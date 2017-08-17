@@ -1,0 +1,56 @@
+MosquitoFemaleHistory:
+  name_cpp: MASHcpp::MosquitoFemaleHistory
+  forward_declare: true
+  constructor:
+    roxygen: |
+      Class to store female mosquito histories; \code{\link{MicroMosquitoFemale}} and \code{\link{MicroMosquito}}
+      @title Mosquito Female History Class
+      @section Methods:
+        * historyInit: initialize the mosquito history
+        * historyTrack: track history at the end of a generic bout (MBITES-XX-Bouts.R)
+        * historyFeed: track history from a host encounter (MBITES-XX-HostEncounter.R)
+        * calcBionomics: calculate bionomic parameters upon mosquito death; not intended to be directly called by user.
+        * exportHistory: export the mosquito history object as a named list which consists of the following components:
+          * stateH: state trajectory
+          * timeH: transition times
+          * ixH: sites visited
+          * pSetH: point sets visited
+          * feedAllH: number of blood meals
+          * feedAllT: times of blood meals
+          * feedHumanH: number of blood meals on human hosts
+          * feedHumanT: times of blood meals on human hosts
+          * feedIxH: ids of all blood hosts
+          * bmSizeH: size of blood meal
+          * batchH: size of egg batch
+          * bionomics_mBatch: mean egg batch size
+          * bionomics_tBatch: total egg production (sum of all egg batches)
+          * bionomics_bmInt: all bloodmeal intervals
+          * bionomics_bmIntH: human bloodmeal intervals
+          * bionomics_lifespan: lifespan
+      @md
+      @export
+  methods:
+    # History Constructor
+    historyInit:
+      args:
+        - privateEnv: "Rcpp::Environment"
+      return_type: void
+
+    # History Tracking
+    historyTrack:
+      args:
+        - privateEnv: "Rcpp::Environment"
+        - alive: bool
+      return_type: void
+
+    historyFeed:
+      args:
+        - privateEnv: "Rcpp::Environment"
+      return_type: void
+
+    calcBionomics:
+      return_type: void
+
+    # History Export
+    exportHistory:
+      return_type: "Rcpp::List"
