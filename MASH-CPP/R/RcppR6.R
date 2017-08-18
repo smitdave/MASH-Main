@@ -820,5 +820,3 @@ NULL
         MosquitoFemaleHistory__exportHistory(self)
       }),
     active=list())
-
-

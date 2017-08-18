@@ -13,3 +13,4 @@ SystemRequirements: C++11
 Imports: Rcpp (>= 0.12.12), R6, RcppR6
 LinkingTo: Rcpp
 RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE)
