@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 //      ______                 __     ____
 //     / ____/   _____  ____  / /_   / __ \__  _____  __  _____
 //    / __/ | | / / _ \/ __ \/ __/  / / / / / / / _ \/ / / / _ \
@@ -10,7 +10,7 @@
 //  A specialized EventData structure for the MASH project
 //  Fork of 'EventQueuer' package for R by Drew Schmidt (license below)
 //
-///////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 
 /*  Copyright (c) 2015, Schmidt
     All rights reserved.
@@ -57,20 +57,20 @@ EventQueue *EventQueue_create()
 
 void EventQueue_push(EventQueue *eq, SEXP EventData)
 {
-  Event *l;
-  l = malloc(sizeof(*l));
+  Event *newE;
+  newE = malloc(sizeof(*newE));
 
-  l->prev = NULL;
-  l->next = eq->start;
-  l->EventData = EventData;
+  newE->prev = NULL;
+  newE->next = eq->start;
+  newE->EventData = EventData;
 
   if (eq->start)
-    eq->start->prev = l;
+    eq->start->prev = newE;
   else
-    eq->start = l;
+    eq->start = newE;
 
-  if (!eq->end) eq->end = l;
-  eq->start = l;
+  if (!eq->end) eq->end = newE;
+  eq->start = newE;
   eq->len++;
 }
 
@@ -78,20 +78,20 @@ void EventQueue_push(EventQueue *eq, SEXP EventData)
 
 void EventQueue_pushback(EventQueue *eq, SEXP EventData)
 {
-  Event *l;
-  l = malloc(sizeof(*l));
+  Event *newE;
+  newE = malloc(sizeof(*newE));
 
-  l->prev = eq->end;
-  l->next = NULL;
-  l->EventData = EventData;
+  newE->prev = eq->end;
+  newE->next = NULL;
+  newE->EventData = EventData;
 
   if (eq->end)
-    eq->end->next = l;
+    eq->end->next = newE;
   else
-    eq->end = l;
+    eq->end = newE;
 
-  if (!eq->start) eq->start = l;
-  eq->end = l;
+  if (!eq->start) eq->start = newE;
+  eq->end = newE;
   eq->len++;
 }
 
@@ -104,24 +104,24 @@ SEXP EventQueue_pop(EventQueue *eq)
   if (eq->len == 0)
     return R_NilValue;
 
-  Event *l = eq->start;
-  if (l->next)
+  Event *newE = eq->start;
+  if (newE->next)
   {
-    tmp = l;
-    l = l->next;
-    l->prev = NULL;
+    tmp = newE;
+    newE = newE->next;
+    newE->prev = NULL;
 
-    l = tmp;
+    newE = tmp;
   }
 
-  eq->start = l->next;
+  eq->start = newE->next;
   if (eq->len == 1)
     eq->end = NULL;
   eq->len--;
 
-  SEXP ret = l->EventData;
+  SEXP ret = newE->EventData;
   R_ReleaseObject(ret);
-  free(l);
+  free(newE);
   return ret;
 }
 
@@ -134,25 +134,25 @@ SEXP EventQueue_popback(EventQueue *eq)
   if (eq->len == 0)
     return R_NilValue;
 
-  Event *l = eq->end;
+  Event *newE = eq->end;
 
-  if (l->prev)
+  if (newE->prev)
   {
-    tmp = l;
-    l = l->prev;
-    l->next = NULL;
+    tmp = newE;
+    newE = newE->prev;
+    newE->next = NULL;
 
-    l = tmp;
+    newE = tmp;
   }
 
-  eq->end = l->prev;
+  eq->end = newE->prev;
   if (eq->len == 1)
     eq->start = NULL;
   eq->len--;
 
-  SEXP ret = l->EventData;
+  SEXP ret = newE->EventData;
   R_ReleaseObject(ret);
-  free(l);
+  free(newE);
   return ret;
 }
 
@@ -162,19 +162,19 @@ void EventQueue_reverse(EventQueue *eq)
 {
   Event *tmp;
   const uint32_t len = eq->len;
-  Event *l;
+  Event *newE;
 
-  l = eq->start;
+  newE = eq->start;
   eq->start = eq->end;
-  eq->end = l;
+  eq->end = newE;
 
   for (int i=0; i<len; i++)
   {
-    tmp = l->next;
-    l->next = l->prev;
-    l->prev = tmp;
+    tmp = newE->next;
+    newE->next = newE->prev;
+    newE->prev = tmp;
 
-    l = tmp;
+    newE = tmp;
   }
 }
 
@@ -186,33 +186,33 @@ int EventQueue_split(const uint32_t k, EventQueue *eq, EventQueue **eq2)
   if (eq->len < k) return -1;
   int i;
   *eq2 = EventQueue_create();
-  Event *l;
+  Event *newE;
 
   if (k <= eq->len/2)
   {
-    l = eq->start;
+    newE = eq->start;
     for (i=0; i<k; i++)
-      l = l->next;
+      newE = newE->next;
   }
   else
   {
-    l = eq->end;
+    newE = eq->end;
     for (i=eq->len; i>k+1; i--)
-      l = l->prev;
+      newE = newE->prev;
   }
 
   (*eq2)->len = eq->len - k;
 
-  eq->end = l->prev;
+  eq->end = newE->prev;
   eq->len = k;
 
-  l->prev = NULL;
-  (*eq2)->start = l;
+  newE->prev = NULL;
+  (*eq2)->start = newE;
   (*eq2)->end = eq->end;
 
 
-  l = eq->end;
-  l->next = NULL;
+  newE = eq->end;
+  newE->next = NULL;
 
   return 0;
 }
@@ -222,11 +222,11 @@ int EventQueue_split(const uint32_t k, EventQueue *eq, EventQueue **eq2)
 // this is very unsafe if you do dumb shit
 int EventQueue_combine(EventQueue *eq, EventQueue *eq2)
 {
-  Event *l;
-  l = eq->end;
+  Event *newE;
+  newE = eq->end;
 
-  l->next = eq2->start;
-  eq2->start->prev = l;
+  newE->next = eq2->start;
+  eq2->start->prev = newE;
 
   eq->end = eq2->end;
 
@@ -244,16 +244,16 @@ int EventQueue_combine(EventQueue *eq, EventQueue *eq2)
 void EventQueue_free(EventQueue *eq)
 {
   Event *tmp;
-  Event *l = eq->start;
+  Event *newE = eq->start;
 
-  while (l)
+  while (newE)
   {
-    if (l->EventData != R_NilValue)
-      R_ReleaseObject(l->EventData);
+    if (newE->EventData != R_NilValue)
+      R_ReleaseObject(newE->EventData);
 
-    tmp = l->next;
-    free(l);
-    l = tmp;
+    tmp = newE->next;
+    free(newE);
+    newE = tmp;
   }
 
   free(eq);
