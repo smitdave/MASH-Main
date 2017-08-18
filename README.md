@@ -1,6 +1,6 @@
-# MASH-Main
+# MASH-Main (Modular Analysis & Simulation for Human Health)
 
- subdirs contain various elements of MASH
+ subdirs contain various elements of the MASH project.
 
 ## MASH-Prototype: MASHprototype package
  * Please install with `devtools::install_github(repo = "slwu89/MASH-Main",subdir = "MASH-Prototype")`
