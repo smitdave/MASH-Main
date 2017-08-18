@@ -28,6 +28,11 @@
 #' @section Methods:
 #'  * item 1:
 #'
+#' @section Fields:
+#'  * **myID**: character identifier of this human, first digits are integer ID and digits after underscore (_) are the patchID; houseID is not necessary because
+#'             location is not resolved to house level in MACRO and MICRO only needs houseID to distribute risk onto \code{\link{feedingSite}} rather than to store humans.
+#'             myID is needed to resolve location to patch level in order to move people between patches in either MICRO or MACRO.
+#'
 #' @md
 #' @export
 Human <- R6::R6Class(classname="Human",
@@ -43,12 +48,13 @@ Human <- R6::R6Class(classname="Human",
                        # Constructor
                        #################################################
 
-                       initialize = function(myID, houseID = NULL, patchID = NULL, bDay = NULL, bWeight = NULL){
+                       initialize = function(myID, houseID = NULL, patchID = NULL, bDay = NULL, bWeight = NULL, verbose = TRUE){
                          private$myID = myID
                          private$houseID = houseID
                          private$patchID = patchID
                          private$bDay = bDay
                          private$bWeight = bWeight
+                         private$verbose = verbose
                          private$EventQueue = MASHcpp::HumanEventQ()
                          private$History = MASHcpp::HistoryGeneric()
                        },
@@ -178,7 +184,7 @@ Human <- R6::R6Class(classname="Human",
                        #################################################
 
                        finalize = function(){
-                         print(paste0("human: ",private$myID," has been garbage collected!"))
+                         if(private$verbose){print(paste0("human: ",private$myID," has been garbage collected!"))}
                        }
 
                      ),
@@ -193,6 +199,8 @@ Human <- R6::R6Class(classname="Human",
                        Alive = TRUE, # boolean
                        bDay = NULL, # double
                        sex = NULL, # integer
+
+                       verbose = NULL, # boolean (used for debugging)
 
                        #Event Queue
                        EventQueue = NULL, # see HUMANS-EventQ.hpp

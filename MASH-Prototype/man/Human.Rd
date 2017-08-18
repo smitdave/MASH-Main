@@ -26,5 +26,14 @@ Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
 }
 }
 
+\section{Fields}{
+
+\itemize{
+\item \strong{myID}: character identifier of this human, first digits are integer ID and digits after underscore (_) are the patchID; houseID is not necessary because
+location is not resolved to house level in MACRO and MICRO only needs houseID to distribute risk onto \code{\link{feedingSite}} rather than to store humans.
+myID is needed to resolve location to patch level in order to move people between patches in either MICRO or MACRO.
+}
+}
+
 \keyword{R6}
 \keyword{class}
