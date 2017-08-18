@@ -8,6 +8,7 @@
 #                          /____/
 #   MASH-CPP
 #   Debugging C++ Memory through R6 Finalizers
+#   Sean Wu
 #   August 18, 2017
 #
 ###############################################################################
@@ -18,6 +19,8 @@
 #'
 #' @export
 DEBUG.MASHCPP <- function(overwrite = TRUE){
+
+  # C++ Classes
 
   MASHcpp:::.R6_HumanEventQ$set(which = "public",name = "finalize",
     value = function(){print(paste0("HumanEventQ being garbage collected"))},
@@ -66,5 +69,7 @@ DEBUG.MASHCPP <- function(overwrite = TRUE){
   MASHcpp:::.R6_mosquitoPfSI$set(which = "public",name = "finalize",
     value = function(){print(paste0("mosquitoPfSI being garbage collected"))},
     overwrite = overwrite)
+
+  # R6 Classes
 
 }
