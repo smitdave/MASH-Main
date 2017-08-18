@@ -47,17 +47,17 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                       # Constructor
                       #################################################
 
-                      initialize = function(patchID, houseIDs = NULL, bDays, bWeights, tStart = 0, verbose = FALSE){
+                      initialize = function(N, patchID, houseIDs = NULL, bDays, bWeights, tStart = 0){
 
                         if(length(patchID) > 1){stop("HumanPop constructor: patchID must be a single value; a HumanPop must be uniquely defined for each patch1")}
                         if(!is.null(houseIDs)){
-                          if(!all.equal(length(houseIDs),length(bWeights),length(bDays))){stop("HumanPop constructor: houseIDs, bDays, bWeights must be vectors of equal length")}
+                          if(!all.equal(N,length(bWeights),length(bDays))){stop("HumanPop constructor: houseIDs, bDays, bWeights must be vectors of equal length")}
                         } else {
                           if(!all.equal(length(bWeights),length(bDays))){stop("HumanPop constructor: bDays, bWeights must be vectors of equal length")}
                         }
 
-                        private$pop = hash::hash()
-                        private$nHumans = length(bDays)
+                        private$pop = vector(mode="list",length=N)
+                        private$N = N
 
                         for(i in 1:private$nHumans){
 
@@ -72,16 +72,17 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                       # Getters & Setters
                       #################################################
 
-                      # get_Human: get a human from a key
+                      # get_Human: get a human from a 'myID'
                       get_Human = function(humanID){
                         if(!is.character(humanID)){stop(paste0("humanID: ",humanID,"must be a character key"))}
-                        return(private$pop[[humanID]])
+                        ix = which(vapply(X = private$pop,FUN = function(x){x$get_myID()},FUN.VALUE = character(1)))
+                        return(private$pop[[ix]])
                       },
 
                       # get_History: retrieve the entire population history or a single human's history
                       get_History = function(){
-                        histories = vector(mode = "list",length = self$nHumans)
-                        for(i in hash::keys(private$pop)){
+                        histories = vector(mode = "list",length = private$N)
+                        for(i in 1:private$N)){
                           histories[[i]] = private$pop[[i]]$get_History()
                         }
                         return(histories)
@@ -95,19 +96,15 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                         for(i in hash::keys(private$pop)){
                           private$pop[[i]]$liveLife(tPause = tPause)
                         }
-                      },
-
-                      #################################################
-                      # Values
-                      #################################################
-
-                      nHumans = NULL,
-                      tStart = NULL
+                      }
 
                     ),
 
                     # private members
                     private = list(
+
+                      N = NULL,
+                      tStart = NULL,
 
                       pop = NULL
 
