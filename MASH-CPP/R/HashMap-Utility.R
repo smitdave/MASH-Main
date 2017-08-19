@@ -23,3 +23,11 @@
 eapplyInvisible <- function(envir){
   .Call(R_eapplyInvisible, envir)
 }
+
+
+
+# eapplyTest <- function (env, FUN, ..., all.names = FALSE, USE.NAMES = TRUE)
+# {
+#     FUN <- match.fun(FUN)
+#     .Internal(eapply(env, FUN, all.names, USE.NAMES))
+# }
