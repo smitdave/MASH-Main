@@ -25,9 +25,9 @@ eapplyInvisible <- function(envir){
 }
 
 
-
-# eapplyTest <- function (env, FUN, ..., all.names = FALSE, USE.NAMES = TRUE)
-# {
-#     FUN <- match.fun(FUN)
-#     .Internal(eapply(env, FUN, all.names, USE.NAMES))
+# eapplyTest <- function(envir ,FUN,...){
+#   .External(R_eapplyTest, FUN, envir, ...)
 # }
+#
+# dotsapply <- function( fun, ... )
+#    .External( dotsapplyR, fun, environment(), ... )
