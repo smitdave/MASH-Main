@@ -45,7 +45,7 @@ HashMap <- R6::R6Class(classname="Human",
 
                        initialize = function(N = 100L){
                          private$storage = new.env(hash=TRUE,size=N)
-                       },
+                       }
 
                      ),
 

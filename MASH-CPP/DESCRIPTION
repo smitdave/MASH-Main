@@ -9,6 +9,8 @@ Description: More about what it does (maybe more than one line)
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
+NeedsCompilation: yes
+ByteCompile: yes
 SystemRequirements: C++11
 Imports: Rcpp (>= 0.12.12), R6, RcppR6
 LinkingTo: Rcpp
