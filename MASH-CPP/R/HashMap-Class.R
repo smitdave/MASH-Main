@@ -44,9 +44,7 @@ HashMap <- R6::R6Class(classname="Human",
                        #################################################
 
                        initialize = function(N = 100L){
-
                          private$storage = new.env(hash=TRUE,size=N)
-
                        },
 
                      ),
@@ -93,4 +91,48 @@ exists_HashMap <- function(key){
 
 HashMap$set(which = "public",name = "exists",
   value = exists_HashMap,
+  overwrite = TRUE)
+
+#' MASH-CPP: HashMap Views all Objects in Hash Table
+#'
+#' Returns character vector of all keys in the environment.
+#'
+ls_HashMap <- function(){
+  ls(env = private$storage)
+}
+
+HashMap$set(which = "public",name = "ls",
+  value = ls_HashMap,
+  overwrite = TRUE)
+
+#' MASH-CPP: HashMap Assign a Key-Value Pair to the Hash Table
+#'
+#' Assign a key-value pair to \code{private$storage}.
+#'
+#' @param key character key
+#' @param value a value to be assigned
+#'
+assign_HashMap <- function(key, value){
+  if(!is.character(key)){stop(paste0("key: ",key,"must be a character"))}
+  assign(x = key, value = value, envir = private$storage,inherits = FALSE)
+}
+
+HashMap$set(which = "public",name = "assign",
+  value = assign_HashMap,
+  overwrite = TRUE)
+
+#' MASH-CPP: HashMap Get the Value Assigned to a Key
+#'
+#' Assign a key-value pair to \code{private$storage}.
+#'
+#' @param key character key
+#' @param value a value to be assigned
+#'
+get_HashMap <- function(key, value){
+  if(!is.character(key)){stop(paste0("key: ",key,"must be a character"))}
+  get(x = key,envir = private$storage,inherits = FALSE)
+}
+
+HashMap$set(which = "public",name = "get",
+  value = get_HashMap,
   overwrite = TRUE)

@@ -71,5 +71,8 @@ DEBUG.MASHCPP <- function(overwrite = TRUE){
     overwrite = overwrite)
 
   # R6 Classes
+  MASHcpp:::HashMap$set(which = "public",name = "finalize",
+    value = function(){print(paste0("HashMap being garbage collected"))},
+    overwrite = overwrite)
 
 }
