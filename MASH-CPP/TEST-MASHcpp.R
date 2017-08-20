@@ -11,6 +11,8 @@
 #
 ###############################################################################
 
+rm(list=ls());gc()
+
 library(MASHcpp)
 library(R6)
 
@@ -22,42 +24,83 @@ class = R6Class("class", public = list(
     eventT = rlnorm(10)
     for(i in 1:10){
       self$queue$addEvent2Q(list(tEvent=eventT[i],tag="test",PAR=NULL))
-    }
+      }
     },
+  addQ = function(){
+    self$queue$addEvent2Q(list(tEvent=500,tag="test",PAR=NULL))
+  },
   eraseQueue = function(){
     self$queue = NULL
   }
 ))
 
-myClass = class$new()
-myClass$queue$get_EventQ()
-myClass$eraseQueue()
-gc()
+# myClass = class$new()
+# myClass$queue$get_EventQ()
+# myClass$eraseQueue()
+# gc()
+#
+# # list vs. pairlist comparison
+#
+# testList = function(N){
+#   xx = list()
+#   for(i in 1:N){
+#     xx[[i]] = list(numbers=1:100)
+#   }
+#   rm(xx)
+# }
+#
+# testPairList = function(N){
+#   xx = pairlist()
+#   for(i in 1:N){
+#     xx[[i]] = list(numbers=1:100)
+#   }
+#   rm(xx)
+# }
+#
+# # dataPts = NULL
+# for(N in c(1e1,1e2,1e3,1e4,1e5)){
+#   print(microbenchmark::microbenchmark(
+#     testList(N = N),
+#     testPairList(N = N),
+#     times = 100
+#   ))
+# }
 
-# list vs. pairlist comparison
 
-testList = function(N){
-  xx = list()
-  for(i in 1:N){
-    xx[[i]] = list(numbers=1:100)
-  }
-  rm(xx)
+myEnv <- new.env(hash = TRUE,size = 100L)
+for(i in 1:100){
+  assign(x = as.character(i),value = class$new(),envir = myEnv)
 }
 
-testPairList = function(N){
-  xx = pairlist()
-  for(i in 1:N){
-    xx[[i]] = list(numbers=1:100)
-  }
-  rm(xx)
-}
+microbenchmark::microbenchmark(
+  # for loop; takes time to pull out the keys in R, but no memory allocation
+  {
+    ix = ls(envir = myEnv)
+    for(i in ix){
+      get(envir = myEnv,x = i)$queue$get_queueN()
+      # myEnv[[ix]]$queue$get_queueN()
+    }
+  },
+  # eapply: wastes time allocating memory for output and filling it, but in C
+  {
+    eapply(env = myEnv,FUN = function(x){x$queue$get_queueN()},USE.NAMES = FALSE,all.names = TRUE)
+  },
+  times = 100
+)
 
-# dataPts = NULL
-for(N in c(1e1,1e2,1e3,1e4,1e5)){
-  print(microbenchmark::microbenchmark(
-    testList(N = N),
-    testPairList(N = N),
-    times = 100
-  ))
-}
+microbenchmark::microbenchmark(
+  # for loop; takes time to pull out the keys in R, but no memory allocation
+  {
+    ix = ls(envir = myEnv)
+    for(i in ix){
+      get(envir = myEnv,x = i)$addQ()
+      # myEnv[[ix]]$queue$get_queueN()
+    }
+  },
+  # eapply: wastes time allocating memory for output and filling it, but in C
+  {
+    eapply(env = myEnv,FUN = function(x){x$addQ()},USE.NAMES = FALSE,all.names = TRUE)
+  },
+  times = 100
+)
 
