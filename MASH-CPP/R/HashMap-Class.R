@@ -21,16 +21,26 @@
 #'
 #'  Provide a R6 implementation of a hash table to store population vectors using native R environments.
 #'
-#' @section Methods:
-#'  * rm: given a character key remove that value from the storage hash table.
-#'  * exists: given a character key return a boolean if the value associated to that key exists in the storage hash table
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object
+#' @keywords R6 class
 #'
+#' @section **Constructor**:
+#'  * N = 100L: size to allocate to the HashMap
 #'
+#' @section **Methods**:
+#'  * rm: see \code{\link{rm_HashMap}}
+#'  * exists: see \code{\link{exists_HashMap}}
+#'  * ls: see \code{\link{ls_HashMap}}
+#'  * assign: see \code{\link{assign_HashMap}}
+#'  * get: see \code{\link{get_HashMap}}
+#'  * eapply: see \code{\link{eapply_HashMap}}
 #'
-#'
+#' @section **Fields**:
+#'  * storage: a hashed R environment, see \code{\link[base]{new.env}} for more details
 #'
 #' @export
-HashMap <- R6::R6Class(classname="Human",
+HashMap <- R6::R6Class(classname="HashMap",
                      portable = TRUE,
                      cloneable = TRUE,
                      lock_class = FALSE,
@@ -128,7 +138,7 @@ HashMap$set(which = "public",name = "assign",
 #' @param key character key
 #' @param value a value to be assigned
 #'
-get_HashMap <- function(key, value){
+get_HashMap <- function(key){
   if(!is.character(key)){stop(paste0("key: ",key,"must be a character"))}
   get(x = key,envir = private$storage,inherits = FALSE)
 }

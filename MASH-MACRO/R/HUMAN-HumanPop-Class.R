@@ -22,15 +22,24 @@
 #' @format An \code{\link{R6Class}} generator object
 #' @keywords R6 class
 #'
-#' @section Constructor:
+#' @section **Constructor**:
 #'  * item 1:
 #'
-#' @section Methods:
-#'  * **get_Human**: retrieve human whose field 'myID' matches argument 'humanID' in keylist of pop field.
+#' @section **Methods**:
+#'  * get_Human: retrieve human whose field 'myID' matches argument 'humanID' in keylist of pop field.
 #'  * item 1:
 #'  * item 1:
 #'  * item 1:
 #'  * item 1:
+#'
+#' @section **Fields**:
+#'  * pop: a object of class \code{\link[MASHcpp]{HashMap}} that stores instantiations of \code{\link{Human}}, see help for more details on the internal structure of this type.
+#'
+#'
+#'
+#'
+#'
+#'
 #'
 #' @md
 #' @export
@@ -49,20 +58,21 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
 
                       initialize = function(N, patchID, houseIDs = NULL, bDays, bWeights, tStart = 0){
 
-                        if(length(patchID) > 1){stop("HumanPop constructor: patchID must be a single value; a HumanPop must be uniquely defined for each patch1")}
+                        if(length(patchID) > 1){stop("HumanPop constructor: patchID must be a single value; a HumanPop must be uniquely defined for each patch")}
                         if(!is.null(houseIDs)){
                           if(!all.equal(N,length(bWeights),length(bDays))){stop("HumanPop constructor: houseIDs, bDays, bWeights must be vectors of equal length")}
                         } else {
                           if(!all.equal(length(bWeights),length(bDays))){stop("HumanPop constructor: bDays, bWeights must be vectors of equal length")}
                         }
+                        if(tStart != 0){print("warning: tStart is not 0, make sure you really want to do this")}
 
-                        private$pop = vector(mode="list",length=N)
+                        private$pop = MASHcpp::HashMap$new(N = N)
                         private$N = N
 
-                        for(i in 1:private$nHumans){
+                        for(i in 1:private$N){
 
                           id = paste0(i,"_",patchID)
-                          private$pop[[id]] = Human$new(myID = id, houseID = NULL, patchID = NULL, bDay = NULL, bWeight = NULL, verbose = verbose)
+                          private$pop$assign(key=id,value=Human$new(myID = id, houseID = houseIDs[i], patchID = patchID, bDay = bDays[i], bWeight = bWeights[i]))
 
                         }
 
@@ -74,18 +84,14 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
 
                       # get_Human: get a human from a 'myID'
                       get_Human = function(humanID){
-                        if(!is.character(humanID)){stop(paste0("humanID: ",humanID,"must be a character key"))}
-                        ix = which(vapply(X = private$pop,FUN = function(x){x$get_myID()},FUN.VALUE = character(1)))
-                        return(private$pop[[ix]])
+                        return(private$pop$get(key=humanID))
                       },
 
                       # get_History: retrieve the entire population history or a single human's history
-                      get_History = function(){
-                        histories = vector(mode = "list",length = private$N)
-                        for(i in 1:private$N)){
-                          histories[[i]] = private$pop[[i]]$get_History()
-                        }
-                        return(histories)
+                      get_history = function(){
+                        return(
+                          private$pop$eapply(tag="get_history",returnVal=TRUE)
+                        )
                       },
 
                       #################################################
@@ -93,9 +99,7 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                       #################################################
 
                       simHumans = function(tPause){
-                        for(i in hash::keys(private$pop)){
-                          private$pop[[i]]$liveLife(tPause = tPause)
-                        }
+                        private$pop$eapply(tag="liveLife",returnVal=FALSE,tPause=tPause)
                       }
 
                     ),
@@ -106,6 +110,7 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                       N = NULL,
                       tStart = NULL,
 
+                      #
                       pop = NULL
 
                     )

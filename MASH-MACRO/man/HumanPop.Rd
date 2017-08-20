@@ -12,21 +12,28 @@ HumanPop
 generate a single human population; they may live in a MacroPatch or a MicroPatch
 Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
 }
-\section{Constructor}{
+\section{\strong{Constructor}}{
 
 \itemize{
 \item item 1:
 }
 }
 
-\section{Methods}{
+\section{\strong{Methods}}{
 
 \itemize{
-\item \strong{get_Human}: retrieve human whose field 'myID' matches argument 'humanID' in keylist of pop field.
+\item get_Human: retrieve human whose field 'myID' matches argument 'humanID' in keylist of pop field.
 \item item 1:
 \item item 1:
 \item item 1:
 \item item 1:
+}
+}
+
+\section{\strong{Fields}}{
+
+\itemize{
+\item pop: a object of class \code{\link[MASHcpp]{HashMap}} that stores instantiations of \code{\link{Human}}, see help for more details on the internal structure of this type.
 }
 }
 

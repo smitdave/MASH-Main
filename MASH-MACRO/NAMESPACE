@@ -3,5 +3,6 @@
 export(DEBUG.MASHMACRO)
 export(Human)
 export(HumanPop)
+export(MacroPatch)
 import(Rcpp)
 importFrom(R6,R6Class)

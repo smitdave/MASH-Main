@@ -4,7 +4,7 @@
 \alias{get_HashMap}
 \title{MASH-CPP: HashMap Get the Value Assigned to a Key}
 \usage{
-get_HashMap(key, value)
+get_HashMap(key)
 }
 \arguments{
 \item{key}{character key}

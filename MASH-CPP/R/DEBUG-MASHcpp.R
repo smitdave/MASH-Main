@@ -23,56 +23,56 @@ DEBUG.MASHCPP <- function(overwrite = TRUE){
   # C++ Classes
 
   MASHcpp:::.R6_HumanEventQ$set(which = "public",name = "finalize",
-    value = function(){print(paste0("HumanEventQ being garbage collected"))},
+    value = function(){message(paste0("HumanEventQ being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_EggQ$set(which = "public",name = "finalize",
-    value = function(){print(paste0("EggQ being garbage collected"))},
+    value = function(){message(paste0("EggQ being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_ImagoQ$set(which = "public",name = "finalize",
-    value = function(){print(paste0("ImagoQ being garbage collected"))},
+    value = function(){message(paste0("ImagoQ being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_EL4P$set(which = "public",name = "finalize",
-    value = function(){print(paste0("EL4P being garbage collected"))},
+    value = function(){message(paste0("EL4P being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_HistoryGeneric$set(which = "public",name = "finalize",
-    value = function(){print(paste0("HistoryGeneric being garbage collected"))},
+    value = function(){message(paste0("HistoryGeneric being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_HistoryTravel$set(which = "public",name = "finalize",
-    value = function(){print(paste0("HistoryTravel being garbage collected"))},
+    value = function(){message(paste0("HistoryTravel being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_RiskQ$set(which = "public",name = "finalize",
-    value = function(){print(paste0("RiskQ being garbage collected"))},
+    value = function(){message(paste0("RiskQ being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_MosquitoFemaleHistory$set(which = "public",name = "finalize",
-    value = function(){print(paste0("MosquitoFemaleHistory being garbage collected"))},
+    value = function(){message(paste0("MosquitoFemaleHistory being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_humanPfMOI$set(which = "public",name = "finalize",
-    value = function(){print(paste0("humanPfMOI being garbage collected"))},
+    value = function(){message(paste0("humanPfMOI being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_mosquitoPfMOI$set(which = "public",name = "finalize",
-    value = function(){print(paste0("mosquitoPfMOI being garbage collected"))},
+    value = function(){message(paste0("mosquitoPfMOI being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_humanPfSI$set(which = "public",name = "finalize",
-    value = function(){print(paste0("humanPfSI being garbage collected"))},
+    value = function(){message(paste0("humanPfSI being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_mosquitoPfSI$set(which = "public",name = "finalize",
-    value = function(){print(paste0("mosquitoPfSI being garbage collected"))},
+    value = function(){message(paste0("mosquitoPfSI being garbage collected"))},
     overwrite = overwrite)
 
   # R6 Classes
   MASHcpp:::HashMap$set(which = "public",name = "finalize",
-    value = function(){print(paste0("HashMap being garbage collected"))},
+    value = function(){message(paste0("HashMap being garbage collected"))},
     overwrite = overwrite)
 
 }

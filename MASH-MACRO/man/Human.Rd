@@ -3,7 +3,7 @@
 \docType{class}
 \name{Human}
 \alias{Human}
-\title{Human Class Definition}
+\title{MASH-MACRO: Human Class Definition}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
 Human
