@@ -20,9 +20,9 @@ DEBUG.MASHCPP()
 
 class = R6Class("class", public = list(
 
-  initialize = function() {
+  initialize = function(n=10) {
     private$queue = MASHcpp::HumanEventQ()
-    eventT = rlnorm(n = 10)
+    eventT = rlnorm(n = n)
     for(i in 1:length(eventT)){
       private$queue$addEvent2Q(list(tEvent=eventT[i],tag="test",PAR=NULL))
       }
@@ -32,6 +32,9 @@ class = R6Class("class", public = list(
   },
   eraseQueue = function(){
     private$queue = NULL
+  },
+  addQstuff = function(time){
+    private$queue$addEvent2Q(list(tEvent=time,tag="test",PAR=NULL))
   },
   get_QueueN = function(){private$queue$get_queueN()},
   get_queue = function(){private$queue$get_EventQ()}
@@ -72,8 +75,18 @@ class = R6Class("class", public = list(
 
 myEnv <- new.env(hash = TRUE,size = 100L)
 for(i in 1:10){
-  assign(x = as.character(i),value = class$new(),envir = myEnv)
+assign(x = as.character(i),value = class$new(n=1),envir = myEnv)
 }
+
+eapplyTest = function(tag,...){
+  eapply(env = myEnv,FUN = function(x,tag,...){
+    x[[tag]](...)
+  },tag=tag,...=...,all.names = TRUE,USE.NAMES = FALSE)
+}
+
+eapplyTest(tag = "addQstuff",time = 10)
+eapply(myEnv,function(x){x$get_queue()},USE.NAMES = F)
+
 
 microbenchmark::microbenchmark(
   # for loop; takes time to pull out the keys in R, but no memory allocation

@@ -141,3 +141,35 @@ HashMap$set(which = "public",name = "get",
 ###############################################################################
 # HashMap: Apply Method Over Environment
 ###############################################################################
+
+#' MASH-CPP: HashMap Call a Method Over All Values in HashMap
+#'
+#' Use \code{\link[base]{eapply}} to call a method found by argument \code{tag} for all values stored in the HashMap \code{private$storage}.
+#' The HashMap class is intended to only store instantiations of R6 objects from a single class, it must not store mixed data types.
+#'
+#' @param tag character tag of the method to call for each element in the HashMap
+#' @param returnVal do we want to capture the ouput of \code{\link[base]{eapply}} and return; if \code{FALSE} apply the function invisibly and return \code{NULL}
+#' @param ... additional named arguments passed to method
+#'
+eapply_HashMap <- function(tag, returnVal = FALSE, ...){
+  # if we want the output
+  if(returnVal){
+    return(
+      eapply(env = private$storage,FUN = function(x,tag,...){
+          x[[tag]](...)
+        },tag=tag,... = ...,all.names = TRUE,USE.NAMES = TRUE)
+    )
+  # if we don't want the output (eventually need to write new version of eapply w/out alloc output memory)
+  } else {
+    invisible(
+      eapply(env = private$storage,FUN = function(x,tag,...){
+          x[[tag]](...)
+        },tag=tag,... = ...,all.names = TRUE,USE.NAMES = FALSE)
+    )
+    return(NULL)
+  }
+}
+
+HashMap$set(which = "public",name = "eapply",
+  value = eapply_HashMap,
+  overwrite = TRUE)
