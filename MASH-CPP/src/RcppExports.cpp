@@ -1664,8 +1664,6 @@ BEGIN_RCPP
 END_RCPP
 }
 
-RcppExport SEXP R_eapplyInvisible(SEXP);
-
 static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_rcpp_hello", (DL_FUNC) &_MASHcpp_rcpp_hello, 0},
     {"_MASHcpp_HumanEventQ__ctor", (DL_FUNC) &_MASHcpp_HumanEventQ__ctor, 1},
@@ -1812,7 +1810,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_MosquitoFemaleHistory__historyFeed", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__historyFeed, 2},
     {"_MASHcpp_MosquitoFemaleHistory__calcBionomics", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__calcBionomics, 1},
     {"_MASHcpp_MosquitoFemaleHistory__exportHistory", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__exportHistory, 1},
-    {"R_eapplyInvisible",                             (DL_FUNC) &R_eapplyInvisible,                             1},
     {NULL, NULL, 0}
 };
 

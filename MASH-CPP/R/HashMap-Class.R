@@ -14,7 +14,7 @@
 ###############################################################################
 
 ###############################################################################
-# HashMap Class Definition
+# HashMap: Class Definition
 ###############################################################################
 
 #'  MASH-CPP: HashMap Class Definition
@@ -60,7 +60,7 @@ HashMap <- R6::R6Class(classname="Human",
 
 
 ###############################################################################
-# HashMap Class Methods
+# HashMap: Class Methods
 ###############################################################################
 
 #'  MASH-CPP: HashMap Value Removal Method
@@ -136,3 +136,8 @@ get_HashMap <- function(key, value){
 HashMap$set(which = "public",name = "get",
   value = get_HashMap,
   overwrite = TRUE)
+
+
+###############################################################################
+# HashMap: Apply Method Over Environment
+###############################################################################
