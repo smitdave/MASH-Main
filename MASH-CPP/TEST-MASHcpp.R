@@ -19,20 +19,23 @@ library(R6)
 DEBUG.MASHCPP()
 
 class = R6Class("class", public = list(
-  queue = MASHcpp::HumanEventQ(),
+
   initialize = function() {
-    eventT = rlnorm(10)
-    for(i in 1:10){
-      self$queue$addEvent2Q(list(tEvent=eventT[i],tag="test",PAR=NULL))
+    private$queue = MASHcpp::HumanEventQ()
+    eventT = rlnorm(n = 10)
+    for(i in 1:length(eventT)){
+      private$queue$addEvent2Q(list(tEvent=eventT[i],tag="test",PAR=NULL))
       }
     },
   addQ = function(){
-    self$queue$addEvent2Q(list(tEvent=500,tag="test",PAR=NULL))
+    private$queue$addEvent2Q(list(tEvent=500,tag="test",PAR=NULL))
   },
   eraseQueue = function(){
-    self$queue = NULL
-  }
-))
+    private$queue = NULL
+  },
+  get_QueueN = function(){private$queue$get_queueN()},
+  get_queue = function(){private$queue$get_EventQ()}
+),private=list( queue = NULL))
 
 # myClass = class$new()
 # myClass$queue$get_EventQ()
@@ -68,7 +71,7 @@ class = R6Class("class", public = list(
 
 
 myEnv <- new.env(hash = TRUE,size = 100L)
-for(i in 1:100){
+for(i in 1:10){
   assign(x = as.character(i),value = class$new(),envir = myEnv)
 }
 
@@ -77,15 +80,15 @@ microbenchmark::microbenchmark(
   {
     ix = ls(envir = myEnv)
     for(i in ix){
-      get(envir = myEnv,x = i)$queue$get_queueN()
+      get(envir = myEnv,x = i)$get_QueueN()
       # myEnv[[ix]]$queue$get_queueN()
     }
   },
   # eapply: wastes time allocating memory for output and filling it, but in C
   {
-    eapply(env = myEnv,FUN = function(x){x$queue$get_queueN()},USE.NAMES = FALSE,all.names = TRUE)
+    eapply(env = myEnv,FUN = function(x){x$get_QueueN()},USE.NAMES = FALSE,all.names = TRUE)
   },
-  times = 100
+  times = 200
 )
 
 microbenchmark::microbenchmark(
@@ -101,6 +104,6 @@ microbenchmark::microbenchmark(
   {
     eapply(env = myEnv,FUN = function(x){x$addQ()},USE.NAMES = FALSE,all.names = TRUE)
   },
-  times = 100
+  times = 200
 )
 
