@@ -13,26 +13,32 @@
 #
 ###############################################################################
 
-#' MASH-MACRO HumanPop Class Definition
+#' HumanPop Class Definition
 #'
-#' generate a single human population; they may live in a MacroPatch or a MicroPatch
-#' Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
+#' Generate a single human population; they may live in a \code{\link{MacroPatch}} or a MicroPatch, the individual humans in the pop may move freely between patches.
+#' Each instance of a \code{\link{Human}} lives in a \code{HumanPop}
 #'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'  * item 1:
+#'  * N: number of humans
+#'  * patchID: integer ID of the patch this \code{HumanPop} lives in
+#'  * houseIDs = NULL: vector of house IDs (only needed in MICRO, in MACRO human location is only resolved to the \code{\link{MacroPatch}} level)
+#'  * bDays: vector of birthdays (given as tStart - age at start)
+#'  * bWeights: vector of biting weights
+#'  * tStart = 0: time to start simulation; constructor will complain if is a value other than 0
 #'
 #' @section **Methods**:
-#'  * get_Human: retrieve human whose field 'myID' matches argument 'humanID' in keylist of pop field.
-#'  * item 1:
-#'  * item 1:
-#'  * item 1:
-#'  * item 1:
+#'  * get_pop: see \code{\link{get_pop_HumanPop}}
+#'  * get_human: see \code{\link{get_human_HumanPop}}
+#'  * get_history: see \code{\link{get_history_HumanPop}}
+#'  * simHumans: see \code{\link{simHumans_HumanPop}}
 #'
 #' @section **Fields**:
+#'  * N: number of human
+#'  * tStart: time to start simulation
 #'  * pop: a object of class \code{\link[MASHcpp]{HashMap}} that stores instantiations of \code{\link{Human}}, see help for more details on the internal structure of this type.
 #'
 #'
@@ -76,30 +82,6 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
 
                         }
 
-                      },
-
-                      #################################################
-                      # Getters & Setters
-                      #################################################
-
-                      # get_Human: get a human from a 'myID'
-                      get_Human = function(humanID){
-                        return(private$pop$get(key=humanID))
-                      },
-
-                      # get_History: retrieve the entire population history or a single human's history
-                      get_history = function(){
-                        return(
-                          private$pop$eapply(tag="get_history",returnVal=TRUE)
-                        )
-                      },
-
-                      #################################################
-                      # Simulation and Events
-                      #################################################
-
-                      simHumans = function(tPause){
-                        private$pop$eapply(tag="liveLife",returnVal=FALSE,tPause=tPause)
                       }
 
                     ),
@@ -109,9 +91,71 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
 
                       N = NULL,
                       tStart = NULL,
-
-                      #
                       pop = NULL
 
                     )
 )
+
+###############################################################################
+# HumanPop: Getters & Setters
+###############################################################################
+
+#' HumanPop: Get the Population
+#'
+#' Return \code{private$pop}
+#'
+#'
+get_pop_HumanPop <- function(){
+  return(private$pop)
+}
+
+HumanPop$set(which = "public",name = "get_pop",
+  value = get_pop_HumanPop,
+  overwrite = TRUE)
+
+#' HumanPop: Get a Human
+#'
+#' Given a character \code{humanID} return that human (calls \code{\link[MASHcpp]{get_HashMap}}) to get the human.
+#'
+#' @param humanID character
+#'
+get_human_HumanPop <- function(humanID){
+  return(private$pop$get(key=humanID))
+}
+
+HumanPop$set(which = "public",name = "get_human",
+  value = get_human_HumanPop,
+  overwrite = TRUE)
+
+#' HumanPop: Get all Histories
+#'
+#' Return all human histories as a named list (names correspond to human \code{myID}). See \code{\link[MASHcpp]{HistoryGeneric}} for details on the history implementation.
+#'
+#'
+get_history_HumanPop <- function(){
+  return(
+    private$pop$eapply(tag="get_history",returnVal=TRUE)
+  )
+}
+
+HumanPop$set(which = "public",name = "get_history",
+  value = get_history_HumanPop,
+  overwrite = TRUE)
+
+###############################################################################
+# HumanPop: Simulation & Events
+###############################################################################
+
+#' HumanPop: Simulate Humans
+#'
+#' Simulate each human's event queue.
+#'
+#' @param tPause numeric (run all events in each human's \code{\link[MASHcpp]{HumanEventQ}} that occur before this time)
+#'
+simHumans_HumanPop <- function(tPause){
+  private$pop$eapply(tag="liveLife",returnVal=FALSE,tPause=tPause)
+}
+
+HumanPop$set(which = "public",name = "simHumans",
+  value = simHumans_HumanPop,
+  overwrite = TRUE)

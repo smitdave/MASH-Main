@@ -17,7 +17,7 @@
 # HashMap: Class Definition
 ###############################################################################
 
-#'  MASH-CPP: HashMap Class Definition
+#'  HashMap Class Definition
 #'
 #'  Provide a R6 implementation of a hash table to store population vectors using native R environments.
 #'
@@ -73,11 +73,11 @@ HashMap <- R6::R6Class(classname="HashMap",
 # HashMap: Class Methods
 ###############################################################################
 
-#'  MASH-CPP: HashMap Value Removal Method
+#' HashMap: Value Removal Method
 #'
 #' Remove a value from \code{private$storage} given a key.
 #'
-#' @param key a character key remove that value from the storage hash table.
+#' @param key a character key; remove that value from the storage hash table.
 #'
 rm_HashMap <- function(key){
   if(!is.character(key)){stop(paste0("key: ",key,"must be a character"))}
@@ -88,7 +88,7 @@ HashMap$set(which = "public",name = "rm",
   value = rm_HashMap,
   overwrite = TRUE)
 
-#' MASH-CPP: HashMap Check if Value Exists
+#' HashMap: Check if Value Exists
 #'
 #' Does a value exist in \code{private$storage} or not.
 #'
@@ -103,7 +103,7 @@ HashMap$set(which = "public",name = "exists",
   value = exists_HashMap,
   overwrite = TRUE)
 
-#' MASH-CPP: HashMap Views all Objects in Hash Table
+#' HashMap: Views all Objects in Hash Table
 #'
 #' Returns character vector of all keys in the environment.
 #'
@@ -115,7 +115,7 @@ HashMap$set(which = "public",name = "ls",
   value = ls_HashMap,
   overwrite = TRUE)
 
-#' MASH-CPP: HashMap Assign a Key-Value Pair to the Hash Table
+#' HashMap: Assign a Key-Value Pair to the Hash Table
 #'
 #' Assign a key-value pair to \code{private$storage}.
 #'
@@ -131,7 +131,7 @@ HashMap$set(which = "public",name = "assign",
   value = assign_HashMap,
   overwrite = TRUE)
 
-#' MASH-CPP: HashMap Get the Value Assigned to a Key
+#' HashMap: Get the Value Assigned to a Key
 #'
 #' Assign a key-value pair to \code{private$storage}.
 #'

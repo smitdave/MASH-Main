@@ -129,12 +129,12 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                    # R6 Classes
                    #################################################
 
-                   # MacroMosquitoPop
-                   get_MacroMosquitoPop = function(){
-                     return(private$MacroMosquitoPop)
+                   # MosquitoPop
+                   get_MosquitoPop = function(){
+                     return(private$MosquitoPop)
                    },
-                   set_MacroMosquitoPop = function(MacroMosquitoPop){
-                     private$MacroMosquitoPop = MacroMosquitoPop
+                   set_MosquitoPop = function(MosquitoPop){
+                     private$MosquitoPop = MosquitoPop
                    },
 
                    # HumanPop
@@ -162,20 +162,29 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                   # private methods & fields
                   private = list(
 
+                    # Fields
+
+                    # Simulation-level parameters
+                    tNow = NULL,
+
                     # Mosquito Feeding
                     bWeightHuman   = NULL,  # biting weight of HumanPop
                     bWeightZoo     = NULL,  # biting weight of livestock
-                    kappa     = NULL,       # relative infectiousness
+                    kappa          = NULL,       # relative infectiousness
 
                     # Human Travel
                     travelWeight = NULL,    # weight for human travel
 
                     # R6 Classes
-                    MacroMosquitoPop = NULL,
+                    MosquitoPop = NULL,
                     HumanPop = NULL,
 
                     # Pointers
-                    TilePointer = NULL     # point to the enclosing metapopulation TILE (MACRO)
+
+                    TilePointer = NULL,     # point to the enclosing metapopulation TILE
+
+                    # Output Connections
+                    conMosquito = NULL
 
                   )
 

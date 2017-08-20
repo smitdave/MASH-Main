@@ -13,7 +13,7 @@
 #
 ###############################################################################
 
-#'  MASH-CPP: Debug Finalizers for C++ Objects
+#'  Debug Finalizers for Classes
 #'
 #'  Print when objects are garbage collected. For debugging purposes only.
 #'
