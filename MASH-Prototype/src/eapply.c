@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 // rho is the environment passed to evaluate
-SEXP eapply_noOut(SEXP rho){
+SEXP R_eapply_noOut(SEXP rho){
 
   if(!isEnvironment(rho)){
     error("rho should be an environment");

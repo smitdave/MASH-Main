@@ -2,7 +2,6 @@
 #'
 #' PROTOTYPE CODE.
 #'
-#' @useDynLib MASHprototype R_eapply_noOut
 #'
 #' @name MASHprototype-package
 #' @docType package
