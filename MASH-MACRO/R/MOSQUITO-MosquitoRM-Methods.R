@@ -15,40 +15,6 @@
 
 
 ###############################################################################
-# MosquitoRM: Getters & Setters
-###############################################################################
-
-#' MosquitoRM: Return a Named Parameter
-#'
-#' Return a value from \code{private$parameters} given a character key.
-#'
-#' @param key a character key; return that value from the named parameter list.
-#'
-get_parameter_MosquitoRM <- function(key){
-  return(private$parameters[[key]])
-}
-
-MosquitoRM$set(which = "public",name = "get_parameter",
-  value = get_parameter_MosquitoRM,
-  overwrite = TRUE)
-
-get_migration <- function(){
-  private$PatchPointer$get_TilePointer()$get_migrationRow(ix = private$patchID)
-}
-
-
-###############################################################################
-# MosquitoRM: Data Output
-###############################################################################
-
-write_CSV_MosquitoRM <- function(){
-
-  popOut = paste0(c(private$PatchPointer$get_tNow(),private$patchID,private$M,private$Y,private$Z),collapse = ",")
-  writeLines(text = popOut, con = private$PatchPointer$conMosquito,sep = "\n")
-
-}
-
-###############################################################################
 # MosquitoRM: Ross-Macdonald Difference Equations
 ###############################################################################
 
@@ -63,7 +29,7 @@ run_popDynamics_MosquitoRM <- function(){
   EIP = self$get_EIP(tNow = private$PatchPointer$get_tNow())
 
   # number of newly infected mosquitoes
-  private$Y0 = private$par$f * private$par$Q private$PatchPointer$kappa * (private$M - private$Y)
+  private$Y0 = private$par$f * private$par$Q * private$PatchPointer$get_kappa() * (private$M - private$Y)
 
   # daily dynamics
   private$M = (private$par$p * private$M) + private$PatchPointer$addCohort()

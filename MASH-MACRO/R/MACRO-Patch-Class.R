@@ -22,15 +22,40 @@
 #' @format An \code{\link{R6Class}} generator object
 #' @keywords R6 class
 #'
-#' @section Constructor:
-#'  * item 1:
+#' @section **Constructor**:
+#'  * patchID: integer ID of this patch
+#'  * patchID: integer ID of this patch
+#'  * patchID: integer ID of this patch
+#'  * patchID: integer ID of this patch
+#'  * mosquitoModule: character string giving the MACRO mosquito module to use; "MosquitoRM" initializes \code{\link{MosquitoRM}}
+#'  * mosquitoPars: named list giving parameters passed to the mosquito class constructor; "MosquitoRM" uses \code{\link{MosquitoRM.Parameters}}
+#'  * humanPars: named list giving parameters passed to the \code{\link{HumanPop}} class constructor
+#'  * bWeightZoo = 0: biting weight on livestock
+#'  * tStart = 1: time to start all simulations
 #'
-#' @section Methods:
+#'  * directory: character string giving directory to write output
+#'
+#'
+#'
+#'
+#' @section **Methods**:
 #'  * **get_Human**: retrieve human whose field 'myID' matches argument 'humanID' in keylist of pop field.
 #'  * item 1:
 #'  * item 1:
 #'  * item 1:
 #'  * item 1:
+#'
+#' @section **Fields**:
+#'  * patchID: integer ID of this patch
+#'  * tStart: time to start simulation
+#'  * tNow: current time of simulation
+#'
+#'  * directory: character string giving directory to write output
+#'
+#'
+#'
+#'
+#'
 #'
 #' @md
 #' @export
@@ -44,117 +69,42 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                  public = list(
 
                    #################################################
-                   # Initialize
+                   # Constructor
                    #################################################
 
-                   initialize = function(MacroPatch_PAR){
+                   initialize = function(patchID, mosquitoModule = "MosquitoRM", mosquitoPars, humanPars,  bWeightZoo = 0, tStart = 1, directory){
 
-                     with(MacroPatch_PAR,{ # enter MacroPatch_PAR environment
+                     # Patch Fields
+                     private$patchID = patchID
+                     private$tStart = tStart
+                     private$tNow = tStart
 
-                       # initialize shared parameters
-                       private$N = N
-                       private$hhID = hhID
-                       private$humanIDs = humanIDs
-                       private$bWeightHuman = bWeightHuman
-                       private$bWeightZoo = bWeightZoo
-                       private$bWeightZootox = bWeightZootox
-                       private$Q = Q
-                       private$kappa = kappa
-                       private$aquaID = aquaID
-                       private$aquaP = aquaP
-                       private$aquaNewM = aquaNewM
-                       private$weightAqua = weightAqua
-                       private$weightOvitrap = weightOvitrap
-                       private$weightSugar = weightSugar
-                       private$weightBait = weightBait
-                       private$weightMate = weightMate
+                     # MACRO Mosquito
+                     switch(mosquitoModule,
+                       MosquitoRM = {private$MosquitoPop = MosquitoRM$new(patchID = patchID, M = mosquitoPars$M, Y = 0, Z = 0, par = mosquitoPars$par)},
+                       {stop("unrecognized entry for 'mosquitoModule'")}
+                      )
 
-                       # initialize AQUATIC ECOLOGY
-                      #  do elsewhere.
-                      #  if(aquaModule == "emerge"){
-                       #
-                      #    private$lambda = lambda
-                       #
-                      #  } else if(aquaModule == "EL4P"){
-                      #    stop("sean hasn't written the routines for MACRO EL4P Aquatic Ecology")
-                      #  } else {
-                      #    stop("aquaModule must be a value in 'emerge' or 'EL4P'")
-                      #  }
+                     # HUMAN HumanPop
+                     private$HumanPop = HumanPop$new(N = humanPars$N, patchID = patchID, houseIDs = NULL, bDays = humanPars$bDays, bWeights = humanPars$bWeights, tStart = tStart - 1)
+
+                     # Output
+                     if(!dir.exists(directory)){
+                       dir.create(directory)
+                     } else {
+
+                       dirFiles = system(command = paste0("ls ",directory),intern = TRUE)
+                       rmFiles = grep(pattern = paste0("Patch",patchID),x = dirFiles)
+                       for(i in rmFiles){
+                         print(paste0("removing file: ",directory,dirFiles[i]))
+                         file.remove(paste0(directory,dirFiles[i]))
+                       }
+
+                     }
+
+                     private$directory = directory
 
 
-                      }) # exit MacroPatch_PAR environment
-
-                   },
-
-                   #################################################
-                   # Getters and Setters
-                   #################################################
-
-                   # Biting weights
-                   get_bWeightHuman = function(){
-                      return(private$bWeightHuman)
-                   },
-                   set_bWeightHuman = function(bWeightHuman){
-                      private$bWeightHuman = bWeightHuman
-                   },
-                   accumulate_bWeightHuman = function(bWeightHuman){
-                     private$bWeightHuman = private$bWeightHuman + bWeightHuman
-                   },
-
-                   get_bWeightZoo = function(){
-                      return(private$bWeightZoo)
-                   },
-                   set_bWeightZoo = function(bWeightZoo){
-                      private$bWeightZoo = bWeightZoo
-                   },
-
-                   get_kappa = function(){
-                     return(private$kappa)
-                   },
-                   set_kappa = function(kappa){
-                     private$kappa = kappa
-                   },
-                   accumulate_kappa = function(kappa){
-                     private$kappa = private$kappa + kappa
-                   },
-
-                   get_travelWeight = function(){
-                     return(private$travelWeight)
-                   },
-                   set_travelWeight = function(travelWeight){
-                     private$travelWeight = travelWeight
-                   },
-
-                   #################################################
-                   # R6 Classes
-                   #################################################
-
-                   # MosquitoPop
-                   get_MosquitoPop = function(){
-                     return(private$MosquitoPop)
-                   },
-                   set_MosquitoPop = function(MosquitoPop){
-                     private$MosquitoPop = MosquitoPop
-                   },
-
-                   # HumanPop
-                   get_HumanPop = function(){
-                     return(private$HumanPop)
-                   },
-                   set_HumanPop = function(HumanPop){
-                     private$HumanPop = HumanPop
-                   },
-
-                   #################################################
-                   # Pointers
-                   #################################################
-
-                   # MacroTile
-                   get_TilePointer = function(){
-                     return(private$TilePointer)
-                   },
-                   set_TilePointer = function(TilePointer){
-                     private$TilePointer = TilePointer
                    }
 
                   ),
@@ -162,9 +112,8 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                   # private methods & fields
                   private = list(
 
-                    # Fields
-
                     # Simulation-level parameters
+                    tStart = NULL,
                     tNow = NULL,
 
                     # Mosquito Feeding
@@ -172,20 +121,167 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                     bWeightZoo     = NULL,  # biting weight of livestock
                     kappa          = NULL,       # relative infectiousness
 
-                    # Human Travel
-                    travelWeight = NULL,    # weight for human travel
-
                     # R6 Classes
                     MosquitoPop = NULL,
                     HumanPop = NULL,
 
-                    # Pointers
-
-                    TilePointer = NULL,     # point to the enclosing metapopulation TILE
-
                     # Output Connections
-                    conMosquito = NULL
+                    directory = NULL,
+                    conMosquito = NULL,
+
+                    # Pointers
+                    TilePointer = NULL     # point to the enclosing metapopulation TILE
 
                   )
 
-)
+) #end class definition
+
+
+###############################################################################
+# MacroPatch: Generic & Shared Methods
+###############################################################################
+
+###############################################################################
+# MacroPatch: Getters & Setters
+###############################################################################
+
+#' MacroPatch: Get Patch's Human Biting Weight
+#'
+#' Return \code{private$bWeightHuman}
+#'
+#'
+get_bWeightHuman_MacroPatch <- function(){
+   return(private$bWeightHuman)
+}
+
+MacroPatch$set(which = "public",name = "get_bWeightHuman",
+  value = get_bWeightHuman_MacroPatch,
+  overwrite = TRUE)
+
+#' MacroPatch: Set Patch's Human Biting Weight
+#'
+#' Set \code{private$bWeightHuman}
+#'
+#' @param bWeightHuman new human biting weight
+#'
+set_bWeightHuman_MacroPatch <- function(bWeightHuman){
+   private$bWeightHuman = bWeightHuman
+}
+
+MacroPatch$set(which = "public",name = "set_bWeightHuman",
+  value = set_bWeightHuman_MacroPatch,
+  overwrite = TRUE)
+
+#' MacroPatch: Accumulate Patch's Human Biting Weight
+#'
+#' Accumulate \code{private$bWeightHuman} (equivalent to private$bWeightHuman += bWeightHuman)
+#'
+#' @param bWeightHuman increment to accumulate
+#'
+accumulate_bWeightHuman_MacroPatch <- function(bWeightHuman){
+  private$bWeightHuman = private$bWeightHuman + bWeightHuman
+}
+
+MacroPatch$set(which = "public",name = "accumulate_bWeightHuman",
+  value = accumulate_bWeightHuman_MacroPatch,
+  overwrite = TRUE)
+
+get_bWeightZoo_MacroPatch <- function(){
+   return(private$bWeightZoo)
+}
+
+MacroPatch$set(which = "public",name = "get_bWeightZoo",
+  value = get_bWeightZoo_MacroPatch,
+  overwrite = TRUE)
+
+set_bWeightZoo_MacroPatch <- function(bWeightZoo){
+   private$bWeightZoo = bWeightZoo
+}
+
+MacroPatch$set(which = "public",name = "set_bWeightZoo",
+  value = set_bWeightZoo_MacroPatch,
+  overwrite = TRUE)
+
+get_kappa_MacroPatch <- function(){
+  return(private$kappa)
+}
+
+MacroPatch$set(which = "public",name = "get_kappa",
+  value = get_kappa_MacroPatch,
+  overwrite = TRUE)
+
+set_kappa_MacroPatch <- function(kappa){
+  private$kappa = kappa
+}
+
+MacroPatch$set(which = "public",name = "set_kappa",
+  value = set_kappa_MacroPatch,
+  overwrite = TRUE)
+
+accumulate_kappa_MacroPatch <- function(kappa){
+  private$kappa = private$kappa + kappa
+}
+
+MacroPatch$set(which = "public",name = "accumulate_kappa",
+  value = accumulate_kappa_MacroPatch,
+  overwrite = TRUE)
+
+# MosquitoPop
+get_MosquitoPop_MacroPatch <- function(){
+  return(private$MosquitoPop)
+}
+
+MacroPatch$set(which = "public",name = "get_MosquitoPop",
+  value = get_MosquitoPop_MacroPatch,
+  overwrite = TRUE)
+
+set_MosquitoPop_MacroPatch <- function(MosquitoPop){
+  private$MosquitoPop = MosquitoPop
+}
+
+MacroPatch$set(which = "public",name = "set_MosquitoPop",
+  value = set_MosquitoPop_MacroPatch,
+  overwrite = TRUE)
+
+# HumanPop
+get_HumanPop_MacroPatch <- function(){
+  return(private$HumanPop)
+}
+
+MacroPatch$set(which = "public",name = "get_HumanPop",
+  value = get_HumanPop_MacroPatch,
+  overwrite = TRUE)
+
+set_HumanPop_MacroPatch <- function(HumanPop){
+  private$HumanPop = HumanPop
+}
+
+MacroPatch$set(which = "public",name = "set_HumanPop",
+  value = set_HumanPop_MacroPatch,
+  overwrite = TRUE)
+
+#' MacroPatch: Get Patch's Pointer to Enclosing \code{\link{MacroTile}}
+#'
+#' Return \code{private$TilePointer}
+#'
+get_TilePointer_MacroPatch <- function(){
+  return(private$TilePointer)
+}
+
+MacroPatch$set(which = "public",name = "get_TilePointer",
+  value = get_TilePointer_MacroPatch,
+  overwrite = TRUE)
+
+#' MacroPatch: Set Patch's Pointer to Enclosing \code{\link{MacroTile}}
+#'
+#' Set \code{private$TilePointer}
+#'
+#' @param TilePointer new pointer
+#'
+set_TilePointer_MacroPatch <- function(TilePointer){
+  private$TilePointer = TilePointer
+}
+
+MacroPatch$set(which = "public",name = "set_TilePointer",
+  value = set_TilePointer_MacroPatch,
+  overwrite = TRUE)

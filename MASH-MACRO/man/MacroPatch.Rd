@@ -13,14 +13,23 @@ Generate a single well-mixed MacroPatch, which can run classical models in stand
 other patches in a \code{\link{MacroTile}}
 Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
 }
-\section{Constructor}{
+\section{\strong{Constructor}}{
 
 \itemize{
-\item item 1:
+\item patchID: integer ID of this patch
+\item patchID: integer ID of this patch
+\item patchID: integer ID of this patch
+\item patchID: integer ID of this patch
+\item mosquitoModule: character string giving the MACRO mosquito module to use; "MosquitoRM" initializes \code{\link{MosquitoRM}}
+\item mosquitoPars: named list giving parameters passed to the mosquito class constructor; "MosquitoRM" uses \code{\link{MosquitoRM.Parameters}}
+\item humanPars: named list giving parameters passed to the \code{\link{HumanPop}} class constructor
+\item bWeightZoo = 0: biting weight on livestock
+\item tStart = 1: time to start all simulations
+\item directory: character string giving directory to write output
 }
 }
 
-\section{Methods}{
+\section{\strong{Methods}}{
 
 \itemize{
 \item \strong{get_Human}: retrieve human whose field 'myID' matches argument 'humanID' in keylist of pop field.
@@ -28,6 +37,16 @@ Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
 \item item 1:
 \item item 1:
 \item item 1:
+}
+}
+
+\section{\strong{Fields}}{
+
+\itemize{
+\item patchID: integer ID of this patch
+\item tStart: time to start simulation
+\item tNow: current time of simulation
+\item directory: character string giving directory to write output
 }
 }
 

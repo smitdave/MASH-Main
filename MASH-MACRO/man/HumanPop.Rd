@@ -3,7 +3,7 @@
 \docType{class}
 \name{HumanPop}
 \alias{HumanPop}
-\title{MASH-MACRO HumanPop Class Definition}
+\title{HumanPop Class Definition}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
 HumanPop
