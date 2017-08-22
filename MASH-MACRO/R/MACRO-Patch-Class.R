@@ -26,7 +26,7 @@
 #'  * patchID: integer ID of this patch
 #'  * patchID: integer ID of this patch
 #'  * patchID: integer ID of this patch
-#'  * patchID: integer ID of this patch
+#'  * aquaModule: character string giving the MACRO Aquatic Ecology module to use; "MosquitoRM" initializes ... WRITE ME
 #'  * mosquitoModule: character string giving the MACRO mosquito module to use; "MosquitoRM" initializes \code{\link{MosquitoRM}}
 #'  * mosquitoPars: named list giving parameters passed to the mosquito class constructor; "MosquitoRM" uses \code{\link{MosquitoRM.Parameters}}
 #'  * humanPars: named list giving parameters passed to the \code{\link{HumanPop}} class constructor
@@ -39,11 +39,20 @@
 #'
 #'
 #' @section **Methods**:
-#'  * **get_Human**: retrieve human whose field 'myID' matches argument 'humanID' in keylist of pop field.
-#'  * item 1:
-#'  * item 1:
-#'  * item 1:
-#'  * item 1:
+#'  * get_bWeightHuman: see \code{\link{get_bWeightHuman_MacroPatch}}
+#'  * set_bWeightHuman: see \code{\link{set_bWeightHuman_MacroPatch}}
+#'  * accumulate_bWeightHuman: see \code{\link{accumulate_bWeightHuman_MacroPatch}}
+#'  * get_bWeightZoo: see \code{\link{get_bWeightZoo_MacroPatch}}
+#'  * set_bWeightZoo: see \code{\link{set_bWeightZoo_MacroPatch}}
+#'  * get_kappa: see \code{\link{get_kappa_MacroPatch}}
+#'  * set_kappa: see \code{\link{set_kappa_MacroPatch}}
+#'  * accumulate_kappa: see \code{\link{accumulate_kappa_MacroPatch}}
+#'  * get_MosquitoPop: see \code{\link{get_MosquitoPop_MacroPatch}}
+#'  * set_MosquitoPop: see \code{\link{set_MosquitoPop_MacroPatch}}
+#'  * get_HumanPop: see \code{\link{get_HumanPop_MacroPatch}}
+#'  * set_MosquitoPop: see \code{\link{set_HumanPop_MacroPatch}}
+#'  * get_TilePointer: see \code{\link{get_TilePointer_MacroPatch}}
+#'  * set_TilePointer: see \code{\link{set_TilePointer_MacroPatch}}
 #'
 #' @section **Fields**:
 #'  * patchID: integer ID of this patch
@@ -72,12 +81,21 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                    # Constructor
                    #################################################
 
-                   initialize = function(patchID, mosquitoModule = "MosquitoRM", mosquitoPars, humanPars,  bWeightZoo = 0, tStart = 1, directory){
+                   initialize = function(patchID, aquaModule = "MosquitoRM", mosquitoModule = "MosquitoRM", mosquitoPars, humanPars,  bWeightZoo = 0, tStart = 1, directory){
 
                      # Patch Fields
                      private$patchID = patchID
                      private$tStart = tStart
                      private$tNow = tStart
+
+                     # Aquatic Ecology
+                     switch(aquaModule,
+                       MosquitoRM = {
+                         private$ImagoQ = MASHcpp::ImagoQ()
+
+                        },
+                       {stop("unrecognized entry for 'aquaModule'")}
+                      )
 
                      # MACRO Mosquito
                      switch(mosquitoModule,

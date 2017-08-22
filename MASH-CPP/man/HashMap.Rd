@@ -3,7 +3,7 @@
 \docType{class}
 \name{HashMap}
 \alias{HashMap}
-\title{MASH-CPP: HashMap Class Definition}
+\title{HashMap Class Definition}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
 HashMap

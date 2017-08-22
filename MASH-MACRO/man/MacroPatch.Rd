@@ -32,11 +32,20 @@ Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
 \section{\strong{Methods}}{
 
 \itemize{
-\item \strong{get_Human}: retrieve human whose field 'myID' matches argument 'humanID' in keylist of pop field.
-\item item 1:
-\item item 1:
-\item item 1:
-\item item 1:
+\item get_bWeightHuman: see \code{\link{get_bWeightHuman_MacroPatch}}
+\item set_bWeightHuman: see \code{\link{set_bWeightHuman_MacroPatch}}
+\item accumulate_bWeightHuman: see \code{\link{accumulate_bWeightHuman_MacroPatch}}
+\item get_bWeightZoo: see \code{\link{get_bWeightZoo_MacroPatch}}
+\item set_bWeightZoo: see \code{\link{set_bWeightZoo_MacroPatch}}
+\item get_kappa: see \code{\link{get_kappa_MacroPatch}}
+\item set_kappa: see \code{\link{set_kappa_MacroPatch}}
+\item accumulate_kappa: see \code{\link{accumulate_kappa_MacroPatch}}
+\item get_MosquitoPop: see \code{\link{get_MosquitoPop_MacroPatch}}
+\item set_MosquitoPop: see \code{\link{set_MosquitoPop_MacroPatch}}
+\item get_HumanPop: see \code{\link{get_HumanPop_MacroPatch}}
+\item set_MosquitoPop: see \code{\link{set_HumanPop_MacroPatch}}
+\item get_TilePointer: see \code{\link{get_TilePointer_MacroPatch}}
+\item set_TilePointer: see \code{\link{set_TilePointer_MacroPatch}}
 }
 }
 

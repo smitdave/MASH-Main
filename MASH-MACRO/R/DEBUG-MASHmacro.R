@@ -31,4 +31,12 @@ DEBUG.MASHMACRO <- function(overwrite = TRUE){
     value = function(){print(paste0("HumanPop in patchID: ",private$patchID," has been garbage collected"))},
     overwrite = overwrite)
 
+  MASHmacro:::MacroPatch$set(which = "public",name = "finalize",
+    value = function(){print(paste0("MacroPatch: ",private$patchID," has been garbage collected"))},
+    overwrite = overwrite)
+
+  MASHmacro:::MosquitoRM$set(which = "public",name = "finalize",
+    value = function(){print(paste0("MosquitoRM in patchID: ",private$patchID," has been garbage collected"))},
+    overwrite = overwrite)
+
 }

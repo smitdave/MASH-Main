@@ -19,6 +19,7 @@
 #include <MASHcpp/AQUA-ImagoQ.hpp>
 #include <MASHcpp/AQUA-EggQ.hpp>
 #include <MASHcpp/AQUA-EL4P.hpp>
+#include <MASHcpp/AQUA-ELPool.hpp>
 
 // MOSQUITO classes
 #include <MASHcpp/MOSQUITO-History.hpp>

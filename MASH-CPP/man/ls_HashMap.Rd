@@ -2,7 +2,7 @@
 % Please edit documentation in R/HashMap-Class.R
 \name{ls_HashMap}
 \alias{ls_HashMap}
-\title{MASH-CPP: HashMap Views all Objects in Hash Table}
+\title{HashMap: Views all Objects in Hash Table}
 \usage{
 ls_HashMap()
 }

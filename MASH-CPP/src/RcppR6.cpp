@@ -565,6 +565,71 @@ void EL4P__set_pop(MASHcpp::RcppR6::RcppR6<MASHcpp::EL4P> obj_, Rcpp::List initP
 }
 
 // [[Rcpp::export]]
+MASHcpp::ELPool ELPool__ctor(double alpha_new, double gamma_new, double psi_new, double sigma_new) {
+  return MASHcpp::ELPool(alpha_new, gamma_new, psi_new, sigma_new);
+}
+// [[Rcpp::export]]
+void ELPool__oneStep(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  obj_->oneStep();
+}
+// [[Rcpp::export]]
+double ELPool__get_psi(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  return obj_->get_psi();
+}
+// [[Rcpp::export]]
+void ELPool__set_psi(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double psi_new) {
+  obj_->set_psi(psi_new);
+}
+// [[Rcpp::export]]
+double ELPool__get_alpha(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  return obj_->get_alpha();
+}
+// [[Rcpp::export]]
+void ELPool__set_alpha(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double alpha_new) {
+  obj_->set_alpha(alpha_new);
+}
+// [[Rcpp::export]]
+double ELPool__get_gamma(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  return obj_->get_gamma();
+}
+// [[Rcpp::export]]
+void ELPool__set_gamma(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double gamma_new) {
+  obj_->set_gamma(gamma_new);
+}
+// [[Rcpp::export]]
+double ELPool__get_sigma(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  return obj_->get_sigma();
+}
+// [[Rcpp::export]]
+void ELPool__set_sigma(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double sigma_new) {
+  obj_->set_sigma(sigma_new);
+}
+// [[Rcpp::export]]
+double ELPool__get_L(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  return obj_->get_L();
+}
+// [[Rcpp::export]]
+void ELPool__set_L(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double L_new) {
+  obj_->set_L(L_new);
+}
+// [[Rcpp::export]]
+double ELPool__get_E(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  return obj_->get_E();
+}
+// [[Rcpp::export]]
+void ELPool__set_E(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double E_new) {
+  obj_->set_E(E_new);
+}
+// [[Rcpp::export]]
+Rcpp::List ELPool__get_ELPool(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  return obj_->get_ELPool();
+}
+// [[Rcpp::export]]
+void ELPool__reset(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  obj_->reset();
+}
+
+// [[Rcpp::export]]
 MASHcpp::MosquitoFemaleHistory MosquitoFemaleHistory__ctor() {
   return MASHcpp::MosquitoFemaleHistory();
 }

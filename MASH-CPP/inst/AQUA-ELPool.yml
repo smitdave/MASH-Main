@@ -1,0 +1,121 @@
+###############################################################################
+#
+#       ___   ____  __  _____
+#     /   | / __ \/ / / /   |
+#    / /| |/ / / / / / / /| |
+#   / ___ / /_/ / /_/ / ___ |
+#  /_/  |_\___\_\____/_/  |_|
+#
+#   MASH-CPP
+#   AQUATIC ECOLOGY
+#   ELPool class definition
+#   Sean Wu
+#   August 21, 2017
+#
+###############################################################################
+
+ELPool:
+  name_cpp: MASHcpp::ELPool
+  forward_declare: true
+  constructor:
+    roxygen: |
+      LPool
+      @title ELPool Class Definition
+      @docType class
+      @format An \code{\link{R6Class}} generator object
+      @keywords R6 class
+      @section **Description**:
+      Generate a single ELPool, a simplified model of aquatic ecology which only includes egg and a single larval stage. See \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4357799/} and \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3737150/} for details on model formulation. The daily difference equations are thus formulated as \deqn{L_{t+1}=E_{t}-(\alpha +\gamma +\psi L_{t}^{\sigma})L_{t}} where aquatic stages mature at the constant per-capita rate \eqn{\alpha}. Mortality is given by the per-capita rate \eqn{\alpha +\gamma +\psi L_{t}^{\sigma}}, where \eqn{\gamma} describes all sources of density independent mortality and and the power-law function \eqn{\psi L_{t}^{\sigma}} describes mortality rates as a function of mean density and \eqn{\psi} represents increase in per-capita mortality in response to crowding. For \eqn{\sigma = 1} the relationship gives mean crowding, which is analogous to the classical first-order description of density dependence as described by the logistic growth equation.
+      @section **Constructor**:
+          * alpha_new = 0.1: daily mautration rate of aquatic stages (1/alpha is expected duration of aquatic life stages)
+          * psi_new = 0.01: density dependent mortality; increase in per-capita mortality in response to crowding (unit given as 1/L)
+          * gamma_new = 0.1: daily density independent mortality rate
+          * sigma_new = 1: scaling relationship of density dependence in response to crowding
+      @section **Methods**:
+        * oneStep: run daily difference equation
+        * get_psi:
+        * set_psi:
+        * add_ImagoQ:
+        * track_ImagoQ:
+        * get_N:
+        * set_N:
+        * get_ImagoQ:
+        * get_ImagoQTime:
+      @section **Fields**:
+        * a field:
+      @export
+    args:
+      - alpha_new: double = 0.1
+      - gamma_new: double = 0.1
+      - psi_new: double = 0.01
+      - sigma_new: double = 1
+  methods:
+
+    ###################################
+    #  ELPool difference equations
+    ###################################
+
+    oneStep:
+      return_type: void
+
+    ###################################
+    #  Getters & Setters
+    ###################################
+
+    get_psi:
+      return_type: double
+
+    set_psi:
+      args:
+        - psi_new: double
+      return_type: void
+
+    get_alpha:
+      return_type: double
+
+    set_alpha:
+      args:
+        - alpha_new: double
+      return_type: void
+
+    get_gamma:
+      return_type: double
+
+    set_gamma:
+      args:
+        - gamma_new: double
+      return_type: void
+
+    get_sigma:
+      return_type: double
+
+    set_sigma:
+      args:
+        - sigma_new: double
+      return_type: void
+
+    get_L:
+      return_type: double
+
+    set_L:
+      args:
+        - L_new: double
+      return_type: void
+
+    get_E:
+      return_type: double
+
+    set_E:
+      args:
+        - E_new: double
+      return_type: void
+
+    ###################################
+    #  Other Methods
+    ###################################
+
+    get_ELPool:
+      return_type: "Rcpp::List"
+
+    reset:
+      return_type: void

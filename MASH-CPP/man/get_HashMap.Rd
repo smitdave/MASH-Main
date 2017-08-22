@@ -2,7 +2,7 @@
 % Please edit documentation in R/HashMap-Class.R
 \name{get_HashMap}
 \alias{get_HashMap}
-\title{MASH-CPP: HashMap Get the Value Assigned to a Key}
+\title{HashMap: Get the Value Assigned to a Key}
 \usage{
 get_HashMap(key)
 }

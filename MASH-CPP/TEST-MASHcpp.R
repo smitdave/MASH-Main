@@ -120,3 +120,19 @@ microbenchmark::microbenchmark(
   times = 200
 )
 
+
+###############################################################################
+# Fixing ELPool
+###############################################################################
+
+eggs =0
+larvae = 0
+alpha = 0.1
+gamma = 0.1
+psi = 0.01
+sigma = 1
+oneStepTest <- function(){
+  l0 = larvae
+  larvae <<- eggs - (alpha + gamma + psi*(l0^sigma))*l0
+  print(larvae)
+}

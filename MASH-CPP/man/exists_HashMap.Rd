@@ -2,7 +2,7 @@
 % Please edit documentation in R/HashMap-Class.R
 \name{exists_HashMap}
 \alias{exists_HashMap}
-\title{MASH-CPP: HashMap Check if Value Exists}
+\title{HashMap: Check if Value Exists}
 \usage{
 exists_HashMap(key)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/HashMap-Class.R
 \name{assign_HashMap}
 \alias{assign_HashMap}
-\title{MASH-CPP: HashMap Assign a Key-Value Pair to the Hash Table}
+\title{HashMap: Assign a Key-Value Pair to the Hash Table}
 \usage{
 assign_HashMap(key, value)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/DEBUG-MASHcpp.R
 \name{DEBUG.MASHCPP}
 \alias{DEBUG.MASHCPP}
-\title{MASH-CPP: Debug Finalizers for C++ Objects}
+\title{Debug Finalizers for Classes}
 \usage{
 DEBUG.MASHCPP(overwrite = TRUE)
 }
