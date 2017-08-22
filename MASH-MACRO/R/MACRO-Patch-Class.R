@@ -26,7 +26,7 @@
 #'  * patchID: integer ID of this patch
 #'  * patchID: integer ID of this patch
 #'  * patchID: integer ID of this patch
-#'  * aquaModule: character string giving the MACRO Aquatic Ecology module to use; "MosquitoRM" initializes ... WRITE ME
+#'  * aquaModule: character string giving the MACRO Aquatic Ecology module to use; "MosquitoRM" initializes \code{\link{ELPool}}
 #'  * mosquitoModule: character string giving the MACRO mosquito module to use; "MosquitoRM" initializes \code{\link{MosquitoRM}}
 #'  * mosquitoPars: named list giving parameters passed to the mosquito class constructor; "MosquitoRM" uses \code{\link{MosquitoRM.Parameters}}
 #'  * humanPars: named list giving parameters passed to the \code{\link{HumanPop}} class constructor
@@ -81,7 +81,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                    # Constructor
                    #################################################
 
-                   initialize = function(patchID, aquaModule = "MosquitoRM", mosquitoModule = "MosquitoRM", mosquitoPars, humanPars,  bWeightZoo = 0, tStart = 1, directory){
+                   initialize = function(patchID, aquaModule = "MosquitoRM", mosquitoModule = "MosquitoRM", aquaPars, mosquitoPars, humanPars,  bWeightZoo = 0, tStart = 1, directory){
 
                      # Patch Fields
                      private$patchID = patchID
@@ -91,8 +91,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                      # Aquatic Ecology
                      switch(aquaModule,
                        MosquitoRM = {
-                         private$ImagoQ = MASHcpp::ImagoQ()
-
+                         private$ELPool = MASHcpp::ELPool(aquaPars$alpha,aquaPars$gamma,aquaPars$psi,aquaPars$sigma)
                         },
                        {stop("unrecognized entry for 'aquaModule'")}
                       )

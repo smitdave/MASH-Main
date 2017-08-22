@@ -38,6 +38,10 @@ DEBUG.MASHCPP <- function(overwrite = TRUE){
     value = function(){message(paste0("EL4P being garbage collected"))},
     overwrite = overwrite)
 
+  MASHcpp:::.R6_ELpool$set(which = "public",name = "finalize",
+    value = function(){message(paste0("ELPool being garbage collected"))},
+    overwrite = overwrite)
+
   MASHcpp:::.R6_HistoryGeneric$set(which = "public",name = "finalize",
     value = function(){message(paste0("HistoryGeneric being garbage collected"))},
     overwrite = overwrite)
@@ -71,6 +75,7 @@ DEBUG.MASHCPP <- function(overwrite = TRUE){
     overwrite = overwrite)
 
   # R6 Classes
+
   MASHcpp:::HashMap$set(which = "public",name = "finalize",
     value = function(){message(paste0("HashMap being garbage collected"))},
     overwrite = overwrite)
