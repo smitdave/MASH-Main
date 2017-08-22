@@ -40,3 +40,5 @@ get_ELPool_MacroPatch <- function(){
 set_ELPool_MacroPatch <- function(){
 
 }
+
+####WRITE ELPool STUFF FOR A SINGLE PATCH, AFTER THAT STRESS TEST MODEL ON A SINGLE PATCH###
