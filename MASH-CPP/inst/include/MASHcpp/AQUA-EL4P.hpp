@@ -157,6 +157,7 @@ public:
   // run the EL4P pool through a burnin period
   void burnIn_GEL4P(const double &M, const double &eqAqua, const double &G, const double &lifespan, const int &tMax = 800){
     for(int i=0; i<tMax; i++){
+      if(i % 100 == 0){Rcpp::checkUserInterrupt();}
       this->oneStep_GEL4P(M,eqAqua,G,lifespan);
     }
   };
@@ -170,6 +171,7 @@ public:
 
     // run EL4P pool through tMax
     for(int i=0; i<tMax; i++){
+      if(i % 100 == 0){Rcpp::checkUserInterrupt();}
       // run daily time step with RM egg laying
       this->oneStep_GEL4P(M,eqAqua,G,lifespan);
 
@@ -201,6 +203,7 @@ public:
 
     // run daily simulation with RM adult dynamics
     for(int i=0; i<tMax; i++){
+      if(i % 100 == 0){Rcpp::checkUserInterrupt();}
       this->oneStep_GEL4P(M,eqAqua,G,lifespan);
       lambda = this->get_totalLambda();
       M = ((exp(-1/lifespan))*M) + lambda;

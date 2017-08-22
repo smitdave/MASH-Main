@@ -618,6 +618,18 @@ ELPool__get_ELPool <- function(obj_) {
     .Call('_MASHcpp_ELPool__get_ELPool', PACKAGE = 'MASHcpp', obj_)
 }
 
+ELPool__set_ELPool <- function(obj_, E_new, L_new) {
+    invisible(.Call('_MASHcpp_ELPool__set_ELPool', PACKAGE = 'MASHcpp', obj_, E_new, L_new))
+}
+
+ELPool__get_parameters <- function(obj_) {
+    .Call('_MASHcpp_ELPool__get_parameters', PACKAGE = 'MASHcpp', obj_)
+}
+
+ELPool__set_parameters <- function(obj_, alpha_new, gamma_new, psi_new, sigma_new) {
+    invisible(.Call('_MASHcpp_ELPool__set_parameters', PACKAGE = 'MASHcpp', obj_, alpha_new, gamma_new, psi_new, sigma_new))
+}
+
 ELPool__reset <- function(obj_) {
     invisible(.Call('_MASHcpp_ELPool__reset', PACKAGE = 'MASHcpp', obj_))
 }

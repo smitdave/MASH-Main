@@ -118,6 +118,29 @@ public:
     );
   };
 
+  void set_ELPool(const double &E_new, const double &L_new){
+    E = E_new;
+    L = L_new;
+  };
+
+  Rcpp::List get_parameters(){
+    return(
+      Rcpp::List::create(
+        Rcpp::Named("alpha") = alpha,
+        Rcpp::Named("gamma") = gamma,
+        Rcpp::Named("psi") = psi,
+        Rcpp::Named("sigma") = sigma
+      )
+    );
+  };
+
+  void set_parameters(const double &alpha_new, const double &gamma_new, const double &psi_new, const double &sigma_new){
+    alpha = alpha_new;
+    gamma = gamma_new;
+    psi = psi_new;
+    sigma = sigma_new;
+  };
+
   void reset(){
     E = 0.0;
     L = 0.0;

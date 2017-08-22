@@ -7,7 +7,7 @@
 #  /_/  |_\___\_\____/_/  |_|
 #
 #   MASH-MACRO
-#   AQUATIC ECOLOGY: MosquitoRM Methods
+#   AQUATIC ECOLOGY: ELPool Methods
 #   Hector Sanchez & David Smith, Hector Sanchez, Sean Wu
 #   August 21, 2017
 #

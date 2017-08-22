@@ -19,7 +19,7 @@ Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
 \item patchID: integer ID of this patch
 \item patchID: integer ID of this patch
 \item patchID: integer ID of this patch
-\item patchID: integer ID of this patch
+\item aquaModule: character string giving the MACRO Aquatic Ecology module to use; "MosquitoRM" initializes \code{\link{ELPool}}
 \item mosquitoModule: character string giving the MACRO mosquito module to use; "MosquitoRM" initializes \code{\link{MosquitoRM}}
 \item mosquitoPars: named list giving parameters passed to the mosquito class constructor; "MosquitoRM" uses \code{\link{MosquitoRM.Parameters}}
 \item humanPars: named list giving parameters passed to the \code{\link{HumanPop}} class constructor

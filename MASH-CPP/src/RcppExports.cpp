@@ -1765,6 +1765,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ELPool__set_ELPool
+void ELPool__set_ELPool(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double E_new, double L_new);
+RcppExport SEXP _MASHcpp_ELPool__set_ELPool(SEXP obj_SEXP, SEXP E_newSEXP, SEXP L_newSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> >::type obj_(obj_SEXP);
+    Rcpp::traits::input_parameter< double >::type E_new(E_newSEXP);
+    Rcpp::traits::input_parameter< double >::type L_new(L_newSEXP);
+    ELPool__set_ELPool(obj_, E_new, L_new);
+    return R_NilValue;
+END_RCPP
+}
+// ELPool__get_parameters
+Rcpp::List ELPool__get_parameters(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_);
+RcppExport SEXP _MASHcpp_ELPool__get_parameters(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> >::type obj_(obj_SEXP);
+    rcpp_result_gen = Rcpp::wrap(ELPool__get_parameters(obj_));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ELPool__set_parameters
+void ELPool__set_parameters(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double alpha_new, double gamma_new, double psi_new, double sigma_new);
+RcppExport SEXP _MASHcpp_ELPool__set_parameters(SEXP obj_SEXP, SEXP alpha_newSEXP, SEXP gamma_newSEXP, SEXP psi_newSEXP, SEXP sigma_newSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> >::type obj_(obj_SEXP);
+    Rcpp::traits::input_parameter< double >::type alpha_new(alpha_newSEXP);
+    Rcpp::traits::input_parameter< double >::type gamma_new(gamma_newSEXP);
+    Rcpp::traits::input_parameter< double >::type psi_new(psi_newSEXP);
+    Rcpp::traits::input_parameter< double >::type sigma_new(sigma_newSEXP);
+    ELPool__set_parameters(obj_, alpha_new, gamma_new, psi_new, sigma_new);
+    return R_NilValue;
+END_RCPP
+}
 // ELPool__reset
 void ELPool__reset(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_);
 RcppExport SEXP _MASHcpp_ELPool__reset(SEXP obj_SEXP) {
@@ -1996,6 +2033,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_ELPool__get_E", (DL_FUNC) &_MASHcpp_ELPool__get_E, 1},
     {"_MASHcpp_ELPool__set_E", (DL_FUNC) &_MASHcpp_ELPool__set_E, 2},
     {"_MASHcpp_ELPool__get_ELPool", (DL_FUNC) &_MASHcpp_ELPool__get_ELPool, 1},
+    {"_MASHcpp_ELPool__set_ELPool", (DL_FUNC) &_MASHcpp_ELPool__set_ELPool, 3},
+    {"_MASHcpp_ELPool__get_parameters", (DL_FUNC) &_MASHcpp_ELPool__get_parameters, 1},
+    {"_MASHcpp_ELPool__set_parameters", (DL_FUNC) &_MASHcpp_ELPool__set_parameters, 5},
     {"_MASHcpp_ELPool__reset", (DL_FUNC) &_MASHcpp_ELPool__reset, 1},
     {"_MASHcpp_MosquitoFemaleHistory__ctor", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__ctor, 0},
     {"_MASHcpp_MosquitoFemaleHistory__historyInit", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__historyInit, 2},

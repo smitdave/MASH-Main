@@ -18,10 +18,12 @@ Generate a single ELPool, a simplified model of aquatic ecology which only inclu
 
 \section{\strong{Constructor}}{
 
-* alpha_new = 0.1: daily mautration rate of aquatic stages (1/alpha is expected duration of aquatic life stages)
-* psi_new = 0.01: density dependent mortality; increase in per-capita mortality in response to crowding (unit given as 1/L)
-* gamma_new = 0.1: daily density independent mortality rate
-* sigma_new = 1: scaling relationship of density dependence in response to crowding
+\itemize{
+\item alpha_new = 0.1: daily mautration rate of aquatic stages (1/alpha is expected duration of aquatic life stages)
+\item psi_new = 0.01: density dependent mortality; increase in per-capita mortality in response to crowding (unit given as 1/L)
+\item gamma_new = 0.1: daily density independent mortality rate
+\item sigma_new = 1: scaling relationship of density dependence in response to crowding
+}
 }
 
 \section{\strong{Methods}}{

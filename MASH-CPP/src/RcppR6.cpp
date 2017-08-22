@@ -625,6 +625,18 @@ Rcpp::List ELPool__get_ELPool(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
   return obj_->get_ELPool();
 }
 // [[Rcpp::export]]
+void ELPool__set_ELPool(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double E_new, double L_new) {
+  obj_->set_ELPool(E_new, L_new);
+}
+// [[Rcpp::export]]
+Rcpp::List ELPool__get_parameters(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
+  return obj_->get_parameters();
+}
+// [[Rcpp::export]]
+void ELPool__set_parameters(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_, double alpha_new, double gamma_new, double psi_new, double sigma_new) {
+  obj_->set_parameters(alpha_new, gamma_new, psi_new, sigma_new);
+}
+// [[Rcpp::export]]
 void ELPool__reset(MASHcpp::RcppR6::RcppR6<MASHcpp::ELPool> obj_) {
   obj_->reset();
 }
