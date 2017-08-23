@@ -38,8 +38,8 @@ DEBUG.MASHCPP <- function(overwrite = TRUE){
     value = function(){message(paste0("EL4P being garbage collected"))},
     overwrite = overwrite)
 
-  MASHcpp:::.R6_ELpool$set(which = "public",name = "finalize",
-    value = function(){message(paste0("ELPool being garbage collected"))},
+  MASHcpp:::.R6_ELP$set(which = "public",name = "finalize",
+    value = function(){message(paste0("ELP being garbage collected"))},
     overwrite = overwrite)
 
   MASHcpp:::.R6_HistoryGeneric$set(which = "public",name = "finalize",

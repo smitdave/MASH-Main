@@ -39,12 +39,20 @@ public:
   ///////////////////////////////////
 
   // oneStep: run one step difference equations for ELP pool
-  void oneStep(){
+  void oneDay_aquaticDynamics(){
 
     double L0 = L;
+    P = alpha*L0;
     L = E - (alpha + gamma + psi * pow(L0,sigma))*L0;
     E = 0.0;
 
+  };
+
+  // return number of emerging adults
+  double oneDay_Emergence(){
+    double lambda = P;
+    P = 0.0;
+    return(lambda)
   };
 
   ///////////////////////////////////
@@ -105,6 +113,15 @@ public:
     E = E_new;
   };
 
+  // P
+  double get_P(){
+    return(P);
+  };
+
+  void set_P(const double &P_new){
+    P = P_new;
+  };
+
   ///////////////////////////////////
   // Other Methods
   ///////////////////////////////////
@@ -113,14 +130,16 @@ public:
     return(
       Rcpp::List::create(
         Rcpp::Named("Eggs") = E,
-        Rcpp::Named("Larvae") = L
+        Rcpp::Named("Larvae") = L,
+        Rcpp::Named("Pupae") = P
       )
     );
   };
 
-  void set_ELP(const double &E_new, const double &L_new){
+  void set_ELP(const double &E_new, const double &L_new, const double &P_new){
     E = E_new;
     L = L_new;
+    P = P_new;
   };
 
   Rcpp::List get_parameters(){
@@ -144,6 +163,7 @@ public:
   void reset(){
     E = 0.0;
     L = 0.0;
+    P = 0.0;
   };
 
 // private members
@@ -152,6 +172,7 @@ private:
   // pool state variables
   double E; // number of eggs in the pool
   double L; // number of larvae in the pool
+  double P; // number of pupae in the pool
 
   // pool parameters
   double alpha; // per-day maturation rate of larvae
@@ -166,6 +187,7 @@ inline ELP::ELP(const double &alpha_new, const double &gamma_new, const double &
 
   E = 0.0;
   L = 0.0;
+  P = 0.0;
 
   alpha = alpha_new;
   gamma = gamma_new;

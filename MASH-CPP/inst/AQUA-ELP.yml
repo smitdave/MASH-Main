@@ -32,7 +32,7 @@ ELP:
         * gamma_new = 0.1: daily density independent mortality rate
         * sigma_new = 1: scaling relationship of density dependence in response to crowding
       @section **Methods**:
-        * oneStep: run daily difference equation
+        * oneDay_aquaticDynamics: run daily difference equation for aquatic populations
         * get_psi:
         * set_psi:
         * add_ImagoQ:
@@ -55,8 +55,11 @@ ELP:
     #  ELP difference equations
     ###################################
 
-    oneStep:
+    oneDay_aquaticDynamics:
       return_type: void
+
+    oneDay_Emergence:
+      return_type: double
 
     ###################################
     #  Getters & Setters
@@ -110,6 +113,14 @@ ELP:
         - E_new: double
       return_type: void
 
+    get_P:
+      return_type: double
+
+    set_P:
+      args:
+        - P_new: double
+      return_type: void
+
     ###################################
     #  Other Methods
     ###################################
@@ -121,6 +132,7 @@ ELP:
       args:
         - E_new: double
         - L_new: double
+        - P_new: double
       return_type: void
 
     get_parameters:

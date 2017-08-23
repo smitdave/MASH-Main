@@ -27,7 +27,7 @@
 #'  * MacroPatch: \code{\link{set_ELP_MacroPatch}} bound to \code{MacroPatch$set_ELP}
 #'
 #' @export
-AQUA.ELP.SETUP <- function(overwrite = TRUE){
+AQUA.ELP.MACRO.SETUP <- function(overwrite = TRUE){
 
   MacroPatch$set(which = "public",name = "get_ELP",
     value = get_ELP_MacroPatch,
@@ -36,6 +36,14 @@ AQUA.ELP.SETUP <- function(overwrite = TRUE){
   MacroPatch$set(which = "public",name = "set_ELP",
     value = set_ELP_MacroPatch,
     overwrite = TRUE)
+
+  # MacroPatch$set(which = "public",name = "get_ELP",
+  #   value = get_ELP_MacroPatch,
+  #   overwrite = TRUE)
+  #
+  # MacroPatch$set(which = "public",name = "set_ELP",
+  #   value = set_ELP_MacroPatch,
+  #   overwrite = TRUE)
 
   # HumanPop$set(which = "public",name = "get_history",
   #   value = get_history_HumanPop,

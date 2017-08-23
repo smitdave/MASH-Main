@@ -81,7 +81,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                    # Constructor
                    #################################################
 
-                   initialize = function(patchID, aquaModule = "MosquitoRM", mosquitoModule = "MosquitoRM", aquaPars, mosquitoPars, humanPars,  bWeightZoo = 0, tStart = 1, directory){
+                   initialize = function(patchID, aquaModule = "ELP", mosquitoModule = "MosquitoRM", aquaPars, mosquitoPars, humanPars,  bWeightZoo = 0, tStart = 1, directory){
 
                      # Patch Fields
                      private$patchID = patchID
@@ -90,7 +90,8 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
 
                      # Aquatic Ecology
                      switch(aquaModule,
-                       MosquitoRM = {
+                       ELP = {
+                         private$ImagoQ = MASHcpp::ImagoQ()
                          private$ELP = MASHcpp::ELP(aquaPars$alpha,aquaPars$gamma,aquaPars$psi,aquaPars$sigma)
                         },
                        {stop("unrecognized entry for 'aquaModule'")}
