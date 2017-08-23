@@ -91,8 +91,8 @@ ELPout = deSolve::ode(y = c(L=100,M=100),times = 1:250,func = ELPode,
                       parms = c(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10))
 
 maxY = max(max(ELPout[,"L"]),max(ELPout[,"M"]))
-plot(ELPout[,"L"],type="l",col="red",ylim=c(0,maxY),main="ODE solution")
-lines(ELPout[,"M"],col="purple")
+plot(ELPout[,"L"],type="l",col="purple",ylim=c(0,maxY),main="ODE solution")
+lines(ELPout[,"M"],col="red")
 grid()
 
 # test diff eqn
@@ -108,13 +108,17 @@ psi=0.01
 L = 100
 M = 100
 
-tMax=250
+tMax=10
 
 Mhist = numeric(tMax+1)
 Lhist = numeric(tMax+1)
 Mhist[1] = M
 Lhist[1] = L
-for(i in 1:tMax){
+for(i in seq(from=1,to=tMax,by=1)){
+  print(paste0("at i eggs laid: ",(f*v*M)))
+  print(paste0("at i larvae dying: ",((alpha + gamma + psi*L)*L)))
+  print(paste0("at i adults emerging: ",(alpha*L)))
+  print(paste0("at i adults dying: ",(g*M)))
   dL = f*v*M - (alpha + gamma + psi*L)*L
   dM = alpha*L - g*M
   L <<- L + dL
@@ -124,3 +128,5 @@ for(i in 1:tMax){
 }
 maxY = max(max(Mhist),max(Lhist))
 plot(Mhist,col="red",type="l",ylim=c(0,maxY))
+lines(Lhist,col="purple")
+grid()
