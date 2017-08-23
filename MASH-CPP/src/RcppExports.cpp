@@ -1612,14 +1612,25 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// ELP__oneStep
-void ELP__oneStep(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_);
-RcppExport SEXP _MASHcpp_ELP__oneStep(SEXP obj_SEXP) {
+// ELP__oneDay_aquaticDynamics
+void ELP__oneDay_aquaticDynamics(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_);
+RcppExport SEXP _MASHcpp_ELP__oneDay_aquaticDynamics(SEXP obj_SEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> >::type obj_(obj_SEXP);
-    ELP__oneStep(obj_);
+    ELP__oneDay_aquaticDynamics(obj_);
     return R_NilValue;
+END_RCPP
+}
+// ELP__oneDay_Emergence
+double ELP__oneDay_Emergence(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_);
+RcppExport SEXP _MASHcpp_ELP__oneDay_Emergence(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> >::type obj_(obj_SEXP);
+    rcpp_result_gen = Rcpp::wrap(ELP__oneDay_Emergence(obj_));
+    return rcpp_result_gen;
 END_RCPP
 }
 // ELP__get_psi
@@ -1754,6 +1765,28 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// ELP__get_P
+double ELP__get_P(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_);
+RcppExport SEXP _MASHcpp_ELP__get_P(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> >::type obj_(obj_SEXP);
+    rcpp_result_gen = Rcpp::wrap(ELP__get_P(obj_));
+    return rcpp_result_gen;
+END_RCPP
+}
+// ELP__set_P
+void ELP__set_P(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double P_new);
+RcppExport SEXP _MASHcpp_ELP__set_P(SEXP obj_SEXP, SEXP P_newSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> >::type obj_(obj_SEXP);
+    Rcpp::traits::input_parameter< double >::type P_new(P_newSEXP);
+    ELP__set_P(obj_, P_new);
+    return R_NilValue;
+END_RCPP
+}
 // ELP__get_ELP
 Rcpp::List ELP__get_ELP(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_);
 RcppExport SEXP _MASHcpp_ELP__get_ELP(SEXP obj_SEXP) {
@@ -1766,14 +1799,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // ELP__set_ELP
-void ELP__set_ELP(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double E_new, double L_new);
-RcppExport SEXP _MASHcpp_ELP__set_ELP(SEXP obj_SEXP, SEXP E_newSEXP, SEXP L_newSEXP) {
+void ELP__set_ELP(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double E_new, double L_new, double P_new);
+RcppExport SEXP _MASHcpp_ELP__set_ELP(SEXP obj_SEXP, SEXP E_newSEXP, SEXP L_newSEXP, SEXP P_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> >::type obj_(obj_SEXP);
     Rcpp::traits::input_parameter< double >::type E_new(E_newSEXP);
     Rcpp::traits::input_parameter< double >::type L_new(L_newSEXP);
-    ELP__set_ELP(obj_, E_new, L_new);
+    Rcpp::traits::input_parameter< double >::type P_new(P_newSEXP);
+    ELP__set_ELP(obj_, E_new, L_new, P_new);
     return R_NilValue;
 END_RCPP
 }
@@ -2019,7 +2053,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_EL4P__reset", (DL_FUNC) &_MASHcpp_EL4P__reset, 1},
     {"_MASHcpp_EL4P__set_pop", (DL_FUNC) &_MASHcpp_EL4P__set_pop, 2},
     {"_MASHcpp_ELP__ctor", (DL_FUNC) &_MASHcpp_ELP__ctor, 4},
-    {"_MASHcpp_ELP__oneStep", (DL_FUNC) &_MASHcpp_ELP__oneStep, 1},
+    {"_MASHcpp_ELP__oneDay_aquaticDynamics", (DL_FUNC) &_MASHcpp_ELP__oneDay_aquaticDynamics, 1},
+    {"_MASHcpp_ELP__oneDay_Emergence", (DL_FUNC) &_MASHcpp_ELP__oneDay_Emergence, 1},
     {"_MASHcpp_ELP__get_psi", (DL_FUNC) &_MASHcpp_ELP__get_psi, 1},
     {"_MASHcpp_ELP__set_psi", (DL_FUNC) &_MASHcpp_ELP__set_psi, 2},
     {"_MASHcpp_ELP__get_alpha", (DL_FUNC) &_MASHcpp_ELP__get_alpha, 1},
@@ -2032,8 +2067,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_ELP__set_L", (DL_FUNC) &_MASHcpp_ELP__set_L, 2},
     {"_MASHcpp_ELP__get_E", (DL_FUNC) &_MASHcpp_ELP__get_E, 1},
     {"_MASHcpp_ELP__set_E", (DL_FUNC) &_MASHcpp_ELP__set_E, 2},
+    {"_MASHcpp_ELP__get_P", (DL_FUNC) &_MASHcpp_ELP__get_P, 1},
+    {"_MASHcpp_ELP__set_P", (DL_FUNC) &_MASHcpp_ELP__set_P, 2},
     {"_MASHcpp_ELP__get_ELP", (DL_FUNC) &_MASHcpp_ELP__get_ELP, 1},
-    {"_MASHcpp_ELP__set_ELP", (DL_FUNC) &_MASHcpp_ELP__set_ELP, 3},
+    {"_MASHcpp_ELP__set_ELP", (DL_FUNC) &_MASHcpp_ELP__set_ELP, 4},
     {"_MASHcpp_ELP__get_parameters", (DL_FUNC) &_MASHcpp_ELP__get_parameters, 1},
     {"_MASHcpp_ELP__set_parameters", (DL_FUNC) &_MASHcpp_ELP__set_parameters, 5},
     {"_MASHcpp_ELP__reset", (DL_FUNC) &_MASHcpp_ELP__reset, 1},

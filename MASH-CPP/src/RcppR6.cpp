@@ -569,8 +569,12 @@ MASHcpp::ELP ELP__ctor(double alpha_new, double gamma_new, double psi_new, doubl
   return MASHcpp::ELP(alpha_new, gamma_new, psi_new, sigma_new);
 }
 // [[Rcpp::export]]
-void ELP__oneStep(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
-  obj_->oneStep();
+void ELP__oneDay_aquaticDynamics(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
+  obj_->oneDay_aquaticDynamics();
+}
+// [[Rcpp::export]]
+double ELP__oneDay_Emergence(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
+  return obj_->oneDay_Emergence();
 }
 // [[Rcpp::export]]
 double ELP__get_psi(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
@@ -621,12 +625,20 @@ void ELP__set_E(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double E_new) {
   obj_->set_E(E_new);
 }
 // [[Rcpp::export]]
+double ELP__get_P(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
+  return obj_->get_P();
+}
+// [[Rcpp::export]]
+void ELP__set_P(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double P_new) {
+  obj_->set_P(P_new);
+}
+// [[Rcpp::export]]
 Rcpp::List ELP__get_ELP(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
   return obj_->get_ELP();
 }
 // [[Rcpp::export]]
-void ELP__set_ELP(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double E_new, double L_new) {
-  obj_->set_ELP(E_new, L_new);
+void ELP__set_ELP(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double E_new, double L_new, double P_new) {
+  obj_->set_ELP(E_new, L_new, P_new);
 }
 // [[Rcpp::export]]
 Rcpp::List ELP__get_parameters(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {

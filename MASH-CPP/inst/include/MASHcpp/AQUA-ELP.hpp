@@ -52,7 +52,7 @@ public:
   double oneDay_Emergence(){
     double lambda = P;
     P = 0.0;
-    return(lambda)
+    return(lambda);
   };
 
   ///////////////////////////////////

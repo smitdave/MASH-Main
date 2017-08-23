@@ -83,11 +83,11 @@ ELPode <- function(t,x,parms){
  with(as.list(c(parms,x)),{
   dL = f*v*M - (alpha + gamma + psi*L)*L
   dM = alpha*L - g*M
-  return(list(c(dL,dM)))
+  return(list(c(dL,dM),eggIn=(f*v*M),larMort=(alpha+gamma+psi*L)*L,larPup=(alpha*L),adultMort=(g*M)))
  })
 }
 
-ELPout = deSolve::ode(y = c(L=100,M=100),times = 1:250,func = ELPode,
+ELPout = deSolve::ode(y = c(L=20,M=20),times = 1:250,func = ELPode,
                       parms = c(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10))
 
 maxY = max(max(ELPout[,"L"]),max(ELPout[,"M"]))
@@ -98,35 +98,65 @@ grid()
 # test diff eqn
 rm(list=ls());gc()
 
+tGrain = 12
+
 v = 20
-f = 0.3
-g = 1/10
-alpha=0.1
-gamma=0.1
-psi=0.01
+f = (0.3)/tGrain
+g = (1/10)/tGrain
+alpha=(0.1)/tGrain
+gamma=(0.1)/tGrain
 
-L = 100
-M = 100
+psiFit = MASHmacro::K2psi_ELP(f = f,v = v,alpha = alpha,g = g,gamma = gamma,K = sqrt(16))
 
-tMax=10
+# psi=.Machine$double.eps
+# psi = 0.001
+psi = psiFit
+
+Lstart = 20
+Mstart = 20
+tMax=(10*tGrain)
 
 Mhist = numeric(tMax+1)
 Lhist = numeric(tMax+1)
-Mhist[1] = M
-Lhist[1] = L
-for(i in seq(from=1,to=tMax,by=1)){
-  print(paste0("at i eggs laid: ",(f*v*M)))
-  print(paste0("at i larvae dying: ",((alpha + gamma + psi*L)*L)))
-  print(paste0("at i adults emerging: ",(alpha*L)))
-  print(paste0("at i adults dying: ",(g*M)))
+Mhist[1] = Mstart
+Lhist[1] = Lstart
+for(i in seq(from=2,to=tMax+1,by=1/tGrain)){
+  M = Mhist[i-1]
+  L = Lhist[i-1]
+  # print(paste0("at i: ",i," eggs laid: ",(f*v*M)))
+  # print(paste0("at i larvae dying: ",((alpha + gamma + psi*L)*L)))
+  # print(paste0("at i adults emerging: ",(alpha*L)))
+  # print(paste0("at i adults dying: ",(g*M)))
   dL = f*v*M - (alpha + gamma + psi*L)*L
   dM = alpha*L - g*M
-  L <<- L + dL
-  M <<- M + dM
-  Mhist[i+1] = M
-  Lhist[i+1] = L
+  # L <<- L + dL
+  # M <<- M + dM
+  Mhist[i+1] = M +dM
+  Lhist[i+1] = L +dL
 }
+
+par(mfrow=c(1,2))
 maxY = max(max(Mhist),max(Lhist))
-plot(Mhist,col="red",type="l",ylim=c(0,maxY))
+minY = min(min(Mhist),min(Lhist))
+plot(Mhist,col="red",type="l",ylim=c(minY,maxY),main="larvae is purple, adults are red",xlab=paste0("tGrain: ",tGrain))
 lines(Lhist,col="purple")
 grid()
+
+
+ELPode <- function(t,x,parms){
+  with(as.list(c(parms,x)),{
+    dL = f*v*M - (alpha + gamma + psi*L)*L
+    dM = alpha*L - g*M
+    return(list(c(dL,dM),eggIn=(f*v*M),larMort=(alpha+gamma+psi*L)*L,larPup=(alpha*L),adultMort=(g*M)))
+  })
+}
+
+
+ELPout = deSolve::ode(y = c(L=Lstart,M=Mstart),times = seq(from=1,to=tMax+1,by=1/tGrain),func = ELPode,
+                      parms = c(f=f,v=v,alpha=alpha,gamma=gamma,psi=psi,g=g))
+
+maxY = max(max(ELPout[,"L"]),max(ELPout[,"M"]))
+plot(ELPout[,"L"],type="l",col="purple",ylim=c(0,maxY),main="ODE solution")
+lines(ELPout[,"M"],col="red")
+grid()
+par(mfrow=c(1,1))

@@ -562,8 +562,12 @@ ELP__ctor <- function(alpha_new, gamma_new, psi_new, sigma_new) {
     .Call('_MASHcpp_ELP__ctor', PACKAGE = 'MASHcpp', alpha_new, gamma_new, psi_new, sigma_new)
 }
 
-ELP__oneStep <- function(obj_) {
-    invisible(.Call('_MASHcpp_ELP__oneStep', PACKAGE = 'MASHcpp', obj_))
+ELP__oneDay_aquaticDynamics <- function(obj_) {
+    invisible(.Call('_MASHcpp_ELP__oneDay_aquaticDynamics', PACKAGE = 'MASHcpp', obj_))
+}
+
+ELP__oneDay_Emergence <- function(obj_) {
+    .Call('_MASHcpp_ELP__oneDay_Emergence', PACKAGE = 'MASHcpp', obj_)
 }
 
 ELP__get_psi <- function(obj_) {
@@ -614,12 +618,20 @@ ELP__set_E <- function(obj_, E_new) {
     invisible(.Call('_MASHcpp_ELP__set_E', PACKAGE = 'MASHcpp', obj_, E_new))
 }
 
+ELP__get_P <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_P', PACKAGE = 'MASHcpp', obj_)
+}
+
+ELP__set_P <- function(obj_, P_new) {
+    invisible(.Call('_MASHcpp_ELP__set_P', PACKAGE = 'MASHcpp', obj_, P_new))
+}
+
 ELP__get_ELP <- function(obj_) {
     .Call('_MASHcpp_ELP__get_ELP', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELP__set_ELP <- function(obj_, E_new, L_new) {
-    invisible(.Call('_MASHcpp_ELP__set_ELP', PACKAGE = 'MASHcpp', obj_, E_new, L_new))
+ELP__set_ELP <- function(obj_, E_new, L_new, P_new) {
+    invisible(.Call('_MASHcpp_ELP__set_ELP', PACKAGE = 'MASHcpp', obj_, E_new, L_new, P_new))
 }
 
 ELP__get_parameters <- function(obj_) {

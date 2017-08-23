@@ -19,7 +19,7 @@ ELP:
   forward_declare: true
   constructor:
     roxygen: |
-      LPool
+      ELP
       @title ELP Class Definition
       @docType class
       @format An \code{\link{R6Class}} generator object

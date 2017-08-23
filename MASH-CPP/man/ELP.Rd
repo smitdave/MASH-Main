@@ -9,7 +9,7 @@
 ELP(alpha_new = 0.1, gamma_new = 0.1, psi_new = 0.01, sigma_new = 1)
 }
 \description{
-LPool
+ELP
 }
 \section{\strong{Description}}{
 
@@ -29,7 +29,7 @@ Generate a single ELP, a simplified model of aquatic ecology which only includes
 \section{\strong{Methods}}{
 
 \itemize{
-\item oneStep: run daily difference equation
+\item oneDay_aquaticDynamics: run daily difference equation for aquatic populations
 \item get_psi:
 \item set_psi:
 \item add_ImagoQ:
