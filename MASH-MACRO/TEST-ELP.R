@@ -95,6 +95,13 @@ plot(ELPout[,"L"],type="l",col="purple",ylim=c(0,maxY),main="ODE solution")
 lines(ELPout[,"M"],col="red")
 grid()
 
+
+###############################################################################
+#
+# COMPARE DIFFERENCE EQNS TO DIFFERENTIAL EQNS
+#
+###############################################################################
+
 # test diff eqn
 rm(list=ls());gc()
 
