@@ -7,7 +7,7 @@
 #  /_/  |_\___\_\____/_/  |_|
 #
 #   MASH-MACRO
-#   AQUATIC ECOLOGY: ELPool Methods
+#   AQUATIC ECOLOGY: ELP Methods
 #   Hector Sanchez & David Smith, Hector Sanchez, Sean Wu
 #   August 21, 2017
 #
@@ -18,12 +18,12 @@
 ###############################################################################
 
 # this is a stand-in for a generic
-addCohort_ELPool_MacroPatch <- function(){
+addCohort_ELP_MacroPatch <- function(){
 
 }
 
 # this is a stand-in for a generic
-aquaticDynamics_ELPool_MacroPatch <- function(){
+aquaticDynamics_ELP_MacroPatch <- function(){
 
 }
 
@@ -33,12 +33,12 @@ aquaticDynamics_ELPool_MacroPatch <- function(){
 #   Getters & Setters
 ###############################################################################
 
-get_ELPool_MacroPatch <- function(){
+get_ELP_MacroPatch <- function(){
 
 }
 
-set_ELPool_MacroPatch <- function(){
+set_ELP_MacroPatch <- function(){
 
 }
 
-####WRITE ELPool STUFF FOR A SINGLE PATCH, AFTER THAT STRESS TEST MODEL ON A SINGLE PATCH###
+####WRITE ELP STUFF FOR A SINGLE PATCH, AFTER THAT STRESS TEST MODEL ON A SINGLE PATCH###

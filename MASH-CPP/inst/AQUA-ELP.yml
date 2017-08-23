@@ -8,24 +8,24 @@
 #
 #   MASH-CPP
 #   AQUATIC ECOLOGY
-#   ELPool class definition
+#   ELP class definition
 #   Sean Wu
 #   August 21, 2017
 #
 ###############################################################################
 
-ELPool:
-  name_cpp: MASHcpp::ELPool
+ELP:
+  name_cpp: MASHcpp::ELP
   forward_declare: true
   constructor:
     roxygen: |
       LPool
-      @title ELPool Class Definition
+      @title ELP Class Definition
       @docType class
       @format An \code{\link{R6Class}} generator object
       @keywords R6 class
       @section **Description**:
-      Generate a single ELPool, a simplified model of aquatic ecology which only includes egg and a single larval stage. See \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4357799/} and \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3737150/} for details on model formulation. The daily difference equations are thus formulated as \deqn{L_{t+1}=E_{t}-(\alpha +\gamma +\psi L_{t}^{\sigma})L_{t}} where aquatic stages mature at the constant per-capita rate \eqn{\alpha}. Mortality is given by the per-capita rate \eqn{\alpha +\gamma +\psi L_{t}^{\sigma}}, where \eqn{\gamma} describes all sources of density independent mortality and and the power-law function \eqn{\psi L_{t}^{\sigma}} describes mortality rates as a function of mean density and \eqn{\psi} represents increase in per-capita mortality in response to crowding. For \eqn{\sigma = 1} the relationship gives mean crowding, which is analogous to the classical first-order description of density dependence as described by the logistic growth equation.
+      Generate a single ELP, a simplified model of aquatic ecology which only includes egg and a single larval stage. See \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC4357799/} and \url{https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3737150/} for details on model formulation. The daily difference equations are thus formulated as \deqn{L_{t+1}=E_{t}-(\alpha +\gamma +\psi L_{t}^{\sigma})L_{t}} where aquatic stages mature at the constant per-capita rate \eqn{\alpha}. Mortality is given by the per-capita rate \eqn{\alpha +\gamma +\psi L_{t}^{\sigma}}, where \eqn{\gamma} describes all sources of density independent mortality and and the power-law function \eqn{\psi L_{t}^{\sigma}} describes mortality rates as a function of mean density and \eqn{\psi} represents increase in per-capita mortality in response to crowding. For \eqn{\sigma = 1} the relationship gives mean crowding, which is analogous to the classical first-order description of density dependence as described by the logistic growth equation.
       @section **Constructor**:
         * alpha_new = 0.1: daily mautration rate of aquatic stages (1/alpha is expected duration of aquatic life stages)
         * psi_new = 0.01: density dependent mortality; increase in per-capita mortality in response to crowding (unit given as 1/L)
@@ -52,7 +52,7 @@ ELPool:
   methods:
 
     ###################################
-    #  ELPool difference equations
+    #  ELP difference equations
     ###################################
 
     oneStep:
@@ -114,10 +114,10 @@ ELPool:
     #  Other Methods
     ###################################
 
-    get_ELPool:
+    get_ELP:
       return_type: "Rcpp::List"
 
-    set_ELPool:
+    set_ELP:
       args:
         - E_new: double
         - L_new: double

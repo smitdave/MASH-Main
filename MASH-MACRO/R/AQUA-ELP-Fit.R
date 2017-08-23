@@ -7,17 +7,17 @@
 #  /_/  |_\___\_\____/_/  |_|
 #
 #   MASH-MACRO
-#   AQUATIC ECOLOGY: ELPool Fitting
+#   AQUATIC ECOLOGY: ELP Fitting
 #   Hector Sanchez & David Smith, Hector Sanchez, Sean Wu
 #   August 22, 2017
 #
 ###############################################################################
 
-#' Aquatic Ecology: ELPool Calculate Psi from K
+#' Aquatic Ecology: ELP Calculate Psi from K
 #'
 #' Calculate strength of density dependence parameter psi (increase in per-capita mortality in response to crowding) from
 #' adult and pool characteristics. Functional form of equation given by \deqn{K=\sqrt[\sigma]{\frac{\frac{fv \alpha }{g}-(\alpha + \gamma)}{\psi }}}
-#' For more details and references see \code{\link[MASHcpp]{ELPool}}.
+#' For more details and references see \code{\link[MASHcpp]{ELP}}.
 #'
 #'
 #' @param f adult female mosquito blood feeding rate (waiting time between bloodmeals is 1/f)
@@ -29,7 +29,7 @@
 #'
 #' @return numeric
 #' @export
-K2psi_ELPool <- function(f,v,alpha,g,gamma,K){
+K2psi_ELP <- function(f,v,alpha,g,gamma,K){
   return(
     (((f*v*alpha)/g) - (alpha+gamma)) / (K^2)
   )

@@ -2,7 +2,7 @@
 
 export(DEBUG.MASHCPP)
 export(EL4P)
-export(ELPool)
+export(ELP)
 export(EggQ)
 export(HashMap)
 export(HistoryGeneric)

@@ -8,37 +8,37 @@
 //
 //  MASH-CPP
 //  AQUATIC ECOLOGY
-//  ELPool class definition
+//  ELP class definition
 //  Sean Wu
 //  August 21, 2017
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-#ifndef _MASHCPP_ELPOOL_HPP_
-#define _MASHCPP_ELPOOL_HPP_
+#ifndef _MASHCPP_ELP_HPP_
+#define _MASHCPP_ELP_HPP_
 
 #include <Rcpp.h>
 
 namespace MASHcpp {
 
-// ELPool: ELPool (larval pool) class definition
-class ELPool {
+// ELP: ELP (larval pool) class definition
+class ELP {
 // public members
 public:
 
   ///////////////////////////////////
-  // ELPool Constructor
+  // ELP Constructor
   ///////////////////////////////////
 
   // constructor defined below
-  ELPool(const double &alpha_new = 0.1, const double &gamma_new = 0.1, const double &psi_new = 0.01, const double &sigma_new = 1);
+  ELP(const double &alpha_new = 0.1, const double &gamma_new = 0.1, const double &psi_new = 0.01, const double &sigma_new = 1);
 
 
   ///////////////////////////////////
-  // ELPool difference equations
+  // ELP difference equations
   ///////////////////////////////////
 
-  // oneStep: run one step difference equations for ELPool pool
+  // oneStep: run one step difference equations for ELP pool
   void oneStep(){
 
     double L0 = L;
@@ -109,7 +109,7 @@ public:
   // Other Methods
   ///////////////////////////////////
 
-  Rcpp::List get_ELPool(){
+  Rcpp::List get_ELP(){
     return(
       Rcpp::List::create(
         Rcpp::Named("Eggs") = E,
@@ -118,7 +118,7 @@ public:
     );
   };
 
-  void set_ELPool(const double &E_new, const double &L_new){
+  void set_ELP(const double &E_new, const double &L_new){
     E = E_new;
     L = L_new;
   };
@@ -162,7 +162,7 @@ private:
 };
 
 // inline definition of constructor to accept default argument values
-inline ELPool::ELPool(const double &alpha_new, const double &gamma_new, const double &psi_new, const double &sigma_new){
+inline ELP::ELP(const double &alpha_new, const double &gamma_new, const double &psi_new, const double &sigma_new){
 
   E = 0.0;
   L = 0.0;

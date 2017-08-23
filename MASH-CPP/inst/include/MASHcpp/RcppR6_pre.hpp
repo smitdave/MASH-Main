@@ -22,7 +22,7 @@ namespace MASHcpp { class RiskQ; }
 namespace MASHcpp { class ImagoQ; }
 namespace MASHcpp { class EggQ; }
 namespace MASHcpp { class EL4P; }
-namespace MASHcpp { class ELPool; }
+namespace MASHcpp { class ELP; }
 namespace MASHcpp { class MosquitoFemaleHistory; }
 
 namespace Rcpp {
@@ -53,8 +53,8 @@ template <> SEXP wrap(const MASHcpp::EggQ&);
 template <> MASHcpp::EggQ as(SEXP);
 template <> SEXP wrap(const MASHcpp::EL4P&);
 template <> MASHcpp::EL4P as(SEXP);
-template <> SEXP wrap(const MASHcpp::ELPool&);
-template <> MASHcpp::ELPool as(SEXP);
+template <> SEXP wrap(const MASHcpp::ELP&);
+template <> MASHcpp::ELP as(SEXP);
 template <> SEXP wrap(const MASHcpp::MosquitoFemaleHistory&);
 template <> MASHcpp::MosquitoFemaleHistory as(SEXP);
 }

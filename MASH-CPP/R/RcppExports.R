@@ -558,80 +558,80 @@ EL4P__set_pop <- function(obj_, initPop) {
     invisible(.Call('_MASHcpp_EL4P__set_pop', PACKAGE = 'MASHcpp', obj_, initPop))
 }
 
-ELPool__ctor <- function(alpha_new, gamma_new, psi_new, sigma_new) {
-    .Call('_MASHcpp_ELPool__ctor', PACKAGE = 'MASHcpp', alpha_new, gamma_new, psi_new, sigma_new)
+ELP__ctor <- function(alpha_new, gamma_new, psi_new, sigma_new) {
+    .Call('_MASHcpp_ELP__ctor', PACKAGE = 'MASHcpp', alpha_new, gamma_new, psi_new, sigma_new)
 }
 
-ELPool__oneStep <- function(obj_) {
-    invisible(.Call('_MASHcpp_ELPool__oneStep', PACKAGE = 'MASHcpp', obj_))
+ELP__oneStep <- function(obj_) {
+    invisible(.Call('_MASHcpp_ELP__oneStep', PACKAGE = 'MASHcpp', obj_))
 }
 
-ELPool__get_psi <- function(obj_) {
-    .Call('_MASHcpp_ELPool__get_psi', PACKAGE = 'MASHcpp', obj_)
+ELP__get_psi <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_psi', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELPool__set_psi <- function(obj_, psi_new) {
-    invisible(.Call('_MASHcpp_ELPool__set_psi', PACKAGE = 'MASHcpp', obj_, psi_new))
+ELP__set_psi <- function(obj_, psi_new) {
+    invisible(.Call('_MASHcpp_ELP__set_psi', PACKAGE = 'MASHcpp', obj_, psi_new))
 }
 
-ELPool__get_alpha <- function(obj_) {
-    .Call('_MASHcpp_ELPool__get_alpha', PACKAGE = 'MASHcpp', obj_)
+ELP__get_alpha <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_alpha', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELPool__set_alpha <- function(obj_, alpha_new) {
-    invisible(.Call('_MASHcpp_ELPool__set_alpha', PACKAGE = 'MASHcpp', obj_, alpha_new))
+ELP__set_alpha <- function(obj_, alpha_new) {
+    invisible(.Call('_MASHcpp_ELP__set_alpha', PACKAGE = 'MASHcpp', obj_, alpha_new))
 }
 
-ELPool__get_gamma <- function(obj_) {
-    .Call('_MASHcpp_ELPool__get_gamma', PACKAGE = 'MASHcpp', obj_)
+ELP__get_gamma <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_gamma', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELPool__set_gamma <- function(obj_, gamma_new) {
-    invisible(.Call('_MASHcpp_ELPool__set_gamma', PACKAGE = 'MASHcpp', obj_, gamma_new))
+ELP__set_gamma <- function(obj_, gamma_new) {
+    invisible(.Call('_MASHcpp_ELP__set_gamma', PACKAGE = 'MASHcpp', obj_, gamma_new))
 }
 
-ELPool__get_sigma <- function(obj_) {
-    .Call('_MASHcpp_ELPool__get_sigma', PACKAGE = 'MASHcpp', obj_)
+ELP__get_sigma <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_sigma', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELPool__set_sigma <- function(obj_, sigma_new) {
-    invisible(.Call('_MASHcpp_ELPool__set_sigma', PACKAGE = 'MASHcpp', obj_, sigma_new))
+ELP__set_sigma <- function(obj_, sigma_new) {
+    invisible(.Call('_MASHcpp_ELP__set_sigma', PACKAGE = 'MASHcpp', obj_, sigma_new))
 }
 
-ELPool__get_L <- function(obj_) {
-    .Call('_MASHcpp_ELPool__get_L', PACKAGE = 'MASHcpp', obj_)
+ELP__get_L <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_L', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELPool__set_L <- function(obj_, L_new) {
-    invisible(.Call('_MASHcpp_ELPool__set_L', PACKAGE = 'MASHcpp', obj_, L_new))
+ELP__set_L <- function(obj_, L_new) {
+    invisible(.Call('_MASHcpp_ELP__set_L', PACKAGE = 'MASHcpp', obj_, L_new))
 }
 
-ELPool__get_E <- function(obj_) {
-    .Call('_MASHcpp_ELPool__get_E', PACKAGE = 'MASHcpp', obj_)
+ELP__get_E <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_E', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELPool__set_E <- function(obj_, E_new) {
-    invisible(.Call('_MASHcpp_ELPool__set_E', PACKAGE = 'MASHcpp', obj_, E_new))
+ELP__set_E <- function(obj_, E_new) {
+    invisible(.Call('_MASHcpp_ELP__set_E', PACKAGE = 'MASHcpp', obj_, E_new))
 }
 
-ELPool__get_ELPool <- function(obj_) {
-    .Call('_MASHcpp_ELPool__get_ELPool', PACKAGE = 'MASHcpp', obj_)
+ELP__get_ELP <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_ELP', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELPool__set_ELPool <- function(obj_, E_new, L_new) {
-    invisible(.Call('_MASHcpp_ELPool__set_ELPool', PACKAGE = 'MASHcpp', obj_, E_new, L_new))
+ELP__set_ELP <- function(obj_, E_new, L_new) {
+    invisible(.Call('_MASHcpp_ELP__set_ELP', PACKAGE = 'MASHcpp', obj_, E_new, L_new))
 }
 
-ELPool__get_parameters <- function(obj_) {
-    .Call('_MASHcpp_ELPool__get_parameters', PACKAGE = 'MASHcpp', obj_)
+ELP__get_parameters <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_parameters', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELPool__set_parameters <- function(obj_, alpha_new, gamma_new, psi_new, sigma_new) {
-    invisible(.Call('_MASHcpp_ELPool__set_parameters', PACKAGE = 'MASHcpp', obj_, alpha_new, gamma_new, psi_new, sigma_new))
+ELP__set_parameters <- function(obj_, alpha_new, gamma_new, psi_new, sigma_new) {
+    invisible(.Call('_MASHcpp_ELP__set_parameters', PACKAGE = 'MASHcpp', obj_, alpha_new, gamma_new, psi_new, sigma_new))
 }
 
-ELPool__reset <- function(obj_) {
-    invisible(.Call('_MASHcpp_ELPool__reset', PACKAGE = 'MASHcpp', obj_))
+ELP__reset <- function(obj_) {
+    invisible(.Call('_MASHcpp_ELP__reset', PACKAGE = 'MASHcpp', obj_))
 }
 
 MosquitoFemaleHistory__ctor <- function() {

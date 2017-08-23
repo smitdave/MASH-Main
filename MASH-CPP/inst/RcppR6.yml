@@ -15,7 +15,7 @@ classes:
   - inst/AQUA-ImagoQ.yml
   - inst/AQUA-EggQ.yml
   - inst/AQUA-EL4P.yml
-  - inst/AQUA-ELPool.yml
+  - inst/AQUA-ELP.yml
 
   # MOSQUITO classes
   - inst/MOSQUITO-History.yml
