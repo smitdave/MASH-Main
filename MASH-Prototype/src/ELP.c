@@ -1,4 +1,4 @@
-///////////////////////////////////////////////////////////////////////////////
+/*/////////////////////////////////////////////////////////////////////////////
 //
 //      ___   ____  __  _____
 //     /   | / __ \/ / / /   |
@@ -12,7 +12,7 @@
 //  Sean Wu
 //  August 23, 2017
 //
-///////////////////////////////////////////////////////////////////////////////
+*//////////////////////////////////////////////////////////////////////////////
 
 #include <R.h>
 
@@ -31,14 +31,14 @@ static double parms[6];
 /* initializer: only two state variables */
 void init_ELP(void (* odeparms)(int *, double *))
 {
-    int N = 2;
+    int N = 6;
     odeparms(&N, parms);
 }
 
 /* derivatives */
 void ode_ELP(int *neq, double *t, double *y, double *ydot, double *yout, int*ip)
 {
-    if (ip[0] < 2) error("nout should be >= 2");
+    // if (ip[0] < 2) error("nout should be >= 2");
     ydot[0] = f*v*y[1] - (alpha + gamma + psi*y[1])*y[0];
     ydot[1] = alpha*y[0] - g*y[1];
 

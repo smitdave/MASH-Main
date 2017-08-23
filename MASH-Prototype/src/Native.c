@@ -27,6 +27,6 @@ static const R_CMethodDef CEntries[] = {
 void R_init_MASHprototype(DllInfo *dll)
 {
   // R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
-  R_registerRoutines(dll, NULL, CEntries, NULL, NULL);
+  R_registerRoutines(dll, CEntries, NULL, NULL, NULL);
   R_useDynamicSymbols(dll, FALSE);
 }

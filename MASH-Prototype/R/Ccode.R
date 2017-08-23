@@ -18,7 +18,7 @@ ELPode <- function(time, parms, ...) {
   parms <- parms[c("f", "v", "alpha","gamma","psi","g")]
   #cat(y0, "\n")
   #cat(parms, "\n")
-  out <- deSolve::ode(y0, time, func = "ode_ELP", parms = parms,
+  out <- deSolve::ode(y = y0, times = time, func = "ode_ELP", parms = parms,
              dllname = "MASHprototype",
              initfunc = "init_ELP", nout = 2, outnames=c("L", "M"), ...)
 
