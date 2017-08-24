@@ -90,81 +90,36 @@ ELPode <- function(t,x,parms){
 ELPout = deSolve::ode(y = c(L=20,M=20),times = 1:250,func = ELPode,
                       parms = c(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10))
 
+par(mfrow=c(1,2))
 maxY = max(max(ELPout[,"L"]),max(ELPout[,"M"]))
 plot(ELPout[,"L"],type="l",col="purple",ylim=c(0,maxY),main="ODE solution (1 L compartment)")
 lines(ELPout[,"M"],col="red")
 grid()
 
 ELPodeN <- function(time,state,par){
-  with(as.list(par),{
+  with(as.list(c(par,state)),{
 
-
+    Ltot = sum(L1,L2,L3,L4)
+    dL1 = f*v*M - ((alpha*n) + gamma + psi*Ltot)*L1
+    dL2 = (alpha*n)*L1 - ((alpha*n) + gamma + psi*Ltot)*L2
+    dL3 = (alpha*n)*L2 - ((alpha*n) + gamma + psi*Ltot)*L3
+    dL4 = (alpha*n)*L3 - ((alpha*n) + gamma + psi*Ltot)*L4
+    dM = (alpha*n)*L4 - g*M
+    return(
+      list(c(dL1,dL2,dL3,dL4,dM),Ltot=Ltot)
+    )
   })
 }
 
+ELPoutN = deSolve::ode(y = c(L1=20,L2=0,L3=0,L4=0,M=20),times = 1:250,func = ELPodeN,
+                       parms = c(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10,n=4))
 
-modBasic <- function(time,state,par){
-  with(as.list(par),{
-
-    sumY  = sum(state[2:(n+1)])
-
-    dxVec = vector(mode="numeric",length=n+2)
-    names(dxVec) = paste0("d",names(state))
-
-    dxVec["dX"] = (a*b*MtoH*state[["Z"]]*(1-state[["X"]])) - (r*state[["X"]])
-    dxVec["dY1"] = (a*c*state[["X"]]*(1-sumY-state[["Z"]])) - (((q*n)+g)*state[["Y1"]])
-    for(i in 2:n){
-      dxVec[[paste0("dY",i)]] = (q*n*state[[paste0("Y",(i-1))]]) - (((q*n)+g)*state[[paste0("Y",i)]])
-    }
-    dxVec["dZ"] = (q*n*state[[paste0("Y",n)]]) - (g*state[["Z"]])
-
-    return(list(dxVec))
-  })
-}
-
-# DS EXAMPLE OF GAMMA DISTRIBUTED DWELL TIMES
-RossRealInc = function(t,y,par)
-{
-  g = par[1]
-  a = par[2]
-  b = par[3]
-  c = par[4]
-  r = par[5]
-  n = par[6]
-  m = par[7]
-  N = par[8]
-  X = y[1]
-  idx = c(1:N)+1
-  Y = y[idx]
-  Z = y[N+2]
-  q = 1/n
-
-  dY = Y
-  dX = m*a*b*Z*(1-X)-r*X
-  dY[1] = a*c*X*(1-sum(Y)-Z)-(q*N+g)*Y[1]
-  for(i in c(2:N))
-    dY[i] = q*N*Y[i-1] - (q*N+g)*Y[i]
-  dZ = q*N*Y[N] - g*Z
-
-  list(c(dX,dY,dZ))
-}
-
-##Parameters
-g = 1/10   #Mosquito death rate
-a = 0.3    #Human feeding rate
-b = 0.5    #Transmission efficiency
-c = 0.5    #Transmission efficiency
-r = 1/100  #Human infectious period
-n = 10     #Incubation period
-m = 5     #Mosquito density, per human
-# N = 8     #Mosquito density, per human (SEEMS TO ACTUALLY BE NUMBER OF DISCRETIZED EIP STATES)
-
-N=16
-
-params = c(g,a,b,c,r,n,m,N)
-inits = c(0.01, rep(0,N+1))
-t = 1:35
-lsoda(y = inits, times = t, func = RossRealInc, parms = params)
+plot(ELPoutN[,"Ltot"],col="darkgreen",type="l",main="purple is L1-L4,green sum(L), red mosy",ylim=c(0,max(ELPoutN[,-1])))
+matplot(x = ELPoutN[,c("L1","L2","L3","L4")],type="l",col="purple",add=T)
+lines(ELPoutN[,"M"],col="red")
+lines(ELPoutN[,"Ltot"],col="darkgreen")
+grid()
+par(mfrow=c(1,1))
 
 ###############################################################################
 #
