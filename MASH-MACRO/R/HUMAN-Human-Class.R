@@ -27,7 +27,7 @@
 #'  * item 1:
 #'
 #' @section Methods:
-#'  * item 1:
+#'  * get_myID: see \code{\link{get_myID_human}}
 #'
 #' @section Fields:
 #'  * **myID**: character identifier of this human, first digits are integer ID and digits after underscore (_) are the patchID; houseID is not necessary because
@@ -57,147 +57,9 @@ Human <- R6::R6Class(classname="Human",
                          private$bWeight = bWeight
                          private$EventQueue = MASHcpp::HumanEventQ()
                          private$History = MASHcpp::HistoryGeneric()
-                       },
-
-                       #################################################
-                       # Getters and Setters
-                       #################################################
-
-                       #myID
-                       get_myID = function(){
-                         return(private$myID)
-                       },
-                       set_myID = function(myID){
-                         private$myID = myID
-                       },
-
-                       #houseID
-                       get_houseID = function(){
-                         return(private$houseID)
-                       },
-                       set_houseID = function(houseID){
-                         private$houseID = houseID
-                       },
-
-                       #patchID
-                       get_patchID = function(){
-                         return(private$patchID)
-                       },
-                       set_patchID = function(patchID){
-                         private$patchID = patchID
-                       },
-
-                       #bDay
-                       get_bDay = function(){
-                         return(private$bDay)
-                       },
-                       set_bDay = function(bDay){
-                         private$bDay = bDay
-                       },
-
-                       #eventQ
-                       get_EventQ = function(){
-                         return(private$EventQueue)
-                       },
-
-                       #Alive
-                       get_Alive = function(){
-                         return(private$Alive)
-                       },
-                       set_Alive = function(Alive){
-                         private$Alive = Alive
-                       },
-
-                       get_sex = function(){
-                         return(private$sex)
-                       },
-                       set_sex = function(sex){
-                         private$sex = sex
-                       },
-
-                       # Health & Related
-                       get_bWeight = function(){
-                         return(private$bWeight)
-                       },
-                       set_bWeight = function(bWeight){
-                         private$bWeight = bWeight
-                       },
-
-                       # Pathogens
-                       get_Pathogens = function(){
-                         return(private$Pathogens)
-                       },
-                       set_Pathogens = function(Pathogens){
-                         private$Pathogens = Pathogens
-                       },
-
-                       #################################################
-                       # Pointers
-                       #################################################
-
-                       # HumanPop
-                       get_HumansPointer = function(){
-                         return(private$HumansPointer)
-                       },
-                       set_HumansPointer = function(HumansPointer){
-                         private$HumansPointer = HumansPointer
-                       },
-
-                       #################################################
-                       # Event Queue
-                       #################################################
-
-                       #oneEvent:
-                       oneEvent = function(tPause){
-                        event = private$EventQueue$firstEvent()
-                        self$runEvent(tEvent = event$tEvent, PAR = event$PAR, tag = event$tag)
-                        private$EventQueue$rmFirstEventFromQ()
-                       },
-
-                       # run an event
-                       runEvent = function(tEvent, PAR, tag){
-                         self[[tag]](tEvent, PAR)
-                       },
-
-                       #liveLife:
-                       liveLife = function(tPause){
-                        while(private$Alive & private$EventQueue$firstTime() < tPause){
-                          self$oneEvent(tPause)
-                          if(private$EventQueue$get_queueN()==0){
-                            break()
-                          }
-                        }
-
-                       },
-
-                       #################################################
-                       # Life Events
-                       #################################################
-
-                       # event_maxDeath: the maximum death time event package
-                       event_maxDeath = function(tEvent = 73000, PAR = NULL, tag = "death"){
-                         list(tEvent = tEvent, PAR = PAR, tag = tag)
-                       },
-
-                       # death: the death event
-                       death = function(tEvent, PAR){
-                         self$track_history(tEvent = tEvent, event = "D")
-                         private$Alive = FALSE
-                       },
-
-                       #################################################
-                       # Auxiliary Functions
-                       #################################################
-
-                       track_history = function(tEvent, event){
-                         private$History$track_history(tEvent, event)
-                       },
-
-                       get_history = function(){
-                         return(private$History$get_history())
                        }
 
-                     ),
+                       ),
 
                      #private members
                      private = list(
@@ -226,5 +88,463 @@ Human <- R6::R6Class(classname="Human",
                        HumansPointer = NULL # environment
 
                      )
+                     
+
+                     
+
 
 ) #end class definition
+
+
+#################################################
+# Getters and Setters
+#################################################
+
+
+#' Human: Gets ID
+#'
+#' Gets ID for human
+#'
+#' More details
+#'
+
+get_myID_human = function(){
+return(private$myID)
+}
+
+
+Human$set(which="public", name="get_myID",
+	value=get_myID_human,
+	overwrite=TRUE)
+
+
+#' Human: Sets ID
+#'
+#' Sets ID for human
+#'
+#' More details
+#'
+set_myID_human = function(myID){
+ private$myID = myID
+}
+
+
+Human$set(which="public", name="set_myID",
+	value=set_myID_human, 
+	overwrite=TRUE)
+
+
+#' Human: Gets house ID
+#'
+#' Gets ID for house
+#'
+#' More details
+#'
+get_houseID_human = function(){
+ return(private$houseID)
+}
+
+
+Human$set(which="public", name="get_houseID",
+	value=get_houseID_human,
+	overwrite=TRUE)
+
+
+#' Human: Sets house ID
+#'
+#' Sets ID for house
+#'
+#' More details
+#'
+set_houseID_human = function(houseID){
+ private$houseID = houseID
+}
+
+
+Human$set(which="public", name="set_houseID",
+	value=set_houseID_human,
+	overwrite=TRUE)
+
+
+#' Human: Gets patch ID
+#'
+#' Gets ID for patch
+#'
+#' More details
+#'
+get_patchID_human = function(){
+ return(private$patchID)
+}
+
+
+Human$set(which="public", name="get_patchID",
+	value=get_patchID_human,
+	overwrite=TRUE)
+
+
+#' Human: Sets patch ID
+#'
+#' Sets ID for patch
+#'
+#' More details
+#'
+set_patchID_human = function(patchID){
+ private$patchID = patchID
+}
+
+
+Human$set(which="public", name="set_patchID",
+	value=set_patchID_human,
+	 overwrite=TRUE)
+
+
+#' Human: Get birthday
+#'
+#' Gets birthday for human
+#'
+#' More details
+#'
+get_bDay_human = function(){
+ return(private$bDay)
+}
+
+
+Human$set(which="public", name="get_bDay",
+	value=get_bDay_human,
+	 overwrite=TRUE)
+
+
+#' Human: Set birthday
+#'
+#' Sets birthday
+#'
+#' More details
+#'
+set_bDay_human = function(bDay){
+ private$bDay = bDay
+}
+
+
+Human$set(which="public", name="set_bDay",
+	value=set_bDay_human,
+	overwrite=TRUE)
+
+
+#' Human: Set EventQ
+#'
+#' Sets EventQ for human
+#'
+#' More details
+#'
+get_EventQ_human = function(){
+ return(private$EventQueue)
+}
+
+
+Human$set(which="public", name="get_bDay",
+	value=get_bDay_human,
+	overwrite=TRUE)
+
+
+#' Human: Get Life Status
+#'
+#' Gets whether human alive or dead
+#'
+#' More details
+#'
+get_Alive_human = function(){
+ return(private$Alive)
+}
+
+
+Human$set(which="public", name="get_Alive",
+	value=get_Alive_human,
+	 overwrite=TRUE)
+
+
+#' Human: Set Life Status
+#'
+#' Sets whether human alive or not
+#'
+#' More details
+#'
+set_Alive_human = function(Alive){
+ private$Alive = Alive
+}
+
+
+Human$set(which="public", name="set_Alive",
+	value=set_Alive_human,
+	overwrite=TRUE)
+
+
+#' Human: Get sex for human
+#'
+#' Gets sex for human
+#'
+#' More details
+#'
+get_sex_human = function(){
+ return(private$sex)
+}
+
+
+Human$set(which="public", name="get_sex",
+	value=get_sex_human,
+	 overwrite=TRUE)
+
+
+#' Human: Set sex
+#'
+#' Sets sex for human
+#'
+#' More details
+#'
+set_sex_human = function(sex){
+ private$sex = sex
+}
+
+
+Human$set(which="public", name="set_sex",
+	value=set_sex_human,
+	overwrite=TRUE)
+
+
+#' Human: Get weight
+#'
+#' Gets weight for human
+#'
+#' More details
+#'
+get_bWeight_human = function(){
+ return(private$bWeight)
+}
+
+
+Human$set(which="public", name="get_bWeight",
+	value=get_bWeight_human,
+	 overwrite=TRUE)
+
+
+#' Human: Set weight
+#'
+#' Sets weight for human
+#'
+#' More details
+#'
+set_bWeight_human = function(bWeight){
+ private$bWeight = bWeight
+}
+
+
+Human$set(which="public", name="set_bWeight",
+	value=set_bWeight_human,
+	overwrite=TRUE)
+
+
+#' Human: Get pathogen
+#'
+#' Gets pathogen
+#'
+#' More details
+#'
+get_Pathogens_human = function(){
+ return(private$Pathogens)
+}
+
+
+Human$set(which="public", name="get_Pathogens",
+	value=get_Pathogens_human,
+	 overwrite=TRUE)
+
+
+#' Human: Set pathogen
+#'
+#' Sets pathogen
+#'
+#' More details
+#'
+set_Pathogens_human = function(Pathogens){
+ private$Pathogens = Pathogens
+}
+
+
+Human$set(which="public", name="set_Pathogens",
+	value=set_Pathogens_human,
+	overwrite=TRUE)
+
+
+#################################################
+# Pointers
+#################################################
+
+
+#' Human: Get Humans Pointer
+#'
+#' Gets humans pointer 
+#'
+#' More details
+#'
+get_HumansPointer_human = function(){
+ return(private$HumansPointer)
+}
+
+Human$set(which="public", name="get_HumansPointer",
+	value=get_HumansPointer_human,
+	overwrite=TRUE)
+
+
+#' Human: Set Human Pointer
+#'
+#' Sets human pointer
+#'
+#' More details
+#'
+set_HumansPointer_human = function(HumansPointer){
+ private$HumansPointer = HumansPointer
+}
+
+
+Human$set(which="public", name="set_HumansPointer",
+	value=set_HumansPointer_human,
+	overwrite=TRUE)
+
+
+#################################################
+# Event Queue
+#################################################
+
+
+#' Human: Initialize Event
+#'
+#' Initializes one event
+#'
+#' More details
+#'
+oneEvent_human = function(tPause){
+event = private$EventQueue$firstEvent()
+self$runEvent(tEvent = event$tEvent, PAR = event$PAR, tag = event$tag)
+private$EventQueue$rmFirstEventFromQ()
+}
+
+
+Human$set(which="public", name="oneEvent",
+	value=oneEvent_human,
+	 overwrite=TRUE)
+
+
+#' Human: Run Event
+#'
+#' Runs event
+#'
+#' More details
+#'
+runEvent_human = function(tEvent, PAR, tag){
+ self[[tag]](tEvent, PAR)
+}
+
+
+Human$set(which="public", name="runEvent",
+	value=runEvent_human,
+	 overwrite=TRUE)
+
+
+#' Human: liveLife
+#'
+#' Initializes liveLife
+#'
+#' More details
+#'
+liveLife_human = function(tPause){
+while(private$Alive & private$EventQueue$firstTime() < tPause){
+  self$oneEvent(tPause)
+  if(private$EventQueue$get_queueN()==0){
+    break()
+  }
+}
+
+}
+
+
+Human$set(which="public", name="lifeLife",
+	value=liveLife_human,
+	 overwrite=TRUE)
+
+
+#################################################
+# Life Events
+#################################################
+
+
+#' Human: The Maximum Death Time Event Package
+#'
+#' Maximum Death Time Event Package
+#'
+#' More details
+#'
+event_maxDeath_human = function(tEvent = 73000, PAR = NULL, tag = "death"){
+ list(tEvent = tEvent, PAR = PAR, tag = tag)
+}
+
+
+Human$set(which="public", name="event_maxDeath",
+	value=event_maxDeath_human,
+	 overwrite=TRUE)
+
+
+#' Human: Death
+#'
+#' tracks death
+#'
+#' More details
+#'
+# death: the death event
+death_human = function(tEvent, PAR){
+ self$track_history(tEvent = tEvent, event = "D")
+ private$Alive = FALSE
+}
+
+
+Human$set(which="public", name="death",
+	value=death_human,
+	 overwrite=TRUE)
+
+
+#################################################
+# Auxiliary Functions
+#################################################
+
+
+#' Human: Tracks History
+#'
+#' Tracks history of events for human
+#'
+#' More details
+#'
+track_history_human = function(tEvent, event){
+ private$History$track_history(tEvent, event)
+}
+
+
+Human$set(which="public", name="track_history",
+	value=track_history_human,
+	 overwrite=TRUE)
+
+
+#' Human: Get History
+#'
+#' Gets history of human
+#'
+#' More details
+#'
+get_history_human = function(){
+ return(private$History$get_history())
+}
+
+
+Human$set(which="public", name="get_history",
+	value=get_history_human,
+	 overwrite=TRUE)
+
+
+
