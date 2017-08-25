@@ -558,16 +558,20 @@ EL4P__set_pop <- function(obj_, initPop) {
     invisible(.Call('_MASHcpp_EL4P__set_pop', PACKAGE = 'MASHcpp', obj_, initPop))
 }
 
-ELP__ctor <- function(alpha_new, gamma_new, psi_new, sigma_new) {
-    .Call('_MASHcpp_ELP__ctor', PACKAGE = 'MASHcpp', alpha_new, gamma_new, psi_new, sigma_new)
+ELP__ctor <- function(alpha_new, gamma_new, psi_new, tGrain_new) {
+    .Call('_MASHcpp_ELP__ctor', PACKAGE = 'MASHcpp', alpha_new, gamma_new, psi_new, tGrain_new)
 }
 
-ELP__oneDay_aquaticDynamics <- function(obj_) {
-    invisible(.Call('_MASHcpp_ELP__oneDay_aquaticDynamics', PACKAGE = 'MASHcpp', obj_))
+ELP__oneDay_aquaticDynamics <- function(obj_, eggIn) {
+    invisible(.Call('_MASHcpp_ELP__oneDay_aquaticDynamics', PACKAGE = 'MASHcpp', obj_, eggIn))
 }
 
 ELP__oneDay_Emergence <- function(obj_) {
     .Call('_MASHcpp_ELP__oneDay_Emergence', PACKAGE = 'MASHcpp', obj_)
+}
+
+ELP__ecologicalSimulation <- function(obj_, g, f, v, L_init, M_init, tMax) {
+    .Call('_MASHcpp_ELP__ecologicalSimulation', PACKAGE = 'MASHcpp', obj_, g, f, v, L_init, M_init, tMax)
 }
 
 ELP__get_psi <- function(obj_) {
@@ -594,52 +598,24 @@ ELP__set_gamma <- function(obj_, gamma_new) {
     invisible(.Call('_MASHcpp_ELP__set_gamma', PACKAGE = 'MASHcpp', obj_, gamma_new))
 }
 
-ELP__get_sigma <- function(obj_) {
-    .Call('_MASHcpp_ELP__get_sigma', PACKAGE = 'MASHcpp', obj_)
-}
-
-ELP__set_sigma <- function(obj_, sigma_new) {
-    invisible(.Call('_MASHcpp_ELP__set_sigma', PACKAGE = 'MASHcpp', obj_, sigma_new))
-}
-
-ELP__get_L <- function(obj_) {
-    .Call('_MASHcpp_ELP__get_L', PACKAGE = 'MASHcpp', obj_)
-}
-
-ELP__set_L <- function(obj_, L_new) {
-    invisible(.Call('_MASHcpp_ELP__set_L', PACKAGE = 'MASHcpp', obj_, L_new))
-}
-
-ELP__get_E <- function(obj_) {
-    .Call('_MASHcpp_ELP__get_E', PACKAGE = 'MASHcpp', obj_)
-}
-
-ELP__set_E <- function(obj_, E_new) {
-    invisible(.Call('_MASHcpp_ELP__set_E', PACKAGE = 'MASHcpp', obj_, E_new))
-}
-
-ELP__get_P <- function(obj_) {
-    .Call('_MASHcpp_ELP__get_P', PACKAGE = 'MASHcpp', obj_)
-}
-
-ELP__set_P <- function(obj_, P_new) {
-    invisible(.Call('_MASHcpp_ELP__set_P', PACKAGE = 'MASHcpp', obj_, P_new))
+ELP__get_tGrain <- function(obj_) {
+    .Call('_MASHcpp_ELP__get_tGrain', PACKAGE = 'MASHcpp', obj_)
 }
 
 ELP__get_ELP <- function(obj_) {
     .Call('_MASHcpp_ELP__get_ELP', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELP__set_ELP <- function(obj_, E_new, L_new, P_new) {
-    invisible(.Call('_MASHcpp_ELP__set_ELP', PACKAGE = 'MASHcpp', obj_, E_new, L_new, P_new))
+ELP__set_ELP <- function(obj_, L1_new, L2_new, L3_new, L4_new) {
+    invisible(.Call('_MASHcpp_ELP__set_ELP', PACKAGE = 'MASHcpp', obj_, L1_new, L2_new, L3_new, L4_new))
 }
 
 ELP__get_parameters <- function(obj_) {
     .Call('_MASHcpp_ELP__get_parameters', PACKAGE = 'MASHcpp', obj_)
 }
 
-ELP__set_parameters <- function(obj_, alpha_new, gamma_new, psi_new, sigma_new) {
-    invisible(.Call('_MASHcpp_ELP__set_parameters', PACKAGE = 'MASHcpp', obj_, alpha_new, gamma_new, psi_new, sigma_new))
+ELP__set_parameters <- function(obj_, alpha_new, gamma_new, psi_new, tGrain_new) {
+    invisible(.Call('_MASHcpp_ELP__set_parameters', PACKAGE = 'MASHcpp', obj_, alpha_new, gamma_new, psi_new, tGrain_new))
 }
 
 ELP__reset <- function(obj_) {

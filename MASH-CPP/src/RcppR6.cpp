@@ -565,16 +565,20 @@ void EL4P__set_pop(MASHcpp::RcppR6::RcppR6<MASHcpp::EL4P> obj_, Rcpp::List initP
 }
 
 // [[Rcpp::export]]
-MASHcpp::ELP ELP__ctor(double alpha_new, double gamma_new, double psi_new, double sigma_new) {
-  return MASHcpp::ELP(alpha_new, gamma_new, psi_new, sigma_new);
+MASHcpp::ELP ELP__ctor(double alpha_new, double gamma_new, double psi_new, double tGrain_new) {
+  return MASHcpp::ELP(alpha_new, gamma_new, psi_new, tGrain_new);
 }
 // [[Rcpp::export]]
-void ELP__oneDay_aquaticDynamics(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
-  obj_->oneDay_aquaticDynamics();
+void ELP__oneDay_aquaticDynamics(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double eggIn) {
+  obj_->oneDay_aquaticDynamics(eggIn);
 }
 // [[Rcpp::export]]
 double ELP__oneDay_Emergence(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
   return obj_->oneDay_Emergence();
+}
+// [[Rcpp::export]]
+std::vector<Rcpp::List> ELP__ecologicalSimulation(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double g, double f, double v, double L_init, double M_init, double tMax) {
+  return obj_->ecologicalSimulation(g, f, v, L_init, M_init, tMax);
 }
 // [[Rcpp::export]]
 double ELP__get_psi(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
@@ -601,52 +605,24 @@ void ELP__set_gamma(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double gamma_new
   obj_->set_gamma(gamma_new);
 }
 // [[Rcpp::export]]
-double ELP__get_sigma(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
-  return obj_->get_sigma();
-}
-// [[Rcpp::export]]
-void ELP__set_sigma(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double sigma_new) {
-  obj_->set_sigma(sigma_new);
-}
-// [[Rcpp::export]]
-double ELP__get_L(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
-  return obj_->get_L();
-}
-// [[Rcpp::export]]
-void ELP__set_L(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double L_new) {
-  obj_->set_L(L_new);
-}
-// [[Rcpp::export]]
-double ELP__get_E(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
-  return obj_->get_E();
-}
-// [[Rcpp::export]]
-void ELP__set_E(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double E_new) {
-  obj_->set_E(E_new);
-}
-// [[Rcpp::export]]
-double ELP__get_P(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
-  return obj_->get_P();
-}
-// [[Rcpp::export]]
-void ELP__set_P(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double P_new) {
-  obj_->set_P(P_new);
+double ELP__get_tGrain(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
+  return obj_->get_tGrain();
 }
 // [[Rcpp::export]]
 Rcpp::List ELP__get_ELP(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
   return obj_->get_ELP();
 }
 // [[Rcpp::export]]
-void ELP__set_ELP(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double E_new, double L_new, double P_new) {
-  obj_->set_ELP(E_new, L_new, P_new);
+void ELP__set_ELP(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double L1_new, double L2_new, double L3_new, double L4_new) {
+  obj_->set_ELP(L1_new, L2_new, L3_new, L4_new);
 }
 // [[Rcpp::export]]
 Rcpp::List ELP__get_parameters(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
   return obj_->get_parameters();
 }
 // [[Rcpp::export]]
-void ELP__set_parameters(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double alpha_new, double gamma_new, double psi_new, double sigma_new) {
-  obj_->set_parameters(alpha_new, gamma_new, psi_new, sigma_new);
+void ELP__set_parameters(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double alpha_new, double gamma_new, double psi_new, double tGrain_new) {
+  obj_->set_parameters(alpha_new, gamma_new, psi_new, tGrain_new);
 }
 // [[Rcpp::export]]
 void ELP__reset(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {

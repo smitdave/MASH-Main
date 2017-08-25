@@ -48,7 +48,7 @@ ELP:
       - alpha_new: double = 0.1
       - gamma_new: double = 0.1
       - psi_new: double = 0.01
-      - sigma_new: double = 1
+      - tGrain_new: double = 1
   methods:
 
     ###################################
@@ -56,10 +56,22 @@ ELP:
     ###################################
 
     oneDay_aquaticDynamics:
+      args:
+        - eggIn: double
       return_type: void
 
     oneDay_Emergence:
       return_type: double
+
+    ecologicalSimulation:
+      args:
+        - g: double
+        - f: double
+        - v: double
+        - L_init: double
+        - M_init: double
+        - tMax: double
+      return_type: "std::vector<Rcpp::List>"
 
     ###################################
     #  Getters & Setters
@@ -89,37 +101,9 @@ ELP:
         - gamma_new: double
       return_type: void
 
-    get_sigma:
+    get_tGrain:
       return_type: double
 
-    set_sigma:
-      args:
-        - sigma_new: double
-      return_type: void
-
-    get_L:
-      return_type: double
-
-    set_L:
-      args:
-        - L_new: double
-      return_type: void
-
-    get_E:
-      return_type: double
-
-    set_E:
-      args:
-        - E_new: double
-      return_type: void
-
-    get_P:
-      return_type: double
-
-    set_P:
-      args:
-        - P_new: double
-      return_type: void
 
     ###################################
     #  Other Methods
@@ -130,9 +114,10 @@ ELP:
 
     set_ELP:
       args:
-        - E_new: double
-        - L_new: double
-        - P_new: double
+        - L1_new: double
+        - L2_new: double
+        - L3_new: double
+        - L4_new: double
       return_type: void
 
     get_parameters:
@@ -143,7 +128,7 @@ ELP:
         - alpha_new: double
         - gamma_new: double
         - psi_new: double
-        - sigma_new: double
+        - tGrain_new: double
       return_type: void
 
     reset:

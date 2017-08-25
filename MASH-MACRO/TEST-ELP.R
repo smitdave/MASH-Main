@@ -229,7 +229,7 @@ calculate_K <- function(f,v,alpha,g,gamma,psi,n){
   )
 }
 
-tGrain = 24
+tGrain = 4
 v = 20
 f = (0.3)/tGrain
 g = (1/10)/tGrain
@@ -281,6 +281,7 @@ for(i in 2:length(tVec)){
   LtotHist[i] = sum(L1hist[i],L2hist[i],L3hist[i],L4hist[i])
 }
 
+par(mfrow=c(1,2))
 maxY = max(max(L1hist),max(L2hist),max(L3hist),max(L4hist),max(Mhist),max(LtotHist))
 plot(L1hist,type="l",col="purple",lty=1,ylim=c(0,maxY),ylab="Counts")
 lines(L2hist,col="purple",lty=2)
@@ -291,29 +292,53 @@ lines(Mhist,col="red")
 grid()
 
 
+ELPodeN <- function(time,state,par){
+  with(as.list(c(par,state)),{
 
-
-
-
-ELP_roots <- function(x,par){
-  c(
-    F1 = par$f*par$v*x[2] - (par$alpha+par$gamma+par$psi*x[1])*x[1],
-    F2 = par$alpha*x[1] - par$g*x[2]
-  )
+    Ltot = sum(L1,L2,L3,L4)
+    dL1 = f*v*M - (alpha*n)*L1 - (gamma + psi*Ltot)*L1
+    dL2 = (alpha*n)*L1 - (alpha*n)*L2 - (gamma + psi*Ltot)*L2
+    dL3 = (alpha*n)*L2 - (alpha*n)*L3 - (gamma + psi*Ltot)*L3
+    dL4 = (alpha*n)*L3 - (alpha*n)*L4 - (gamma + psi*Ltot)*L4
+    dM = (alpha*n)*L4 - g*M
+    return(
+      list(c(dL1,dL2,dL3,dL4,dM),Ltot=Ltot,LarvalForceOfMortality=(gamma+(psi*Ltot)),larPup=((alpha*n)*L4))
+    )
+  })
 }
-par = list(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10)
-rootSolve::multiroot(f = ELP_roots,start = c(500,500),parms = par,useFortran = TRUE,positive = TRUE)
+
+ELPoutN = deSolve::ode(y = c(L1=5,L2=5,L3=5,L4=5,M=20),times = 1:250,func = ELPodeN,
+                       parms = c(f=f,v=v,alpha=alpha,gamma=gamma,psi=psi,g=g,n=4))
+
+plot(ELPoutN[,"Ltot"],col="darkgreen",type="l",main="purple is L1-L4,green is total L, red mosy",ylim=c(0,max(ELPoutN[,-1])))
+matplot(x = ELPoutN[,c("L1","L2","L3","L4")],type="l",col="purple",add=T,lty=c(1,2,3,4))
+lines(ELPoutN[,"M"],col="red")
+lines(ELPoutN[,"Ltot"],col="darkgreen")
+grid()
+par(mfrow=c(1,1))
 
 
-EL4P_roots <- function(x,par){
-  c(
-    F1 = par$f*par$v*x[5] - (4*par$alpha+par$gamma+par$psi*sum(x[1],x[2],x[3],x[4]))*x[1],
-    F2 = 4*par$alpha*x[1] - (4*par$alpha+par$gamma+par$psi*sum(x[1],x[2],x[3],x[4]))*x[2],
-    F3 = 4*par$alpha*x[2] - (4*par$alpha+par$gamma+par$psi*sum(x[1],x[2],x[3],x[4]))*x[3],
-    F4 = 4*par$alpha*x[3] - (4*par$alpha+par$gamma+par$psi*sum(x[1],x[2],x[3],x[4]))*x[4],
-    F5 = 4*par$alpha*x[4] - par$g*x[5]
-  )
-}
-par = list(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10)
-out = rootSolve::multiroot(f = EL4P_roots,start = c(100,100,100,100,100),parms = par,useFortran = TRUE,positive = TRUE)
-sum(out$root[1:4])
+
+
+# ELP_roots <- function(x,par){
+#   c(
+#     F1 = par$f*par$v*x[2] - (par$alpha+par$gamma+par$psi*x[1])*x[1],
+#     F2 = par$alpha*x[1] - par$g*x[2]
+#   )
+# }
+# par = list(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10)
+# rootSolve::multiroot(f = ELP_roots,start = c(500,500),parms = par,useFortran = TRUE,positive = TRUE)
+#
+#
+# EL4P_roots <- function(x,par){
+#   c(
+#     F1 = par$f*par$v*x[5] - (4*par$alpha+par$gamma+par$psi*sum(x[1],x[2],x[3],x[4]))*x[1],
+#     F2 = 4*par$alpha*x[1] - (4*par$alpha+par$gamma+par$psi*sum(x[1],x[2],x[3],x[4]))*x[2],
+#     F3 = 4*par$alpha*x[2] - (4*par$alpha+par$gamma+par$psi*sum(x[1],x[2],x[3],x[4]))*x[3],
+#     F4 = 4*par$alpha*x[3] - (4*par$alpha+par$gamma+par$psi*sum(x[1],x[2],x[3],x[4]))*x[4],
+#     F5 = 4*par$alpha*x[4] - par$g*x[5]
+#   )
+# }
+# par = list(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10)
+# out = rootSolve::multiroot(f = EL4P_roots,start = c(100,100,100,100,100),parms = par,useFortran = TRUE,positive = TRUE)
+# sum(out$root[1:4])
