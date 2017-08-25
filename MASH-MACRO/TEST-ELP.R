@@ -86,6 +86,10 @@ gamma=0.1
 g=1/10
 psi=0.01
 
+sqrt(
+  ((f*v*alpha*(1/g)) - (alpha+gamma)) / psi
+)
+
 ELPode <- function(t,x,parms){
  with(as.list(c(parms,x)),{
   dL = f*v*M - (alpha*L) - (gamma + psi*L)*L
@@ -97,42 +101,42 @@ ELPode <- function(t,x,parms){
 ELPout = deSolve::ode(y = c(L=20,M=20),times = 1:250,func = ELPode,
                       parms = c(f=f,v=v,alpha=alpha,gamma=gamma,psi=psi,g=g))
 
-par(mfrow=c(1,2))
+# par(mfrow=c(1,2))
 maxY = max(max(ELPout[,"L"]),max(ELPout[,"M"]))
 plot(ELPout[,"L"],type="l",col="purple",ylim=c(0,maxY),main="ODE solution (1 L compartment)")
 lines(ELPout[,"M"],col="red")
 grid()
 
-ELPodeN <- function(time,state,par){
-  with(as.list(c(par,state)),{
-
-    Ltot = sum(L1,L2,L3,L4)
-    dL1 = f*v*M - (alpha*n)*L1 - (gamma + psi*Ltot)*L1
-    dL2 = (alpha*n)*L1 - (alpha*n)*L2 - (gamma + psi*Ltot)*L2
-    dL3 = (alpha*n)*L2 - (alpha*n)*L3 - (gamma + psi*Ltot)*L3
-    dL4 = (alpha*n)*L3 - (alpha*n)*L4 - (gamma + psi*Ltot)*L4
-    dM = (alpha*n)*L4 - g*M
-    return(
-      list(c(dL1,dL2,dL3,dL4,dM),Ltot=Ltot,LarvalForceOfMortality=(gamma+(psi*Ltot)),larPup=((alpha*n)*L4))
-    )
-  })
-}
-
-ELPoutN = deSolve::ode(y = c(L1=5,L2=5,L3=5,L4=5,M=20),times = 1:250,func = ELPodeN,
-                       parms = c(f=f,v=v,alpha=alpha,gamma=gamma,psi=0.001,g=g,n=4))
-
-plot(ELPoutN[,"Ltot"],col="darkgreen",type="l",main="purple is L1-L4,green is total L, red mosy",ylim=c(0,max(ELPoutN[,-1])))
-matplot(x = ELPoutN[,c("L1","L2","L3","L4")],type="l",col="purple",add=T,lty=c(1,2,3,4))
-lines(ELPoutN[,"M"],col="red")
-lines(ELPoutN[,"Ltot"],col="darkgreen")
-grid()
-par(mfrow=c(1,1))
-
-ELPout[,"LarvalForceOfMortality"]
-ELPoutN[,"LarvalForceOfMortality"]
-
-ELPout[,"larPup"]
-ELPoutN[,"larPup"]
+# ELPodeN <- function(time,state,par){
+#   with(as.list(c(par,state)),{
+# 
+#     Ltot = sum(L1,L2,L3,L4)
+#     dL1 = f*v*M - (alpha*n)*L1 - (gamma + psi*Ltot)*L1
+#     dL2 = (alpha*n)*L1 - (alpha*n)*L2 - (gamma + psi*Ltot)*L2
+#     dL3 = (alpha*n)*L2 - (alpha*n)*L3 - (gamma + psi*Ltot)*L3
+#     dL4 = (alpha*n)*L3 - (alpha*n)*L4 - (gamma + psi*Ltot)*L4
+#     dM = (alpha*n)*L4 - g*M
+#     return(
+#       list(c(dL1,dL2,dL3,dL4,dM),Ltot=Ltot,LarvalForceOfMortality=(gamma+(psi*Ltot)),larPup=((alpha*n)*L4))
+#     )
+#   })
+# }
+# 
+# ELPoutN = deSolve::ode(y = c(L1=5,L2=5,L3=5,L4=5,M=20),times = 1:250,func = ELPodeN,
+#                        parms = c(f=f,v=v,alpha=alpha,gamma=gamma,psi=0.001,g=g,n=4))
+# 
+# plot(ELPoutN[,"Ltot"],col="darkgreen",type="l",main="purple is L1-L4,green is total L, red mosy",ylim=c(0,max(ELPoutN[,-1])))
+# matplot(x = ELPoutN[,c("L1","L2","L3","L4")],type="l",col="purple",add=T,lty=c(1,2,3,4))
+# lines(ELPoutN[,"M"],col="red")
+# lines(ELPoutN[,"Ltot"],col="darkgreen")
+# grid()
+# par(mfrow=c(1,1))
+# 
+# ELPout[,"LarvalForceOfMortality"]
+# ELPoutN[,"LarvalForceOfMortality"]
+# 
+# ELPout[,"larPup"]
+# ELPoutN[,"larPup"]
 
 ###############################################################################
 #
@@ -215,6 +219,12 @@ par(mfrow=c(1,1))
 #
 ###############################################################################
 
+calculate_K <- function(f,v,alpha,g,gamma,psi,n){
+  sqrt(
+    ((f*v*(alpha*n)*(1/g)) - ((alpha*n)+gamma)) / psi
+  )
+}
+
 tGrain = 24
 v = 20
 f = (0.3)/tGrain
@@ -224,8 +234,10 @@ gamma=(0.1)/tGrain
 psi = 0.001/tGrain
 Lstart = 20
 Mstart = 20
-tMax=3
+tMax=100
 n=4
+
+calculate_K(f,v,alpha,g,gamma,psi,n)
 
 L1hist = numeric(tMax)
 L2hist = numeric(tMax)
@@ -266,9 +278,10 @@ for(i in 2:length(tVec)){
 }
 
 maxY = max(max(L1hist),max(L2hist),max(L3hist),max(L4hist),max(Mhist),max(LtotHist))
-plot(L1hist,type="l",col="purple",lty=1,ylim=c(0,maxY))
+plot(L1hist,type="l",col="purple",lty=1,ylim=c(0,maxY),ylab="Counts")
 lines(L2hist,col="purple",lty=2)
 lines(L3hist,col="purple",lty=3)
 lines(L4hist,col="purple",lty=4)
 lines(LtotHist,col="darkgreen")
 lines(Mhist,col="red")
+grid()
