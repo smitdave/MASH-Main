@@ -88,17 +88,17 @@ Human <- R6::R6Class(classname="Human",
                        HumansPointer = NULL # environment
 
                      )
-                     
 
-                     
+
+
 
 
 ) #end class definition
 
 
-#################################################
+###############################################################################
 # Getters and Setters
-#################################################
+###############################################################################
 
 
 #' Human: Gets ID
@@ -107,7 +107,6 @@ Human <- R6::R6Class(classname="Human",
 #'
 #' More details
 #'
-
 get_myID_human = function(){
 return(private$myID)
 }
@@ -130,7 +129,7 @@ set_myID_human = function(myID){
 
 
 Human$set(which="public", name="set_myID",
-	value=set_myID_human, 
+	value=set_myID_human,
 	overwrite=TRUE)
 
 
@@ -374,14 +373,14 @@ Human$set(which="public", name="set_Pathogens",
 	overwrite=TRUE)
 
 
-#################################################
+###############################################################################
 # Pointers
-#################################################
+###############################################################################
 
 
 #' Human: Get Humans Pointer
 #'
-#' Gets humans pointer 
+#' Gets humans pointer
 #'
 #' More details
 #'
@@ -410,9 +409,9 @@ Human$set(which="public", name="set_HumansPointer",
 	overwrite=TRUE)
 
 
-#################################################
+###############################################################################
 # Event Queue
-#################################################
+###############################################################################
 
 
 #' Human: Initialize Event
@@ -545,6 +544,3 @@ get_history_human = function(){
 Human$set(which="public", name="get_history",
 	value=get_history_human,
 	 overwrite=TRUE)
-
-
-

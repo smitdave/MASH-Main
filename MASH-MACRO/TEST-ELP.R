@@ -58,9 +58,7 @@ testELP <- R6::R6Class(classname = "testELP",
                          finalize = function(){print("i'm being garbage cleaned")}
                        ))
 
-v = 25
-f = 0.3
-m = 20
+
 
 # ELP = testELP$new()
 # tMax = 250
@@ -75,20 +73,29 @@ m = 20
 MASHmacro::K2psi_ELP(f = f,v = v,alpha = 0.1,g = 1/10,gamma = 0.1,K = 20)
 
 
+
 # test diff eqn
 
 library(deSolve)
 
+v = 20
+f = 0.3
+K = 20
+alpha=0.1
+gamma=0.1
+g=1/10
+psi=0.01
+
 ELPode <- function(t,x,parms){
  with(as.list(c(parms,x)),{
-  dL = f*v*M - (alpha + gamma + psi*L)*L
+  dL = f*v*M - (alpha*L) - (gamma + psi*L)*L
   dM = alpha*L - g*M
-  return(list(c(dL,dM),eggIn=(f*v*M),larMort=(alpha+gamma+psi*L)*L,larPup=(alpha*L),adultMort=(g*M)))
+  return(list(c(dL,dM),eggIn=(f*v*M),larMort=(alpha+gamma+psi*L)*L,LarvalForceOfMortality=(gamma+psi*L),larPup=(alpha*L),adultMort=(g*M)))
  })
 }
 
 ELPout = deSolve::ode(y = c(L=20,M=20),times = 1:250,func = ELPode,
-                      parms = c(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10))
+                      parms = c(f=f,v=v,alpha=alpha,gamma=gamma,psi=psi,g=g))
 
 par(mfrow=c(1,2))
 maxY = max(max(ELPout[,"L"]),max(ELPout[,"M"]))
@@ -100,26 +107,32 @@ ELPodeN <- function(time,state,par){
   with(as.list(c(par,state)),{
 
     Ltot = sum(L1,L2,L3,L4)
-    dL1 = f*v*M - ((alpha*n) + gamma + psi*Ltot)*L1
-    dL2 = (alpha*n)*L1 - ((alpha*n) + gamma + psi*Ltot)*L2
-    dL3 = (alpha*n)*L2 - ((alpha*n) + gamma + psi*Ltot)*L3
-    dL4 = (alpha*n)*L3 - ((alpha*n) + gamma + psi*Ltot)*L4
+    dL1 = f*v*M - (alpha*n)*L1 - (gamma + psi*Ltot)*L1
+    dL2 = (alpha*n)*L1 - (alpha*n)*L2 - (gamma + psi*Ltot)*L2
+    dL3 = (alpha*n)*L2 - (alpha*n)*L3 - (gamma + psi*Ltot)*L3
+    dL4 = (alpha*n)*L3 - (alpha*n)*L4 - (gamma + psi*Ltot)*L4
     dM = (alpha*n)*L4 - g*M
     return(
-      list(c(dL1,dL2,dL3,dL4,dM),Ltot=Ltot)
+      list(c(dL1,dL2,dL3,dL4,dM),Ltot=Ltot,LarvalForceOfMortality=(gamma+(psi*Ltot)),larPup=((alpha*n)*L4))
     )
   })
 }
 
-ELPoutN = deSolve::ode(y = c(L1=20,L2=0,L3=0,L4=0,M=20),times = 1:250,func = ELPodeN,
-                       parms = c(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10,n=4))
+ELPoutN = deSolve::ode(y = c(L1=5,L2=5,L3=5,L4=5,M=20),times = 1:250,func = ELPodeN,
+                       parms = c(f=f,v=v,alpha=alpha,gamma=gamma,psi=0.001,g=g,n=4))
 
-plot(ELPoutN[,"Ltot"],col="darkgreen",type="l",main="purple is L1-L4,green sum(L), red mosy",ylim=c(0,max(ELPoutN[,-1])))
-matplot(x = ELPoutN[,c("L1","L2","L3","L4")],type="l",col="purple",add=T)
+plot(ELPoutN[,"Ltot"],col="darkgreen",type="l",main="purple is L1-L4,green is total L, red mosy",ylim=c(0,max(ELPoutN[,-1])))
+matplot(x = ELPoutN[,c("L1","L2","L3","L4")],type="l",col="purple",add=T,lty=c(1,2,3,4))
 lines(ELPoutN[,"M"],col="red")
 lines(ELPoutN[,"Ltot"],col="darkgreen")
 grid()
 par(mfrow=c(1,1))
+
+ELPout[,"LarvalForceOfMortality"]
+ELPoutN[,"LarvalForceOfMortality"]
+
+ELPout[,"larPup"]
+ELPoutN[,"larPup"]
 
 ###############################################################################
 #
@@ -192,3 +205,70 @@ plot(ELPout[,"L"],type="l",col="purple",ylim=c(0,maxY),main="ODE solution")
 lines(ELPout[,"M"],col="red")
 grid()
 par(mfrow=c(1,1))
+
+
+
+
+###############################################################################
+#
+# EL4P (SEAN VERSION) ODE VS DIFFERENCE EQN
+#
+###############################################################################
+
+tGrain = 24
+v = 20
+f = (0.3)/tGrain
+g = (1/10)/tGrain
+alpha=(0.1)/tGrain
+gamma=(0.1)/tGrain
+psi = 0.001/tGrain
+Lstart = 20
+Mstart = 20
+tMax=3
+n=4
+
+L1hist = numeric(tMax)
+L2hist = numeric(tMax)
+L3hist = numeric(tMax)
+L4hist = numeric(tMax)
+Mhist = numeric(tMax)
+LtotHist = numeric(tMax)
+
+Mhist[1] = Mstart
+L1hist[1] = Lstart/4
+L2hist[1] = Lstart/4
+L3hist[1] = Lstart/4
+L4hist[1] = Lstart/4
+LtotHist[1] = Lstart
+
+tVec = seq(from=2,to=tMax+1,by=1/tGrain)
+for(i in 2:length(tVec)){
+  L1 = L1hist[i-1]
+  L2 = L2hist[i-1]
+  L3 = L3hist[i-1]
+  L4 = L4hist[i-1]
+  M = Mhist[i-1]
+
+  Ltot = sum(L1,L2,L3,L4)
+  
+  dL1 = f*v*M - (alpha*n)*L1 - gamma*L1 - (psi*Ltot)*L1
+  dL2 = (alpha*n)*L1 - (alpha*n)*L2 - gamma*L2 - (psi*Ltot)*L2
+  dL3 = (alpha*n)*L2 - (alpha*n)*L3 - gamma*L3 - (psi*Ltot)*L3
+  dL4 = (alpha*n)*L3 - (alpha*n)*L4 - gamma*L4 - (psi*Ltot)*L4
+  dM = (alpha*n)*L4 - g*M
+
+  L1hist[i] = L1 + dL1
+  L2hist[i] = L2 + dL2
+  L3hist[i] = L3 + dL3
+  L4hist[i] = L4 + dL4
+  Mhist[i] = M + dM
+  LtotHist[i] = sum(L1hist[i],L2hist[i],L3hist[i],L4hist[i])
+}
+
+maxY = max(max(L1hist),max(L2hist),max(L3hist),max(L4hist),max(Mhist),max(LtotHist))
+plot(L1hist,type="l",col="purple",lty=1,ylim=c(0,maxY))
+lines(L2hist,col="purple",lty=2)
+lines(L3hist,col="purple",lty=3)
+lines(L4hist,col="purple",lty=4)
+lines(LtotHist,col="darkgreen")
+lines(Mhist,col="red")
