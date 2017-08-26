@@ -574,6 +574,10 @@ ELP__ecologicalSimulation <- function(obj_, g, f, v, L_init, M_init, tMax) {
     .Call('_MASHcpp_ELP__ecologicalSimulation', PACKAGE = 'MASHcpp', obj_, g, f, v, L_init, M_init, tMax)
 }
 
+ELP__ecologicalSimulation2 <- function(obj_, g_init, f_init, v_init, L_init, M_init, tMax) {
+    .Call('_MASHcpp_ELP__ecologicalSimulation2', PACKAGE = 'MASHcpp', obj_, g_init, f_init, v_init, L_init, M_init, tMax)
+}
+
 ELP__get_psi <- function(obj_) {
     .Call('_MASHcpp_ELP__get_psi', PACKAGE = 'MASHcpp', obj_)
 }

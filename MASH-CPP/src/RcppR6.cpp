@@ -581,6 +581,10 @@ std::vector<Rcpp::List> ELP__ecologicalSimulation(MASHcpp::RcppR6::RcppR6<MASHcp
   return obj_->ecologicalSimulation(g, f, v, L_init, M_init, tMax);
 }
 // [[Rcpp::export]]
+Rcpp::List ELP__ecologicalSimulation2(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double g_init, double f_init, double v_init, double L_init, double M_init, double tMax) {
+  return obj_->ecologicalSimulation2(g_init, f_init, v_init, L_init, M_init, tMax);
+}
+// [[Rcpp::export]]
 double ELP__get_psi(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_) {
   return obj_->get_psi();
 }

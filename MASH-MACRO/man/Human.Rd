@@ -22,7 +22,7 @@ Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
 \section{Methods}{
 
 \itemize{
-\item item 1:
+\item get_myID: see \code{\link{get_myID_human}}
 }
 }
 

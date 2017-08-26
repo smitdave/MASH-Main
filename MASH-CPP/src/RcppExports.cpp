@@ -1651,6 +1651,23 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ELP__ecologicalSimulation2
+Rcpp::List ELP__ecologicalSimulation2(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_, double g_init, double f_init, double v_init, double L_init, double M_init, double tMax);
+RcppExport SEXP _MASHcpp_ELP__ecologicalSimulation2(SEXP obj_SEXP, SEXP g_initSEXP, SEXP f_initSEXP, SEXP v_initSEXP, SEXP L_initSEXP, SEXP M_initSEXP, SEXP tMaxSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> >::type obj_(obj_SEXP);
+    Rcpp::traits::input_parameter< double >::type g_init(g_initSEXP);
+    Rcpp::traits::input_parameter< double >::type f_init(f_initSEXP);
+    Rcpp::traits::input_parameter< double >::type v_init(v_initSEXP);
+    Rcpp::traits::input_parameter< double >::type L_init(L_initSEXP);
+    Rcpp::traits::input_parameter< double >::type M_init(M_initSEXP);
+    Rcpp::traits::input_parameter< double >::type tMax(tMaxSEXP);
+    rcpp_result_gen = Rcpp::wrap(ELP__ecologicalSimulation2(obj_, g_init, f_init, v_init, L_init, M_init, tMax));
+    return rcpp_result_gen;
+END_RCPP
+}
 // ELP__get_psi
 double ELP__get_psi(MASHcpp::RcppR6::RcppR6<MASHcpp::ELP> obj_);
 RcppExport SEXP _MASHcpp_ELP__get_psi(SEXP obj_SEXP) {
@@ -1998,6 +2015,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_ELP__oneDay_aquaticDynamics", (DL_FUNC) &_MASHcpp_ELP__oneDay_aquaticDynamics, 2},
     {"_MASHcpp_ELP__oneDay_Emergence", (DL_FUNC) &_MASHcpp_ELP__oneDay_Emergence, 1},
     {"_MASHcpp_ELP__ecologicalSimulation", (DL_FUNC) &_MASHcpp_ELP__ecologicalSimulation, 7},
+    {"_MASHcpp_ELP__ecologicalSimulation2", (DL_FUNC) &_MASHcpp_ELP__ecologicalSimulation2, 7},
     {"_MASHcpp_ELP__get_psi", (DL_FUNC) &_MASHcpp_ELP__get_psi, 1},
     {"_MASHcpp_ELP__set_psi", (DL_FUNC) &_MASHcpp_ELP__set_psi, 2},
     {"_MASHcpp_ELP__get_alpha", (DL_FUNC) &_MASHcpp_ELP__get_alpha, 1},

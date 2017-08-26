@@ -73,6 +73,16 @@ ELP:
         - tMax: double
       return_type: "std::vector<Rcpp::List>"
 
+    ecologicalSimulation2:
+      args:
+        - g_init: double
+        - f_init: double
+        - v_init: double
+        - L_init: double
+        - M_init: double
+        - tMax: double
+      return_type: "Rcpp::List"
+
     ###################################
     #  Getters & Setters
     ###################################

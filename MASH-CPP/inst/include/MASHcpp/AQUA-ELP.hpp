@@ -102,22 +102,107 @@ public:
       dL4 = (alpha*4)*L3 - (alpha*4)*L4 - gamma*L4 - (psi*Ltot)*L4;
       dM = (alpha*4)*L4 - g*M;
 
+      Rcpp::Rcout << "dL1: " << dL1 << " dL2: " << dL2 << " dL3: " << dL3 << " dL4: " << dL4 << " dM: " << dM << std::endl;
+
       L1 += dL1;
       L2 += dL2;
       L3 += dL3;
       L4 += dL4;
       M += dM;
 
-      stateVar["L1"] = L1;
-      stateVar["L2"] = L2;
-      stateVar["L3"] = L3;
-      stateVar["L4"] = L4;
-      stateVar["M"] = M;
+      Rcpp::Rcout << "L1: " << L1 << " L2: " << L2 << " L3: " << L3 << " L4: " << L4 << " M: " << M << std::endl;
 
+      Rcpp::List stateVar = Rcpp::List::create(
+              Rcpp::Named("L1") = L1,
+              Rcpp::Named("L2") = L2,
+              Rcpp::Named("L3") = L3,
+              Rcpp::Named("L4") = L4,
+              Rcpp::Named("M") = M
+            );
+
+      // stateVar["L1"] = L1;
+      // stateVar["L2"] = L2;
+      // stateVar["L3"] = L3;
+      // stateVar["L4"] = L4;
+      // stateVar["M"] = M;
+
+      out.push_back(stateVar);
     }
 
     this->reset(); // reset L1-L4 compartments at end of simulation
     return(out);
+  };
+
+  Rcpp::List ecologicalSimulation2(const double &g_init, const double &f_init, const double &v_init, const double &L_init, const double &M_init, const int &tMax){
+
+    double g = g_init/tGrain;
+    double f = f_init/tGrain;
+    double v = v_init;
+
+    Rcpp::Rcout << "g: " << g << " f: " << f << " v: " << v << std::endl;
+
+    std::vector<double> L1hist;
+    L1hist.reserve(tMax*tGrain);
+    std::vector<double> L2hist;
+    L2hist.reserve(tMax*tGrain);
+    std::vector<double> L3hist;
+    L3hist.reserve(tMax*tGrain);
+    std::vector<double> L4hist;
+    L4hist.reserve(tMax*tGrain);
+    std::vector<double> Mhist;
+    Mhist.reserve(tMax*tGrain);
+
+    Mhist.push_back(M_init);
+    L1hist.push_back(L_init/4.0);
+    L2hist.push_back(L_init/4.0);
+    L3hist.push_back(L_init/4.0);
+    L4hist.push_back(L_init/4.0);
+
+    Rcpp::Rcout << " Mhist init: " << Mhist.back() << "L init's: " << L1hist.back() << " " << L2hist.back() << " " << L3hist.back() << " " << L4hist.back() << std::endl;
+
+    for(int i = 0; i < tMax; i++){
+
+      double L1now = L1hist.back();
+      double L2now = L2hist.back();
+      double L3now = L3hist.back();
+      double L4now = L4hist.back();
+      double Mnow = Mhist.back();
+
+      Rcpp::Rcout << " Mnow: " << Mnow << "L's: " << L1now << " " << L2now << " " << L3now << " " << L4now << std::endl;
+
+      double Ltot = L1now+L2now+L3now+L4now;
+
+      Rcpp::Rcout << "Ltot: " << Ltot << std::endl;
+
+      double dL1 = f*v*Mnow - (alpha*4)*L1now - gamma*L1now - (psi*Ltot)*L1now;
+      Rcpp::Rcout << "dL1: " << dL1 << std::endl;
+      double dL2 = (alpha*4)*L1now - (alpha*4)*L2now - gamma*L2now - (psi*Ltot)*L2now;
+      Rcpp::Rcout << "dL2: " << dL2 << std::endl;
+      double dL3 = (alpha*4)*L2now - (alpha*4)*L3now - gamma*L3now - (psi*Ltot)*L3now;
+      Rcpp::Rcout << "dL3: " << dL3 << std::endl;
+      double dL4 = (alpha*4)*L3now - (alpha*4)*L4now - gamma*L4now - (psi*Ltot)*L4now;
+      Rcpp::Rcout << "dL4: " << dL4 << std::endl;
+      double dM = (alpha*4)*L4now - g*Mnow;
+      Rcpp::Rcout << "dM: " << dM << std::endl;
+
+      L1hist.push_back((L1now+dL1));
+      L2hist.push_back((L2now+dL2));
+      L3hist.push_back((L3now+dL3));
+      L4hist.push_back((L4now+dL4));
+      Mhist.push_back((Mnow+dM));
+
+    }
+
+    this->reset(); // reset L1-L4 compartments at end of simulation
+    return(
+      Rcpp::List::create(
+        Rcpp::Named("L1") = L1hist,
+        Rcpp::Named("L2") = L2hist,
+        Rcpp::Named("L3") = L3hist,
+        Rcpp::Named("L4") = L4hist,
+        Rcpp::Named("M") = Mhist
+      )
+    );
   };
 
   ///////////////////////////////////
@@ -229,9 +314,9 @@ inline ELP::ELP(const double &alpha_new, const double &gamma_new, const double &
   L3 = 0.0;
   L4 = 0.0;
 
-  alpha = alpha_new/tGrain;
-  gamma = gamma_new/tGrain;
-  psi = psi_new/tGrain;
+  alpha = alpha_new/tGrain_new;
+  gamma = gamma_new/tGrain_new;
+  psi = psi_new/tGrain_new;
   tGrain = tGrain_new;
 
 }
