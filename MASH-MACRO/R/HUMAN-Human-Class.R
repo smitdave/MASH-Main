@@ -28,6 +28,30 @@
 #'
 #' @section Methods:
 #'  * get_myID: see \code{\link{get_myID_human}}
+#'  * set_myID: see \code{\link{set_myID_human}}
+#'  * get_houseID: see \code{\link{get_houseID_human}}
+#'  * set_houseID: see \code{\link{set_houseID_human}}
+#'  * get_patchID: see \code{\link{get_patchID_human}}
+#'  * set_patchID: see \code{\link{et_patchID_human}}
+#'  * get_bDay: see \code{\link{get_bDay_human}}
+#'  * set_bDay: see \code{\link{set_bDay_human}}
+#'  * get_EventQ: see \code{\link{get_EventQ_human}}
+#'  * get_Alive: see \code{\link{get_Alive_human}}
+#'  * set_Alive: see \code{\link{set_Alive_human}}
+#'  * get_sex: see \code{\link{get_sex_human}}
+#'  * set_sex: see \code{\link{set_sex_human}}
+#'  * get_bWeight: see \code{\link{get_bWeight_human}}
+#'  * set_bWeight: see \code{\link{set_bWeight_human}}
+#'  * set_Pathogens: see \code{\link{set_Pathogens_human}}
+#'  * get_HumansPointer: see \code{\link{get_HumansPointer_human}}
+#'  * set_HumansPointer: see \code{\link{set_HumansPointer_human}}
+#'  * oneEvent: see \code{\link{oneEvent_human}}
+#'  * runEvent: see \code{\link{runEvent_human}}
+#'  * liveLife: see \code{\link{liveLife_human}}
+#'  * event_maxDeath: see \code{\link{event_maxDeath_human}}
+#'  * death: see \code{\link{death_human}}
+#'  * track_history: see \code{\link{track_history_human}}
+#'  * get_history: see \code{\link{get_history_human}}
 #'
 #' @section Fields:
 #'  * **myID**: character identifier of this human, first digits are integer ID and digits after underscore (_) are the patchID; houseID is not necessary because
