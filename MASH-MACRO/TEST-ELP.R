@@ -323,8 +323,3 @@ par(mfrow=c(1,1))
 # par = list(f=0.3,v=20,alpha=0.1,gamma=0.1,psi=0.01,g=1/10)
 # out = rootSolve::multiroot(f = EL4P_roots,start = c(100,100,100,100,100),parms = par,useFortran = TRUE,positive = TRUE)
 # sum(out$root[1:4])
-
-
-
-
-
