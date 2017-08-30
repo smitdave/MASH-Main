@@ -23,6 +23,30 @@ Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
 
 \itemize{
 \item get_myID: see \code{\link{get_myID_human}}
+\item set_myID: see \code{\link{set_myID_human}}
+\item get_houseID: see \code{\link{get_houseID_human}}
+\item set_houseID: see \code{\link{set_houseID_human}}
+\item get_patchID: see \code{\link{get_patchID_human}}
+\item set_patchID: see \code{\link{et_patchID_human}}
+\item get_bDay: see \code{\link{get_bDay_human}}
+\item set_bDay: see \code{\link{set_bDay_human}}
+\item get_EventQ: see \code{\link{get_EventQ_human}}
+\item get_Alive: see \code{\link{get_Alive_human}}
+\item set_Alive: see \code{\link{set_Alive_human}}
+\item get_sex: see \code{\link{get_sex_human}}
+\item set_sex: see \code{\link{set_sex_human}}
+\item get_bWeight: see \code{\link{get_bWeight_human}}
+\item set_bWeight: see \code{\link{set_bWeight_human}}
+\item set_Pathogens: see \code{\link{set_Pathogens_human}}
+\item get_HumansPointer: see \code{\link{get_HumansPointer_human}}
+\item set_HumansPointer: see \code{\link{set_HumansPointer_human}}
+\item oneEvent: see \code{\link{oneEvent_human}}
+\item runEvent: see \code{\link{runEvent_human}}
+\item liveLife: see \code{\link{liveLife_human}}
+\item event_maxDeath: see \code{\link{event_maxDeath_human}}
+\item death: see \code{\link{death_human}}
+\item track_history: see \code{\link{track_history_human}}
+\item get_history: see \code{\link{get_history_human}}
 }
 }
 
