@@ -13,11 +13,15 @@
 
 rm(list=ls());gc()
 
-Tmax=10
+Tmax=20
 
 lambda <- function(x){
-  100*(sin(x*pi)+1)
+  100*(sin(2*x*pi)+1)
 }
+
+curve(expr = lambda,from = 0,to = 1,n = 1000,type = "l",main = "time-varying rate function (NHPP)")
+
+integrate(f = lambda,lower = 0,upper = 1,subdivisions = 1e3)$value
 
 Lambda <- function(t){
   integrate(f=lambda,lower=0,upper=t)$value
@@ -40,10 +44,9 @@ while(X[length(X)]<Tmax){
   print(paste0("sampled t: ",t))
 }
 
-hist(X,breaks=seq(0,max(X)+1,by=.1),col="steelblue")
+hist(X,breaks=seq(0,max(X)+1,by=.1),col="steelblue",main="NHPP trajectory",xlab="Time",ylab="")
    u=seq(0,max(X),by=.02)
    lines(u,lambda(u)/10,lwd=2,col="red")
 
-integrate(f = lambda,lower = 0,upper = 1,subdivisions = 1e3)$value
-
-cutX = cut(x = X,breaks=0:10,right = FALSE)
+cutX = cut(x = X,breaks=0:20,right = FALSE)
+table(cutX)
