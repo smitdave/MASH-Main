@@ -135,7 +135,6 @@ get_myID_human = function(){
 return(private$myID)
 }
 
-
 Human$set(which="public", name="get_myID",
 	value=get_myID_human,
 	overwrite=TRUE)
@@ -150,7 +149,6 @@ Human$set(which="public", name="get_myID",
 set_myID_human = function(myID){
  private$myID = myID
 }
-
 
 Human$set(which="public", name="set_myID",
 	value=set_myID_human,
@@ -167,7 +165,6 @@ get_houseID_human = function(){
  return(private$houseID)
 }
 
-
 Human$set(which="public", name="get_houseID",
 	value=get_houseID_human,
 	overwrite=TRUE)
@@ -182,7 +179,6 @@ Human$set(which="public", name="get_houseID",
 set_houseID_human = function(houseID){
  private$houseID = houseID
 }
-
 
 Human$set(which="public", name="set_houseID",
 	value=set_houseID_human,
@@ -199,7 +195,6 @@ get_patchID_human = function(){
  return(private$patchID)
 }
 
-
 Human$set(which="public", name="get_patchID",
 	value=get_patchID_human,
 	overwrite=TRUE)
@@ -214,7 +209,6 @@ Human$set(which="public", name="get_patchID",
 set_patchID_human = function(patchID){
  private$patchID = patchID
 }
-
 
 Human$set(which="public", name="set_patchID",
 	value=set_patchID_human,
@@ -231,7 +225,6 @@ get_bDay_human = function(){
  return(private$bDay)
 }
 
-
 Human$set(which="public", name="get_bDay",
 	value=get_bDay_human,
 	 overwrite=TRUE)
@@ -246,7 +239,6 @@ Human$set(which="public", name="get_bDay",
 set_bDay_human = function(bDay){
  private$bDay = bDay
 }
-
 
 Human$set(which="public", name="set_bDay",
 	value=set_bDay_human,
@@ -263,7 +255,6 @@ get_EventQ_human = function(){
  return(private$EventQueue)
 }
 
-
 Human$set(which="public", name="get_bDay",
 	value=get_bDay_human,
 	overwrite=TRUE)
@@ -278,7 +269,6 @@ Human$set(which="public", name="get_bDay",
 get_Alive_human = function(){
  return(private$Alive)
 }
-
 
 Human$set(which="public", name="get_Alive",
 	value=get_Alive_human,
@@ -295,7 +285,6 @@ set_Alive_human = function(Alive){
  private$Alive = Alive
 }
 
-
 Human$set(which="public", name="set_Alive",
 	value=set_Alive_human,
 	overwrite=TRUE)
@@ -310,7 +299,6 @@ Human$set(which="public", name="set_Alive",
 get_sex_human = function(){
  return(private$sex)
 }
-
 
 Human$set(which="public", name="get_sex",
 	value=get_sex_human,
@@ -327,7 +315,6 @@ set_sex_human = function(sex){
  private$sex = sex
 }
 
-
 Human$set(which="public", name="set_sex",
 	value=set_sex_human,
 	overwrite=TRUE)
@@ -342,7 +329,6 @@ Human$set(which="public", name="set_sex",
 get_bWeight_human = function(){
  return(private$bWeight)
 }
-
 
 Human$set(which="public", name="get_bWeight",
 	value=get_bWeight_human,
@@ -359,7 +345,6 @@ set_bWeight_human = function(bWeight){
  private$bWeight = bWeight
 }
 
-
 Human$set(which="public", name="set_bWeight",
 	value=set_bWeight_human,
 	overwrite=TRUE)
@@ -375,7 +360,6 @@ get_Pathogens_human = function(){
  return(private$Pathogens)
 }
 
-
 Human$set(which="public", name="get_Pathogens",
 	value=get_Pathogens_human,
 	 overwrite=TRUE)
@@ -390,7 +374,6 @@ Human$set(which="public", name="get_Pathogens",
 set_Pathogens_human = function(Pathogens){
  private$Pathogens = Pathogens
 }
-
 
 Human$set(which="public", name="set_Pathogens",
 	value=set_Pathogens_human,
@@ -450,7 +433,6 @@ self$runEvent(tEvent = event$tEvent, PAR = event$PAR, tag = event$tag)
 private$EventQueue$rmFirstEventFromQ()
 }
 
-
 Human$set(which="public", name="oneEvent",
 	value=oneEvent_human,
 	 overwrite=TRUE)
@@ -466,7 +448,6 @@ runEvent_human = function(tEvent, PAR, tag){
  self[[tag]](tEvent, PAR)
 }
 
-
 Human$set(which="public", name="runEvent",
 	value=runEvent_human,
 	 overwrite=TRUE)
@@ -479,15 +460,14 @@ Human$set(which="public", name="runEvent",
 #' More details
 #'
 liveLife_human = function(tPause){
-while(private$Alive & private$EventQueue$firstTime() < tPause){
-  self$oneEvent(tPause)
-  if(private$EventQueue$get_queueN()==0){
-    break()
+  while(private$Alive & private$EventQueue$firstTime() < tPause){
+    self$oneEvent(tPause)
+    if(private$EventQueue$get_queueN()==0){
+      break()
+    }
   }
-}
 
 }
-
 
 Human$set(which="public", name="lifeLife",
 	value=liveLife_human,
@@ -509,7 +489,6 @@ event_maxDeath_human = function(tEvent = 73000, PAR = NULL, tag = "death"){
  list(tEvent = tEvent, PAR = PAR, tag = tag)
 }
 
-
 Human$set(which="public", name="event_maxDeath",
 	value=event_maxDeath_human,
 	 overwrite=TRUE)
@@ -526,7 +505,6 @@ death_human = function(tEvent, PAR){
  self$track_history(tEvent = tEvent, event = "D")
  private$Alive = FALSE
 }
-
 
 Human$set(which="public", name="death",
 	value=death_human,
@@ -548,7 +526,6 @@ track_history_human = function(tEvent, event){
  private$History$track_history(tEvent, event)
 }
 
-
 Human$set(which="public", name="track_history",
 	value=track_history_human,
 	 overwrite=TRUE)
@@ -563,7 +540,6 @@ Human$set(which="public", name="track_history",
 get_history_human = function(){
  return(private$History$get_history())
 }
-
 
 Human$set(which="public", name="get_history",
 	value=get_history_human,

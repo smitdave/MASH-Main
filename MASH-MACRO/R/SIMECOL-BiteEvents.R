@@ -45,7 +45,7 @@ biteIntensity_SimEcol <- function(t,hb,hs,trend=0,wt=0){
 #'
 #' @export
 biteWeight_SimEcol <- function(age, aa=1.7, bb=4){
-  
+
 }
 
 
