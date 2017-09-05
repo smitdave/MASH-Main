@@ -11,24 +11,161 @@
 #
 ###############################################################################
 
-class = R6Class("class", public = list(
+library(R6)
+library(MASHcpp)
 
-  initialize = function(n=10) {
-    private$queue = MASHcpp::HumanEventQ()
-    eventT = rlnorm(n = n)
-    for(i in 1:length(eventT)){
-      private$queue$addEvent2Q(list(tEvent=eventT[i],tag="test",PAR=NULL))
-      }
+TestClass = R6Class("TestClass",
+
+  portable = TRUE,
+  cloneable = TRUE,
+  lock_class = FALSE,
+  lock_objects = FALSE,
+
+  #public members
+  public = list(
+
+    #################################################
+    # Constructor
+    #################################################
+
+    initialize = function(myID, myState, tStart){
+
+      private$myID = myID
+      private$state = myState
+      private$tNow = tStart
+      private$tNext = NULL
+
     },
-  addQ = function(){
-    private$queue$addEvent2Q(list(tEvent=500,tag="test",PAR=NULL))
+
+    #################################################
+    # Methods
+    #################################################
+
+    get_alive = function(){
+      return(private$ALIVE)
+    },
+    set_alive = function(ALIVE){
+      private$ALIVE = ALIVE
+    },
+
+    get_ID = function(){
+      return(private$myID)
+    },
+
+    get_state = function(){
+      return(private$state)
+    },
+    set_state = function(state){
+      private$state = state
+    },
+
+    get_tNow = function(){
+      return(private$tNow)
+    },
+    set_tNow = function(tNow){
+      private$tNow = tNow
+    },
+
+    get_hist = function(){
+      return(private$history)
+    },
+
+    simulate = function(){
+      private$ALIVE = TRUE
+      private$tNow = 0
+      while(private$ALIVE){
+
+        # about 1.5 days on average
+        tau = rgamma(n=1,shape=5,rate=(1/1.5)*5)
+
+        private$tNow = private$tNow + tau
+
+        private$history = c(private$history,private$tNow)
+
+        # not correctly scaled but good enough
+        if(runif(1)<0.15){
+          private$ALIVE = FALSE
+        }
+
+        # terrible statistical properties
+        if(private$tNow > 50){
+          private$ALIVE = FALSE
+        }
+
+      }
+
+    }
+
+
+  ),
+
+  #private members
+  private = list(
+
+    # basic fields
+    myID = NULL,
+    myState = NULL,
+    tNow = NULL,
+    tNext = NULL,
+
+
+    history = 0,
+    ALIVE = NULL,
+
+    popPointer = NULL
+
+  )
+
+)
+
+
+# make a hash table and put 200 of our test class in them
+myPop = MASHcpp::HashMap$new(N=200)
+
+for(i in 1:200){
+  myPop$assign(key = as.character(i),value = TestClass$new(i,"rest",0))
+}
+
+# make sure they are there
+myPop$ls()
+myPop$get(key = "10")
+
+# cool, now lets simulate each of them.
+myPop$eapply(tag = "simulate",returnVal = FALSE)
+# make sure that they ran and that they all died.
+myPop$eapply(tag = "get_hist",returnVal = TRUE)
+
+rm(myPop);gc()
+
+# now benchmark it
+library(microbenchmark)
+microbenchmark::microbenchmark(
+  {
+    myPop = MASHcpp::HashMap$new(N=200)
+    for(i in 1:200){
+      myPop$assign(key = as.character(i),value = TestClass$new(i,"rest",0))
+    }
+    myPop$eapply(tag = "simulate",returnVal = FALSE)
+    myPop$eapply(tag = "get_hist",returnVal = FALSE)
   },
-  eraseQueue = function(){
-    private$queue = NULL
-  },
-  addQstuff = function(time){
-    private$queue$addEvent2Q(list(tEvent=time,tag="test",PAR=NULL))
-  },
-  get_QueueN = function(){private$queue$get_queueN()},
-  get_queue = function(){private$queue$get_EventQ()}
-),private=list( queue = NULL))
+  times = 100
+)
+
+
+# # when we benchmark we will do:
+# microbenchmark::microbenchmark(
+#   {
+#     myPop = MASHcpp::HashMap$new(N=200)
+#     for(i in 1:200){
+#       myPop$assign(key = as.character(i),value = TestClass$new(i,"rest",0))
+#     }
+#     myPop$eapply(tag = "simulate",returnVal = FALSE)
+#     myPop$eapply(tag = "get_hist",returnVal = FALSE)
+#   },
+#   {
+#     # your code for the double linked list will go here!
+#   },
+#   times = 100
+# )
+
+
