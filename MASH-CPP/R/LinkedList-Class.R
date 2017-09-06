@@ -120,7 +120,7 @@ dLinkedList$set(which = "public",name = "makeNode",
 addElem_dLinkedList <-function(new, prev, nex){
   #if (isEmpty_dLinkedList(prev)) {
    # assign(element = val, nextnode = nex, envir = list2env(prev))
-   # } 
+   # }
  # else {
     llist<-makeNode(val=new, prevnode=prev, nextnode=nex)
    # }

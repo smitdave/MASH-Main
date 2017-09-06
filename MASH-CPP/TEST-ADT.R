@@ -137,35 +137,31 @@ myPop$eapply(tag = "get_hist",returnVal = TRUE)
 
 rm(myPop);gc()
 
-# now benchmark it
+# now benchmark just making some mosquitoes and running a sim
 library(microbenchmark)
 microbenchmark::microbenchmark(
   {
-    myPop = MASHcpp::HashMap$new(N=200)
+    hashTablePop = MASHcpp::HashMap$new(N=200)
     for(i in 1:200){
-      myPop$assign(key = as.character(i),value = TestClass$new(i,"rest",0))
+      hashTablePop$assign(key = as.character(i),value = TestClass$new(i,"rest",0))
     }
-    myPop$eapply(tag = "simulate",returnVal = FALSE)
-    myPop$eapply(tag = "get_hist",returnVal = FALSE)
+    hashTablePop$eapply(tag = "simulate",returnVal = FALSE)
+    hashTablePop$eapply(tag = "get_hist",returnVal = FALSE)
   },
   times = 100
 )
 
+rm(c("hashTablePop"));gc()
 
-# # when we benchmark we will do:
+# # now benchmark adding and removing elements from the data structure
 # microbenchmark::microbenchmark(
 #   {
-#     myPop = MASHcpp::HashMap$new(N=200)
-#     for(i in 1:200){
-#       myPop$assign(key = as.character(i),value = TestClass$new(i,"rest",0))
-#     }
-#     myPop$eapply(tag = "simulate",returnVal = FALSE)
-#     myPop$eapply(tag = "get_hist",returnVal = FALSE)
-#   },
-#   {
-#     # your code for the double linked list will go here!
-#   },
-#   times = 100
+#     hashTablePop = MASHcpp::HashMap$new(N=200)
+#     
+#     # hashTablePop$assign(key = )
+#   }
+#   
 # )
+
 
 
