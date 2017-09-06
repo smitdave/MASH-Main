@@ -157,11 +157,8 @@ rm(c("hashTablePop"));gc()
 # microbenchmark::microbenchmark(
 #   {
 #     hashTablePop = MASHcpp::HashMap$new(N=200)
-#     
+#
 #     # hashTablePop$assign(key = )
 #   }
-#   
+#
 # )
-
-
-

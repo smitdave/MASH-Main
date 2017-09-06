@@ -77,7 +77,7 @@ SimpleMosquito <- R6::R6Class(classname="MosquitoRM",
                      private = list(
 
                        # basic fields
-                       myID = NULL
+                       myID = NULL,
                        myState = NULL,
                        tNow = NULL,
                        tNext = NULL,

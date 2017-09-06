@@ -31,61 +31,39 @@ biteIntensity_SimEcol <- function(t,hb,hs,trend=0,wt=0){
 }
 
 
-#' Simulated Ecology: Biting Intensity Function
+#' Simulated Ecology: Age-dependent Biting Weight
 #'
-#' Evaluate instantaneous biting intensity at time t. Biting intensity is modulated by periodic
-#' seasonality.
+#' Evaluate age-dependent human biting weight.
 #'
-#' @param t time (units of days)
-#' @param hb baseline biting
-#' @param hs amplitude of seasonal biting around baseline \code{hb}
-#' @param trend modulate biting intensity over time
-#' @param wt biting weight as function of time (is a vector calculated from \code{\link{biteWeight_SimEcol}})
+#' @param age numeric value of age, given in days since birth
+#' @param aa maximum value attained by the function
+#' @param bb speed at which function attains its maximum (smaller values lead to faster attainment of maximum, larger values become linear, must be >0)
 #'
 #'
 #' @export
 biteWeight_SimEcol <- function(age, aa=1.7, bb=4){
-
-}
-
-
-
-
-
-hh = function(t,hb,hs,trend=0,wt=1){
-  wt*(hb*(1+trend*t)*(1 + hs*sin(2*pi*t/365))^2)
-}
-
-make.weight = function(age, aa=1.7, bb=4){
   aa*age/(bb*365+age)
 }
 
-# N: number of bites
-# mxYR: max year (make bites for 0:mxYR time period)
-# hb:
-# hs:
-# trend:
-# wt:
-# dt: time step (in days)
-make.bites = function(N, mxYR, hb, hs, trend=0, wt=1, dt=5){
-  t = seq(0,mxYR*365, by = dt)
-  wt = make.weight(t)
-  xp = hh(t = t,hb =  hb,hs =  hs,trend = trend, wt=wt)
-  xpC = cumsum(xp)
-  bite.dt = runif(N,0,max(xpC))
-  get.ix = function(i){
-    min(which(bite.dt[i] < xpC))
-  }
-  ixx = sapply(1:N, get.ix)
-  t[ixx]
-}
 
 
-make.bites.plot = function(N, mxYR, hb, hs, trend=0, wt=1, dt=5, plot=FALSE){
+#' Simulated Ecology: Generate Seasonal Biting Pattern
+#'
+#' Generate a seasonally-forced lifetime biting pattern for a single human as a non-homogeneous Poisson process.
+#'
+#' @param N total number of bites over time interval
+#' @param mxYR time in years to simulate (will run from 0 to mxYR)
+#' @param hb passed to \code{\link{biteIntensity_SimEcol}}
+#' @param hs passed to \code{\link{biteIntensity_SimEcol}}
+#' @param trend strength of seasonal trend, passed to \code{\link{biteIntensity_SimEcol}}
+#' @param dt time step (in days)
+#'
+#' @export
+makeBites_SimEcol <- function(N, mxYR, hb, hs, trend = 0, dt = 5){
 
   t = seq(0,mxYR*365, by = dt)
-  wt = make.weight(t) # biting weight is increasing function age; bites should become more dense in time as age increase
-  xp = hh(t = t,hb =  hb,hs =  hs,trend = trend, wt=wt) # biting hazard?
+  wt = biteWeight_SimEcol(t) # biting weight is increasing function age; bites should become more dense in time as age increase
+  xp = biteIntensity_SimEcol(t = t,hb =  hb,hs =  hs,trend = trend, wt=wt) # biting hazard?
   xpC = cumsum(xp) # cumulative biting hazard?
   bite.dt = runif(N,0,max(xpC))
 
@@ -93,6 +71,34 @@ make.bites.plot = function(N, mxYR, hb, hs, trend=0, wt=1, dt=5, plot=FALSE){
     min(which(bite.dt[i] < xpC))
   },FUN.VALUE = integer(1),bite.dt=bite.dt,xpC=xpC)
 
+  return(t[ixx])
+}
+
+
+#' Simulated Ecology: Plot Seasonal Biting Pattern
+#'
+#' Plot the non-homogeneous Poisson biting process produced by \code{\link{makeBitesPlot_SimEcol}}.
+#'
+#' @param N total number of bites over time interval
+#' @param mxYR time in years to simulate (will run from 0 to mxYR)
+#' @param hb passed to \code{\link{biteIntensity_SimEcol}}
+#' @param hs passed to \code{\link{biteIntensity_SimEcol}}
+#' @param trend strength of seasonal trend, passed to \code{\link{biteIntensity_SimEcol}}
+#' @param dt time step (in days)
+#' @param returnVals if \code{TRUE}, return the biting times
+#'
+#' @export
+makeBitesPlot_SimEcol <- function(N, mxYR, hb, hs, trend = 0, dt = 5, returnVals = FALSE){
+
+  t = seq(0,mxYR*365, by = dt)
+  wt = biteWeight_SimEcol(t) # biting weight is increasing function age; bites should become more dense in time as age increase
+  xp = biteIntensity_SimEcol(t = t,hb =  hb,hs =  hs,trend = trend, wt=wt) # biting hazard?
+  xpC = cumsum(xp) # cumulative biting hazard?
+  bite.dt = runif(N,0,max(xpC))
+
+  ixx = vapply(X = 1:N,FUN = function(i,bite.dt,xpC){
+    min(which(bite.dt[i] < xpC))
+  },FUN.VALUE = integer(1),bite.dt=bite.dt,xpC=xpC)
 
   # set up plotting surface
   par(mfrow=c(2,2))
@@ -119,26 +125,10 @@ make.bites.plot = function(N, mxYR, hb, hs, trend=0, wt=1, dt=5, plot=FALSE){
   xAxis = seq(from=0,to=round(max(t[ixx]),digits = -3),length.out = 10)
   axis(side = 1,at = xAxis,labels = round(xAxis/365,1))
 
-  # it might be nice to try estimating the intensity function of a NHPP with some package on this data
-  # densEst = density(x = sort(t[ixx]))
-  # nwSmooth = ksmooth(x = sort(t[ixx]),y=sort(xpC[ixx]),bandwidth = max(t[ixx])/10)
-  # lines(x = nwSmooth$x,y = nwSmooth$y,col = "grey20",lwd=2.5)
-
   # reset graphical pars
   par(mar = oldMar,mfrow=c(1,1))
 
-  # return bite times
-  t[ixx]
+  if(returnVals){
+    return(t[ixx])
+  }
 }
-
-
-#wt = seq(0, 5*365, by = 5)
-
-age = seq(0:3650)
-wt = make.weight(age)
-xp = sapply(X = age,FUN = hh, hb=2, hs = 1, wt=wt)
-#plot(age, xp, type = "l")
-
-bites= sort(make.bites(70, 10, 1, 5, wt=wt, trend = .05))
-make.bites.plot(70, 10, 1, 5, wt=wt, trend = .05,plot = T)
-#plot(bites, bites*0, type = "p")
