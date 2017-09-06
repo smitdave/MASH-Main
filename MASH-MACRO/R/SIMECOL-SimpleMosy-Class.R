@@ -67,7 +67,6 @@ SimpleMosquito <- R6::R6Class(classname="MosquitoRM",
                          private$myID = myID
                          private$state = myState
                          private$tNow = tStart
-                         prviate$tNext = NULL
 
                        }
 
@@ -77,10 +76,10 @@ SimpleMosquito <- R6::R6Class(classname="MosquitoRM",
                      private = list(
 
                        # basic fields
-                       myID = NULL,
-                       myState = NULL,
-                       tNow = NULL,
-                       tNext = NULL,
+                       myID = character(1),
+                       myState = character(1),
+                       tNow = numeric(1),
+                       tNext = numeric(1),
 
                        # pointers
                        PatchPointer = NULL,
