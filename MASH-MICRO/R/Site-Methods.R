@@ -284,47 +284,275 @@ FeedingSite$set(which = "public",name = "set_LandscapePointer",
 )
 
 
-
 ###############################################################################
 # Aquatic Habitat Site
 ###############################################################################
 
-# site index
-get_ix <- function(){return(private$ix)}
-set_ix <- function(ix){private$ix = ix}
+#' Get ix
+#'
+#' Return site index \code{ix}
+#'  * This method is bound to \code{AquaticSite$get_ix}
+#'
+get_ix_AquaticSite <- function(){return(private$ix)}
 
-# site coordinates
-get_siteXY <- function(){return(private$siteXY)}
-set_siteXY <- function(siteXY){private$siteXY = siteXY}
+AquaticSite$set(which = "public",name = "get_ix",
+  value = get_ix_AquaticSite, overwrite = TRUE
+)
 
-# search weight
-get_searchWt <- function(){return(private$searchWt)}
-set_searchWt <- function(searchWt){private$searchWt = searchWt}
+#' Set ix
+#'
+#' Set site index \code{ix}
+#'  * This method is bound to \code{AquaticSite$set_ix}
+#'
+#' @param ix integer
+#'
+set_ix_AquaticSite <- function(ix){private$ix = ix}
 
-# site type (1 is domestic, 0 is not peri-domestic)
-get_siteType <- function(){return(private$siteType)}
-set_siteType <- function(siteType){priate$siteType = siteType}
+AquaticSite$set(which = "public",name = "get_ix",
+  value = set_ix_AquaticSite, overwrite = TRUE
+)
 
-# AquaticSite
+#' Get siteXY
+#'
+#' Get site coordinates \code{siteXY}
+#'  * This method is bound to \code{AquaticSite$get_siteXY}
+#'
+get_siteXY_AquaticSite <- function(){return(private$siteXY)}
 
-get_haz <- function(){return(private$haz)}
-set_haz <- function(haz){private$haz = haz}
+AquaticSite$set(which = "public",name = "get_siteXY",
+  value = get_siteXY_AquaticSite, overwrite = TRUE
+)
 
-get_ImagoQ <- function(){return(private$ImagoQ)}
-set_ImagoQ <- function(ImagoQ){private$ImagoQ = ImagoQ}
+#' Set siteXY
+#'
+#' Set site coordinates \code{siteXY}
+#'  * This method is bound to \code{AquaticSite$set_siteXY}
+#'
+#' @param ix numeric(2)
+#'
+set_siteXY_AquaticSite <- function(newSiteXY){private$siteXY = set_siteXY}
 
-get_EggQ <- function(){return(private$EggQ)}
-set_EggQ <- function(EggQ){private$EggQ = EggQ}
+AquaticSite$set(which = "public",name = "get_siteXY",
+  value = set_siteXY_AquaticSite, overwrite = TRUE
+)
 
-get_EL4P <- function(){return(private$EL4P)}
-set_EL4P <- function(EL4P){private$EL4P = EL4P}
+#' Get searchWt
+#'
+#' Get site search weight \code{searchWt}
+#'  * This method is bound to \code{AquaticSite$get_searchWt}
+#'
+get_searchWt_AquaticSite <- function(){return(private$get_searchWt)}
 
-get_lambda <- function(){return(private$lambda)}
-set_lambda <- function(lambda){private$lambda = lambda}
+AquaticSite$set(which = "public",name = "get_siteXY",
+  value = get_searchWt_AquaticSite, overwrite = TRUE
+)
 
-get_numGenotypes <- function(){return(private$numGenotypes)}
-set_numGenotypes <- function(numGenotypes){private$numGenotypes = numGenotypes}
+#' Set searchWt
+#'
+#' Set site search weight \code{searchWt}
+#'  * This method is bound to \code{AquaticSite$set_searchWt}
+#'
+#' @param ix numeric
+#'
+set_searchWt_AquaticSite <- function(searchWt){private$searchWt = searchWt}
 
-# landscape pointer
-get_LandscapePointer <- function(){return(private$LandscapePointer)}
-set_LandscapePointer <- function(LandscapePointer){private$LandscapePointer = LandscapePointer}
+AquaticSite$set(which = "public",name = "set_searchWt",
+  value = set_searchWt_AquaticSite, overwrite = TRUE
+)
+
+
+#' Get siteType
+#'
+#' Get site type \code{siteType}; 1 is peri-domestic, 0 is non peri-domestic.
+#'  * This method is bound to \code{AquaticSite$get_siteType}
+#'
+get_siteType_AquaticSite <- function(){return(private$siteType)}
+
+AquaticSite$set(which = "public",name = "get_siteType",
+  value = get_siteType_AquaticSite, overwrite = TRUE
+)
+
+#' Set siteType
+#'
+#' Set site type \code{siteType}; 1 is peri-domestic, 0 is non peri-domestic.
+#'  * This method is bound to \code{AquaticSite$set_siteType}
+#'
+#' @param siteType integer
+#'
+set_siteType_AquaticSite <- function(siteType){priate$siteType = siteType}
+
+AquaticSite$set(which = "public",name = "set_siteType",
+  value = set_siteType_AquaticSite, overwrite = TRUE
+)
+
+
+#' Get haz
+#'
+#' Get landing hazard associated with outside wall at this site \code{haz}
+#'  * This method is bound to \code{AquaticSite$get_haz}
+#'
+get_haz_AquaticSite <- function(){return(private$haz)}
+
+AquaticSite$set(which = "public",name = "get_haz",
+  value = get_haz_AquaticSite, overwrite = TRUE
+)
+
+#' Set haz
+#'
+#' Set landing hazard associated with outside wall at this site \code{haz}
+#'  * This method is bound to \code{AquaticSite$set_haz}
+#'
+#' @param haz numeric
+#'
+set_haz_AquaticSite <- function(haz){private$haz = haz}
+
+AquaticSite$set(which = "public",name = "set_haz",
+  value = set_haz_AquaticSite, overwrite = TRUE
+)
+
+
+#' Get ImagoQ
+#'
+#' Get mosquito imago queue of emerging adults, object of class \code{\link[MASHcpp]{ImagoQ}}
+#'  * This method is bound to \code{AquaticSite$get_ImagoQ}
+#'
+get_ImagoQ_AquaticSite <- function(){return(private$ImagoQ)}
+
+AquaticSite$set(which = "public",name = "get_ImagoQ",
+  value = get_ImagoQ_AquaticSite, overwrite = TRUE
+)
+
+#' Set ImagoQ
+#'
+#' Set mosquito imago queue of emerging adults, object of class \code{\link[MASHcpp]{ImagoQ}}
+#'  * This method is bound to \code{AquaticSite$set_ImagoQ}
+#'
+#' @param ImagoQ object of class \code{\link[MASHcpp]{ImagoQ}}
+#'
+set_ImagoQ_AquaticSite <- function(ImagoQ){private$ImagoQ = ImagoQ}
+
+AquaticSite$set(which = "public",name = "set_ImagoQ",
+  value = set_ImagoQ_AquaticSite, overwrite = TRUE
+)
+
+#' Get EggQ
+#'
+#' Get mosquito egg batch queue, object of class \code{\link[MASHcpp]{EggQ}}
+#'  * This method is bound to \code{AquaticSite$get_EggQ}
+#'
+get_EggQ_AquaticSite <- function(){return(private$EggQ)}
+
+AquaticSite$set(which = "public",name = "get_EggQ",
+  value = get_EggQ_AquaticSite, overwrite = TRUE
+)
+
+#' Set EggQ
+#'
+#' Set mosquito egg batch queue, object of class \code{\link[MASHcpp]{EggQ}}
+#'  * This method is bound to \code{AquaticSite$set_EggQ}
+#'
+#' @param EggQ object of class \code{\link[MASHcpp]{EggQ}}
+#'
+set_EggQ_AquaticSite <- function(EggQ){private$EggQ = EggQ}
+
+AquaticSite$set(which = "public",name = "set_EggQ",
+  value = set_EggQ_AquaticSite, overwrite = TRUE
+)
+
+#' Get EL4P
+#'
+#' Get aquatic populations, object of class \code{\link[MASHcpp]{EL4P}}
+#'  * This method is bound to \code{AquaticSite$get_EL4P}
+#'
+get_EL4P_AquaticSite <- function(){return(private$EL4P)}
+
+AquaticSite$set(which = "public",name = "get_EL4P",
+  value = get_EL4P_AquaticSite, overwrite = TRUE
+)
+
+#' Set EL4P
+#'
+#' Set aquatic populations, object of class \code{\link[MASHcpp]{EL4P}}
+#'  * This method is bound to \code{AquaticSite$set_EL4P}
+#'
+#' @param EL4P object of class \code{\link[MASHcpp]{EL4P}}
+#'
+set_EL4P_AquaticSite <- function(EL4P){private$EL4P = EL4P}
+
+AquaticSite$set(which = "public",name = "set_EL4P",
+  value = set_EL4P_AquaticSite, overwrite = TRUE
+)
+
+#' Get lambda
+#'
+#' Get vector of lambda of mean daily emergence at this site
+#'  * This method is bound to \code{AquaticSite$get_lambda}
+#'
+get_lambda_AquaticSite <- function(){return(private$lambda)}
+
+AquaticSite$set(which = "public",name = "get_lambda",
+  value = get_lambda_AquaticSite, overwrite = TRUE
+)
+
+#' Set lambda
+#'
+#' Set vector of lambda of mean daily emergence at this site
+#'  * This method is bound to \code{AquaticSite$set_lambda}
+#'
+#' @param lambda numeric(365)
+#'
+set_lambda_AquaticSite <- function(lambda){private$lambda = lambda}
+
+AquaticSite$set(which = "public",name = "set_lambda",
+  value = set_lambda_AquaticSite, overwrite = TRUE
+)
+
+#' Get numGenotypes
+#'
+#' Get number of genotypes.
+#'  * This method is bound to \code{AquaticSite$get_numGenotypes}
+#'
+get_numGenotypes_AquaticSite <- function(){return(private$numGenotypes)}
+
+AquaticSite$set(which = "public",name = "get_numGenotypes",
+  value = get_numGenotypes_AquaticSite, overwrite = TRUE
+)
+
+#' Set numGenotypes
+#'
+#' Set number of genotypes.
+#'  * This method is bound to \code{AquaticSite$set_numGenotypes}
+#'
+#' @param numGenotypes numeric(365)
+#'
+set_numGenotypes_AquaticSite <- function(numGenotypes){private$numGenotypes = numGenotypes}
+
+AquaticSite$set(which = "public",name = "set_numGenotypes",
+  value = set_numGenotypes_AquaticSite, overwrite = TRUE
+)
+
+
+#' Get \code{\link{Landscape}} Pointer
+#'
+#' Return \code{Landscape$self} enclosing this site.
+#'  * This method is bound to \code{AquaticSite$get_LandscapePointer}
+#'
+get_LandscapePointer_AquaticSite <- function(){return(private$LandscapePointer)}
+
+AquaticSite$set(which = "public",name = "get_LandscapePointer",
+  value = get_LandscapePointer_AquaticSite, overwrite = TRUE
+)
+
+
+#' Set \code{\link{Landscape}} Pointer
+#'
+#' Set the pointer \code{Landscape$self} enclosing this site.
+#'  * This method is bound to \code{AquaticSite$set_LandscapePointer}
+#'
+#' @param LandscapePointer an environment
+#'
+set_LandscapePointer_AquaticSite <- function(LandscapePointer){private$LandscapePointer = LandscapePointer}
+
+AquaticSite$set(which = "public",name = "set_LandscapePointer",
+  value = set_LandscapePointer_AquaticSite, overwrite = TRUE
+)
