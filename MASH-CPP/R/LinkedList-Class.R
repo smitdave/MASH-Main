@@ -8,13 +8,13 @@
 #
 #   MASH-CPP
 #   HashMap Class Definition
-#   Sean Wu
+#   Biyonka Liang & Sean Wu
 #   August 18, 2017
 #
 ###############################################################################
 
 ###############################################################################
-# HashMap: Class Definition
+# Double Linked List: Class Definition
 ###############################################################################
 
 #'  HashMap Class Definition
@@ -54,14 +54,17 @@ dLinkedList <- R6::R6Class(classname="dLinkedList",
                        # Constructor
                        #################################################
 
-                       initialize = function(){
-                         private$storage = new.env(parent = create_emptyenv())
+                       initialize = function(N = 100L){
+                        #  private$storage = new.env(parent = create_emptyenv())
+                        # just want to leave parent blank because then the parent will be the enclosing R6 object's envir
+                         private$storage = new.env(hash = FALSE, size = N)
                        }
 
                      ),
 
                      #private members
                      private = list(
+
                         storage = NULL
 
                      )
@@ -86,8 +89,18 @@ isEmpty_dLinkedList <- function(llist) {
 }
 
 dLinkedList$set(which = "public",name = "isEmpty",
-  value = isEmpty_dLinkedList,
-  overwrite = TRUE)
+  value = isEmpty_dLinkedList, overwrite = TRUE
+)
+
+
+# isEmpty_dLinkedList <- function(){
+#   numKeys = length(ls(envir = private$storage,all.names = TRUE))
+#   if(numKeys == 0){
+#     return(TRUE)
+#   } else if(numKeys > 0){
+#     return(FALSE)
+#   }
+# }
 
 
 #' dLinkedList: Node Creation
@@ -107,8 +120,16 @@ makeNode_dLinkedList <- function(val, prevnode=NULL, nextnode=NULL) {
 }
 
 dLinkedList$set(which = "public",name = "makeNode",
-  value = makeNode_dLinkedList,
-  overwrite = TRUE)
+  value = makeNode_dLinkedList, overwrite = TRUE
+)
+
+# makeNode_dLinkedList <- function(value, prevnode = NULL, nextnode = NULL){
+#   node = new.env(hash = FALSE, size = 3L)
+#   node$element = value
+#   node$nextnode = nextnode
+#   node$prevnode = prevnode
+#
+# }
 
 
 #' dLinkedList: Add Element

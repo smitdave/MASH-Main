@@ -131,9 +131,9 @@ myPop$ls()
 myPop$get(key = "10")
 
 # cool, now lets simulate each of them.
-myPop$eapply(tag = "simulate",returnVal = FALSE)
+myPop$apply(tag = "simulate",returnVal = FALSE)
 # make sure that they ran and that they all died.
-myPop$eapply(tag = "get_hist",returnVal = TRUE)
+myPop$apply(tag = "get_hist",returnVal = TRUE)
 
 rm(myPop);gc()
 
@@ -145,8 +145,8 @@ microbenchmark::microbenchmark(
     for(i in 1:200){
       hashTablePop$assign(key = as.character(i),value = TestClass$new(i,"rest",0))
     }
-    hashTablePop$eapply(tag = "simulate",returnVal = FALSE)
-    hashTablePop$eapply(tag = "get_hist",returnVal = FALSE)
+    hashTablePop$apply(tag = "simulate",returnVal = FALSE)
+    hashTablePop$apply(tag = "get_hist",returnVal = FALSE)
   },
   times = 100
 )

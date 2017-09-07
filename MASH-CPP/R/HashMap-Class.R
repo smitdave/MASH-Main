@@ -42,7 +42,7 @@
 #' @export
 HashMap <- R6::R6Class(classname="HashMap",
                      portable = TRUE,
-                     cloneable = TRUE,
+                     cloneable = FALSE,
                      lock_class = FALSE,
                      lock_objects = FALSE,
 
@@ -180,6 +180,6 @@ eapply_HashMap <- function(tag, returnVal = FALSE, ...){
   }
 }
 
-HashMap$set(which = "public",name = "eapply",
+HashMap$set(which = "public",name = "apply",
   value = eapply_HashMap,
   overwrite = TRUE)
