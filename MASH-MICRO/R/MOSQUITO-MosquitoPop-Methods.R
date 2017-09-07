@@ -14,8 +14,93 @@
 ###############################################################################
 
 
+
+
+#' Push pop
+#'
+#' Push new female mosquitoes into \code{\link{MosquitoPopFemale}}.
+#'  * This method is bound to \code{MosquitoPopFemale$push_pop}
+#'
+#' @param N integer; number of emerging mosquitoes
+#' @param tEmerge integer; day of emergence
+#' @param genotype integer; genotype of emerging mosquitoes
+#' @param ix integer; site of emergence
+#'
+push_pop_MosquitoPopFemale <- function(N, tEmerge, genotype, ix){
+  for(i in 1:N){
+    myID = paste0(tEmerge,"_",i,"_",genotype)
+    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=private$initState,eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
+  }
+}
+
+
+
 ###############################################################################
 # Generic Methods
+###############################################################################
+
+#' Get pop
+#'
+#' Simply provides access to the \code{\link[MASHcpp]{HashMap}} object that contains the mosquito objects.
+#'  * This method is bound to \code{MosquitoPopFemale$get_pop} and \code{MosquitoPopFemale$get_pop}
+#'
+get_pop_MosquitoPop <- function(){
+  return(private$pop)
+}
+
+MosquitoPopFemale$set(which = "public",name = "get_pop",
+  value = get_pop_MosquitoPop, overwrite = TRUE
+)
+
+MosquitoPopMale$set(which = "public",name = "get_pop",
+  value = get_pop_MosquitoPop, overwrite = TRUE
+)
+
+
+#' Get MBITES_PAR
+#'
+#' Get an M-BITES parameter.
+#'  * This method is bound to \code{MosquitoPopFemale$get_MBITES_PAR} and \code{MosquitoPopFemale$get_MBITES_PAR}
+#'
+#' @param par if given, return named parameter otherwise return entire list
+#'
+get_MBITES_PAR_MosquitoPop <- function(par = NULL){
+  if(is.null(par)){
+    return(private$MBITES_PAR)
+  } else {
+    return(private$MBITES_PAR[[par]])
+  }
+}
+
+MosquitoPopFemale$set(which = "public",name = "get_MBITES_PAR",
+  value = get_MBITES_PAR_MosquitoPop, overwrite = TRUE
+)
+
+MosquitoPopMale$set(which = "public",name = "get_MBITES_PAR",
+  value = get_MBITES_PAR_MosquitoPop, overwrite = TRUE
+)
+
+
+#' Set MBITES_PAR
+#'
+#' Set M-BITES parameter list.
+#'  * This method is bound to \code{MosquitoPopFemale$set_MBITES_PAR} and \code{MosquitoPopFemale$set_MBITES_PAR}
+#'
+set_MBITES_PAR_MosquitoPop <- function(MBITES_PAR){
+  private$MBITES_PAR = MBITES_PAR
+}
+
+MosquitoPopFemale$set(which = "public",name = "set_MBITES_PAR",
+  value = set_MBITES_PAR_MosquitoPop, overwrite = TRUE
+)
+
+MosquitoPopMale$set(which = "public",name = "set_MBITES_PAR",
+  value = set_MBITES_PAR_MosquitoPop, overwrite = TRUE
+)
+
+
+###############################################################################
+# Generic Pointers
 ###############################################################################
 
 #' Get \code{\link{Landscape}} Pointer
@@ -130,69 +215,8 @@ MosquitoPopMale$set(which = "public",name = "set_TilePointer",
   value = set_TilePointer_MosquitoPop, overwrite = TRUE
 )
 
-
-#' Get pop
-#'
-#' Simply provides access to the \code{\link[MASHcpp]{HashMap}} object that contains the mosquito objects.
-#'  * This method is bound to \code{MosquitoPopFemale$get_pop} and \code{MosquitoPopFemale$get_pop}
-#'
-get_pop_MosquitoPop <- function(){
-  return(private$pop)
-}
-
-MosquitoPopFemale$set(which = "public",name = "get_pop",
-  value = get_pop_MosquitoPop, overwrite = TRUE
-)
-
-MosquitoPopMale$set(which = "public",name = "get_pop",
-  value = get_pop_MosquitoPop, overwrite = TRUE
-)
-
-
-#' Get MBITES_PAR
-#'
-#' Get an M-BITES parameter.
-#'  * This method is bound to \code{MosquitoPopFemale$get_MBITES_PAR} and \code{MosquitoPopFemale$get_MBITES_PAR}
-#'
-#' @param par if given, return named parameter otherwise return entire list
-#'
-get_MBITES_PAR_MosquitoPop <- function(par = NULL){
-  if(is.null(par)){
-    return(private$MBITES_PAR)
-  } else {
-    return(private$MBITES_PAR[[par]])
-  }
-}
-
-MosquitoPopFemale$set(which = "public",name = "get_MBITES_PAR",
-  value = get_MBITES_PAR_MosquitoPop, overwrite = TRUE
-)
-
-MosquitoPopMale$set(which = "public",name = "get_MBITES_PAR",
-  value = get_MBITES_PAR_MosquitoPop, overwrite = TRUE
-)
-
-
-#' Set MBITES_PAR
-#'
-#' Set M-BITES parameter list.
-#'  * This method is bound to \code{MosquitoPopFemale$set_MBITES_PAR} and \code{MosquitoPopFemale$set_MBITES_PAR}
-#'
-set_MBITES_PAR_MosquitoPop <- function(MBITES_PAR){
-  private$MBITES_PAR = MBITES_PAR
-}
-
-MosquitoPopFemale$set(which = "public",name = "set_MBITES_PAR",
-  value = set_MBITES_PAR_MosquitoPop, overwrite = TRUE
-)
-
-MosquitoPopMale$set(which = "public",name = "set_MBITES_PAR",
-  value = set_MBITES_PAR_MosquitoPop, overwrite = TRUE
-)
-
-
 ###############################################################################
-# Female-specific Methods
+# Female-specific Pointers
 ###############################################################################
 
 #' Get \code{\link{MosquitoPopMale}} Pointer
@@ -225,7 +249,7 @@ MosquitoPopFemale$set(which = "public",name = "set_MalePopPointer",
 
 
 ###############################################################################
-# Male-specific Methods
+# Male-specific Pointers
 ###############################################################################
 
 #' Get \code{\link{MosquitoPopFemale}} Pointer

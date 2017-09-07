@@ -22,7 +22,7 @@
 #' @examples
 #' Aqua.Emerge.Setup()
 #' @export
-MICRO.Emerge.Setup <- function(overwrite = TRUE){
+AQUA.Emerge.Setup <- function(overwrite = TRUE){
 
   message("initializing 'Emerge' module for Aquatic Ecology")
 
