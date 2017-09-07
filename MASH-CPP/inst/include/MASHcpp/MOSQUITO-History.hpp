@@ -95,14 +95,7 @@ public:
         bionomics_tBatch = 0;
       }
 
-      // // intervals between bloodmeals
-      // std::adjacent_difference(feedAllT.begin(), feedAllT.end(), std::back_inserter(bionomics_bmInt));
-      // bionomics_bmInt.erase(bionomics_bmInt.begin());
-      //
-      // std::adjacent_difference(feedHumanT.begin(), feedHumanT.end(), std::back_inserter(bionomics_bmIntH));
-      // bionomics_bmIntH.erase(bionomics_bmIntH.begin());
-
-      // DEBUG for when the mosy dies after a single blood meal
+      // for when the mosy dies after a single blood meal
       if(feedAllT.size() < 2){
         bionomics_bmInt.push_back(0);
       } else {
