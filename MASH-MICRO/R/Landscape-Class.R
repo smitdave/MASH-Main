@@ -13,66 +13,23 @@
 # Landscape Definition
 #################################################################
 
-#' MICRO Landscape Class Definition
+#' Landscape Class Definition
 #'
-#' This is a Landscape object that is part of a MICRO microsimulation Tile object, defined in \code{\link{MicroTile}}.
+#' im a class!
 #'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object
 #' @keywords R6 class
 #'
-#' @section Methods:
-#'  * **Constructor**
-#'    * new: initialize a new \code{Landscape} object
-#'      * Arguments:
-#'        * \code{Landscape_PAR}: see \code{\link{Landscape.Parameters}} for parameter generation function.
-#'  * **Getters & Setters**
-#'    * get_FeedingSites: get \code{private$FeedingSites}
-#'      * Arguments:
-#'        * \code{ixS}: if \code{NULL} return all sites, otherwise return site indexed by \code{ixS}
-#'    * set_FeedingSites: set \code{private$FeedingSites}
-#'      * Arguments:
-#'        * \code{FeedingSites}: replacement object (see below)
-#'        * \code{ixS}: if \code{NULL} replace all sites, otherwise replace site indexed by \code{ixS}
-#'    * get_AquaSites: get \code{private$AquaSites}
-#'      * Arguments:
-#'        * \code{ixS}: if \code{NULL} return all sites, otherwise return site indexed by \code{ixS}
-#'    * set_AquaSites: set \code{private$AquaSites}
-#'      * Arguments:
-#'        * \code{AquaSites}: replacement object (see below)
-#'        * \code{ixS}: if \code{NULL} replace all sites, otherwise replace site indexed by \code{ixS}
-#'    * get_SugarSites: get \code{private$SugarSites}
-#'    * set_SugarSites: set \code{private$SugarSites}
-#'    * get_MatingSites: get \code{private$MatingSites}
-#'    * set_MatingSites: set \code{private$MatingSites}
-#'  * **Pointers**
-#'    * get_TilePointer: get \code{\link{MicroTile}} pointer
-#'    * set_TilePointer: set \code{\link{MicroTile}} pointer
-#'    * set_FemalePopPointer:
-#'    * set_FemalePopPointer:
-#'    * get_MosquitoPopMalePointer:
-#'    * set_MosquitoPopMalePointer:
-#'    * get_HumansPointer: get \code{\link{HumanPop}} pointer
-#'    * set_HumansPointer: set \code{\link{HumanPop}} pointer
+#' @section **Constructor**:
+#'  * argument: im an agument!
 #'
+#' @section **Methods**:
+#'  * method: im a method!
 #'
+#' @section **Fields**:
+#'  * field: im a field!
 #'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#' @md
 #' @export
 Landscape <- R6::R6Class(classname = "Landscape",
                  portable = TRUE,
