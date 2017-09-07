@@ -16,8 +16,11 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP R_eapply_noOut(SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_MASHPrototype_rcpp_hello", (DL_FUNC) &_MASHPrototype_rcpp_hello, 0},
+    {"R_eapply_noOut",            (DL_FUNC) &R_eapply_noOut,            1},
     {NULL, NULL, 0}
 };
 

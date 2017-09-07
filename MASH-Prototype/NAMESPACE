@@ -2,4 +2,6 @@
 
 export(ELPode)
 export(HumanPop)
+export(eapply_noOut)
 useDynLib(MASHprototype)
+useDynLib(MASHprototype,R_eapply_noOut)
