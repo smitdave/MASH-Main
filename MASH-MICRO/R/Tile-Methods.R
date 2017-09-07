@@ -58,7 +58,7 @@ simMICRO_oneRun <- function(tMax, runID, verbose = FALSE, timeStep = 1, clearInt
 }
 
 # add to MicroTile
-MicroTile$set(which = "public",name = "simMICRO_oneRun",
+Tile$set(which = "public",name = "simMICRO_oneRun",
           value = simMICRO_oneRun,
           overwrite = TRUE
 )
@@ -117,7 +117,7 @@ simMICRO_oneStep <- function(timeStep = 1, verbose = FALSE, clearInterval = 10, 
 }
 
 # add to MicroTile
-MicroTile$set(which = "public",name = "simMICRO_oneStep",
+Tile$set(which = "public",name = "simMICRO_oneStep",
           value = simMICRO_oneStep,
           overwrite = TRUE
 )
@@ -195,7 +195,7 @@ set_FemalePop_MicroTile <- function(MosquitoPop_PAR){
   invisible(gc())
 }
 
-MicroTile$set(which = "public",name = "set_FemalePop",
+Tile$set(which = "public",name = "set_FemalePop",
           value = set_FemalePop_MicroTile,
           overwrite = TRUE
 )
