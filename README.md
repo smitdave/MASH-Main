@@ -2,9 +2,7 @@
 
  subdirs contain various elements of the MASH project.
 
-## MASH-Prototype: MASHprototype package
- * Please install with `devtools::install_github(repo = "slwu89/MASH-Main",subdir = "MASH-Prototype")`
- * This repository is intended for serious prototyping of unstable code and not intended for general users.
+
 
 ## MASH-CPP: MASHcpp package
 * Please install with `devtools::install_github(repo = "slwu89/MASH-Main",subdir = "MASH-CPP")`
@@ -14,3 +12,14 @@
 ## MASH-MACRO: MASHmacro package
 * Please install with `devtools::install_github(repo = "slwu89/MASH-Main",subdir = "MASH-MACRO")`
 * This repository contains necessary classes and functions to run macrosimulation tiles.
+
+## MASH-MICRO: MASHmicro package
+* Please install with `devtools::install_github(repo = "slwu89/MASH-Main",subdir = "MASH-MICRO")`
+* This repository contains necessary classes and functions to run microsimulation tiles.
+
+## MASH-Prototype: MASHprototype package
+ * Please install with `devtools::install_github(repo = "slwu89/MASH-Main",subdir = "MASH-Prototype")`
+ * This repository is intended for serious prototyping of unstable code and not intended for general users.
+ 
+ ## MASH-Test: Testing Scripts
+  * This directory is not set up as an R package and is solely intended to hold test scripts and plan package vignettes. 
