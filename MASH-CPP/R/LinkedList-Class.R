@@ -152,39 +152,92 @@ dLinkedList$set(which = "public",name = "addElem",
   value = addElem_dLinkedList,
   overwrite = TRUE)
 
-#remove element, check if element in linkedlist, return length of list, list all elements in list, apply function over list
+#' dLinkedList: Return Size of List
+#'
+#' Returns the total number of nodes in the list
+#'
+#' @param llist is a doubly linked list
+#'
+size_dLinkedList<-function(llist, size=0){
+  if (isEmpty(llist)) {
+    return(size)
+    }
+  else {
+    size<-size+1L
+    size_dLinkedList(llist$nextnode, size)
+    }
+}
+
+dLinkedList$set(which = "public",name = "size",
+  value = size_dLinkedList,
+  overwrite = TRUE)
 
 
-
-
-
-
-#' HashMap: Check if Value Exists
+#' dLinkedList: Check if Value Exists
 #'
 #' Does a value exist in \code{private$storage} or not.
 #'
-#' @param key given a character key return a boolean if the value associated to that key exists in the storage hash table
+#' @param llist is an instance of the doubly linked list class
 #'
-exists_HashMap <- function(key){
-  if(!is.character(key)){stop(paste0("key: ",key,"must be a character"))}
-  exists(x = key,envir = private$storage,inherits = FALSE)
+exists_dLinkedList<-function(llist, value, exists = FALSE){
+  if (isEmpty(llist)) {
+    return(exists)
+    }
+  else if (llist$element == value) {
+    exists <- TRUE
+    return (exists)
+  }
+  else {
+    exists_dLinkedList(llist$nextnode, value, exists)
+    }
 }
 
-HashMap$set(which = "public",name = "exists",
-  value = exists_HashMap,
+
+dLinkedList$set(which = "public",name = "exists",
+  value = exists_dLinkedList,
   overwrite = TRUE)
 
-#' HashMap: Views all Objects in Hash Table
+#' dLinkedList: Views all Objects in a doubly linked list
 #'
-#' Returns character vector of all keys in the environment.
+#' Returns node elements of all nodes in the environment.
 #'
-ls_HashMap <- function(){
+ls_dLinkedList <- function(){
   ls(env = private$storage)
 }
 
-HashMap$set(which = "public",name = "ls",
-  value = ls_HashMap,
+dLinkedList$set(which = "public",name = "ls",
+  value = ls_dLinkedList,
   overwrite = TRUE)
+
+#' dLinkedList: Check if Value Exists
+#'
+#' Does a value exist in \code{private$storage} or not.
+#'
+#' @param llist is an instance of the doubly linked list class
+#'
+delElement<-function(llist, pos=NULL){
+if(is.null(pos)) warning("Nothing to delete")
+listsize<-sizeLinkList(llist)
+if(pos>listsize) stop("Position greater than size of list")
+if (isEmpty(llist)) {
+warning("Empty List")
+} else if(pos==1){
+PreviousNode<-llist$nextnode
+} else
+{
+PreviousNode<-linkListNode(llist$element)
+for(i in 1:(listsize-1)){
+if(pos==(i+1)){
+PreviousNode$nextnode<-setNextNode(llist$nextnode)
+} else
+{
+PreviousNode$nextnode<-llist$nextnode
+llist<-llist$nextnode
+}
+}
+}
+return(PreviousNode)
+}
 
 
 
