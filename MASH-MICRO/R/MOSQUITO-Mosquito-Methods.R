@@ -438,6 +438,38 @@ MosquitoMale$set(which = "public",name = "get_energy",
 
 
 ###############################################################################
+# Generic Methods
+###############################################################################
+
+#' Remove Self
+#'
+#' Remove this mosquito from the population containing it.
+#'  * This method is bound to \code{MosquitoFemale$rmSelf}
+#'
+rmSelf_MosquitoFemale <- function(){
+  private$FemalePopPointer$get_pop()$rm(key = private$id)
+}
+
+MosquitoFemale$set(which = "public",name = "rmSelf",
+  value = rmSelf_MosquitoFemale, overwrite = TRUE
+)
+
+
+#' Remove Self
+#'
+#' Remove this mosquito from the population containing it.
+#'  * This method is bound to \code{MosquitoMale$rmSelf}
+#'
+rmSelf_MosquitoMale <- function(){
+  private$FemalePopPointer$get_pop()$rm(key = private$id)
+}
+
+MosquitoMale$set(which = "public",name = "rmSelf",
+  value = rmSelf_MosquitoMale, overwrite = TRUE
+)
+
+
+###############################################################################
 # Female-specific Methods
 ###############################################################################
 

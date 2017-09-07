@@ -18,6 +18,24 @@
 # MosquitoPopFemale: Class Definition
 ###############################################################################
 
+#' MosquitoPopFemale Class Definition
+#'
+#' im a class!
+#'
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object
+#' @keywords R6 class
+#'
+#' @section **Constructor**:
+#'  * argument: im an agument!
+#'
+#' @section **Methods**:
+#'  * method: im a method!
+#'
+#' @section **Fields**:
+#'  * field: im a field!
+#'
+#' @export
 MosquitoPopFemale <- R6::R6Class(classname = "MosquitoPopFemale",
                        portable = TRUE,
                        cloneable = FALSE,
@@ -59,8 +77,25 @@ MosquitoPopFemale <- R6::R6Class(classname = "MosquitoPopFemale",
 # MosquitoPopMale: Class Definition
 ###############################################################################
 
-
-MosquitoPopMale <- R6::R6Class(classname = "MosquitoPopFemale",
+#' MosquitoPopMale Class Definition
+#'
+#' im a class!
+#'
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object
+#' @keywords R6 class
+#'
+#' @section **Constructor**:
+#'  * argument: im an agument!
+#'
+#' @section **Methods**:
+#'  * method: im a method!
+#'
+#' @section **Fields**:
+#'  * field: im a field!
+#'
+#' @export
+MosquitoPopMale <- R6::R6Class(classname = "MosquitoPopMale",
                        portable = TRUE,
                        cloneable = FALSE,
                        lock_class = FALSE,

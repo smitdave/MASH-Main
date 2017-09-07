@@ -51,8 +51,6 @@ ImagoQ:
         - N_new: int
         - tEmerge_new: double
         - genotype_new: int
-        - damID_new: "std::string"
-        - sireID_new: "std::string"
       return_type: void
 
     # Queue Tracking

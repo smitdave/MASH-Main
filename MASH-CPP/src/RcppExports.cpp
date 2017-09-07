@@ -1184,17 +1184,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // ImagoQ__add_ImagoQ
-void ImagoQ__add_ImagoQ(MASHcpp::RcppR6::RcppR6<MASHcpp::ImagoQ> obj_, int N_new, double tEmerge_new, int genotype_new, std::string damID_new, std::string sireID_new);
-RcppExport SEXP _MASHcpp_ImagoQ__add_ImagoQ(SEXP obj_SEXP, SEXP N_newSEXP, SEXP tEmerge_newSEXP, SEXP genotype_newSEXP, SEXP damID_newSEXP, SEXP sireID_newSEXP) {
+void ImagoQ__add_ImagoQ(MASHcpp::RcppR6::RcppR6<MASHcpp::ImagoQ> obj_, int N_new, double tEmerge_new, int genotype_new);
+RcppExport SEXP _MASHcpp_ImagoQ__add_ImagoQ(SEXP obj_SEXP, SEXP N_newSEXP, SEXP tEmerge_newSEXP, SEXP genotype_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::ImagoQ> >::type obj_(obj_SEXP);
     Rcpp::traits::input_parameter< int >::type N_new(N_newSEXP);
     Rcpp::traits::input_parameter< double >::type tEmerge_new(tEmerge_newSEXP);
     Rcpp::traits::input_parameter< int >::type genotype_new(genotype_newSEXP);
-    Rcpp::traits::input_parameter< std::string >::type damID_new(damID_newSEXP);
-    Rcpp::traits::input_parameter< std::string >::type sireID_new(sireID_newSEXP);
-    ImagoQ__add_ImagoQ(obj_, N_new, tEmerge_new, genotype_new, damID_new, sireID_new);
+    ImagoQ__add_ImagoQ(obj_, N_new, tEmerge_new, genotype_new);
     return R_NilValue;
 END_RCPP
 }
@@ -1288,17 +1286,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // EggQ__add_EggQ
-void EggQ__add_EggQ(MASHcpp::RcppR6::RcppR6<MASHcpp::EggQ> obj_, int N_new, double tOviposit_new, int genotype_new, std::string damID_new, std::string sireID_new);
-RcppExport SEXP _MASHcpp_EggQ__add_EggQ(SEXP obj_SEXP, SEXP N_newSEXP, SEXP tOviposit_newSEXP, SEXP genotype_newSEXP, SEXP damID_newSEXP, SEXP sireID_newSEXP) {
+void EggQ__add_EggQ(MASHcpp::RcppR6::RcppR6<MASHcpp::EggQ> obj_, int N_new, double tOviposit_new, int genotype_new);
+RcppExport SEXP _MASHcpp_EggQ__add_EggQ(SEXP obj_SEXP, SEXP N_newSEXP, SEXP tOviposit_newSEXP, SEXP genotype_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::EggQ> >::type obj_(obj_SEXP);
     Rcpp::traits::input_parameter< int >::type N_new(N_newSEXP);
     Rcpp::traits::input_parameter< double >::type tOviposit_new(tOviposit_newSEXP);
     Rcpp::traits::input_parameter< int >::type genotype_new(genotype_newSEXP);
-    Rcpp::traits::input_parameter< std::string >::type damID_new(damID_newSEXP);
-    Rcpp::traits::input_parameter< std::string >::type sireID_new(sireID_newSEXP);
-    EggQ__add_EggQ(obj_, N_new, tOviposit_new, genotype_new, damID_new, sireID_new);
+    EggQ__add_EggQ(obj_, N_new, tOviposit_new, genotype_new);
     return R_NilValue;
 END_RCPP
 }
@@ -1976,7 +1972,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_ImagoQ__ctor", (DL_FUNC) &_MASHcpp_ImagoQ__ctor, 0},
     {"_MASHcpp_ImagoQ__clear_ImagoQ", (DL_FUNC) &_MASHcpp_ImagoQ__clear_ImagoQ, 1},
     {"_MASHcpp_ImagoQ__clear_ImagoQTime", (DL_FUNC) &_MASHcpp_ImagoQ__clear_ImagoQTime, 2},
-    {"_MASHcpp_ImagoQ__add_ImagoQ", (DL_FUNC) &_MASHcpp_ImagoQ__add_ImagoQ, 6},
+    {"_MASHcpp_ImagoQ__add_ImagoQ", (DL_FUNC) &_MASHcpp_ImagoQ__add_ImagoQ, 4},
     {"_MASHcpp_ImagoQ__track_ImagoQ", (DL_FUNC) &_MASHcpp_ImagoQ__track_ImagoQ, 2},
     {"_MASHcpp_ImagoQ__get_N", (DL_FUNC) &_MASHcpp_ImagoQ__get_N, 1},
     {"_MASHcpp_ImagoQ__set_N", (DL_FUNC) &_MASHcpp_ImagoQ__set_N, 2},
@@ -1985,7 +1981,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_EggQ__ctor", (DL_FUNC) &_MASHcpp_EggQ__ctor, 0},
     {"_MASHcpp_EggQ__clear_EggQ", (DL_FUNC) &_MASHcpp_EggQ__clear_EggQ, 1},
     {"_MASHcpp_EggQ__clear_EggQTime", (DL_FUNC) &_MASHcpp_EggQ__clear_EggQTime, 2},
-    {"_MASHcpp_EggQ__add_EggQ", (DL_FUNC) &_MASHcpp_EggQ__add_EggQ, 6},
+    {"_MASHcpp_EggQ__add_EggQ", (DL_FUNC) &_MASHcpp_EggQ__add_EggQ, 4},
     {"_MASHcpp_EggQ__track_EggQ", (DL_FUNC) &_MASHcpp_EggQ__track_EggQ, 2},
     {"_MASHcpp_EggQ__get_N", (DL_FUNC) &_MASHcpp_EggQ__get_N, 1},
     {"_MASHcpp_EggQ__set_N", (DL_FUNC) &_MASHcpp_EggQ__set_N, 2},

@@ -422,8 +422,8 @@ void ImagoQ__clear_ImagoQTime(MASHcpp::RcppR6::RcppR6<MASHcpp::ImagoQ> obj_, dou
   obj_->clear_ImagoQTime(time);
 }
 // [[Rcpp::export]]
-void ImagoQ__add_ImagoQ(MASHcpp::RcppR6::RcppR6<MASHcpp::ImagoQ> obj_, int N_new, double tEmerge_new, int genotype_new, std::string damID_new, std::string sireID_new) {
-  obj_->add_ImagoQ(N_new, tEmerge_new, genotype_new, damID_new, sireID_new);
+void ImagoQ__add_ImagoQ(MASHcpp::RcppR6::RcppR6<MASHcpp::ImagoQ> obj_, int N_new, double tEmerge_new, int genotype_new) {
+  obj_->add_ImagoQ(N_new, tEmerge_new, genotype_new);
 }
 // [[Rcpp::export]]
 double ImagoQ__track_ImagoQ(MASHcpp::RcppR6::RcppR6<MASHcpp::ImagoQ> obj_, double time) {
@@ -459,8 +459,8 @@ void EggQ__clear_EggQTime(MASHcpp::RcppR6::RcppR6<MASHcpp::EggQ> obj_, double ti
   obj_->clear_EggQTime(time);
 }
 // [[Rcpp::export]]
-void EggQ__add_EggQ(MASHcpp::RcppR6::RcppR6<MASHcpp::EggQ> obj_, int N_new, double tOviposit_new, int genotype_new, std::string damID_new, std::string sireID_new) {
-  obj_->add_EggQ(N_new, tOviposit_new, genotype_new, damID_new, sireID_new);
+void EggQ__add_EggQ(MASHcpp::RcppR6::RcppR6<MASHcpp::EggQ> obj_, int N_new, double tOviposit_new, int genotype_new) {
+  obj_->add_EggQ(N_new, tOviposit_new, genotype_new);
 }
 // [[Rcpp::export]]
 double EggQ__track_EggQ(MASHcpp::RcppR6::RcppR6<MASHcpp::EggQ> obj_, double time) {

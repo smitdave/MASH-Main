@@ -418,8 +418,8 @@ ImagoQ__clear_ImagoQTime <- function(obj_, time) {
     invisible(.Call('_MASHcpp_ImagoQ__clear_ImagoQTime', PACKAGE = 'MASHcpp', obj_, time))
 }
 
-ImagoQ__add_ImagoQ <- function(obj_, N_new, tEmerge_new, genotype_new, damID_new, sireID_new) {
-    invisible(.Call('_MASHcpp_ImagoQ__add_ImagoQ', PACKAGE = 'MASHcpp', obj_, N_new, tEmerge_new, genotype_new, damID_new, sireID_new))
+ImagoQ__add_ImagoQ <- function(obj_, N_new, tEmerge_new, genotype_new) {
+    invisible(.Call('_MASHcpp_ImagoQ__add_ImagoQ', PACKAGE = 'MASHcpp', obj_, N_new, tEmerge_new, genotype_new))
 }
 
 ImagoQ__track_ImagoQ <- function(obj_, time) {
@@ -454,8 +454,8 @@ EggQ__clear_EggQTime <- function(obj_, time) {
     invisible(.Call('_MASHcpp_EggQ__clear_EggQTime', PACKAGE = 'MASHcpp', obj_, time))
 }
 
-EggQ__add_EggQ <- function(obj_, N_new, tOviposit_new, genotype_new, damID_new, sireID_new) {
-    invisible(.Call('_MASHcpp_EggQ__add_EggQ', PACKAGE = 'MASHcpp', obj_, N_new, tOviposit_new, genotype_new, damID_new, sireID_new))
+EggQ__add_EggQ <- function(obj_, N_new, tOviposit_new, genotype_new) {
+    invisible(.Call('_MASHcpp_EggQ__add_EggQ', PACKAGE = 'MASHcpp', obj_, N_new, tOviposit_new, genotype_new))
 }
 
 EggQ__track_EggQ <- function(obj_, time) {

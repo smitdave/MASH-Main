@@ -12,6 +12,6 @@ set_FemalePopPointer_MosquitoPopMale(FemalePopPointer)
 \description{
 Set the pointer to \code{MosquitoPopMale$self} in the same \code{\link{Tile}} by reference.
 \itemize{
-\item This method is bound to \MosquitoPopFemale{MosquitoPopMale$set_FemalePopPointer}
+\item This method is bound to \code{MosquitoPopMale$set_FemalePopPointer}
 }
 }

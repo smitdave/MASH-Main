@@ -81,7 +81,7 @@ HashMap <- R6::R6Class(classname="HashMap",
 #'
 rm_HashMap <- function(key){
   if(!is.character(key)){stop(paste0("key: ",key,"must be a character"))}
-  rm(key,envir = private$storage,inherits = FALSE)
+  rm(list = key,envir = private$storage,inherits = FALSE)
 }
 
 HashMap$set(which = "public",name = "rm",

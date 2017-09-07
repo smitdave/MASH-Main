@@ -244,7 +244,7 @@ MosquitoPopMale$set(which = "public",name = "get_FemalePopPointer",
 #' Set \code{\link{MosquitoPopFemale}} Pointer
 #'
 #' Set the pointer to \code{MosquitoPopMale$self} in the same \code{\link{Tile}} by reference.
-#'  * This method is bound to \MosquitoPopFemale{MosquitoPopMale$set_FemalePopPointer}
+#'  * This method is bound to \code{MosquitoPopMale$set_FemalePopPointer}
 #'
 #' @param MalePopPointer an environment
 #'

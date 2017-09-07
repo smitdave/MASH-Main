@@ -16,20 +16,16 @@ namespace MASHcpp {
 
 // ImagoSlot: struct to store information for batches of emerging adults
 struct EggSlot{
-  EggSlot(const int &N_new, const double &tOviposit_new, const int &genotype_new, const std::string &damID_new, const std::string &sireID_new);
+  EggSlot(const int &N_new, const double &tOviposit_new, const int &genotype_new);
   int N;
   double tOviposit;
   int genotype;
-  std::string damID;
-  std::string sireID;
 };
 
-inline EggSlot::EggSlot(const int &N_new, const double &tOviposit_new, const int &genotype_new, const std::string &damID_new, const std::string &sireID_new){
+inline EggSlot::EggSlot(const int &N_new, const double &tOviposit_new, const int &genotype_new){
   N = N_new;
   tOviposit = tOviposit_new;
   genotype = genotype_new;
-  damID = damID_new;
-  sireID = sireID_new;
 }
 
 // EggQVector: store EggSlot structs
@@ -71,8 +67,6 @@ public:
           EggQVec[*it].N = 0;
           EggQVec[*it].tOviposit = -1;
           EggQVec[*it].genotype = -1;
-          EggQVec[*it].damID = -1;
-          EggQVec[*it].sireID = -1;
       }
 
       N -= fullIx.size();
@@ -98,15 +92,13 @@ public:
         EggQVec[*it].N = 0;
         EggQVec[*it].tOviposit = -1;
         EggQVec[*it].genotype = -1;
-        EggQVec[*it].damID = -1;
-        EggQVec[*it].sireID = -1;
     }
 
     N -= timeIx.size();
   }
 
   // add_EggQ: Add egg batches to EggQ
-  void add_EggQ(const int &N_new, const double &tOviposit_new, const int &genotype_new, const std::string &damID_new, const std::string &sireID_new){
+  void add_EggQ(const int &N_new, const double &tOviposit_new, const int &genotype_new){
 
       // find null slot
       auto it = std::find_if(EggQVec.begin(), EggQVec.end(), [](EggSlot ix){
@@ -116,15 +108,13 @@ public:
       // insert the new slot into EggQ
       if(it == EggQVec.end()){
           // there are no null slots
-          EggQVec.push_back(EggSlot(N_new,tOviposit_new,genotype_new,damID_new,sireID_new));
+          EggQVec.push_back(EggSlot(N_new,tOviposit_new,genotype_new));
       } else {
           // there is a null slot
           size_t ix = std::distance(EggQVec.begin(), it);
           EggQVec[ix].N = N_new;
           EggQVec[ix].tOviposit = tOviposit_new;
           EggQVec[ix].genotype = genotype_new;
-          EggQVec[ix].damID = damID_new;
-          EggQVec[ix].sireID = sireID_new;
       }
 
       N += 1;
@@ -180,9 +170,7 @@ public:
         Rcpp::List::create(
           Rcpp::Named("N") = it->N,
           Rcpp::Named("tOviposit") = it->tOviposit,
-          Rcpp::Named("genotype") = it->genotype,
-          Rcpp::Named("damID") = it->damID,
-          Rcpp::Named("sireID") = it->sireID
+          Rcpp::Named("genotype") = it->genotype
         )
       );
     }
@@ -210,9 +198,7 @@ public:
         Rcpp::List::create(
           Rcpp::Named("N") = EggQVec[*it].N,
           Rcpp::Named("tEmerge") = EggQVec[*it].tOviposit,
-          Rcpp::Named("genotype") = EggQVec[*it].genotype,
-          Rcpp::Named("damID") = EggQVec[*it].damID,
-          Rcpp::Named("sireID") = EggQVec[*it].sireID
+          Rcpp::Named("genotype") = EggQVec[*it].genotype
         )
       );
 
@@ -221,8 +207,6 @@ public:
         EggQVec[*it].N = 0;
         EggQVec[*it].tOviposit = -1;
         EggQVec[*it].genotype = -1;
-        EggQVec[*it].damID = -1;
-        EggQVec[*it].sireID = -1;
         N -= 1;
       }
 
@@ -245,7 +229,7 @@ inline EggQ::EggQ(){
 
   N = 0;
   EggQVec.reserve(50);
-  EggQVec.insert(EggQVec.end(), 10, EggSlot(0,-1,-1,"-1","-1"));
+  EggQVec.insert(EggQVec.end(), 10, EggSlot(0,-1,-1));
 
 }
 

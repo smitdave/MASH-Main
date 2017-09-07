@@ -11,6 +11,7 @@
 #
 ###############################################################################
 
+rm(list=ls());gc()
 library(R6)
 library(MASHcpp)
 
@@ -28,12 +29,13 @@ TestClass = R6Class("TestClass",
     # Constructor
     #################################################
 
-    initialize = function(myID, myState, tStart){
+    initialize = function(myID, myState, tStart, popPointer){
 
       private$myID = myID
       private$state = myState
       private$tNow = tStart
       private$tNext = NULL
+      private$popPointer = popPointer
 
     },
 
@@ -94,6 +96,10 @@ TestClass = R6Class("TestClass",
 
       }
 
+    },
+
+    REMOVE_MYSELF = function(){
+      private$popPointer$rm(key=as.character(private$myID))
     }
 
 
@@ -118,13 +124,22 @@ TestClass = R6Class("TestClass",
 
 )
 
+TestClass$set(which = "public",name = "finalize",
+  value = function(){message(paste0("TestClass" ,private$myID," being garbage collected"))},
+  overwrite = TRUE
+)
+
 
 # make a hash table and put 200 of our test class in them
-myPop = MASHcpp::HashMap$new(N=200)
+myPop = MASHcpp::HashMap$new(N=10)
 
-for(i in 1:200){
-  myPop$assign(key = as.character(i),value = TestClass$new(i,"rest",0))
+for(i in 1:10){
+  myPop$assign(key = as.character(i),value = TestClass$new(i,"rest",0,myPop))
 }
+
+myPop$rm(key = "5")
+
+myPop$get(key = "1")$REMOVE_MYSELF()
 
 # make sure they are there
 myPop$ls()
