@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 extern SEXP R_eapply_noOut(SEXP envir);
+// extern SEXP R_hashApply(SEXP call, SEXP op, SEXP args, SEXP rho);
 
 // ELP model
 extern void init_ELP(void (* odeparms)(int *, double *));
@@ -21,6 +22,7 @@ static const R_CMethodDef CEntries[] = {
 // for .Call interface
 static const R_CallMethodDef CallEntries[] = {
    {"R_eapply_noOut", (DL_FUNC) &R_eapply_noOut, 1},
+  //  {"R_hashApply", (DL_FUNC) &R_hashApply, 2},
    {NULL, NULL, 0}
  };
 
