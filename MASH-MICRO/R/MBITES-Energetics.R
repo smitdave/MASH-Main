@@ -17,10 +17,10 @@
 # Sugar Energetics
 ###############################################################################
 
-#' MBITES-Generic: Probability of Death due to Energy Reserves for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Probability of Death due to Energy Reserves for \code{\link{MosquitoFemale}}
 #'
 #' Incremental mortality as a function of energy reserves given by \deqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
-#'  * This method is bound to \code{MicroMosquitoFemale$pEnergySurvival()}.
+#'  * This method is bound to \code{MosquitoFemale$pEnergySurvival()}.
 #' @md
 mbitesGeneric_pEnergySurvival <- function(){
   return(
@@ -28,10 +28,10 @@ mbitesGeneric_pEnergySurvival <- function(){
   )
 }
 
-#' MBITES-Generic: Probability to Queue Sugar Bout due to Energy Reserves for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Probability to Queue Sugar Bout due to Energy Reserves for \code{\link{MosquitoFemale}}
 #'
 #' Probability to queue sugar bout as function of energy reserves given by \deqn{ \frac{2+S.sb}{1+S.sb}-\frac{e^{S.sa\times energy}}{S.sb+e^{S.sa\times energy}} }
-#'  * This method is bound to \code{MicroMosquitoFemale$pSugarBout()}.
+#'  * This method is bound to \code{MosquitoFemale$pSugarBout()}.
 #' @md
 mbitesGeneric_pSugarBout <- function(){
   return(
@@ -44,10 +44,10 @@ mbitesGeneric_pSugarBout <- function(){
 # Blood Energetics
 ###############################################################################
 
-#' MBITES-Generic: Draw Bloodmeal Size for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Draw Bloodmeal Size for \code{\link{MosquitoFemale}}
 #'
 #' Draw a bloodmeal size from Beta(bm.a,bm.b)
-#'  * This method is bound to \code{MicroMosquitoFemale$rBloodMealSize()}.
+#'  * This method is bound to \code{MosquitoFemale$rBloodMealSize()}.
 #' @md
 mbitesGeneric_rBloodMealSize <- function(){
   return(
@@ -60,10 +60,10 @@ mbitesGeneric_rBloodMealSize <- function(){
 # Overfeed
 ###############################################################################
 
-#' MBITES-Generic: Probaility of Overfeeding due to Bloodmeal Size for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Probaility of Overfeeding due to Bloodmeal Size for \code{\link{MosquitoFemale}}
 #'
 #' Probability of death due to overfeeding from bloodmeal size given by \deqn{\frac{e^{of.a\times bmSize}}{of.b+e^{of.a\times bmSize}}}
-#'  * This method is bound to \code{MicroMosquitoFemale$pOverFeed()}.
+#'  * This method is bound to \code{MosquitoFemale$pOverFeed()}.
 #' @md
 mbitesGeneric_pOverFeed <- function(){
   return(
@@ -76,10 +76,10 @@ mbitesGeneric_pOverFeed <- function(){
 # Refeed
 ###############################################################################
 
-#' MBITES-Generic: Probaility to re-enter Blood Feeding Cycle from Incomplete Feeding for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Probaility to re-enter Blood Feeding Cycle from Incomplete Feeding for \code{\link{MosquitoFemale}}
 #'
 #' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \deqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times bmSize}}{rf.b+e^{rf.a\times bmSize}} }
-#'  * This method is bound to \code{MicroMosquitoFemale$pReFeed()}.
+#'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
 #' @md
 mbitesGeneric_pReFeed <- function(){
   return(
@@ -92,10 +92,10 @@ mbitesGeneric_pReFeed <- function(){
 # Egg Batch
 ###############################################################################
 
-#' MBITES-Generic: Draw Normally-distributed Egg Batch Size for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Draw Normally-distributed Egg Batch Size for \code{\link{MosquitoFemale}}
 #'
 #' Draw a egg batch size from Normal(bs.m,bs.v)
-#'  * This method is bound to \code{MicroMosquitoFemale$rBatchSize()}.
+#'  * This method is bound to \code{MosquitoFemale$rBatchSize()}.
 #' @md
 mbitesGeneric_rBatchSizeNorm <- function(){
   return(
@@ -103,10 +103,10 @@ mbitesGeneric_rBatchSizeNorm <- function(){
   )
 }
 
-#' MBITES-Generic: Egg Batch Size due to Bloodmeal Size for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Egg Batch Size due to Bloodmeal Size for \code{\link{MosquitoFemale}}
 #'
 #' Give an egg batch size given by \deqn{ bmSize\times maxBatch }
-#'  * This method is bound to \code{MicroMosquitoFemale$rBatchSize()}.
+#'  * This method is bound to \code{MosquitoFemale$rBatchSize()}.
 #' @md
 mbitesGeneric_rBatchSizeBms <- function(){
   return(
@@ -114,10 +114,10 @@ mbitesGeneric_rBatchSizeBms <- function(){
   )
 }
 
-#' MBITES-Generic: Normally-distributed Egg Maturation Time for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Normally-distributed Egg Maturation Time for \code{\link{MosquitoFemale}}
 #'
 #' Draw an egg maturation time from Normal(emt.m,emt.v)
-#'  * This method is bound to \code{MicroMosquitoFemale$rEggMaturationTime()}.
+#'  * This method is bound to \code{MosquitoFemale$rEggMaturationTime()}.
 #' @md
 mbitesGeneric_rEggMaturationTimeNorm <- function(){
   return(
@@ -125,19 +125,19 @@ mbitesGeneric_rEggMaturationTimeNorm <- function(){
   )
 }
 
-#' MBITES-Generic: No Egg Maturation Time for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: No Egg Maturation Time for \code{\link{MosquitoFemale}}
 #'
 #' Instant egg maturation.
-#'  * This method is bound to \code{MicroMosquitoFemale$rEggMaturationTime()}.
+#'  * This method is bound to \code{MosquitoFemale$rEggMaturationTime()}.
 #' @md
 mbitesGeneric_rEggMaturationTimeOff <- function(){
   return(0)
 }
 
-# #' MBITES-Generic: Make an Egg Batch and Oviposit for \code{\link{MicroMosquitoFemale}}
+# #' MBITES-Generic: Make an Egg Batch and Oviposit for \code{\link{MosquitoFemale}}
 # #'
 # #' Make an egg batch and deposit on the landscape.
-# #'  * This method is bound to \code{MicroMosquitoFemale$makeBatches()}.
+# #'  * This method is bound to \code{MosquitoFemale$makeBatches()}.
 # #' @md
 # mbitesGeneric_makeBatches <- function(){
 #   addBatch2Q(M$batch, M$ix, M$tNow, M$id, M$sire) # aquaticEcology.R

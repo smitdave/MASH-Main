@@ -61,7 +61,15 @@ fileNameFinal = sub(pattern = "Temp",x = fileName,replacement = "")
 sedLinux = "sed: 1: 'x;${s/,$//;p;x}; 2,$ p' "
 sedMac = "sed -n -e x -e '${s/,$//;p;x;}' -e '2,$ p' "
 
-switch()
+if(grepl(pattern = "mac",x = .Platform$pkgType)){
+  system(command = paste0(sedMac,directory,fileName," > ",directory,fileNameFinal))
+  system(command = paste0("rm ",directiory,fileName))
+} else if(LINUX){
+  system(command = paste0(sedLinux,directory,fileName," > ",directory,fileNameFinal))
+  system(command = paste0("rm ",directiory,fileName))
+} else {
+  stop("Windows is not supported by MASH")
+}
 
 system(command = paste0("sed -n -e x -e '${s/,$//;p;x;}' -e '2,$ p' ",directory,fileName," > ",directory,fileNameFinal))
 system(command = paste0("rm ",directiory,fileName))

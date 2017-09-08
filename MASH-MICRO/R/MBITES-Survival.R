@@ -1,22 +1,26 @@
-#################################################################
+###############################################################################
+#       __  ___      ____  _____________________
+#      /  |/  /     / __ )/  _/_  __/ ____/ ___/
+#     / /|_/ /_____/ __  |/ /  / / / __/  \__ \
+#    / /  / /_____/ /_/ // /  / / / /___ ___/ /
+#   /_/  /_/     /_____/___/ /_/ /_____//____/
 #
-#   MASH
-#   M-BITES
-#   Senescence, flight and resting survival
-#   David Smith, Hector Sanchez, Sean Wu
-#   July 28, 2017
+#   MASH-MICRO
+#   MBITES-Survival
+#   MASH-MICRO Team
+#   September 7, 2017
 #
-#################################################################
+###############################################################################
 
 #################################################################
 # Flight Survival
 #################################################################
 
-#' MBITES-Generic: Flight Survival for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Flight Survival for \code{\link{MosquitoFemale}}
 #'
 #' Run generic flight survival probailities for bouts (launch to launch).
 #' Depending on settings from M-BITES parameters, senescence and/or tattering may also be simulated.
-#'  * This method is bound to \code{MicroMosquitoFemale$surviveFlight()}.
+#'  * This method is bound to \code{MosquitoFemale$surviveFlight()}.
 #' @md
 mbitesGeneric_surviveFlight <- function(){
   if(self$isActive()){
@@ -39,10 +43,10 @@ mbitesGeneric_surviveFlight <- function(){
 # Wing Tattering
 #################################################################
 
-#' MBITES-Generic: Wing Tattering for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Wing Tattering for \code{\link{MosquitoFemale}}
 #'
 #' Draw from a zero-inflated Beta distribution for additive wing damager from tattering.
-#'  * This method is bound to \code{MicroMosquitoFemale$rTatterSize()}.
+#'  * This method is bound to \code{MosquitoFemale$rTatterSize()}.
 #' @md
 mbitesGeneric_rTatterSize <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("ttsz.p")){
@@ -52,10 +56,10 @@ mbitesGeneric_rTatterSize <- function(){
   }
 }
 
-#' MBITES-Generic: Probability of Death due to Wing Tattering for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Probability of Death due to Wing Tattering for \code{\link{MosquitoFemale}}
 #'
 #' probability of death due to tattering given by \deqn{ \frac{2+ttr.b}{1+ttr.b} - \frac{e^{damage\times ttr.a}}{ttr.b+e^{damage\times ttr.a}} }
-#'  * This method is bound to \code{MicroMosquitoFemale$pTatter()}.
+#'  * This method is bound to \code{MosquitoFemale$pTatter()}.
 #' @md
 mbitesGeneric_pTatter <- function(){
   return((2+private$FemalePopPointer$get_MBITES_PAR("ttr.b"))/(1+private$FemalePopPointer$get_MBITES_PAR("ttr.b")) - exp(private$damage*private$FemalePopPointer$get_MBITES_PAR("ttr.a"))/(private$FemalePopPointer$get_MBITES_PAR("ttr.b") + exp(private$damage*private$FemalePopPointer$get_MBITES_PAR("ttr.a"))))
@@ -66,10 +70,10 @@ mbitesGeneric_pTatter <- function(){
 # Senescence
 #################################################################
 
-#' MBITES-Generic: Probability of Death due to Senescence for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Probability of Death due to Senescence for \code{\link{MosquitoFemale}}
 #'
 #' probability of death due to senescence given by \deqn{ \frac{2+sns.b}{1+sns.b} - \frac{e^{sns.a\times age}}{sns.b+e^{sns.a\times age}} }
-#'  * This method is bound to \code{MicroMosquitoFemale$pSenesce()}.
+#'  * This method is bound to \code{MosquitoFemale$pSenesce()}.
 #' @md
 mbitesGeneric_pSenesce <- function(){
   age = private$tNow - private$bDay
@@ -81,10 +85,10 @@ mbitesGeneric_pSenesce <- function(){
 # Resting Survival
 ##########################################
 
-#' MBITES-Generic: Resting Survival for \code{\link{MicroMosquitoFemale}}
+#' MBITES-Generic: Resting Survival for \code{\link{MosquitoFemale}}
 #'
 #' Run generic resting survival probailities for bouts (launch to launch).
-#'  * This method is bound to \code{MicroMosquitoFemale$surviveResting()}.
+#'  * This method is bound to \code{MosquitoFemale$surviveResting()}.
 #' @md
 mbitesGeneric_surviveResting <- function(){
   if(self$isActive()){
