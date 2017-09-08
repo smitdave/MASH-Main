@@ -134,7 +134,7 @@ HumanPop$set(which = "public",name = "get_human",
 #'
 get_history_HumanPop <- function(){
   return(
-    private$pop$eapply(tag="get_history",returnVal=TRUE)
+    private$pop$apply(tag="get_history",returnVal=TRUE)
   )
 }
 
@@ -153,7 +153,7 @@ HumanPop$set(which = "public",name = "get_history",
 #' @param tPause numeric (run all events in each human's \code{\link[MASHcpp]{HumanEventQ}} that occur before this time)
 #'
 simHumans_HumanPop <- function(tPause){
-  private$pop$eapply(tag="liveLife",returnVal=FALSE,tPause=tPause)
+  private$pop$apply(tag="liveLife",returnVal=FALSE,tPause=tPause)
 }
 
 HumanPop$set(which = "public",name = "simHumans",

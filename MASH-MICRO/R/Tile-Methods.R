@@ -28,7 +28,7 @@
 #' @param timeStep the time step of the model
 #' @param clearInterval interval to clear population and track mosquito history (see \code{\link{clear_pop}})
 #' @param popTrack log daily counts of mosquitoes in life stages or not (written to MicroTile$directory)
-#' @param historyTrack output mosquito histories to JSON via \code{\link{MicroMosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)
+#' @param historyTrack output mosquito histories to JSON via \code{\link{MosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)
 #' @md
 simMICRO_oneRun <- function(tMax, runID, verbose = FALSE, timeStep = 1, clearInterval = 10, popTrack = FALSE, historyTrack = FALSE){
 
@@ -76,7 +76,7 @@ Tile$set(which = "public",name = "simMICRO_oneRun",
 #' @param verbose current iteration (disable for running in batch mode)
 #' @param clearInterval interval to clear population and track mosquito history (see \code{\link{clear_pop}})
 #' @param popTrack log daily counts of mosquitoes in life stages or not (written to MicroTile$directory)
-#' @param historyTrack output mosquito histories to JSON via \code{\link{MicroMosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)
+#' @param historyTrack output mosquito histories to JSON via \code{\link{MosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)
 #' @md
 simMICRO_oneStep <- function(timeStep = 1, verbose = FALSE, clearInterval = 10, popTrack = FALSE, historyTrack = TRUE){
 
@@ -89,7 +89,7 @@ simMICRO_oneStep <- function(timeStep = 1, verbose = FALSE, clearInterval = 10, 
 
   # Aquatic Ecology
   private$Landscape$oneStep_AquaticEcology() # manage lambda -> ImagoQ (emerge) or EggQ -> ImagoQ (EL4P)
-  private$Landscape$addCohort() # emerging adults from ImagoQ to MicroMosquitoPopFemale
+  private$Landscape$addCohort() # emerging adults from ImagoQ to MosquitoPopFemale
 
   # M-BITES
   private$FemalePop$MBITES()
@@ -124,7 +124,7 @@ Tile$set(which = "public",name = "simMICRO_oneStep",
 
 
 ###############################################################################
-# MICRO MicroTile Set MicroMosquitoPopFemale
+# MICRO MicroTile Set MosquitoPopFemale
 # This is needed for running DHM-Cohort:
 #   1. use MicroMosquitoPop.Setup with cohort=TRUE
 #   2. initialize the MicroTile as per normal
@@ -133,7 +133,7 @@ Tile$set(which = "public",name = "simMICRO_oneStep",
 #   5. use this function to make the mosquitoes for full sim
 ###############################################################################
 
-#' MICRO \code{\link{MicroTile}}: Re-initialize \code{\link{MicroMosquitoPopFemale}}
+#' MICRO \code{\link{MicroTile}}: Re-initialize \code{\link{MosquitoPopFemale}}
 #'
 #' Erase the old \code{private$FemalePop} object in the tile and re-allocate.
 #' This function is needed for running MBITES-Cohort models, themselves needed to parameterize EL4P Aquatic Ecology Module.
@@ -157,7 +157,7 @@ set_FemalePop_MicroTile <- function(MosquitoPop_PAR){
   private$FemalePop = NULL
 
   # generate female mosquito object
-  private$FemalePop = MicroMosquitoPopFemale$new(N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
+  private$FemalePop = MosquitoPopFemale$new(N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
                                                time_init = MosquitoPop_PAR$time,  # time simulation begins
                                                ix_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
                                                genotype_init = MosquitoPop_PAR$genotype_female,  # genotypes of females
@@ -212,7 +212,7 @@ Tile$set(which = "public",name = "set_FemalePop",
 # #' @param verbose current iteration (disable for running in batch mode)
 # #' @param clearInterval interval to clear population and track mosquito history (see \code{\link{clear_pop}})
 # #' @param popTrack log daily counts of mosquitoes in life stages or not (written to MicroTile$directory)
-# #' @param historyTrack output mosquito histories to JSON via \code{\link{MicroMosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)
+# #' @param historyTrack output mosquito histories to JSON via \code{\link{MosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)
 # #' @md
 # reset_MicroTile <- function(HumanPop_PAR){
 #

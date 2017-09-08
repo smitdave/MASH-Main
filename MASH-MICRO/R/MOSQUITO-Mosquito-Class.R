@@ -51,7 +51,7 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             ##############################################################
 
                             # initialize: needs to take PAR as a parameter because certain module-specific parameter values will be stored there
-                            # pointers are also passed down from enclosing MicroMosquitoPopFemale object
+                            # pointers are also passed down from enclosing MosquitoPopFemale object
                             initialize = function(id, time, ix, genotype, state, eggT = 0, eggP = 0, energyPreG = 0){
 
                               # initialize general fields
@@ -141,8 +141,8 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             Pathogens      = NULL,
 
                             # Pointers
-                            FemalePopPointer = NULL,  # Point to enclosing MicroMosquitoPopFemale
-                            MalePopPointer = NULL,    # Point to MicroMosquitoPopMale in the same microsimulation Tile
+                            FemalePopPointer = NULL,  # Point to enclosing MosquitoPopFemale
+                            MalePopPointer = NULL,    # Point to MosquitoPopMale in the same microsimulation Tile
                             LandscapePointer = NULL,  # Point to Landscape object in same microsimulation Tile
                             HumansPointer = NULL,     # Point to HumanPop object in same microsimulation Tile
                             TilePointer = NULL        # Point to enclosing microsimulation Tile
@@ -210,8 +210,8 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                           history = NULL,          # history
 
                           # Pointers
-                          FemalePopPointer = NULL,  # Point to enclosing MicroMosquitoPopFemale
-                          MalePopPointer = NULL,    # Point to MicroMosquitoPopMale in the same microsimulation Tile
+                          FemalePopPointer = NULL,  # Point to enclosing MosquitoPopFemale
+                          MalePopPointer = NULL,    # Point to MosquitoPopMale in the same microsimulation Tile
                           LandscapePointer = NULL,  # Point to Landscape object in same microsimulation Tile
                           HumansPointer = NULL,     # Point to HumanPop object in same microsimulation Tile
                           TilePointer = NULL        # Point to enclosing microsimulation Tile

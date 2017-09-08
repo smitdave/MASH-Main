@@ -42,13 +42,13 @@ AQUA.Emerge.Setup <- function(overwrite = TRUE){
             overwrite = overwrite
   )
 
-  # ImagoQ to MicroMosquitoPopFemale
+  # ImagoQ to MosquitoPopFemale
   AquaticSite$set(which = "public",name = "addCohort_MicroEmergeSite",
             value = addCohort_EmergeSite,
             overwrite = overwrite
   )
 
-  # ImagoQ to MicroMosquitoPopFemale
+  # ImagoQ to MosquitoPopFemale
   Landscape$set(which = "public",name = "addCohort",
             value = addCohort_Emerge,
             overwrite = overwrite

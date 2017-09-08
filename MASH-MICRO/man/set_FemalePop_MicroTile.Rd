@@ -2,7 +2,7 @@
 % Please edit documentation in R/Tile-Methods.R
 \name{set_FemalePop_MicroTile}
 \alias{set_FemalePop_MicroTile}
-\title{MICRO \code{\link{MicroTile}}: Re-initialize \code{\link{MicroMosquitoPopFemale}}}
+\title{MICRO \code{\link{MicroTile}}: Re-initialize \code{\link{MosquitoPopFemale}}}
 \usage{
 set_FemalePop_MicroTile(MosquitoPop_PAR)
 }

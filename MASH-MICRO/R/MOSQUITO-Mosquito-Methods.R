@@ -15,191 +15,186 @@
 
 
 ###############################################################################
-# Pointers
+# Generic Methods
 ###############################################################################
 
-#' Get \code{\link{MosquitoPopFemale}} Pointer
+#' Remove Self
 #'
-#' Return \code{MosquitoPopFemale$self} enclosing this mosquito (if method for \code{\link{MosquitoFemale}}), or in the same \code{\link{Tile}} (if method for \code{\link{MosquitoMale}}) by reference.
-#'  * This method is bound to \code{MosquitoFemale$get_FemalePopPointer} and \code{MosquitoMale$get_FemalePopPointer}
+#' Remove this mosquito from the population containing it.
+#'  * This method is bound to \code{MosquitoFemale$rmSelf}
 #'
-get_FemalePopPointer_Mosquito <- function(){
-  return(private$FemalePopPointer)
+rmSelf_MosquitoFemale <- function(){
+  private$FemalePopPointer$get_pop()$rm(key = private$id)
 }
 
-MosquitoFemale$set(which = "public",name = "get_FemalePopPointer",
-  value = get_FemalePopPointer_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "rmSelf",
+  value = rmSelf_MosquitoFemale, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "get_FemalePopPointer",
-  value = get_FemalePopPointer_Mosquito, overwrite = TRUE
-)
 
-#' Set \code{\link{MosquitoPopFemale}} Pointer
+#' Remove Self
 #'
-#' Set the pointer to \code{MosquitoPopFemale$self} enclosing this mosquito (if method for \code{\link{MosquitoFemale}}), or in the same \code{\link{Tile}} (if method for \code{\link{MosquitoMale}}).
-#'  * This method is bound to \code{MosquitoFemale$set_FemalePopPointer} and \code{MosquitoMale$set_FemalePopPointer}
+#' Remove this mosquito from the population containing it.
+#'  * This method is bound to \code{MosquitoMale$rmSelf}
 #'
-#' @param FemalePopPointer an environment
-#'
-set_FemalePopPointer_Mosquito <- function(FemalePopPointer){
-  private$FemalePopPointer = FemalePopPointer
+rmSelf_MosquitoMale <- function(){
+  private$FemalePopPointer$get_pop()$rm(key = private$id)
 }
 
-MosquitoFemale$set(which = "public",name = "set_FemalePopPointer",
-  value = set_FemalePopPointer_Mosquito, overwrite = TRUE
-)
-
-MosquitoMale$set(which = "public",name = "set_FemalePopPointer",
-  value = set_FemalePopPointer_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "rmSelf",
+  value = rmSelf_MosquitoMale, overwrite = TRUE
 )
 
 
-#' Get \code{\link{MosquitoPopMale}} Pointer
+###############################################################################
+# Female-specific Methods
+###############################################################################
+
+#' Get bmSize
 #'
-#' Return \code{MosquitoPopMale$self} enclosing this mosquito (if method for \code{\link{MosquitoMale}}), or in the same \code{\link{Tile}} (if method for \code{\link{MosquitoFemale}}) by reference.
-#'  * This method is bound to \code{MosquitoFemale$get_MalePopPointer} and \code{MosquitoMale$get_MalePopPointer}
+#' Return mosquito blood meal size (\code{numeric}).
+#'  * This method is bound to \code{MosquitoFemale$get_bmSize}
 #'
-get_MalePopPointer_Mosquito <- function(){
-  return(private$MalePopPointer)
+get_bmSize_Mosquito <- function(){
+  return(private$bmSize)
 }
 
-MosquitoFemale$set(which = "public",name = "get_MalePopPointer",
-  value = get_MalePopPointer_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_bmSize",
+  value = get_bmSize_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "get_MalePopPointer",
-  value = get_MalePopPointer_Mosquito, overwrite = TRUE
-)
-
-#' Set \code{\link{MosquitoPopMale}} Pointer
+#' Get batch
 #'
-#' Set the pointer to \code{MosquitoPopMale$self} enclosing this mosquito (if method for \code{\link{MosquitoMale}}), or in the same \code{\link{Tile}} (if method for \code{\link{MosquitoFemale}}).
-#'  * This method is bound to \code{MosquitoFemale$set_MalePopPointer} and \code{MosquitoMale$set_MalePopPointer}
+#' Return mosquito egg batch size (\code{numeric}).
+#'  * This method is bound to \code{MosquitoFemale$get_bmSize}
 #'
-#' @param MalePopPointer an environment
-#'
-set_MalePopPointer_Mosquito <- function(MalePopPointer){
-  private$MalePopPointer = MalePopPointer
+get_batch_Mosquito <- function(){
+  return(private$batch)
 }
 
-MosquitoFemale$set(which = "public",name = "set_MalePopPointer",
-  value = set_MalePopPointer_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_batch",
+  value = get_batch_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "set_MalePopPointer",
-  value = set_MalePopPointer_Mosquito, overwrite = TRUE
-)
-
-
-#' Get \code{\link{Landscape}} Pointer
+#' Get eggT
 #'
-#' Return enclosing \code{Landscape$self} by refernce.
-#'  * This method is bound to \code{MosquitoFemale$get_LandscapePointer} and \code{MosquitoMale$get_LandscapePointer}
+#' Return mosquito minimum time for eggs to mature (\code{numeric}).
+#'  * This method is bound to \code{MosquitoFemale$get_eggT}
 #'
-get_LandscapePointer_Mosquito <- function(){
-  return(private$LandscapePointer)
+get_eggT_Mosquito <- function(){
+  return(private$eggT)
 }
 
-MosquitoFemale$set(which = "public",name = "get_LandscapePointer",
-  value = get_LandscapePointer_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_eggT",
+  value = get_eggT_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "get_LandscapePointer",
-  value = get_LandscapePointer_Mosquito, overwrite = TRUE
-)
-
-#' Set \code{\link{Landscape}} Pointer
+#' Get eggP
 #'
-#' Set pointer to the enclosing \code{Landscape$self}.
-#'  * This method is bound to \code{MosquitoFemale$set_LandscapePointer} and \code{MosquitoMale$set_LandscapePointer}
+#' Return mosquito minimum blood provision for eggs to mature (\code{numeric}).
+#'  * This method is bound to \code{MosquitoFemale$get_eggP}
 #'
-#' @param LandscapePointer an environment
-#'
-set_LandscapePointer_Mosquito <- function(LandscapePointer){
-  private$LandscapePointer = LandscapePointer
+get_eggP_Mosquito <- function(){
+  return(private$eggP)
 }
 
-MosquitoFemale$set(which = "public",name = "get_LandscapePointer",
-  value = set_LandscapePointer_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_eggP",
+  value = get_eggP_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "get_LandscapePointer",
-  value = set_LandscapePointer_Mosquito, overwrite = TRUE
-)
-
-
-#' Get \code{\link[MASHmacro]{HumanPop}} Pointer
+#' Get sire
 #'
-#' Return pointer to \code{HumanPop$self} within the same microsimulation tile by reference.
-#'  * This method is bound to \code{MosquitoFemale$get_HumansPointer} and \code{MosquitoMale$get_HumansPointer}
+#' Return ID of the \code{\link{MosquitoMale}} this mosquito mated with (\code{numeric}).
+#'  * This method is bound to \code{MosquitoFemale$get_sire}
 #'
-get_HumansPointer_Mosquito <- function(){
-  return(private$HumansPointer)
+get_sire_Mosquito <- function(){
+  return(private$sire)
 }
 
-MosquitoFemale$set(which = "public",name = "get_HumansPointer",
-  value = get_HumansPointer_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_sire",
+  value = get_sire_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "get_HumansPointer",
-  value = get_HumansPointer_Mosquito, overwrite = TRUE
-)
-
-#' Set \code{\link[MASHmacro]{HumanPop}} Pointer
+#' Get energyPreG
 #'
-#' Set pointer to \code{HumanPop$self} within the same microsimulation tile.
-#'  * This method is bound to \code{MosquitoFemale$set_HumansPointer} and \code{MosquitoMale$set_HumansPointer}
+#' Return mosquito minimum blood provision for maturation (\code{numeric}).
+#'  * This method is bound to \code{MosquitoFemale$get_energyPreG}
 #'
-#' @param HumansPointer an environment
-#'
-set_HumansPointer_Mosquito <- function(HumansPointer){
-  private$HumansPointer = HumansPointer
+get_energyPreG_Mosquito <- function(){
+  return(private$energyPreG)
 }
 
-MosquitoFemale$set(which = "public",name = "set_HumansPointer",
-  value = set_HumansPointer_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_energyPreG",
+  value = get_energyPreG_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "set_HumansPointer",
-  value = set_HumansPointer_Mosquito, overwrite = TRUE
-)
-
-
-#' Get \code{\link{Tile}} Pointer
+#' Get hostID
 #'
-#' Return pointer to enclosing \code{Tile$self}.
-#'  * This method is bound to \code{MosquitoFemale$get_TilePointer} and \code{MosquitoMale$get_TilePointer}
+#' Return ID of the host this mosquito last fed upon (\code{integer}).
+#'  * This method is bound to \code{MosquitoFemale$get_hostID}
 #'
-get_TilePointer_Mosquito <- function(){
-  return(private$TilePointer)
+get_hostID_Mosquito <- function(){
+  return(private$hostID)
 }
 
-MosquitoFemale$set(which = "public",name = "get_TilePointer",
-  value = get_TilePointer_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_hostID",
+  value = get_hostID_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "get_TilePointer",
-  value = get_TilePointer_Mosquito, overwrite = TRUE
-)
-
-#' Set \code{\link{Tile}} Pointer
+#' Get Pathogens
 #'
-#' Set pointer to enclosing \code{Tile$self}.
-#'  * This method is bound to \code{MosquitoFemale$set_TilePointer} and \code{MosquitoMale$set_TilePointer}
-#'
-#' @param TilePointer an environment
-#'
-set_TilePointer_Mosquito <- function(TilePointer){
-  private$TilePointer = TilePointer
+#' Return \code{Pathogens} object in this mosquito.
+#'  * This method is bound to \code{MosquitoFemale$get_Pathogens}
+#
+get_Pathogens_Mosquito <- function(){
+  return(private$Pathogens)
 }
 
-MosquitoFemale$set(which = "public",name = "set_TilePointer",
-  value = set_TilePointer_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_Pathogens",
+  value = get_Pathogens_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "set_TilePointer",
-  value = set_TilePointer_Mosquito, overwrite = TRUE
+#' Initialize Pathogens
+#'
+#' Initialize \code{Pathogens} object in this mosquito. This function is a placeholder that should be overwritten by an appropriate PATHOGEN module setup function.
+#'  * This method is bound to \code{MosquitoFemale$init_Pathogens}
+#
+init_Pathogens_Mosquito <- function(){
+  print(paste0("if you are seeing this error the correct PATHOGEN module setup has not been run!"))
+}
+
+MosquitoFemale$set(which = "public",name = "init_Pathogens",
+  value = init_Pathogens_Mosquito, overwrite = TRUE
+)
+
+#' Get History
+#'
+#' Return history from \code{\link[MASHcpp]{MosquitoFemaleHistory}}
+#'  * This method is bound to \code{MosquitoFemale$get_history}
+#
+get_history_Mosquito <- function(){
+  return(
+    private$history$exportHistory()
+  )
+}
+
+MosquitoFemale$set(which = "public",name = "get_history",
+  value = get_history_Mosquito, overwrite = TRUE
+)
+
+#' Get Bionomics
+#'
+#' Return bionomics calculated from \code{\link[MASHcpp]{MosquitoFemaleHistory}}
+#'  * This method is bound to \code{MosquitoFemale$get_bionomics}
+#
+get_bionomics_Mosquito <- function(){
+  return(
+    private$history$exportBionomics()
+  )
+}
+
+MosquitoFemale$set(which = "public",name = "get_bionomics",
+  value = get_bionomics_Mosquito, overwrite = TRUE
 )
 
 
@@ -438,184 +433,189 @@ MosquitoMale$set(which = "public",name = "get_energy",
 
 
 ###############################################################################
-# Generic Methods
+# Pointers
 ###############################################################################
 
-#' Remove Self
+#' Get \code{\link{MosquitoPopFemale}} Pointer
 #'
-#' Remove this mosquito from the population containing it.
-#'  * This method is bound to \code{MosquitoFemale$rmSelf}
+#' Return \code{MosquitoPopFemale$self} enclosing this mosquito (if method for \code{\link{MosquitoFemale}}), or in the same \code{\link{Tile}} (if method for \code{\link{MosquitoMale}}) by reference.
+#'  * This method is bound to \code{MosquitoFemale$get_FemalePopPointer} and \code{MosquitoMale$get_FemalePopPointer}
 #'
-rmSelf_MosquitoFemale <- function(){
-  private$FemalePopPointer$get_pop()$rm(key = private$id)
+get_FemalePopPointer_Mosquito <- function(){
+  return(private$FemalePopPointer)
 }
 
-MosquitoFemale$set(which = "public",name = "rmSelf",
-  value = rmSelf_MosquitoFemale, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_FemalePopPointer",
+  value = get_FemalePopPointer_Mosquito, overwrite = TRUE
+)
+
+MosquitoMale$set(which = "public",name = "get_FemalePopPointer",
+  value = get_FemalePopPointer_Mosquito, overwrite = TRUE
+)
+
+#' Set \code{\link{MosquitoPopFemale}} Pointer
+#'
+#' Set the pointer to \code{MosquitoPopFemale$self} enclosing this mosquito (if method for \code{\link{MosquitoFemale}}), or in the same \code{\link{Tile}} (if method for \code{\link{MosquitoMale}}).
+#'  * This method is bound to \code{MosquitoFemale$set_FemalePopPointer} and \code{MosquitoMale$set_FemalePopPointer}
+#'
+#' @param FemalePopPointer an environment
+#'
+set_FemalePopPointer_Mosquito <- function(FemalePopPointer){
+  private$FemalePopPointer = FemalePopPointer
+}
+
+MosquitoFemale$set(which = "public",name = "set_FemalePopPointer",
+  value = set_FemalePopPointer_Mosquito, overwrite = TRUE
+)
+
+MosquitoMale$set(which = "public",name = "set_FemalePopPointer",
+  value = set_FemalePopPointer_Mosquito, overwrite = TRUE
 )
 
 
-#' Remove Self
+#' Get \code{\link{MosquitoPopMale}} Pointer
 #'
-#' Remove this mosquito from the population containing it.
-#'  * This method is bound to \code{MosquitoMale$rmSelf}
+#' Return \code{MosquitoPopMale$self} enclosing this mosquito (if method for \code{\link{MosquitoMale}}), or in the same \code{\link{Tile}} (if method for \code{\link{MosquitoFemale}}) by reference.
+#'  * This method is bound to \code{MosquitoFemale$get_MalePopPointer} and \code{MosquitoMale$get_MalePopPointer}
 #'
-rmSelf_MosquitoMale <- function(){
-  private$FemalePopPointer$get_pop()$rm(key = private$id)
+get_MalePopPointer_Mosquito <- function(){
+  return(private$MalePopPointer)
 }
 
-MosquitoMale$set(which = "public",name = "rmSelf",
-  value = rmSelf_MosquitoMale, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_MalePopPointer",
+  value = get_MalePopPointer_Mosquito, overwrite = TRUE
+)
+
+MosquitoMale$set(which = "public",name = "get_MalePopPointer",
+  value = get_MalePopPointer_Mosquito, overwrite = TRUE
+)
+
+#' Set \code{\link{MosquitoPopMale}} Pointer
+#'
+#' Set the pointer to \code{MosquitoPopMale$self} enclosing this mosquito (if method for \code{\link{MosquitoMale}}), or in the same \code{\link{Tile}} (if method for \code{\link{MosquitoFemale}}).
+#'  * This method is bound to \code{MosquitoFemale$set_MalePopPointer} and \code{MosquitoMale$set_MalePopPointer}
+#'
+#' @param MalePopPointer an environment
+#'
+set_MalePopPointer_Mosquito <- function(MalePopPointer){
+  private$MalePopPointer = MalePopPointer
+}
+
+MosquitoFemale$set(which = "public",name = "set_MalePopPointer",
+  value = set_MalePopPointer_Mosquito, overwrite = TRUE
+)
+
+MosquitoMale$set(which = "public",name = "set_MalePopPointer",
+  value = set_MalePopPointer_Mosquito, overwrite = TRUE
 )
 
 
-###############################################################################
-# Female-specific Methods
-###############################################################################
-
-#' Get bmSize
+#' Get \code{\link{Landscape}} Pointer
 #'
-#' Return mosquito blood meal size (\code{numeric}).
-#'  * This method is bound to \code{MosquitoFemale$get_bmSize}
+#' Return enclosing \code{Landscape$self} by refernce.
+#'  * This method is bound to \code{MosquitoFemale$get_LandscapePointer} and \code{MosquitoMale$get_LandscapePointer}
 #'
-get_bmSize_Mosquito <- function(){
-  return(private$bmSize)
+get_LandscapePointer_Mosquito <- function(){
+  return(private$LandscapePointer)
 }
 
-MosquitoFemale$set(which = "public",name = "get_bmSize",
-  value = get_bmSize_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_LandscapePointer",
+  value = get_LandscapePointer_Mosquito, overwrite = TRUE
 )
 
-#' Get batch
-#'
-#' Return mosquito egg batch size (\code{numeric}).
-#'  * This method is bound to \code{MosquitoFemale$get_bmSize}
-#'
-get_batch_Mosquito <- function(){
-  return(private$batch)
-}
-
-MosquitoFemale$set(which = "public",name = "get_batch",
-  value = get_batch_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "get_LandscapePointer",
+  value = get_LandscapePointer_Mosquito, overwrite = TRUE
 )
 
-#' Get eggT
+#' Set \code{\link{Landscape}} Pointer
 #'
-#' Return mosquito minimum time for eggs to mature (\code{numeric}).
-#'  * This method is bound to \code{MosquitoFemale$get_eggT}
+#' Set pointer to the enclosing \code{Landscape$self}.
+#'  * This method is bound to \code{MosquitoFemale$set_LandscapePointer} and \code{MosquitoMale$set_LandscapePointer}
 #'
-get_eggT_Mosquito <- function(){
-  return(private$eggT)
+#' @param LandscapePointer an environment
+#'
+set_LandscapePointer_Mosquito <- function(LandscapePointer){
+  private$LandscapePointer = LandscapePointer
 }
 
-MosquitoFemale$set(which = "public",name = "get_eggT",
-  value = get_eggT_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_LandscapePointer",
+  value = set_LandscapePointer_Mosquito, overwrite = TRUE
 )
 
-#' Get eggP
-#'
-#' Return mosquito minimum blood provision for eggs to mature (\code{numeric}).
-#'  * This method is bound to \code{MosquitoFemale$get_eggP}
-#'
-get_eggP_Mosquito <- function(){
-  return(private$eggP)
-}
-
-MosquitoFemale$set(which = "public",name = "get_eggP",
-  value = get_eggP_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "get_LandscapePointer",
+  value = set_LandscapePointer_Mosquito, overwrite = TRUE
 )
 
-#' Get sire
+
+#' Get \code{\link[MASHmacro]{HumanPop}} Pointer
 #'
-#' Return ID of the \code{\link{MosquitoMale}} this mosquito mated with (\code{numeric}).
-#'  * This method is bound to \code{MosquitoFemale$get_sire}
+#' Return pointer to \code{HumanPop$self} within the same microsimulation tile by reference.
+#'  * This method is bound to \code{MosquitoFemale$get_HumansPointer} and \code{MosquitoMale$get_HumansPointer}
 #'
-get_sire_Mosquito <- function(){
-  return(private$sire)
+get_HumansPointer_Mosquito <- function(){
+  return(private$HumansPointer)
 }
 
-MosquitoFemale$set(which = "public",name = "get_sire",
-  value = get_sire_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_HumansPointer",
+  value = get_HumansPointer_Mosquito, overwrite = TRUE
 )
 
-#' Get energyPreG
-#'
-#' Return mosquito minimum blood provision for maturation (\code{numeric}).
-#'  * This method is bound to \code{MosquitoFemale$get_energyPreG}
-#'
-get_energyPreG_Mosquito <- function(){
-  return(private$energyPreG)
-}
-
-MosquitoFemale$set(which = "public",name = "get_energyPreG",
-  value = get_energyPreG_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "get_HumansPointer",
+  value = get_HumansPointer_Mosquito, overwrite = TRUE
 )
 
-#' Get hostID
+#' Set \code{\link[MASHmacro]{HumanPop}} Pointer
 #'
-#' Return ID of the host this mosquito last fed upon (\code{integer}).
-#'  * This method is bound to \code{MosquitoFemale$get_hostID}
+#' Set pointer to \code{HumanPop$self} within the same microsimulation tile.
+#'  * This method is bound to \code{MosquitoFemale$set_HumansPointer} and \code{MosquitoMale$set_HumansPointer}
 #'
-get_hostID_Mosquito <- function(){
-  return(private$hostID)
+#' @param HumansPointer an environment
+#'
+set_HumansPointer_Mosquito <- function(HumansPointer){
+  private$HumansPointer = HumansPointer
 }
 
-MosquitoFemale$set(which = "public",name = "get_hostID",
-  value = get_hostID_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "set_HumansPointer",
+  value = set_HumansPointer_Mosquito, overwrite = TRUE
 )
 
-#' Get Pathogens
-#'
-#' Return \code{Pathogens} object in this mosquito.
-#'  * This method is bound to \code{MosquitoFemale$get_Pathogens}
-#
-get_Pathogens_Mosquito <- function(){
-  return(private$Pathogens)
-}
-
-MosquitoFemale$set(which = "public",name = "get_Pathogens",
-  value = get_Pathogens_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "set_HumansPointer",
+  value = set_HumansPointer_Mosquito, overwrite = TRUE
 )
 
-#' Initialize Pathogens
+
+#' Get \code{\link{Tile}} Pointer
 #'
-#' Initialize \code{Pathogens} object in this mosquito. This function is a placeholder that should be overwritten by an appropriate PATHOGEN module setup function.
-#'  * This method is bound to \code{MosquitoFemale$init_Pathogens}
-#
-init_Pathogens_Mosquito <- function(){
-  print(paste0("if you are seeing this error the correct PATHOGEN module setup has not been run!"))
+#' Return pointer to enclosing \code{Tile$self}.
+#'  * This method is bound to \code{MosquitoFemale$get_TilePointer} and \code{MosquitoMale$get_TilePointer}
+#'
+get_TilePointer_Mosquito <- function(){
+  return(private$TilePointer)
 }
 
-MosquitoFemale$set(which = "public",name = "init_Pathogens",
-  value = init_Pathogens_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_TilePointer",
+  value = get_TilePointer_Mosquito, overwrite = TRUE
 )
 
-#' Get History
-#'
-#' Return history from \code{\link[MASHcpp]{MosquitoFemaleHistory}}
-#'  * This method is bound to \code{MosquitoFemale$get_history}
-#
-get_history_Mosquito <- function(){
-  return(
-    private$history$exportHistory()
-  )
-}
-
-MosquitoFemale$set(which = "public",name = "get_history",
-  value = get_history_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "get_TilePointer",
+  value = get_TilePointer_Mosquito, overwrite = TRUE
 )
 
-#' Get Bionomics
+#' Set \code{\link{Tile}} Pointer
 #'
-#' Return bionomics calculated from \code{\link[MASHcpp]{MosquitoFemaleHistory}}
-#'  * This method is bound to \code{MosquitoFemale$get_bionomics}
-#
-get_bionomics_Mosquito <- function(){
-  return(
-    private$history$exportBionomics()
-  )
+#' Set pointer to enclosing \code{Tile$self}.
+#'  * This method is bound to \code{MosquitoFemale$set_TilePointer} and \code{MosquitoMale$set_TilePointer}
+#'
+#' @param TilePointer an environment
+#'
+set_TilePointer_Mosquito <- function(TilePointer){
+  private$TilePointer = TilePointer
 }
 
-MosquitoFemale$set(which = "public",name = "get_bionomics",
-  value = get_bionomics_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "set_TilePointer",
+  value = set_TilePointer_Mosquito, overwrite = TRUE
+)
+
+MosquitoMale$set(which = "public",name = "set_TilePointer",
+  value = set_TilePointer_Mosquito, overwrite = TRUE
 )

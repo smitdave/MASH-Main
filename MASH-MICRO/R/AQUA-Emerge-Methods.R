@@ -78,7 +78,7 @@ oneStep_Emerge <- function(){
 
 #' MICRO \code{\link{Landscape}} Method: Get Emerging Adults from ImagoQ and Zero out ImagoQ
 #'
-#' Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MicroMosquitoPopFemale}}.
+#' Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MosquitoPopFemale}}.
 #' This is a helper function for \code{\link{addCohort_MicroEmerge}}.
 #'  * This method is bound to \code{AquaticSite$addCohort_MicroEmergeSite()}.
 #'
@@ -99,7 +99,7 @@ addCohort_EmergeSite <- function(tNow){
 
 #' MICRO \code{\link{Landscape}} Method: Get Emerging Adults from ImagoQ and Zero out ImagoQ
 #'
-#' Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MicroMosquitoPopFemale}}.
+#' Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MosquitoPopFemale}}.
 #' This function fills a generic for \code{\link{simMICRO_oneStep}}.
 #'  * This method is bound to \code{Landscape$addCohort()}
 #'

@@ -68,7 +68,7 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$movementFemale = MicroKernel_exactAll(private$Landscape,sigma=3,eps=0.1,beta=0)
 
                      # generate female mosquito object
-                     private$FemalePop = MicroMosquitoPopFemale$new(N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
+                     private$FemalePop = MosquitoPopFemale$new(N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
                                                                   time_init = MosquitoPop_PAR$time,  # time simulation begins
                                                                   ix_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
                                                                   genotype_init = MosquitoPop_PAR$genotype_female,  # genotypes of females

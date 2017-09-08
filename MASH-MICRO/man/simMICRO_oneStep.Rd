@@ -16,7 +16,7 @@ simMICRO_oneStep(timeStep = 1, verbose = FALSE, clearInterval = 10,
 
 \item{popTrack}{log daily counts of mosquitoes in life stages or not (written to MicroTile$directory)}
 
-\item{historyTrack}{output mosquito histories to JSON via \code{\link{MicroMosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)}
+\item{historyTrack}{output mosquito histories to JSON via \code{\link{MosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)}
 }
 \description{
 Run MICRO simulation for one time step, the length of which defines the temporal window for indifference to contingent events.

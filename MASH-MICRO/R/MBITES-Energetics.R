@@ -133,12 +133,3 @@ mbitesGeneric_rEggMaturationTimeNorm <- function(){
 mbitesGeneric_rEggMaturationTimeOff <- function(){
   return(0)
 }
-
-# #' MBITES-Generic: Make an Egg Batch and Oviposit for \code{\link{MosquitoFemale}}
-# #'
-# #' Make an egg batch and deposit on the landscape.
-# #'  * This method is bound to \code{MosquitoFemale$makeBatches()}.
-# #' @md
-# mbitesGeneric_makeBatches <- function(){
-#   addBatch2Q(M$batch, M$ix, M$tNow, M$id, M$sire) # aquaticEcology.R
-# }

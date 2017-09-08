@@ -64,7 +64,7 @@ MosquitoPopFemale <- R6::R6Class(classname = "MosquitoPopFemale",
                          MBITES_PAR = list(),        # MBITES Parameters
 
                          # Pointers
-                         MalePopPointer = NULL,    # Point to MicroMosquitoPopMale in the same microsimulation Tile
+                         MalePopPointer = NULL,    # Point to MosquitoPopMale in the same microsimulation Tile
                          LandscapePointer = NULL,  # Point to Landscape object in same microsimulation Tile
                          HumansPointer = NULL,     # Point to HumanPop object in same microsimulation Tile
                          TilePointer = NULL        # Point to enclosing microsimulation Tile
@@ -123,7 +123,7 @@ MosquitoPopMale <- R6::R6Class(classname = "MosquitoPopMale",
                          MBITES_PAR = list(),        # MBITES Parameters
 
                          # Pointers
-                         FemalePopPointer = NULL,    # Point to MicroMosquitoPopMale in the same microsimulation Tile
+                         FemalePopPointer = NULL,    # Point to MosquitoPopMale in the same microsimulation Tile
                          LandscapePointer = NULL,  # Point to Landscape object in same microsimulation Tile
                          HumansPointer = NULL,     # Point to HumanPop object in same microsimulation Tile
                          TilePointer = NULL        # Point to enclosing microsimulation Tile

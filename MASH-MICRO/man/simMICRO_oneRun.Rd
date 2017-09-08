@@ -20,7 +20,7 @@ simMICRO_oneRun(tMax, runID, verbose = FALSE, timeStep = 1,
 
 \item{popTrack}{log daily counts of mosquitoes in life stages or not (written to MicroTile$directory)}
 
-\item{historyTrack}{output mosquito histories to JSON via \code{\link{MicroMosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)}
+\item{historyTrack}{output mosquito histories to JSON via \code{\link{MosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)}
 }
 \description{
 write me
