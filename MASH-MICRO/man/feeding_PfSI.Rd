@@ -2,14 +2,14 @@
 % Please edit documentation in R/PATHOGEN-PfSI-Methods.R
 \name{feeding_PfSI}
 \alias{feeding_PfSI}
-\title{PfSI \code{\link{MicroMosquitoFemale}} Method: Host Feeding}
+\title{PfSI \code{\link{MosquitoFemale}} Method: Host Feeding}
 \usage{
 feeding_PfSI()
 }
 \description{
-The mosquito feeds on the host. Feeding occurs during code{MicroMosquitoFemale$humanEncounter()}.
+The mosquito feeds on the host. Feeding occurs during code{MosquitoFemale$humanEncounter()}.
 Human to mosquito pathogen transmission occurs during host feeding.
 \itemize{
-\item This method is bound to \code{MicroMosquitoFemale$feeding()}
+\item This method is bound to \code{MosquitoFemale$feeding()}
 }
 }

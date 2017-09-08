@@ -2,16 +2,16 @@
 % Please edit documentation in R/PATHOGEN-PfSI-Methods.R
 \name{probing_PfSI}
 \alias{probing_PfSI}
-\title{PfSI \code{\link{MicroMosquitoFemale}} Method: Host Probing}
+\title{PfSI \code{\link{MosquitoFemale}} Method: Host Probing}
 \usage{
 probing_PfSI()
 }
 \description{
-The mosquito probes the host prior to successful feeding. Probing occurs during code{MicroMosquitoFemale$humanEncounter()}.
+The mosquito probes the host prior to successful feeding. Probing occurs during code{MosquitoFemale$humanEncounter()}.
 Mosquito to human pathogen transmission occurs during host probing.
 If the PfSI infection has passed the EIP, \code{\link{probeHost_PfSI}} is called via the mosquito's pointer to the \code{\link{HumanPop}} class
 to initiate the PfSI infection process.
 \itemize{
-\item This method is bound to \code{MicroMosquitoFemale$probing()}
+\item This method is bound to \code{MosquitoFemale$probing()}
 }
 }
