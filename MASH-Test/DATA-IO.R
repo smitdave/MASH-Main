@@ -38,7 +38,8 @@ makeConnection <- function(directiory, fileName){
   return(con)
 }
 
-con = makeConnection(directiory = myDIR,fileName = "testCon.json")
+fileName = "testConTemp.json"
+con = makeConnection(directiory = myDIR,fileName = fileName)
 
 
 # simulate iterating through some list of data and outputting line by line
@@ -54,4 +55,13 @@ writeLines(text = "]",con = con)
 
 close(con)
 
-system(command = paste0("wc -l ",directory,fileName))
+fileNameFinal = sub(pattern = "Temp",x = fileName,replacement = "")
+
+
+sedLinux = "sed: 1: 'x;${s/,$//;p;x}; 2,$ p' "
+sedMac = "sed -n -e x -e '${s/,$//;p;x;}' -e '2,$ p' "
+
+switch()
+
+system(command = paste0("sed -n -e x -e '${s/,$//;p;x;}' -e '2,$ p' ",directory,fileName," > ",directory,fileNameFinal))
+system(command = paste0("rm ",directiory,fileName))
