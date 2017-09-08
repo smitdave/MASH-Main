@@ -16,7 +16,7 @@
 #' Initialize PfSI Pathogen Module for MICRO
 #'
 #' Generate a list of parameters PfSI_PAR in \code{\link{Human}} and public methods in \code{\link{Human}} for PfSI infection model; also defines public methods
-#' in \code{\link{MicroMosquitoFemale}} for PfSI infection model.
+#' in \code{\link{MosquitoFemale}} for PfSI infection model.
 #'
 #' @param overwrite overwrite existing methods and fields?
 #' @param Pf_c 0.15; transmission efficiency: infected human to mosquito
@@ -117,7 +117,7 @@ PfSI.MICRO.Setup <- function(
   ###################################################################
 
   ###################################################################
-  # Add PfSI Pathogen Object to 'MicroMosquitoFemale' & 'MicroMosquitoPopFemale' Class
+  # Add PfSI Pathogen Object to 'MosquitoFemale' & 'MosquitoPopFemale' Class
   ###################################################################
 
   MosquitoFemale$set(which = "public",name = "probing",

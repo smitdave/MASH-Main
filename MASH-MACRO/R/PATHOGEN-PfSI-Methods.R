@@ -15,7 +15,7 @@
 #' PfSI \code{Human} Method: Get PfSI_PAR
 #'
 #' Get either entire list or one named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
-#' This method is bound to \code{Human$get_PfSI_PAR()}
+#'  * This method is bound to \code{Human$get_PfSI_PAR()}
 #'
 Human_get_PfSI_PAR <- function(ix = NULL){
   return(private$HumansPointer$get_PfSI_PAR(ix))
@@ -24,7 +24,7 @@ Human_get_PfSI_PAR <- function(ix = NULL){
 #' PfSI \code{HumanPop} Method: Get PfSI_PAR
 #'
 #' Get either entire list or one named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
-#' This method is bound to \code{HumanPop$get_PfSI_PAR()}
+#'  * This method is bound to \code{HumanPop$get_PfSI_PAR()}
 #' @param PfSI_PAR new parameter list, see \code{\link{PfSI.Parameters}}
 HumanPop_get_PfSI_PAR <- function(ix = NULL){
   if(is.null(ix)){
@@ -37,7 +37,7 @@ HumanPop_get_PfSI_PAR <- function(ix = NULL){
 #' PfSI \code{HumanPop} Method: Set PfSI Paramters for a \code{\link{HumanPop}}
 #'
 #' Set PfSI_PAR for a HumanPop; this is useful for simulating multiple populations with different parameter values.
-#' This method is bound to \code{HumanPop$set_PfSI_PAR()}
+#'  * This method is bound to \code{HumanPop$set_PfSI_PAR()}
 #' @param PfSI_PAR new parameter list, see \code{\link{PfSI.Parameters}}
 HumanPop_set_PfSI_PAR <- function(PfSI_PAR){
   private$PfSI_PAR = PfSI_PAR
@@ -81,55 +81,6 @@ init_PfSI <- function(PfPR, tStart = 0){
 
 }
 
-# this isn't needed because humanPops are stored individually in patches in MACRO
-# #' PfSI \code{HumanPop} Method: Initialize MACRO PfSI Infections
-# #'
-# #' Initialize PfSI infections with parasite prevalence PfPR for each patch.
-# #' This method is bound to \code{HumanPop$init_MACRO_PfSI()}
-# #'
-# #' @param PfPR a vector of parasite prevalence at each patch
-# #' @param tStart time to start simulation
-# init_MACRO_PfSI <- function(PfPR, tStart = 0){
-#
-#   private$PfID = 1L
-#   self$set_humanPfSI()
-#
-#   # initialize biting propensity on humans
-#   self$updateKappa()
-#
-#   patchID = private$patchID
-#   patches = unique(patchID)
-#   # iterate over patches
-#   for(ixP in patches){
-#     print(paste0("init PfSI infections in patch: ",ixP," at PfPR: ",PfPR[ixP]))
-#
-#     # iterate over humans in that patch
-#     humanIter = which(patchID==ixP)
-#     for(ixH in humanIter){
-#
-#       if(runif(1) < PfPR[ixP]){
-#         private$pop[[ixH]]$infectHumanPfSI(tEvent = tStart, PAR = list(damID=-1L,sireID=-1L))
-#       } else {
-#         private$pop[[ixH]]$get_Pathogens()$track_history(tEvent = tStart, event = "S")
-#       }
-#
-#     } # end iter over humans
-#
-#   } # end iter over patches
-#
-# }
-
-# #' MACRO PfSI \code{MacroTile} Method: Initialize MACRO PfSI Infections
-# #'
-# #' Initialize PfSI infections with parasite prevalence PfPR for each patch.
-# #' Pass \code{PfPR} and \code{tStart} to function \code{\link{init_MACRO_PfSI}}
-# #' This method is bound to \code{MacroTile$init_PfSI()}
-# #'
-# #' @param PfPR a vector of parasite prevalence at each patch
-# #' @param tStart time to start simulation
-# init_MacroTile_PfSI <- function(PfPR, tStart = 0){
-#   private$HumanPop$init_MACRO_PfSI(PfPR, tStart)
-# }
 
 #' PfSI \code{HumanPop} Method: Get PfSI Histories
 #'
@@ -150,7 +101,7 @@ HumanPop_get_PfSI_history <- function(){
 
 #' PfSI \code{Human} Method: Set Human-stage PfSI Object
 #'
-#' Set the \code{\link{humanPfSI}} object in a human.
+#' Set the \code{\link[MASHcpp]{humanPfSI}} object in a human.
 #' This method is bound to \code{Human$set_humanPfSI()}
 #'
 Human_set_humanPfSI <- function(PfID, tInf = -1L, b = 0.55, c = 0.15, damID = -1L, sireID = -1L, infected = FALSE, chemoprophylaxis = FALSE){
@@ -159,7 +110,7 @@ Human_set_humanPfSI <- function(PfID, tInf = -1L, b = 0.55, c = 0.15, damID = -1
 
 #' PfSI \code{HumanPop} Method: Set Human-stage PfSI Object
 #'
-#' Set the \code{\link{humanPfSI}} object in a human poulation; this does not initialize infection, only sets the object.
+#' Set the \code{\link[MASHcpp]{humanPfSI}} object in a human poulation; this does not initialize infection, only sets the object.
 #' This method is bound to \code{HumanPop$set_humanPfSI()}
 #'
 #' @param b infected mosquito to human transmission efficiency

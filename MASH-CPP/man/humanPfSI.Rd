@@ -5,8 +5,7 @@
 \title{PfSI Human Stage Pathogen Class}
 \usage{
 humanPfSI(PfID_init, tInf_init = -1, b_init = 0.55, c_init = 0.15,
-  damID_init = -1, sireID_init = -1, infected_init = FALSE,
-  chemoprophylaxis_init = FALSE)
+  infected_init = FALSE, chemoprophylaxis_init = FALSE, N = 20)
 }
 \arguments{
 \item{PfID_init}{PfID derived from the tile level PfPedigree}
@@ -17,13 +16,11 @@ humanPfSI(PfID_init, tInf_init = -1, b_init = 0.55, c_init = 0.15,
 
 \item{c_init}{infected human to mosquito transmission efficiency}
 
-\item{damID_init}{female gametocyte 'mother'}
-
-\item{sireID_init}{male gametocyte 'father'}
-
 \item{infected_init}{infection status}
 
 \item{chemoprophylaxis_init}{chemoprophylaxis protection status}
+
+\item{N}{size to preallocate output vectors}
 }
 \description{
 A class for storing parameters and state variables of human-stage PfSI infections.
@@ -39,10 +36,8 @@ A class for storing parameters and state variables of human-stage PfSI infection
 \item set_b:
 \item get_c:
 \item set_c:
-\item get_damID:
-\item push_damID:
-\item get_sireID:
-\item push_sireID:
+\item get_vectorInf:
+\item push_vectorInf:
 \item get_infected:
 \item set_infected:
 \item get_chemoprophylaxis:

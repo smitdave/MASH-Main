@@ -67,8 +67,8 @@ probing_PfSI <- function(){
 #'
 #' @md
 feeding_PfSI <- function(){
-  # if human is infected
-  if(private$HumansPointer$get_Human(ixH = private$hostID)$get_Pathogens()$get_infected()){
+  # if human is infected and mosquito not yet infected
+  if(private$HumansPointer$get_Human(ixH = private$hostID)$get_Pathogens()$get_infected() & !private$Pathogens$get_infected()){
     if(runif(1) < private$HumansPointer$get_Human(ixH = private$hostID)$get_Pathogens()$get_c()){
       # if human to mosquito transmission successful set the PfSI object in the mosquito accordingly
       PfID = private$HumansPointer$get_Human(ixH = private$hostID)$get_Pathogens()$back_PfID()

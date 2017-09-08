@@ -54,14 +54,14 @@ MicroKernel_SampleMvOb_MosquitoPop <- function(ixS, state, inPointSet){
 }
 
 
-#################################################################
-# MicroMosquitoFemale and MicroMosquitoMale 'moveMe' Methods
-# THESE METHODS ARE CALLED IN oneBOUT()
-#################################################################
+###############################################################################
+# MosquitoFemale and MosquitoMale 'moveMe' Methods
+###############################################################################
 
-#' MICRO Search Kernels: \code{\link{MicroMosquitoFemale}} Movement Function for Full M-BITES Lifecycle Model
+#' MICRO Search Kernels: \code{\link{MosquitoFemale}} Movement Function for Full M-BITES Lifecycle Model
 #'
-#' Move one mosquito based on site and next behavioral state. This method is bound to \code{MicroMosquitoFemale$moveMe()}
+#' Move one mosquito based on site and next behavioral state.
+#'  * This method is bound to \code{MosquitoFemale$moveMe()}
 #'
 MicroKernel_moveMe_FULL <- function(){
 
@@ -77,12 +77,11 @@ MicroKernel_moveMe_FULL <- function(){
   private$inPointSet = pSetNew
 }
 
-#' MICRO Search Kernels: \code{\link{MicroMosquitoFemale}} Movement Function for Full M-BITES Lifecycle Model
+#' MICRO Search Kernels: \code{\link{MosquitoFemale}} Movement Function for Full M-BITES Lifecycle Model
 #'
 #' Move one mosquito based on site and next behavioral state.
-#'  * This method is bound to \code{MicroMosquitoFemale$moveMe()}
+#'  * This method is bound to \code{MosquitoFemale$moveMe()}
 #'
-#' @md
 MicroKernel_moveMe_BRO <- function(){
 
   switch(private$state,
@@ -100,9 +99,9 @@ MicroKernel_moveMe_BRO <- function(){
 
 }
 
-#' MICRO Search Kernels: \code{\link{MicroMosquitoFemale}} Movement Function for Full M-BITES Lifecycle Model
+#' MICRO Search Kernels: \code{\link{MosquitoFemale}} Movement Function for Full M-BITES Lifecycle Model
 #'
-#' Move one mosquito based on site and next behavioral state. This method is bound to \code{MicroMosquitoFemale$moveMe()}
+#' Move one mosquito based on site and next behavioral state. This method is bound to \code{MosquitoFemale$moveMe()}
 #'
 MicroKernel_moveMe_BROM <- function(){
 
@@ -117,9 +116,9 @@ MicroKernel_moveMe_BROM <- function(){
   private$inPointSet = pSetNew
 }
 
-#' MICRO Search Kernels: \code{\link{MicroMosquitoMale}} Movement Function for Full M-BITES Lifecycle Model
+#' MICRO Search Kernels: \code{\link{MosquitoMale}} Movement Function for Full M-BITES Lifecycle Model
 #'
-#' Move one mosquito based on site and next behavioral state. This method is bound to \code{MicroMosquitoMale$moveMe()}
+#' Move one mosquito based on site and next behavioral state. This method is bound to \code{MosquitoMale$moveMe()}
 #'
 MicroKernel_moveMe_Male <- function(){
 
@@ -134,9 +133,9 @@ MicroKernel_moveMe_Male <- function(){
 }
 
 
-#################################################################
+###############################################################################
 # MicroTile 'get_movement' Methods
-#################################################################
+###############################################################################
 
 #' MICRO Search Kernels: \code{\link{MicroTile}} Access MvAll Object for Female Full M-BITES Lifecycle Model
 #'
@@ -235,98 +234,3 @@ get_MicroKernel_movement_Male <- function(ixS, state, inPointSet){
     {return(NULL)}
   )
 }
-
-
-# #' MICRO Search Kernels: \code{\link{MicroMosquitoPopFemale}} Access MvAll Object for Full M-BITES Lifecycle Model
-# #'
-# #' Replace generic \code{MicroMosquitoPopFemale$get_movement()} method for MicroKernel module; it will be bound to \code{MicroMosquitoPopFemale$get_movement()}
-# #'
-# get_MicroKernel_movement_FULL<- function(ixS, state, inPointSet){
-#   switch(state,
-#     F = {
-#         if(inPointSet=="f"){return(private$movement$F2F[[ixS]])}
-#         if(inPointSet=="s"){return(private$movement$S2F[[ixS]])}
-#         if(inPointSet=="m"){return(private$movement$M2F[[ixS]])}
-#         if(inPointSet=="l"){return(private$movement$L2F[[ixS]])}
-#       },
-#     L = {
-#         if(inPointSet=="f"){return(private$movement$F2L[[ixS]])}
-#         if(inPointSet=="s"){return(private$movement$S2L[[ixS]])}
-#         if(inPointSet=="m"){return(private$movement$M2L[[ixS]])}
-#         if(inPointSet=="l"){return(private$movement$L2L[[ixS]])}
-#       },
-#     S = {
-#         if(inPointSet=="f"){return(private$movement$F2S[[ixS]])}
-#         if(inPointSet=="s"){return(private$movement$S2S[[ixS]])}
-#         if(inPointSet=="m"){return(private$movement$M2S[[ixS]])}
-#         if(inPointSet=="l"){return(private$movement$L2S[[ixS]])}
-#       },
-#     M = {
-#         if(inPointSet=="f"){return(private$movement$F2M[[ixS]])}
-#         if(inPointSet=="s"){return(private$movement$S2M[[ixS]])}
-#         if(inPointSet=="m"){return(private$movement$M2M[[ixS]])}
-#         if(inPointSet=="l"){return(private$movement$L2M[[ixS]])}
-#       },
-#     {return(NULL)}
-#   )
-# }
-#
-# #' MICRO Search Kernels: \code{\link{MicroMosquitoPopFemale}} Access MvAll Object for M-BITES BRO Lifecycle Model
-# #'
-# #' Replace generic \code{MicroMosquitoPopFemale$get_movement()} method for MicroKernel module; it will be bound to \code{MicroMosquitoPopFemale$get_movement()}
-# #'
-# get_MicroKernel_movement_BRO <- function(ixS, state, inPointSet){
-#   switch(state,
-#     B = {
-#         if(inPointSet=="f"){return(private$movement$F2F[[ixS]])}
-#         if(inPointSet=="l"){return(private$movement$L2F[[ixS]])}
-#       },
-#     O = {
-#         if(inPointSet=="f"){return(private$movement$F2L[[ixS]])}
-#         if(inPointSet=="l"){return(private$movement$L2L[[ixS]])}
-#       },
-#     {return(NULL)}
-#   )}
-#
-# #' MICRO Search Kernels: \code{\link{MicroMosquitoPopFemale}} Access MvAll Object for M-BITES BROM Lifecycle Model
-# #'
-# #' Replace generic \code{MicroMosquitoPopFemale$get_movement()} method for MicroKernel module; it will be bound to \code{MicroMosquitoPopFemale$get_movement()}
-# #'
-# get_MicroKernel_movement_BROM <- function(ixS, state, inPointSet){
-#   switch(state,
-#     B = {
-#         if(inPointSet=="f"){return(private$movement$F2F[[ixS]])}
-#         if(inPointSet=="m"){return(private$movement$M2F[[ixS]])}
-#         if(inPointSet=="l"){return(private$movement$L2F[[ixS]])}
-#       },
-#     O = {
-#         if(inPointSet=="f"){return(private$movement$F2L[[ixS]])}
-#         if(inPointSet=="m"){return(private$movement$M2L[[ixS]])}
-#         if(inPointSet=="l"){return(private$movement$L2L[[ixS]])}
-#       },
-#     M = {
-#         if(inPointSet=="f"){return(private$movement$F2M[[ixS]])}
-#         if(inPointSet=="m"){return(private$movement$M2M[[ixS]])}
-#         if(inPointSet=="l"){return(private$movement$L2M[[ixS]])}
-#       },
-#     {return(NULL)}
-#   )
-# }
-#
-# #' MICRO Search Kernels: \code{\link{MicroMosquitoPopMale}} Access MvAll Object for M-BITES BROM Lifecycle Model
-# #'
-# #' Replace generic \code{MicroMosquitoPopMale$get_movement()} method for MicroKernel module; it will be bound to \code{MicroMosquitoPopMale$get_movement()}
-# #'
-# get_MicroKernel_movement_Male <- function(ixS, state, inPointSet){
-#   switch(state,
-#     M = {
-#         if(inPointSet=="m"){return(private$movement$M2M[[ixS]])}
-#         if(inPointSet=="s"){return(private$movement$S2M[[ixS]])}
-#       },
-#     S = {
-#         if(inPointSet=="m"){return(private$movement$M2S[[ixS]])}
-#         if(inPointSet=="s"){return(private$movement$S2S[[ixS]])}
-#       },
-#     {return(NULL)}
-#   )
-# }

@@ -146,7 +146,7 @@ MicroKernel_exactMvOb <- function(S,D,sigma=3,eps=0.1,beta=0){
 #' Generate an exact movement object (one-step Markov transition matrix between all sets of sites).
 #' This function returns nested list of the following form for all site classes in landscape:
 #'  * S2D: output of \code{\link{MicroKernel_exactMvOb}} applied to starting site point set S and destination point set D
-#' The output, MvAll, will be assigned to \code{private$movement} field of \code{\link{MicroMosquitoPopFemale}} or \code{\link{MicroMosquitoPopMale}}. The specific accessor can be found at \code{\link{get_MicroKernel_movement}}.
+#' The output, MvAll, will be assigned to \code{private$movement} field of \code{\link{MosquitoPopFemale}} or \code{\link{MosquitoPopMale}}. The specific accessor can be found at \code{\link{get_MicroKernel_movement}}.
 #'
 #' @param Landscape a microsimulation \code{\link{Landscape}} object
 #' @param sigma a param
