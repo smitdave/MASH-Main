@@ -66,8 +66,14 @@ mbitesBRO_cohort_oneMosquito_MBITES <- function(){
     self$oneBout()
   }
 
-  history = self$get_history()
-  return(history)
+  # if mosquito is dead output data if asked and remove it from the enclosing storage object
+  if(private$stateNew == "D"){
+    if(!is.null(private$TilePointer$get_FemaleHistoryCon())){
+      cat(jsonlite::toJSON(x = self$get_history(),pretty = TRUE),",\n",sep="",file = private$TilePointer$get_FemaleHistoryCon())
+    }
+    self$rmSelf()
+  }
+
 }
 
 

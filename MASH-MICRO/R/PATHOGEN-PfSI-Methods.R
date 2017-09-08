@@ -50,7 +50,7 @@ init_Pathogens_MosquitoPopFemale_PfSI <- function(){
 #' @md
 probing_PfSI <- function(){
   # if mosquito has active infection
-  if(private$Pathogens$get_tInf() > 0){
+  if(private$Pathogens$get_tInf() > -1){
     # update the moquito infection
     if(private$tNow > (private$Pathogens$get_tInf() + private$FemalePopPointer$get_MBITES_PAR("PfEIP"))){
       private$Pathogens$set_infected(TRUE)

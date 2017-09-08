@@ -34,6 +34,7 @@
 #'  * method: im a method!
 #'
 #' @section **Fields**:
+#'  * id: character of format tEmerge_id_genotype (ie; "5_42_2" is the 42nd mosquito emerging on day 5 with genotype 2)
 #'  * field: im a field!
 #'
 #' @export

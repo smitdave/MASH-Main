@@ -22,7 +22,6 @@
 #' Method for exponentially-distributed bout lengths (model mosquitoes as a Markov process).
 #'  * This method is bound to \code{MosquitoFemale$timingExponential()}.
 #'
-#' @md
 mbitesBRO_timingExponential <- function(){
   if(self$isActive()){
     duration = switch(private$state,
@@ -39,7 +38,6 @@ mbitesBRO_timingExponential <- function(){
 #' Method for Gamma-distributed bout lengths (model mosquitoes as a semi-Markov process).
 #'  * This method is bound to \code{MosquitoFemale$timingExponential()}.
 #'
-#' @md
 mbitesBRO_timingGamma <- function(){
   if(self$isActive()){
     duration = switch(private$state,
@@ -76,7 +74,6 @@ mbitesBRO_timingGamma <- function(){
 #'
 #'  * This method is bound to \code{MosquitoFemale$get_MySiteType()}.
 #'
-#' @md
 #' @return vector of landing spot weights
 mbitesBRO_get_MySiteType <- function(){
   switch(private$inPointSet,
@@ -91,7 +88,6 @@ mbitesBRO_get_MySiteType <- function(){
 #' Method for return landing spot weights based on behavioral state of mosquito.
 #'  * This method is bound to \code{MosquitoFemale$get_WTS()}.
 #'
-#' @md
 #' @return vector of landing spot weights
 mbitesBRO_get_WTS <- function(){
   switch(private$state,
@@ -114,7 +110,6 @@ mbitesBRO_get_WTS <- function(){
 #'
 #'  * This method is bound to \code{MosquitoFemale$newSpot()}.
 #'
-#' @md
 #' @return integer value corresponding to new landing spot
 mbitesBRO_newSpot <- function(){
   if(self$get_MySiteType() == 1){
@@ -130,7 +125,6 @@ mbitesBRO_newSpot <- function(){
 #' Method to simulate attempted house entry for mosquito, and call appropriate events if the mosquito enters.
 #'  * This method is bound to \code{MosquitoFemale$enterHouse()}.
 #'
-#' @md
 mbitesBRO_enterHouse <- function(){
   if(runif(1) < private$LandscapePointer$get_FeedingSites(private$ix)$get_enterP()){
     # mosquito is inside of house
@@ -157,7 +151,6 @@ mbitesBRO_enterHouse <- function(){
 #'
 #'  * This method is bound to \code{MosquitoFemale$landingSpot()}.
 #'
-#' @md
 mbitesBRO_landingSpot <- function(){
   if(self$isActive()){
     oldSpot = private$lspot
