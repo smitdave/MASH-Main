@@ -6,9 +6,3 @@
 \usage{
 mbitesGeneric_rTatterSize()
 }
-\description{
-Draw from a zero-inflated Beta distribution for additive wing damager from tattering.
-\itemize{
-\item This method is bound to \code{MosquitoFemale$rTatterSize()}.
-}
-}

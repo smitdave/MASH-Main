@@ -1,0 +1,23 @@
+---
+title: "M-BITES Equations"
+author: "Sean Wu"
+date: "9/8/2017"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE)
+```
+
+## M-BITES Survival
+
+### Wing Tattering
+
+Zero-inflated Beta distribution for damage due to wing tattering
+$$
+rTatterSize=\left\{\begin{matrix}
+x=0; P(ttsz.p)
+\\ 
+x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
+\end{matrix}\right.
+$$  

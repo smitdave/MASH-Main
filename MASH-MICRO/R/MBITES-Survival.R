@@ -45,7 +45,12 @@ mbitesGeneric_surviveFlight <- function(){
 
 #' MBITES-Generic: Wing Tattering for \code{\link{MosquitoFemale}}
 #'
-#' Draw from a zero-inflated Beta distribution for additive wing damager from tattering.
+#' Draw from a zero-inflated Beta distribution for additive wing damage from tattering.
+#' Wing damage is given by \deqn{ \left\{\begin{matrix}
+#' x=0; P(ttsz.p)
+#' \\
+#' x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
+#' \end{matrix}\right. }
 #'  * This method is bound to \code{MosquitoFemale$rTatterSize()}.
 #' @md
 mbitesGeneric_rTatterSize <- function(){
