@@ -4,7 +4,8 @@
 \alias{mosquitoPfSI}
 \title{PfSI Mosquito Stage Pathogen Class}
 \usage{
-mosquitoPfSI(PfID_init, tInf_init = -1, infected_init = FALSE)
+mosquitoPfSI(PfID_init, MosquitoID_init, tInf_init = -1,
+  infected_init = FALSE)
 }
 \arguments{
 \item{PfID_init}{PfID derived from the infecting human's gametocytes}

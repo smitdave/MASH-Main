@@ -72,7 +72,7 @@ init_PfSI <- function(PfPR, tStart = 0){
   for(ixH in 1:self$nHumans){
 
     if(runif(1) < PfPR){
-      private$pop[[ixH]]$infectHumanPfSI(tEvent = tStart, PAR = list(damID=-1L,sireID=-1L))
+      private$pop[[ixH]]$infectHumanPfSI(tEvent = tStart, PAR = list(vectorInf="initInf"))
     } else {
       private$pop[[ixH]]$get_Pathogens()$track_history(tEvent = tStart, event = "S")
     }
@@ -82,17 +82,17 @@ init_PfSI <- function(PfPR, tStart = 0){
 }
 
 
-#' PfSI \code{HumanPop} Method: Get PfSI Histories
-#'
-#' Get all PfSI histories, stored in class \code{\link{humanPfSI}}
-#' This function is bound to \code{HumanPop$get_PfSI_history()}
-HumanPop_get_PfSI_history <- function(){
-  PfSI_history = vector(mode="list",length=self$nHumans)
-  for(ixH in 1:self$nHumans){
-    PfSI_history[[ixH]] = private$pop[[ixH]]$get_Pathogens()$get_history()
-  }
-  return(PfSI_history)
-}
+# #' PfSI \code{HumanPop} Method: Get PfSI Histories
+# #'
+# #' Get all PfSI histories, stored in class \code{\link{humanPfSI}}
+# #' This function is bound to \code{HumanPop$get_PfSI_history()}
+# HumanPop_get_PfSI_history <- function(){
+#   PfSI_history = vector(mode="list",length=self$nHumans)
+#   for(ixH in 1:self$nHumans){
+#     PfSI_history[[ixH]] = private$pop[[ixH]]$get_Pathogens()$get_history()
+#   }
+#   return(PfSI_history)
+# }
 
 
 ###################################################################
@@ -104,8 +104,8 @@ HumanPop_get_PfSI_history <- function(){
 #' Set the \code{\link[MASHcpp]{humanPfSI}} object in a human.
 #' This method is bound to \code{Human$set_humanPfSI()}
 #'
-Human_set_humanPfSI <- function(PfID, tInf = -1L, b = 0.55, c = 0.15, damID = -1L, sireID = -1L, infected = FALSE, chemoprophylaxis = FALSE){
-  private$Pathogens = MASHcpp::humanPfSI(PfID, tInf, b, c, damID, sireID, infected, chemoprophylaxis)
+Human_set_humanPfSI <- function(PfID, tInf = -1L, b = 0.55, c = 0.15, infected = FALSE, chemoprophylaxis = FALSE){
+  private$Pathogens = MASHcpp::humanPfSI(PfID, tInf, b, c, infected, chemoprophylaxis)
 }
 
 #' PfSI \code{HumanPop} Method: Set Human-stage PfSI Object
@@ -283,16 +283,14 @@ event_infectHumanPfSI <- function(tEvent, PAR = NULL){
 #'  * The end of this PfSI infection is queued by \code{\link{add2Q_endPfSI}}
 #' @md
 #' @param tEvent time of infection
-#' @param PAR must be a list containing \code{damID} and \code{sireID}
+#' @param PAR must be a list containing character \code{vectorID}
 infectHumanPfSI <- function(tEvent, PAR){
   if(!private$Pathogens$get_infected() & !private$Pathogens$get_chemoprophylaxis()){
     private$Pathogens$track_history(tEvent = tEvent, event = "I") # track history
     private$Pathogens$set_infected(TRUE)
     # increment PfID
     private$Pathogens$push_PfID(private$HumansPointer$increment_PfID())
-
-    private$Pathogens$push_damID(PAR$damID)
-    private$Pathogens$push_sireID(PAR$sireID)
+    private$Pathogens$push_vectorInf(PAR$vectorID)
     if(runif(1) < self$get_PfSI_PAR("FeverPf")){
         self$add2Q_feverPfSI(tEvent = tEvent)
     }

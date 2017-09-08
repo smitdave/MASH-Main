@@ -128,6 +128,7 @@ mosquitoPfSI:
       @export
     args:
       - PfID_init: int
+      - MosquitoID_init: "std::string"
       - tInf_init: double = -1
       - infected_init: bool = FALSE
   methods:
@@ -137,6 +138,13 @@ mosquitoPfSI:
     set_PfID:
       args:
         - PfID_new: int
+      return_type: void
+
+    get_MosquitoID:
+      return_type: "std::string"
+    set_MosquitoID:
+      args:
+        - MosquitoID_new: "std::string"
       return_type: void
 
     get_tInf:
@@ -159,3 +167,6 @@ mosquitoPfSI:
       args:
         - infected_new: bool
       return_type: void
+
+    get_all:
+      return_type: "Rcpp::List"

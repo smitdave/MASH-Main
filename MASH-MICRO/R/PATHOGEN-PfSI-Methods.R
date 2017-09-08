@@ -25,7 +25,7 @@
 #' @md
 #' @export
 init_Pathogens_MosquitoFemale_PfSI <- function(){
-  private$Pathogens = MASHcpp::mosquitoPfSI(PfID_init = -1L, infected_init = FALSE)
+  private$Pathogens = MASHcpp::mosquitoPfSI(PfID_init = -1L, MosquitoID_init = private$id, infected_init = FALSE)
 }
 
 #' PfSI Helper Code for Pathogen Initialization in \code{\link{MosquitoPopFemale}}

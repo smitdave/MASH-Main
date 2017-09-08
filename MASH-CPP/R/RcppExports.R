@@ -134,8 +134,8 @@ humanPfSI__get_history <- function(obj_) {
     .Call('_MASHcpp_humanPfSI__get_history', PACKAGE = 'MASHcpp', obj_)
 }
 
-mosquitoPfSI__ctor <- function(PfID_init, tInf_init, infected_init) {
-    .Call('_MASHcpp_mosquitoPfSI__ctor', PACKAGE = 'MASHcpp', PfID_init, tInf_init, infected_init)
+mosquitoPfSI__ctor <- function(PfID_init, MosquitoID_init, tInf_init, infected_init) {
+    .Call('_MASHcpp_mosquitoPfSI__ctor', PACKAGE = 'MASHcpp', PfID_init, MosquitoID_init, tInf_init, infected_init)
 }
 
 mosquitoPfSI__get_PfID <- function(obj_) {
@@ -144,6 +144,14 @@ mosquitoPfSI__get_PfID <- function(obj_) {
 
 mosquitoPfSI__set_PfID <- function(obj_, PfID_new) {
     invisible(.Call('_MASHcpp_mosquitoPfSI__set_PfID', PACKAGE = 'MASHcpp', obj_, PfID_new))
+}
+
+mosquitoPfSI__get_MosquitoID <- function(obj_) {
+    .Call('_MASHcpp_mosquitoPfSI__get_MosquitoID', PACKAGE = 'MASHcpp', obj_)
+}
+
+mosquitoPfSI__set_MosquitoID <- function(obj_, MosquitoID_new) {
+    invisible(.Call('_MASHcpp_mosquitoPfSI__set_MosquitoID', PACKAGE = 'MASHcpp', obj_, MosquitoID_new))
 }
 
 mosquitoPfSI__get_tInf <- function(obj_) {
@@ -168,6 +176,10 @@ mosquitoPfSI__get_infected <- function(obj_) {
 
 mosquitoPfSI__set_infected <- function(obj_, infected_new) {
     invisible(.Call('_MASHcpp_mosquitoPfSI__set_infected', PACKAGE = 'MASHcpp', obj_, infected_new))
+}
+
+mosquitoPfSI__get_all <- function(obj_) {
+    .Call('_MASHcpp_mosquitoPfSI__get_all', PACKAGE = 'MASHcpp', obj_)
 }
 
 humanPfMOI__ctor <- function(PfID_init, tInf_init, MOI_init, b_init, c_init, damID_init, sireID_init, chemoprophylaxis_init) {

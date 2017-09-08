@@ -163,8 +163,11 @@ public:
   // Mosquito Stage PfSI Constructor
   ///////////////////////////////////
 
-  mosquitoPfSI(const int &PfID_init, const double &tInf_init = -1,
-    const bool &infected_init = false);
+  mosquitoPfSI(const int &PfID_init,
+    const std::string &MosquitoID_init,
+    const double &tInf_init = -1,
+    const bool &infected_init = false
+  );
 
   ///////////////////////////////////
   // Getters & Setters
@@ -175,6 +178,13 @@ public:
   };
   void set_PfID(const int &PfID_new){
     PfID = PfID_new;
+  };
+
+  std::string get_MosquitoID(){
+    return(MosquitoID);
+  }
+  void set_MosquitoID(const std::string &MosquitoID_new){
+    MosquitoID = MosquitoID_new;
   }
 
   double get_tInf(){
@@ -198,11 +208,25 @@ public:
     infected = infected_new;
   };
 
+  // return this PfSI object (used for transmission tracking)
+  Rcpp::List get_all(){
+    return(
+      Rcpp::List::create(
+        Rcpp::Named("PfID") = PfID,
+        Rcpp::Named("MosquitoID") = MosquitoID,
+        Rcpp::Named("tInf") = tInf,
+        Rcpp::Named("humanInf") = humanInf,
+        Rcpp::Named("infected") = infected
+      )
+    );
+  };
+
 // private members
 private:
 
   // PfSI Parameters & State Variables
   int PfID; // pathogen ID
+  std::string MosquitoID; // ID of mosquito this pathogen resides in
   double tInf; // time of infection (human to mosquito transmission)
   std::string humanInf; // id of infecting human
   bool infected; // infection
@@ -210,11 +234,15 @@ private:
 };
 
 // inline definition of constructor to accept default argument values
-inline mosquitoPfSI::mosquitoPfSI(const int &PfID_init, const double &tInf_init,
-  const bool &infected_init){
+inline mosquitoPfSI::mosquitoPfSI(const int &PfID_init,
+  const std::string &MosquitoID_init,
+  const double &tInf_init,
+  const bool &infected_init
+  ){
 
     // set parameters and state variables
     PfID = PfID_init;
+    MosquitoID = MosquitoID_init;
     tInf = tInf_init;
     infected = infected_init;
 
