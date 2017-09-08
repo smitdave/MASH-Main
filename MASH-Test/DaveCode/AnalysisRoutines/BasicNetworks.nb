@@ -1,0 +1,534 @@
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[         0,          0]
+NotebookDataLength[     19238,        533]
+NotebookOptionsPosition[     18193,        491]
+NotebookOutlinePosition[     18583,        508]
+CellTagsIndexPosition[     18540,        505]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+
+Cell[CellGroupData[{
+Cell["Networks Analysis", "Title",
+ CellChangeTimes->{{3.6706169208047647`*^9, 3.670616928065783*^9}, {
+  3.676392445859047*^9, 3.676392455642004*^9}, {3.676393073818508*^9, 
+  3.676393076073601*^9}}],
+
+Cell["HMSC", "Text",
+ CellChangeTimes->{{3.676392177643515*^9, 3.676392184030815*^9}, {
+  3.677933870535602*^9, 3.677933871047069*^9}}],
+
+Cell["\<\
+Description: Network tests using EpiFire \
+(https://github.com/tjhladish/EpiFire). This is just a bunch of assorted \
+routines with different ideas for future networks analysis work. Created for: \
+\[OpenCurlyDoubleQuote]Outputs/NetworksExample\[CloseCurlyDoubleQuote]
+-Requires PajaroLocoPublic\
+\>", "Text",
+ CellChangeTimes->{{3.676392206992317*^9, 3.676392229201673*^9}, {
+  3.676392265418539*^9, 3.6763923521661663`*^9}, {3.676392518152458*^9, 
+  3.676392614268005*^9}, {3.6763930839863234`*^9, 3.676393130999732*^9}, {
+  3.676393276162858*^9, 3.676393286201212*^9}, {3.67639681984267*^9, 
+  3.676396870560326*^9}, {3.6763971931319733`*^9, 3.676397204282432*^9}, {
+  3.67639826217762*^9, 3.67639827917894*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Functions", "Section",
+ CellChangeTimes->{{3.676398289425378*^9, 3.6763982921089573`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"BinarizeTransitionsMatrix", "[", 
+   RowBox[{"transitionsMatrix_", ",", "threshold_"}], "]"}], ":=", 
+  RowBox[{"{", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Table", "[", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{"If", "[", 
+         RowBox[{
+          RowBox[{"#", ">", "threshold"}], ",", "1", ",", "0"}], "]"}], "&"}],
+        "/@", "i"}], "\[IndentingNewLine]", ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", 
+        RowBox[{"transitionsMatrix", "[", 
+         RowBox[{"[", "1", "]"}], "]"}]}], "}"}]}], "]"}], 
+    "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+    RowBox[{"transitionsMatrix", "[", 
+     RowBox[{"[", "2", "]"}], "]"}]}], "\[IndentingNewLine]", 
+   "}"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"QuantilesListPlot", "[", "data_", "]"}], ":=", 
+  RowBox[{"ListLinePlot", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"Mean", "/@", "data"}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Quantile", "[", 
+         RowBox[{"#", ",", 
+          RowBox[{"1", "/", "4"}]}], "]"}], "&"}], "/@", "data"}], ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"Quantile", "[", 
+         RowBox[{"#", ",", 
+          RowBox[{"3", "/", "4"}]}], "]"}], "&"}], "/@", "data"}]}], "}"}], 
+    ",", "\[IndentingNewLine]", 
+    RowBox[{"InterpolationOrder", "\[Rule]", "0"}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"PlotRange", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"0", ",", 
+       RowBox[{"Max", "[", 
+        RowBox[{"Max", "/@", "data"}], "]"}]}], "}"}]}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"PlotStyle", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{"{", "Thick", "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Red", ",", "Thin"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"Red", ",", "Thin"}], "}"}]}], "}"}]}], ",", 
+    "\[IndentingNewLine]", 
+    RowBox[{"Filling", "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"2", "\[Rule]", 
+       RowBox[{"{", "3", "}"}]}], "}"}]}]}], "\[IndentingNewLine]", 
+   "]"}]}]}], "Input"]
+}, Closed]],
+
+Cell[CellGroupData[{
+
+Cell["Routines", "Section",
+ CellChangeTimes->{{3.676393294711277*^9, 3.676393298053919*^9}}],
+
+Cell[BoxData[{
+ RowBox[{"<<", "PajaroLoco`"}], "\[IndentingNewLine]", 
+ RowBox[{"SetDirectory", "[", 
+  RowBox[{
+   RowBox[{"ParentDirectory", "[", 
+    RowBox[{"NotebookDirectory", "[", "]"}], "]"}], "<>", "\"\</Outputs/\>\"",
+    "<>", "\"\<NetworksExample/TransitionsNormalised_HET_HET/\>\""}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"rawData", "=", 
+   RowBox[{"Import", "[", "\"\<transmat_self.csv\>\"", "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"matrixData", "=", 
+   RowBox[{
+    RowBox[{"rawData", "[", 
+     RowBox[{"[", 
+      RowBox[{"2", ";;", "All"}], "]"}], "]"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"All", ",", 
+      RowBox[{"2", ";;", "All"}]}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"ready", "=", 
+   RowBox[{"{", 
+    RowBox[{"matrixData", ",", 
+     RowBox[{"ToString", "/@", 
+      RowBox[{"Range", "[", 
+       RowBox[{"matrixData", "//", "Length"}], "]"}]}]}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"frequencies", "=", 
+   RowBox[{"GraphTransitionsFrequencies", "[", 
+    RowBox[{"ready", ",", 
+     RowBox[{"VertexLabelStyle", "\[Rule]", ".0001"}]}], "]"}]}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Export", "[", 
+    RowBox[{"\"\<frequencies.png\>\"", ",", "frequencies", ",", 
+     RowBox[{"ImageSize", "\[Rule]", "2000"}], ",", 
+     RowBox[{"ImageResolution", "\[Rule]", "200"}]}], "]"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"CommunityGraphPlot", "[", 
+   RowBox[{"frequencies", ",", 
+    RowBox[{"FindGraphCommunities", "[", 
+     RowBox[{"frequencies", ",", 
+      RowBox[{"Method", "->", "\"\<Spectral\>\""}]}], "]"}]}], "]"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{"(*", 
+   RowBox[{"Export", "[", 
+    RowBox[{"\"\<frequenciesComm.png\>\"", ",", "%", ",", 
+     RowBox[{"ImageSize", "\[Rule]", "2000"}], ",", 
+     RowBox[{"ImageResolution", "\[Rule]", "100"}]}], "]"}], 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"FindGraphCommunities", "[", "frequencies", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"HighlightGraph", "[", 
+  RowBox[{"frequencies", ",", 
+   RowBox[{"Map", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"Subgraph", "[", 
+       RowBox[{"frequencies", ",", "#"}], "]"}], "&"}], ",", " ", "%"}], 
+    "]"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.675437558199318*^9, 3.675437589954591*^9}, {
+   3.675437622489924*^9, 3.675437785064378*^9}, 3.675437816338694*^9, {
+   3.675438016465927*^9, 3.67543802993198*^9}, {3.675438136541246*^9, 
+   3.675438151535632*^9}, {3.675438568124749*^9, 3.675438585817717*^9}, {
+   3.675438620124548*^9, 3.6754386254137983`*^9}, {3.675438677921115*^9, 
+   3.675438678515905*^9}, {3.675440947609763*^9, 3.675440948364723*^9}, {
+   3.6755430899381847`*^9, 3.67554309288922*^9}, {3.675696837134306*^9, 
+   3.675696878996108*^9}, {3.6757040200771017`*^9, 3.6757040400236607`*^9}, {
+   3.675708477080229*^9, 3.675708513962031*^9}, {3.675782110879071*^9, 
+   3.675782114859044*^9}, {3.6763982164475203`*^9, 3.6763982492100983`*^9}, {
+   3.676398354119708*^9, 3.67639835879839*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"{", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Total", "/@", "matrixData"}], ",", "\[IndentingNewLine]", 
+    RowBox[{"Total", "/@", 
+     RowBox[{"(", 
+      RowBox[{"Transpose", "[", "matrixData", "]"}], ")"}]}]}], 
+   "\[IndentingNewLine]", "}"}], "//", 
+  RowBox[{
+   RowBox[{"MatrixPlot", "[", 
+    RowBox[{"#", ",", 
+     RowBox[{"PlotLegends", "\[Rule]", 
+      RowBox[{"Placed", "[", 
+       RowBox[{"Automatic", ",", "Above"}], "]"}]}]}], "]"}], 
+   "&"}]}], "\[IndentingNewLine]", 
+ RowBox[{"matrixData", "//", 
+  RowBox[{
+   RowBox[{"MatrixPlot", "[", 
+    RowBox[{"#", ",", 
+     RowBox[{"PlotLegends", "\[Rule]", 
+      RowBox[{"Placed", "[", 
+       RowBox[{"Automatic", ",", "Above"}], "]"}]}]}], "]"}], 
+   "&"}]}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<frequenciesMatrix.png\>\"", ",", 
+   RowBox[{"%", "[", 
+    RowBox[{"[", "1", "]"}], "]"}], ",", 
+   RowBox[{"ImageSize", "\[Rule]", "2000"}], ",", 
+   RowBox[{"ImageResolution", "\[Rule]", "200"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.675541554620881*^9, 3.675541600209094*^9}, {
+  3.675541984004198*^9, 3.6755420149777727`*^9}, {3.675542510353546*^9, 
+  3.675542516340373*^9}, {3.675543060530979*^9, 3.675543061786695*^9}, {
+  3.675696872184032*^9, 3.6756969169173822`*^9}, {3.67570856852309*^9, 
+  3.675708588866541*^9}, {3.675708671793997*^9, 3.675708702889697*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["EpiFire", "Section",
+ CellChangeTimes->{{3.676393303300721*^9, 3.676393306493971*^9}}],
+
+Cell[BoxData[{
+ RowBox[{"threshold", "=", 
+  RowBox[{"Mean", "[", 
+   RowBox[{"2.75", "*", 
+    RowBox[{"Mean", "[", 
+     RowBox[{"ready", "[", 
+      RowBox[{"[", "1", "]"}], "]"}], "]"}]}], "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"binarisedNetwork", "=", 
+   RowBox[{"BinarizeTransitionsMatrix", "[", 
+    RowBox[{"ready", ",", "threshold"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+  "ConvertAdjacencyMatrixToiGraphEdgeList", "[", "binarisedNetwork", "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Cases", "[", 
+   RowBox[{"%", ",", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{"a_", ",", "b_", ",", "c_"}], "}"}], "/;", 
+      RowBox[{"c", ">", "0"}]}], "\[Rule]", 
+     RowBox[{"{", 
+      RowBox[{"a", ",", "b"}], "}"}]}]}], "]"}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{
+   RowBox[{"$HomeDirectory", "<>", "\"\</Desktop/edges.csv\>\""}], ",", "%"}],
+   "]"}]}], "Input",
+ CellChangeTimes->{{3.675697500077743*^9, 3.6756976031994123`*^9}, {
+  3.6756987352966146`*^9, 3.675698746502891*^9}, {3.675698790629011*^9, 
+  3.6756988063412237`*^9}, {3.675698931159857*^9, 3.675698934979506*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"binarisedNetwork", "[", 
+    RowBox[{"[", "1", "]"}], "]"}], "//", "AdjacencyGraph"}], "//", 
+  "UndirectedGraph"}]], "Input",
+ CellChangeTimes->{{3.675697645209545*^9, 3.675697657995206*^9}, {
+  3.6756989012257843`*^9, 3.6756989213397818`*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"raw", "=", 
+   RowBox[{
+    RowBox[{"Import", "[", "\"\<Untitled.csv\>\"", "]"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"1", ";;", "3000"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dataPad", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"PadRight", "[", 
+      RowBox[{"#", ",", "30", ",", "0"}], "]"}], "&"}], "/@", "raw"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g1", "=", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"ListLinePlot", "[", 
+        RowBox[{"dataPad", ",", 
+         RowBox[{"PlotStyle", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"{", 
+            RowBox[{"LightBlue", ",", 
+             RowBox[{"Opacity", "[", ".25", "]"}], ",", 
+             RowBox[{"Thickness", "[", ".001", "]"}]}], "}"}], "}"}]}], ",", 
+         RowBox[{"InterpolationOrder", "\[Rule]", "1"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ListLinePlot", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"Quantile", "[", 
+              RowBox[{"#", ",", 
+               RowBox[{"1", "/", "4"}]}], "]"}], "&"}], "/@", 
+            RowBox[{"(", 
+             RowBox[{"dataPad", "//", "Transpose"}], ")"}]}], ",", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Quantile", "[", 
+              RowBox[{"#", ",", 
+               RowBox[{"3", "/", "4"}]}], "]"}], "&"}], "/@", 
+            RowBox[{"(", 
+             RowBox[{"dataPad", "//", "Transpose"}], ")"}]}]}], "}"}], ",", 
+         RowBox[{"PlotStyle", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Thickness", "[", ".000005", "]"}], ",", "Red"}], "}"}], 
+           "}"}]}], ",", 
+         RowBox[{"InterpolationOrder", "\[Rule]", "2"}], ",", 
+         RowBox[{"Filling", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"1", "\[Rule]", 
+            RowBox[{"{", "2", "}"}]}], "}"}]}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ListLinePlot", "[", 
+        RowBox[{
+         RowBox[{"Mean", "/@", 
+          RowBox[{"Transpose", "[", "dataPad", "]"}]}], ",", 
+         RowBox[{"InterpolationOrder", "\[Rule]", "1"}]}], "]"}]}], 
+      "\[IndentingNewLine]", "}"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Time\>\"", ",", "\"\<PeopleInfected\>\""}], "}"}]}], ",", 
+     
+     RowBox[{"GridLines", "\[Rule]", "Automatic"}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g2", "=", 
+   RowBox[{"Histogram", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Max", "/@", "dataPad"}], ")"}], "/", "38"}], ",", 
+     RowBox[{"ChartStyle", "\[Rule]", "\"\<Pastel\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Medium"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<EpidemicSize\>\"", ",", "\"\<Frequency\>\""}], "}"}]}], 
+     ",", 
+     RowBox[{"GridLines", "\[Rule]", "Automatic"}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Grid", "[", 
+  RowBox[{"{", 
+   RowBox[{"{", 
+    RowBox[{"g1", ",", "g2"}], "}"}], "}"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<SIR.png\>\"", ",", "%", ",", 
+   RowBox[{"ImageSize", "\[Rule]", "2000"}], ",", 
+   RowBox[{"ImageResolution", "\[Rule]", "200"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.6757827291030483`*^9, 3.675782799030259*^9}, {
+   3.675782841265561*^9, 3.675782888686431*^9}, {3.67578291997436*^9, 
+   3.675783074599003*^9}, {3.675783127609964*^9, 3.67578312782225*^9}, {
+   3.675783167361425*^9, 3.6757831969378023`*^9}, {3.675783313558161*^9, 
+   3.675783313720025*^9}, {3.675783430389851*^9, 3.675783608775304*^9}, {
+   3.6757836566974783`*^9, 3.6757837090197067`*^9}, {3.675783740646356*^9, 
+   3.6757839772580137`*^9}, 3.675791528774416*^9, {3.6757916181308126`*^9, 
+   3.675791630808243*^9}}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"raw", "=", 
+   RowBox[{
+    RowBox[{"Import", "[", "\"\<Untitled2.csv\>\"", "]"}], "[", 
+    RowBox[{"[", 
+     RowBox[{"1", ";;", "3000"}], "]"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"dataPad", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"PadRight", "[", 
+      RowBox[{"#", ",", "30", ",", "0"}], "]"}], "&"}], "/@", "raw"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g1", "=", 
+   RowBox[{"Show", "[", 
+    RowBox[{
+     RowBox[{"{", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"ListLinePlot", "[", 
+        RowBox[{"dataPad", ",", 
+         RowBox[{"PlotStyle", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"{", 
+            RowBox[{"LightBlue", ",", 
+             RowBox[{"Opacity", "[", ".25", "]"}], ",", 
+             RowBox[{"Thickness", "[", ".001", "]"}]}], "}"}], "}"}]}], ",", 
+         RowBox[{"InterpolationOrder", "\[Rule]", "1"}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ListLinePlot", "[", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"Quantile", "[", 
+              RowBox[{"#", ",", 
+               RowBox[{"1", "/", "4"}]}], "]"}], "&"}], "/@", 
+            RowBox[{"(", 
+             RowBox[{"dataPad", "//", "Transpose"}], ")"}]}], ",", 
+           RowBox[{
+            RowBox[{
+             RowBox[{"Quantile", "[", 
+              RowBox[{"#", ",", 
+               RowBox[{"3", "/", "4"}]}], "]"}], "&"}], "/@", 
+            RowBox[{"(", 
+             RowBox[{"dataPad", "//", "Transpose"}], ")"}]}]}], "}"}], ",", 
+         RowBox[{"PlotStyle", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"Thickness", "[", ".000005", "]"}], ",", "Red"}], "}"}], 
+           "}"}]}], ",", 
+         RowBox[{"InterpolationOrder", "\[Rule]", "2"}], ",", 
+         RowBox[{"Filling", "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"1", "\[Rule]", 
+            RowBox[{"{", "2", "}"}]}], "}"}]}]}], "]"}], ",", 
+       "\[IndentingNewLine]", 
+       RowBox[{"ListLinePlot", "[", 
+        RowBox[{
+         RowBox[{"Mean", "/@", 
+          RowBox[{"Transpose", "[", "dataPad", "]"}]}], ",", 
+         RowBox[{"InterpolationOrder", "\[Rule]", "1"}]}], "]"}]}], 
+      "\[IndentingNewLine]", "}"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<Time\>\"", ",", "\"\<PeopleInfected\>\""}], "}"}]}], ",", 
+     
+     RowBox[{"GridLines", "\[Rule]", "Automatic"}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"g2", "=", 
+   RowBox[{"Histogram", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"Max", "/@", "dataPad"}], ")"}], "/", "38"}], ",", "8", ",", 
+     RowBox[{"ChartStyle", "\[Rule]", "\"\<Pastel\>\""}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Medium"}], ",", 
+     RowBox[{"FrameLabel", "\[Rule]", 
+      RowBox[{"{", 
+       RowBox[{"\"\<EpidemicSize\>\"", ",", "\"\<Frequency\>\""}], "}"}]}], 
+     ",", 
+     RowBox[{"GridLines", "\[Rule]", "Automatic"}], ",", 
+     RowBox[{"Frame", "\[Rule]", "True"}], ",", 
+     RowBox[{"ImageSize", "\[Rule]", "Medium"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Grid", "[", 
+  RowBox[{"{", 
+   RowBox[{"{", 
+    RowBox[{"g1", ",", "g2"}], "}"}], "}"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<SIR2.png\>\"", ",", "%", ",", 
+   RowBox[{"ImageSize", "\[Rule]", "2000"}], ",", 
+   RowBox[{"ImageResolution", "\[Rule]", "200"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.6757904935432*^9, 3.675790497040484*^9}, {
+   3.675791441941141*^9, 3.6757915099511833`*^9}, {3.675791612180501*^9, 
+   3.675791612413274*^9}, 3.675791642861103*^9, {3.675791747521192*^9, 
+   3.6757918091956244`*^9}}]
+}, Closed]]
+}, Open  ]]
+},
+WindowSize->{1078, 830},
+WindowMargins->{{157, Automatic}, {Automatic, 0}},
+Magnification:>0.75 Inherited,
+FrontEndVersion->"10.4 for Mac OS X x86 (32-bit, 64-bit Kernel) (February 25, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[CellGroupData[{
+Cell[422, 15, 200, 3, 69, "Title"],
+Cell[625, 20, 135, 2, 23, "Text"],
+Cell[763, 24, 725, 12, 54, "Text"],
+Cell[CellGroupData[{
+Cell[1513, 40, 96, 1, 48, "Section"],
+Cell[1612, 43, 2118, 61, 134, "Input"]
+}, Closed]],
+Cell[CellGroupData[{
+Cell[3767, 109, 93, 1, 38, "Section"],
+Cell[3863, 112, 3112, 76, 153, "Input"],
+Cell[6978, 190, 1413, 34, 88, "Input"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[8428, 229, 92, 1, 48, "Section"],
+Cell[8523, 232, 1191, 32, 42, "Input"],
+Cell[9717, 266, 292, 7, 12, "Input"],
+Cell[10012, 275, 4219, 107, 93, "Input"],
+Cell[14234, 384, 3931, 103, 93, "Input"]
+}, Closed]]
+}, Open  ]]
+}
+]
+*)
+

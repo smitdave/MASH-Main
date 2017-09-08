@@ -1,0 +1,117 @@
+\documentclass{article}
+
+\usepackage{Sweave}
+\begin{document}
+\input{RMeq-concordance}
+
+We use the notation from previous papers, with $S = fQ/g$ and $P = e^{-gn}$ and $\lambda = \Lambda/H$ as shorthand.  
+
+\section{Closed Population}
+
+\begin{equation}\begin{array}{rl}
+\dot X &= b f Q (1-\alpha) \frac{\textstyle{Z}}{\textstyle{H}}(H-X) - r X \\ 
+\dot M &= \Lambda - g M \\ 
+\dot Y &= c f Q \frac{\textstyle{X}}{\textstyle{H}}(M-Y) - g Y \\ 
+\dot Z &= c f Q \frac{\textstyle{X(t-n)}}{\textstyle{H}}(M(t-n)-Y(t-n)) - g Z
+\end{array}\end{equation}
+
+Where $R_0 =  \frac{\textstyle{\Lambda}}{\textstyle{H}}\frac{\textstyle{f^2 Q^2}}{\textstyle{g^2}}e^{-gn}= \lambda S^2 P$ and $R_c = (1-\alpha) R_0$, such that 
+
+At the equilibrium, we get: 
+\begin{equation}\begin{array}{rl}
+\frac{\textstyle{X}}{\textstyle{H}} &= \max\left[0,\frac{\textstyle{R_c - 1}}{\textstyle{R_c + c S}}\right] \\
+\frac{\textstyle{M}}{\textstyle{H}} &= \frac{\textstyle{\Lambda}}{\textstyle{gH}} \\
+\frac{\textstyle{Y}}{\textstyle{H}} &= \max\left[0,\frac{\textstyle{\left(R_c - 1\right)cS}}{\textstyle{R_c \left(1+ c S\right)}}\right] \\
+Z &= Y P \\
+\end{array}\end{equation}
+
+We can also solve for the force of infection in terms of $R_c$: $h = bfQ\frac{\textstyle{Z}}{\textstyle{H}}$.  If we see a fraction $\alpha$ of these cases at the clinic, then we see $\alpha h$, and we can compute $R_c = \frac{\textstyle{h (1+cS) + r}}{\textstyle{r(1-\alpha)}}.$ 
+
+\section{Open Population, No Mosquito Movement}
+
+We define the matrix $\phi$, whose $ij^{th}$ element is the proportion of time that a person from patch $i$ spends in patch $j$, $\phi'$ is the transpose of $\phi$.  We note that the population of a place is actually $\phi^T H$, and the ratio $H/\phi^T H$ give us a good check on our model because it tells us the fraction of people who are present here (on average) are from here. We also note that if the vector for the EIR in each patch is given by ${\cal E} = fQZ/\phi^T H$, then the EIR vector is $ \phi {\cal E} = fQ \phi Z/ \phi^T H$. 
+%
+\begin{equation}\begin{array}{rl}
+\dot X &= b  (1-\alpha) f Q \frac{\textstyle{\phi Z}}{\textstyle{\phi^T H}} (H-X) - r X \\ 
+\dot M &= \Lambda - g M \\ 
+\dot Y &= c f Q \frac{\textstyle{\phi^T X}}{\textstyle{\phi^T H}}(M-Y) - g Y \\ 
+\dot Z &= c f Q e^{-gn}\frac{\textstyle{\phi^T X(t-n)}}{\textstyle{\phi^T H}}(M(t-n)-Y(t-n)) - g Z
+\end{array}\end{equation}
+%
+(NOTE that the $\phi^T H$ in the denominator is a vector and the division is element-wise, not a matrix operation.) 
+We focus on the case where malaria is endemic, and we can get the steady states by solving the following sets of linear equations. First off, we get the equilibrium raio of mosquitoes to humans by solving the following linear equation: 
+\begin{equation}
+\bar M  = \Lambda/g 
+\end{equation}
+and it is also useful to note that
+\begin{equation}
+\bar Z  = P Y 
+\end{equation}
+%
+and now we see whether we can get an expression for $x = X/H$.
+\begin{equation} \begin{array}{rl}
+\left( c S \phi^T X  + \phi^T H \right) Y &= c S \phi^T X  \Lambda/g \\
+\left( c S X +  H \right) Z &= c S P \Lambda/g X \\ 
+b (1-\alpha) f Q /r Z &= R_c H \frac{\textstyle{X}}{\textstyle{cSX + H}}
+\end{array}
+\end{equation}
+(NOTE: $\phi$ is non-singular as is its transpose, so we can just multiply through by the inverse of $\phi^T$ in step 2) 
+
+where $R_c$ denotes the local reproductive number 
+\begin{equation}
+R_c H = bc (1-\alpha) \Lambda S^2 P
+\end{equation}
+
+
+
+Having solved for this, we can find the remaining quantities by solving the following linear equations: 
+\begin{equation}\begin{array}{rl}
+R_c H \phi \frac{\textstyle{X}}{\textstyle{cSX + H}} (H-X) &= \phi^T H X \\
+R_c H \phi (H-X) &= \phi^T H \left(cS X + H  \right) \\
+\left(R_c \phi + c S \phi^T\right) x & = \left( R_c \phi - \phi^T \right) \vec 1 
+\end{array}\end{equation}
+(NOTE: H and X are vectors the multiplication/ division here is is piecewise, so it's OK to cancel the X or H by multiplying through on the RHS by the vector 1/X or 1/H which is really the vector of the inverse of each element. and $\vec 1$ denotes the vector of 1's with the same length as X.) 
+
+While we can solve this equation explicitly by taking an inverse, it's probably preferrable to solve the linear system. 
+
+% \section{Open Population, Mosquito Movement}
+% 
+% We define the matrix $\phi$, where the element $\phi_{i,j}$ is the proportion of time that a person from patch $i$ spends in patch $j$, and $\phi^T$ is the transpose of $phi$.  We note that the population of a place is actually $\phi^T H$, and the ratio $H/\phi^T H$ give us a good check on our model because it tells us the fraction of people who are present here (on average) are from here. We also note that if the vector for the EIR in each patch is given by ${\cal E} = fQZ/\phi^T H$, then the EIR vector is ${\cal E} \phi$.  
+% %
+% \begin{equation}\begin{array}{rl}
+% \dot X &= b  (1-\alpha) f Q \frac{\textstyle{\phi Z}}{\textstyle{\phi^T H}} (H-X) - r X \\ 
+% \dot M &= \Lambda - g M - q (\sigma M - \sigma^T M)\\ 
+% \dot Y &= c f Q \frac{\textstyle{\phi^T X}}{\textstyle{\phi^T H}}(M-Y) - g Y - q (\sigma Y - \sigma^T Y) \\ 
+% \dot Z &= c f Q e^{-gn}\frac{\textstyle{\phi^T X(t-n)}}{\textstyle{\phi^T H}}(M(t-n)-Y(t-n)) - g Z - q (\sigma Z - \sigma^T Z) 
+% \end{array}\end{equation}
+% %
+% We focus on the case where malaria is endemic, and we can get the steady states by solving the following sets of linear equations. First off, we get the equilibrium raio of mosquitoes to humans by solving the following linear equation: 
+% \begin{equation}
+% \left(I + q/g \left( \sigma - \sigma^T \right) \right) M  = \Lambda/g 
+% \end{equation}
+% %
+% \begin{equation} \begin{array}{rl}
+% \left( c S \frac{\textstyle{\phi^T X}}{\textstyle{\phi^T H}} \right) Y - \left(I + q/g (\sigma - \sigma^T) \right)  Y (M/M) &= c S \frac{\textstyle{\phi^T X}}{\textstyle{\phi^T H}} M \\
+% \left( c S \frac{\textstyle{\phi^T X}}{\textstyle{\phi^T H}} - \Lambda/g I \right) Y &= c S \frac{\textstyle{\phi^T X}}{\textstyle{\phi^T H}} M
+% \end{array}
+% \end{equation}
+% and 
+% \begin{equation}
+% Z = P Y 
+% \end{equation}
+% 
+% and we let $\hat R_c$ denote the local reproductive number:
+% \begin{equation}
+% \hat R_c = (1-\alpha) \frac{\textstyle{M}}{\textstyle{\phi^T H}} \frac{\textstyle{f^2Q^2}}{\textstyle{gr}} e^{-gn}. 
+% \end{equation}
+% Having solved for this, we can find the remaining quantities by solving the following linear equations: 
+% \begin{equation}\begin{array}{rl}
+% \left( \phi R_c \phi^T - S \phi^T \right) \frac{\textstyle{X}}{\textstyle{H}} &=  \left(\phi R_c \phi^T - I\right) \vec 1 \\
+% 
+% \left(I - q/g\left( \sigma - \sigma^T \right) \right) \frac{\textstyle{Y}}{\textstyle{\phi^T H}} &= \frac{\textstyle{\left(\phi R_c \phi^T -I\right)cS}}{\textstyle{\phi R_c \phi^T \left(1+ c S\right)}} \\
+% Z &= Y P \\
+% \end{array}\end{equation}
+
+
+
+\end{document}

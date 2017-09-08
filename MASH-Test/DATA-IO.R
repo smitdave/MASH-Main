@@ -33,13 +33,13 @@ toJSON(dat,pretty = T)
 # figure out how to write JSON out "line by line"
 
 # make a connection
-makeConnection <- function(directiory, fileName){
+makeConnection <- function(directory, fileName){
   con = file(description = paste0(directory,fileName),open = "wt")
   return(con)
 }
 
 fileName = "testConTemp.json"
-con = makeConnection(directiory = myDIR,fileName = fileName)
+con = makeConnection(directory = myDIR,fileName = fileName)
 
 
 # simulate iterating through some list of data and outputting line by line

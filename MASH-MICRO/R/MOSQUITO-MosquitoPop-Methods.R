@@ -35,6 +35,10 @@ push_pop_MosquitoPopFemale <- function(N, tEmerge, genotype, ix){
   }
 }
 
+MosquitoPopFemale$set(which = "public",name = "push_pop",
+  value = push_pop_MosquitoPopFemale, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Generic Methods

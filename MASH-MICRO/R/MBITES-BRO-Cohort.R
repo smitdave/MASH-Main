@@ -88,50 +88,23 @@ mbitesBRO_cohort_oneMosquito_MBITES <- function(){
 #' @param N number of mosquitoes in cohort
 #' @param writeJSON if \code{TRUE} write output to JSON in the directory initialized in the enclosing \code{\link{MicroTile}}, else return a list
 #' @md
-mbitesBRO_cohort_simCohort <- function(N, writeJSON){
+mbitesBRO_cohort_simCohort <- function(N){
 
-  # allocate space for cohort
-  private$pop = vector(mode="list",length=N)
+  # assign population
+  aquaStart = sample(x = private$LandscapePointer$get_AquaSitesN(),size = N,replace = TRUE)
+  self$push_pop(N=N,tEmerge=0,genotype=1L,ix=aquaStart)
 
-  # randomly allocate to initial positions
-  aquaN = private$LandscapePointer$AquaSitesN
-  aquaIx = sample(x = aquaN,size = N,replace = TRUE)
+  # begin json out
+  writeLines(text = "[",con = private$TilePointer$get_FemaleHistoryCon())
 
-  # assign cohort
-  for(i in 1:N){
-    private$pop[[i]] = MosquitoFemale$new(id = as.character(i), time = 0, ix = aquaIx[i], genotype = 0L, state = private$initState)
-    private$pop[[i]]$set_FemalePopPointer(self)
-    private$pop[[i]]$set_TilePointer(private$TilePointer)
-    private$pop[[i]]$set_LandscapePointer(private$LandscapePointer)
+  # run simulation
+  private$pop$apply(tag="MBITES_Cohort",returnVal=FALSE)
 
-    # unneeded pointers
-    # private$pop[[ix]]$set_MalePopPointer(private$MalePopPointer)
-    # private$pop[[ix]]$set_HumansPointer(private$HumansPointer)
-  }
+  # clean up json out
+  writeLines(text = "]",con = private$TilePointer$get_FemaleHistoryCon())
+  print(paste0("closing con: ",summary(private$TilePointer$get_FemaleHistoryCon())$description," please re-open before running more simulations"))
+  close(private$TilePointer$get_FemaleHistoryCon())
 
-  # do the sim
-  nCores = parallel::detectCores()-2L
-  cohortOut = parallel::mclapply(X = private$pop,FUN = function(x){x$MBITES_Cohort()},mc.cores = nCores)
-  names(cohortOut) = 1:N
-
-  # write out to JSON directory.
-  if(writeJSON){
-
-    # write JSON
-    con = file(description = paste0(private$TilePointer$get_directory(),"MOSQUITO/","cohortBRO.json"),open = "wt")
-    writeLines(text = jsonlite::toJSON(x = cohortOut,pretty = TRUE),con = con)
-    close(con)
-
-    # remove the temporary cohort and manually garbage collect to clear up memory
-    private$pop = NULL
-    gc()
-    return(NULL)
-  } else {
-    # remove the temporary cohort and manually garbage collect to clear up memory
-    private$pop = NULL
-    gc()
-
-    # return a list
-    return(cohortOut)
-  }
+  # manually call garbage collection
+  gc()
 }

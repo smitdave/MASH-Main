@@ -28,7 +28,7 @@
 #'
 #'
 #'
-#' @return modifies the \code{\link{MosquitoFemale}} and \code{\link{MosquitoMale}} classes.
+#' @return writes methods to \code{\link{MosquitoFemale}} and \code{\link{MosquitoMale}} classes.
 #' @export
 MBITES.Generic.Setup <- function(
   overwrite = TRUE,
@@ -135,10 +135,6 @@ MBITES.Generic.Setup <- function(
     {stop("unrecognized entry for eggMatT")}
   )
 
-  # MosquitoFemale$set(which = "public",name = "makeBatches",
-  #           value = mbitesGeneric_makeBatches,
-  #           overwrite = overwrite
-  # )
 
   ##############################################################
   # MBITES-Survival.R
