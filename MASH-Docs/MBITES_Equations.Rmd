@@ -9,15 +9,83 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE,tidy=TRUE)
 ```
 
-## M-BITES Survival
+## M-BITES Survival: `MBITES-Survival.R`
 
 ### Wing Tattering
 
-Zero-inflated Beta distribution for damage due to wing tattering
+Per-bout Zero-inflated Beta distribution for damage due to wing tattering
 $$
 rTatterSize=\left\{\begin{matrix}
-x=0; P(ttsz.p)
+0 \quad P(ttsz.p)
 \\ 
-x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
+Beta(ttsz.a,ttsz.b)\quad P(1-ttsz.p)
 \end{matrix}\right.
 $$  
+
+Per-bout Probability of Death due to Wing Tattering
+$$
+\frac{2+ttr.b}{1+ttr.b} - \frac{e^{damage\times ttr.a}}{ttr.b+e^{damage\times ttr.a}}
+$$
+
+
+## Senescence
+
+Per-bout probability of death due to senescence
+$$
+\frac{2+sns.b}{1+sns.b} - \frac{e^{sns.a\times age}}{sns.b+e^{sns.a\times age}}
+$$
+
+## M-BITES Energetics: `MBITES-Energetics.R`
+
+### Sugar Energetics
+
+Incremental mortality as function of energy reserves
+$$
+\frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}}
+$$
+
+Probability to queue sugar bout as function of energy reserves
+$$
+\frac{2+S.sb}{1+S.sb}-\frac{e^{S.sa\times energy}}{S.sb+e^{S.sa\times energy}}
+$$
+
+## Blood Energetics
+
+Bloodmeal size
+$$
+rBloodMealSize\sim Beta(bm.a,bm.b)
+$$
+
+## Overfeed
+
+Probability of death due to overfeeding given by
+$$
+\frac{e^{of.a\times bmSize}}{of.b+e^{of.a\times bmSize}}
+$$
+
+## Refeed
+
+Probability to re-enter blood feeding cycle after incomplete blood feeding given by
+$$
+\frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times bmSize}}{rf.b+e^{rf.a\times bmSize}}
+$$
+
+## Egg Production
+
+Draw normally-distributed egg batch size per bloodmeal
+$$
+rBatchSizeNorm\sim Norm(bs.m,bs.v)
+$$
+
+Egg batch size as function of bloodmeal size
+$$
+rBatchSizeBms = bmSize\times maxBatch
+$$
+
+Egg maturation time
+$$
+max(0,Norm(emt.m,emt.v))
+$$
+
+
+
