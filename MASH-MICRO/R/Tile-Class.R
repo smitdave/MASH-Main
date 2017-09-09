@@ -128,46 +128,6 @@ Tile <- R6::R6Class(classname = "Tile",
                      }
 
 
-                   },
-
-                   #################################################################
-                   # Getters & Setters
-                   #################################################################
-
-                   get_tNow = function(){return(private$tNow)},
-                   set_tNow = function(tNow){private$tNow = tNow},
-
-                   get_HumanPop = function(){return(private$HumanPop)},
-
-                   get_Landscape = function(){return(private$Landscape)},
-
-                   get_FemalePop = function(){return(private$FemalePop)},
-
-                   get_MalePop = function(){return(private$MalePop)},
-
-                   get_directory = function(){return(private$directory)},
-                   set_directory = function(directory){private$directory = directory},
-
-                   get_runID = function(){return(private$runID)},
-                   set_runID = function(runID){private$runID = runID},
-
-                   get_FemaleCSVCon = function(){return(private$FemaleCSVCon)},
-                   set_FemaleCSVCon = function(FemaleCSVCon){private$FemaleCSVCon = FemaleCSVCon},
-
-                   get_MaleCSVCon = function(){return(private$MaleCSVCon)},
-                   set_MaleCSVCon = function(MaleCSVCon){private$MaleCSVCon = MaleCSVCon},
-
-                   #################################################################
-                   # Utility
-                   #################################################################
-
-                   close_con = function(){
-                     if(!is.null(private$FemaleCSVCon)){
-                       close(private$FemaleCSVCon)
-                     }
-                     if(!is.null(private$MaleCSVCon)){
-                      close(private$MaleCSVCon)
-                     }
                    }
 
                  ),
@@ -192,7 +152,9 @@ Tile <- R6::R6Class(classname = "Tile",
                    # simulation output and logging
                    runID = integer(1),
                    FemaleCSVCon = NULL,
-                   MaleCSVCon = NULL
+                   MaleCSVCon = NULL,
+                   FemaleHistoryCon = NULL,
+                   MaleHistoryCon = NULL
 
                  )
 )

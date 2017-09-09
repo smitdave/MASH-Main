@@ -9,5 +9,7 @@ PfSI_ttInfectionPf()
 \description{
 How many days after the infectious bite does a PfSI infection start? See \code{\link{PfSI.Parameters}} parameter \code{LatentPf} constant latent period.
 This method is called from \code{\link{infectiousBite_PfSI}}
-This method is bound to \code{Human$ttInfectionPf()}
+\itemize{
+\item This method is bound to \code{Human$ttInfectionPf()}
+}
 }

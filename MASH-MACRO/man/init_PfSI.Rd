@@ -8,5 +8,7 @@ init_PfSI(PfPR, tStart = 0)
 }
 \description{
 Initialize PfSI infections with parasite prevalence PfPR in a human population.
-This method is bound to \code{HumanPop$init_PfSI()}
+\itemize{
+\item This method is bound to \code{HumanPop$init_PfSI()}
+}
 }

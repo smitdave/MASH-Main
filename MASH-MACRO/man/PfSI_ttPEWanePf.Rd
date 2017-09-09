@@ -9,5 +9,7 @@ PfSI_ttPEWanePf()
 \description{
 After administration of PE Vaccination what is duration of protection (reduced infected mosquito to human transmission efficiency)? See \code{\link{PfSI.Parameters}} parameter \code{mnPEPf} and \code{vrPEPf} for normally distributed duration of protection.
 This method is called from \code{\link{event_pewanePfSI}}
-This method is bound to \code{Human$ttPEWanePf()}
+\itemize{
+\item This method is bound to \code{Human$ttPEWanePf()}
+}
 }

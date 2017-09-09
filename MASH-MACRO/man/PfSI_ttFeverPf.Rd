@@ -9,5 +9,7 @@ PfSI_ttFeverPf()
 \description{
 What is the timing of fever relative to the start of a PfSI infection? See \code{\link{PfSI.Parameters}} parameter \code{mnFeverPf} constant timing period.
 This method is called from \code{\link{event_feverPfSI}}
-This method is bound to \code{Human$ttFeverPf()}
+\itemize{
+\item This method is bound to \code{Human$ttFeverPf()}
+}
 }

@@ -8,5 +8,7 @@ PfSI_increment_PfID()
 }
 \description{
 Whenever a new liver-stage infection manifests in a human we increment the PfID counter and return the new PfID.
-This method is bound to \code{HumanPop$increment_PfID()}
+\itemize{
+\item This method is bound to \code{HumanPop$increment_PfID()}
+}
 }

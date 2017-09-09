@@ -14,5 +14,7 @@ infectiousBite_PfSI(tBite, PAR)
 \description{
 This method is called from \code{\link{probeHost_PfSI}}.
 If the infectious bite results in successful transmission, this function queues a human infection event, see \code{\link{add2Q_infectHumanPfSI}}
-This method is bound to \code{Human$infectiousBite_PfSI()}
+\itemize{
+\item This method is bound to \code{Human$infectiousBite_PfSI()}
+}
 }

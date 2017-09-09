@@ -200,9 +200,9 @@ Tile$set(which = "public",name = "set_FemalePop",
           overwrite = TRUE
 )
 
-# #################################################################
+# ###############################################################################
 # # Set HumanPop: Used to reset MicroTile in between simulation runs
-# #################################################################
+# ###############################################################################
 #
 # #' MICRO \code{\link{MicroTile}}: Re-initialize \code{\link{HumanPop}}
 # #'
@@ -234,3 +234,272 @@ Tile$set(which = "public",name = "set_FemalePop",
 #    }
 #
 # }
+
+
+###############################################################################
+# Getters & Setters
+###############################################################################
+
+
+
+#################################################################
+# Getters & Setters
+#################################################################
+
+#' Get tNow
+#'
+#' Return current simulation time. All agents run events until their next scheduled event overruns the current simulation time, upon which they
+#' hold in the current behavioral state until the next time step. At the end of all activity on that iteration, \code{tNow} increases and the loop iterates.
+#'  * This method is bound to \code{Tile$get_tNow}
+#'
+get_tNow_Tile <- function(){return(private$tNow)}
+
+Tile$set(which = "public",name = "get_tNow",
+  value = get_tNow_Tile, overwrite = TRUE
+)
+
+#' Set tNow
+#'
+#' Set current simulation time
+#'  * This method is bound to \code{Tile$set_tNow}
+#'
+#' @param tNow numeric
+#'
+set_tNow <- function(tNow){private$tNow = tNow}
+
+Tile$set(which = "public",name = "set_tNow",
+  value = set_tNow_Tile, overwrite = TRUE
+)
+
+#' Get Humans
+#'
+#' Return embedded human population object \code{\link[MASHmacro]{HumanPop}}
+#'  * This method is bound to \code{Tile$get_HumanPop}
+#'
+get_HumanPop_Tile <- function(){return(private$HumanPop)}
+
+Tile$set(which = "public",name = "get_HumanPop",
+  value = get_HumanPop_Tile, overwrite = TRUE
+)
+
+#' Get Landscape
+#'
+#' Return embedded landscape object \code{\link{Landscape}}
+#'  * This method is bound to \code{Tile$get_Landscape}
+#'
+get_Landscape_Tile <- function(){return(private$Landscape)}
+
+Tile$set(which = "public",name = "get_Landscape",
+  value = get_Landscape_Tile, overwrite = TRUE
+)
+
+#' Get Female Mosquitoes
+#'
+#' Return embedded female mosquito population object \code{\link{MosquitoPopFemale}}
+#'  * This method is bound to \code{Tile$get_FemalePop}
+#'
+get_FemalePop_Tile <- function(){return(private$FemalePop)}
+
+Tile$set(which = "public",name = "get_FemalePop",
+  value = get_FemalePop_Tile, overwrite = TRUE
+)
+
+#' Get Male Mosquitoes
+#'
+#' Return embedded male mosquito population object \code{\link{MosquitoPopMale}}
+#'  * This method is bound to \code{Tile$get_MalePop}
+#'
+get_MalePop_Tile <- function(){return(private$MalePop)}
+
+Tile$set(which = "public",name = "get_MalePop",
+  value = get_MalePop_Tile, overwrite = TRUE
+)
+
+
+#' Get Directory
+#'
+#' Return the directory (character) containing output for this tile
+#'  * This method is bound to \code{Tile$get_directory}
+#'
+get_directory_Tile <- function(){return(private$directory)}
+
+Tile$set(which = "public",name = "get_directory",
+  value = get_directory_Tile, overwrite = TRUE
+)
+
+#' Set Directory
+#'
+#' Set the directory (character) containing output for this tile
+#'  * This method is bound to \code{Tile$set_directory}
+#'
+#' @param directory character
+#'
+set_directory_Tile <- function(directory){private$directory = directory}
+
+Tile$set(which = "public",name = "set_directory",
+  value = set_directory_Tile, overwrite = TRUE
+)
+
+#' Get Run ID
+#'
+#' Return current simulation run ID that will be used to identify multiple simulation output from the same tile object.
+#'  * This method is bound to \code{Tile$get_runID}
+#'
+get_runID_Tile <- function(){return(private$runID)}
+
+Tile$set(which = "public",name = "get_runID",
+  value = get_runID_Tile, overwrite = TRUE
+)
+
+#' Set Run ID
+#'
+#' Set current simulation run ID that will be used to identify multiple simulation output from the same tile object.
+#'  * This method is bound to \code{Tile$set_runID}
+#'
+#' @param runID integer
+#'
+set_runID_Tile <- function(runID){private$runID = runID}
+
+Tile$set(which = "public",name = "set_runID",
+  value = set_runID_Tile, overwrite = TRUE
+)
+
+#' Get Female CSV Connection
+#'
+#' Return the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$get_FemaleCSVCon}
+#'
+get_FemaleCSVCon_Tile <- function(){return(private$FemaleCSVCon)}
+
+Tile$set(which = "public",name = "get_FemaleCSVCon",
+  value = get_FemaleCSVCon_Tile, overwrite = TRUE
+)
+
+#' Set Female CSV Connection
+#'
+#' Set the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$set_FemaleCSVCon}
+#'
+#' @param FemaleCSVCon object of class \code{\link[base]{connection}}, usually opened with \code{file}
+#'
+set_FemaleCSVCon_Tile <- function(FemaleCSVCon){private$FemaleCSVCon = FemaleCSVCon}
+
+Tile$set(which = "public",name = "set_FemaleCSVCon",
+  value = set_FemaleCSVCon_Tile, overwrite = TRUE
+)
+
+#' Close Female CSV Connection
+#'
+#' Close the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$close_FemaleCSVCon}
+#'
+close_FemaleCSVCon_Tile <- function(){close(private$FemaleCSVCon)}
+
+Tile$set(which = "public",name = "close_FemaleCSVCon",
+  value = close_FemaleCSVCon_Tile, overwrite = TRUE
+)
+
+#' Get Male CSV Connection
+#'
+#' Return the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$get_MaleCSVCon}
+#'
+get_MaleCSVCon_Tile <- function(){return(private$MaleCSVCon)}
+
+Tile$set(which = "public",name = "get_MaleCSVCon",
+  value = get_MaleCSVCon_Tile, overwrite = TRUE
+)
+
+#' Set Male CSV Connection
+#'
+#' Set the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$set_MaleCSVCon}
+#'
+#' @param MaleCSVCon object of class \code{\link[base]{connection}}, usually opened with \code{file}
+#'
+set_MaleCSVCon_Tile <- function(MaleCSVCon){private$MaleCSVCon = MaleCSVCon}
+
+Tile$set(which = "public",name = "set_MaleCSVCon",
+  value = set_MaleCSVCon_Tile, overwrite = TRUE
+)
+
+#' Close Male CSV Connection
+#'
+#' Close the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$close_MaleCSVCon}
+#'
+close_MaleCSVCon_Tile <- function(){close(private$FemaleCSVCon)}
+
+Tile$set(which = "public",name = "close_MaleCSVCon",
+  value = close_MaleCSVCon_Tile, overwrite = TRUE
+)
+
+#' Get Female CSV Connection
+#'
+#' Return the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$get_FemaleHistoryCon}
+#'
+get_FemaleHistoryCon_Tile <- function(){return(private$FemaleHistoryCon)}
+
+Tile$set(which = "public",name = "get_FemaleHistoryCon",
+  value = get_FemaleHistoryCon_Tile, overwrite = TRUE
+)
+
+#' Set Female CSV Connection
+#'
+#' Set the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$set_FemaleHistoryCon}
+#'
+#' @param FemaleHistoryCon object of class \code{\link[base]{connection}}, usually opened with \code{file}
+#'
+set_FemaleHistoryCon_Tile <- function(FemaleHistoryCon){private$FemaleHistoryCon = FemaleHistoryCon}
+
+Tile$set(which = "public",name = "set_FemaleHistoryCon",
+  value = set_FemaleHistoryCon_Tile, overwrite = TRUE
+)
+
+#' Close Female CSV Connection
+#'
+#' Close the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$close_FemaleHistoryCon}
+#'
+close_FemaleHistoryCon_Tile <- function(){close(private$FemaleHistoryCon)}
+
+Tile$set(which = "public",name = "close_FemaleHistoryCon",
+  value = close_FemaleHistoryCon_Tile, overwrite = TRUE
+)
+
+#' Get Female CSV Connection
+#'
+#' Return the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$get_MaleHistoryCon}
+#'
+get_MaleHistoryCon_Tile <- function(){return(private$MaleHistoryCon)}
+
+Tile$set(which = "public",name = "get_MaleHistoryCon",
+  value = get_MaleHistoryCon_Tile, overwrite = TRUE
+)
+
+#' Set Female CSV Connection
+#'
+#' Set the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$set_MaleHistoryCon}
+#'
+#' @param MaleHistoryCon object of class \code{\link[base]{connection}}, usually opened with \code{file}
+#'
+set_MaleHistoryCon_Tile <- function(MaleHistoryCon){private$MaleHistoryCon = MaleHistoryCon}
+
+Tile$set(which = "public",name = "set_MaleHistoryCon",
+  value = set_MaleHistoryCon_Tile, overwrite = TRUE
+)
+
+#' Close Female CSV Connection
+#'
+#' Close the text connection used to write population count data to CSV.
+#'  * This method is bound to \code{Tile$close_MaleHistoryCon}
+#'
+close_MaleHistoryCon_Tile <- function(){close(private$MaleHistoryCon)}
+
+Tile$set(which = "public",name = "close_MaleHistoryCon",
+  value = close_MaleHistoryCon_Tile, overwrite = TRUE
+)

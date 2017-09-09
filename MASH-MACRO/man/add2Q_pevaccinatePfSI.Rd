@@ -15,5 +15,7 @@ add2Q_pevaccinatePfSI(tEvent, PAR = NULL)
 Add PfSI PE vaccination event to the event queue.
 This method is called from \code{\link{queueVaccination_SimBitePfSI}}
 This method adds event \code{\link{event_pevaccinatePfSI}} to the event queue.
-This method is bound to \code{Human$add2Q_pevaccinatePfSI()}
+\itemize{
+\item This method is bound to \code{Human$add2Q_pevaccinatePfSI()}
+}
 }

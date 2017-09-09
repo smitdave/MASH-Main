@@ -11,5 +11,7 @@ HumanPop_get_PfSI_PAR(ix = NULL)
 }
 \description{
 Get either entire list or one named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
-This method is bound to \code{HumanPop$get_PfSI_PAR()}
+\itemize{
+\item This method is bound to \code{HumanPop$get_PfSI_PAR()}
+}
 }

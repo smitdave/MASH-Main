@@ -9,5 +9,7 @@ PfSI_ttClearPf()
 \description{
 How many days does a PfSI infection last? See \code{\link{PfSI.Parameters}} parameter \code{DurationPf} for mean of exponentially distributed infection.
 This method is called from \code{\link{event_endPfSI}}
-This method is bound to \code{Human$ttClearPf()}
+\itemize{
+\item This method is bound to \code{Human$ttClearPf()}
+}
 }

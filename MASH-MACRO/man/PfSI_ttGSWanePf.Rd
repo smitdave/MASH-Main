@@ -9,5 +9,7 @@ PfSI_ttGSWanePf()
 \description{
 Duration of protection by GS Vaccination? See \code{\link{PfSI.Parameters}} parameter \code{mnGSPf} and \code{vrGSPf} for normally distributed duration of protection.
 This method is called from \code{\link{event_gswanePfSI}}
-This method is bound to \code{Human$ttGSWanePf()}
+\itemize{
+\item This method is bound to \code{Human$ttGSWanePf()}
+}
 }

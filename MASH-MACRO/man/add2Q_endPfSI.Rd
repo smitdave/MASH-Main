@@ -15,5 +15,7 @@ add2Q_endPfSI(tEvent, PAR = NULL)
 Add PfSI infection clearance event to the event queue.
 This method is called from \code{\link{infectHumanPfSI}}
 This method adds event \code{\link{event_endPfSI}} to the event queue.
-This method is bound to \code{Human$add2Q_endPfSI()}
+\itemize{
+\item This method is bound to \code{Human$add2Q_endPfSI()}
+}
 }

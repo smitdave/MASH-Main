@@ -9,5 +9,7 @@ PfSI_ttSusceptiblePf()
 \description{
 After administration of Chemoprophylaxis what is time to susceptibility? See \code{\link{PfSI.Parameters}} parameter \code{mnChemoprophylaxisPf} constant timing period.
 This method is called from \code{\link{event_endprophylaxisPfSI}}
-This method is bound to \code{Human$ttSusceptiblePf()}
+\itemize{
+\item This method is bound to \code{Human$ttSusceptiblePf()}
+}
 }

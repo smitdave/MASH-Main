@@ -8,5 +8,7 @@ HumanPop_get_PfSI_history()
 }
 \description{
 Get all PfSI histories, stored in class \code{\link{humanPfSI}}
-This function is bound to \code{HumanPop$get_PfSI_history()}
+\itemize{
+\item This function is bound to \code{HumanPop$get_PfSI_history()}
+}
 }

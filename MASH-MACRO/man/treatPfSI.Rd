@@ -13,5 +13,7 @@ treatPfSI(tEvent, PAR)
 }
 \description{
 Simulate a PfSI treatment event. If the human is infected, set susceptible and track history; also initiate period of chemoprophylaxis, see \code{\link{add2Q_endprophylaxisPfSI}}
-This method is bound to \code{Human$treatPfSI()}
+\itemize{
+\item This method is bound to \code{Human$treatPfSI()}
+}
 }

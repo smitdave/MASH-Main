@@ -166,3 +166,14 @@ MBITES.Generic.Setup <- function(
   )
 
 }
+
+
+
+#' M-BITES \code{NULL} Mosquito History
+#'
+#' This is used to pad the final entry when mosquitoes are being written to JSON by \code{\link[jsonlite]{toJSON}}.
+#'
+#' @export
+mbitesGeneric_NULL <- list(
+  id = "NULL"
+)

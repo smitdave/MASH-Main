@@ -14,5 +14,7 @@ probeHost_PfSI(tBite, mosquitoPfSI)
 \description{
 This method is called by a mosquito when she probes a human host, but may also be called by \code{\link{SimBitePfSI}} as a filler.
 If the biting mosquito is infectious, the method calls \code{\link{infectiousBite_PfSI}}, otherwise does nothing.
-This method is bound to \code{Human$probeHost_PfSI()}
+\itemize{
+\item This method is bound to \code{Human$probeHost_PfSI()}
+}
 }

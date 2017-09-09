@@ -9,7 +9,7 @@ infectHumanPfSI(tEvent, PAR)
 \arguments{
 \item{tEvent}{time of infection}
 
-\item{PAR}{must be a list containing \code{damID} and \code{sireID}}
+\item{PAR}{must be a list containing character \code{vectorID}}
 }
 \description{
 Simulate a PfSI infection. If the human is not under chemoprophylaxis or already infected, begin an infection.

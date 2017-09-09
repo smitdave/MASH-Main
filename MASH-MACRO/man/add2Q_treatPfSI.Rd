@@ -15,5 +15,7 @@ add2Q_treatPfSI(tEvent, PAR = NULL)
 Add PfSI treatment event to the event queue.
 This method is called from \code{\link{feverPfSI}}
 This method adds event \code{\link{event_treatPfSI}} to the event queue.
-This method is bound to \code{Human$add2Q_treatPfSI()}
+\itemize{
+\item This method is bound to \code{Human$add2Q_treatPfSI()}
+}
 }

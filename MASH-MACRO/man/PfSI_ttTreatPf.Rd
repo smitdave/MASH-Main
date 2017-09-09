@@ -9,5 +9,7 @@ PfSI_ttTreatPf()
 \description{
 What is the timing of treatment relative to the start of a fever incident? See \code{\link{PfSI.Parameters}} parameter \code{mnTreatPf} constant timing period.
 This method is called from \code{\link{event_treatPfSI}}
-This method is bound to \code{Human$ttTreatPf()}
+\itemize{
+\item This method is bound to \code{Human$ttTreatPf()}
+}
 }

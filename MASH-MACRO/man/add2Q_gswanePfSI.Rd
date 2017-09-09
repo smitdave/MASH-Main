@@ -15,5 +15,7 @@ add2Q_gswanePfSI(tEvent, PAR = NULL)
 Add PfSI GS waning protection event to the event queue.
 This method is called from \code{\link{gsvaccinatePfSI}}
 This method adds event \code{\link{event_gswanePfSI}} to the event queue.
-This method is bound to \code{Human$add2Q_gswanePfSI()}
+\itemize{
+\item This method is bound to \code{Human$add2Q_gswanePfSI()}
+}
 }

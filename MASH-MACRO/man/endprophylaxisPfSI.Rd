@@ -13,5 +13,7 @@ endprophylaxisPfSI(tEvent, PAR)
 }
 \description{
 End PfSI chemoprophylaxis protection.
-This method is bound to \code{Human$endprophylaxisPfSI()}
+\itemize{
+\item This method is bound to \code{Human$endprophylaxisPfSI()}
+}
 }

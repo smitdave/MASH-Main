@@ -100,7 +100,8 @@ mbitesBRO_cohort_simCohort <- function(N){
   # run simulation
   private$pop$apply(tag="MBITES_Cohort",returnVal=FALSE)
 
-  # clean up json out
+  # clean up json out and close connection
+  writeLines(text = jsonlite::toJSON(x = mbitesGeneric_NULL,pretty = TRUE),con = private$TilePointer$get_FemaleHistoryCon())
   writeLines(text = "]",con = private$TilePointer$get_FemaleHistoryCon())
   print(paste0("closing con: ",summary(private$TilePointer$get_FemaleHistoryCon())$description," please re-open before running more simulations"))
   close(private$TilePointer$get_FemaleHistoryCon())

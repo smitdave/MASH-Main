@@ -15,5 +15,7 @@ add2Q_endprophylaxisPfSI(tEvent, PAR = NULL)
 Add PfSI end of chemoprophylaxis event to the event queue.
 This method is called from \code{\link{treatPfSI}}
 This method adds event \code{\link{event_endprophylaxisPfSI}} to the event queue.
-This method is bound to \code{Human$add2Q_endprophylaxisPfSI()}
+\itemize{
+\item This method is bound to \code{Human$add2Q_endprophylaxisPfSI()}
+}
 }
