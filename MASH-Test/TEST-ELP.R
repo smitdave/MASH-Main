@@ -72,7 +72,7 @@ for(i in 2:length(tVec)){
   LtotHist[i] = sum(L1hist[i],L2hist[i],L3hist[i],L4hist[i])
 }
 
-par(mfrow=c(1,2))
+# par(mfrow=c(1,2))
 maxY = max(max(L1hist),max(L2hist),max(L3hist),max(L4hist),max(Mhist),max(LtotHist))
 plot(L1hist,type="l",col="purple",lty=1,ylim=c(0,maxY),ylab="Counts")
 lines(L2hist,col="purple",lty=2)
@@ -83,20 +83,20 @@ lines(Mhist,col="red")
 grid()
 
 
-rm(EL4P_cpp);gc()
-EL4P_cpp = MASHcpp::ELP(alpha_new = alpha,gamma_new = gamma,psi_new = psi,tGrain_new = tGrain)
-out = EL4P_cpp$ecologicalSimulation2(g_init = g,f_init = f,v_init = v,L_init = Lstart,M_init = Mstart,tMax = tMax)
-
-lTotHist = Reduce(f = "+",x = out[1:4])
-maxY = max(vapply(X = c(out,lTotHist),FUN = max,FUN.VALUE = numeric(1)))
-plot(out$L1,type = "l",col="purple",lty=1,ylim=c(0,maxY),ylab = "Counts")
-lines(out$L2,col="purple",lty=2)
-lines(out$L3,col="purple",lty=3)
-lines(out$L4,col="purple",lty=4)
-lines(lTotHist,col="darkgreen")
-lines(out$M,col="red")
-grid()
-par(mfrow=c(1,1))
+# rm(EL4P_cpp);gc()
+# EL4P_cpp = MASHcpp::ELP(alpha_new = alpha,gamma_new = gamma,psi_new = psi,tGrain_new = tGrain)
+# out = EL4P_cpp$ecologicalSimulation2(g_init = g,f_init = f,v_init = v,L_init = Lstart,M_init = Mstart,tMax = tMax)
+# 
+# lTotHist = Reduce(f = "+",x = out[1:4])
+# maxY = max(vapply(X = c(out,lTotHist),FUN = max,FUN.VALUE = numeric(1)))
+# plot(out$L1,type = "l",col="purple",lty=1,ylim=c(0,maxY),ylab = "Counts")
+# lines(out$L2,col="purple",lty=2)
+# lines(out$L3,col="purple",lty=3)
+# lines(out$L4,col="purple",lty=4)
+# lines(lTotHist,col="darkgreen")
+# lines(out$M,col="red")
+# grid()
+# par(mfrow=c(1,1))
 
 # ELP_roots <- function(x,par){
 #   c(
