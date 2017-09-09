@@ -51,7 +51,6 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             # Initializer
                             ##############################################################
 
-                            # initialize: needs to take PAR as a parameter because certain module-specific parameter values will be stored there
                             # pointers are also passed down from enclosing MosquitoPopFemale object
                             initialize = function(id, time, ix, genotype, state, eggT = 0, eggP = 0, energyPreG = 0){
 
