@@ -18,33 +18,34 @@
 #'
 #' Generate simple sinusoidally forced seasonal emergence.
 #'
-#' @param aquaPars a list of the following structure
-#'  * N: number of aquatic habitats (required)
-#'  * lambda: number of emerging adult females per human per day averaged over one year for the entire \code{\link{Landscape}} (required)
-#'  * lambdaWeight: vector of weights applied to each site (if not specified or set to \code{NULL} initialize to Gamma(1,1) distribution)
-#'  * offset: vector of seasonal offsets in peak emergence applied to each site (if not specified or set to \code{NULL} initialize to 0 for all sites)
-#' @md
+#' @param N number of aquatic habitats (required)
+#' @param lambda number of emerging adult females per human per day averaged over one year for the entire \code{\link{Landscape}} (required)
+#' @param lambdaWeight vector of weights applied to each site (if not specified or set to \code{NULL} initialize to Gamma(1,1) distribution)
+#' @param offset vector of seasonal offsets in peak emergence applied to each site (if not specified or set to \code{NULL} initialize to 0 for all sites)
+#'
+#'
 #' @return list \code{lambda} where each element is the daily emergence for that \code{\link{FeedingSite}}
 #' @examples
-#' makeLambda_MicroEmerge(aquaPars= list(lambda = c(2,3,4)))
+#' simpleLambda_Emerge(aquaPars= list(lambda = c(2,3,4)))
 #' @export
-makeLambda_Emerge <- function(aquaPars){
+simpleLambda_Emerge <- function(N, lambda, lambdaWeight = NULL, offset = NULL){
 
-  with(aquaPars,{
+  if(is.null(offset)){
+    offset = rep(0,length=N)
+  }
 
-    if(!exists("lambdaWeight",inherits = FALSE) || is.null(lambdaWeight)){lambdaWeight = rgamma(n = N,shape = 1,rate = 1)}
+  if(is.null(lambdaWeight)){
+    lambdaWeight = rgamma(n = N,shape = 1,rate = 1)
+  }
 
-    K = lambda*lambdaWeight / sum(lambdaWeight)
-    if(!exists("offset",inherits = FALSE) || is.null(lambdaWeight)){offset = rep(0,length=N)}
+  K = lambda*lambdaWeight / sum(lambdaWeight)
+  lambdaOut = vector(mode="list",length=N)
 
-    lambdaOut = vector(mode="list",length=N)
-    for(ix in 1:N){
-      lambdaOut[[ix]] = K[ix]*(1+sin(2*pi*(1:365-offset[ix])/365))
-    }
+  for(ix in 1:N){
+    lambdaOut[[ix]] = K[ix]*(1+sin(2*pi*(1:365-offset[ix])/365))
+  }
 
-    return(lambdaOut)
-  })
-
+  return(lambdaOut)
 }
 
 
