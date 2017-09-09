@@ -20,7 +20,7 @@ Landscape.Aqua.Parameters(nAqua, siteXY, module, modulePars, searchWt = NULL,
 
 \item{modulePars}{additional list of named parameters to be passed to Aquatic Ecology module specific parameter generating functions
 \itemize{
-\item Emerge: should be named list of parameters for \code{\link{makeLambda_MicroEmerge}}
+\item Emerge: list of parameters to be passed to \code{\link{simpleLambda_Emerge}} (N not required).
 \item EL4P: NULL
 }}
 

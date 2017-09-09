@@ -240,12 +240,6 @@ Tile$set(which = "public",name = "set_FemalePop",
 # Getters & Setters
 ###############################################################################
 
-
-
-#################################################################
-# Getters & Setters
-#################################################################
-
 #' Get tNow
 #'
 #' Return current simulation time. All agents run events until their next scheduled event overruns the current simulation time, upon which they
@@ -265,7 +259,7 @@ Tile$set(which = "public",name = "get_tNow",
 #'
 #' @param tNow numeric
 #'
-set_tNow <- function(tNow){private$tNow = tNow}
+set_tNow_Tile <- function(tNow){private$tNow = tNow}
 
 Tile$set(which = "public",name = "set_tNow",
   value = set_tNow_Tile, overwrite = TRUE

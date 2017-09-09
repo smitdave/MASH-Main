@@ -28,6 +28,7 @@ im a class!
 \section{\strong{Fields}}{
 
 \itemize{
+\item id: character of format tEmerge_id_genotype (ie; "5_42_2" is the 42nd mosquito emerging on day 5 with genotype 2)
 \item field: im a field!
 }
 }

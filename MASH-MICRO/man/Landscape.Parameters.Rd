@@ -68,6 +68,3 @@ This function is a specific instantiation of a generic system to generate parame
 chosen landscape. Any user-specified function can be written to generate parameters, as long as the
 return list is in the same format.
 }
-\examples{
-
-}

@@ -12,7 +12,7 @@ MBITES.Generic.Setup(overwrite = TRUE, batchSize = "bms", eggMatT = "off")
 \item{eggMatT}{character switch that should be one of \code{"off","norm"} for egg batch maturation time turned off or normally distributed}
 }
 \value{
-modifies the \code{\link{MosquitoFemale}} and \code{\link{MosquitoMale}} classes.
+writes methods to \code{\link{MosquitoFemale}} and \code{\link{MosquitoMale}} classes.
 }
 \description{
 This function initializes generic methods for M-BITES models; please note that the

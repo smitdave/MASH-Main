@@ -1,12 +1,17 @@
-#################################################################
+###############################################################################
+#       __                    __
+#      / /   ____ _____  ____/ /_____________ _____  ___
+#     / /   / __ `/ __ \/ __  / ___/ ___/ __ `/ __ \/ _ \
+#    / /___/ /_/ / / / / /_/ (__  ) /__/ /_/ / /_/ /  __/
+#   /_____/\__,_/_/ /_/\__,_/____/\___/\__,_/ .___/\___/
+#                                          /_/
 #
-#   MASH
-#   R6-ified
-#   Minimal Landscape for Well-mixed Patch
-#   Hector Sanchez & David Smith, Hector Sanchez, Sean Wu
+#   MASH-MICRO
+#   MICRO: Landscape Class Definition
+#   MASH-MICRO Team
 #   May 9, 2017
 #
-#################################################################
+###############################################################################
 
 
 #################################################################
@@ -54,7 +59,7 @@ Landscape <- R6::R6Class(classname = "Landscape",
                          #########################################
 
                          private$FeedingSites = vector(mode="list",length=FeedingSite_PAR$nFeed)
-                         self$FeedingSitesN = FeedingSite_PAR$nFeed
+                         private$FeedingSitesN = FeedingSite_PAR$nFeed
                          for(ix in 1:FeedingSite_PAR$nFeed){
 
                            private$FeedingSites[[ix]] = FeedingSite$new(
@@ -74,7 +79,7 @@ Landscape <- R6::R6Class(classname = "Landscape",
                          #########################################
 
                          private$AquaSites = vector(mode="list",length=AquaticSite_PAR$nAqua)
-                         self$AquaSitesN = AquaticSite_PAR$nAqua
+                         private$AquaSitesN = AquaticSite_PAR$nAqua
                          for(ix in 1:AquaticSite_PAR$nAqua){
 
                            private$AquaSites[[ix]] = AquaticSite$new(
@@ -93,139 +98,15 @@ Landscape <- R6::R6Class(classname = "Landscape",
                        # Set Pointers
                        #########################################
 
-                       for(ix in 1:self$FeedingSitesN){
+                       for(ix in 1:private$FeedingSitesN){
                          private$FeedingSites[[ix]]$set_LandscapePointer(self)
                        }
 
-                       for(ix in 1:self$AquaSitesN){
+                       for(ix in 1:private$AquaSitesN){
                          private$AquaSites[[ix]]$set_LandscapePointer(self)
                        }
 
-                   },
-
-                  #################################################################
-                  # Getters & Setters
-                  #################################################################
-
-                  # FeedingSites
-                  get_FeedingSites = function(ixS = NULL){
-                    if(is.null(ixS)){
-                      return(private$FeedingSites)
-                    } else {
-                      return(private$FeedingSites[[ixS]])
-                    }
-                  },
-                  set_FeedingSites = function(FeedingSites, ixS = NULL){
-                    if(is.null(ixS)){
-                      private$FeedingSites = FeedingSites
-                    } else {
-                      private$FeedingSites[[ixS]] = FeedingSites
-                    }
-                  },
-
-                  # AquaSites
-                  get_AquaSites = function(ixS = NULL){
-                    if(is.null(ixS)){
-                      return(private$AquaSites)
-                    } else {
-                      return(private$AquaSites[[ixS]])
-                    }
-                  },
-                  set_AquaSites = function(AquaSites, ixS = NULL){
-                    if(is.null(ixS)){
-                      private$AquaSites = AquaSites
-                    } else {
-                      private$AquaSites[[ixS]] = AquaSites
-                    }
-                  },
-
-                  # SugarSites
-                  get_SugarSites = function(ixS = NULL){
-                    if(is.null(ixS)){
-                      return(private$MatingSites)
-                    } else {
-                      return(private$MatingSites[[ixS]])
-                    }
-                  },
-                  set_SugarSites = function(SugarSites, ixS = NULL){
-                    if(is.null(ixS)){
-                      private$SugarSites = SugarSites
-                    } else {
-                      private$SugarSites[[ixS]] = SugarSites
-                    }
-                  },
-
-                  # MatingSites
-                  get_MatingSites = function(ixS = NULL){
-                    if(is.null(ixS)){
-                      return(private$MatingSites)
-                    } else {
-                      return(private$MatingSites[[ixS]])
-                    }
-                  },
-                  set_MatingSites = function(MatingSites, ixS = NULL){
-                    if(is.null(ixS)){
-                      private$MatingSites = MatingSites
-                    } else {
-                      private$MatingSites[[ixS]] = MatingSites
-                    }
-                  },
-
-                  #################################################################
-                  # Pointers
-                  #################################################################
-
-                  # TilePointer
-                  get_TilePointer = function(){
-                    return(private$TilePointer)
-                  },
-                  set_TilePointer = function(TilePointer){
-                    private$TilePointer = TilePointer
-                  },
-
-                  # FemalePopPointer
-                  get_FemalePopPointer = function(){
-                    return(private$FemalePopPointer)
-                  },
-                  set_FemalePopPointer = function(FemalePopPointer){
-                    private$FemalePopPointer = FemalePopPointer
-                  },
-
-                  # MalePopPointer
-                  get_MalePopPointer = function(){
-                    return(private$MalePopPointer)
-                  },
-                  set_MalePopPointer = function(MalePopPointer){
-                    private$MalePopPointer = MalePopPointer
-                  },
-
-                  # HumansPointer
-                  get_HumansPointer = function(){
-                    return(private$HumansPointer)
-                  },
-                  set_HumansPointer = function(HumansPointer){
-                    private$HumansPointer = HumansPointer
-                  },
-
-                  #################################################################
-                  # Site-specific Functions
-                  #################################################################
-
-                  clear_RiskQ = function(){
-                    for(ixF in 1:self$FeedingSitesN){
-                      private$FeedingSites[[ixF]]$clear_RiskQ()
-                    }
-                  },
-
-                  #################################################################
-                  # Public Fields
-                  #################################################################
-
-                  # Number of Sites
-                  FeedingSitesN = NULL,
-                  AquaSitesN = NULL,
-                  SugarSitesN = NULL,
-                  MatingSitesN = NULL
+                   }
 
                  ),
 
@@ -238,12 +119,16 @@ Landscape <- R6::R6Class(classname = "Landscape",
                    SugarSites = NULL,
                    MatingSites = NULL,
 
+                   FeedingSitesN = numeric(1),
+                   AquaSitesN = numeric(1),
+                   SugarSitesN = numeric(1),
+                   MatingSitesN = numeric(1),
+
                    # Pointers
                    TilePointer = NULL,                    # point to the enclosing microsimulation TILE (MICRO)
                    FemalePopPointer = NULL,       # point to the MosquitoPopFemale in this enclosing microsimulation TILE (MICRO)
                    MalePopPointer = NULL,         # point to the MosquitoPopMale in this enclosing microsimulation TILE (MICRO)
                    HumansPointer = NULL                   # point to the HumanPop in this enclosing microsimulation TILE (MICRO)
-
 
                  )
 )

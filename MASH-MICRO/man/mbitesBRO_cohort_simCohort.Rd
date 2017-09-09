@@ -4,7 +4,7 @@
 \alias{mbitesBRO_cohort_simCohort}
 \title{MBITES-BRO-Cohort: Human Host Encounter for \code{\link{MosquitoFemale}}}
 \usage{
-mbitesBRO_cohort_simCohort(N, writeJSON)
+mbitesBRO_cohort_simCohort(N)
 }
 \arguments{
 \item{N}{number of mosquitoes in cohort}

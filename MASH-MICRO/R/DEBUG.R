@@ -22,6 +22,7 @@ DEBUG.MASHMICRO <- function(overwrite = TRUE){
 
   # R6 Classes
 
+  # MOSQUITO
   MASHmicro:::MosquitoFemale$set(which = "public",name = "finalize",
     value = function(){message(paste0("MosquitoFemale" ,private$id," being garbage collected"))},
     overwrite = overwrite
@@ -41,5 +42,31 @@ DEBUG.MASHMICRO <- function(overwrite = TRUE){
     value = function(){message(paste0("MosquitoPopFemale being garbage collected"))},
     overwrite = overwrite
   )
-  
+
+  # SITE
+
+  MASHmicro:::FeedingSite$set(which = "public",name = "finalize",
+    value = function(){message(paste0("FeedingSite ",private$ix," being garbage collected"))},
+    overwrite = overwrite
+  )
+
+  MASHmicro:::AquaticSite$set(which = "public",name = "finalize",
+    value = function(){message(paste0("AquaticSite ",private$ix," being garbage collected"))},
+    overwrite = overwrite
+  )
+
+  # LANDSCAPE
+
+  MASHmicro:::Landscape$set(which = "public",name = "finalize",
+    value = function(){message(paste0("Landscape being garbage collected"))},
+    overwrite = overwrite
+  )
+
+  # TILE
+
+  MASHmicro:::Tile$set(which = "public",name = "finalize",
+    value = function(){message(paste0("Tile being garbage collected"))},
+    overwrite = overwrite
+  )
+
 }
