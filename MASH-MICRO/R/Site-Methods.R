@@ -37,7 +37,7 @@ FeedingSite$set(which = "public",name = "get_ix",
 #'
 set_ix_FeedingSite <- function(ix){private$ix = ix}
 
-FeedingSite$set(which = "public",name = "get_ix",
+FeedingSite$set(which = "public",name = "set_ix",
   value = set_ix_FeedingSite, overwrite = TRUE
 )
 
@@ -60,9 +60,9 @@ FeedingSite$set(which = "public",name = "get_siteXY",
 #'
 #' @param ix numeric(2)
 #'
-set_siteXY_FeedingSite <- function(newSiteXY){private$siteXY = set_siteXY}
+set_siteXY_FeedingSite <- function(newSiteXY){private$siteXY = newSiteXY}
 
-FeedingSite$set(which = "public",name = "get_siteXY",
+FeedingSite$set(which = "public",name = "set_siteXY",
   value = set_siteXY_FeedingSite, overwrite = TRUE
 )
 
@@ -71,9 +71,9 @@ FeedingSite$set(which = "public",name = "get_siteXY",
 #' Get site search weight \code{searchWt}
 #'  * This method is bound to \code{FeedingSite$get_searchWt}
 #'
-get_searchWt_FeedingSite <- function(){return(private$get_searchWt)}
+get_searchWt_FeedingSite <- function(){return(private$searchWt)}
 
-FeedingSite$set(which = "public",name = "get_siteXY",
+FeedingSite$set(which = "public",name = "get_searchWt",
   value = get_searchWt_FeedingSite, overwrite = TRUE
 )
 
@@ -308,7 +308,7 @@ AquaticSite$set(which = "public",name = "get_ix",
 #'
 set_ix_AquaticSite <- function(ix){private$ix = ix}
 
-AquaticSite$set(which = "public",name = "get_ix",
+AquaticSite$set(which = "public",name = "set_ix",
   value = set_ix_AquaticSite, overwrite = TRUE
 )
 
@@ -330,9 +330,9 @@ AquaticSite$set(which = "public",name = "get_siteXY",
 #'
 #' @param ix numeric(2)
 #'
-set_siteXY_AquaticSite <- function(newSiteXY){private$siteXY = set_siteXY}
+set_siteXY_AquaticSite <- function(newSiteXY){private$siteXY = newSiteXY}
 
-AquaticSite$set(which = "public",name = "get_siteXY",
+AquaticSite$set(which = "public",name = "set_siteXY",
   value = set_siteXY_AquaticSite, overwrite = TRUE
 )
 
@@ -341,9 +341,9 @@ AquaticSite$set(which = "public",name = "get_siteXY",
 #' Get site search weight \code{searchWt}
 #'  * This method is bound to \code{AquaticSite$get_searchWt}
 #'
-get_searchWt_AquaticSite <- function(){return(private$get_searchWt)}
+get_searchWt_AquaticSite <- function(){return(private$searchWt)}
 
-AquaticSite$set(which = "public",name = "get_siteXY",
+AquaticSite$set(which = "public",name = "get_searchWt",
   value = get_searchWt_AquaticSite, overwrite = TRUE
 )
 

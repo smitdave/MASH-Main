@@ -35,7 +35,7 @@
 #'  * "emerge": initialize parameters for Emerge module of Aquatic Ecology
 #'  * "EL4P": initialize parameters for EL4P module of Aquatic Ecology
 #' @param modulePars additional list of named parameters to be passed to Aquatic Ecology module specific parameter generating functions
-#'  * Emerge: should be named list of parameters for \code{\link{makeLambda_MicroEmerge}}
+#'  * Emerge: should be named list of parameters for \code{\link{simpleLambda_Emerge}}
 #'  * EL4P: NULL
 #' @param hazV mean value for feeding site vegetation landing hazard (if 0 it is set to 0 for all sites)
 #' @param hazW mean value for feeding site outside wall landing hazard (if 0 it is set to 0 for all sites)
@@ -209,7 +209,9 @@ Landscape.Aqua.Parameters <- function(nAqua, siteXY, module , modulePars, search
   # Aquatic Ecology modules
   Landscape_Aqua_PAR$module = module
   if(module == "emerge"){
-    Landscape_Aqua_PAR$lambda = simpleLambda_Emerge(modulePars)
+    with(modulePars,{
+      Landscape_Aqua_PAR$lambda = simpleLambda_Emerge(N,lambda,lambdaWeight,offset)
+    })
   }
 
   return(Landscape_Aqua_PAR)

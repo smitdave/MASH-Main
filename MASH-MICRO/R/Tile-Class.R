@@ -62,21 +62,17 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$Landscape = Landscape$new(Landscape_PAR)
 
                      # generate human object
-                     private$HumanPop = HumanPop$new(HumanPop_PAR)
+                     private$HumanPop = MASHmacro::HumanPop$new(patchID = 1L,HumanPop_PAR)
 
                      # generate movement object
                      private$movementFemale = MicroKernel_exactAll(private$Landscape,sigma=3,eps=0.1,beta=0)
 
                      # generate female mosquito object
                      private$FemalePop = MosquitoPopFemale$new(N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
-                                                                  time_init = MosquitoPop_PAR$time,  # time simulation begins
                                                                   ix_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
                                                                   genotype_init = MosquitoPop_PAR$genotype_female,  # genotypes of females
-                                                                  MBITES_PAR = MosquitoPop_PAR$MBITES_PAR,  # M-BITES parameters
-                                                                  module = MosquitoPop_PAR$module)  # M-BITES module
-
-                     # initialize female mosquito Pathogen object field
-                     private$FemalePop$init_Pathogens()
+                                                                  MBITES_PAR = MosquitoPop_PAR$MBITES_PAR  # M-BITES parameters
+                                                                )
 
                      #################################################
                      # Set Pointers

@@ -62,23 +62,16 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                       # Constructor
                       #################################################
 
-                      initialize = function(N, patchID, houseIDs = NULL, bDays, bWeights, tStart = 0){
+                      initialize = function(patchID, HumanPop_PAR){
 
-                        if(length(patchID) > 1){stop("HumanPop constructor: patchID must be a single value; a HumanPop must be uniquely defined for each patch")}
-                        if(!is.null(houseIDs)){
-                          if(!all.equal(N,length(bWeights),length(bDays))){stop("HumanPop constructor: houseIDs, bDays, bWeights must be vectors of equal length")}
-                        } else {
-                          if(!all.equal(length(bWeights),length(bDays))){stop("HumanPop constructor: bDays, bWeights must be vectors of equal length")}
-                        }
-                        if(tStart != 0){print("warning: tStart is not 0, make sure you really want to do this")}
-
-                        private$pop = MASHcpp::HashMap$new(N = N)
-                        private$N = N
+                        private$pop = MASHcpp::HashMap$new(N = HumanPop_PAR$N+50L)
+                        private$N = HumanPop_PAR$
+                        private$tStart = 0
 
                         for(i in 1:private$N){
 
                           id = paste0(i,"_",patchID)
-                          private$pop$assign(key=id,value=Human$new(myID = id, houseID = houseIDs[i], patchID = patchID, bDay = bDays[i], bWeight = bWeights[i]))
+                          private$pop$assign(key=id,value=Human$new(myID = id, houseID = HumanPop_PAR$houseIDs[i], patchID = patchID, bDay = HumanPop_PAR$bDays[i], bWeight = HumanPop_PAR$bWeights[i]))
 
                         }
 
@@ -89,9 +82,14 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                     # private members
                     private = list(
 
+                      # fields
                       N = NULL,
-                      tStart = NULL,
+                      tStart = numeric(1),
                       pop = NULL
+
+                      # pointers
+                      TilePointer = NULL,
+                      PatchPointer = NULL
 
                     )
 )
@@ -111,7 +109,8 @@ get_pop_HumanPop <- function(){
 
 HumanPop$set(which = "public",name = "get_pop",
   value = get_pop_HumanPop,
-  overwrite = TRUE)
+  overwrite = TRUE
+)
 
 #' HumanPop: Get a Human
 #'
@@ -125,7 +124,8 @@ get_human_HumanPop <- function(humanID){
 
 HumanPop$set(which = "public",name = "get_human",
   value = get_human_HumanPop,
-  overwrite = TRUE)
+  overwrite = TRUE
+)
 
 #' HumanPop: Get all Histories
 #'
@@ -140,7 +140,9 @@ get_history_HumanPop <- function(){
 
 HumanPop$set(which = "public",name = "get_history",
   value = get_history_HumanPop,
-  overwrite = TRUE)
+  overwrite = TRUE
+)
+
 
 ###############################################################################
 # HumanPop: Simulation & Events
@@ -158,4 +160,41 @@ simHumans_HumanPop <- function(tPause){
 
 HumanPop$set(which = "public",name = "simHumans",
   value = simHumans_HumanPop,
-  overwrite = TRUE)
+  overwrite = TRUE
+)
+
+
+###############################################################################
+# HumanPop: Pointers
+###############################################################################
+
+
+#' Get Tile Pointer
+#'
+#' Return either microsimulation \code{\link[MASHmicro]{Tile}} or macrosimulation \code{\link{Tile}} enclosing this site.
+#'  * This method is bound to \code{HumanPop$get_TilePointer}
+#'
+get_TilePointer_HumanPop <- function(){
+ return(private$TilePointer)
+}
+
+HumanPop$set(which="public", name="get_TilePointer",
+	value = get_TilePointer_HumanPop, overwrite=TRUE
+)
+
+
+#' Set Tile Pointer
+#'
+#' Set either microsimulation \code{\link[MASHmicro]{Tile}} or macrosimulation \code{\link{Tile}} enclosing this site.
+#'  * This method is bound to \code{HumanPop$set_TilePointer}
+#'
+#' @param TilePointer an environment
+#'
+set_TilePointer_HumanPop <- function(TilePointer){
+ private$TilePointer = TilePointer
+}
+
+
+HumanPop$set(which="public", name="set_TilePointer",
+	value = set_TilePointer_HumanPop, overwrite=TRUE
+)

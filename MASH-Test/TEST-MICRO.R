@@ -11,7 +11,45 @@
 #
 ###############################################################################
 
+rm(list=ls());gc()
 library(MASHmicro)
 
-par = MBITES.BRO.Parameters()
-mosyF = MosquitoPopFemale$new(N= 10,ix_init = rep(1,10),genotype_init = rep(1,10),MBITES_PAR = par)
+DEBUG.MASHMICRO()
+
+# par = MBITES.BRO.Parameters()
+# mosyF = MosquitoPopFemale$new(N= 10,ix_init = rep(1,10),genotype_init = rep(1,10),MBITES_PAR = par)
+# 
+# mosyF$get_pop()$get("0_1_1")$get_history()
+# mosyF$get_pop()$get("0_1_1")$rmSelf()
+# 
+# mosyF$get_pop()$ls()
+# 
+# mosyF$push_pop(N = 5,tEmerge = 10,genotype = 5,ix = 3)
+# 
+# mosyF$get_pop()$ls()
+
+
+
+# make a tile
+DIR = "/Users/slwu89/Desktop/MASHOUT/"
+
+# landscape parameters
+nAqua = 10
+nFeed = 10
+emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
+landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,pointGen = "poisson",module = "emerge",modulePars = emerge_par)
+
+# human parameters
+human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
+
+# M-BITES parameters
+nMosy = 50
+mbites_par = MBITES.BRO.Parameters()
+mosquito_par = list(
+  N_female = nMosy,
+  ix_female = rep(1,nMosy),
+  genotype_female = rep(1,nMosy),
+  MBITES_PAR = mbites_par
+)
+
+MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)

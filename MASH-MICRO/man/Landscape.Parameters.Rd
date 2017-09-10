@@ -30,7 +30,7 @@ Landscape.Parameters(nFeed, nAqua, pointGen = "poisson", module, modulePars,
 
 \item{modulePars}{additional list of named parameters to be passed to Aquatic Ecology module specific parameter generating functions
 \itemize{
-\item Emerge: should be named list of parameters for \code{\link{makeLambda_MicroEmerge}}
+\item Emerge: should be named list of parameters for \code{\link{simpleLambda_Emerge}}
 \item EL4P: NULL
 }}
 
