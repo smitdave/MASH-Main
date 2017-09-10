@@ -110,7 +110,7 @@ PfSI.MICRO.Setup <- function(
 
 ){
 
-  message(paste0("initializing PfSI PATHOGEN module"))
+  cat("initializing PfSI Pathogen module\n",sep="")
 
   ###################################################################
   # PfSI MICRO Mosquito methods
@@ -145,7 +145,7 @@ PfSI.MICRO.Setup <- function(
   ###################################################################
 
   # PfSI_PAR: list of PfSI parameters added to private field of 'HumanPop' class
-  HumanPop$set(which = "private",name = "PfSI_PAR",
+  MASHmacro::HumanPop$set(which = "private",name = "PfSI_PAR",
             value = list(
               Pf_c   = Pf_c,
               Pf_b   = Pf_b,
@@ -174,19 +174,19 @@ PfSI.MICRO.Setup <- function(
   )
 
   # getter for PfSI_PAR: ix should be a character eg 'Pf_b'
-  Human$set(which = "public",name = "get_PfSI_PAR",
-            value = MASHmacro::Human_get_PfSI_PAR,
+  MASHmacro::Human$set(which = "public",name = "get_PfSI_PAR",
+            value = MASHmacro:::Human_get_PfSI_PAR,
             overwrite = overwrite
   )
 
-  HumanPop$set(which = "public",name = "get_PfSI_PAR",
-            value = MASHmacro::HumanPop_get_PfSI_PAR,
+  MASHmacro::HumanPop$set(which = "public",name = "get_PfSI_PAR",
+            value = MASHmacro:::HumanPop_get_PfSI_PAR,
             overwrite = overwrite
   )
 
   # set PfSI_PAR for a HumanPop; this is useful for simulating multiple populations with different parameter values
-  HumanPop$set(which = "public",name = "set_PfSI_PAR",
-            value = MASHmacro::HumanPop_set_PfSI_PAR,
+  MASHmacro::HumanPop$set(which = "public",name = "set_PfSI_PAR",
+            value = MASHmacro:::HumanPop_set_PfSI_PAR,
             overwrite = overwrite
   )
 
@@ -195,26 +195,26 @@ PfSI.MICRO.Setup <- function(
   ###################################################################
 
   # PfID counter
-  HumanPop$set(which = "private",name = "PfID",
+  MASHmacro::HumanPop$set(which = "private",name = "PfID",
             value = 0L,
             overwrite = overwrite
   )
 
   # whenever a new liver-stage infection manifests in a human we increment the PfID counter and return the new PfID
-  HumanPop$set(which = "public",name = "increment_PfID",
-            value = MASHmacro::PfSI_increment_PfID,
+  MASHmacro::HumanPop$set(which = "public",name = "increment_PfID",
+            value = MASHmacro:::PfSI_increment_PfID,
             overwrite = overwrite
   )
 
   # initialize PfSI infections with patch parasite prevalence PfPR
-  HumanPop$set(which = "public",name = "init_PfSI",
-            value = MASHmacro::init_PfSI,
+  MASHmacro::HumanPop$set(which = "public",name = "init_PfSI",
+            value = MASHmacro:::init_PfSI,
             overwrite = overwrite
   )
 
   # history getter
-  HumanPop$set(which = "public",name = "get_PfSI_history",
-            value = MASHmacro::HumanPop_get_PfSI_history,
+  MASHmacro::HumanPop$set(which = "public",name = "get_PfSI_history",
+            value = MASHmacro:::HumanPop_get_PfSI_history,
             overwrite = overwrite
   )
 
@@ -223,13 +223,13 @@ PfSI.MICRO.Setup <- function(
   # Add PfSI Pathogen Object to 'Human' & 'HumanPop' Class
   ###################################################################
 
-  Human$set(which = "public",name = "set_humanPfSI",
-            value = MASHmacro::Human_set_humanPfSI,
+  MASHmacro::Human$set(which = "public",name = "set_humanPfSI",
+            value = MASHmacro:::Human_set_humanPfSI,
             overwrite = overwrite
   )
 
-  HumanPop$set(which = "public",name = "set_humanPfSI",
-            value = MASHmacro::HumanPop_set_humanPfSI,
+  MASHmacro::HumanPop$set(which = "public",name = "set_humanPfSI",
+            value = MASHmacro:::HumanPop_set_humanPfSI,
             overwrite = overwrite
   )
 
@@ -241,14 +241,14 @@ PfSI.MICRO.Setup <- function(
   # probeHost_PfSI:
   # arguments are tBite (time of bite)
   # mosquitoPfSI; the mosquitoPfSI R6 object passed from the biting mosquito
-  Human$set(which = "public",name = "probeHost_PfSI",
-            value = MASHmacro::probeHost_PfSI,
+  MASHmacro::Human$set(which = "public",name = "probeHost_PfSI",
+            value = MASHmacro:::probeHost_PfSI,
             overwrite = overwrite
   )
 
   # infectiousBite_PfSI
-  Human$set(which = "public",name = "infectiousBite_PfSI",
-            value = MASHmacro::infectiousBite_PfSI,
+  MASHmacro::Human$set(which = "public",name = "infectiousBite_PfSI",
+            value = MASHmacro:::infectiousBite_PfSI,
             overwrite = overwrite
   )
 
@@ -258,48 +258,48 @@ PfSI.MICRO.Setup <- function(
 
   # Duration of Infection
   # (How many days does the infection last?)
-  Human$set(which = "public",name = "ttClearPf",
-            value = MASHmacro::PfSI_ttClearPf,
+  MASHmacro::Human$set(which = "public",name = "ttClearPf",
+            value = MASHmacro:::PfSI_ttClearPf,
             overwrite = overwrite
   )
 
   # Latency:
   # (How many days after the infectious
   #  bite does the infection start?)
-  Human$set(which = "public",name = "ttInfectionPf",
-            value = MASHmacro::PfSI_ttInfectionPf,
+  MASHmacro::Human$set(which = "public",name = "ttInfectionPf",
+            value = MASHmacro:::PfSI_ttInfectionPf,
             overwrite = overwrite
   )
 
   # Timing of Fever Incident
   # (relative to start of the infection)
-  Human$set(which = "public",name = "ttFeverPf",
-            value = MASHmacro::PfSI_ttFeverPf,
+  MASHmacro::Human$set(which = "public",name = "ttFeverPf",
+            value = MASHmacro:::PfSI_ttFeverPf,
             overwrite = overwrite
   )
 
   # Timing of Treatment
   # (relative to start of the fever)
-  Human$set(which = "public",name = "ttTreatPf",
-            value = MASHmacro::PfSI_ttTreatPf,
+  MASHmacro::Human$set(which = "public",name = "ttTreatPf",
+            value = MASHmacro:::PfSI_ttTreatPf,
             overwrite = overwrite
   )
 
   # Prophylaxis, time to susceptibility
-  Human$set(which = "public",name = "ttSusceptiblePf",
-            value = MASHmacro::PfSI_ttSusceptiblePf,
+  MASHmacro::Human$set(which = "public",name = "ttSusceptiblePf",
+            value = MASHmacro:::PfSI_ttSusceptiblePf,
             overwrite = overwrite
   )
 
   # Duration of protection by PE Vaccination
-  Human$set(which = "public",name = "ttPEWanePf",
-            value = MASHmacro::PfSI_ttPEWanePf,
+  MASHmacro::Human$set(which = "public",name = "ttPEWanePf",
+            value = MASHmacro:::PfSI_ttPEWanePf,
             overwrite = overwrite
   )
 
   # Duration of protection Blocked by GS Vaccination
-  Human$set(which = "public",name = "ttGSWanePf",
-            value = MASHmacro::PfSI_ttGSWanePf,
+  MASHmacro::Human$set(which = "public",name = "ttGSWanePf",
+            value = MASHmacro:::PfSI_ttGSWanePf,
             overwrite = overwrite
   )
 
@@ -315,20 +315,20 @@ PfSI.MICRO.Setup <- function(
   ###################################################################
 
   # add2Q_infectHumanPfSI
-  Human$set(which = "public",name = "add2Q_infectHumanPfSI",
-            value = MASHmacro::add2Q_infectHumanPfSI,
+  MASHmacro::Human$set(which = "public",name = "add2Q_infectHumanPfSI",
+            value = MASHmacro:::add2Q_infectHumanPfSI,
             overwrite = overwrite
   )
 
   # event_infectHumanPfSI: begin a PfSI infection
-  Human$set(which = "public",name = "event_infectHumanPfSI",
-            value = MASHmacro::event_infectHumanPfSI,
+  MASHmacro::Human$set(which = "public",name = "event_infectHumanPfSI",
+            value = MASHmacro:::event_infectHumanPfSI,
             overwrite = overwrite
   )
 
   # infectHumanPfSI
-  Human$set(which = "public",name = "infectHumanPfSI",
-            value = MASHmacro::infectHumanPfSI,
+  MASHmacro::Human$set(which = "public",name = "infectHumanPfSI",
+            value = MASHmacro:::infectHumanPfSI,
             overwrite = overwrite
   )
 
@@ -337,20 +337,20 @@ PfSI.MICRO.Setup <- function(
   ###################################################################
 
   # add2Q_endPfSI
-  Human$set(which = "public",name = "add2Q_endPfSI",
-            value = MASHmacro::add2Q_endPfSI,
+  MASHmacro::Human$set(which = "public",name = "add2Q_endPfSI",
+            value = MASHmacro:::add2Q_endPfSI,
             overwrite = overwrite
   )
 
   # event_endPfSI: end a PfSI infection
-  Human$set(which = "public",name = "event_endPfSI",
-            value = MASHmacro::event_endPfSI,
+  MASHmacro::Human$set(which = "public",name = "event_endPfSI",
+            value = MASHmacro:::event_endPfSI,
             overwrite = overwrite
   )
 
   # endPfSI
-  Human$set(which = "public",name = "endPfSI",
-            value = MASHmacro::endPfSI,
+  MASHmacro::Human$set(which = "public",name = "endPfSI",
+            value = MASHmacro:::endPfSI,
             overwrite = overwrite
   )
 
@@ -358,18 +358,18 @@ PfSI.MICRO.Setup <- function(
   # Fever
   ###################################################################
 
-  Human$set(which = "public",name = "add2Q_feverPfSI",
-            value = MASHmacro::add2Q_feverPfSI,
+  MASHmacro::Human$set(which = "public",name = "add2Q_feverPfSI",
+            value = MASHmacro:::add2Q_feverPfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "event_feverPfSI",
-            value = MASHmacro::event_feverPfSI,
+  MASHmacro::Human$set(which = "public",name = "event_feverPfSI",
+            value = MASHmacro:::event_feverPfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "feverPfSI",
-            value = MASHmacro::feverPfSI,
+  MASHmacro::Human$set(which = "public",name = "feverPfSI",
+            value = MASHmacro:::feverPfSI,
             overwrite = overwrite
   )
 
@@ -377,18 +377,18 @@ PfSI.MICRO.Setup <- function(
   # Treatment
   ###################################################################
 
-  Human$set(which = "public",name = "add2Q_treatPfSI",
-            value = MASHmacro::add2Q_treatPfSI,
+  MASHmacro::Human$set(which = "public",name = "add2Q_treatPfSI",
+            value = MASHmacro:::add2Q_treatPfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "event_treatPfSI",
-            value = MASHmacro::event_treatPfSI,
+  MASHmacro::Human$set(which = "public",name = "event_treatPfSI",
+            value = MASHmacro:::event_treatPfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "treatPfSI",
-            value = MASHmacro::treatPfSI,
+  MASHmacro::Human$set(which = "public",name = "treatPfSI",
+            value = MASHmacro:::treatPfSI,
             overwrite = overwrite
   )
 
@@ -396,18 +396,18 @@ PfSI.MICRO.Setup <- function(
   # End of Chemoprophylaxis
   ###################################################################
 
-  Human$set(which = "public",name = "add2Q_endprophylaxisPfSI",
-            value = MASHmacro::add2Q_endprophylaxisPfSI,
+  MASHmacro::Human$set(which = "public",name = "add2Q_endprophylaxisPfSI",
+            value = MASHmacro:::add2Q_endprophylaxisPfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "event_endprophylaxisPfSI",
-            value = MASHmacro::event_endprophylaxisPfSI,
+  MASHmacro::Human$set(which = "public",name = "event_endprophylaxisPfSI",
+            value = MASHmacro:::event_endprophylaxisPfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "endprophylaxisPfSI",
-            value = MASHmacro::endprophylaxisPfSI,
+  MASHmacro::Human$set(which = "public",name = "endprophylaxisPfSI",
+            value = MASHmacro:::endprophylaxisPfSI,
             overwrite = overwrite
   )
 
@@ -416,34 +416,34 @@ PfSI.MICRO.Setup <- function(
   ###################################################################
 
   # vaccination
-  Human$set(which = "public",name = "add2Q_pevaccinatePfSI",
-            value = MASHmacro::add2Q_pevaccinatePfSI,
+  MASHmacro::Human$set(which = "public",name = "add2Q_pevaccinatePfSI",
+            value = MASHmacro:::add2Q_pevaccinatePfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "event_pevaccinatePfSI",
-            value = MASHmacro::event_pevaccinatePfSI,
+  MASHmacro::Human$set(which = "public",name = "event_pevaccinatePfSI",
+            value = MASHmacro:::event_pevaccinatePfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "pevaccinatePfSI",
-            value = MASHmacro::pevaccinatePfSI,
+  MASHmacro::Human$set(which = "public",name = "pevaccinatePfSI",
+            value = MASHmacro:::pevaccinatePfSI,
             overwrite = overwrite
   )
 
   # waning protection
-  Human$set(which = "public",name = "add2Q_pewanePfSI",
-            value = MASHmacro::add2Q_pewanePfSI,
+  MASHmacro::Human$set(which = "public",name = "add2Q_pewanePfSI",
+            value = MASHmacro:::add2Q_pewanePfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "event_pewanePfSI",
-            value = MASHmacro::event_pewanePfSI,
+  MASHmacro::Human$set(which = "public",name = "event_pewanePfSI",
+            value = MASHmacro:::event_pewanePfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "pewanePfSI",
-            value = MASHmacro::pewanePfSI,
+  MASHmacro::Human$set(which = "public",name = "pewanePfSI",
+            value = MASHmacro:::pewanePfSI,
             overwrite = overwrite
   )
 
@@ -452,34 +452,34 @@ PfSI.MICRO.Setup <- function(
   ###################################################################
 
   # vaccination
-  Human$set(which = "public",name = "add2Q_gsvaccinatePfSI",
-            value = MASHmacro::add2Q_gsvaccinatePfSI,
+  MASHmacro::Human$set(which = "public",name = "add2Q_gsvaccinatePfSI",
+            value = MASHmacro:::add2Q_gsvaccinatePfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "event_gsvaccinatePfSI",
-            value = MASHmacro::event_gsvaccinatePfSI,
+  MASHmacro::Human$set(which = "public",name = "event_gsvaccinatePfSI",
+            value = MASHmacro:::event_gsvaccinatePfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "gsvaccinatePfSI",
-            value = MASHmacro::gsvaccinatePfSI,
+  MASHmacro::Human$set(which = "public",name = "gsvaccinatePfSI",
+            value = MASHmacro:::gsvaccinatePfSI,
             overwrite = overwrite
   )
 
   # waning protection
-  Human$set(which = "public",name = "add2Q_gswanePfSI",
-            value = MASHmacro::add2Q_gswanePfSI,
+  MASHmacro::Human$set(which = "public",name = "add2Q_gswanePfSI",
+            value = MASHmacro:::add2Q_gswanePfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "event_gswanePfSI",
-            value = MASHmacro::event_gswanePfSI,
+  MASHmacro::Human$set(which = "public",name = "event_gswanePfSI",
+            value = MASHmacro:::event_gswanePfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "gswanePfSI",
-            value = MASHmacro::gswanePfSI,
+  MASHmacro::Human$set(which = "public",name = "gswanePfSI",
+            value = MASHmacro:::gswanePfSI,
             overwrite = overwrite
   )
 
@@ -487,13 +487,13 @@ PfSI.MICRO.Setup <- function(
   # PfSI Diagnostics
   ###################################################################
 
-  Human$set(which = "public",name = "rdtTest_PfSI",
-            value = MASHmacro::rdtTest_PfSI,
+  MASHmacro::Human$set(which = "public",name = "rdtTest_PfSI",
+            value = MASHmacro:::rdtTest_PfSI,
             overwrite = overwrite
   )
 
-  Human$set(which = "public",name = "lmTest_PfSI",
-            value = MASHmacro::lmTest_PfSI,
+  MASHmacro::Human$set(which = "public",name = "lmTest_PfSI",
+            value = MASHmacro:::lmTest_PfSI,
             overwrite = overwrite
   )
 

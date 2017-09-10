@@ -209,9 +209,7 @@ Landscape.Aqua.Parameters <- function(nAqua, siteXY, module , modulePars, search
   # Aquatic Ecology modules
   Landscape_Aqua_PAR$module = module
   if(module == "emerge"){
-    with(modulePars,{
-      Landscape_Aqua_PAR$lambda = simpleLambda_Emerge(N,lambda,lambdaWeight,offset)
-    })
+    Landscape_Aqua_PAR$lambda = simpleLambda_Emerge(modulePars$N,modulePars$lambda,modulePars$lambdaWeight,modulePars$offset)
   }
 
   return(Landscape_Aqua_PAR)

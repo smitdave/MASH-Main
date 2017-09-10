@@ -16,26 +16,12 @@ library(MASHmicro)
 
 DEBUG.MASHMICRO()
 
-# par = MBITES.BRO.Parameters()
-# mosyF = MosquitoPopFemale$new(N= 10,ix_init = rep(1,10),genotype_init = rep(1,10),MBITES_PAR = par)
-# 
-# mosyF$get_pop()$get("0_1_1")$get_history()
-# mosyF$get_pop()$get("0_1_1")$rmSelf()
-# 
-# mosyF$get_pop()$ls()
-# 
-# mosyF$push_pop(N = 5,tEmerge = 10,genotype = 5,ix = 3)
-# 
-# mosyF$get_pop()$ls()
-# 
-
-
 # make a tile
 DIR = "/Users/slwu89/Desktop/MASHOUT/"
 
 # setup
 Humans.Setup()
-
+PfSI.MICRO.Setup()
 
 # landscape parameters
 nAqua = 10
@@ -58,4 +44,27 @@ mosquito_par = list(
 
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
 
-MicroLandscapePlot_utility(MicroTile$get_Landscape())
+MicroLandscapePlot_utility(Landscape = MicroTile$get_Landscape())
+
+
+
+
+
+
+
+
+
+
+
+# par = MBITES.BRO.Parameters()
+# mosyF = MosquitoPopFemale$new(N= 10,ix_init = rep(1,10),genotype_init = rep(1,10),MBITES_PAR = par)
+# 
+# mosyF$get_pop()$get("0_1_1")$get_history()
+# mosyF$get_pop()$get("0_1_1")$rmSelf()
+# 
+# mosyF$get_pop()$ls()
+# 
+# mosyF$push_pop(N = 5,tEmerge = 10,genotype = 5,ix = 3)
+# 
+# mosyF$get_pop()$ls()
+# 
