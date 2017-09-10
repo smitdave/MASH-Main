@@ -13,10 +13,77 @@
 #
 ###############################################################################
 
+###############################################################################
+# Auxiliary Functions
+###############################################################################
 
-##########################################
+#' Sample Equally from Color Space
+#'
+#' This function is a low-level utility to sample at equal points from the color wheel to produce ggplot2 color scheme.
+#'
+#' @param n number of colors to sample
+#' @param alpha opacity
+#' @return a vector of colors in hex format
+#' @examples
+#' ggCol_utility(n=10, alpha = 0.5)
+#' @export
+ggCol_utility <- function(n, alpha = 1) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100, alpha = alpha)[1:n]
+}
+
+#' Sample Equally from Color Space with Offset
+#'
+#' This function is a low-level utility to sample at equal points from the color wheel to produce ggplot2 color scheme.
+#' This is a modification of \code{\link{ggCol_utility}} with a simple offset where sampling begins at 1 + offset.
+#'
+#' @param n number of colors to sample
+#' @param offset offset from 1
+#' @param alpha opacity
+#' @return a vector of colors in hex format
+#' @examples
+#' ggColOffset_utility(n=10, offset = 2, alpha = 0.5)
+#' @export
+ggColOffset_utility <- function(n,offset,alpha=1){
+  hues = seq(15, 375, length = n + 1 + offset)
+  hcl(h = hues,l = 65,c = 100, alpha = alpha)[(1+offset):(offset+n)]
+}
+
+#' Brighten or Darken Colors
+#'
+#' With input of hcl colors (hex code), brighten or darken by a factor
+#'
+#' @param color vector of hcl colors
+#' @param factor factor to brighten or darken colors
+#' @param bright logical variable to brighten or darken
+#' @param alpha opacity
+#' @return a vector of colors in hex format
+#' @examples
+#' colLuminosity_utility(color=MASH::ggCol_utility(n=5), factor = 1.15, bright = TRUE)
+#' @export
+colLuminosity_utility <- function(color,factor,bright,alpha=NULL){
+
+  if(!is.logical(bright)){ #sanity check
+    stop("i don't know if you wan't me to make your color brighter or darker!")
+  }
+
+  col = col2rgb(color,alpha=FALSE) #convert to rgba color space
+  if(bright){
+    col = col*factor
+  } else {
+    col = col/factor
+  }
+  if(!is.null(alpha)){ #adjust alpha if specified
+    rbind(col,alpha = 255 * alpha)
+  }
+  col = rgb(t(as.matrix(apply(col, 1, function(x) if (x > 255) 255 else x))), maxColorValue=255)
+  return(col)
+}
+
+
+###############################################################################
 # Plot Landscape
-##########################################
+###############################################################################
 
 #' Plot a MICRO Landscape
 #'

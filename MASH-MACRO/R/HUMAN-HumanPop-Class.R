@@ -65,7 +65,7 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                       initialize = function(patchID, HumanPop_PAR){
 
                         private$pop = MASHcpp::HashMap$new(N = HumanPop_PAR$N+50L)
-                        private$N = HumanPop_PAR$
+                        private$N = HumanPop_PAR$N
                         private$tStart = 0
 
                         for(i in 1:private$N){
@@ -85,7 +85,7 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                       # fields
                       N = NULL,
                       tStart = numeric(1),
-                      pop = NULL
+                      pop = NULL,
 
                       # pointers
                       TilePointer = NULL,

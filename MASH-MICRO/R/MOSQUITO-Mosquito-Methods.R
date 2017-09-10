@@ -160,7 +160,7 @@ MosquitoFemale$set(which = "public",name = "get_Pathogens",
 #'  * This method is bound to \code{MosquitoFemale$init_Pathogens}
 #
 init_Pathogens_Mosquito <- function(){
-  print(paste0("if you are seeing this error the correct PATHOGEN module setup has not been run!"))
+  cat("if you are seeing this error the correct PATHOGEN module setup has not been run!\n",sep="")
 }
 
 MosquitoFemale$set(which = "public",name = "init_Pathogens",
@@ -538,11 +538,11 @@ set_LandscapePointer_Mosquito <- function(LandscapePointer){
   private$LandscapePointer = LandscapePointer
 }
 
-MosquitoFemale$set(which = "public",name = "get_LandscapePointer",
+MosquitoFemale$set(which = "public",name = "set_LandscapePointer",
   value = set_LandscapePointer_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "get_LandscapePointer",
+MosquitoMale$set(which = "public",name = "set_LandscapePointer",
   value = set_LandscapePointer_Mosquito, overwrite = TRUE
 )
 

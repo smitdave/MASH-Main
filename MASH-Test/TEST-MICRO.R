@@ -27,11 +27,15 @@ DEBUG.MASHMICRO()
 # mosyF$push_pop(N = 5,tEmerge = 10,genotype = 5,ix = 3)
 # 
 # mosyF$get_pop()$ls()
-
+# 
 
 
 # make a tile
 DIR = "/Users/slwu89/Desktop/MASHOUT/"
+
+# setup
+Humans.Setup()
+
 
 # landscape parameters
 nAqua = 10
@@ -53,3 +57,5 @@ mosquito_par = list(
 )
 
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
+
+MicroLandscapePlot_utility(MicroTile$get_Landscape())

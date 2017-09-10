@@ -78,16 +78,14 @@ Tile <- R6::R6Class(classname = "Tile",
                      # Set Pointers
                      #################################################
 
-                     # Human & HumanPop Pointers (duplicate for Humans in HumanPop$pop)
+                     # Human & HumanPop Pointers
                      private$HumanPop$set_TilePointer(self)
                      private$HumanPop$set_LandscapePointer(private$Landscape)
                      private$HumanPop$set_FemalePopPointer(private$FemalePop)
 
-                     for(ixH in 1:private$HumanPop$nHumans){
-                       private$HumanPop$get_Human(ixH)$set_TilePointer(self)
-                       private$HumanPop$get_Human(ixH)$set_LandscapePointer(private$Landscape)
-                       private$HumanPop$get_Human(ixH)$set_FemalePopPointer(private$FemalePop)
-                     }
+                     private$HumanPop$get_pop()$apply(tag="set_TilePointer",returnVal=FALSE,TilePointer=self)
+                     private$HumanPop$get_pop()$apply(tag="set_LandscapePointer",returnVal=FALSE,LandscapePointer=private$Landscape)
+                     private$HumanPop$get_pop()$apply(tag="set_FemalePopPointer",returnVal=FALSE,FemalePopPointer=private$FemalePop)
 
                      # Landscape Pointers
                      private$Landscape$set_TilePointer(self)
@@ -98,12 +96,14 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$FemalePop$set_TilePointer(self)
                      private$FemalePop$set_LandscapePointer(private$Landscape)
                      private$FemalePop$set_HumansPointer(private$HumanPop)
+                     private$FemalePop$set_MalePopPointer(private$MalePop)
 
-                     for(ixM in private$FemalePop$which_alive()){
-                       private$FemalePop$get_MosquitoIxM(ixM)$set_TilePointer(self)
-                       private$FemalePop$get_MosquitoIxM(ixM)$set_LandscapePointer(private$Landscape)
-                       private$FemalePop$get_MosquitoIxM(ixM)$set_HumansPointer(private$HumanPop)
-                     }
+                     private$FemalePop$get_pop()$apply(tag="set_FemalePopPointer",returnVal=FALSE,FemalePopPointer=private$FemalePop)
+                     private$FemalePop$get_pop()$apply(tag="set_MalePopPointer",returnVal=FALSE,MalePopPointer=private$MalePop)
+
+                     private$FemalePop$get_pop()$apply(tag="set_TilePointer",returnVal=FALSE,TilePointer=self)
+                     private$FemalePop$get_pop()$apply(tag="set_LandscapePointer",returnVal=FALSE,LandscapePointer=private$Landscape)
+                     private$FemalePop$get_pop()$apply(tag="set_HumansPointer",returnVal=FALSE,HumansPointer=private$HumanPop)
 
                      #################################################
                      # Set Output Directory

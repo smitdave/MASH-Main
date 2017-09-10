@@ -17,7 +17,7 @@
 #' Human Class Definition
 #'
 #' This is a generic human being blah blah ...
-#' Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
+#' Each instance of a \code{Human} lives in a \code{\link{Human}}
 #'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object
@@ -73,7 +73,7 @@ Human <- R6::R6Class(classname="Human",
                        # Constructor
                        #################################################
 
-                       initialize <- function(myID, houseID = NULL, patchID = NULL, bDay = NULL, bWeight = NULL){
+                       initialize = function(myID, houseID = NULL, patchID = NULL, bDay = NULL, bWeight = NULL){
                          private$myID = myID
                          private$houseID = houseID
                          private$patchID = patchID
@@ -416,6 +416,37 @@ Human$set(which="public", name="set_HumansPointer",
 	value=set_HumansPointer_Human,
 	overwrite=TRUE
 )
+
+#' Get Tile Pointer
+#'
+#' Return either microsimulation \code{\link[MASHmicro]{Tile}} or macrosimulation \code{\link{Tile}} enclosing this site.
+#'  * This method is bound to \code{Human$get_TilePointer}
+#'
+get_TilePointer_Human <- function(){
+ return(private$TilePointer)
+}
+
+Human$set(which="public", name="get_TilePointer",
+	value = get_TilePointer_Human, overwrite=TRUE
+)
+
+
+#' Set Tile Pointer
+#'
+#' Set either microsimulation \code{\link[MASHmicro]{Tile}} or macrosimulation \code{\link{Tile}} enclosing this site.
+#'  * This method is bound to \code{Human$set_TilePointer}
+#'
+#' @param TilePointer an environment
+#'
+set_TilePointer_Human <- function(TilePointer){
+ private$TilePointer = TilePointer
+}
+
+
+Human$set(which="public", name="set_TilePointer",
+	value = set_TilePointer_Human, overwrite=TRUE
+)
+
 
 
 ###############################################################################
