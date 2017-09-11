@@ -35,12 +35,12 @@ push_pop_MosquitoPopFemale <- function(N, tEmerge, genotype, ix){
     myID = paste0(tEmerge,"_",i,"_",genotype)
     private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=private$initState,eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
 
-    private$pop$get(ID)$set_FemalePopPointer(self)
-    private$pop$get(ID)$set_MalePopPointer(private$MalePopPointer)
+    private$pop$get(myID)$set_FemalePopPointer(self)
+    private$pop$get(myID)$set_MalePopPointer(private$MalePopPointer)
 
-    private$pop$get(ID)$set_TilePointer(private$TilePointer)
-    private$pop$get(ID)$set_LandscapePointer(private$LandscapePointer)
-    private$pop$get(ID)$set_HumansPointer(private$HumansPointer)
+    private$pop$get(myID)$set_TilePointer(private$TilePointer)
+    private$pop$get(myID)$set_LandscapePointer(private$LandscapePointer)
+    private$pop$get(myID)$set_HumansPointer(private$HumansPointer)
 
   }
 }

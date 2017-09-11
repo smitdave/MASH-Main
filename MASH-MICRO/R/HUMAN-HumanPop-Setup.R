@@ -20,7 +20,7 @@
 #' Initialize additional methods in \code{\link[MASHmacro]{Human}} and \code{\link[MASHmacro]{HumanPop}}
 #'
 #' @export
-Humans.Setup <- function(overwrite = TRUE){
+Humans.MICRO.Setup <- function(overwrite = TRUE){
 
   # HumanPop
 

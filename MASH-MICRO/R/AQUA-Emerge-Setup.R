@@ -24,7 +24,7 @@
 #' @export
 AQUA.Emerge.Setup <- function(overwrite = TRUE){
 
-  message("initializing 'Emerge' module for Aquatic Ecology")
+  cat("initializing Emerge Aquatic Ecology module\n",sep="")
 
   #################################################################
   # One Day 'Emerge'

@@ -70,7 +70,7 @@ oneStep_EmergeSite <- function(tNow){
 #' @md
 oneStep_Emerge <- function(){
   tNow = private$TilePointer$get_tNow()
-  for(ixA in 1:self$AquaSitesN){
+  for(ixA in 1:self$get_AquaSitesN()){
     private$AquaSites[[ixA]]$oneStep_EmergeSite(tNow)
   }
 }
@@ -107,7 +107,7 @@ addCohort_EmergeSite <- function(tNow){
 #' @md
 addCohort_Emerge <- function(){
   tNow = private$TilePointer$get_tNow()
-  for(ixA in 1:self$AquaSitesN){
+  for(ixA in 1:self$get_AquaSitesN()){
     private$AquaSites[[ixA]]$addCohort_MicroEmergeSite(tNow)
   }
 }

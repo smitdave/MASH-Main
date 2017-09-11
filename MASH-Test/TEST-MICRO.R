@@ -13,15 +13,17 @@
 
 rm(list=ls());gc()
 library(MASHmicro)
+set.seed(42L)
 
-DEBUG.MASHMICRO()
+DEBUG.MASH.MICRO()
 
 # make a tile
 DIR = "/Users/slwu89/Desktop/MASHOUT/"
 
 # setup
-Humans.Setup()
+Humans.MICRO.Setup()
 PfSI.MICRO.Setup()
+AQUA.Emerge.Setup()
 
 # landscape parameters
 nAqua = 10
@@ -47,9 +49,10 @@ MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,Mosq
 MicroLandscapePlot_utility(Landscape = MicroTile$get_Landscape())
 
 
-
-
-
+MicroTile$get_FemalePop()$get_pop()$ls()
+MicroTile$get_Landscape()$oneStep_AquaticEcology()
+MicroTile$get_Landscape()$addCohort()
+MicroTile$get_FemalePop()$get_pop()$ls()
 
 
 
