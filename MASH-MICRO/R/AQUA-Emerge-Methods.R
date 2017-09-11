@@ -55,7 +55,7 @@ oneStep_EmergeSite <- function(tNow){
   lambdaExact = private$lambda[floor(tNow)%%365+1]
   lambdaEmerge = rpois(n = 1, lambda = lambdaExact)
   if(lambdaEmerge > 0){
-    private$ImagoQ$add_ImagoQ(N_new = lambdaEmerge, tEmerge_new = tNow, genotype_new = -1L)
+    private$ImagoQ$add_ImagoQ(N_new = lambdaEmerge, tEmerge_new = tNow, genotype_new = 1L)
   }
 
 }

@@ -95,6 +95,7 @@ mbitesBRO_cohort_simCohort <- function(N){
   self$push_pop(N=N,tEmerge=0,genotype=1L,ix=aquaStart)
 
   # begin json out
+    #  con = file(description = paste0(private$TilePointer$get_directory(),"MOSQUITO/",fileName),open = "wt")
   writeLines(text = "[",con = private$TilePointer$get_FemaleHistoryCon())
 
   # run simulation

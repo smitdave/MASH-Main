@@ -43,6 +43,11 @@ DEBUG.MASH.MICRO <- function(overwrite = TRUE){
     overwrite = overwrite
   )
 
+  MASHmicro:::MosquitoPopFemale$set(which = "public",name = "test_WriteHistoryAndDelete",
+    value = test_WriteHistoryAndDelete_MosquitoPopFemale,
+    overwrite = overwrite
+  )
+
   # SITE
 
   MASHmicro:::FeedingSite$set(which = "public",name = "finalize",
@@ -69,4 +74,17 @@ DEBUG.MASH.MICRO <- function(overwrite = TRUE){
     overwrite = overwrite
   )
 
+}
+
+
+#'  Debug: Write Out Female Histories and Delete
+#'
+#'  Testing writing out all female histories to JSON and then having each female delete herself from the MASHcpp::HashMap class.
+#'    * This method is bound to \code{MosquitoPopFemale$test_WriteHistoryAndDelete}
+test_WriteHistoryAndDelete_MosquitoPopFemale <- function(){
+   con = file(description = paste0(private$TilePointer$get_MosquitoDirectory(),"testHistory.json"),open = "wt")
+   writeLines(text = "[",con = con)
+   private$pop$apply(tag="writeAndDelete",returnVal=FALSE,con=con)
+   writeLines(text = "]",con = con)
+   close(con);rm(con)
 }

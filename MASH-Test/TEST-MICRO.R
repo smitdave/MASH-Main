@@ -57,7 +57,7 @@ MicroTile$get_FemalePop()$get_pop()$ls()
 
 
 
-
+MicroTile$get_FemalePop()$test_WriteHistoryAndDelete()
 
 # par = MBITES.BRO.Parameters()
 # mosyF = MosquitoPopFemale$new(N= 10,ix_init = rep(1,10),genotype_init = rep(1,10),MBITES_PAR = par)
@@ -70,4 +70,3 @@ MicroTile$get_FemalePop()$get_pop()$ls()
 # mosyF$push_pop(N = 5,tEmerge = 10,genotype = 5,ix = 3)
 # 
 # mosyF$get_pop()$ls()
-# 

@@ -32,6 +32,22 @@ MosquitoFemale$set(which = "public",name = "rmSelf",
 )
 
 
+#' Export JSON History and Remove Self
+#'
+#'  * This method is bound to \code{MosquitoFemale$writeAndDelete}
+#'
+#' @param con a \code{\link[base]{connection}} to write to (the correct directory can be found with \code{\link{get_MosquitoDirectory_Tile}})
+#'
+writeAndDelete_MosquitoFemale <- function(con){
+  cat(jsonlite::toJSON(x = private$history$exportHistory(),pretty = TRUE),",\n",sep="",file = con)
+  private$FemalePopPointer$get_pop()$rm(key = private$id)
+}
+
+MosquitoFemale$set(which = "public",name = "writeAndDelete",
+  value = writeAndDelete_MosquitoFemale, overwrite = TRUE
+)
+
+
 #' Remove Self
 #'
 #' Remove this mosquito from the population containing it.

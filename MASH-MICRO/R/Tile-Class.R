@@ -119,10 +119,12 @@ Tile <- R6::R6Class(classname = "Tile",
                      if(!dir.exists(paste0(directory,"MOSQUITO/"))){
                        dir.create(paste0(directory,"MOSQUITO/"))
                      }
+                     private$MosquitoDirectory = paste0(directory,"MOSQUITO/")
+
                      if(!dir.exists(paste0(directory,"HUMAN/"))){
                        dir.create(paste0(directory,"HUMAN/"))
                      }
-
+                     private$HumanDirectory = paste0(directory,"HUMAN/")
 
                    }
 
@@ -137,7 +139,6 @@ Tile <- R6::R6Class(classname = "Tile",
                    HumanPop_PAR = list(),
                    movementFemale = list(),
                    movementMale = list(),
-                   directory = character(1),
 
                    # objects interacting on a tile
                    HumanPop = NULL,
@@ -147,6 +148,9 @@ Tile <- R6::R6Class(classname = "Tile",
 
                    # simulation output and logging
                    runID = integer(1),
+                   directory = character(1),
+                   MosquitoDirectory = character(1),
+                   HumanDirectory = character(1),
                    FemaleCSVCon = NULL,
                    MaleCSVCon = NULL,
                    FemaleHistoryCon = NULL,

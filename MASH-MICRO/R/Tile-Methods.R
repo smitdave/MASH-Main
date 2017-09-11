@@ -334,6 +334,28 @@ Tile$set(which = "public",name = "set_directory",
   value = set_directory_Tile, overwrite = TRUE
 )
 
+#' Get Directory for Mosquito Output
+#'
+#' Return the directory (character) containing mosquito output for this tile
+#'  * This method is bound to \code{Tile$get_MosquitoDirectory}
+#'
+get_MosquitoDirectory_Tile <- function(){return(private$MosquitoDirectory)}
+
+Tile$set(which = "public",name = "get_MosquitoDirectory",
+  value = get_MosquitoDirectory_Tile, overwrite = TRUE
+)
+
+#' Get Directory for Human Output
+#'
+#' Return the directory (character) containing human output for this tile
+#'  * This method is bound to \code{Tile$get_HumanDirectory}
+#'
+get_HumanDirectory_Tile <- function(){return(private$HumanDirectory)}
+
+Tile$set(which = "public",name = "get_HumanDirectory",
+  value = get_HumanDirectory_Tile, overwrite = TRUE
+)
+
 #' Get Run ID
 #'
 #' Return current simulation run ID that will be used to identify multiple simulation output from the same tile object.
