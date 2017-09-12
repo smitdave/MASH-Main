@@ -4,7 +4,7 @@
 \alias{MBITES.BRO.Cohort.Setup}
 \title{MBITES-BRO-Cohort: Initialize Additional Methods & Fields in \code{\link{MosquitoPopFemale}} and \code{\link{MosquitoFemale}}}
 \usage{
-MBITES.BRO.Cohort.Setup(overwrite = TRUE)
+MBITES.BRO.Cohort.Setup(move = FALSE, overwrite = TRUE)
 }
 \arguments{
 \item{overwrite}{overwrite methods}

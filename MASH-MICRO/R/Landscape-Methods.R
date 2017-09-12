@@ -343,7 +343,7 @@ Landscape$set(which = "public",name = "set_HumansPointer",
 #'  * This method is bound to \code{Landscape$clear_RiskQ}
 #'
 clear_RiskQ_Landscape <- function(){
-  for(ixF in 1:self$FeedingSitesN){
+  for(ixF in 1:private$FeedingSitesN){
     private$FeedingSites[[ixF]]$clear_RiskQ()
   }
 }

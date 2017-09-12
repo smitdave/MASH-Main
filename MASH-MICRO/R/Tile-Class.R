@@ -126,6 +126,8 @@ Tile <- R6::R6Class(classname = "Tile",
                      }
                      private$HumanDirectory = paste0(directory,"HUMAN/")
 
+                     cat("output will be written to: ",directory,"\n human output will be in: ",directory,"HUMAN/\n mosquito output will be in: ",directory,"MOSQUITO/\n",sep="")
+
                    }
 
                  ),

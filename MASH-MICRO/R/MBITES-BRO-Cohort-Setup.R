@@ -24,7 +24,7 @@
 #' @examples
 #' MBITES.BRO.Setup()
 #' @export
-MBITES.BRO.Cohort.Setup <- function(overwrite = TRUE){
+MBITES.BRO.Cohort.Setup <- function(move = FALSE, overwrite = TRUE){
 
   # alert user
   cat("initializing M-BITES BRO Cohort module\n",sep="")

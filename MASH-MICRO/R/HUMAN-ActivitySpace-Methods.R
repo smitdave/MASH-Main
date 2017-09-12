@@ -89,7 +89,7 @@ init_ActivitySpace_Human <- function(nDaily){
 #'
 #' This function is bound to \code{HumanPop$sim_ActivitySpace()}
 #'
-sim_MicroHumanPop_ActivitySpace <- function(){
+sim_ActivitySpace_HumanPop <- function(){
 
   # zero out all risk queues
   private$LandscapePointer$clear_RiskQ()
@@ -103,7 +103,7 @@ sim_MicroHumanPop_ActivitySpace <- function(){
 #'
 #' This function is bound to \code{Human$sim_ActivitySpace()}
 #'
-sim_MicroHuman_ActivitySpace <- function(){
+sim_ActivitySpace_Human <- function(){
 
   # add risk at home site
   pD = rbeta(n=1,shape1=100,shape2=100*(1-private$ActivitySpace$p)/private$ActivitySpace$p) # proportion of time at home site today
@@ -119,4 +119,27 @@ sim_MicroHuman_ActivitySpace <- function(){
     }
   }
 
+}
+
+
+
+#################################################################
+# Check Activity Space
+#################################################################
+
+#' Return Human Activity Space on a Tile
+#'
+#' Return the human activity space for each site.
+#'  * This function is bound to \code{Tile$get_ActivitySpace()}
+#'
+get_ActivitySpace_Tile <- function(){
+
+  TileActivity = vector(mode="list",length=private$Landscape$get_FeedingSitesN())
+
+  for(i in 1:length(TileActivity)){
+    TileActivity[[i]]$human = private$Landscape$get_FeedingSites(i)$get_RiskQ()$get_HumanHost()
+    TileActivity[[i]]$zoo = private$Landscape$get_FeedingSites(i)$get_RiskQ()$get_OtherHost()
+  }
+
+  return(TileActivity)
 }

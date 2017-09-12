@@ -50,7 +50,7 @@ MBITES.BRO.Setup <- function(overwrite = TRUE, aquaModule, timing = "exponential
       weibull = {
         stop("sean hasn't derived semi-Markov mosquito processes based on weibull distributed waiting times yet. maybe when his days exceed 24 hours.")
       },
-      {stop(paste0("unrecognized entry for timing, expected character in 'exponential', 'gamma', 'weibull', got: ",timing))}
+      {stop(cat("unrecognized entry for timing, expected character in 'exponential', 'gamma', 'weibull', got: ",timing,"\n",sep=""))}
     )
 
     MosquitoFemale$set(which = "public",name = "get_MySiteType",

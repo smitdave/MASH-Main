@@ -56,7 +56,12 @@ MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,Mosq
 
 # MicroLandscapePlot_utility(Landscape = MicroTile$get_Landscape())
 
-MicroTile$get_FemalePop()$simCohort(N = 1e3)
+# MicroTile$get_FemalePop()$simCohort(N = 1e3)
+
+MicroTile$get_HumanPop()$init_ActivitySpace()
+MicroTile$get_HumanPop()$sim_ActivitySpace()
+
+MicroTile$get_ActivitySpace()
 
 # MicroTile$get_FemalePop()$get_pop()$ls()
 # MicroTile$get_Landscape()$oneStep_AquaticEcology()
@@ -65,8 +70,6 @@ MicroTile$get_FemalePop()$simCohort(N = 1e3)
 
 
 
-
-# MicroTile$get_FemalePop()$test_WriteHistoryAndDelete()
 
 
 

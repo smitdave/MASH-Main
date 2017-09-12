@@ -7,7 +7,7 @@
 #   /_____/\___/_.___/\__,_/\__, /
 #                          /____/
 #   MASH-MACRO
-#   Debugging C++ Memory through R6 Finalizers
+#   Debugging Memory Management through R6 Finalizers (Destructors)
 #   August 18, 2017
 #
 ###############################################################################
@@ -24,19 +24,19 @@
 DEBUG.MASHMACRO <- function(overwrite = TRUE){
 
   MASHmacro:::Human$set(which = "public",name = "finalize",
-    value = function(){print(paste0("Human: ",private$myID," has been garbage collected"))},
+    value = function(){cat("Human: ",private$myID," has been garbage collected\n",sep="")},
     overwrite = overwrite)
 
   MASHmacro:::HumanPop$set(which = "public",name = "finalize",
-    value = function(){print(paste0("HumanPop in patchID: ",private$patchID," has been garbage collected"))},
+    value = function(){cat("HumanPop in patchID: ",private$patchID," has been garbage collected\n",sep="")},
     overwrite = overwrite)
 
   MASHmacro:::MacroPatch$set(which = "public",name = "finalize",
-    value = function(){print(paste0("MacroPatch: ",private$patchID," has been garbage collected"))},
+    value = function(){cat("MacroPatch: ",private$patchID," has been garbage collected\n",sep="")},
     overwrite = overwrite)
 
   MASHmacro:::MosquitoRM$set(which = "public",name = "finalize",
-    value = function(){print(paste0("MosquitoRM in patchID: ",private$patchID," has been garbage collected"))},
+    value = function(){cat("MosquitoRM in patchID: ",private$patchID," has been garbage collected\n",sep="")},
     overwrite = overwrite)
 
 }

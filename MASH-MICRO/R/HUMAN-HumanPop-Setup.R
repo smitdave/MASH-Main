@@ -24,6 +24,36 @@ Humans.MICRO.Setup <- function(overwrite = TRUE){
 
   cat("initializing Humans MICRO methods\n",sep="")
 
+  # Activity Space
+
+  MASHmacro::Human$set(which = "public",name = "get_ActivitySpace",
+    value = get_ActivitySpace_Human, overwrite = overwrite
+  )
+
+  MASHmacro::Human$set(which = "public",name = "set_ActivitySpace",
+    value = set_ActivitySpace_Human, overwrite = overwrite
+  )
+
+  MASHmacro::HumanPop$set(which = "public",name = "init_ActivitySpace",
+    value = init_ActivitySpace_HumanPop, overwrite = overwrite
+  )
+
+  MASHmacro::Human$set(which = "public",name = "init_ActivitySpace",
+    value = init_ActivitySpace_Human, overwrite = overwrite
+  )
+
+  MASHmacro::HumanPop$set(which = "public",name = "sim_ActivitySpace",
+    value = sim_ActivitySpace_HumanPop, overwrite = overwrite
+  )
+
+  MASHmacro::Human$set(which = "public",name = "sim_ActivitySpace",
+    value = sim_ActivitySpace_Human, overwrite = overwrite
+  )
+
+  MASHmicro::Tile$set(which = "public",name = "get_ActivitySpace",
+    value = get_ActivitySpace_Tile, overwrite = overwrite
+  )
+
   # HumanPop
 
   MASHmacro::HumanPop$set(which = "private",name = "FemalePopPointer",
