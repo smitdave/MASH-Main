@@ -1,13 +1,16 @@
-#################################################################
+###############################################################################
+#       __  ___      ____  _____________________
+#      /  |/  /     / __ )/  _/_  __/ ____/ ___/
+#     / /|_/ /_____/ __  |/ /  / / / __/  \__ \
+#    / /  / /_____/ /_/ // /  / / / /___ ___/ /
+#   /_/  /_/     /_____/___/ /_/ /_____//____/
 #
-#   MASH
-#   R6-ified
-#   MBITES-BRO (Blood Feeding, Resting, Oviposition)
-#   Simplified Cohort Simulation
-#   David Smith, Hector Sanchez, Sean Wu
-#   August 9, 2017
+#   MASH-MICRO
+#   MBITES-BRO: Cohort Methods
+#   MASH-MICRO Team
+#   September 7, 2017
 #
-#################################################################
+###############################################################################
 
 #################################################################
 # MBITES-BRO-Cohort: Host Encounter
@@ -21,7 +24,7 @@
 #'
 #' After calling \code{\link{mbitesGeneric_chooseHost}}, the mosquito encounters a human host and attempts to feed.
 #'  * This method is bound to \code{MosquitoFemale$humanEncounter()}.
-#' @md
+#'
 mbitesBRO_cohort_humanEncounter <- function(){
   if(runif(1) < 1-private$FemalePopPointer$get_MBITES_PAR("surviveH")){ # does not survive to probe
     private$stateNew = "D"
@@ -58,7 +61,7 @@ mbitesBRO_cohort_humanEncounter <- function(){
 #' For differences between cohort and microsimulation versions see \code{\link{MBITES.BRO.Cohort.Setup}}
 #'  * This method is bound to \code{MosquitoFemale$MBITES_Cohort()}.
 #'
-#' @md
+#'
 mbitesBRO_cohort_oneMosquito_MBITES <- function(){
 
   # run algorithm until dead

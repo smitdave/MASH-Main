@@ -984,7 +984,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // RiskQ__get_who
-std::vector<int> RiskQ__get_who(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_);
+std::vector<std::string> RiskQ__get_who(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_);
 RcppExport SEXP _MASHcpp_RiskQ__get_who(SEXP obj_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -995,12 +995,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // RiskQ__push_who
-void RiskQ__push_who(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_, int who_new);
+void RiskQ__push_who(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_, std::string who_new);
 RcppExport SEXP _MASHcpp_RiskQ__push_who(SEXP obj_SEXP, SEXP who_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< int >::type who_new(who_newSEXP);
+    Rcpp::traits::input_parameter< std::string >::type who_new(who_newSEXP);
     RiskQ__push_who(obj_, who_new);
     return R_NilValue;
 END_RCPP
@@ -1050,12 +1050,12 @@ BEGIN_RCPP
 END_RCPP
 }
 // RiskQ__add_HumanHost
-void RiskQ__add_HumanHost(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_, int who_new, double pTm_new, double w_new);
+void RiskQ__add_HumanHost(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_, std::string who_new, double pTm_new, double w_new);
 RcppExport SEXP _MASHcpp_RiskQ__add_HumanHost(SEXP obj_SEXP, SEXP who_newSEXP, SEXP pTm_newSEXP, SEXP w_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< int >::type who_new(who_newSEXP);
+    Rcpp::traits::input_parameter< std::string >::type who_new(who_newSEXP);
     Rcpp::traits::input_parameter< double >::type pTm_new(pTm_newSEXP);
     Rcpp::traits::input_parameter< double >::type w_new(w_newSEXP);
     RiskQ__add_HumanHost(obj_, who_new, pTm_new, w_new);
@@ -1073,15 +1073,15 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// RiskQ__get_HumanHostIx
-Rcpp::List RiskQ__get_HumanHostIx(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_, int ix);
-RcppExport SEXP _MASHcpp_RiskQ__get_HumanHostIx(SEXP obj_SEXP, SEXP ixSEXP) {
+// RiskQ__get_HumanHostID
+Rcpp::List RiskQ__get_HumanHostID(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_, std::string ID);
+RcppExport SEXP _MASHcpp_RiskQ__get_HumanHostID(SEXP obj_SEXP, SEXP IDSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< int >::type ix(ixSEXP);
-    rcpp_result_gen = Rcpp::wrap(RiskQ__get_HumanHostIx(obj_, ix));
+    Rcpp::traits::input_parameter< std::string >::type ID(IDSEXP);
+    rcpp_result_gen = Rcpp::wrap(RiskQ__get_HumanHostID(obj_, ID));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1118,13 +1118,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // RiskQ__add_OtherHost
-void RiskQ__add_OtherHost(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_, double otherW_new, int typeID_new);
+void RiskQ__add_OtherHost(MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> obj_, double otherW_new, std::string typeID_new);
 RcppExport SEXP _MASHcpp_RiskQ__add_OtherHost(SEXP obj_SEXP, SEXP otherW_newSEXP, SEXP typeID_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::RiskQ> >::type obj_(obj_SEXP);
     Rcpp::traits::input_parameter< double >::type otherW_new(otherW_newSEXP);
-    Rcpp::traits::input_parameter< int >::type typeID_new(typeID_newSEXP);
+    Rcpp::traits::input_parameter< std::string >::type typeID_new(typeID_newSEXP);
     RiskQ__add_OtherHost(obj_, otherW_new, typeID_new);
     return R_NilValue;
 END_RCPP
@@ -1950,7 +1950,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_RiskQ__push_w", (DL_FUNC) &_MASHcpp_RiskQ__push_w, 2},
     {"_MASHcpp_RiskQ__add_HumanHost", (DL_FUNC) &_MASHcpp_RiskQ__add_HumanHost, 4},
     {"_MASHcpp_RiskQ__get_HumanHost", (DL_FUNC) &_MASHcpp_RiskQ__get_HumanHost, 1},
-    {"_MASHcpp_RiskQ__get_HumanHostIx", (DL_FUNC) &_MASHcpp_RiskQ__get_HumanHostIx, 2},
+    {"_MASHcpp_RiskQ__get_HumanHostID", (DL_FUNC) &_MASHcpp_RiskQ__get_HumanHostID, 2},
     {"_MASHcpp_RiskQ__clear_HumanHost", (DL_FUNC) &_MASHcpp_RiskQ__clear_HumanHost, 1},
     {"_MASHcpp_RiskQ__get_nOther", (DL_FUNC) &_MASHcpp_RiskQ__get_nOther, 1},
     {"_MASHcpp_RiskQ__set_nOther", (DL_FUNC) &_MASHcpp_RiskQ__set_nOther, 2},

@@ -15,7 +15,9 @@ rm(list=ls());gc()
 library(MASHmicro)
 set.seed(42L)
 
-DEBUG.MASH.MICRO()
+DEBUG.MASHMICRO()
+MASHcpp::DEBUG.MASHCPP()
+MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
 DIR = "/Users/slwu89/Desktop/MASHOUT/"

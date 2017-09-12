@@ -38,10 +38,10 @@ public:
     N = N_new;
   };
 
-  std::vector<int> get_who(){
+  std::vector<std::string> get_who(){
     return(who);
   };
-  void push_who(const int &who_new){
+  void push_who(const std::string &who_new){
     who.push_back(who_new);
   };
 
@@ -65,10 +65,10 @@ public:
   ///////////////////////////////////
 
   // add_HumanHost: add a single human host to the risk queue
-  void add_HumanHost(const int &who_new, const double &pTm_new, const double &w_new){
+  void add_HumanHost(const std::string &who_new, const double &pTm_new, const double &w_new){
 
     // chcek if new host is already in this RiskQ
-    std::vector<int>::iterator it = std::find(who.begin(), who.end(), who_new);
+    std::vector<std::string>::iterator it = std::find(who.begin(), who.end(), who_new);
     if(it != who.end()){
       // host is already in this RiskQ
       int ix = std::distance(who.begin(), it);
@@ -98,9 +98,9 @@ public:
 
   };
 
-  // get_HumanHostIx: return the risk queue information for human identified by their index in 'who'
-  Rcpp::List get_HumanHostIx(const int &ix){
-    std::vector<int>::iterator it = std::find(who.begin(), who.end(), ix);
+  // get_HumanHostID: return the risk queue information for human identified by their ID
+  Rcpp::List get_HumanHostID(const std::string &ix){
+    std::vector<std::string>::iterator it = std::find(who.begin(), who.end(), ix);
     if(it == who.end()){
       Rcpp::stop("human not found in this RiskQ!");
     } else {
@@ -134,7 +134,7 @@ public:
   };
 
   // add_OtherHost:
-  void add_OtherHost(const double &otherW_new, const int &typeID_new){
+  void add_OtherHost(const double &otherW_new, const std::string &typeID_new){
     nOther += 1;
     otherW.push_back(otherW_new);
     typeID.push_back(typeID_new);
@@ -155,14 +155,14 @@ private:
 
   // RiskQ elements
   int N; // number of humans in the risk queue
-  std::vector<int> who; // who: ix of humans in risk queue
+  std::vector<std::string> who; // who: ix of humans in risk queue
   std::vector<double> pTm; // pTm: person time at risk
   std::vector<double> w; // w: biting weight on hosts
 
   // other hosts
   int nOther;
   std::vector<double> otherW;
-  std::vector<int> typeID;
+  std::vector<std::string> typeID;
   // OtherHostVector OtherHosts; // vector of non-human hosts
 
 };

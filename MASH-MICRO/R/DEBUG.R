@@ -18,7 +18,7 @@
 #'  Print when objects are garbage collected. For debugging purposes only.
 #'
 #' @export
-DEBUG.MASH.MICRO <- function(overwrite = TRUE){
+DEBUG.MASHMICRO <- function(overwrite = TRUE){
 
   # R6 Classes
 

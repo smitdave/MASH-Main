@@ -378,8 +378,8 @@ RiskQ__get_HumanHost <- function(obj_) {
     .Call('_MASHcpp_RiskQ__get_HumanHost', PACKAGE = 'MASHcpp', obj_)
 }
 
-RiskQ__get_HumanHostIx <- function(obj_, ix) {
-    .Call('_MASHcpp_RiskQ__get_HumanHostIx', PACKAGE = 'MASHcpp', obj_, ix)
+RiskQ__get_HumanHostID <- function(obj_, ID) {
+    .Call('_MASHcpp_RiskQ__get_HumanHostID', PACKAGE = 'MASHcpp', obj_, ID)
 }
 
 RiskQ__clear_HumanHost <- function(obj_) {

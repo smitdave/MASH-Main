@@ -32,10 +32,10 @@ RiskQ:
       return_type: void
 
     get_who:
-      return_type: "std::vector<int>"
+      return_type: "std::vector<std::string>"
     push_who:
       args:
-        - who_new: int
+        - who_new: "std::string"
       return_type: void
 
     get_pTm:
@@ -55,7 +55,7 @@ RiskQ:
     # Human Hosts
     add_HumanHost:
       args:
-        - who_new: int
+        - who_new: "std::string"
         - pTm_new: double
         - w_new: double
       return_type: void
@@ -63,9 +63,9 @@ RiskQ:
     get_HumanHost:
       return_type: "Rcpp::List"
 
-    get_HumanHostIx:
+    get_HumanHostID:
       args:
-        - ix: int
+        - ID: "std::string"
       return_type: "Rcpp::List"
 
     clear_HumanHost:
@@ -82,7 +82,7 @@ RiskQ:
     add_OtherHost:
       args:
         - otherW_new: double
-        - typeID_new: int
+        - typeID_new: "std::string"
       return_type: void
 
     get_OtherHost:

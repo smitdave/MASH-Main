@@ -6,7 +6,7 @@
 #   /_/  /_/     /_____/___/ /_/ /_____//____/
 #
 #   MASH-MICRO
-#   MBITES-ChooseHost
+#   MBITES: ChooseHost
 #   MASH-MICRO Team
 #   September 7, 2017
 #

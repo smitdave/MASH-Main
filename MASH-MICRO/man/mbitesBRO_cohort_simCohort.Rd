@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-BRO-Cohort.R
 \name{mbitesBRO_cohort_simCohort}
 \alias{mbitesBRO_cohort_simCohort}
-\title{MBITES-BRO-Cohort: Human Host Encounter for \code{\link{MosquitoFemale}}}
+\title{MBITES-BRO-Cohort: Run Simulation for \code{\link{MosquitoPopFemale}}}
 \usage{
 mbitesBRO_cohort_simCohort(N)
 }
@@ -10,7 +10,7 @@ mbitesBRO_cohort_simCohort(N)
 \item{N}{number of mosquitoes in cohort}
 }
 \description{
-After calling \code{\link{mbitesGeneric_chooseHost}}, the mosquito encounters a human host and attempts to feed.
+Run cohort simulation for population of mosquitoes and write bionomics to .json.
 \itemize{
 \item This method is bound to \code{MosquitoPopFemale$simCohort()}.
 }
