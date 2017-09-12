@@ -25,7 +25,7 @@
 #' @export
 MBITES.BRO.Setup <- function(overwrite = TRUE, aquaModule, timing = "exponential"){
 
-    message("initializing M-BITES BRO methods")
+    cat("initializing M-BITES BRO module\n",sep="")
 
     #################################################################
     # MBITES-BRO-Bouts.R

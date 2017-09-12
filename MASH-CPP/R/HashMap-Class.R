@@ -85,8 +85,23 @@ rm_HashMap <- function(key){
 }
 
 HashMap$set(which = "public",name = "rm",
-  value = rm_HashMap,
+  value = rm_HashMap, overwrite = TRUE
+)
+
+#' HashMap: Remove all Values
+#'
+#' Remove a value from \code{private$storage} given a key.
+#'
+#' @param key a character key; remove that value from the storage hash table.
+#'
+rmAll_HashMap <- function(){
+  rm(list = ls(env = private$storage),envir = private$storage,inherits = FALSE)
+}
+
+HashMap$set(which = "public",name = "rmAll",
+  value = rmAll_HashMap,
   overwrite = TRUE)
+
 
 #' HashMap: Check if Value Exists
 #'

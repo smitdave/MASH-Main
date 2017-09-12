@@ -37,8 +37,11 @@ MicroKernel_SampleMvOb_MosquitoPop <- function(ixS, state, inPointSet){
     return(MvOb$ix)
   } else {
     if(x <= MvOb$PR[1] + MvOb$PR[2]){ # near movement
-      ixNear = sample(x = length(MvOb$near$id),size = 1,prob = MvOb$near$pr)
-      return(MvOb$near[ixNear])
+      # ixNear = sample(x = length(MvOb$near$id),size = 1,prob = MvOb$near$pr)
+      # return(MvOb$near$id[ixNear])
+      return(
+        sampleIx_utility(x = MvOb$near$id, size = 1, prob = MvOb$near$pr)
+      )
     } else {
       if(x <= sum(MvOb$pr)){ # around movement
         stop("'around' movement not yet implemented")
@@ -61,14 +64,16 @@ MicroKernel_SampleMvOb_MosquitoPop <- function(ixS, state, inPointSet){
 #'
 MicroKernel_moveMe_FULL <- function(){
 
-  private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-
-  switch(private$state,
-    F = {private$inPointSet = "f"},
-    L = {private$inPointSet = "l"},
-    S = {private$inPointSet = "s"},
-    M = {private$inPointSet = "m"}
-  )
+  # pSetNew = switch(private$state,
+  #     F = {"f"},
+  #     L = {"l"},
+  #     S = {"s"},
+  #     M = {"m"},
+  #     {private$inPointSet}
+  #   )
+  #
+  # private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+  # private$inPointSet = pSetNew
 
 }
 
@@ -79,12 +84,18 @@ MicroKernel_moveMe_FULL <- function(){
 #'
 MicroKernel_moveMe_BRO <- function(){
 
-  private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-
   switch(private$state,
-    B = {private$inPointSet = "f"},
-    O = {private$inPointSet = "l"}
-  )
+
+      B = {
+          private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+          private$inPointSet = "f"
+        },
+      O = {
+          private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+          private$inPointSet = "l"
+        },
+      {return(NULL)}
+    )
 
 }
 
@@ -94,13 +105,15 @@ MicroKernel_moveMe_BRO <- function(){
 #'
 MicroKernel_moveMe_BROM <- function(){
 
-  private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-
-  switch(private$state,
-    B = {private$inPointSet = "f"},
-    O = {private$inPointSet = "l"},
-    M = {private$inPointSet = "m"}
-  )
+  # pSetNew = switch(private$state,
+  #     B = {"f"},
+  #     O = {"l"},
+  #     M = {"m"},
+  #     {private$inPointSet}
+  #   )
+  #
+  # private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+  # private$inPointSet = pSetNew
 
 }
 
@@ -110,13 +123,21 @@ MicroKernel_moveMe_BROM <- function(){
 #'
 MicroKernel_moveMe_Male <- function(){
 
+  # private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+  #
+  # switch(private$state,
+  #   M = {private$inPointSet = "m"},
+  #   S = {private$inPointSet = "s"}
+  # )
+  cat("if you are seeing me then Sean needs to fix movement for males: he needs to make get_MicroKernel_movement_Male male specific and make MicroKernel_SampleMvOb_MosquitoPop for males\n",sep="")
+  pSetNew = switch(private$state,
+      M = {"m"},
+      S = {"s"},
+      {private$inPointSet}
+    )
+
   private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-
-  switch(private$state,
-    M = {private$inPointSet = "m"},
-    S = {private$inPointSet = "s"}
-  )
-
+  private$inPointSet = pSetNew
 }
 
 

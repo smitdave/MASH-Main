@@ -75,13 +75,12 @@ MBITES.BRO.Parameters <- function(
   B_wts = rep(1,5),
   R_wts = rep(1,5),
   O_wts = rep(1,5),
-  InAndOut = matrix(
-    c(c(4,2,1,0,1),
-      c(2,1,1,0,1),
-      c(2,1,1,0,2),
-      c(1,1,1,0,1),
-      c(6,4,2,1,0)
-    ), byrow=FALSE, ncol=5),
+  InAndOut = matrix(data = c(4,2,2,1,6,
+                             2,1,1,1,4,
+                             1,1,1,1,2,
+                             0,0,0,0,1,
+                             1,1,2,1,0),
+                             nrow = 5,ncol = 5,byrow = TRUE,dimnames = list(c("i","w","v","r","l"),c("i","w","v","r","l"))),
 
 
   ##########################################

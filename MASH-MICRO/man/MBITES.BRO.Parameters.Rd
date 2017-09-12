@@ -5,8 +5,9 @@
 \title{Generate Parameters for M-BITES 'BRO' Module}
 \usage{
 MBITES.BRO.Parameters(B_wts = rep(1, 5), R_wts = rep(1, 5), O_wts = rep(1,
-  5), InAndOut = matrix(c(c(4, 2, 1, 0, 1), c(2, 1, 1, 0, 1), c(2, 1, 1, 0,
-  2), c(1, 1, 1, 0, 1), c(6, 4, 2, 1, 0)), byrow = FALSE, ncol = 5),
+  5), InAndOut = matrix(data = c(4, 2, 2, 1, 6, 2, 1, 1, 1, 4, 1, 1, 1, 1, 2,
+  0, 0, 0, 0, 1, 1, 1, 2, 1, 0), nrow = 5, ncol = 5, byrow = TRUE, dimnames =
+  list(c("i", "w", "v", "r", "l"), c("i", "w", "v", "r", "l"))),
   gammaShape = 8, B_surv = 0.85, B_succeed = 0.8, B_time = 3/4,
   surviveH = 1, probeH = 1, surviveprobeH = 1, feedH = 1,
   surviveZ = 1, feedZ = 1, R_surv = 0.9, R_time = 0.8, O_surv = 0.8,

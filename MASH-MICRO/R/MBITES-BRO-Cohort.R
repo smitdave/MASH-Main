@@ -81,32 +81,58 @@ mbitesBRO_cohort_oneMosquito_MBITES <- function(){
 # MBITES-BRO-Cohort: Run Cohort Simulation
 #################################################################
 
-#' MBITES-BRO-Cohort: Human Host Encounter for \code{\link{MosquitoFemale}}
+#' MBITES-BRO-Cohort: Run Simulation for \code{\link{MosquitoPopFemale}}
 #'
-#' After calling \code{\link{mbitesGeneric_chooseHost}}, the mosquito encounters a human host and attempts to feed.
+#' Run cohort simulation for population of mosquitoes and write bionomics to .json.
 #'  * This method is bound to \code{MosquitoPopFemale$simCohort()}.
 #' @param N number of mosquitoes in cohort
-#' @param writeJSON if \code{TRUE} write output to JSON in the directory initialized in the enclosing \code{\link{MicroTile}}, else return a list
-#' @md
+#'
 mbitesBRO_cohort_simCohort <- function(N){
+
+  # clean population
+  private$pop$rmAll()
+  gc()
 
   # assign population
   aquaStart = sample(x = private$LandscapePointer$get_AquaSitesN(),size = N,replace = TRUE)
-  self$push_pop(N=N,tEmerge=0,genotype=1L,ix=aquaStart)
+  for(i in 1:N){
+    # assign the mosquitoes
+    myID = paste0("0_",i,"_1")
+    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=0,ix=aquaStart[i],genotype=1L,state=private$initState,eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
+
+    private$pop$get(myID)$set_FemalePopPointer(self)
+    private$pop$get(myID)$set_MalePopPointer(private$MalePopPointer)
+
+    private$pop$get(myID)$set_TilePointer(private$TilePointer)
+    private$pop$get(myID)$set_LandscapePointer(private$LandscapePointer)
+    private$pop$get(myID)$set_HumansPointer(private$HumansPointer)
+  }
 
   # begin json out
-    #  con = file(description = paste0(private$TilePointer$get_directory(),"MOSQUITO/",fileName),open = "wt")
+  count = 1
+  fileName = paste0(private$TilePointer$get_MosquitoDirectory(),"MBITES_BRO_run",count,"_cohort.json")
+  while(file.exists(fileName)){
+    count = count + 1
+    fileName = paste0(private$TilePointer$get_MosquitoDirectory(),"MBITES_BRO_run",count,"_cohort.json")
+  }
+
+  cat("writing M-BITES BRO Cohort bionomics to: ",fileName,"\n",sep="")
+  private$TilePointer$set_FemaleHistoryCon(
+    file(description = fileName,open = "wt")
+  )
+
   writeLines(text = "[",con = private$TilePointer$get_FemaleHistoryCon())
 
   # run simulation
   private$pop$apply(tag="MBITES_Cohort",returnVal=FALSE)
 
   # clean up json out and close connection
-  writeLines(text = jsonlite::toJSON(x = mbitesGeneric_NULL,pretty = TRUE),con = private$TilePointer$get_FemaleHistoryCon())
   writeLines(text = "]",con = private$TilePointer$get_FemaleHistoryCon())
-  print(paste0("closing con: ",summary(private$TilePointer$get_FemaleHistoryCon())$description," please re-open before running more simulations"))
+  cat("closing con: ",summary(private$TilePointer$get_FemaleHistoryCon())$description," please re-open before running more simulations\n",sep="")
   close(private$TilePointer$get_FemaleHistoryCon())
 
-  # manually call garbage collection
+  # clean population
+  private$pop$rmAll()
   gc()
+  cat("M-BITES BRO Cohort run complete; please reset population and re-run appropriate setup functions before running full simulations\n",sep="")
 }

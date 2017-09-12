@@ -24,14 +24,17 @@
 MBITES.BRO.Cohort.Setup <- function(overwrite = TRUE){
 
   # alert user
-  message("initializing MBITES-BRO Cohort shared methods")
-
-  MBITES.BRO.Setup(overwrite=TRUE,aquaModule="emerge")
-  MBITES.Cohort.Setup(overwrite=TRUE)
+  cat("initializing M-BITES BRO Cohort module\n",sep="")
 
   ##############################################################
   # MBITES-BRO-Cohort.R
   ##############################################################
+
+  # chooseHost
+  MosquitoFemale$set(which = "public",name = "chooseHost",
+            value = mbitesCohort_chooseHost,
+            overwrite = overwrite
+  )
 
   # humanEncounter
   MosquitoFemale$set(which = "public",name = "humanEncounter",

@@ -30,7 +30,7 @@
 #'
 push_pop_MosquitoPopFemale <- function(N, tEmerge, genotype, ix){
   for(i in 1:N){
-    
+
     # assign the mosquitoes
     myID = paste0(tEmerge,"_",i,"_",genotype)
     private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=private$initState,eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))

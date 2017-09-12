@@ -37,7 +37,7 @@ MBITES.Generic.Setup <- function(
   ){
 
   # alert user
-  message("initializing M-BITES generic shared methods")
+  cat("initializing M-BITES shared methods\n",sep="")
 
   ##############################################################
   # MBITES-ChooseHost.R

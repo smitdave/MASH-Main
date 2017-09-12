@@ -8,8 +8,6 @@ mbitesBRO_cohort_simCohort(N)
 }
 \arguments{
 \item{N}{number of mosquitoes in cohort}
-
-\item{writeJSON}{if \code{TRUE} write output to JSON in the directory initialized in the enclosing \code{\link{MicroTile}}, else return a list}
 }
 \description{
 After calling \code{\link{mbitesGeneric_chooseHost}}, the mosquito encounters a human host and attempts to feed.

@@ -22,6 +22,8 @@
 #' @export
 Humans.MICRO.Setup <- function(overwrite = TRUE){
 
+  cat("initializing Humans MICRO methods\n",sep="")
+
   # HumanPop
 
   MASHmacro::HumanPop$set(which = "private",name = "FemalePopPointer",

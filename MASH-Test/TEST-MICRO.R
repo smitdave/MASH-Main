@@ -25,6 +25,12 @@ Humans.MICRO.Setup()
 PfSI.MICRO.Setup()
 AQUA.Emerge.Setup()
 
+MBITES.Generic.Setup()
+MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential")
+MBITES.BRO.Cohort.Setup()
+
+SEARCH.Kernel.Setup(MBITES = "BRO")
+
 # landscape parameters
 nAqua = 10
 nFeed = 10
@@ -46,18 +52,26 @@ mosquito_par = list(
 
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
 
-MicroLandscapePlot_utility(Landscape = MicroTile$get_Landscape())
+# MicroLandscapePlot_utility(Landscape = MicroTile$get_Landscape())
+
+MicroTile$get_FemalePop()$simCohort(N = 1e3)
+
+# MicroTile$get_FemalePop()$get_pop()$ls()
+# MicroTile$get_Landscape()$oneStep_AquaticEcology()
+# MicroTile$get_Landscape()$addCohort()
+# MicroTile$get_FemalePop()$get_pop()$ls()
 
 
-MicroTile$get_FemalePop()$get_pop()$ls()
-MicroTile$get_Landscape()$oneStep_AquaticEcology()
-MicroTile$get_Landscape()$addCohort()
-MicroTile$get_FemalePop()$get_pop()$ls()
+
+
+# MicroTile$get_FemalePop()$test_WriteHistoryAndDelete()
 
 
 
 
-MicroTile$get_FemalePop()$test_WriteHistoryAndDelete()
+###############################################################################
+# old code
+###############################################################################
 
 # par = MBITES.BRO.Parameters()
 # mosyF = MosquitoPopFemale$new(N= 10,ix_init = rep(1,10),genotype_init = rep(1,10),MBITES_PAR = par)

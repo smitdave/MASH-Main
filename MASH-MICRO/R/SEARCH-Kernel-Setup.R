@@ -28,7 +28,7 @@
 #' @export
 SEARCH.Kernel.Setup <- function(MBITES = "BRO", overwrite = TRUE){
 
-  message(paste0("initializing MICRO component methods & fields for MicroMosquitoPop & MicroMosquito Class for M-BITES module: ",MBITES))
+  cat("initializing MICRO component methods & fields for MicroMosquitoPop & MicroMosquito Class for M-BITES module: ",MBITES,"\n",sep="")
 
   #################################################################
   # SampleMove() Methods in Populations
@@ -64,7 +64,7 @@ SEARCH.Kernel.Setup <- function(MBITES = "BRO", overwrite = TRUE){
 
   if(MBITES == "BRO"){
 
-    MicroTile$set(which = "public",name = "get_movement",
+    Tile$set(which = "public",name = "get_movement",
                 value = get_MicroKernel_movement_BRO,
                 overwrite = overwrite
     )
@@ -75,7 +75,7 @@ SEARCH.Kernel.Setup <- function(MBITES = "BRO", overwrite = TRUE){
 
   } else if(MBITES == "BROM"){
 
-    MicroTile$set(which = "public",name = "get_movement",
+    Tile$set(which = "public",name = "get_movement",
                 value = get_MicroKernel_movement_BROM,
                 overwrite = overwrite
     )
@@ -86,7 +86,7 @@ SEARCH.Kernel.Setup <- function(MBITES = "BRO", overwrite = TRUE){
 
   } else if(MBITES == "FULL"){
 
-    MicroTile$set(which = "public",name = "get_movement",
+    Tile$set(which = "public",name = "get_movement",
                 value = get_MicroKernel_movement_FULL,
                 overwrite = overwrite
     )
