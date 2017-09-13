@@ -72,6 +72,7 @@ feeding_PfSI <- function(){
     if(runif(1) < private$HumansPointer$get_human(humanID = private$hostID)$get_Pathogens()$get_c()){
       # if human to mosquito transmission successful set the PfSI object in the mosquito accordingly
       PfID = private$HumansPointer$get_human(humanID = private$hostID)$get_Pathogens()$back_PfID()
+      private$Pathogens$set_humanInf(private$hostID)
       private$Pathogens$set_tInf(private$tNow)
       private$Pathogens$set_PfID(PfID)
     }
