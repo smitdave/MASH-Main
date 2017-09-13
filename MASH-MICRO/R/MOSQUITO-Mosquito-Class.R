@@ -135,7 +135,7 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             # Maturation & Reproduction
                             sire        = integer(1),
                             energyPreG  = numeric(1),          # pre-gonotrophic energy requirement
-                            hostID      = integer(1),           # the id of the host: -1::none; 0::not human
+                            hostID      = character(1),           # the id of the host: -1::none; 0::not human
 
                             # Pathogens
                             Pathogens      = NULL,

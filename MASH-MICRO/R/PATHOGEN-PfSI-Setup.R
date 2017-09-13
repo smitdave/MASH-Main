@@ -208,13 +208,13 @@ PfSI.MICRO.Setup <- function(
 
   # initialize PfSI infections with patch parasite prevalence PfPR
   MASHmacro::HumanPop$set(which = "public",name = "init_PfSI",
-            value = MASHmacro:::init_PfSI,
+            value = MASHmacro:::init_PfSI_HumanPop,
             overwrite = overwrite
   )
 
-  # history getter
-  MASHmacro::HumanPop$set(which = "public",name = "get_PfSI_history",
-            value = MASHmacro:::HumanPop_get_PfSI_history,
+  # initialize PfSI infections for human
+  MASHmacro::Human$set(which = "public",name = "init_PfSI",
+            value = MASHmacro:::init_PfSI_Human,
             overwrite = overwrite
   )
 

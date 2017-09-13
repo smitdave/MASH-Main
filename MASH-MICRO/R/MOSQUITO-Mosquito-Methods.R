@@ -36,10 +36,12 @@ MosquitoFemale$set(which = "public",name = "rmSelf",
 #'
 #'  * This method is bound to \code{MosquitoFemale$writeAndDelete}
 #'
-#' @param con a \code{\link[base]{connection}} to write to (the correct directory can be found with \code{\link{get_MosquitoDirectory_Tile}})
+#' @param conHist a \code{\link[base]{connection}} to write mosquito history to (the correct directory can be found with \code{\link{get_MosquitoDirectory_Tile}})
+#' @param conPath a \code{\link[base]{connection}} to write mosquito-stage pathogen history to (the correct directory can be found with \code{\link{get_MosquitoDirectory_Tile}})
 #'
-writeAndDelete_MosquitoFemale <- function(con){
-  cat(jsonlite::toJSON(x = private$history$exportHistory(),pretty = TRUE),",\n",sep="",file = con)
+writeAndDelete_MosquitoFemale <- function(conHist, conPath){
+  cat(jsonlite::toJSON(x = private$history$exportHistory(),pretty = TRUE),",\n",sep="",file = conHist)
+  cat(jsonlite::toJSON(x = private$Pathogens$get_history(),pretty = TRUE),",\n",sep="",file = conPath)
   private$FemalePopPointer$get_pop()$rm(key = private$id)
 }
 
@@ -354,6 +356,25 @@ MosquitoMale$set(which = "public",name = "get_inPointSet",
   value = get_inPointSet_Mosquito, overwrite = TRUE
 )
 
+#' Set inPointSet
+#'
+#' Set mosquito point set (\code{character}). With \code{ix}, the mosquito spatial location is resolved.
+#'  * This method is bound to \code{MosquitoFemale$set_inPointSet} and \code{MosquitoMale$set_inPointSet}
+#'
+#' @param inPointSet character
+#'
+set_inPointSet_Mosquito <- function(inPointSet){
+  private$inPointSet = inPointSet
+}
+
+MosquitoFemale$set(which = "public",name = "set_inPointSet",
+  value = set_inPointSet_Mosquito, overwrite = TRUE
+)
+
+MosquitoMale$set(which = "public",name = "set_inPointSet",
+  value = set_inPointSet_Mosquito, overwrite = TRUE
+)
+
 #' Get ix
 #'
 #' Return mosquito point index (\code{integer}). With \code{inPointSet}, the mosquito spatial location is resolved.
@@ -369,6 +390,25 @@ MosquitoFemale$set(which = "public",name = "get_ix",
 
 MosquitoMale$set(which = "public",name = "get_ix",
   value = get_ix_Mosquito, overwrite = TRUE
+)
+
+#' Set ix
+#'
+#' Set mosquito point index (\code{integer}). With \code{inPointSet}, the mosquito spatial location is resolved.
+#'  * This method is bound to \code{MosquitoFemale$set_ix} and \code{MosquitoMale$set_ix}
+#'
+#' @param ix integer
+#'
+set_ix_Mosquito <- function(ix){
+  private$ix = ix
+}
+
+MosquitoFemale$set(which = "public",name = "set_ix",
+  value = set_ix_Mosquito, overwrite = TRUE
+)
+
+MosquitoMale$set(which = "public",name = "set_ix",
+  value = set_ix_Mosquito, overwrite = TRUE
 )
 
 #' Get mature

@@ -143,6 +143,23 @@ HumanPop$set(which = "public",name = "get_history",
   overwrite = TRUE
 )
 
+#' HumanPop: Get all Pathogen histories
+#'
+#' Get all pathogen histories.
+#'  * This function is bound to \code{HumanPop$get_PathogensHistory()}
+#'
+get_PathogensHistory_HumanPop <- function(){
+  return(
+    private$pop$apply(tag="get_PathogensHistory",returnVal=TRUE)
+  )
+}
+
+HumanPop$set(which = "public",name = "get_PathogensHistory",
+  value = get_PathogensHistory_HumanPop,
+  overwrite = TRUE
+)
+
+
 
 ###############################################################################
 # HumanPop: Simulation & Events
@@ -155,7 +172,7 @@ HumanPop$set(which = "public",name = "get_history",
 #' @param tPause numeric (run all events in each human's \code{\link[MASHcpp]{HumanEventQ}} that occur before this time)
 #'
 simHumans_HumanPop <- function(tPause){
-  private$pop$apply(tag="liveLife",returnVal=FALSE,tPause=tPause)
+  private$pop$apply(tag="simHuman",returnVal=FALSE,tPause=tPause)
 }
 
 HumanPop$set(which = "public",name = "simHumans",

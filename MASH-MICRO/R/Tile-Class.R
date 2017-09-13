@@ -84,6 +84,7 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$HumanPop$set_FemalePopPointer(private$FemalePop)
 
                      private$HumanPop$get_pop()$apply(tag="set_TilePointer",returnVal=FALSE,TilePointer=self)
+                     private$HumanPop$get_pop()$apply(tag="set_HumansPointer",returnVal=FALSE,HumansPointer=private$HumanPop)
                      private$HumanPop$get_pop()$apply(tag="set_LandscapePointer",returnVal=FALSE,LandscapePointer=private$Landscape)
                      private$HumanPop$get_pop()$apply(tag="set_FemalePopPointer",returnVal=FALSE,FemalePopPointer=private$FemalePop)
 
@@ -150,13 +151,24 @@ Tile <- R6::R6Class(classname = "Tile",
 
                    # simulation output and logging
                    runID = integer(1),
+
                    directory = character(1),
                    MosquitoDirectory = character(1),
                    HumanDirectory = character(1),
+
+                   # human output
+                   HumanPathogenCon = NULL,
+
+                   # track populations each day
                    FemaleCSVCon = NULL,
                    MaleCSVCon = NULL,
+
+                   # write individual histories to JSON
                    FemaleHistoryCon = NULL,
-                   MaleHistoryCon = NULL
+                   MaleHistoryCon = NULL,
+
+                   # write mosquito stage pathogen objects to JSON
+                   MosquitoPathogenCon = NULL
 
                  )
 )

@@ -4,7 +4,7 @@
 \alias{HumanPop_set_humanPfSI}
 \title{PfSI \code{HumanPop} Method: Set Human-stage PfSI Object}
 \usage{
-HumanPop_set_humanPfSI(b = NULL, c = NULL)
+HumanPop_set_humanPfSI()
 }
 \arguments{
 \item{b}{infected mosquito to human transmission efficiency}

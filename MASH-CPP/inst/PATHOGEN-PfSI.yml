@@ -97,7 +97,6 @@ humanPfSI:
       args:
         - tEvent: double
         - event: "std::string"
-        - vectorInf_new: "std::string"
       return_type: void
     get_history:
       return_type: "Rcpp::List"
@@ -168,5 +167,5 @@ mosquitoPfSI:
         - infected_new: bool
       return_type: void
 
-    get_all:
+    get_history:
       return_type: "Rcpp::List"

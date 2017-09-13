@@ -4,10 +4,12 @@
 \alias{writeAndDelete_MosquitoFemale}
 \title{Export JSON History and Remove Self}
 \usage{
-writeAndDelete_MosquitoFemale(con)
+writeAndDelete_MosquitoFemale(conHist, conPath)
 }
 \arguments{
-\item{con}{a \code{\link[base]{connection}} to write to (the correct directory can be found with \code{\link{get_MosquitoDirectory_Tile}})}
+\item{conHist}{a \code{\link[base]{connection}} to write mosquito history to (the correct directory can be found with \code{\link{get_MosquitoDirectory_Tile}})}
+
+\item{conPath}{a \code{\link[base]{connection}} to write mosquito-stage pathogen history to (the correct directory can be found with \code{\link{get_MosquitoDirectory_Tile}})}
 }
 \description{
 \itemize{

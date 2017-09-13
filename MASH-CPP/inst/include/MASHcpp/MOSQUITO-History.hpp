@@ -58,8 +58,26 @@ public:
   // historyFeed: track feeding history
   void historyFeed(const Rcpp::Environment &privateEnv){
 
-    int hostID = privateEnv["hostID"];
-    if(hostID > 0){
+    std::string hostID = privateEnv["hostID"];
+    // if(hostID > 0){
+    //   // human host
+    //   feedAllH += 1;    // number of blood meals
+    //   feedAllT.push_back(privateEnv["tNow"]);   // times of blood meals
+    //   feedHumanH += 1;    // number of blood meals on human hosts
+    //   feedHumanT.push_back(privateEnv["tNow"]);   // times of blood meals on human hosts
+    //   feedIxH.push_back(privateEnv["hostID"]);    // ids of all blood hosts
+    //   bmSizeH.push_back(privateEnv["bmSize"]);    // size of blood meal
+    //   batchH.push_back(privateEnv["batch"]);    // size of egg batch
+    // } else {
+    //   // non-human host
+    //   feedAllH += 1;    // number of blood meals
+    //   feedAllT.push_back(privateEnv["tNow"]);   // times of blood meals
+    //   feedIxH.push_back(privateEnv["hostID"]);    // ids of all blood hosts
+    //   bmSizeH.push_back(privateEnv["bmSize"]);    // size of blood meal
+    //   batchH.push_back(privateEnv["batch"]);    // size of egg batch
+    // }
+
+    if(hostID[0]!=(int('z'))){
       // human host
       feedAllH += 1;    // number of blood meals
       feedAllT.push_back(privateEnv["tNow"]);   // times of blood meals
@@ -165,7 +183,7 @@ private:
   std::vector<double>      feedAllT;
   int                      feedHumanH;
   std::vector<double>      feedHumanT;
-  std::vector<int>         feedIxH;
+  std::vector<std::string>         feedIxH;
   std::vector<int>         bmSizeH;
   std::vector<int>         batchH;
 
@@ -180,22 +198,22 @@ private:
 // inline definition of constructor to accept default argument values
 inline MosquitoFemaleHistory::MosquitoFemaleHistory(){
 
-  stateH.reserve(50);
-  timeH.reserve(50);
-  ixH.reserve(50);
-  pSetH.reserve(50);
+  stateH.reserve(20);
+  timeH.reserve(02);
+  ixH.reserve(20);
+  pSetH.reserve(20);
   feedAllH = 0;
-  feedAllT.reserve(50);
+  feedAllT.reserve(20);
   feedHumanH = 0;
-  feedHumanT.reserve(50);
-  feedIxH.reserve(50);
-  bmSizeH.reserve(50);
-  batchH.reserve(50);
+  feedHumanT.reserve(20);
+  feedIxH.reserve(20);
+  bmSizeH.reserve(20);
+  batchH.reserve(20);
 
   bionomics_mBatch = 0.0;
   bionomics_tBatch = 0;
-  bionomics_bmInt.reserve(10); // might not be necessary
-  bionomics_bmIntH.reserve(10); // might not be necessary
+  bionomics_bmInt.reserve(6); // might not be necessary
+  bionomics_bmIntH.reserve(6); // might not be necessary
   bionomics_lifespan = 0.0;
 
 }

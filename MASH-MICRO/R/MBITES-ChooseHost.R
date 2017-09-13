@@ -55,9 +55,9 @@ mbitesCohort_chooseHost <- function(){
 
   # human host
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("Q")){
-    private$hostID = 1L
+    private$hostID = "human"
   # zoo host
   } else {
-    private$hostID = -1L
+    private$hostID = "zoo"
   }
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/Tile-Methods.R
 \name{set_FemaleHistoryCon_Tile}
 \alias{set_FemaleHistoryCon_Tile}
-\title{Set Female CSV Connection}
+\title{Set Female JSON Connection}
 \usage{
 set_FemaleHistoryCon_Tile(FemaleHistoryCon)
 }
@@ -10,7 +10,7 @@ set_FemaleHistoryCon_Tile(FemaleHistoryCon)
 \item{FemaleHistoryCon}{object of class \code{\link[base]{connection}}, usually opened with \code{file}}
 }
 \description{
-Set the text connection used to write population count data to CSV.
+Set the text connection used to write female histories to JSON.
 \itemize{
 \item This method is bound to \code{Tile$set_FemaleHistoryCon}
 }

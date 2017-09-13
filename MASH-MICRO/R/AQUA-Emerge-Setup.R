@@ -49,7 +49,7 @@ AQUA.Emerge.Setup <- function(overwrite = TRUE){
   )
 
   # ImagoQ to MosquitoPopFemale
-  Landscape$set(which = "public",name = "addCohort",
+  Landscape$set(which = "public",name = "addCohort_AquaticEcology",
             value = addCohort_Emerge,
             overwrite = overwrite
   )

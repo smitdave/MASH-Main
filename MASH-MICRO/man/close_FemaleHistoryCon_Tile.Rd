@@ -2,12 +2,12 @@
 % Please edit documentation in R/Tile-Methods.R
 \name{close_FemaleHistoryCon_Tile}
 \alias{close_FemaleHistoryCon_Tile}
-\title{Close Female CSV Connection}
+\title{Close Male JSON Connection}
 \usage{
 close_FemaleHistoryCon_Tile()
 }
 \description{
-Close the text connection used to write population count data to CSV.
+Close the text connection used to write female histories to JSON.
 \itemize{
 \item This method is bound to \code{Tile$close_FemaleHistoryCon}
 }

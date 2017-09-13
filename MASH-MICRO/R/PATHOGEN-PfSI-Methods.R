@@ -54,7 +54,7 @@ probing_PfSI <- function(){
     # update the moquito infection
     if(private$tNow > (private$Pathogens$get_tInf() + private$FemalePopPointer$get_MBITES_PAR("PfEIP"))){
       private$Pathogens$set_infected(TRUE)
-      private$HumansPointer$get_Human(ixH = private$hostID)$probeHost_PfSI(tBite = private$tNow, mosquitoPfSI = private$Pathogens)
+      private$HumansPointer$get_human(humanID = private$hostID)$probeHost_PfSI(tBite = private$tNow, mosquitoPfSI = private$Pathogens)
     }
   }
 }
@@ -68,10 +68,10 @@ probing_PfSI <- function(){
 #' @md
 feeding_PfSI <- function(){
   # if human is infected and mosquito not yet infected
-  if(private$HumansPointer$get_Human(ixH = private$hostID)$get_Pathogens()$get_infected() & !private$Pathogens$get_infected()){
-    if(runif(1) < private$HumansPointer$get_Human(ixH = private$hostID)$get_Pathogens()$get_c()){
+  if(private$HumansPointer$get_human(humanID = private$hostID)$get_Pathogens()$get_infected() & !private$Pathogens$get_infected()){
+    if(runif(1) < private$HumansPointer$get_human(humanID = private$hostID)$get_Pathogens()$get_c()){
       # if human to mosquito transmission successful set the PfSI object in the mosquito accordingly
-      PfID = private$HumansPointer$get_Human(ixH = private$hostID)$get_Pathogens()$back_PfID()
+      PfID = private$HumansPointer$get_human(humanID = private$hostID)$get_Pathogens()$back_PfID()
       private$Pathogens$set_tInf(private$tNow)
       private$Pathogens$set_PfID(PfID)
     }

@@ -354,15 +354,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // humanPfSI__track_history
-void humanPfSI__track_history(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfSI> obj_, double tEvent, std::string event, std::string vectorInf_new);
-RcppExport SEXP _MASHcpp_humanPfSI__track_history(SEXP obj_SEXP, SEXP tEventSEXP, SEXP eventSEXP, SEXP vectorInf_newSEXP) {
+void humanPfSI__track_history(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfSI> obj_, double tEvent, std::string event);
+RcppExport SEXP _MASHcpp_humanPfSI__track_history(SEXP obj_SEXP, SEXP tEventSEXP, SEXP eventSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfSI> >::type obj_(obj_SEXP);
     Rcpp::traits::input_parameter< double >::type tEvent(tEventSEXP);
     Rcpp::traits::input_parameter< std::string >::type event(eventSEXP);
-    Rcpp::traits::input_parameter< std::string >::type vectorInf_new(vectorInf_newSEXP);
-    humanPfSI__track_history(obj_, tEvent, event, vectorInf_new);
+    humanPfSI__track_history(obj_, tEvent, event);
     return R_NilValue;
 END_RCPP
 }
@@ -501,14 +500,14 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// mosquitoPfSI__get_all
-Rcpp::List mosquitoPfSI__get_all(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfSI> obj_);
-RcppExport SEXP _MASHcpp_mosquitoPfSI__get_all(SEXP obj_SEXP) {
+// mosquitoPfSI__get_history
+Rcpp::List mosquitoPfSI__get_history(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfSI> obj_);
+RcppExport SEXP _MASHcpp_mosquitoPfSI__get_history(SEXP obj_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfSI> >::type obj_(obj_SEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfSI__get_all(obj_));
+    rcpp_result_gen = Rcpp::wrap(mosquitoPfSI__get_history(obj_));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1887,7 +1886,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_humanPfSI__set_infected", (DL_FUNC) &_MASHcpp_humanPfSI__set_infected, 2},
     {"_MASHcpp_humanPfSI__get_chemoprophylaxis", (DL_FUNC) &_MASHcpp_humanPfSI__get_chemoprophylaxis, 1},
     {"_MASHcpp_humanPfSI__set_chemoprophylaxis", (DL_FUNC) &_MASHcpp_humanPfSI__set_chemoprophylaxis, 2},
-    {"_MASHcpp_humanPfSI__track_history", (DL_FUNC) &_MASHcpp_humanPfSI__track_history, 4},
+    {"_MASHcpp_humanPfSI__track_history", (DL_FUNC) &_MASHcpp_humanPfSI__track_history, 3},
     {"_MASHcpp_humanPfSI__get_history", (DL_FUNC) &_MASHcpp_humanPfSI__get_history, 1},
     {"_MASHcpp_mosquitoPfSI__ctor", (DL_FUNC) &_MASHcpp_mosquitoPfSI__ctor, 4},
     {"_MASHcpp_mosquitoPfSI__get_PfID", (DL_FUNC) &_MASHcpp_mosquitoPfSI__get_PfID, 1},
@@ -1900,7 +1899,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_mosquitoPfSI__set_humanInf", (DL_FUNC) &_MASHcpp_mosquitoPfSI__set_humanInf, 2},
     {"_MASHcpp_mosquitoPfSI__get_infected", (DL_FUNC) &_MASHcpp_mosquitoPfSI__get_infected, 1},
     {"_MASHcpp_mosquitoPfSI__set_infected", (DL_FUNC) &_MASHcpp_mosquitoPfSI__set_infected, 2},
-    {"_MASHcpp_mosquitoPfSI__get_all", (DL_FUNC) &_MASHcpp_mosquitoPfSI__get_all, 1},
+    {"_MASHcpp_mosquitoPfSI__get_history", (DL_FUNC) &_MASHcpp_mosquitoPfSI__get_history, 1},
     {"_MASHcpp_humanPfMOI__ctor", (DL_FUNC) &_MASHcpp_humanPfMOI__ctor, 8},
     {"_MASHcpp_humanPfMOI__get_PfID", (DL_FUNC) &_MASHcpp_humanPfMOI__get_PfID, 1},
     {"_MASHcpp_humanPfMOI__push_PfID", (DL_FUNC) &_MASHcpp_humanPfMOI__push_PfID, 2},

@@ -75,6 +75,7 @@ Human <- R6::R6Class(classname="Human",
 
                        initialize = function(myID, houseID = NULL, patchID = NULL, bDay = NULL, bWeight = NULL){
                          private$myID = myID
+                         private$Alive = TRUE
                          private$houseID = houseID
                          private$patchID = patchID
                          private$bDay = bDay
@@ -255,9 +256,9 @@ get_EventQ_Human <- function(){
  return(private$EventQueue)
 }
 
-Human$set(which="public", name="get_bDay",
-	value=get_bDay_Human,
-	overwrite=TRUE)
+Human$set(which="public", name="get_EventQ",
+	value=get_EventQ_Human, overwrite=TRUE
+)
 
 
 #' Human: Get Life Status
@@ -376,8 +377,21 @@ set_Pathogens_Human <- function(Pathogens){
 }
 
 Human$set(which="public", name="set_Pathogens",
-	value=set_Pathogens_Human,
-	overwrite=TRUE)
+	value=set_Pathogens_Human,overwrite=TRUE
+)
+
+#' Human: Set Pathogen History
+#'
+#' Calls \code{Pathogens$get_history} which should be defined for all human-stage pathogen objects.
+#'
+#'
+get_PathogensHistory_Human <- function(){
+  return(private$Pathogens$get_history())
+}
+
+Human$set(which="public", name="get_PathogensHistory",
+	value=get_PathogensHistory_Human,overwrite=TRUE
+)
 
 
 ###############################################################################
@@ -461,14 +475,14 @@ Human$set(which="public", name="set_TilePointer",
 #' More details
 #'
 oneEvent_Human <- function(tPause){
-event = private$EventQueue$firstEvent()
-self$runEvent(tEvent = event$tEvent, PAR = event$PAR, tag = event$tag)
-private$EventQueue$rmFirstEventFromQ()
+  event = private$EventQueue$firstEvent()
+  self$runEvent(tEvent = event$tEvent, PAR = event$PAR, tag = event$tag)
+  private$EventQueue$rmFirstEventFromQ()
 }
 
 Human$set(which="public", name="oneEvent",
-	value=oneEvent_Human,
-	 overwrite=TRUE)
+	value=oneEvent_Human, overwrite=TRUE
+)
 
 
 #' Human: Run Event
@@ -482,17 +496,17 @@ runEvent_Human <- function(tEvent, PAR, tag){
 }
 
 Human$set(which="public", name="runEvent",
-	value=runEvent_Human,
-	 overwrite=TRUE)
+	value=runEvent_Human, overwrite=TRUE
+)
 
 
-#' Human: liveLife
+#' Human: simHuman
 #'
-#' Initializes liveLife
+#' Simulate a human up until time \code{tPause}
 #'
-#' More details
+#' @param tPause numeric; run human simulation until this point
 #'
-liveLife_Human <- function(tPause){
+simHuman_Human <- function(tPause){
   while(private$Alive & private$EventQueue$firstTime() < tPause){
     self$oneEvent(tPause)
     if(private$EventQueue$get_queueN()==0){
@@ -502,9 +516,9 @@ liveLife_Human <- function(tPause){
 
 }
 
-Human$set(which="public", name="lifeLife",
-	value=liveLife_Human,
-	 overwrite=TRUE)
+Human$set(which="public", name="simHuman",
+	value = simHuman_Human, overwrite = TRUE
+)
 
 
 #################################################
@@ -523,8 +537,7 @@ event_maxDeath_Human <- function(tEvent = 73000, PAR = NULL, tag = "death"){
 }
 
 Human$set(which="public", name="event_maxDeath",
-	value=event_maxDeath_Human,
-	 overwrite=TRUE)
+	value = event_maxDeath_Human, overwrite=TRUE)
 
 
 #' Human: Death

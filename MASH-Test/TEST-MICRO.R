@@ -13,7 +13,7 @@
 
 rm(list=ls());gc()
 library(MASHmicro)
-set.seed(42L)
+# set.seed(42L)
 
 DEBUG.MASHMICRO()
 MASHcpp::DEBUG.MASHCPP()
@@ -24,12 +24,12 @@ DIR = "/Users/slwu89/Desktop/MASHOUT/"
 
 # setup
 Humans.MICRO.Setup()
-PfSI.MICRO.Setup()
+PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
 AQUA.Emerge.Setup()
 
 MBITES.Generic.Setup()
 MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential")
-MBITES.BRO.Cohort.Setup()
+# MBITES.BRO.Cohort.Setup()
 
 SEARCH.Kernel.Setup(MBITES = "BRO")
 
@@ -44,7 +44,7 @@ human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin =
 
 # M-BITES parameters
 nMosy = 50
-mbites_par = MBITES.BRO.Parameters()
+mbites_par = MBITES.BRO.Parameters(PfEIP=1)
 mosquito_par = list(
   N_female = nMosy,
   ix_female = rep(1,nMosy),
@@ -59,18 +59,30 @@ MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,Mosq
 # MicroTile$get_FemalePop()$simCohort(N = 1e3)
 
 MicroTile$get_HumanPop()$init_ActivitySpace()
-MicroTile$get_HumanPop()$sim_ActivitySpace()
+# MicroTile$get_HumanPop()$sim_ActivitySpace()
+# 
+# MicroTile$get_ActivitySpace()
 
-MicroTile$get_ActivitySpace()
+MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 
+# MicroTile$get_HumanPop()$get_PathogensHistory()
+MicroTile$simMICRO_oneRun(tMax = 300,verbose = TRUE)
+
+MicroTile$reset_FemalePop(MosquitoPop_PAR = mosquito_par)
+MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
+MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+
+# testing one step aquatic ecology for emerge
 # MicroTile$get_FemalePop()$get_pop()$ls()
 # MicroTile$get_Landscape()$oneStep_AquaticEcology()
 # MicroTile$get_Landscape()$addCohort()
 # MicroTile$get_FemalePop()$get_pop()$ls()
 
-
-
-
+# testing chooseHost
+# MicroTile$get_FemalePop()$get_pop()$get("0_1_1")$set_inPointSet("f")
+# debug(MicroTile$get_FemalePop()$get_pop()$get("0_1_1")$chooseHost)
+# MicroTile$get_FemalePop()$get_pop()$get("0_1_1")$chooseHost()
 
 
 

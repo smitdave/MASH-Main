@@ -126,8 +126,8 @@ humanPfSI__set_chemoprophylaxis <- function(obj_, chemoprophylaxis_new) {
     invisible(.Call('_MASHcpp_humanPfSI__set_chemoprophylaxis', PACKAGE = 'MASHcpp', obj_, chemoprophylaxis_new))
 }
 
-humanPfSI__track_history <- function(obj_, tEvent, event, vectorInf_new) {
-    invisible(.Call('_MASHcpp_humanPfSI__track_history', PACKAGE = 'MASHcpp', obj_, tEvent, event, vectorInf_new))
+humanPfSI__track_history <- function(obj_, tEvent, event) {
+    invisible(.Call('_MASHcpp_humanPfSI__track_history', PACKAGE = 'MASHcpp', obj_, tEvent, event))
 }
 
 humanPfSI__get_history <- function(obj_) {
@@ -178,8 +178,8 @@ mosquitoPfSI__set_infected <- function(obj_, infected_new) {
     invisible(.Call('_MASHcpp_mosquitoPfSI__set_infected', PACKAGE = 'MASHcpp', obj_, infected_new))
 }
 
-mosquitoPfSI__get_all <- function(obj_) {
-    .Call('_MASHcpp_mosquitoPfSI__get_all', PACKAGE = 'MASHcpp', obj_)
+mosquitoPfSI__get_history <- function(obj_) {
+    .Call('_MASHcpp_mosquitoPfSI__get_history', PACKAGE = 'MASHcpp', obj_)
 }
 
 humanPfMOI__ctor <- function(PfID_init, tInf_init, MOI_init, b_init, c_init, damID_init, sireID_init, chemoprophylaxis_init) {

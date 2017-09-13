@@ -125,8 +125,8 @@ void humanPfSI__set_chemoprophylaxis(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfSI>
   obj_->set_chemoprophylaxis(chemoprophylaxis_new);
 }
 // [[Rcpp::export]]
-void humanPfSI__track_history(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfSI> obj_, double tEvent, std::string event, std::string vectorInf_new) {
-  obj_->track_history(tEvent, event, vectorInf_new);
+void humanPfSI__track_history(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfSI> obj_, double tEvent, std::string event) {
+  obj_->track_history(tEvent, event);
 }
 // [[Rcpp::export]]
 Rcpp::List humanPfSI__get_history(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfSI> obj_) {
@@ -178,8 +178,8 @@ void mosquitoPfSI__set_infected(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfSI> o
   obj_->set_infected(infected_new);
 }
 // [[Rcpp::export]]
-Rcpp::List mosquitoPfSI__get_all(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfSI> obj_) {
-  return obj_->get_all();
+Rcpp::List mosquitoPfSI__get_history(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfSI> obj_) {
+  return obj_->get_history();
 }
 
 // [[Rcpp::export]]

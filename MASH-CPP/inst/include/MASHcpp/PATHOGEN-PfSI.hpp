@@ -96,10 +96,9 @@ public:
   ///////////////////////////////////
 
   // history tracking
-  void track_history(const double &tEvent, const std::string &event, const std::string &vectorInf_new){
+  void track_history(const double &tEvent, const std::string &event){
     events.push_back(event);
     eventT.push_back(tEvent);
-    vectorInf.push_back(vectorInf_new);
   };
 
   // return history
@@ -209,7 +208,7 @@ public:
   };
 
   // return this PfSI object (used for transmission tracking)
-  Rcpp::List get_all(){
+  Rcpp::List get_history(){
     return(
       Rcpp::List::create(
         Rcpp::Named("PfID") = PfID,

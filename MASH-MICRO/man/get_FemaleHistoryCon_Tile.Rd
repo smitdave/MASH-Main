@@ -2,12 +2,12 @@
 % Please edit documentation in R/Tile-Methods.R
 \name{get_FemaleHistoryCon_Tile}
 \alias{get_FemaleHistoryCon_Tile}
-\title{Get Female CSV Connection}
+\title{Get Female JSON Connection}
 \usage{
 get_FemaleHistoryCon_Tile()
 }
 \description{
-Return the text connection used to write population count data to CSV.
+Return the text connection used to write female histories to JSON.
 \itemize{
 \item This method is bound to \code{Tile$get_FemaleHistoryCon}
 }
