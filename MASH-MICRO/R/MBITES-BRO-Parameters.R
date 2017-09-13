@@ -297,7 +297,8 @@ MBITES.BRO.Parameters <- function(
 
     stateSpace = c("B","R","O"),
     initState = "B",
-    lspot = c("i","w","v","r","l")
+    lspot = c("i","w","v","r","l"),
+    Fstate = c(B=0,R=0,O=0)
 
   ))
 

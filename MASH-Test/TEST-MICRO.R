@@ -66,12 +66,13 @@ MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 
 # MicroTile$get_HumanPop()$get_PathogensHistory()
-MicroTile$simMICRO_oneRun(tMax = 300,verbose = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE,trackPop = TRUE)
 
 MicroTile$reset_FemalePop(MosquitoPop_PAR = mosquito_par)
 MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 MicroTile$get_HumanPop()$init_ActivitySpace()
+MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE)
 
 # testing one step aquatic ecology for emerge
 # MicroTile$get_FemalePop()$get_pop()$ls()

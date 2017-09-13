@@ -55,6 +55,9 @@ set_ActivitySpace_Human <- function(nDaily, Nplaces, p, loc){
 #'
 init_ActivitySpace_HumanPop <- function(nDaily = 1.4){
 
+  # clear out activity space
+  private$LandscapePointer$clear_RiskQ()
+
   private$pop$apply(tag="init_ActivitySpace",returnVal=FALSE,nDaily=nDaily)
 
 }

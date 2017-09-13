@@ -28,8 +28,12 @@
 #'
 simMICRO_oneRun <- function(tMax, verbose = FALSE, trackPop = FALSE){
 
+  # set runID
   private$runID = private$runID + 1L
   cat("running MICRO simulation runID: ",private$runID,"\n",sep="")
+
+  # reset tNow
+  private$tNow = 1
 
   # set up output connections
   FemaleHistoryFile = paste0(self$get_MosquitoDirectory(),"FemaleMosquitoHistory_Run",private$runID,".json")
@@ -47,7 +51,14 @@ simMICRO_oneRun <- function(tMax, verbose = FALSE, trackPop = FALSE){
   self$set_HumanPathogenCon(file(description = HumanPathogenFile,open = "wt"))
 
   if(trackPop){
-    # set up CSV output.
+    FemaleCSVFile = paste0(self$get_MosquitoDirectory(),"FemaleMosquitoPop_Run",private$runID,".json")
+    self$set_FemaleCSVCon(file(description = FemaleCSVFile,open = "wt"))
+    writeLines(text = paste0(c("time",private$FemalePop$get_MBITES_PAR("stateSpace")),collapse = ","),con = self$get_FemaleCSVCon(),sep = "\n") # write header
+    if(!is.null(private$MalePop)){
+      MaleCSVFile = paste0(self$get_MosquitoDirectory(),"MaleMosquitoPop_Run",private$runID,".json")
+      self$set_MaleCSVCon(file(description = MaleCSVFile,open = "wt"))
+      writeLines(text = paste0(c("time",private$MalePop$get_MBITES_PAR("stateSpace")),collapse = ","),con = self$get_MaleCSVCon(),sep = "\n") # write header
+    }
   }
 
   if(verbose){
@@ -78,6 +89,10 @@ simMICRO_oneRun <- function(tMax, verbose = FALSE, trackPop = FALSE){
   if(!is.null(private$MalePop)){self$close_MaleHistoryCon()}
   self$close_MosquitoPathogenCon()
   self$close_HumanPathogenCon()
+  if(trackPop){
+    self$close_FemaleCSVCon()
+    if(!is.null(private$MalePop)){self$close_MaleCSVCon()}
+  }
 
 }
 
@@ -126,7 +141,15 @@ simMICRO_oneStep <- function(verbose = FALSE, trackPop = FALSE){
 
   # log population count
   if(trackPop){
-    # write pops to csv
+    # write pops to csv (THIS IS PROBABLY INEFFICIENT; SET UP)
+    Fcount = table(unlist(private$FemalePop$get_pop()$apply(tag="get_state",returnVal=TRUE)))
+    Fstate = private$FemalePop$get_MBITES_PAR("Fstate")
+    # Fstate = setNames(object = rep(0,length(private$FemalePop$get_MBITES_PAR("stateSpace"))),nm = private$FemalePop$get_MBITES_PAR("stateSpace"))
+    Fstate[names(Fcount)] = Fcount
+    writeLines(text = paste0(c(private$tNow,Fstate),collapse = ","),con = self$get_FemaleCSVCon(),sep = "\n")
+    if(!is.null(private$MalePop)){
+      # do something here
+    }
   }
 
   # update tNow
@@ -209,7 +232,8 @@ Tile$set(which = "public",name = "reset_FemalePop",
 reset_HumanPop_Tile <- function(HumanPop_PAR){
 
   # clear old HumanPop
-  private$HumanPop$get_pop()$rmAll()
+  # private$HumanPop$get_pop()$rmAll()
+  private$HumanPop = NULL
   gc()
 
   # generate human object
