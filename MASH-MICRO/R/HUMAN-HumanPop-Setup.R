@@ -54,6 +54,10 @@ Humans.MICRO.Setup <- function(overwrite = TRUE){
     value = get_ActivitySpace_Tile, overwrite = overwrite
   )
 
+  MASHmicro::Tile$set(which = "public",name = "write_ActivitySpace",
+    value = write_ActivitySpace_Tile, overwrite = overwrite
+  )
+
   # HumanPop
 
   MASHmacro::HumanPop$set(which = "private",name = "FemalePopPointer",

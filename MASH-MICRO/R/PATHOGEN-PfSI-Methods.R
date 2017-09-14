@@ -22,8 +22,8 @@
 #' Initializes an empty PfSI pathogen in \code{\link{MosquitoFemale}} called during object initialization.
 #'  * This method is bound to \code{MosquitoFemale$init_Pathogens()}
 #'
-#' @md
-#' @export
+#'
+#'
 init_Pathogens_MosquitoFemale_PfSI <- function(){
   private$Pathogens = MASHcpp::mosquitoPfSI(PfID_init = -1L, MosquitoID_init = private$id, infected_init = FALSE)
 }
@@ -33,8 +33,8 @@ init_Pathogens_MosquitoFemale_PfSI <- function(){
 #' Initializes empty PfSI pathogens in \code{\link{MosquitoPopFemale}} called during object initialization.
 #'  * This method is bound to \code{MosquitoPopFemale$init_Pathogens()}
 #'
-#' @md
-#' @export
+#'
+#'
 init_Pathogens_MosquitoPopFemale_PfSI <- function(){
   private$pop$apply(tag="init_Pathogens",returnVal=FALSE)
 }
@@ -47,7 +47,7 @@ init_Pathogens_MosquitoPopFemale_PfSI <- function(){
 #' to initiate the PfSI infection process.
 #'  * This method is bound to \code{MosquitoFemale$probing()}
 #'
-#' @md
+#'
 probing_PfSI <- function(){
   # if mosquito has active infection
   if(private$Pathogens$get_tInf() > -1){
@@ -65,7 +65,7 @@ probing_PfSI <- function(){
 #' Human to mosquito pathogen transmission occurs during host feeding.
 #'  * This method is bound to \code{MosquitoFemale$feeding()}
 #'
-#' @md
+#'
 feeding_PfSI <- function(){
   # if human is infected and mosquito not yet infected
   if(private$HumansPointer$get_human(humanID = private$hostID)$get_Pathogens()$get_infected() & !private$Pathogens$get_infected()){

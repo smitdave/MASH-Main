@@ -140,9 +140,24 @@ get_ActivitySpace_Tile <- function(){
   TileActivity = vector(mode="list",length=private$Landscape$get_FeedingSitesN())
 
   for(i in 1:length(TileActivity)){
+    TileActivity[[i]]$siteID = i
     TileActivity[[i]]$human = private$Landscape$get_FeedingSites(i)$get_RiskQ()$get_HumanHost()
     TileActivity[[i]]$zoo = private$Landscape$get_FeedingSites(i)$get_RiskQ()$get_OtherHost()
   }
 
   return(TileActivity)
+}
+
+
+#' Write Human Activity Space on a Tile
+#'
+#' Write the human activity space for each site to JSON.
+#'  * This function is bound to \code{Tile$write_ActivitySpace()}
+#'
+write_ActivitySpace_Tile <- function(){
+
+  con = file(description=paste0(private$HumanDirectory,"ActivitySpace_Run",private$runID,"_Time",private$tNow,".json"),open="wt")
+  writeLines(text = jsonlite::toJSON(x = self$get_ActivitySpace(),pretty = TRUE),con = con)
+  close(con)
+
 }
