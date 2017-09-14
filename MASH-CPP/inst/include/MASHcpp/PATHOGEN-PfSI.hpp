@@ -233,10 +233,11 @@ private:
 };
 
 // inline definition of constructor to accept default argument values
-inline mosquitoPfSI::mosquitoPfSI(const int &PfID_init,
-  const std::string &MosquitoID_init,
-  const double &tInf_init,
-  const bool &infected_init
+inline mosquitoPfSI::mosquitoPfSI(
+    const int &PfID_init,
+    const std::string &MosquitoID_init,
+    const double &tInf_init,
+    const bool &infected_init
   ){
 
     // set parameters and state variables

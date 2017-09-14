@@ -51,11 +51,11 @@ simMICRO_oneRun <- function(tMax, verbose = FALSE, trackPop = FALSE){
   self$set_HumanPathogenCon(file(description = HumanPathogenFile,open = "wt"))
 
   if(trackPop){
-    FemaleCSVFile = paste0(self$get_MosquitoDirectory(),"FemaleMosquitoPop_Run",private$runID,".json")
+    FemaleCSVFile = paste0(self$get_MosquitoDirectory(),"FemaleMosquitoPop_Run",private$runID,".csv")
     self$set_FemaleCSVCon(file(description = FemaleCSVFile,open = "wt"))
     writeLines(text = paste0(c("time",private$FemalePop$get_MBITES_PAR("stateSpace")),collapse = ","),con = self$get_FemaleCSVCon(),sep = "\n") # write header
     if(!is.null(private$MalePop)){
-      MaleCSVFile = paste0(self$get_MosquitoDirectory(),"MaleMosquitoPop_Run",private$runID,".json")
+      MaleCSVFile = paste0(self$get_MosquitoDirectory(),"MaleMosquitoPop_Run",private$runID,".csv")
       self$set_MaleCSVCon(file(description = MaleCSVFile,open = "wt"))
       writeLines(text = paste0(c("time",private$MalePop$get_MBITES_PAR("stateSpace")),collapse = ","),con = self$get_MaleCSVCon(),sep = "\n") # write header
     }

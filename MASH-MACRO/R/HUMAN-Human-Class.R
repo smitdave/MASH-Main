@@ -58,7 +58,7 @@
 #'             location is not resolved to house level in MACRO and MICRO only needs houseID to distribute risk onto \code{\link{feedingSite}} rather than to store humans.
 #'             myID is needed to resolve location to patch level in order to move people between patches in either MICRO or MACRO.
 #'
-#' @md
+#'
 #' @export
 Human <- R6::R6Class(classname="Human",
                      portable = TRUE,

@@ -59,13 +59,11 @@ MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,Mosq
 # MicroTile$get_FemalePop()$simCohort(N = 1e3)
 
 MicroTile$get_HumanPop()$init_ActivitySpace()
-# MicroTile$get_HumanPop()$sim_ActivitySpace()
-# 
+
 # MicroTile$get_ActivitySpace()
 
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 
-# MicroTile$get_HumanPop()$get_PathogensHistory()
 MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE,trackPop = TRUE)
 
 MicroTile$reset_FemalePop(MosquitoPop_PAR = mosquito_par)
@@ -73,6 +71,15 @@ MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE)
+
+
+
+
+
+###############################################################################
+# old code
+###############################################################################
+
 
 # testing one step aquatic ecology for emerge
 # MicroTile$get_FemalePop()$get_pop()$ls()
@@ -84,12 +91,6 @@ MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE)
 # MicroTile$get_FemalePop()$get_pop()$get("0_1_1")$set_inPointSet("f")
 # debug(MicroTile$get_FemalePop()$get_pop()$get("0_1_1")$chooseHost)
 # MicroTile$get_FemalePop()$get_pop()$get("0_1_1")$chooseHost()
-
-
-
-###############################################################################
-# old code
-###############################################################################
 
 # par = MBITES.BRO.Parameters()
 # mosyF = MosquitoPopFemale$new(N= 10,ix_init = rep(1,10),genotype_init = rep(1,10),MBITES_PAR = par)

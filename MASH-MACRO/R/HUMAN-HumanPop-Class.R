@@ -47,7 +47,7 @@
 #'
 #'
 #'
-#' @md
+#'
 #' @export
 HumanPop <- R6::R6Class(classname = "HumanPop",
                     portable = TRUE,
