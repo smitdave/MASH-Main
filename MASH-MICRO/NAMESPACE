@@ -3,6 +3,7 @@
 export(AQUA.Emerge.Setup)
 export(AquaticSite)
 export(DEBUG.MASHMICRO)
+export(EL4P)
 export(FeedingSite)
 export(Humans.MICRO.Setup)
 export(Landscape)
