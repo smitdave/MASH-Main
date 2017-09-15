@@ -1,4 +1,3 @@
-###############################################################################
 #       __  ______   _____ __  __      __  ______   __________  ____
 #      /  |/  /   | / ___// / / /     /  |/  /   | / ____/ __ \/ __ \
 #     / /|_/ / /| | \__ \/ /_/ /_____/ /|_/ / /| |/ /   / /_/ / / / /
@@ -14,6 +13,57 @@
 rm(list=ls());gc()
 library(MASHmacro)
 
+
+###############################################################################
+# John Marshall EL4P
+###############################################################################
+
+N_genotypes = 2
+
+# EL4P = matrix(data = 0,nrow = 7,ncol = N_genotypes,dimnames = list(c("E","L1","L2","L3","L4","P","lambda"),NULL))
+E = rep(0,N_genotypes)
+L1 = rep(0,N_genotypes)
+L2 = rep(0,N_genotypes)
+L3 = rep(0,N_genotypes)
+L4 = rep(0,N_genotypes)
+P = rep(0,N_genotypes)
+lambda = rep(0,N_genotypes)
+
+
+K = 1e3
+muE = 0.1
+muL = 0.1
+muP = 0.1
+durE = 1
+durL = 4
+durP = 1
+
+L = sum(L1,L2,L3,L4)
+
+coef = matrix(data = c(
+  rep(x =  exp(-muE)*(1-(1-exp(-1/durE))),times = N_genotypes), # E
+  rep(x = exp(-muE)*(1-exp(-1/durE)) + exp(-muL*(1+(L/K)))*(1-(1-exp(-4/durL))),times = N_genotypes), # L1
+  rep(x = exp(-muL*(1+(L/K)))*((1-exp(-4/durL)) + (1-(1-exp(-4/durL)))),times = N_genotypes), # L2
+  rep(x = exp(-muL*(1+(L/K)))*((1-exp(-4/durL)) + (1-(1-exp(-4/durL)))),times = N_genotypes), # L3
+  rep(x = exp(-muL*(1+(L/K)))*((1-exp(-4/durL)) + (1-(1-exp(-4/durL)))),times = N_genotypes), # L4
+  rep(x = exp(-muL*(1+(L/K)))*(1-exp(-4/durL)) + exp(-muP)*(1-(1-exp(-1/durP))),times = N_genotypes), # P
+  rep(x = exp(-muP)*(1-exp(-1/(2*durP))),times = N_genotypes) # lambda
+),nrow = 7,ncol = N_genotypes,byrow = TRUE,dimnames = list(c("E","L1","L2","L3","L4","P","lambda"),NULL))
+
+
+EL4P["E",1:2] = 10
+
+# new = 
+
+pop$eggs   = exp(-muE)*(1-(1-exp(-1/durE)))*eggso
+pop$L1     = exp(-muE)*(1-exp(-1/durE))*eggso + exp(-muL*(1+(Lo/K)))*(1-(1-exp(-4/durL)))*L1o
+pop$L2     = exp(-muL*(1+(Lo/K)))*((1-exp(-4/durL))*L1o + (1-(1-exp(-4/durL)))*L2o)
+pop$L3     = exp(-muL*(1+(Lo/K)))*((1-exp(-4/durL))*L2o + (1-(1-exp(-4/durL)))*L3o)
+pop$L4     = exp(-muL*(1+(Lo/K)))*((1-exp(-4/durL))*L3o + (1-(1-exp(-4/durL)))*L4o)
+pop$P      = exp(-muL*(1+(Lo/K)))*(1-exp(-4/durL))*L4o + exp(-muP)*(1-(1-exp(-1/durP)))*Po
+pop$lambda = exp(-muP)*(1-exp(-1/(2*durP)))*Po
+
+
 ###############################################################################
 #
 # EL4P R VS C++ HEAD TO HEAD
@@ -22,17 +72,17 @@ library(MASHmacro)
 ###############################################################################
 
 
-tGrain = 1
+tGrain = 24
 v = 20
 f = (0.3)/tGrain
 g = (1/10)/tGrain
-alpha=(0.1)/tGrain
+alpha=(0.9)/tGrain
 gamma=(0.1)/tGrain
 psi = 0.001/tGrain
 Lstart = 20
 Mstart = 20
 tMax=100
-n=4
+n=1
 
 L1hist = numeric(tMax)
 L2hist = numeric(tMax)
