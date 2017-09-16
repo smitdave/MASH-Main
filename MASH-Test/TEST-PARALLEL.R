@@ -11,30 +11,48 @@
 ##############################################################################################################
 
 library(parallel)
+library(snow)
 
 # we use a socket cluster because we don't want to fork the current environment
-cl = parallel::makeCluster(spec = 2,type = "PSOCK")
+cl = parallel::makeCluster(spec = 2,type = "SOCK")
 
-parallel::clusterEvalQ(cl = cl,expr = {
+# serialize(object = rnorm(10),connection = cl[[1]]$con)
+
+# parallel:::sendCall(con = cl[[1]],fun = function(){
+#   pid <- Sys.getpid()
+#   name <- Sys.info()["nodename"]
+#   x <- paste("This a call specifically sent to ", name, "with PID", pid, "!")
+#   return(x)
+# },args = list(),return = FALSE, tag = 1)
+
+# parallel::clusterEvalQ(cl = cl,expr = {
+#   pid <- Sys.getpid()
+#   name <- Sys.info()["nodename"]
+#   str <- paste("This is R running on", name, "with PID", pid, "!")
+#   return(str)
+# })
+
+# snow:::sendData(node = cl[[1]],data = rnorm(5))
+
+parallel::clusterEvalQ(cl = cl[1],expr = {
   pid <- Sys.getpid()
   name <- Sys.info()["nodename"]
   str <- paste("This is R running on", name, "with PID", pid, "!")
-  return(str)
+  # return(str)
 })
 
+parallel::clusterEvalQ(cl = cl[2],expr = {
+  x = rnorm(n = 1e3)
+})
 
-clusterEvalQ(cl = cl,expr = {ls()})
-
-parallel:::sendCall(con = cl[[1]],fun = function(){
-  x = paste("This a call specifically sent to ", name, "with PID", pid, "!")
-},args = list(),return = FALSE)
-
-# parallel:::sendData(node = cl[[1]],data = 5)
+parallel::clusterEvalQ(cl = cl[2],expr = {
+  return(x)
+})
 
 clusterEvalQ(cl = cl,expr = {ls()})
 
 stopCluster(cl)
-
+rm(cl)
 
 
 
