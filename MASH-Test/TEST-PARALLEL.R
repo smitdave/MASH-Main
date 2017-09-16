@@ -39,28 +39,71 @@ rm(cl)
 # second round, one small step for R, one giant leap for epidemiologists
 ###############################################################################
 
-cl = parallel::makePSOCKcluster(names = 2)
+cl = parallel::makePSOCKcluster(names = 3)
+
+DIR = "/Users/slwu89/Desktop/MASHOUT/"
+if(!dir.exists(DIR)){
+  dir.create(DIR)
+}
+file2erase = system(command = paste0("ls ",DIR),intern = T)
+for(file in file2erase){
+  file.remove(paste0(DIR,file))
+}
+
+# debug(parallel:::sendCall)
+# undebug(parallel:::sendCall)
 
 # send data to node 1 and do a 'calculation'
 parallel:::sendCall(con = cl[[1]],fun = function(x){
   y <<- x + 5
 },args = list(x = 10),return = FALSE,tag = 1)
 
-parallel:::recvData(node = cl[[1]])
+node1out = parallel:::recvData(node = cl[[1]])
 
 parallel::clusterEvalQ(cl = cl,expr = {ls()})
 
-# send data to node 2 and do a 'calculation'
-parallel:::sendCall(con = cl[[2]],fun = function(){
+# send data to node 2 and do a 'calculation', and write out the 'calculation'
+parallel:::sendCall(con = cl[[2]],fun = function(DIR){
   x <<- rexp(n = 10)
-},args = list(),return = FALSE,tag = 2)
+  con = file(description = paste0(DIR,"node2out.txt"),open = "wt")
+  writeLines(text = paste0("node 2 is printing! the results of x were: ",x),con =con)
+  close(con)
+},args = list(DIR = DIR),return = FALSE,tag = 2)
 
-parallel:::recvData(node = cl[[2]])
+node2out = parallel:::recvData(node = cl[[2]])
+
+parallel::clusterEvalQ(cl = cl,expr = {ls()})
+
+# do a more strenuous computation on node 3
+# first, push the DIR to that node's memory
+parallel:::sendCall(con = cl[[3]],fun = function(DIR){
+  DIR <<- DIR
+},args = list(DIR = DIR),return = FALSE,tag = 3)
+# do a 'computation' and write to txt
+parallel:::sendCall(con = cl[[3]],fun = function(){
+  con = file(description = paste0(DIR,"node3out.txt"),open = "wt")
+  pid = Sys.getpid()
+  writeLines(text = paste0("node 3 is printing from pid: ",pid),con = con)
+  for(i in 1:1e3){
+    writeLines(text = paste0(i),con = get(x = "con"))
+  }
+  close(con)
+},args = list(),return = FALSE,tag = 3)
+
+# let's come back to node 1 and tell it to print out some stuff
+parallel:::sendCall(con = cl[[1]],fun = function(DIR){
+  con = file(description = paste0(DIR,"node1out.txt"),open = "wt")
+  pid = Sys.getpid()
+  name = Sys.info()["nodename"]
+  str = paste("Node 1 reporting in, running on", name, "with PID", pid, "!")
+  writeLines(text = str,con =con)
+  close(con)
+},args = list(DIR=DIR),return = FALSE,tag = 1)
 
 parallel::clusterEvalQ(cl = cl,expr = {ls()})
 
 # it's all good, shut it down...
-stopCluster(cl)
+parallel::stopCluster(cl)
 rm(cl)
 
 
