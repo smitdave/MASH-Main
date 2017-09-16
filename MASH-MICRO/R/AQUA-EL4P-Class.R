@@ -72,7 +72,7 @@ EL4P <- R6::R6Class(classname = "EL4P",
                         private$L4_lag = rep(0,times=N_genotypes)
                         private$P_lag = rep(0,times=N_genotypes)
 
-                        private$L_tot = 0
+                        private$L = 0
 
                       }
 
@@ -107,7 +107,7 @@ EL4P <- R6::R6Class(classname = "EL4P",
                       muLarva = numeric(1),
                       muPupae = numeric(1),
 
-                      L_tot = numeric(1)
+                      L = numeric(1)
 
                     )
 )

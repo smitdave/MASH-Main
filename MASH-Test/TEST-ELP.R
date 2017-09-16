@@ -12,57 +12,72 @@
 
 rm(list=ls());gc()
 library(MASHmacro)
+library(MASHmicro)
 
 
 ###############################################################################
 # John Marshall EL4P
 ###############################################################################
 
-N_genotypes = 2
+N_genotypes = 1
 
-# EL4P = matrix(data = 0,nrow = 7,ncol = N_genotypes,dimnames = list(c("E","L1","L2","L3","L4","P","lambda"),NULL))
-E = rep(0,N_genotypes)
-L1 = rep(0,N_genotypes)
-L2 = rep(0,N_genotypes)
-L3 = rep(0,N_genotypes)
-L4 = rep(0,N_genotypes)
-P = rep(0,N_genotypes)
-lambda = rep(0,N_genotypes)
+el4p = MASHmicro::EL4P$new(K = 100,dEgg = 2,dLarva = 2,dPupae = 2,muEgg = 0.1,muLarva = 0.01,muPupae = 0.1,N_genotypes = N_genotypes)
 
+# el4p$addBatch_EL4P(batch = c(10,10))
+# el4p$get_all(lag = TRUE)
 
-K = 1e3
-muE = 0.1
-muL = 0.1
-muP = 0.1
-durE = 1
-durL = 4
-durP = 1
+g = 1/10
+v = 20
+f = 0.3
+M = 100
 
-L = sum(L1,L2,L3,L4)
+Ehist = vector(mode="list",length=1000)
+L1hist = vector(mode="list",length=1000)
+L2hist = vector(mode="list",length=1000)
+L3hist = vector(mode="list",length=1000)
+L4hist = vector(mode="list",length=1000)
+Phist = vector(mode="list",length=1000)
+lambdahist = vector(mode="list",length=1000)
 
-coef = matrix(data = c(
-  rep(x =  exp(-muE)*(1-(1-exp(-1/durE))),times = N_genotypes), # E
-  rep(x = exp(-muE)*(1-exp(-1/durE)) + exp(-muL*(1+(L/K)))*(1-(1-exp(-4/durL))),times = N_genotypes), # L1
-  rep(x = exp(-muL*(1+(L/K)))*((1-exp(-4/durL)) + (1-(1-exp(-4/durL)))),times = N_genotypes), # L2
-  rep(x = exp(-muL*(1+(L/K)))*((1-exp(-4/durL)) + (1-(1-exp(-4/durL)))),times = N_genotypes), # L3
-  rep(x = exp(-muL*(1+(L/K)))*((1-exp(-4/durL)) + (1-(1-exp(-4/durL)))),times = N_genotypes), # L4
-  rep(x = exp(-muL*(1+(L/K)))*(1-exp(-4/durL)) + exp(-muP)*(1-(1-exp(-1/durP))),times = N_genotypes), # P
-  rep(x = exp(-muP)*(1-exp(-1/(2*durP))),times = N_genotypes) # lambda
-),nrow = 7,ncol = N_genotypes,byrow = TRUE,dimnames = list(c("E","L1","L2","L3","L4","P","lambda"),NULL))
+tNow = 1
+while(tNow <= 1000){
+  el4p$addBatch_EL4P(batch = (f*v*M))
+  el4p$oneDay_EL4P()
+  Ehist[[tNow]] = el4p$get_E()
+  L1hist[[tNow]] = el4p$get_L1()
+  L2hist[[tNow]] = el4p$get_L2()
+  L3hist[[tNow]] = el4p$get_L3()
+  L4hist[[tNow]] = el4p$get_L4()
+  Phist[[tNow]] = el4p$get_P()
+  lambdahist[[tNow]] = el4p$get_lambda()
+  el4p$clear_lambda()
+  M = lambdahist[[tNow]] - g*M
+  
+  tNow = tNow + 1
+}
 
+Eout = Reduce(f = rbind,x = Ehist)
+Eout = rowSums(Eout)
 
-EL4P["E",1:2] = 10
+L1out = Reduce(f = rbind,x = L1hist)
+L1out = rowSums(L1out)
 
-# new = 
+L2out = Reduce(f = rbind,x = L2hist)
+L2out = rowSums(L2out)
 
-pop$eggs   = exp(-muE)*(1-(1-exp(-1/durE)))*eggso
-pop$L1     = exp(-muE)*(1-exp(-1/durE))*eggso + exp(-muL*(1+(Lo/K)))*(1-(1-exp(-4/durL)))*L1o
-pop$L2     = exp(-muL*(1+(Lo/K)))*((1-exp(-4/durL))*L1o + (1-(1-exp(-4/durL)))*L2o)
-pop$L3     = exp(-muL*(1+(Lo/K)))*((1-exp(-4/durL))*L2o + (1-(1-exp(-4/durL)))*L3o)
-pop$L4     = exp(-muL*(1+(Lo/K)))*((1-exp(-4/durL))*L3o + (1-(1-exp(-4/durL)))*L4o)
-pop$P      = exp(-muL*(1+(Lo/K)))*(1-exp(-4/durL))*L4o + exp(-muP)*(1-(1-exp(-1/durP)))*Po
-pop$lambda = exp(-muP)*(1-exp(-1/(2*durP)))*Po
+L3out = Reduce(f = rbind,x = L3hist)
+L3out = rowSums(L3out)
 
+L4out = Reduce(f = rbind,x = L4hist)
+L4out = rowSums(L4out)
+
+Pout = Reduce(f = rbind,x = Phist)
+Pout = rowSums(Pout)
+
+lambdaout = Reduce(f = rbind,x = lambdahist)
+lambdaout = rowSums(lambdaout)
+
+matplot(cbind(Eout,L1out,L2out,L3out,L4out,Pout,lambdaout),type="l",lty=1)
 
 ###############################################################################
 #

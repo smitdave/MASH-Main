@@ -15,9 +15,8 @@
 
 
 ###############################################################################
-# Difference Equations
+# Difference Equations & Specialized Methods
 ###############################################################################
-
 
 #' EL4P Daily Difference Equations
 #'
@@ -26,7 +25,7 @@
 #'
 oneDay_EL4P <- function(){
 
-  private$L_tot     = sum(private$L1,private$L2,private$L3,private$L4)
+  private$L     = sum(private$L1,private$L2,private$L3,private$L4)
 
   private$E_lag     = private$E
   private$L1_lag    = private$L1
@@ -36,11 +35,11 @@ oneDay_EL4P <- function(){
   private$P_lag     = private$P
 
   private$E         = exp(-private$muEgg)*(1-(1-exp(-1/private$dEgg)))*private$E_lag
-  private$L1        = exp(-private$muEgg)*(1-exp(-1/private$dEgg))*private$E_lag + exp(-private$muLarva*(1+(L/private$K)))*(1-(1-exp(-4/private$dLarva)))*private$L1_lag
-  private$L2        = exp(-private$muLarva*(1+(L/private$K)))*((1-exp(-4/private$dLarva))*private$L1_lag + (1-(1-exp(-4/private$dLarva)))*private$L2_lag)
-  private$L3        = exp(-private$muLarva*(1+(L/private$K)))*((1-exp(-4/private$dLarva))*private$L2_lag + (1-(1-exp(-4/private$dLarva)))*private$L3_lag)
-  private$L4        = exp(-private$muLarva*(1+(L/private$K)))*((1-exp(-4/private$dLarva))*private$L3_lag + (1-(1-exp(-4/private$dLarva)))*private$L4_lag)
-  private$P         = exp(-private$muLarva*(1+(L/private$K)))*(1-exp(-4/private$dLarva))*private$L4_lag + exp(-private$muPupae)*(1-(1-exp(-1/private$dPupae)))*private$P_lag
+  private$L1        = exp(-private$muEgg)*(1-exp(-1/private$dEgg))*private$E_lag + exp(-private$muLarva*(1+(private$L/private$K)))*(1-(1-exp(-4/private$dLarva)))*private$L1_lag
+  private$L2        = exp(-private$muLarva*(1+(private$L/private$K)))*((1-exp(-4/private$dLarva))*private$L1_lag + (1-(1-exp(-4/private$dLarva)))*private$L2_lag)
+  private$L3        = exp(-private$muLarva*(1+(private$L/private$K)))*((1-exp(-4/private$dLarva))*private$L2_lag + (1-(1-exp(-4/private$dLarva)))*private$L3_lag)
+  private$L4        = exp(-private$muLarva*(1+(private$L/private$K)))*((1-exp(-4/private$dLarva))*private$L3_lag + (1-(1-exp(-4/private$dLarva)))*private$L4_lag)
+  private$P         = exp(-private$muLarva*(1+(private$L/private$K)))*(1-exp(-4/private$dLarva))*private$L4_lag + exp(-private$muPupae)*(1-(1-exp(-1/private$dPupae)))*private$P_lag
   private$lambda    = exp(-private$muPupae)*(1-exp(-1/(2*private$dPupae)))*private$P_lag
 
 }
@@ -50,9 +49,76 @@ EL4P$set(which = "public",name = "oneDay_EL4P",
 )
 
 
+#' EL4P Add Egg Batch
+#'
+#' Add an egg batch to EL4P
+#'  * This method is bound to \code{EL4P$addBatch_EL4P}
+#'
+#' @param batch numeric vector, size of vector must equal the number of genotypes in the EL4P population
+#'
+addBatch_EL4P <- function(batch){
+  if(length(batch) != private$N_genotypes){
+    stop(cat("number of elements in egg batch: ",batch," must be equal to number of genotypes in EL4P\n",sep=""))
+  }
+  private$E = private$E + batch
+}
+
+EL4P$set(which = "public",name = "addBatch_EL4P",
+          value = addBatch_EL4P, overwrite = TRUE
+)
+
+
 ###############################################################################
 # Getters & Setters
 ###############################################################################
+
+# get all
+
+#' EL4P: Get All Life Stages
+#'
+#' Return all life stages
+#'  * This method is bound to \code{EL4P$get_all}
+#'
+#' @param lag logical; return lag stages as well?
+#'
+get_all_EL4P <- function(lag = FALSE){
+  if(lag){
+    return(
+      list(
+        E = private$E,
+        E_lag = private$E_lag,
+        L1 = private$L1,
+        L1_lag = private$L1_lag,
+        L2 = private$L2,
+        L2_lag = private$L2_lag,
+        L3 = private$L3,
+        L3_lag = private$L3_lag,
+        L4 = private$L4,
+        L4_lag = private$L4_lag,
+        P = private$P,
+        P_lag = private$P_lag,
+        lambda = private$lambda
+      )
+    )
+  } else {
+    return(
+      list(
+        E = private$E,
+        L1 = private$L1,
+        L2 = private$L2,
+        L3 = private$L3,
+        L4 = private$L4,
+        P = private$P,
+        lambda = private$lambda
+      )
+    )
+  }
+}
+
+EL4P$set(which = "public",name = "get_all",
+          value = get_all_EL4P, overwrite = TRUE
+)
+
 
 # lambda
 
