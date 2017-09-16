@@ -53,14 +53,32 @@ for(file in file2erase){
 # debug(parallel:::sendCall)
 # undebug(parallel:::sendCall)
 
+# send class generator to all nodes
+parallel::clusterEvalQ(cl = cl,expr = {
+  testClass <<- R6::R6Class(classname = "test",
+                           public = list(
+                             x = 10,
+                             y = 20
+                           )
+  )
+})
+
 # send data to node 1 and do a 'calculation'
 parallel:::sendCall(con = cl[[1]],fun = function(x){
+  aClass <<- testClass$new()
   y <<- x + 5
 },args = list(x = 10),return = FALSE,tag = 1)
 
 node1out = parallel:::recvData(node = cl[[1]])
 
 parallel::clusterEvalQ(cl = cl,expr = {ls()})
+
+# get something specific out of node 1
+node1specific = parallel::clusterCall(cl = cl[1],fun = function(){
+  return(
+    aClass$x
+  )
+})
 
 # send data to node 2 and do a 'calculation', and write out the 'calculation'
 parallel:::sendCall(con = cl[[2]],fun = function(DIR){
