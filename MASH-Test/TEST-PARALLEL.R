@@ -11,34 +11,14 @@
 ##############################################################################################################
 
 library(parallel)
-library(snow)
 
 # we use a socket cluster because we don't want to fork the current environment
-cl = parallel::makeCluster(spec = 2,type = "SOCK")
-
-# serialize(object = rnorm(10),connection = cl[[1]]$con)
-
-# parallel:::sendCall(con = cl[[1]],fun = function(){
-#   pid <- Sys.getpid()
-#   name <- Sys.info()["nodename"]
-#   x <- paste("This a call specifically sent to ", name, "with PID", pid, "!")
-#   return(x)
-# },args = list(),return = FALSE, tag = 1)
-
-# parallel::clusterEvalQ(cl = cl,expr = {
-#   pid <- Sys.getpid()
-#   name <- Sys.info()["nodename"]
-#   str <- paste("This is R running on", name, "with PID", pid, "!")
-#   return(str)
-# })
-
-# snow:::sendData(node = cl[[1]],data = rnorm(5))
+cl = parallel::makePSOCKcluster(names = 2)
 
 parallel::clusterEvalQ(cl = cl[1],expr = {
   pid <- Sys.getpid()
   name <- Sys.info()["nodename"]
   str <- paste("This is R running on", name, "with PID", pid, "!")
-  # return(str)
 })
 
 parallel::clusterEvalQ(cl = cl[2],expr = {
@@ -49,11 +29,39 @@ parallel::clusterEvalQ(cl = cl[2],expr = {
   return(x)
 })
 
-clusterEvalQ(cl = cl,expr = {ls()})
+parallel::clusterEvalQ(cl = cl,expr = {ls()})
 
 stopCluster(cl)
 rm(cl)
 
+
+###############################################################################
+# second round, one small step for R, one giant leap for epidemiologists
+###############################################################################
+
+cl = parallel::makePSOCKcluster(names = 2)
+
+# send data to node 1 and do a 'calculation'
+parallel:::sendCall(con = cl[[1]],fun = function(x){
+  y <<- x + 5
+},args = list(x = 10),return = FALSE,tag = 1)
+
+parallel:::recvData(node = cl[[1]])
+
+parallel::clusterEvalQ(cl = cl,expr = {ls()})
+
+# send data to node 2 and do a 'calculation'
+parallel:::sendCall(con = cl[[2]],fun = function(){
+  x <<- rexp(n = 10)
+},args = list(),return = FALSE,tag = 2)
+
+parallel:::recvData(node = cl[[2]])
+
+parallel::clusterEvalQ(cl = cl,expr = {ls()})
+
+# it's all good, shut it down...
+stopCluster(cl)
+rm(cl)
 
 
 
