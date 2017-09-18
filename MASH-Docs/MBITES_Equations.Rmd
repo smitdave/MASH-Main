@@ -13,14 +13,14 @@ knitr::opts_chunk$set(echo = TRUE,tidy=TRUE)
 
 ### Wing Tattering
 
-Per-bout Zero-inflated Beta distribution for damage due to wing tattering
+Per-bout Zero-inflated Beta distribution for damage due to wing tattering; male wing tattering has same functional form but with parameters $ttsz.p.m$, $ttsz.a.m$, $ttsz.b.m$.
 $$
 rTatterSize=\left\{\begin{matrix}
 0 \quad P(ttsz.p)
-\\ 
+\\
 Beta(ttsz.a,ttsz.b)\quad P(1-ttsz.p)
 \end{matrix}\right.
-$$  
+$$
 
 Per-bout Probability of Death due to Wing Tattering
 $$
@@ -30,7 +30,7 @@ $$
 
 ## Senescence
 
-Per-bout probability of death due to senescence
+Per-bout probability of death due to senescence; male senescence has same functional form but with parameters $sns.n.m$, $sns.a.m$.
 $$
 \frac{2+sns.b}{1+sns.b} - \frac{e^{sns.a\times age}}{sns.b+e^{sns.a\times age}}
 $$
@@ -86,6 +86,3 @@ Egg maturation time
 $$
 max(0,Norm(emt.m,emt.v))
 $$
-
-
-

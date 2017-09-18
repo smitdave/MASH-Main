@@ -318,8 +318,8 @@ mbitesBRO_oneBout <- function(){
   # self$energetics()
 
   # survival
-  self$surviveResting()
-  self$surviveFlight()
+  self$surviveResting()   # MBITES-Survival.R
+  self$surviveFlight()    # MBITES-Survival.R
 
   # log history
   private$history$historyTrack(privateEnv = private, alive = self$isAlive())
