@@ -650,4 +650,21 @@ Rcpp::List MosquitoFemaleHistory__exportHistory(MASHcpp::RcppR6::RcppR6<MASHcpp:
   return obj_->exportHistory();
 }
 
+// [[Rcpp::export]]
+MASHcpp::MosquitoMaleHistory MosquitoMaleHistory__ctor() {
+  return MASHcpp::MosquitoMaleHistory();
+}
+// [[Rcpp::export]]
+void MosquitoMaleHistory__historyInit(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory> obj_, Rcpp::Environment privateEnv) {
+  obj_->historyInit(privateEnv);
+}
+// [[Rcpp::export]]
+void MosquitoMaleHistory__historyTrack(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory> obj_, Rcpp::Environment privateEnv, bool alive) {
+  obj_->historyTrack(privateEnv, alive);
+}
+// [[Rcpp::export]]
+Rcpp::List MosquitoMaleHistory__exportHistory(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory> obj_) {
+  return obj_->exportHistory();
+}
+
 

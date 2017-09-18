@@ -1837,6 +1837,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// MosquitoMaleHistory__ctor
+MASHcpp::MosquitoMaleHistory MosquitoMaleHistory__ctor();
+RcppExport SEXP _MASHcpp_MosquitoMaleHistory__ctor() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(MosquitoMaleHistory__ctor());
+    return rcpp_result_gen;
+END_RCPP
+}
+// MosquitoMaleHistory__historyInit
+void MosquitoMaleHistory__historyInit(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory> obj_, Rcpp::Environment privateEnv);
+RcppExport SEXP _MASHcpp_MosquitoMaleHistory__historyInit(SEXP obj_SEXP, SEXP privateEnvSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory> >::type obj_(obj_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::Environment >::type privateEnv(privateEnvSEXP);
+    MosquitoMaleHistory__historyInit(obj_, privateEnv);
+    return R_NilValue;
+END_RCPP
+}
+// MosquitoMaleHistory__historyTrack
+void MosquitoMaleHistory__historyTrack(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory> obj_, Rcpp::Environment privateEnv, bool alive);
+RcppExport SEXP _MASHcpp_MosquitoMaleHistory__historyTrack(SEXP obj_SEXP, SEXP privateEnvSEXP, SEXP aliveSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory> >::type obj_(obj_SEXP);
+    Rcpp::traits::input_parameter< Rcpp::Environment >::type privateEnv(privateEnvSEXP);
+    Rcpp::traits::input_parameter< bool >::type alive(aliveSEXP);
+    MosquitoMaleHistory__historyTrack(obj_, privateEnv, alive);
+    return R_NilValue;
+END_RCPP
+}
+// MosquitoMaleHistory__exportHistory
+Rcpp::List MosquitoMaleHistory__exportHistory(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory> obj_);
+RcppExport SEXP _MASHcpp_MosquitoMaleHistory__exportHistory(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory> >::type obj_(obj_SEXP);
+    rcpp_result_gen = Rcpp::wrap(MosquitoMaleHistory__exportHistory(obj_));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_rcpp_hello", (DL_FUNC) &_MASHcpp_rcpp_hello, 0},
@@ -1999,6 +2043,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_MosquitoFemaleHistory__historyFeed", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__historyFeed, 2},
     {"_MASHcpp_MosquitoFemaleHistory__calcBionomics", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__calcBionomics, 1},
     {"_MASHcpp_MosquitoFemaleHistory__exportHistory", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__exportHistory, 1},
+    {"_MASHcpp_MosquitoMaleHistory__ctor", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__ctor, 0},
+    {"_MASHcpp_MosquitoMaleHistory__historyInit", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__historyInit, 2},
+    {"_MASHcpp_MosquitoMaleHistory__historyTrack", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__historyTrack, 3},
+    {"_MASHcpp_MosquitoMaleHistory__exportHistory", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__exportHistory, 1},
     {NULL, NULL, 0}
 };
 

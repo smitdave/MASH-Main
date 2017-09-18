@@ -642,3 +642,19 @@ MosquitoFemaleHistory__exportHistory <- function(obj_) {
     .Call('_MASHcpp_MosquitoFemaleHistory__exportHistory', PACKAGE = 'MASHcpp', obj_)
 }
 
+MosquitoMaleHistory__ctor <- function() {
+    .Call('_MASHcpp_MosquitoMaleHistory__ctor', PACKAGE = 'MASHcpp')
+}
+
+MosquitoMaleHistory__historyInit <- function(obj_, privateEnv) {
+    invisible(.Call('_MASHcpp_MosquitoMaleHistory__historyInit', PACKAGE = 'MASHcpp', obj_, privateEnv))
+}
+
+MosquitoMaleHistory__historyTrack <- function(obj_, privateEnv, alive) {
+    invisible(.Call('_MASHcpp_MosquitoMaleHistory__historyTrack', PACKAGE = 'MASHcpp', obj_, privateEnv, alive))
+}
+
+MosquitoMaleHistory__exportHistory <- function(obj_) {
+    .Call('_MASHcpp_MosquitoMaleHistory__exportHistory', PACKAGE = 'MASHcpp', obj_)
+}
+

@@ -47,6 +47,9 @@ template <> inline std::string generator_name<MASHcpp::ELP >() {return ".R6_ELP"
 template <> inline std::string   class_name_r<MASHcpp::MosquitoFemaleHistory >() {return "MosquitoFemaleHistory";}
 template <> inline std::string   package_name<MASHcpp::MosquitoFemaleHistory >() {return "MASHcpp";}
 template <> inline std::string generator_name<MASHcpp::MosquitoFemaleHistory >() {return ".R6_MosquitoFemaleHistory";}
+template <> inline std::string   class_name_r<MASHcpp::MosquitoMaleHistory >() {return "MosquitoMaleHistory";}
+template <> inline std::string   package_name<MASHcpp::MosquitoMaleHistory >() {return "MASHcpp";}
+template <> inline std::string generator_name<MASHcpp::MosquitoMaleHistory >() {return ".R6_MosquitoMaleHistory";}
 }
 }
 }
@@ -145,6 +148,12 @@ template <> inline SEXP wrap(const MASHcpp::MosquitoFemaleHistory& x) {
 }
 template <> inline MASHcpp::MosquitoFemaleHistory as(SEXP x) {
   return *(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoFemaleHistory>(x));
+}
+template <> inline SEXP wrap(const MASHcpp::MosquitoMaleHistory& x) {
+  return wrap(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory>(x));
+}
+template <> inline MASHcpp::MosquitoMaleHistory as(SEXP x) {
+  return *(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoMaleHistory>(x));
 }
 }
 

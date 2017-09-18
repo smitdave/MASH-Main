@@ -181,7 +181,58 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                         lock_objects = FALSE,
 
                         # public members
-                        public = list(),
+                        public = list(
+
+                          ##############################################################
+                          # Initializer
+                          ##############################################################
+
+                          # pointers are also passed down from enclosing MosquitoPopFemale object
+                          initialize = function(id, time, ix, genotype, state, eggT = 0, eggP = 0, energyPreG = 0){
+
+                            # # initialize general fields
+                            #
+                            # # ID and time
+                            # private$id        = id        # mosquito id
+                            # private$bDay      = time        # time of emergence
+                            # private$tNow      = time        # time of last event
+                            # private$tNext     = time        # time to next event
+                            # private$genotype  = genotype
+                            #
+                            # # State and Location
+                            # private$state      = state       # {F,B,R,L,O,S,M,E,D}
+                            # private$stateNew   = state       # {F,B,R,L,O,S,M,E,D}
+                            # private$inPointSet = "l"       # class of site {f,l,s,m}
+                            # private$ix         = ix       # index of site
+                            # private$mature     = FALSE       # mature
+                            #
+                            # # Other State Variables
+                            # private$lspot     = "l"        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
+                            # private$damage    = 0        # wing tattering
+                            # private$energy    = 1        # energy reserves
+                            #
+                            # # Egg Batch Variables
+                            # private$bmSize = 0         # the size of the blood meal, relative to max
+                            # private$batch  = 0         # female eggs in batch
+                            # private$eggT   = eggT         # MBITES_PAR the minimum time before eggs are mature
+                            # private$eggP   = eggP         # MBITES_PAR the mimimum provision for eggs to mature
+                            #
+                            # # Maturation & Reproduction
+                            # sire        = 0
+                            # energyPreG  = energyPreG           # MBITES_PAR pre-gonotrophic energy requirement
+                            # hostID      = 0           # the id of the host: -1::none; 0::not human
+                            #
+                            # # initialize PATHOGEN object
+                            # # PAR must contain a function mapped to the R6ClassGenerator object needed
+                            # self$init_Pathogens()
+                            #
+                            # # initialize history object
+                            # private$history = MASHcpp::MosquitoFemaleHistory()
+                            # private$history$historyInit(privateEnv = private)
+
+                          } # end initializer
+
+                        ),
 
                         # private members
                         private = list(

@@ -31,6 +31,19 @@ MosquitoFemale$set(which = "public",name = "rmSelf",
   value = rmSelf_MosquitoFemale, overwrite = TRUE
 )
 
+#' Remove Self
+#'
+#' Remove this mosquito from the population containing it.
+#'  * This method is bound to \code{MosquitoMale$rmSelf}
+#'
+rmSelf_MosquitoMale <- function(){
+  private$MalePopPointer$get_pop()$rm(key = private$id)
+}
+
+MosquitoMale$set(which = "public",name = "rmSelf",
+  value = rmSelf_MosquitoMale, overwrite = TRUE
+)
+
 
 #' Export JSON History and Remove Self
 #'
@@ -49,18 +62,19 @@ MosquitoFemale$set(which = "public",name = "writeAndDelete",
   value = writeAndDelete_MosquitoFemale, overwrite = TRUE
 )
 
-
-#' Remove Self
+#' Export JSON History and Remove Self
 #'
-#' Remove this mosquito from the population containing it.
-#'  * This method is bound to \code{MosquitoMale$rmSelf}
+#'  * This method is bound to \code{MosquitoMale$writeAndDelete}
 #'
-rmSelf_MosquitoMale <- function(){
-  private$FemalePopPointer$get_pop()$rm(key = private$id)
+#' @param conHist a \code{\link[base]{connection}} to write mosquito history to (the correct directory can be found with \code{\link{get_MosquitoDirectory_Tile}})
+#'
+writeAndDelete_MosquitoMale <- function(conHist){
+  cat(jsonlite::toJSON(x = private$history$exportHistory(),pretty = TRUE),",\n",sep="",file = conHist)
+  private$MalePopPointer$get_pop()$rm(key = private$id)
 }
 
-MosquitoMale$set(which = "public",name = "rmSelf",
-  value = rmSelf_MosquitoMale, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "writeAndDelete",
+  value = writeAndDelete_MosquitoMale, overwrite = TRUE
 )
 
 

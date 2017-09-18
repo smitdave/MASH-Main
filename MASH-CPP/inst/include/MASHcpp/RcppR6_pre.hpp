@@ -24,6 +24,7 @@ namespace MASHcpp { class EggQ; }
 namespace MASHcpp { class EL4P; }
 namespace MASHcpp { class ELP; }
 namespace MASHcpp { class MosquitoFemaleHistory; }
+namespace MASHcpp { class MosquitoMaleHistory; }
 
 namespace Rcpp {
 template <typename T> SEXP wrap(const MASHcpp::RcppR6::RcppR6<T>&);
@@ -57,6 +58,8 @@ template <> SEXP wrap(const MASHcpp::ELP&);
 template <> MASHcpp::ELP as(SEXP);
 template <> SEXP wrap(const MASHcpp::MosquitoFemaleHistory&);
 template <> MASHcpp::MosquitoFemaleHistory as(SEXP);
+template <> SEXP wrap(const MASHcpp::MosquitoMaleHistory&);
+template <> MASHcpp::MosquitoMaleHistory as(SEXP);
 }
 
 #endif

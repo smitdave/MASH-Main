@@ -1,9 +1,28 @@
+###############################################################################
+#
+#       __  _______  _____ ____  __  ________________
+#      /  |/  / __ \/ ___// __ \/ / / /  _/_  __/ __ \
+#     / /|_/ / / / /\__ \/ / / / / / // /  / / / / / /
+#    / /  / / /_/ /___/ / /_/ / /_/ // /  / / / /_/ /
+#   /_/  /_/\____//____/\___\_\____/___/ /_/  \____/
+#
+#   MASH-CPP
+#   Mosquito History Class Definition
+#   MASH-CPP Team
+#   September 18, 2017
+#
+###############################################################################
+
+###############################################################################
+# MosquitoFemaleHistory
+###############################################################################
+
 MosquitoFemaleHistory:
   name_cpp: MASHcpp::MosquitoFemaleHistory
   forward_declare: true
   constructor:
     roxygen: |
-      Class to store female mosquito histories; \code{\link{MicroMosquitoFemale}} and \code{\link{MicroMosquito}}
+      Class to store female mosquito histories
       @title Mosquito Female History Class
       @section Methods:
         * historyInit: initialize the mosquito history
@@ -49,6 +68,39 @@ MosquitoFemaleHistory:
       return_type: void
 
     calcBionomics:
+      return_type: void
+
+    # History Export
+    exportHistory:
+      return_type: "Rcpp::List"
+
+
+###############################################################################
+# MosquitoMaleHistory
+###############################################################################
+
+MosquitoMaleHistory:
+  name_cpp: MASHcpp::MosquitoMaleHistory
+  forward_declare: true
+  constructor:
+    roxygen: |
+      Class to store male mosquito histories
+      @title Mosquito Male History Class
+      @section Methods:
+        * a method: write me!
+      @export
+  methods:
+    # History Constructor
+    historyInit:
+      args:
+        - privateEnv: "Rcpp::Environment"
+      return_type: void
+
+    # History Tracking
+    historyTrack:
+      args:
+        - privateEnv: "Rcpp::Environment"
+        - alive: bool
       return_type: void
 
     # History Export
