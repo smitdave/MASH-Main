@@ -49,7 +49,7 @@ mosquito_par = list(
   N_female = nMosy,
   ix_female = rep(1,nMosy),
   genotype_female = rep(1,nMosy),
-  MBITES_PAR = mbites_par
+  MBITES_PAR_FEMALE = mbites_par
 )
 
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)

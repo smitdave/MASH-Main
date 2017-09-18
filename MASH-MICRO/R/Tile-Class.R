@@ -71,8 +71,15 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$FemalePop = MosquitoPopFemale$new(N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
                                                                   ix_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
                                                                   genotype_init = MosquitoPop_PAR$genotype_female,  # genotypes of females
-                                                                  MBITES_PAR = MosquitoPop_PAR$MBITES_PAR  # M-BITES parameters
-                                                                )
+                                                                  MBITES_PAR = MosquitoPop_PAR$MBITES_PAR_FEMALE  # M-BITES parameters
+                    )
+
+                    # generate male mosquito object
+                    if(!is.null(MosquitoPop_PAR$N_male)){
+                      private$MalePop = MosquitoPopMale$new(
+                        # N = 
+                      )
+                    }
 
                      #################################################
                      # Set Pointers

@@ -175,3 +175,137 @@ AquaticSite <- R6::R6Class(classname = "AquaticSite",
 
                  )
 )
+
+
+###############################################################################
+# Mating Site
+###############################################################################
+
+#' Mating Site Class Definition
+#'
+#' im a class!
+#'
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object
+#' @keywords R6 class
+#'
+#' @section **Constructor**:
+#'  * argument: im an agument!
+#'
+#' @section **Methods**:
+#'  * method: im a method!
+#'
+#' @section **Fields**:
+#'  * field: im a field!
+#'
+#' @export
+MatingSite <- R6::R6Class(classname = "MatingSite",
+                 portable = TRUE,
+                 cloneable = FALSE,
+                 lock_class = FALSE,
+                 lock_objects = FALSE,
+
+                 # public members
+                 public = list(
+
+                   #################################################
+                   # Initialize
+                   #################################################
+
+                   initialize = function(ix, siteXY, searchWt, haz = 0, siteType = 0L){
+
+                     private$ix = ix
+                     private$siteXY = siteXY
+                     private$searchWt = searchWt
+                     private$haz = haz
+                     private$siteType = siteType
+                     private$MatingQ = MASHcpp::MatingQ()
+
+                   }
+
+                 ),
+
+                 # private members
+                 private = list(
+
+                   # generic fields
+                   ix = integer(1),
+                   siteXY = numeric(2),
+                   searchWt = integer(1),
+                   siteType = integer(1),   # an aquatic or sugar site could be inside of a house, for example.
+
+                   # MatingSite fields
+                   haz = numeric(1),
+                   MatingQ = NULL,           # host risk queue
+
+                   # Pointers
+                   LandscapePointer = NULL
+
+                 )
+)
+
+
+###############################################################################
+# Sugar Feeding Site
+###############################################################################
+
+#' Sugar Feeding Site Class Definition
+#'
+#' im a class!
+#'
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object
+#' @keywords R6 class
+#'
+#' @section **Constructor**:
+#'  * argument: im an agument!
+#'
+#' @section **Methods**:
+#'  * method: im a method!
+#'
+#' @section **Fields**:
+#'  * field: im a field!
+#'
+#' @export
+SugarSite <- R6::R6Class(classname = "SugarSite",
+                 portable = TRUE,
+                 cloneable = FALSE,
+                 lock_class = FALSE,
+                 lock_objects = FALSE,
+
+                 # public members
+                 public = list(
+
+                   #################################################
+                   # Initialize
+                   #################################################
+
+                   initialize = function(ix, siteXY, searchWt, haz = 0, siteType = 0L){
+
+                     private$ix = ix
+                     private$siteXY = siteXY
+                     private$searchWt = searchWt
+                     private$haz = haz
+                     private$siteType = siteType
+
+                   }
+
+                 ),
+
+                 # private members
+                 private = list(
+
+                   # generic fields
+                   ix = integer(1),
+                   siteXY = numeric(2),
+                   searchWt = integer(1),
+                   siteType = integer(1),   # an aquatic or sugar site could be inside of a house, for example.
+
+                   # MatingSite fields
+                   haz = numeric(1),
+
+                   # Pointers
+                   LandscapePointer = NULL
+
+                 )
+)

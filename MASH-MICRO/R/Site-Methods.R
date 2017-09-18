@@ -556,3 +556,316 @@ set_LandscapePointer_AquaticSite <- function(LandscapePointer){private$Landscape
 AquaticSite$set(which = "public",name = "set_LandscapePointer",
   value = set_LandscapePointer_AquaticSite, overwrite = TRUE
 )
+
+
+###############################################################################
+# Mating Site
+###############################################################################
+
+#' Get ix
+#'
+#' Return site index \code{ix}
+#'  * This method is bound to \code{MatingSite$get_ix}
+#'
+get_ix_MatingSite <- function(){return(private$ix)}
+
+MatingSite$set(which = "public",name = "get_ix",
+  value = get_ix_MatingSite, overwrite = TRUE
+)
+
+#' Set ix
+#'
+#' Set site index \code{ix}
+#'  * This method is bound to \code{MatingSite$set_ix}
+#'
+#' @param ix integer
+#'
+set_ix_MatingSite <- function(ix){private$ix = ix}
+
+MatingSite$set(which = "public",name = "set_ix",
+  value = set_ix_MatingSite, overwrite = TRUE
+)
+
+#' Get siteXY
+#'
+#' Get site coordinates \code{siteXY}
+#'  * This method is bound to \code{MatingSite$get_siteXY}
+#'
+get_siteXY_MatingSite <- function(){return(private$siteXY)}
+
+MatingSite$set(which = "public",name = "get_siteXY",
+  value = get_siteXY_MatingSite, overwrite = TRUE
+)
+
+#' Set siteXY
+#'
+#' Set site coordinates \code{siteXY}
+#'  * This method is bound to \code{MatingSite$set_siteXY}
+#'
+#' @param ix numeric(2)
+#'
+set_siteXY_MatingSite <- function(newSiteXY){private$siteXY = newSiteXY}
+
+MatingSite$set(which = "public",name = "set_siteXY",
+  value = set_siteXY_MatingSite, overwrite = TRUE
+)
+
+#' Get searchWt
+#'
+#' Get site search weight \code{searchWt}
+#'  * This method is bound to \code{MatingSite$get_searchWt}
+#'
+get_searchWt_MatingSite <- function(){return(private$searchWt)}
+
+MatingSite$set(which = "public",name = "get_searchWt",
+  value = get_searchWt_MatingSite, overwrite = TRUE
+)
+
+#' Set searchWt
+#'
+#' Set site search weight \code{searchWt}
+#'  * This method is bound to \code{MatingSite$set_searchWt}
+#'
+#' @param ix numeric
+#'
+set_searchWt_MatingSite <- function(searchWt){private$searchWt = searchWt}
+
+MatingSite$set(which = "public",name = "set_searchWt",
+  value = set_searchWt_MatingSite, overwrite = TRUE
+)
+
+
+#' Get siteType
+#'
+#' Get site type \code{siteType}; 1 is peri-domestic, 0 is non peri-domestic.
+#'  * This method is bound to \code{MatingSite$get_siteType}
+#'
+get_siteType_MatingSite <- function(){return(private$siteType)}
+
+MatingSite$set(which = "public",name = "get_siteType",
+  value = get_siteType_MatingSite, overwrite = TRUE
+)
+
+#' Set siteType
+#'
+#' Set site type \code{siteType}; 1 is peri-domestic, 0 is non peri-domestic.
+#'  * This method is bound to \code{MatingSite$set_siteType}
+#'
+#' @param siteType integer
+#'
+set_siteType_MatingSite <- function(siteType){priate$siteType = siteType}
+
+MatingSite$set(which = "public",name = "set_siteType",
+  value = set_siteType_MatingSite, overwrite = TRUE
+)
+
+
+#' Get haz
+#'
+#' Get landing hazard associated with outside wall at this site \code{haz}
+#'  * This method is bound to \code{MatingSite$get_haz}
+#'
+get_haz_MatingSite <- function(){return(private$haz)}
+
+MatingSite$set(which = "public",name = "get_haz",
+  value = get_haz_MatingSite, overwrite = TRUE
+)
+
+#' Set haz
+#'
+#' Set landing hazard associated with outside wall at this site \code{haz}
+#'  * This method is bound to \code{MatingSite$set_haz}
+#'
+#' @param haz numeric
+#'
+set_haz_MatingSite <- function(haz){private$haz = haz}
+
+MatingSite$set(which = "public",name = "set_haz",
+  value = set_haz_MatingSite, overwrite = TRUE
+)
+
+#' Get MatingQ
+#'
+#' Get the mating queue object at this site; see \code{\link[MASHcpp]{MatingQ}} for details.
+#'  * This method is bound to \code{MatingSite$get_MatingQ}
+#'
+get_MatingQ_MatingSite <- function(){return(private$haz)}
+
+MatingSite$set(which = "public",name = "get_MatingQ",
+  value = get_MatingQ_MatingSite, overwrite = TRUE
+)
+
+#' Get \code{\link{Landscape}} Pointer
+#'
+#' Return \code{Landscape$self} enclosing this site.
+#'  * This method is bound to \code{MatingSite$get_LandscapePointer}
+#'
+get_LandscapePointer_MatingSite <- function(){return(private$LandscapePointer)}
+
+MatingSite$set(which = "public",name = "get_LandscapePointer",
+  value = get_LandscapePointer_MatingSite, overwrite = TRUE
+)
+
+#' Set \code{\link{Landscape}} Pointer
+#'
+#' Set the pointer \code{Landscape$self} enclosing this site.
+#'  * This method is bound to \code{MatingSite$set_LandscapePointer}
+#'
+#' @param LandscapePointer an environment
+#'
+set_LandscapePointer_MatingSite <- function(LandscapePointer){private$LandscapePointer = LandscapePointer}
+
+MatingSite$set(which = "public",name = "set_LandscapePointer",
+  value = set_LandscapePointer_MatingSite, overwrite = TRUE
+)
+
+
+###############################################################################
+# Sugar Feeding Site
+###############################################################################
+
+#' Get ix
+#'
+#' Return site index \code{ix}
+#'  * This method is bound to \code{SugarSite$get_ix}
+#'
+get_ix_SugarSite <- function(){return(private$ix)}
+
+SugarSite$set(which = "public",name = "get_ix",
+  value = get_ix_SugarSite, overwrite = TRUE
+)
+
+#' Set ix
+#'
+#' Set site index \code{ix}
+#'  * This method is bound to \code{SugarSite$set_ix}
+#'
+#' @param ix integer
+#'
+set_ix_SugarSite <- function(ix){private$ix = ix}
+
+SugarSite$set(which = "public",name = "set_ix",
+  value = set_ix_SugarSite, overwrite = TRUE
+)
+
+#' Get siteXY
+#'
+#' Get site coordinates \code{siteXY}
+#'  * This method is bound to \code{SugarSite$get_siteXY}
+#'
+get_siteXY_SugarSite <- function(){return(private$siteXY)}
+
+SugarSite$set(which = "public",name = "get_siteXY",
+  value = get_siteXY_SugarSite, overwrite = TRUE
+)
+
+#' Set siteXY
+#'
+#' Set site coordinates \code{siteXY}
+#'  * This method is bound to \code{SugarSite$set_siteXY}
+#'
+#' @param ix numeric(2)
+#'
+set_siteXY_SugarSite <- function(newSiteXY){private$siteXY = newSiteXY}
+
+SugarSite$set(which = "public",name = "set_siteXY",
+  value = set_siteXY_SugarSite, overwrite = TRUE
+)
+
+#' Get searchWt
+#'
+#' Get site search weight \code{searchWt}
+#'  * This method is bound to \code{SugarSite$get_searchWt}
+#'
+get_searchWt_SugarSite <- function(){return(private$searchWt)}
+
+SugarSite$set(which = "public",name = "get_searchWt",
+  value = get_searchWt_SugarSite, overwrite = TRUE
+)
+
+#' Set searchWt
+#'
+#' Set site search weight \code{searchWt}
+#'  * This method is bound to \code{SugarSite$set_searchWt}
+#'
+#' @param ix numeric
+#'
+set_searchWt_SugarSite <- function(searchWt){private$searchWt = searchWt}
+
+SugarSite$set(which = "public",name = "set_searchWt",
+  value = set_searchWt_SugarSite, overwrite = TRUE
+)
+
+
+#' Get siteType
+#'
+#' Get site type \code{siteType}; 1 is peri-domestic, 0 is non peri-domestic.
+#'  * This method is bound to \code{SugarSite$get_siteType}
+#'
+get_siteType_SugarSite <- function(){return(private$siteType)}
+
+SugarSite$set(which = "public",name = "get_siteType",
+  value = get_siteType_SugarSite, overwrite = TRUE
+)
+
+#' Set siteType
+#'
+#' Set site type \code{siteType}; 1 is peri-domestic, 0 is non peri-domestic.
+#'  * This method is bound to \code{SugarSite$set_siteType}
+#'
+#' @param siteType integer
+#'
+set_siteType_SugarSite <- function(siteType){priate$siteType = siteType}
+
+SugarSite$set(which = "public",name = "set_siteType",
+  value = set_siteType_SugarSite, overwrite = TRUE
+)
+
+
+#' Get haz
+#'
+#' Get landing hazard associated with outside wall at this site \code{haz}
+#'  * This method is bound to \code{SugarSite$get_haz}
+#'
+get_haz_SugarSite <- function(){return(private$haz)}
+
+SugarSite$set(which = "public",name = "get_haz",
+  value = get_haz_SugarSite, overwrite = TRUE
+)
+
+#' Set haz
+#'
+#' Set landing hazard associated with outside wall at this site \code{haz}
+#'  * This method is bound to \code{SugarSite$set_haz}
+#'
+#' @param haz numeric
+#'
+set_haz_SugarSite <- function(haz){private$haz = haz}
+
+SugarSite$set(which = "public",name = "set_haz",
+  value = set_haz_SugarSite, overwrite = TRUE
+)
+
+#' Get \code{\link{Landscape}} Pointer
+#'
+#' Return \code{Landscape$self} enclosing this site.
+#'  * This method is bound to \code{SugarSite$get_LandscapePointer}
+#'
+get_LandscapePointer_SugarSite <- function(){return(private$LandscapePointer)}
+
+SugarSite$set(which = "public",name = "get_LandscapePointer",
+  value = get_LandscapePointer_SugarSite, overwrite = TRUE
+)
+
+#' Set \code{\link{Landscape}} Pointer
+#'
+#' Set the pointer \code{Landscape$self} enclosing this site.
+#'  * This method is bound to \code{SugarSite$set_LandscapePointer}
+#'
+#' @param LandscapePointer an environment
+#'
+set_LandscapePointer_SugarSite <- function(LandscapePointer){private$LandscapePointer = LandscapePointer}
+
+SugarSite$set(which = "public",name = "set_LandscapePointer",
+  value = set_LandscapePointer_SugarSite, overwrite = TRUE
+)
