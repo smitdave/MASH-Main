@@ -22,7 +22,7 @@
 #'
 #' @return writes methods to \code{\link{MosquitoMale}} class.
 #' @export
-MBITES.Generic.Setup <- function(
+MBITES.Male.Setup <- function(
   overwrite = TRUE,
   timing = "exponential"
   ){
@@ -62,7 +62,48 @@ MBITES.Generic.Setup <- function(
             value = mbitesMale_get_surviveFlightProb, overwrite = overwrite
   )
 
+  ##############################################################
+  # MBITES-Male-Bouts.R
+  ##############################################################
+
+  switch(timing,
+    exponential = {
+      MosquitoMale$set(which = "public",name = "timing",
+                value = mbitesMale_timingExponential, overwrite = overwrite
+      )
+    },
+    gamma = {
+      MosquitoMale$set(which = "public",name = "timing",
+                value = mbitesMale_timingGamma, overwrite = overwrite
+      )
+    },
+    weibull = {
+      stop(cat("sean hasn't written weibull waiting times yet\n",sep=""))
+    },
+    {stop(cat("unrecognized entry for timing, expected character in 'exponential', 'gamma', 'weibull', got: ",timing,"\n",sep=""))}
+  )
+
+  MosquitoMale$set(which = "public",name = "get_MySiteType",
+            value = mbitesMale_get_MySiteType, overwrite = overwrite
+  )
+
+  MosquitoMale$set(which = "public",name = "get_WTS",
+            value = mbitesMale_get_WTS, overwrite = overwrite
+  )
+
+  MosquitoMale$set(which = "public",name = "newSpot",
+            value = mbitesMale_newSpot, overwrite = overwrite
+  )
+
+  MosquitoMale$set(which = "public",name = "enterHouse",
+            value = mbitesMale_enterHouse, overwrite = overwrite
+  )
+
+  MosquitoMale$set(which = "public",name = "landingSpot",
+            value = mbitesMale_landingSpot, overwrite = overwrite
+  )
 
 
 
-}
+
+} # end setup

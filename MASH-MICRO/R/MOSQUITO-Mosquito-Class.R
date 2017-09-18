@@ -188,7 +188,7 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                           ##############################################################
 
                           # pointers are also passed down from enclosing MosquitoPopFemale object
-                          initialize = function(id, time, ix, genotype, state){
+                          initialize = function(id, time, ix, genotype, state, mateFitness){
 
                             # initialize general fields
 
@@ -242,6 +242,7 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                           lspot     = character(1),        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
                           damage    = numeric(1),        # wing tattering
                           energy    = numeric(1),        # energy reserves
+                          mateFitness = numeric(1),      # mating fitness
 
                           history = NULL,          # history
 

@@ -123,7 +123,7 @@ MosquitoPopMale <- R6::R6Class(classname = "MosquitoPopMale",
                            private$pop = MASHcpp::HashMap$new(N = N+500L)
                            for(i in 1:N){
                              ID = paste0("0_",i,"_",genotype_init[i])
-                             private$pop$assign(key = ID, value = MosquitoMale$new(id=ID,time=0,ix=ix_init[i],genotype=genotype_init[i],state=private$initState))
+                             private$pop$assign(key = ID, value = MosquitoMale$new(id=ID,time=0,ix=ix_init[i],genotype=genotype_init[i],state=private$initState,mateFitness=1))
                              private$pop$get(ID)$set_MalePopPointer(self)
                            }
 
