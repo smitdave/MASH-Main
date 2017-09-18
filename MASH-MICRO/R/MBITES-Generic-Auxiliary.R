@@ -39,7 +39,7 @@ sampleIx_utility <- function(x, ...){
 #'  * This method is bound to \code{MosquitoFemale$isAlive()} or \code{MosquitoMale$isAlive()}.
 #' @md
 mbitesGeneric_isAlive <- function(){
-  if(private$stateNew == "D" || private$state == "D"){
+  if(private$stateNew == "D" | private$state == "D"){
     return(FALSE)
   } else {
     return(TRUE)
