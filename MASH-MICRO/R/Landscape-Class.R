@@ -55,7 +55,7 @@ Landscape <- R6::R6Class(classname = "Landscape",
                      with(Landscape_PAR,{
 
                          #########################################
-                         # Generate Feeding Sites
+                         # Generate Blood Feeding Sites
                          #########################################
 
                          private$FeedingSites = vector(mode="list",length=FeedingSite_PAR$nFeed)
@@ -89,6 +89,22 @@ Landscape <- R6::R6Class(classname = "Landscape",
                             module = AquaticSite_PAR$module,
                             lambda = AquaticSite_PAR$lambda[[ix]],
                             haz = AquaticSite_PAR$haz[ix])
+
+                         }
+
+                         #########################################
+                         # Generate Mating Sites
+                         #########################################
+
+                         if(!is.null(MatingSite_PAR)){
+
+                         }
+
+                         #########################################
+                         # Generate Sugar Feeding Sites
+                         #########################################
+
+                         if(!is.null(SugarSite_PAR)){
 
                          }
 
