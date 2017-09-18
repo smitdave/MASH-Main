@@ -171,23 +171,25 @@ mbitesBRO_landingSpot <- function(){
 #' A mosquito performs a blood feeding bout (all actions taken launch to launch when blood feeding required).
 #'  * This method is bound to \code{MosquitoFemale$boutB()}.
 #'
-#' @md
 mbitesBRO_boutB <- function(){
-  # check success
-  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("B_succeed")){
-    self$chooseHost() # MBITES-BRO-ChooseHost.R
-  } else {
-    private$hostID = 0L
-  }
 
-  if(private$hostID > 0){
-    self$humanEncounter() # MBITES-BRO-HostEncounter.R
-  } else if(private$hostID == -1){
-    self$zooEncounter() # MBITES-BRO-HostEncounter.R
-  } else if(private$hostID == 0){
-    return(NULL)
-  } else {
-    stop("illegal hostID value")
+  if(self$isAlive()){
+    # check success
+    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("B_succeed")){
+      self$chooseHost() # MBITES-BRO-ChooseHost.R
+    } else {
+      private$hostID = 0L
+    }
+
+    if(private$hostID > 0){
+      self$humanEncounter() # MBITES-BRO-HostEncounter.R
+    } else if(private$hostID == -1){
+      self$zooEncounter() # MBITES-BRO-HostEncounter.R
+    } else if(private$hostID == 0){
+      return(NULL)
+    } else {
+      stop("illegal hostID value")
+    }
   }
 
 }

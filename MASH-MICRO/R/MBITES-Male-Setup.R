@@ -123,7 +123,25 @@ MBITES.Male.Setup <- function(
             value = mbitesMale_landingSpot, overwrite = overwrite
   )
 
+  MosquitoMale$set(which = "public",name = "boutM",
+            value = mbitesMale_boutM, overwrite = overwrite
+  )
 
+  MosquitoMale$set(which = "public",name = "boutS",
+            value = mbitesMale_boutS, overwrite = overwrite
+  )
+
+  MosquitoMale$set(which = "public",name = "boutR",
+            value = mbitesMale_boutR, overwrite = overwrite
+  )
+
+  MosquitoMale$set(which = "public",name = "MBITES",
+            value = mbitesMale_oneMosquito_MBITES, overwrite = overwrite
+  )
+
+  MosquitoPopMale$set(which = "public",name = "MBITES",
+            value = mbitesMale_Pop_MBITES, overwrite = overwrite
+  )
 
 
 } # end setup

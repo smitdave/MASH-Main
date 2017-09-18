@@ -154,8 +154,13 @@ mbitesMale_landingSpot <- function(){
 # MBITES-Male: Mating Bout
 ###############################################################################
 
+#' MBITES-Male: Male Mating Bout \code{MosquitoMale}
+#'
+#' A male mosquito performs a mating bout. If successful (governed by parameter M.s.m), the mosquito enters a mating queue (see \code{\link[MASHcpp]{MatingQ}}).
+#'  * This method is bound to \code{MosquitoMale$boutM()}.
+#'
 mbitesMale_boutM <- function(){
-  
+
   if(self$isAlive() & runif(1) < private$MalePopPointer$get_MBITES_PAR("M.s.m")){
     private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$add_male2Q(private$id,private$mateFitness)
     private$stateNew = "R"
@@ -163,23 +168,50 @@ mbitesMale_boutM <- function(){
 
 }
 
+
 ###############################################################################
 # MBITES-Male: Sugar Feeding Bout
 ###############################################################################
 
+#' MBITES-Male: Male Sugar Feeding Bout \code{MosquitoMale}
+#'
+#' A male mosquito attempts to sugar feed. If successful (governed by parameter S.s.m), the mosquito energy is topped off, otherwise the mosquito's energy is unchanged.
+#'  * This method is bound to \code{MosquitoMale$boutS()}.
+#'
 mbitesMale_boutS <- function(){
 
+  if(self$isAlive()){
+    if(runif(1) < private$MalePopPointer$get_MBITES_PAR("S.s.m")){
+      private$energy = 1
+      private$stateNew = "R"
+    } else {
+      private$stateNew = "R"
+    }
+  }
+
 }
+
 
 ###############################################################################
 # MBITES-Male: Resting Bout
 ###############################################################################
 
+#' MBITES-Male: Male Sugar Feeding Bout \code{MosquitoMale}
+#'
+#' A male mosquito attempts to sugar feed. If successful (governed by parameter R.s.m), the mosquito energy is topped off, otherwise the mosquito's energy is unchanged.
+#'  * This method is bound to \code{MosquitoMale$boutS()}.
+#'
 mbitesMale_boutR <- function(){
 
+  if(self$isAlive()){
+    if(runif(1) < private$MalePopPointer$get_MBITES_PAR("R.s.m")){
+      private$stateNew = "M"
+    } else {
+      private$stateNew = "D"
+    }
+  }
+
 }
-
-
 
 
 ###############################################################################
@@ -220,10 +252,10 @@ mbitesMale_oneBout <- function(){
   self$timing() # update tNext
 
   # movement
-  self$moveMe()
+  self$moveMe()             # SEARCH-Kernel-Methods.R
 
   # landing spot
-  self$landingSpot()
+  self$landingSpot()        # MBITES-Male-Bouts.R
 
   # bout
   switch(private$state,
