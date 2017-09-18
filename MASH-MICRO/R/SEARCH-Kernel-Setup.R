@@ -23,7 +23,8 @@
 #' @param MBITES what M-BITES module to run?
 #'  * BRO: Blood Feeding, Resting, Oviposition module
 #'  * BROM: Blood Feeding, Resting, Oviposition, Mating module
-#'  * FULL: Full life cycle M-BITES module
+#'  * BROMS: Blood Feeding, Resting, Oviposition, Mating & Sugar Feeding module
+#'  * FULL: Full life cycle M-BITES module (Blood Feeding Search & Attempt, Resting, Oviposition Search & Attempt, Mating, Sugar Feeding)
 #'
 #' @export
 SEARCH.Kernel.Setup <- function(MBITES = "BRO", overwrite = TRUE){
@@ -35,12 +36,12 @@ SEARCH.Kernel.Setup <- function(MBITES = "BRO", overwrite = TRUE){
   #################################################################
 
   MosquitoPopFemale$set(which = "public",name = "SampleMove",
-              value = MicroKernel_SampleMvOb_MosquitoPop,
+              value = MicroKernel_SampleMvOb_MosquitoPopFemale,
               overwrite = overwrite
   )
 
   MosquitoPopMale$set(which = "public",name = "SampleMove",
-              value = MicroKernel_SampleMvOb_MosquitoPop,
+              value = MicroKernel_SampleMvOb_MosquitoPopMale,
               overwrite = overwrite
   )
 

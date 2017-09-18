@@ -351,3 +351,19 @@ clear_RiskQ_Landscape <- function(){
 Landscape$set(which = "public",name = "clear_RiskQ",
   value = clear_RiskQ_Landscape, overwrite = TRUE
 )
+
+#' Clear Mating Queue for Landscape
+#'
+#' Clear the \code{\link[MASHcpp]{MatingQ}} for all mating sites by calling \code{\link{clear_MatingQ_MatingSite}}
+#' This function is called in \code{\link{mbitesMale_Pop_MBITES}}.
+#'  * This method is bound to \code{Landscape$clear_MatingQ}
+#'
+clear_MatingQ_Landscape <- function(){
+  for(ix in 1:private$MatingSitesN){
+    private$MatingSites[[ix]]$clear_MatingQ()
+  }
+}
+
+Landscape$set(which = "public",name = "clear_MatingQ",
+  value = clear_MatingQ_Landscape, overwrite = TRUE
+)

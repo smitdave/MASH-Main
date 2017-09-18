@@ -11,7 +11,8 @@ SEARCH.Kernel.Setup(MBITES = "BRO", overwrite = TRUE)
 \itemize{
 \item BRO: Blood Feeding, Resting, Oviposition module
 \item BROM: Blood Feeding, Resting, Oviposition, Mating module
-\item FULL: Full life cycle M-BITES module
+\item BROMS: Blood Feeding, Resting, Oviposition, Mating & Sugar Feeding module
+\item FULL: Full life cycle M-BITES module (Blood Feeding Search & Attempt, Resting, Oviposition Search & Attempt, Mating, Sugar Feeding)
 }}
 }
 \description{

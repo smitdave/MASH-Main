@@ -63,6 +63,26 @@ MBITES.Male.Setup <- function(
   )
 
   ##############################################################
+  # MBITES-Male-Energetics.R
+  ##############################################################
+
+  MosquitoMale$set(which = "public",name = "sugarEnergetics",
+            value = mbitesMale_sugarEnergetics, overwrite = overwrite
+  )
+
+  MosquitoMale$set(which = "public",name = "pEnergySurvival",
+            value = mbitesMale_pEnergySurvival, overwrite = overwrite
+  )
+
+  MosquitoMale$set(which = "public",name = "pSugarBout",
+            value = mbitesMale_pSugarBout, overwrite = overwrite
+  )
+
+  MosquitoMale$set(which = "public",name = "queueSugarBout",
+            value = mbitesMale_queueSugarBout, overwrite = overwrite
+  )
+
+  ##############################################################
   # MBITES-Male-Bouts.R
   ##############################################################
 

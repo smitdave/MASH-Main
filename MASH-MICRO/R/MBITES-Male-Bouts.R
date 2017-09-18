@@ -98,7 +98,7 @@ mbitesMale_get_WTS <- function(){
 #'
 #'  * This method is bound to \code{MosquitoMale$newSpot()}.
 #'
-#' @return integer value corresponding to new landing spot
+#' @return character
 mbitesMale_newSpot <- function(){
   if(self$get_MySiteType() == 1){
     probs = private$MalePopPointer$get_MBITES_PAR("InAndOut")[private$lspot,] * self$get_WTS()
@@ -131,11 +131,11 @@ mbitesMale_enterHouse <- function(){
 #' Mosquito lands after a flight (choose a landing spot), which may cause various events.
 #' This function always calls \code{\link{mbitesMale_newSpot}} and may call \code{\link{mbitesMale_enterHouse}}
 #' Landing spots include:
-#'  * i: 1 rest on the inside wall of a structure
-#'  * w: 2 rest on the outside wall of a structure
-#'  * v: 3 rest on vegetation
-#'  * r: 4 reattempt without resting
-#'  * l: 5 leave the area
+#'  * i: rest on the inside wall of a structure
+#'  * w: rest on the outside wall of a structure
+#'  * v: rest on vegetation
+#'  * r: reattempt without resting
+#'  * l: leave the area
 #'
 #'  * This method is bound to \code{MosquitoMale$landingSpot()}.
 #'
@@ -147,4 +147,114 @@ mbitesMale_landingSpot <- function(){
       self$enterHouse() # enterHouse
     }
   }
+}
+
+
+
+
+
+
+#################################################################
+# MBITES-Male: Generic Bout
+#################################################################
+
+#' MBITES-Male: One Bout \code{MosquitoMale}
+#'
+#' Mosquito behavior has a finite set of states (state space of model), within which there are certain biological functions that are always evaluated.
+#' A bout is the actions taken by a mosquito between a launch and landing; \code{mbitesMale_oneBout} handles all the biological imperatives that occur during a bout,
+#' while specialized bout action methods handle the events that occur due to the purpose of the bout.
+#'  * \code{\link{mbitesMale_boutM}}: male mating bout
+#'  * \code{\link{mbitesMale_boutS}}: male sugar feeding bout
+#'  * \code{\link{mbitesMale_boutR}}: male resting bout
+#'
+#' The generic bout runs necessary updates of timing, state, survival, energetics, and queue checks prior to calling the nested
+#' specific bout action, and checks that the mosquito is alive/active before calling the bout. It updates \code{tNext} and \code{stateNew}.
+#'
+#' This corresponds to the following Gillespie-style algorithm:
+#'
+#' 1. tNow is set to tNext from previous bout
+#' 2. moveMe: movement between point classes (if needed)
+#' 3. boutFun: run bout function
+#' 4. run energetics and check if alive
+#' 5. run landingSpot and check if alive
+#' 6. run surviveResting/surviveFlight and check if alive
+#' 7. update tNext
+#' 8. update state to stateNew which is determined in the bout
+#'
+#'  * This method is bound to \code{MosquitoMale$oneBout()}.
+#'
+#'
+mbitesMale_oneBout <- function(){
+
+  # update time and state
+  private$tNow = private$tNext # update time
+  private$state = private$stateNew # update current state
+  self$timing() # update tNext
+
+  # movement
+  self$moveMe()
+
+  # landing spot
+  self$landingSpot()
+
+  # bout
+  switch(private$state,
+    M = {self$boutM()},
+    S = {self$boutS()},
+    R = {self$boutR()},
+    {stop("illegal behavioral state for MBITES-Male")}
+  )
+
+  # energetics
+  self$sugarEnergetics()    # MBITES-Male-Energetics.R
+
+  # survival
+  self$surviveResting()     # MBITES-Male-Survival.R
+  self$surviveFlight()      # MBITES-Male-Survival.R
+
+  # log history
+  private$history$historyTrack(privateEnv = private, alive = self$isAlive())
+
+}
+
+
+#################################################################
+# MBITES-Male: Simulation
+#################################################################
+
+#' MBITES-Male: Run Simulation for \code{\link{MosquitoMale}}
+#'
+#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{MicroTile}}.
+#' This method calls \code{\link{mbitesMale_oneBout}} to simulate each life stage.
+#'  * This method is bound to \code{MosquitoMale$MBITES()}.
+#'
+#' @md
+mbitesMale_oneMosquito_MBITES <- function(){
+
+  # run algorithm while alive and has not overrun tile time
+  while(private$tNext < private$TilePointer$get_tNow() & private$stateNew != "D"){
+    self$oneBout()
+  }
+
+  # if mosquito is dead output data if asked and remove it from the enclosing storage object
+  if(private$stateNew == "D" & private$get_MBITES_PAR("maleHistory")){
+    self$writeAndDelete(conHist = private$TilePointer$get_MaleHistoryCon())
+  }
+
+}
+
+#' MBITES-Male: Run Simulation for \code{\link{MosquitoPopMale}}
+#'
+#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{MicroTile}}.
+#' This method calls \code{\link{mbitesMale_oneMosquito_MBITES}} one each living mosquito sequentially.
+#' Prior to running simulation, this function calls \code{\link{clear_MatingQ_Landscape}} to clear mating queues.
+#'  * This method is bound to \code{MosquitoPopMale$MBITES()}.
+#'
+#' @md
+mbitesMale_Pop_MBITES <- function(){
+
+  private$LandscapePointer$clear_MatingQ()
+
+  private$pop$apply(tag="MBITES",returnVal=FALSE)
+
 }

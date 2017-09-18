@@ -7,7 +7,7 @@
 mbitesMale_newSpot()
 }
 \value{
-integer value corresponding to new landing spot
+character
 }
 \description{
 Method for return a new landing spot based on behavioral state of mosquito and weights from \code{\link{mbitesMale_get_WTS}}.

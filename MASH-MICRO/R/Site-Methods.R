@@ -695,6 +695,20 @@ MatingSite$set(which = "public",name = "get_MatingQ",
   value = get_MatingQ_MatingSite, overwrite = TRUE
 )
 
+#' Clear MatingQ
+#'
+#' Clear the mating queue object at this site; see \code{\link[MASHcpp]{MatingQ}} for details.
+#'  * This method is bound to \code{MatingSite$clear_MatingQ}
+#'
+clear_MatingQ_MatingSite <- function(){
+  private$MatingQ$clear_MatingQ()
+}
+
+MatingSite$set(which = "public",name = "clear_MatingQ",
+  value = clear_MatingQ_MatingSite, overwrite = TRUE
+)
+
+
 #' Get \code{\link{Landscape}} Pointer
 #'
 #' Return \code{Landscape$self} enclosing this site.

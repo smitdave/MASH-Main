@@ -23,7 +23,7 @@
 #'  * This method is bound to \code{MosquitoMale$surviveResting()}.
 #'
 mbitesMale_surviveResting <- function(){
-  if(self$isActive()){
+  if(self$isAlive()){
     if(runif(1) < self$get_restHaz()){
       private$stateNew = "D"
     }
@@ -55,7 +55,7 @@ mbitesMale_get_restHaz <- function(){
 #'  * This method is bound to \code{MosquitoMale$surviveFlight()}.
 #'
 mbitesMale_surviveFlight <- function(){
-  if(self$isActive()){
+  if(self$isAlive()){
     p = self$get_surviveFlightProb()
     if(private$MalePopPointer$get_MBITES_PAR("TATTER.M")){
       private$damage = private$damage + self$rTatterSize()

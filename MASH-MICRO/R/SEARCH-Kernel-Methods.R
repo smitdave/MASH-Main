@@ -17,17 +17,17 @@
 # 'MicroKernel_SampleMvOb' Method
 ###############################################################################
 
-#' MICRO Search Kernels: \code{\link{MicroMosquito}} Sample MvOb
+#' MICRO Search Kernels: \code{\link{MosquitoPopFemale}} Sample MvOb
 #'
 #' This method is a helper for \code{\link{MicroKernel_moveMe}} and samples the appropriate MvOb in MvAll stored in an enclosing \code{\link{Tile}} object.
-#'  * This function is bound to \code{MosquitoPopFemale$SampleMove} and \code{MosquitoPopMale$SampleMove}
+#'  * This function is bound to \code{MosquitoPopFemale$SampleMove}
 #'
 #' @param ixS: current site index \code{ix} of this mosquito
 #' @param state: current behavioral state of this mosquito
 #' @param inPointSet: current point set this mosquito is in
 #' @return new index
 #' @md
-MicroKernel_SampleMvOb_MosquitoPop <- function(ixS, state, inPointSet){
+MicroKernel_SampleMvOb_MosquitoPopFemale <- function(ixS, state, inPointSet){
 
   MvOb = private$TilePointer$get_movement(ixS,state,inPointSet)
 
@@ -50,6 +50,23 @@ MicroKernel_SampleMvOb_MosquitoPop <- function(ixS, state, inPointSet){
       }
     }
   }
+}
+
+#' MICRO Search Kernels: \code{\link{MosquitoPopMale}} Sample MvOb
+#'
+#' This method is a helper for \code{\link{MicroKernel_moveMe}} and samples the appropriate MvOb in MvAll stored in an enclosing \code{\link{Tile}} object.
+#'  * This function is bound to \code{MosquitoPopMale$SampleMove}
+#'
+#' @param ixS: current site index \code{ix} of this mosquito
+#' @param state: current behavioral state of this mosquito
+#' @param inPointSet: current point set this mosquito is in
+#' @return new index
+#' @md
+MicroKernel_SampleMvOb_MosquitoPopMale <- function(ixS, state, inPointSet){
+
+  MvOb = private$TilePointer$get_movementMale(ixS,state,inPointSet)
+  sampleIx_utility(x = MvOb$near$id, size = 1, prob = MvOb$near$pr)
+
 }
 
 
@@ -123,21 +140,19 @@ MicroKernel_moveMe_BROM <- function(){
 #'
 MicroKernel_moveMe_Male <- function(){
 
-  # private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-  #
-  # switch(private$state,
-  #   M = {private$inPointSet = "m"},
-  #   S = {private$inPointSet = "s"}
-  # )
-  cat("if you are seeing me then Sean needs to fix movement for males: he needs to make get_MicroKernel_movement_Male male specific and make MicroKernel_SampleMvOb_MosquitoPop for males\n",sep="")
-  pSetNew = switch(private$state,
-      M = {"m"},
-      S = {"s"},
-      {private$inPointSet}
+  switch(private$state,
+
+      M = {
+          private$ix = private$MalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+          private$inPointSet = "m"
+        },
+      S = {
+          private$ix = private$MalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+          private$inPointSet = "s"
+        },
+      {return(NULL)}
     )
 
-  private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-  private$inPointSet = pSetNew
 }
 
 
@@ -149,7 +164,7 @@ MicroKernel_moveMe_Male <- function(){
 #'
 #' Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementFemale} field of a microsimulation tile.
 #'  *  This method bound to \code{MicroTile$get_movement}
-#' @md
+#'
 get_MicroKernel_movement_FULL<- function(ixS, state, inPointSet){
   switch(state,
     F = {
@@ -184,7 +199,7 @@ get_MicroKernel_movement_FULL<- function(ixS, state, inPointSet){
 #'
 #' Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementFemale} field of a microsimulation tile.
 #'  *  This method bound to \code{MicroTile$get_movement}
-#' @md
+#'
 get_MicroKernel_movement_BRO <- function(ixS, state, inPointSet){
   switch(state,
     B = {
@@ -202,7 +217,7 @@ get_MicroKernel_movement_BRO <- function(ixS, state, inPointSet){
 #'
 #' Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementFemale} field of a microsimulation tile.
 #'  *  This method bound to \code{MicroTile$get_movement}
-#' @md
+#'
 get_MicroKernel_movement_BROM <- function(ixS, state, inPointSet){
   switch(state,
     B = {
@@ -228,7 +243,7 @@ get_MicroKernel_movement_BROM <- function(ixS, state, inPointSet){
 #'
 #' Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementMale} field of a microsimulation tile.
 #'  *  This method bound to \code{MicroTile$get_movementMale}
-#' @md
+#'
 get_MicroKernel_movement_Male <- function(ixS, state, inPointSet){
   switch(state,
     M = {

@@ -131,10 +131,10 @@ simMICRO_oneStep <- function(verbose = FALSE, trackPop = FALSE){
   private$Landscape$addCohort_AquaticEcology()
 
   # M-BITES
-  private$FemalePop$MBITES()
   if(!is.null(private$MalePop)){
     private$MalePop$MBITES()
   }
+  private$FemalePop$MBITES()
 
   # human event queue simulation
   private$HumanPop$simHumans(tPause = private$tNow)

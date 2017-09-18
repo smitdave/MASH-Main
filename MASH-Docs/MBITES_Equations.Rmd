@@ -39,12 +39,12 @@ $$
 
 ### Sugar Energetics
 
-Incremental mortality as function of energy reserves
+Incremental mortality as function of energy reserves, each launch takes $S.u$ units of energy; male energetics has same functional form but with parameters $S.a.m$, $S.b.m$, $S.u.m$.
 $$
 \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}}
 $$
 
-Probability to queue sugar bout as function of energy reserves
+Probability to queue sugar bout as function of energy reserves; male sugar bout queueing probability has same functional form but with parameters $S.sb.m$, $S.sa.m$.
 $$
 \frac{2+S.sb}{1+S.sb}-\frac{e^{S.sa\times energy}}{S.sb+e^{S.sa\times energy}}
 $$

@@ -11,11 +11,11 @@ Mosquito lands after a flight (choose a landing spot), which may cause various e
 This function always calls \code{\link{mbitesMale_newSpot}} and may call \code{\link{mbitesMale_enterHouse}}
 Landing spots include:
 \itemize{
-\item i: 1 rest on the inside wall of a structure
-\item w: 2 rest on the outside wall of a structure
-\item v: 3 rest on vegetation
-\item r: 4 reattempt without resting
-\item l: 5 leave the area
+\item i: rest on the inside wall of a structure
+\item w: rest on the outside wall of a structure
+\item v: rest on vegetation
+\item r: reattempt without resting
+\item l: leave the area
 }
 }
 \details{

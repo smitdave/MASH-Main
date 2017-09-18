@@ -98,6 +98,19 @@ Landscape <- R6::R6Class(classname = "Landscape",
 
                          if(!is.null(MatingSite_PAR)){
 
+                           private$MatingSites = vector(mode="list",length=MatingSite_PAR$nMate)
+                           private$MatingSitesN = MatingSite_PAR$nMate
+                           for(ix in 1:MatingSite_PAR$nMate){
+
+                             private$MatingSites[[ix]] = MatingSite$new(
+                               ix = ix,
+                               siteXY = c(MatingSite_PAR$siteXY$x[ix],MatingSite_PAR$siteXY$y[ix]),
+                               searchWt = MatingSite_PAR$searchWt[ix],
+                               haz = MatingSite_PAR$haz[ix]
+                             )
+
+                           }
+
                          }
 
                          #########################################
@@ -105,6 +118,18 @@ Landscape <- R6::R6Class(classname = "Landscape",
                          #########################################
 
                          if(!is.null(SugarSite_PAR)){
+                           private$SugarSites = vector(mode="list",length=SugarSite_PAR$nSugar)
+                           private$SugarSitesN = SugarSite_PAR$nSugar
+                           for(ix in 1:SugarSite_PAR$nSugar){
+
+                             private$SugarSites[[ix]] = MatingSite$new(
+                               ix = ix,
+                               siteXY = c(SugarSite_PAR$siteXY$x[ix],SugarSite_PAR$siteXY$y[ix]),
+                               searchWt = SugarSite_PAR$searchWt[ix],
+                               haz = SugarSite_PAR$haz[ix]
+                             )
+
+                           }
 
                          }
 
@@ -120,6 +145,18 @@ Landscape <- R6::R6Class(classname = "Landscape",
 
                        for(ix in 1:private$AquaSitesN){
                          private$AquaSites[[ix]]$set_LandscapePointer(self)
+                       }
+
+                       if(!is.null(Landscape_PAR$MatingSite_PAR)){
+                         for(ix in 1:private$MatingSitesN){
+                           private$MatingSites[[ix]]$set_LandscapePointer(self)
+                         }
+                       }
+
+                       if(!is.null(Landscape_PAR$SugarSite_PAR)){
+                         for(ix in 1:private$SugarSitesN){
+                           private$SugarSites[[ix]]$set_LandscapePointer(self)
+                         }
                        }
 
                    }
