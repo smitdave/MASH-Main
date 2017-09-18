@@ -1123,6 +1123,60 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// MatingQ__ctor
+MASHcpp::MatingQ MatingQ__ctor();
+RcppExport SEXP _MASHcpp_MatingQ__ctor() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(MatingQ__ctor());
+    return rcpp_result_gen;
+END_RCPP
+}
+// MatingQ__get_N
+int MatingQ__get_N(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_);
+RcppExport SEXP _MASHcpp_MatingQ__get_N(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> >::type obj_(obj_SEXP);
+    rcpp_result_gen = Rcpp::wrap(MatingQ__get_N(obj_));
+    return rcpp_result_gen;
+END_RCPP
+}
+// MatingQ__add_male2Q
+void MatingQ__add_male2Q(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_, std::string maleID_new, double mateFitness_new);
+RcppExport SEXP _MASHcpp_MatingQ__add_male2Q(SEXP obj_SEXP, SEXP maleID_newSEXP, SEXP mateFitness_newSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> >::type obj_(obj_SEXP);
+    Rcpp::traits::input_parameter< std::string >::type maleID_new(maleID_newSEXP);
+    Rcpp::traits::input_parameter< double >::type mateFitness_new(mateFitness_newSEXP);
+    MatingQ__add_male2Q(obj_, maleID_new, mateFitness_new);
+    return R_NilValue;
+END_RCPP
+}
+// MatingQ__get_MatingQ
+Rcpp::List MatingQ__get_MatingQ(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_);
+RcppExport SEXP _MASHcpp_MatingQ__get_MatingQ(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> >::type obj_(obj_SEXP);
+    rcpp_result_gen = Rcpp::wrap(MatingQ__get_MatingQ(obj_));
+    return rcpp_result_gen;
+END_RCPP
+}
+// MatingQ__clear_MatingQ
+void MatingQ__clear_MatingQ(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_);
+RcppExport SEXP _MASHcpp_MatingQ__clear_MatingQ(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> >::type obj_(obj_SEXP);
+    MatingQ__clear_MatingQ(obj_);
+    return R_NilValue;
+END_RCPP
+}
 // ImagoQ__ctor
 MASHcpp::ImagoQ ImagoQ__ctor();
 RcppExport SEXP _MASHcpp_ImagoQ__ctor() {
@@ -1982,6 +2036,11 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_RiskQ__set_nOther", (DL_FUNC) &_MASHcpp_RiskQ__set_nOther, 2},
     {"_MASHcpp_RiskQ__add_OtherHost", (DL_FUNC) &_MASHcpp_RiskQ__add_OtherHost, 3},
     {"_MASHcpp_RiskQ__get_OtherHost", (DL_FUNC) &_MASHcpp_RiskQ__get_OtherHost, 1},
+    {"_MASHcpp_MatingQ__ctor", (DL_FUNC) &_MASHcpp_MatingQ__ctor, 0},
+    {"_MASHcpp_MatingQ__get_N", (DL_FUNC) &_MASHcpp_MatingQ__get_N, 1},
+    {"_MASHcpp_MatingQ__add_male2Q", (DL_FUNC) &_MASHcpp_MatingQ__add_male2Q, 3},
+    {"_MASHcpp_MatingQ__get_MatingQ", (DL_FUNC) &_MASHcpp_MatingQ__get_MatingQ, 1},
+    {"_MASHcpp_MatingQ__clear_MatingQ", (DL_FUNC) &_MASHcpp_MatingQ__clear_MatingQ, 1},
     {"_MASHcpp_ImagoQ__ctor", (DL_FUNC) &_MASHcpp_ImagoQ__ctor, 0},
     {"_MASHcpp_ImagoQ__clear_ImagoQ", (DL_FUNC) &_MASHcpp_ImagoQ__clear_ImagoQ, 1},
     {"_MASHcpp_ImagoQ__clear_ImagoQTime", (DL_FUNC) &_MASHcpp_ImagoQ__clear_ImagoQTime, 2},

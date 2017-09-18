@@ -398,6 +398,26 @@ RiskQ__get_OtherHost <- function(obj_) {
     .Call('_MASHcpp_RiskQ__get_OtherHost', PACKAGE = 'MASHcpp', obj_)
 }
 
+MatingQ__ctor <- function() {
+    .Call('_MASHcpp_MatingQ__ctor', PACKAGE = 'MASHcpp')
+}
+
+MatingQ__get_N <- function(obj_) {
+    .Call('_MASHcpp_MatingQ__get_N', PACKAGE = 'MASHcpp', obj_)
+}
+
+MatingQ__add_male2Q <- function(obj_, maleID_new, mateFitness_new) {
+    invisible(.Call('_MASHcpp_MatingQ__add_male2Q', PACKAGE = 'MASHcpp', obj_, maleID_new, mateFitness_new))
+}
+
+MatingQ__get_MatingQ <- function(obj_) {
+    .Call('_MASHcpp_MatingQ__get_MatingQ', PACKAGE = 'MASHcpp', obj_)
+}
+
+MatingQ__clear_MatingQ <- function(obj_) {
+    invisible(.Call('_MASHcpp_MatingQ__clear_MatingQ', PACKAGE = 'MASHcpp', obj_))
+}
+
 ImagoQ__ctor <- function() {
     .Call('_MASHcpp_ImagoQ__ctor', PACKAGE = 'MASHcpp')
 }

@@ -74,6 +74,10 @@ DEBUG.MASHCPP <- function(overwrite = TRUE){
     value = function(){cat("mosquitoPfSI being garbage collected\n",sep="")},
     overwrite = overwrite)
 
+  MASHcpp:::.R6_MatingQ$set(which = "public",name = "finalize",
+    value = function(){cat("MatingQ being garbage collected\n",sep="")},
+    overwrite = overwrite)
+
   # R6 Classes
 
   MASHcpp:::HashMap$set(which = "public",name = "finalize",

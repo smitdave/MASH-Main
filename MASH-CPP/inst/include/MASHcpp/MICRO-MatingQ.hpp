@@ -32,11 +32,11 @@ namespace MASHcpp {
     void add_male2Q(const std::string &maleID_new, const double &mateFitness_new){
 
       // chcek if new host is already in this maleID_new
-      std::vector<std::string>::iterator it = std::find(maleID.begin(), maleID.end(), who_new);
-      if(it != maleID_new.end()){
+      std::vector<std::string>::iterator it = std::find(maleID.begin(), maleID.end(), maleID_new);
+      if(it != maleID.end()){
         // host is already in this RiskQ
-        int ix = std::distance(maleID_new.begin(), it);
-        maleID_new[ix] = maleID_new;
+        int ix = std::distance(maleID.begin(), it);
+        maleID[ix] = maleID_new;
         mateFitness[ix] = mateFitness_new;
       } else {
         // host is new to this RiskQ

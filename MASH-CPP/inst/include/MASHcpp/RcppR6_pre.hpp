@@ -19,6 +19,7 @@ namespace MASHcpp { class mosquitoPfSI; }
 namespace MASHcpp { class humanPfMOI; }
 namespace MASHcpp { class mosquitoPfMOI; }
 namespace MASHcpp { class RiskQ; }
+namespace MASHcpp { class MatingQ; }
 namespace MASHcpp { class ImagoQ; }
 namespace MASHcpp { class EggQ; }
 namespace MASHcpp { class EL4P; }
@@ -48,6 +49,8 @@ template <> SEXP wrap(const MASHcpp::mosquitoPfMOI&);
 template <> MASHcpp::mosquitoPfMOI as(SEXP);
 template <> SEXP wrap(const MASHcpp::RiskQ&);
 template <> MASHcpp::RiskQ as(SEXP);
+template <> SEXP wrap(const MASHcpp::MatingQ&);
+template <> MASHcpp::MatingQ as(SEXP);
 template <> SEXP wrap(const MASHcpp::ImagoQ&);
 template <> MASHcpp::ImagoQ as(SEXP);
 template <> SEXP wrap(const MASHcpp::EggQ&);
