@@ -24,8 +24,10 @@ mbitesGeneric_chooseMate <- function(){
   }
 
   if(private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$get_N() == 0){
+    # if no males present, leave the area
     private$lspot = "l"
   } else {
+    # choose a mate based on male mating fitness
     mates = private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$get_MatingQ()
     ix = sampleIx_utility(x = 1:length(mates$maleID), size = 1, prob = mates$mateFitness)
     private$mateID = mates$maleID[ix]

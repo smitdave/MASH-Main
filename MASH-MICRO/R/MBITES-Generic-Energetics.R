@@ -17,6 +17,35 @@
 # Sugar Energetics
 ###############################################################################
 
+#' MBITES-Generic: Sugar Energetics for \code{\link{MosquitoFemale}}
+#'
+#' Handle energy dependent mortality and sugar bout queueing as function of current mosquito energy levels.
+#'  * This method is bound to \code{MosquitoFemale$sugarEnergetics()}.
+#'
+mbitesGeneric_sugarEnergetics <- function(){
+  if(self$isAlive()){
+    private$energy = max(0,private$energy - private$MalePopPointer$get_MBITES_PAR("S.u"))
+
+    if(runif(1) < 1-self$pEnergySurvival()){
+      private$stateNew = "D"
+    } else {
+      self$queueSugarBout()
+    }
+
+  }
+}
+
+#' MBITES-Generic: Queue Sugar Bout due to Energy Reserves for \code{\link{MosquitoFemale}}
+#'
+#' Potentially queue a sugar bout \code{\link{mbitesBROS_boutS}} as a function of energy reserves.
+#'  * This method is bound to \code{MosquitoFemale$queueSugarBout()}.
+#'
+mbitesGeneric_queueSugarBout <- function(){
+  if(runif(1) < self$pSugarBout()){
+    private$stateNew = "S"
+  }
+}
+
 #' MBITES-Generic: Probability of Death due to Energy Reserves for \code{\link{MosquitoFemale}}
 #'
 #' Incremental mortality as a function of energy reserves given by \deqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }

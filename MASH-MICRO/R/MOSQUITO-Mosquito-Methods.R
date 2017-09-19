@@ -136,7 +136,7 @@ MosquitoFemale$set(which = "public",name = "get_eggP",
 
 #' Get mateID
 #'
-#' Return ID of the \code{\link{MosquitoMale}} this mosquito mated with (\code{numeric}).
+#' Return ID of the \code{\link{MosquitoMale}} this mosquito mated with.
 #'  * This method is bound to \code{MosquitoFemale$get_mateID}
 #'
 get_mateID_Mosquito <- function(){
@@ -145,6 +145,19 @@ get_mateID_Mosquito <- function(){
 
 MosquitoFemale$set(which = "public",name = "get_mateID",
   value = get_mateID_Mosquito, overwrite = TRUE
+)
+
+#' Get mateGenotype
+#'
+#' Return genotype of the \code{\link{MosquitoMale}} this mosquito mated with.
+#'  * This method is bound to \code{MosquitoFemale$get_mateGenotype}
+#'
+get_mateGenotype_Mosquito <- function(){
+  return(private$mateGenotype)
+}
+
+MosquitoFemale$set(which = "public",name = "get_mateGenotype",
+  value = get_mateGenotype_Mosquito, overwrite = TRUE
 )
 
 #' Get energyPreG

@@ -162,7 +162,7 @@ mbitesMale_landingSpot <- function(){
 mbitesMale_boutM <- function(){
 
   if(self$isAlive() & runif(1) < private$MalePopPointer$get_MBITES_PAR("M.s.m")){
-    private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$add_male2Q(private$id,private$mateFitness)
+    private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$add_male2Q(private$id,private$mateFitness,private$genotype)
     private$stateNew = "R"
   }
 

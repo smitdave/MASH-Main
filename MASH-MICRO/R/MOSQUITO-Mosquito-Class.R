@@ -211,6 +211,7 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                             private$lspot     = "l"        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
                             private$damage    = 0        # wing tattering
                             private$energy    = 1        # energy reserves
+                            private$mateFitness = mateFitness
 
                             # initialize history object
                             private$history = MASHcpp::MosquitoMaleHistory()

@@ -85,6 +85,16 @@ MBITES.Generic.Setup <- function(
   # MBITES-Energetics.R
   ##############################################################
 
+  MosquitoFemale$set(which = "public",name = "sugarEnergetics",
+            value = mbitesGeneric_sugarEnergetics,
+            overwrite = overwrite
+  )
+
+  MosquitoFemale$set(which = "public",name = "queueSugarBout",
+            value = mbitesGeneric_queueSugarBout,
+            overwrite = overwrite
+  )
+
   MosquitoFemale$set(which = "public",name = "pEnergySurvival",
             value = mbitesGeneric_pEnergySurvival,
             overwrite = overwrite
