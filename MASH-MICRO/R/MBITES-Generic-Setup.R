@@ -49,6 +49,15 @@ MBITES.Generic.Setup <- function(
   )
 
   ##############################################################
+  # MBITES-ChooseMate.R
+  ##############################################################
+
+  MosquitoFemale$set(which = "public",name = "chooseMate",
+            value = mbitesGeneric_chooseMate,
+            overwrite = overwrite
+  )
+
+  ##############################################################
   # MBITES-Auxiliary.R
   ##############################################################
 

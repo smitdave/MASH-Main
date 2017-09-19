@@ -134,17 +134,17 @@ MosquitoFemale$set(which = "public",name = "get_eggP",
   value = get_eggP_Mosquito, overwrite = TRUE
 )
 
-#' Get sire
+#' Get mateID
 #'
 #' Return ID of the \code{\link{MosquitoMale}} this mosquito mated with (\code{numeric}).
-#'  * This method is bound to \code{MosquitoFemale$get_sire}
+#'  * This method is bound to \code{MosquitoFemale$get_mateID}
 #'
-get_sire_Mosquito <- function(){
-  return(private$sire)
+get_mateID_Mosquito <- function(){
+  return(private$mateID)
 }
 
-MosquitoFemale$set(which = "public",name = "get_sire",
-  value = get_sire_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_mateID",
+  value = get_mateID_Mosquito, overwrite = TRUE
 )
 
 #' Get energyPreG

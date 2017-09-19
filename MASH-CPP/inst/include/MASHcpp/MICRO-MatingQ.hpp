@@ -57,6 +57,7 @@ namespace MASHcpp {
     };
 
     void clear_MatingQ(){
+      N = 0;
       maleID.clear();
       mateFitness.clear();
     };
@@ -72,6 +73,7 @@ namespace MASHcpp {
   inline MatingQ::MatingQ(){
     N = 0;
     maleID.reserve(30);
+    maleGenotype.reserve(30);
     mateFitness.reserve(30);
   }
 

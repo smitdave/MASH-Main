@@ -133,9 +133,10 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             eggP   = numeric(1),         # the mimimum provision for eggs to mature
 
                             # Maturation & Reproduction
-                            mate        = integer(1),
-                            energyPreG  = numeric(1),          # pre-gonotrophic energy requirement
-                            hostID      = character(1),           # the id of the host: -1::none; 0::not human
+                            mateID        = character(1),
+                            mateGenotype  = integer(1),
+                            energyPreG    = numeric(1),          # pre-gonotrophic energy requirement
+                            hostID        = character(1),           # the id of the host: -1::none; 0::not human
 
                             # Pathogens
                             Pathogens      = NULL,

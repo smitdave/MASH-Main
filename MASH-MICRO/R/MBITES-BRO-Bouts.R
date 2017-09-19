@@ -204,7 +204,6 @@ mbitesBRO_boutB <- function(){
 #' A mosquito performs a post-prandial resting bout (all actions taken launch to launch when resting required).
 #'  * This method is bound to \code{MosquitoFemale$boutR()}.
 #'
-#' @md
 mbitesBRO_boutR <- function(){
   if(self$isAlive()){
     if(private$FemalePopPointer$get_MBITES_PAR("REFEED")){
