@@ -55,7 +55,7 @@ MosquitoPopFemale <- R6::R6Class(classname = "MosquitoPopFemale",
                            private$pop = MASHcpp::HashMap$new(N = N+500L)
                            for(i in 1:N){
                              ID = paste0("0_",i,"_",genotype_init[i])
-                             private$pop$assign(key = ID, value = MosquitoFemale$new(id=ID,time=0,ix=ix_init[i],genotype=genotype_init[i],state=private$initState,eggT=MBITES_PAR$eggT,eggP=MBITES_PAR$eggP,energyPreG=MBITES_PAR$energyPreG))
+                             private$pop$assign(key = ID, value = MosquitoFemale$new(id=ID,time=0,ix=ix_init[i],genotype=genotype_init[i],state=private$MBITES_PAR$initState,eggT=MBITES_PAR$eggT,eggP=MBITES_PAR$eggP,energyPreG=MBITES_PAR$energyPreG))
                              private$pop$get(ID)$set_FemalePopPointer(self)
                            }
 
@@ -121,7 +121,7 @@ MosquitoPopMale <- R6::R6Class(classname = "MosquitoPopMale",
                            private$pop = MASHcpp::HashMap$new(N = N+500L)
                            for(i in 1:N){
                              ID = paste0("0_",i,"_",genotype_init[i])
-                             private$pop$assign(key = ID, value = MosquitoMale$new(id=ID,time=0,ix=ix_init[i],genotype=genotype_init[i],state=private$initState,mateFitness=1))
+                             private$pop$assign(key = ID, value = MosquitoMale$new(id=ID,time=0,ix=ix_init[i],genotype=genotype_init[i],state=private$MBITES_PAR$initState,mateFitness=1))
                              private$pop$get(ID)$set_MalePopPointer(self)
                            }
 
@@ -133,7 +133,6 @@ MosquitoPopMale <- R6::R6Class(classname = "MosquitoPopMale",
 
                          # Fields
                          pop = NULL,               # mosquito population
-                         initState = character(1),         # initial state for newly emerging females
                          MBITES_PAR = list(),        # MBITES Parameters
 
                          # Pointers
