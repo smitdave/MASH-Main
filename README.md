@@ -7,6 +7,9 @@
 * This repository stores `C++` classes exposed to `R` through the `RcppR6` package.
 * This repository also implements as `R6` hash table style container for storing populations through `R`'s native `environment` data structure (somewhat analgous to `std::unordered_map`). Hash tables allow O(1) lookup time and cheap deletion/insertion of elements because they are not stored in contiguous memory; their disadvantage is slow iteration through elements when compared to data structures in contiguous memory. Because mosquitoes and humans may need to move between patches, and in the case of mosquitoes, frequently die and need to be replaced, a hash table can provide performance optimizations over `R`'s `list` objects, which frequently involve large amounts of copying.
 
+## MASH-Docs: Documentation
+ * This directory is not set up as an R package and contains .tex and .Rmd documents describing functionality of MASH.
+
 ## MASH-GUI: MASHgui package
 * Please install with `devtools::install_github(repo = "slwu89/MASH-Main",subdir = "MASH-GUI")`
 * This repository contains necessary code to run R Shiny GUIs for parameterizing and visualizing MASH.
