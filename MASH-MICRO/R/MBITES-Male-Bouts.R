@@ -156,12 +156,12 @@ mbitesMale_landingSpot <- function(){
 
 #' MBITES-Male: Male Mating Bout \code{MosquitoMale}
 #'
-#' A male mosquito performs a mating bout. If successful (governed by parameter M.s.m), the mosquito enters a mating queue (see \code{\link[MASHcpp]{MatingQ}}).
+#' A male mosquito performs a mating bout. If successful (governed by parameter M_succeed), the mosquito enters a mating queue (see \code{\link[MASHcpp]{MatingQ}}).
 #'  * This method is bound to \code{MosquitoMale$boutM()}.
 #'
 mbitesMale_boutM <- function(){
 
-  if(self$isAlive() & runif(1) < private$MalePopPointer$get_MBITES_PAR("M.s.m")){
+  if(self$isAlive() & runif(1) < private$MalePopPointer$get_MBITES_PAR("M_succeed")){
     private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$add_male2Q(private$id,private$mateFitness,private$genotype)
     private$stateNew = "R"
   }
@@ -175,13 +175,13 @@ mbitesMale_boutM <- function(){
 
 #' MBITES-Male: Male Sugar Feeding Bout \code{MosquitoMale}
 #'
-#' A male mosquito attempts to sugar feed. If successful (governed by parameter S.s.m), the mosquito energy is topped off, otherwise the mosquito's energy is unchanged.
+#' A male mosquito attempts to sugar feed. If successful (governed by parameter S_succeed), the mosquito energy is topped off, otherwise the mosquito's energy is unchanged.
 #'  * This method is bound to \code{MosquitoMale$boutS()}.
 #'
 mbitesMale_boutS <- function(){
 
   if(self$isAlive()){
-    if(runif(1) < private$MalePopPointer$get_MBITES_PAR("S.s.m")){
+    if(runif(1) < private$MalePopPointer$get_MBITES_PAR("S_succeed")){
       private$energy = 1
       private$stateNew = "R"
     } else {
@@ -198,16 +198,17 @@ mbitesMale_boutS <- function(){
 
 #' MBITES-Male: Male Sugar Feeding Bout \code{MosquitoMale}
 #'
-#' A male mosquito attempts to sugar feed. If successful (governed by parameter R.s.m), the mosquito energy is topped off, otherwise the mosquito's energy is unchanged.
+#' A male mosquito attempts to sugar feed. If successful (governed by parameter R_succeed), the mosquito energy is topped off, otherwise the mosquito's energy is unchanged.
 #'  * This method is bound to \code{MosquitoMale$boutS()}.
 #'
 mbitesMale_boutR <- function(){
 
   if(self$isAlive()){
-    if(runif(1) < private$MalePopPointer$get_MBITES_PAR("R.s.m")){
+    if(runif(1) < private$MalePopPointer$get_MBITES_PAR("R_succeed")){
       private$stateNew = "M"
     } else {
-      private$stateNew = "D"
+      private$lspot = "l"
+      private$stateNew = "R"
     }
   }
 

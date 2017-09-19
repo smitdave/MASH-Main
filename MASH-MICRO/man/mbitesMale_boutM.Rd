@@ -7,7 +7,7 @@
 mbitesMale_boutM()
 }
 \description{
-A male mosquito performs a mating bout. If successful (governed by parameter M.s.m), the mosquito enters a mating queue (see \code{\link[MASHcpp]{MatingQ}}).
+A male mosquito performs a mating bout. If successful (governed by parameter M_succeed), the mosquito enters a mating queue (see \code{\link[MASHcpp]{MatingQ}}).
 \itemize{
 \item This method is bound to \code{MosquitoMale$boutM()}.
 }

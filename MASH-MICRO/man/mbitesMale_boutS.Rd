@@ -7,7 +7,7 @@
 mbitesMale_boutS()
 }
 \description{
-A male mosquito attempts to sugar feed. If successful (governed by parameter S.s.m), the mosquito energy is topped off, otherwise the mosquito's energy is unchanged.
+A male mosquito attempts to sugar feed. If successful (governed by parameter S_succeed), the mosquito energy is topped off, otherwise the mosquito's energy is unchanged.
 \itemize{
 \item This method is bound to \code{MosquitoMale$boutS()}.
 }

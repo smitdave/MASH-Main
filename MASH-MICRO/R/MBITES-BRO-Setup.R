@@ -26,7 +26,11 @@
 #' @examples
 #' MBITES.BRO.Setup()
 #' @export
-MBITES.BRO.Setup <- function(overwrite = TRUE, aquaModule, timing = "exponential"){
+MBITES.BRO.Setup <- function(
+  overwrite = TRUE,
+  aquaModule = "emerge",
+  timing = "exponential"
+){
 
     cat("initializing M-BITES BRO module\n",sep="")
 

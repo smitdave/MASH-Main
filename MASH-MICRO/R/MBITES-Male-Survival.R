@@ -39,7 +39,7 @@ mbitesMale_get_restHaz <- function(){
   switch(private$inPointSet,
     m = {return(private$LandscapePointer$get_MatingSites(private$ix)$get_haz())},
     s = {return(private$LandscapePointer$get_SugarSites(private$ix)$get_haz())},
-    {stop("illegal point set for MBITES-Male")}
+    {stop(cat("illegal point set for MBITES-Male: ",private$inPointSet,"\n",sep=""))}
   )
 }
 
@@ -57,11 +57,11 @@ mbitesMale_get_restHaz <- function(){
 mbitesMale_surviveFlight <- function(){
   if(self$isAlive()){
     p = self$get_surviveFlightProb()
-    if(private$MalePopPointer$get_MBITES_PAR("TATTER.M")){
+    if(private$MalePopPointer$get_MBITES_PAR("TATTER")){
       private$damage = private$damage + self$rTatterSize()
       p = p * self$pTatter()
     }
-    if(private$MalePopPointer$get_MBITES_PAR("SENESCE.M")){
+    if(private$MalePopPointer$get_MBITES_PAR("SENESCE")){
       p = p * self$pSenesce()
     }
     if(runif(1) < 1-p){
@@ -77,24 +77,24 @@ mbitesMale_surviveFlight <- function(){
 #'
 mbitesMale_pSenesce <- function(){
   age = private$tNow - private$bDay
-  return((2+private$MalePopPointer$get_MBITES_PAR("sns.b.m"))/(1+private$MalePopPointer$get_MBITES_PAR("sns.b.m")) - exp(private$MalePopPointer$get_MBITES_PAR("sns.a.m")*private$age)/(private$MalePopPointer$get_MBITES_PAR("sns.b.m") + exp(private$MalePopPointer$get_MBITES_PAR("sns.a.m")*private$age)))
+  return((2+private$MalePopPointer$get_MBITES_PAR("sns.b"))/(1+private$MalePopPointer$get_MBITES_PAR("sns.b")) - exp(private$MalePopPointer$get_MBITES_PAR("sns.a")*private$age)/(private$MalePopPointer$get_MBITES_PAR("sns.b") + exp(private$MalePopPointer$get_MBITES_PAR("sns.a")*private$age)))
 }
 
 #' MBITES-Generic: Wing Tattering for \code{\link{MosquitoFemale}}
 #'
 #' Draw from a zero-inflated Beta distribution for additive wing damage from tattering.
 #' Wing damage is given by \deqn{ \left\{\begin{matrix}
-#' x=0; P(ttsz.p.m)
+#' x=0; P(ttsz.p)
 #' \\
-#' x\sim Beta(ttsz.a.m,ttsz.b.m); P(1-ttsz.p.m)
+#' x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
 #' \end{matrix}\right. }
 #'  * This method is bound to \code{MosquitoMale$rTatterSize()}.
 #' @md
 mbitesMale_rTatterSize <- function(){
-  if(runif(1) < private$MalePopPointer$get_MBITES_PAR("ttsz.p.m")){
+  if(runif(1) < private$MalePopPointer$get_MBITES_PAR("ttsz.p")){
     return(0)
   } else {
-    return(rbeta(1,private$MalePopPointer$get_MBITES_PAR("ttsz.a.m"),private$MalePopPointer$get_MBITES_PAR("ttsz.b.m")))
+    return(rbeta(1,private$MalePopPointer$get_MBITES_PAR("ttsz.a"),private$MalePopPointer$get_MBITES_PAR("ttsz.b")))
   }
 }
 
@@ -104,12 +104,12 @@ mbitesMale_rTatterSize <- function(){
 #'  * This method is bound to \code{MosquitoFemale$pTatter()}.
 #' @md
 mbitesMale_pTatter <- function(){
-  return((2+private$MalePopPointer$get_MBITES_PAR("ttr.b.m"))/(1+private$MalePopPointer$get_MBITES_PAR("ttr.b.m")) - exp(private$damage*private$MalePopPointer$get_MBITES_PAR("ttr.a.m"))/(private$MalePopPointer$get_MBITES_PAR("ttr.b.m") + exp(private$damage*private$MalePopPointer$get_MBITES_PAR("ttr.a.m"))))
+  return((2+private$MalePopPointer$get_MBITES_PAR("ttr.b"))/(1+private$MalePopPointer$get_MBITES_PAR("ttr.b")) - exp(private$damage*private$MalePopPointer$get_MBITES_PAR("ttr.a"))/(private$MalePopPointer$get_MBITES_PAR("ttr.b") + exp(private$damage*private$MalePopPointer$get_MBITES_PAR("ttr.a"))))
 }
 
 #' MBITES-Male: Get Baseline Survival Probability for \code{\link{MosquitoMale}}
 #'
-#' Get baseline survival probability for \code{\link{mbitesGeneric_surviveFlight}}.
+#' Get baseline flight survival probability for \code{\link{mbitesGeneric_surviveFlight}}.
 #'  * This method is bound to \code{MosquitoMale$get_surviveFlightProb()}.
 #'
 mbitesMale_get_surviveFlightProb <- function(){

@@ -9,9 +9,9 @@ mbitesMale_rTatterSize()
 \description{
 Draw from a zero-inflated Beta distribution for additive wing damage from tattering.
 Wing damage is given by \deqn{ \left\{\begin{matrix}
-x=0; P(ttsz.p.m)
+x=0; P(ttsz.p)
 \\
-x\sim Beta(ttsz.a.m,ttsz.b.m); P(1-ttsz.p.m)
+x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
 \end{matrix}\right. }
 \itemize{
 \item This method is bound to \code{MosquitoMale$rTatterSize()}.

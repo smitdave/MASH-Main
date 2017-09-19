@@ -4,7 +4,8 @@
 \alias{MBITES.BRO.Setup}
 \title{MBITES-BRO: Initialize Additional Methods & Fields in \code{\link{MosquitoPopFemale}} and \code{\link{MosquitoFemale}}}
 \usage{
-MBITES.BRO.Setup(overwrite = TRUE, aquaModule, timing = "exponential")
+MBITES.BRO.Setup(overwrite = TRUE, aquaModule = "emerge",
+  timing = "exponential")
 }
 \arguments{
 \item{overwrite}{overwrite methods}

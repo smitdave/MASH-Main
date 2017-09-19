@@ -23,7 +23,7 @@
 #'
 mbitesMale_sugarEnergetics <- function(){
   if(self$isAlive()){
-    private$energy = max(0,private$energy - private$MalePopPointer$get_MBITES_PAR("S.u.m"))
+    private$energy = max(0,private$energy - private$MalePopPointer$get_MBITES_PAR("S.u"))
 
     if(runif(1) < 1-self$pEnergySurvival()){
       private$stateNew = "D"
@@ -41,7 +41,7 @@ mbitesMale_sugarEnergetics <- function(){
 #'
 mbitesMale_pEnergySurvival <- function(){
   return(
-    exp(private$MalePopPointer$get_MBITES_PAR("S.a.m")*private$energy) / (private$MalePopPointer$get_MBITES_PAR("S.b.m") + exp(private$MalePopPointer$get_MBITES_PAR("S.a.m")*private$energy))
+    exp(private$MalePopPointer$get_MBITES_PAR("S.a")*private$energy) / (private$MalePopPointer$get_MBITES_PAR("S.b") + exp(private$MalePopPointer$get_MBITES_PAR("S.a")*private$energy))
   )
 }
 
@@ -52,7 +52,7 @@ mbitesMale_pEnergySurvival <- function(){
 #'
 mbitesMale_pSugarBout <- function(){
   return(
-    (2+private$MalePopPointer$get_MBITES_PAR("S.sb.m"))/(1+private$MalePopPointer$get_MBITES_PAR("S.sb.m"))-exp(private$MalePopPointer$get_MBITES_PAR("S.sa.m")*private$energy)/(private$MalePopPointer$get_MBITES_PAR("S.sb.m")+exp(private$MalePopPointer$get_MBITES_PAR("S.sa.m")*private$energy))
+    (2+private$MalePopPointer$get_MBITES_PAR("S.sb"))/(1+private$MalePopPointer$get_MBITES_PAR("S.sb"))-exp(private$MalePopPointer$get_MBITES_PAR("S.sa")*private$energy)/(private$MalePopPointer$get_MBITES_PAR("S.sb")+exp(private$MalePopPointer$get_MBITES_PAR("S.sa")*private$energy))
   )
 }
 
