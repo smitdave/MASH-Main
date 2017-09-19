@@ -134,6 +134,7 @@ MBITES.Male.Parameters <- function(
     S.sa = S.sa,
     S.sb = S.sb,
 
+    initState = "M",
     lspot = c("i","w","v","r","l")
 
   ))

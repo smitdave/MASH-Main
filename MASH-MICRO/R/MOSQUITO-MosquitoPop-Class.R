@@ -50,7 +50,6 @@ MosquitoPopFemale <- R6::R6Class(classname = "MosquitoPopFemale",
 
                          initialize = function(N, ix_init, genotype_init, MBITES_PAR){
 
-                           private$initState = MBITES_PAR$initState
                            private$MBITES_PAR = MBITES_PAR
 
                            private$pop = MASHcpp::HashMap$new(N = N+500L)
@@ -68,7 +67,6 @@ MosquitoPopFemale <- R6::R6Class(classname = "MosquitoPopFemale",
 
                          # Fields
                          pop = NULL,               # mosquito population
-                         initState = character(1),         # initial state for newly emerging females
                          MBITES_PAR = list(),        # MBITES Parameters
 
                          # Pointers

@@ -33,7 +33,7 @@ push_pop_MosquitoPopFemale <- function(N, tEmerge, genotype, ix){
 
     # assign the mosquitoes
     myID = paste0(tEmerge,"_",i,"_",genotype)
-    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=private$initState,eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
+    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=self$get_MBITES_PAR("initState"),eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
 
     private$pop$get(myID)$set_FemalePopPointer(self)
     private$pop$get(myID)$set_MalePopPointer(private$MalePopPointer)
@@ -64,7 +64,7 @@ push_pop_MosquitoPopMale <- function(N, tEmerge, genotype, ix){
 
     # assign the mosquitoes
     myID = paste0(tEmerge,"_",i,"_",genotype)
-    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=private$initState))
+    private$pop$assign(key = myID, value = MosquitoMale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=self$get_MBITES_PAR("initState")))
 
     private$pop$get(myID)$set_FemalePopPointer(private$FemalePopPointer)
     private$pop$get(myID)$set_MalePopPointer(self)

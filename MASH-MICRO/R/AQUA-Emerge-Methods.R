@@ -95,6 +95,9 @@ addCohort_EmergeSite <- function(tNow){
   if(length(EmergingAdults) > 0){
     for(i in 1:length(EmergingAdults)){
       private$LandscapePointer$get_FemalePopPointer()$push_pop(N = EmergingAdults[[i]]$N, tEmerge = EmergingAdults[[i]]$tEmerge, ix = private$ix, genotype = EmergingAdults[[i]]$genotype)
+      if(!is.null(private$LandscapePointer$get_MalePopPointer())){
+        private$LandscapePointer$get_MalePopPointer()$push_pop(N = EmergingAdults[[i]]$N, tEmerge = EmergingAdults[[i]]$tEmerge, ix = private$ix, genotype = EmergingAdults[[i]]$genotype)
+      }
     }
   }
 
