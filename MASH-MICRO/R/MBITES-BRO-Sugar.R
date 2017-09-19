@@ -22,7 +22,7 @@
 mbitesBROS_boutS <- function(){
 
   if(self$isAlive()){
-    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("S.s")){
+    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("S_succeed")){
       private$energy = 1
 
       if(!private$mature){

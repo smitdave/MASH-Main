@@ -12,8 +12,8 @@ A bout is the actions taken by a mosquito between a launch and landing; \code{mb
 while specialized bout action methods handle the events that occur due to the purpose of the bout.
 \itemize{
 \item \code{\link{mbitesBRO_boutB}}: blood feeding bout
-\item \code{\link{mbitesBRO_boutR}}: blood feeding bout
-\item \code{\link{mbitesBRO_boutO}}: blood feeding bout
+\item \code{\link{mbitesBRO_boutR}}: resting feeding bout
+\item \code{\link{mbitesBRO_boutO}}: oviposition bout
 }
 }
 \details{

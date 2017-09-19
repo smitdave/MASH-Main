@@ -11,6 +11,10 @@
 #
 ###############################################################################
 
+###############################################################################
+# M-BITES: BRO Female Only Run with Emerge and PfSI
+###############################################################################
+
 rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
@@ -73,11 +77,31 @@ MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE)
 
 
+###############################################################################
+# M-BITES: BROMS Female + MBITES-Male Run with Emerge
+###############################################################################
+
+rm(list=ls());gc()
+library(MASHmicro)
+# set.seed(42L)
+
+DEBUG.MASHMICRO()
+MASHcpp::DEBUG.MASHCPP()
+MASHmacro::DEBUG.MASHMACRO()
+
+
+
+
+
+
+
 
 
 
 ###############################################################################
-# old code
+# 
+#   DEPRECATED TEST CODE
+# 
 ###############################################################################
 
 

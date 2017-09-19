@@ -273,8 +273,8 @@ mbitesBRO_layEggs_EL4P <- function(){
 #' A bout is the actions taken by a mosquito between a launch and landing; \code{mbitesBRO_oneBout} handles all the biological imperatives that occur during a bout,
 #' while specialized bout action methods handle the events that occur due to the purpose of the bout.
 #'  * \code{\link{mbitesBRO_boutB}}: blood feeding bout
-#'  * \code{\link{mbitesBRO_boutR}}: blood feeding bout
-#'  * \code{\link{mbitesBRO_boutO}}: blood feeding bout
+#'  * \code{\link{mbitesBRO_boutR}}: resting feeding bout
+#'  * \code{\link{mbitesBRO_boutO}}: oviposition bout
 #'
 #' The generic bout runs necessary updates of timing, state, survival, energetics, and queue checks prior to calling the nested
 #' specific bout action, and checks that the mosquito is alive/active before calling the bout. It updates \code{tNext} and \code{stateNew}.

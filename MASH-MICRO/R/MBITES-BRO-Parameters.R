@@ -56,6 +56,16 @@
 #' @param ttsz.b shape param for tattering damage (see \code{\link{mbitesGeneric_rTatterSize}})
 #' @param ttr.a exp param for tattering survival (see \code{\link{mbitesGeneric_pTatter}})
 #' @param ttr.b exp param for tattering survival (see \code{\link{mbitesGeneric_pTatter}})
+#' @param SUGAR logical; enable sugar bouts and energetics (see \code{\link{mbitesBROS_boutS}} and \code{\link{mbitesGeneric_sugarEnergetics}})
+#' @param S_succeed probability to successfully locate sugar source and replenish energy in sugar feeding bout
+#' @param preGsugar amount of energy a sugar meal contributes to energyPreG (pre-gonotrophic energy requirement)
+#' @param S.u per-bout energy expenditure
+#' @param S.a shape parameter of per-bout probability of survival as function of energy reserves
+#' @param S.b shape parameter of per-bout probability of survival as function of energy reserves
+#' @param S.sa shape parameter of probability to queue sugar bout as function of energy reserves
+#' @param S.sb shape parameter of probability to queue sugar bout as function of energy reserves
+#' @param MATE logical; enable mating (see \code{\link{mbitesBROM_boutM}})
+#' @param M_succeed probability to successfully locate a mating swarm and call \code{\link{mbitesGeneric_chooseMate}}
 #' @param bs.m mean of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})
 #' @param bs.v standard deviation of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})
 #' @param maxBatch maximum egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeBms}})
@@ -164,7 +174,25 @@ MBITES.BRO.Parameters <- function(
   ttr.b = 500, #exp param for tattering survival
 
   ##########################################
-  # Reproduction
+  # SUGAR
+  ##########################################
+  SUGAR = FALSE,
+  S_succeed = 0.95,
+  preGsugar = 0,
+  S.u = 1/5,
+  S.a = 20,
+  S.b = 10,
+  S.sa = 15,
+  S.sb = 5,
+
+  ##########################################
+  # MATING
+  ##########################################
+  MATE = FALSE,
+  M_succeed = 0.95,
+
+  ##########################################
+  # Reproduction & Development
   ##########################################
   bs.m = 30, # used in mbitesGeneric_rBatchSizeNorm
   bs.v = 5, # used in mbitesGeneric_rBatchSizeNorm
@@ -189,7 +217,7 @@ MBITES.BRO.Parameters <- function(
 
 ){
 
-  return(list(
+  out = list(
 
     B_wts = B_wts,
     R_wts = R_wts,
@@ -270,7 +298,7 @@ MBITES.BRO.Parameters <- function(
     ttr.b = ttr.b, #exp param for tattering survival
 
     ##########################################
-    # Reproduction
+    # Reproduction & Development
     ##########################################
     bs.m = bs.m,
     bs.v = bs.v,
@@ -300,6 +328,35 @@ MBITES.BRO.Parameters <- function(
     lspot = c("i","w","v","r","l"),
     Fstate = c(B=0,R=0,O=0)
 
-  ))
+  )
+
+  out$SUGAR = SUGAR
+  out$MATE = MATE
+
+  ##########################################
+  # SUGAR
+  ##########################################
+  if(SUGAR){
+    out$StateSpace = c(out$StateSpace,"S")
+    out$Fstate = c(out$Fstate,c(S=0))
+    out$S_succeed = S_succeed
+    out$S.u = S.u
+    out$S.a = S.a
+    out$S.b = S.b
+    out$S.sa = S.sa
+    out$S.sb = S.sb
+  }
+
+  ##########################################
+  # MATING
+  ##########################################
+  if(MATE){
+    out$StateSpace = c(out$StateSpace,"M")
+    out$initState = "M"
+    out$Fstate = c(out$Fstate,c(M=0))
+    out$M_succeed = M_succeed
+  }
+
+  return(out)
 
 }

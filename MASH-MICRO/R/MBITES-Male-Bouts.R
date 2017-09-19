@@ -183,10 +183,8 @@ mbitesMale_boutS <- function(){
   if(self$isAlive()){
     if(runif(1) < private$MalePopPointer$get_MBITES_PAR("S_succeed")){
       private$energy = 1
-      private$stateNew = "R"
-    } else {
-      private$stateNew = "R"
     }
+    private$stateNew = "R"
   }
 
 }

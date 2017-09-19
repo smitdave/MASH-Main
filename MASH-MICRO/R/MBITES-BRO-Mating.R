@@ -22,11 +22,9 @@
 mbitesBROM_boutM <- function(){
 
   if(self$isAlive()){
-    if(runif(1) < private$get_MBITES_PAR("M.s")){
-      private$stateNew = "B"
+    if(runif(1) < private$get_MBITES_PAR("M_succeed")){
       self$chooseMate()
-    } else {
-      private$stateNew = "D"
+      private$stateNew = "B"
     }
   }
 
