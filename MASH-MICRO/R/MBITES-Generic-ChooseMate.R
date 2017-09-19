@@ -27,7 +27,9 @@ mbitesGeneric_chooseMate <- function(){
     private$lspot = "l"
   } else {
     mates = private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$get_MatingQ()
-    private$mate = sampleIx_utility(x = mates$maleID, size = 1, prob = mates$mateFitness)
+    ix = sampleIx_utility(x = 1:length(mates$maleID), size = 1, prob = mates$mateFitness)
+    private$mateID = mates$maleID[ix]
+    private$mateGenotype = mates$maleGenotype[ix]
   }
 
 }

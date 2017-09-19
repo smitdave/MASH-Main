@@ -36,6 +36,7 @@ MatingQ:
       args:
         - maleID_new: "std::string"
         - mateFitness_new: double
+        - maleGenotype_new: int
       return_type: void
 
     get_MatingQ:

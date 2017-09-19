@@ -410,8 +410,8 @@ int MatingQ__get_N(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_) {
   return obj_->get_N();
 }
 // [[Rcpp::export]]
-void MatingQ__add_male2Q(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_, std::string maleID_new, double mateFitness_new) {
-  obj_->add_male2Q(maleID_new, mateFitness_new);
+void MatingQ__add_male2Q(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_, std::string maleID_new, double mateFitness_new, int maleGenotype_new) {
+  obj_->add_male2Q(maleID_new, mateFitness_new, maleGenotype_new);
 }
 // [[Rcpp::export]]
 Rcpp::List MatingQ__get_MatingQ(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_) {

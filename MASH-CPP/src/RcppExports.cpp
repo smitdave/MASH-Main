@@ -1145,14 +1145,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // MatingQ__add_male2Q
-void MatingQ__add_male2Q(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_, std::string maleID_new, double mateFitness_new);
-RcppExport SEXP _MASHcpp_MatingQ__add_male2Q(SEXP obj_SEXP, SEXP maleID_newSEXP, SEXP mateFitness_newSEXP) {
+void MatingQ__add_male2Q(MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> obj_, std::string maleID_new, double mateFitness_new, int maleGenotype_new);
+RcppExport SEXP _MASHcpp_MatingQ__add_male2Q(SEXP obj_SEXP, SEXP maleID_newSEXP, SEXP mateFitness_newSEXP, SEXP maleGenotype_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::MatingQ> >::type obj_(obj_SEXP);
     Rcpp::traits::input_parameter< std::string >::type maleID_new(maleID_newSEXP);
     Rcpp::traits::input_parameter< double >::type mateFitness_new(mateFitness_newSEXP);
-    MatingQ__add_male2Q(obj_, maleID_new, mateFitness_new);
+    Rcpp::traits::input_parameter< int >::type maleGenotype_new(maleGenotype_newSEXP);
+    MatingQ__add_male2Q(obj_, maleID_new, mateFitness_new, maleGenotype_new);
     return R_NilValue;
 END_RCPP
 }
@@ -2038,7 +2039,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_RiskQ__get_OtherHost", (DL_FUNC) &_MASHcpp_RiskQ__get_OtherHost, 1},
     {"_MASHcpp_MatingQ__ctor", (DL_FUNC) &_MASHcpp_MatingQ__ctor, 0},
     {"_MASHcpp_MatingQ__get_N", (DL_FUNC) &_MASHcpp_MatingQ__get_N, 1},
-    {"_MASHcpp_MatingQ__add_male2Q", (DL_FUNC) &_MASHcpp_MatingQ__add_male2Q, 3},
+    {"_MASHcpp_MatingQ__add_male2Q", (DL_FUNC) &_MASHcpp_MatingQ__add_male2Q, 4},
     {"_MASHcpp_MatingQ__get_MatingQ", (DL_FUNC) &_MASHcpp_MatingQ__get_MatingQ, 1},
     {"_MASHcpp_MatingQ__clear_MatingQ", (DL_FUNC) &_MASHcpp_MatingQ__clear_MatingQ, 1},
     {"_MASHcpp_ImagoQ__ctor", (DL_FUNC) &_MASHcpp_ImagoQ__ctor, 0},

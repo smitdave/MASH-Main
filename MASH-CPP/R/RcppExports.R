@@ -406,8 +406,8 @@ MatingQ__get_N <- function(obj_) {
     .Call('_MASHcpp_MatingQ__get_N', PACKAGE = 'MASHcpp', obj_)
 }
 
-MatingQ__add_male2Q <- function(obj_, maleID_new, mateFitness_new) {
-    invisible(.Call('_MASHcpp_MatingQ__add_male2Q', PACKAGE = 'MASHcpp', obj_, maleID_new, mateFitness_new))
+MatingQ__add_male2Q <- function(obj_, maleID_new, mateFitness_new, maleGenotype_new) {
+    invisible(.Call('_MASHcpp_MatingQ__add_male2Q', PACKAGE = 'MASHcpp', obj_, maleID_new, mateFitness_new, maleGenotype_new))
 }
 
 MatingQ__get_MatingQ <- function(obj_) {
