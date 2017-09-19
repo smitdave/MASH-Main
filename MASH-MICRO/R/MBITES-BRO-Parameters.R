@@ -58,6 +58,7 @@
 #' @param ttr.b exp param for tattering survival (see \code{\link{mbitesGeneric_pTatter}})
 #' @param SUGAR logical; enable sugar bouts and energetics (see \code{\link{mbitesBROS_boutS}} and \code{\link{mbitesGeneric_sugarEnergetics}})
 #' @param S_succeed probability to successfully locate sugar source and replenish energy in sugar feeding bout
+#' @param S_time average duration of time spent in sugar feeding state (unconditional on next state)
 #' @param preGsugar amount of energy a sugar meal contributes to energyPreG (pre-gonotrophic energy requirement)
 #' @param S.u per-bout energy expenditure
 #' @param S.a shape parameter of per-bout probability of survival as function of energy reserves
@@ -66,6 +67,7 @@
 #' @param S.sb shape parameter of probability to queue sugar bout as function of energy reserves
 #' @param MATE logical; enable mating (see \code{\link{mbitesBROM_boutM}})
 #' @param M_succeed probability to successfully locate a mating swarm and call \code{\link{mbitesGeneric_chooseMate}}
+#' @param M_time average duration of time spent in mating state (unconditional on next state)
 #' @param bs.m mean of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})
 #' @param bs.v standard deviation of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})
 #' @param maxBatch maximum egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeBms}})
@@ -178,6 +180,7 @@ MBITES.BRO.Parameters <- function(
   ##########################################
   SUGAR = FALSE,
   S_succeed = 0.95,
+  S_time = 0.25,
   preGsugar = 0,
   S.u = 1/5,
   S.a = 20,
@@ -190,6 +193,7 @@ MBITES.BRO.Parameters <- function(
   ##########################################
   MATE = FALSE,
   M_succeed = 0.95,
+  M_time = 0.5,
 
   ##########################################
   # Reproduction & Development
@@ -340,6 +344,7 @@ MBITES.BRO.Parameters <- function(
     out$StateSpace = c(out$StateSpace,"S")
     out$Fstate = c(out$Fstate,c(S=0))
     out$S_succeed = S_succeed
+    out$S_time = S_time
     out$S.u = S.u
     out$S.a = S.a
     out$S.b = S.b
@@ -355,6 +360,7 @@ MBITES.BRO.Parameters <- function(
     out$initState = "M"
     out$Fstate = c(out$Fstate,c(M=0))
     out$M_succeed = M_succeed
+    out$M_time = M_time
   }
 
   return(out)

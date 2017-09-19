@@ -28,11 +28,35 @@
 #' @export
 MBITES.BRO.Setup <- function(
   overwrite = TRUE,
+  SUGAR = FALSE,
+  MATE = FALSE,
   aquaModule = "emerge",
   timing = "exponential"
 ){
 
     cat("initializing M-BITES BRO module\n",sep="")
+
+    #################################################################
+    # MBITES-BRO-Sugar.R
+    #################################################################
+
+    if(SUGAR){
+      cat("sugar feeding enabled\n")
+      MosquitoFemale$set(which = "public",name = "boutS",
+                value = mbitesBROS_boutS, overwrite = overwrite
+      )
+    }
+
+    #################################################################
+    # MBITES-BRO-Mating.R
+    #################################################################
+
+    if(MATE){
+      cat("mating behavior enabled\n")
+      MosquitoFemale$set(which = "public",name = "boutM",
+                value = mbitesBROM_boutM, overwrite = overwrite
+      )
+    }
 
     #################################################################
     # MBITES-BRO-Bouts.R

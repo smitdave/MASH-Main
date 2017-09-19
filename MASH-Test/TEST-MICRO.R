@@ -89,7 +89,59 @@ DEBUG.MASHMICRO()
 MASHcpp::DEBUG.MASHCPP()
 MASHmacro::DEBUG.MASHMACRO()
 
+# make a tile
+DIR = "/Users/slwu89/Desktop/MASHOUT/"
 
+# setup
+Humans.MICRO.Setup()
+PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
+AQUA.Emerge.Setup()
+
+MBITES.Generic.Setup()
+MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential",SUGAR = TRUE,MATE = TRUE)
+MBITES.Male.Setup(timing = "exponential")
+
+# fix this function; wont work!
+SEARCH.Kernel.Setup(MBITES = "BRO")
+
+# landscape parameters
+nAqua = 20
+nFeed = 20
+emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
+landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
+
+# human parameters
+human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
+
+# M-BITES parameters
+nMosy = 50
+mbites_par = MBITES.BRO.Parameters(PfEIP=1)
+mosquito_par = list(
+  N_female = nMosy,
+  ix_female = rep(1,nMosy),
+  genotype_female = rep(1,nMosy),
+  MBITES_PAR_FEMALE = mbites_par
+)
+
+MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
+
+# MicroLandscapePlot_utility(Landscape = MicroTile$get_Landscape())
+
+# MicroTile$get_FemalePop()$simCohort(N = 1e3)
+
+MicroTile$get_HumanPop()$init_ActivitySpace()
+
+# MicroTile$get_ActivitySpace()
+
+MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+
+MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE,trackPop = TRUE)
+
+MicroTile$reset_FemalePop(MosquitoPop_PAR = mosquito_par)
+MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
+MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE)
 
 
 

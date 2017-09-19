@@ -27,7 +27,9 @@ mbitesBRO_timingExponential <- function(){
     duration = switch(private$state,
       B = {private$FemalePopPointer$get_MBITES_PAR("B_time")},
       R = {private$FemalePopPointer$get_MBITES_PAR("R_time")},
-      O = {private$FemalePopPointer$get_MBITES_PAR("O_time")}
+      O = {private$FemalePopPointer$get_MBITES_PAR("O_time")},
+      M = {private$FemalePopPointer$get_MBITES_PAR("M_time")},
+      S = {private$FemalePopPointer$get_MBITES_PAR("S_time")}
     )
     private$tNext = private$tNow + rexp(n=1,rate=1/duration)
   }
@@ -43,7 +45,9 @@ mbitesBRO_timingGamma <- function(){
     duration = switch(private$state,
       B = {private$FemalePopPointer$get_MBITES_PAR("B_time")},
       R = {private$FemalePopPointer$get_MBITES_PAR("R_time")},
-      O = {private$FemalePopPointer$get_MBITES_PAR("O_time")}
+      O = {private$FemalePopPointer$get_MBITES_PAR("O_time")},
+      M = {private$FemalePopPointer$get_MBITES_PAR("M_time")},
+      S = {private$FemalePopPointer$get_MBITES_PAR("S_time")}
     )
     private$tNext = private$tNow + rgamma(n=1,shape=private$FemalePopPointer$get_MBITES_PAR("gammaShape"),rate=(1/duration)*private$FemalePopPointer$get_MBITES_PAR("gammaShape"))
   }
@@ -311,16 +315,17 @@ mbitesBRO_oneBout <- function(){
     B = {self$boutB()},
     R = {self$boutR()},
     O = {self$boutO()},
-    {stop("illegal behavioral state for MBITES-BRO")}
+    {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
   )
 
   # energetics
-  # SUGAR ENERGETICS NOT IMPLEMENTED IN MBITES-BRO
-  # self$energetics()
+  if(private$FemalePopPointer$get_MBITES_PAR("SUGAR")){
+    self$sugarEnergetics()  # MBITES-Generic-Energetics.R
+  }
 
   # survival
-  self$surviveResting()   # MBITES-Survival.R
-  self$surviveFlight()    # MBITES-Survival.R
+  self$surviveResting()     # MBITES-Survival.R
+  self$surviveFlight()      # MBITES-Survival.R
 
   # log history
   private$history$historyTrack(privateEnv = private, alive = self$isAlive())

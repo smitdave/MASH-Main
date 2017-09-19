@@ -15,11 +15,11 @@ MBITES.BRO.Parameters(B_wts = rep(1, 5), R_wts = rep(1, 5), O_wts = rep(1,
   REFEED = FALSE, rf.a = 60, rf.b = 5000, OVERFEED = FALSE, of.a = 5,
   of.b = 5000, SENESCE = FALSE, sns.a = 0.1, sns.b = 100,
   TATTER = FALSE, ttsz.p = 0.5, ttsz.a = 5, ttsz.b = 95, ttr.a = 15,
-  ttr.b = 500, SUGAR = FALSE, S_succeed = 0.95, preGsugar = 0,
-  S.u = 1/5, S.a = 20, S.b = 10, S.sa = 15, S.sb = 5, MATE = FALSE,
-  M_succeed = 0.95, bs.m = 30, bs.v = 5, maxBatch = 30, emt.m = 3,
-  emt.v = 1, eggT = 0, eggP = 0, energyPreG = 0, PfEIP = 12,
-  Q = 0.9)
+  ttr.b = 500, SUGAR = FALSE, S_succeed = 0.95, S_time = 0.25,
+  preGsugar = 0, S.u = 1/5, S.a = 20, S.b = 10, S.sa = 15, S.sb = 5,
+  MATE = FALSE, M_succeed = 0.95, M_time = 0.5, bs.m = 30, bs.v = 5,
+  maxBatch = 30, emt.m = 3, emt.v = 1, eggT = 0, eggP = 0,
+  energyPreG = 0, PfEIP = 12, Q = 0.9)
 }
 \arguments{
 \item{B_wts}{landing spot weights}
@@ -98,6 +98,8 @@ MBITES.BRO.Parameters(B_wts = rep(1, 5), R_wts = rep(1, 5), O_wts = rep(1,
 
 \item{S_succeed}{probability to successfully locate sugar source and replenish energy in sugar feeding bout}
 
+\item{S_time}{average duration of time spent in sugar feeding state (unconditional on next state)}
+
 \item{preGsugar}{amount of energy a sugar meal contributes to energyPreG (pre-gonotrophic energy requirement)}
 
 \item{S.u}{per-bout energy expenditure}
@@ -113,6 +115,8 @@ MBITES.BRO.Parameters(B_wts = rep(1, 5), R_wts = rep(1, 5), O_wts = rep(1,
 \item{MATE}{logical; enable mating (see \code{\link{mbitesBROM_boutM}})}
 
 \item{M_succeed}{probability to successfully locate a mating swarm and call \code{\link{mbitesGeneric_chooseMate}}}
+
+\item{M_time}{average duration of time spent in mating state (unconditional on next state)}
 
 \item{bs.m}{mean of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})}
 
