@@ -655,6 +655,10 @@ void MosquitoFemaleHistory__historyInit(MASHcpp::RcppR6::RcppR6<MASHcpp::Mosquit
   obj_->historyInit(privateEnv);
 }
 // [[Rcpp::export]]
+void MosquitoFemaleHistory__set_mateID(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoFemaleHistory> obj_, std::string mateID_new) {
+  obj_->set_mateID(mateID_new);
+}
+// [[Rcpp::export]]
 void MosquitoFemaleHistory__historyTrack(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoFemaleHistory> obj_, Rcpp::Environment privateEnv, bool alive) {
   obj_->historyTrack(privateEnv, alive);
 }

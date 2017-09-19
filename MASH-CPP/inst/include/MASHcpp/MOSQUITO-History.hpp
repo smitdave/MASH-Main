@@ -49,6 +49,10 @@ public:
   // History Tracking
   ///////////////////////////////////
 
+  void set_mateID(const std::string &mateID_new){
+    mateID = mateID_new;
+  };
+
   // pass the private environment of the enclosing mosquito to the function
   void historyTrack(const Rcpp::Environment &privateEnv, const bool &alive){
 
@@ -62,6 +66,7 @@ public:
       timeH.push_back(privateEnv["tNext"]); // transition times
       this->calcBionomics(); // track bionomics upon death
     }
+
   };
 
   // historyFeed: track feeding history
@@ -137,6 +142,7 @@ public:
       Rcpp::List::create(
         // ID
         Rcpp::Named("ID") = ID,
+        Rcpp::Named("mateID") = mateID,
         // history objects
         Rcpp::Named("stateH") = stateH,
         Rcpp::Named("timeH") = timeH,
@@ -165,19 +171,20 @@ private:
 
   // ID
   std::string              ID;
+  std::string              mateID;
 
   // history objects
-  std::vector<std::string> stateH;
-  std::vector<double>      timeH;
-  std::vector<int>         ixH;
-  std::vector<std::string> pSetH;
-  int                      feedAllH;
-  std::vector<double>      feedAllT;
-  int                      feedHumanH;
-  std::vector<double>      feedHumanT;
+  std::vector<std::string>         stateH;
+  std::vector<double>              timeH;
+  std::vector<int>                 ixH;
+  std::vector<std::string>         pSetH;
+  int                              feedAllH;
+  std::vector<double>              feedAllT;
+  int                              feedHumanH;
+  std::vector<double>              feedHumanT;
   std::vector<std::string>         feedIxH;
-  std::vector<int>         bmSizeH;
-  std::vector<int>         batchH;
+  std::vector<int>                 bmSizeH;
+  std::vector<int>                 batchH;
 
   // bionomics
   double               bionomics_mBatch;

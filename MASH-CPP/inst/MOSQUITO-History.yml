@@ -49,13 +49,18 @@ MosquitoFemaleHistory:
       @md
       @export
   methods:
-    # History Constructor
+    # History Initializer
     historyInit:
       args:
         - privateEnv: "Rcpp::Environment"
       return_type: void
 
     # History Tracking
+    set_mateID:
+      args:
+        - mateID_new: "std::string"
+      return_type: void
+
     historyTrack:
       args:
         - privateEnv: "Rcpp::Environment"

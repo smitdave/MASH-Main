@@ -646,6 +646,10 @@ MosquitoFemaleHistory__historyInit <- function(obj_, privateEnv) {
     invisible(.Call('_MASHcpp_MosquitoFemaleHistory__historyInit', PACKAGE = 'MASHcpp', obj_, privateEnv))
 }
 
+MosquitoFemaleHistory__set_mateID <- function(obj_, mateID_new) {
+    invisible(.Call('_MASHcpp_MosquitoFemaleHistory__set_mateID', PACKAGE = 'MASHcpp', obj_, mateID_new))
+}
+
 MosquitoFemaleHistory__historyTrack <- function(obj_, privateEnv, alive) {
     invisible(.Call('_MASHcpp_MosquitoFemaleHistory__historyTrack', PACKAGE = 'MASHcpp', obj_, privateEnv, alive))
 }

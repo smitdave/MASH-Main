@@ -1848,6 +1848,17 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// MosquitoFemaleHistory__set_mateID
+void MosquitoFemaleHistory__set_mateID(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoFemaleHistory> obj_, std::string mateID_new);
+RcppExport SEXP _MASHcpp_MosquitoFemaleHistory__set_mateID(SEXP obj_SEXP, SEXP mateID_newSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoFemaleHistory> >::type obj_(obj_SEXP);
+    Rcpp::traits::input_parameter< std::string >::type mateID_new(mateID_newSEXP);
+    MosquitoFemaleHistory__set_mateID(obj_, mateID_new);
+    return R_NilValue;
+END_RCPP
+}
 // MosquitoFemaleHistory__historyTrack
 void MosquitoFemaleHistory__historyTrack(MASHcpp::RcppR6::RcppR6<MASHcpp::MosquitoFemaleHistory> obj_, Rcpp::Environment privateEnv, bool alive);
 RcppExport SEXP _MASHcpp_MosquitoFemaleHistory__historyTrack(SEXP obj_SEXP, SEXP privateEnvSEXP, SEXP aliveSEXP) {
@@ -2099,6 +2110,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_ELP__reset", (DL_FUNC) &_MASHcpp_ELP__reset, 1},
     {"_MASHcpp_MosquitoFemaleHistory__ctor", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__ctor, 0},
     {"_MASHcpp_MosquitoFemaleHistory__historyInit", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__historyInit, 2},
+    {"_MASHcpp_MosquitoFemaleHistory__set_mateID", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__set_mateID, 2},
     {"_MASHcpp_MosquitoFemaleHistory__historyTrack", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__historyTrack, 3},
     {"_MASHcpp_MosquitoFemaleHistory__historyFeed", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__historyFeed, 2},
     {"_MASHcpp_MosquitoFemaleHistory__calcBionomics", (DL_FUNC) &_MASHcpp_MosquitoFemaleHistory__calcBionomics, 1},
