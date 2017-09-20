@@ -15,6 +15,28 @@
 
 
 ###############################################################################
+# Male-specific Methods
+###############################################################################
+
+#' Get mateFitness
+#'
+#' Get the male mating fitness associated with a given genotype.
+#'  * This method is bound to \code{MosquitoPopMale$get_mateFitness}
+#'
+#' @param genotype integer; genotype of male mosquito
+#'
+get_mateFitness_MosquitoPopMale <- function(genotype){
+  return(
+    private$MBITES_PAR$mateFitness[genotype]
+  )
+}
+
+MosquitoPopMale$set(which = "public",name = "get_mateFitness",
+  value = get_mateFitness_MosquitoPopMale, overwrite = TRUE
+)
+
+
+###############################################################################
 # Push Pop
 ###############################################################################
 
@@ -64,7 +86,7 @@ push_pop_MosquitoPopMale <- function(N, tEmerge, genotype, ix){
 
     # assign the mosquitoes
     myID = paste0(tEmerge,"_",i,"_",genotype)
-    private$pop$assign(key = myID, value = MosquitoMale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=self$get_MBITES_PAR("initState")))
+    private$pop$assign(key = myID, value = MosquitoMale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=self$get_MBITES_PAR("initState"),mateFitness=self$get_mateFitness(genotype)))
 
     private$pop$get(myID)$set_FemalePopPointer(private$FemalePopPointer)
     private$pop$get(myID)$set_MalePopPointer(self)

@@ -22,7 +22,7 @@
 mbitesBROM_boutM <- function(){
 
   if(self$isAlive()){
-    if(runif(1) < private$get_MBITES_PAR("M_succeed")){
+    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("M_succeed")){
       self$chooseMate()
       private$stateNew = "B"
     }

@@ -4,19 +4,22 @@
 \alias{MBITES.Male.Parameters}
 \title{Generate Parameters for M-BITES Male Lifecycle Module}
 \usage{
-MBITES.Male.Parameters(maleHistory = FALSE, M_wts = rep(1, 5),
-  S_wts = rep(1, 5), R_wts = rep(1, 5), InAndOut = matrix(data = c(4, 2,
-  2, 1, 6, 2, 1, 1, 1, 4, 1, 1, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 2, 1, 0), nrow =
-  5, ncol = 5, byrow = TRUE, dimnames = list(c("i", "w", "v", "r", "l"), c("i",
-  "w", "v", "r", "l"))), M_surv = 0.85, S_surv = 0.8, R_surv = 0.95,
-  M_succeed = 0.95, S_succeed = 0.95, R_succeed = 0.99, gammaShape = 8,
-  M_time = 0.5, S_time = 0.65, R_time = 0.75, TATTER = FALSE,
-  ttsz.p = 0.5, ttsz.a = 5, ttsz.b = 95, ttr.a = 15, ttr.b = 500,
-  SENESCE = FALSE, sns.a = 0.1, sns.b = 100, S.u = 1/5, S.a = 20,
-  S.b = 10, S.sa = 15, S.sb = 5)
+MBITES.Male.Parameters(maleHistory = FALSE, mateFitness = 1,
+  M_wts = rep(1, 5), S_wts = rep(1, 5), R_wts = rep(1, 5),
+  InAndOut = matrix(data = c(4, 2, 2, 1, 6, 2, 1, 1, 1, 4, 1, 1, 1, 1, 2, 0,
+  0, 0, 0, 1, 1, 1, 2, 1, 0), nrow = 5, ncol = 5, byrow = TRUE, dimnames =
+  list(c("i", "w", "v", "r", "l"), c("i", "w", "v", "r", "l"))),
+  M_surv = 0.85, S_surv = 0.8, R_surv = 0.95, M_succeed = 0.95,
+  S_succeed = 0.95, R_succeed = 0.99, gammaShape = 8, M_time = 0.5,
+  S_time = 0.65, R_time = 0.75, TATTER = FALSE, ttsz.p = 0.5,
+  ttsz.a = 5, ttsz.b = 95, ttr.a = 15, ttr.b = 500, SENESCE = FALSE,
+  sns.a = 0.1, sns.b = 100, S.u = 1/5, S.a = 20, S.b = 10,
+  S.sa = 15, S.sb = 5)
 }
 \arguments{
 \item{maleHistory}{logical; write male histories to JSON}
+
+\item{mateFitness}{vector of relative mating fitness}
 
 \item{M_wts}{landing spot weights}
 

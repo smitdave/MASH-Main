@@ -16,10 +16,11 @@ MBITES.BRO.Parameters(B_wts = rep(1, 5), R_wts = rep(1, 5), O_wts = rep(1,
   of.b = 5000, SENESCE = FALSE, sns.a = 0.1, sns.b = 100,
   TATTER = FALSE, ttsz.p = 0.5, ttsz.a = 5, ttsz.b = 95, ttr.a = 15,
   ttr.b = 500, SUGAR = FALSE, S_succeed = 0.95, S_time = 0.25,
-  preGsugar = 0, S.u = 1/5, S.a = 20, S.b = 10, S.sa = 15, S.sb = 5,
-  MATE = FALSE, M_succeed = 0.95, M_time = 0.5, bs.m = 30, bs.v = 5,
+  S_wts = rep(1, 5), S_surv = 0.9, S.u = 1/5, S.a = 20, S.b = 10,
+  S.sa = 15, S.sb = 5, MATE = FALSE, M_succeed = 0.95, M_time = 0.5,
+  M_wts = rep(1, 5), M_surv = 0.95, bs.m = 30, bs.v = 5,
   maxBatch = 30, emt.m = 3, emt.v = 1, eggT = 0, eggP = 0,
-  energyPreG = 0, PfEIP = 12, Q = 0.9)
+  energyPreG = 0, preGsugar = 0, preGblood = 0, PfEIP = 12, Q = 0.9)
 }
 \arguments{
 \item{B_wts}{landing spot weights}
@@ -100,7 +101,7 @@ MBITES.BRO.Parameters(B_wts = rep(1, 5), R_wts = rep(1, 5), O_wts = rep(1,
 
 \item{S_time}{average duration of time spent in sugar feeding state (unconditional on next state)}
 
-\item{preGsugar}{amount of energy a sugar meal contributes to energyPreG (pre-gonotrophic energy requirement)}
+\item{S_wts}{landing spot weights}
 
 \item{S.u}{per-bout energy expenditure}
 
@@ -118,6 +119,8 @@ MBITES.BRO.Parameters(B_wts = rep(1, 5), R_wts = rep(1, 5), O_wts = rep(1,
 
 \item{M_time}{average duration of time spent in mating state (unconditional on next state)}
 
+\item{M_wts}{landing spot weights}
+
 \item{bs.m}{mean of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})}
 
 \item{bs.v}{standard deviation of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})}
@@ -133,6 +136,10 @@ MBITES.BRO.Parameters(B_wts = rep(1, 5), R_wts = rep(1, 5), O_wts = rep(1,
 \item{eggP}{minimum provision to produce eggs}
 
 \item{energyPreG}{pre-gonotrophic energy requirement}
+
+\item{preGsugar}{amount of energy a sugar meal contributes to energyPreG (pre-gonotrophic energy requirement)}
+
+\item{preGblood}{amount of energy a blood meal contributes to energyPreG (pre-gonotrophic energy requirement)}
 
 \item{PfEIP}{entomological inoculation period for Plasmodium falciparum during \code{MosquitoFemale$probing()}}
 

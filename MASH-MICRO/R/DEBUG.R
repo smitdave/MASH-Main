@@ -29,7 +29,7 @@ DEBUG.MASHMICRO <- function(overwrite = TRUE){
   )
 
   MASHmicro:::MosquitoMale$set(which = "public",name = "finalize",
-    value = function(){message(paste0("MosquitoFemale" ,private$id," being garbage collected"))},
+    value = function(){message(paste0("MosquitoMale" ,private$id," being garbage collected"))},
     overwrite = overwrite
   )
 
@@ -39,7 +39,7 @@ DEBUG.MASHMICRO <- function(overwrite = TRUE){
   )
 
   MASHmicro:::MosquitoPopMale$set(which = "public",name = "finalize",
-    value = function(){message(paste0("MosquitoPopFemale being garbage collected"))},
+    value = function(){message(paste0("MosquitoPopMale being garbage collected"))},
     overwrite = overwrite
   )
 
@@ -59,6 +59,17 @@ DEBUG.MASHMICRO <- function(overwrite = TRUE){
     value = function(){message(paste0("AquaticSite ",private$ix," being garbage collected"))},
     overwrite = overwrite
   )
+
+  MASHmicro:::MatingSite$set(which = "public",name = "finalize",
+    value = function(){message(paste0("MatingSite ",private$ix," being garbage collected"))},
+    overwrite = overwrite
+  )
+
+  MASHmicro:::SugarSite$set(which = "public",name = "finalize",
+    value = function(){message(paste0("SugarSite ",private$ix," being garbage collected"))},
+    overwrite = overwrite
+  )
+
 
   # LANDSCAPE
 

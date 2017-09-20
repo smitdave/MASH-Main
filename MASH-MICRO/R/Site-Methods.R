@@ -689,7 +689,7 @@ MatingSite$set(which = "public",name = "set_haz",
 #' Get the mating queue object at this site; see \code{\link[MASHcpp]{MatingQ}} for details.
 #'  * This method is bound to \code{MatingSite$get_MatingQ}
 #'
-get_MatingQ_MatingSite <- function(){return(private$haz)}
+get_MatingQ_MatingSite <- function(){return(private$MatingQ)}
 
 MatingSite$set(which = "public",name = "get_MatingQ",
   value = get_MatingQ_MatingSite, overwrite = TRUE

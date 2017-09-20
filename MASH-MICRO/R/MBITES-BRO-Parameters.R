@@ -59,7 +59,7 @@
 #' @param SUGAR logical; enable sugar bouts and energetics (see \code{\link{mbitesBROS_boutS}} and \code{\link{mbitesGeneric_sugarEnergetics}})
 #' @param S_succeed probability to successfully locate sugar source and replenish energy in sugar feeding bout
 #' @param S_time average duration of time spent in sugar feeding state (unconditional on next state)
-#' @param preGsugar amount of energy a sugar meal contributes to energyPreG (pre-gonotrophic energy requirement)
+#' @param S_wts landing spot weights
 #' @param S.u per-bout energy expenditure
 #' @param S.a shape parameter of per-bout probability of survival as function of energy reserves
 #' @param S.b shape parameter of per-bout probability of survival as function of energy reserves
@@ -68,6 +68,7 @@
 #' @param MATE logical; enable mating (see \code{\link{mbitesBROM_boutM}})
 #' @param M_succeed probability to successfully locate a mating swarm and call \code{\link{mbitesGeneric_chooseMate}}
 #' @param M_time average duration of time spent in mating state (unconditional on next state)
+#' @param M_wts landing spot weights
 #' @param bs.m mean of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})
 #' @param bs.v standard deviation of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})
 #' @param maxBatch maximum egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeBms}})
@@ -76,6 +77,8 @@
 #' @param eggT minimum time to egg maturation
 #' @param eggP minimum provision to produce eggs
 #' @param energyPreG pre-gonotrophic energy requirement
+#' @param preGsugar amount of energy a sugar meal contributes to energyPreG (pre-gonotrophic energy requirement)
+#' @param preGblood amount of energy a blood meal contributes to energyPreG (pre-gonotrophic energy requirement)
 #' @param PfEIP entomological inoculation period for Plasmodium falciparum during \code{MosquitoFemale$probing()}
 #' @param Q human blood index (used in \code{\link{mbitesCohort_chooseHost}})
 #' @return a named list of parameters
@@ -181,7 +184,8 @@ MBITES.BRO.Parameters <- function(
   SUGAR = FALSE,
   S_succeed = 0.95,
   S_time = 0.25,
-  preGsugar = 0,
+  S_wts = rep(1,5),
+  S_surv = 0.9,
   S.u = 1/5,
   S.a = 20,
   S.b = 10,
@@ -194,6 +198,8 @@ MBITES.BRO.Parameters <- function(
   MATE = FALSE,
   M_succeed = 0.95,
   M_time = 0.5,
+  M_wts = rep(1,5),
+  M_surv = 0.95,
 
   ##########################################
   # Reproduction & Development
@@ -206,6 +212,8 @@ MBITES.BRO.Parameters <- function(
   eggT = 0, # minimum time to egg maturation
   eggP = 0, # minimum provision to produce eggs
   energyPreG = 0, # pre-gonotrophic energy requirement
+  preGsugar = 0, # sugar units to fill pre-gonotrophic energy requirement
+  preGblood = 0, # blood units to fill pre-gonotrophic energy requirement
 
   ##########################################
   # Pathogen Transmission
@@ -312,6 +320,8 @@ MBITES.BRO.Parameters <- function(
     eggT = eggT, # minimum time to egg maturation
     eggP = eggP, # minimum provision to produce eggs
     energyPreG = energyPreG, # pre-gonotrophic energy requirement
+    preGsugar = preGsugar,
+    preGblood = preGblood,
 
     ##########################################
     # Pathogen Transmission
@@ -341,10 +351,12 @@ MBITES.BRO.Parameters <- function(
   # SUGAR
   ##########################################
   if(SUGAR){
-    out$StateSpace = c(out$StateSpace,"S")
+    out$stateSpace = c(out$stateSpace,"S")
     out$Fstate = c(out$Fstate,c(S=0))
     out$S_succeed = S_succeed
     out$S_time = S_time
+    out$S_wts = S_wts
+    out$S_surv = S_surv
     out$S.u = S.u
     out$S.a = S.a
     out$S.b = S.b
@@ -356,11 +368,13 @@ MBITES.BRO.Parameters <- function(
   # MATING
   ##########################################
   if(MATE){
-    out$StateSpace = c(out$StateSpace,"M")
+    out$stateSpace = c(out$stateSpace,"M")
     out$initState = "M"
     out$Fstate = c(out$Fstate,c(M=0))
     out$M_succeed = M_succeed
     out$M_time = M_time
+    out$M_wts = M_wts
+    out$M_surv = M_surv
   }
 
   return(out)

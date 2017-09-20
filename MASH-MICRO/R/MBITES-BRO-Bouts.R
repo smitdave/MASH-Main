@@ -83,7 +83,9 @@ mbitesBRO_get_MySiteType <- function(){
   switch(private$inPointSet,
     f = {return(private$LandscapePointer$get_FeedingSites(private$ix)$get_siteType())},
     l = {return(private$LandscapePointer$get_AquaSites(private$ix)$get_siteType())},
-    {stop("illegal point set for MBITES-BRO")}
+    m = {return(private$LandscapePointer$get_MatingSites(private$ix)$get_siteType())},
+    s = {return(private$LandscapePointer$get_SugarSites(private$ix)$get_siteType())},
+    {stop("illegal point set for M-BITES")}
   )
 }
 
@@ -97,7 +99,10 @@ mbitesBRO_get_WTS <- function(){
   switch(private$state,
     B = private$FemalePopPointer$get_MBITES_PAR("B_wts"),
     R = private$FemalePopPointer$get_MBITES_PAR("R_wts"),
-    O = private$FemalePopPointer$get_MBITES_PAR("O_wts")
+    O = private$FemalePopPointer$get_MBITES_PAR("O_wts"),
+    M = private$FemalePopPointer$get_MBITES_PAR("M_wts"),
+    S = private$FemalePopPointer$get_MBITES_PAR("S_wts"),
+    {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
   )
 }
 
@@ -315,6 +320,8 @@ mbitesBRO_oneBout <- function(){
     B = {self$boutB()},
     R = {self$boutR()},
     O = {self$boutO()},
+    M = {self$boutM()},
+    S = {self$boutS()},
     {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
   )
 

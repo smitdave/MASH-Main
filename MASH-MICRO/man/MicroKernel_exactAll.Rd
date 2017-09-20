@@ -4,16 +4,19 @@
 \alias{MicroKernel_exactAll}
 \title{MICRO Search Kernels: Exact Movement Object Between All Point Sets}
 \usage{
-MicroKernel_exactAll(Landscape, sigma = 3, eps = 0.1, beta = 0)
+MicroKernel_exactAll(Landscape, male = FALSE, sigma = 3, eps = 0.1,
+  beta = 0)
 }
 \arguments{
 \item{Landscape}{a microsimulation \code{\link{Landscape}} object}
 
-\item{sigma}{a param}
+\item{male}{logical; calculate male movement kernel}
 
-\item{eps}{a param}
+\item{sigma}{numeric}
 
-\item{beta}{a param}
+\item{eps}{numeric}
+
+\item{beta}{numeric}
 }
 \value{
 list of movement objects between all site classes (see above and \code{\link{MicroKernel_exactMvOb}}) for details.

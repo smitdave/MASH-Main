@@ -65,19 +65,25 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$HumanPop = MASHmacro::HumanPop$new(patchID = 1L,HumanPop_PAR)
 
                      # generate movement object
-                     private$movementFemale = MicroKernel_exactAll(private$Landscape,sigma=3,eps=0.1,beta=0)
+                     private$movementFemale = MicroKernel_exactAll(private$Landscape,male=FALSE,sigma=3,eps=0.1,beta=0)
 
                      # generate female mosquito object
-                     private$FemalePop = MosquitoPopFemale$new(N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
-                                                                  ix_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
-                                                                  genotype_init = MosquitoPop_PAR$genotype_female,  # genotypes of females
-                                                                  MBITES_PAR = MosquitoPop_PAR$MBITES_PAR_FEMALE  # M-BITES parameters
+                     private$FemalePop = MosquitoPopFemale$new(
+                       N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
+                       ix_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
+                       genotype_init = MosquitoPop_PAR$genotype_female,  # genotypes of females
+                       MBITES_PAR = MosquitoPop_PAR$MBITES_PAR_FEMALE  # M-BITES parameters
                     )
 
                     # generate male mosquito object
                     if(!is.null(MosquitoPop_PAR$N_male)){
+                      private$movementMale = MicroKernel_exactAll(private$Landscape,male=TRUE,sigma=3,eps=0.1,beta=0)
+
                       private$MalePop = MosquitoPopMale$new(
-                        # N = 
+                        N = MosquitoPop_PAR$N_male,
+                        ix_init = MosquitoPop_PAR$ix_male,
+                        genotype_init = MosquitoPop_PAR$genotype_male,
+                        MBITES_PAR = MosquitoPop_PAR$MBITES_PAR_MALE
                       )
                     }
 
@@ -99,6 +105,7 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$Landscape$set_TilePointer(self)
                      private$Landscape$set_HumansPointer(private$HumanPop)
                      private$Landscape$set_FemalePopPointer(private$FemalePop)
+                     private$Landscape$set_MalePopPointer(private$MalePop)
 
                      # Female Mosquito Population Pointers
                      private$FemalePop$set_TilePointer(self)
@@ -112,6 +119,21 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$FemalePop$get_pop()$apply(tag="set_TilePointer",returnVal=FALSE,TilePointer=self)
                      private$FemalePop$get_pop()$apply(tag="set_LandscapePointer",returnVal=FALSE,LandscapePointer=private$Landscape)
                      private$FemalePop$get_pop()$apply(tag="set_HumansPointer",returnVal=FALSE,HumansPointer=private$HumanPop)
+
+                    #  Male Mosquito Population Pointers
+                    if(!is.null(MosquitoPop_PAR$N_male)){
+                      private$MalePop$set_TilePointer(self)
+                      private$MalePop$set_LandscapePointer(private$Landscape)
+                      private$MalePop$set_HumansPointer(private$HumanPop)
+                      private$MalePop$set_FemalePopPointer(private$FemalePop)
+
+                      private$MalePop$get_pop()$apply(tag="set_FemalePopPointer",returnVal=FALSE,FemalePopPointer=private$FemalePop)
+                      private$MalePop$get_pop()$apply(tag="set_MalePopPointer",returnVal=FALSE,MalePopPointer=private$MalePop)
+
+                      private$MalePop$get_pop()$apply(tag="set_TilePointer",returnVal=FALSE,TilePointer=self)
+                      private$MalePop$get_pop()$apply(tag="set_LandscapePointer",returnVal=FALSE,LandscapePointer=private$Landscape)
+                      private$MalePop$get_pop()$apply(tag="set_HumansPointer",returnVal=FALSE,HumansPointer=private$HumanPop)
+                    }
 
                      #################################################
                      # Set Output Directory

@@ -135,6 +135,10 @@ MBITES.Male.Setup <- function(
             value = mbitesMale_boutR, overwrite = overwrite
   )
 
+  MosquitoMale$set(which = "public",name = "oneBout",
+            value = mbitesMale_oneBout, overwrite = overwrite
+  )
+
   MosquitoMale$set(which = "public",name = "MBITES",
             value = mbitesMale_oneMosquito_MBITES, overwrite = overwrite
   )

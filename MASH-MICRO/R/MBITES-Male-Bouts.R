@@ -296,8 +296,12 @@ mbitesMale_oneMosquito_MBITES <- function(){
   }
 
   # if mosquito is dead output data if asked and remove it from the enclosing storage object
-  if(private$stateNew == "D" & private$get_MBITES_PAR("maleHistory")){
-    self$writeAndDelete(conHist = private$TilePointer$get_MaleHistoryCon())
+  if(private$stateNew == "D"){
+    if(private$MalePopPointer$get_MBITES_PAR("maleHistory")){
+      self$writeAndDelete(conHist = private$TilePointer$get_MaleHistoryCon())
+    } else {
+      self$rmSelf()
+    }
   }
 
 }

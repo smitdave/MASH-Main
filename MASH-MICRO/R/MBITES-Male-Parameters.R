@@ -17,6 +17,7 @@
 #' Generate named list of parameters used throughout MICRO/M-BITES. All arguments have default values which are listed below before the definition.
 #'
 #' @param maleHistory logical; write male histories to JSON
+#' @param mateFitness vector of relative mating fitness
 #' @param M_wts landing spot weights
 #' @param S_wts landing spot weights
 #' @param R_wts landing spot weights
@@ -52,6 +53,7 @@
 MBITES.Male.Parameters <- function(
 
   maleHistory = FALSE,
+  mateFitness = 1,
 
   M_wts = rep(1,5),
   S_wts = rep(1,5),
@@ -98,6 +100,7 @@ MBITES.Male.Parameters <- function(
   return(list(
 
     maleHistory = maleHistory,
+    mateFitness = mateFitness,
     M_wts = M_wts,
     S_wts = S_wts,
     R_wts = R_wts,

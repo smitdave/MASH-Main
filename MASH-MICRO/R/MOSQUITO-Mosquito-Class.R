@@ -82,9 +82,7 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                               private$eggP   = eggP         # MBITES_PAR the mimimum provision for eggs to mature
 
                               # Maturation & Reproduction
-                              sire        = 0
-                              energyPreG  = energyPreG           # MBITES_PAR pre-gonotrophic energy requirement
-                              hostID      = 0           # the id of the host: -1::none; 0::not human
+                              private$energyPreG  = energyPreG           # MBITES_PAR pre-gonotrophic energy requirement
 
                               # initialize PATHOGEN object
                               # PAR must contain a function mapped to the R6ClassGenerator object needed
@@ -189,7 +187,7 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                           ##############################################################
 
                           # pointers are also passed down from enclosing MosquitoPopFemale object
-                          initialize = function(id, time, ix, genotype, state, mateFitness){
+                          initialize = function(id, time, ix, genotype, state, mateFitness = 1){
 
                             # initialize general fields
 

@@ -21,9 +21,7 @@
 #' Initialize MICRO Search Kernels module of mosquito search behavior.
 #'
 #' @param MBITES what M-BITES module to run?
-#'  * BRO: Blood Feeding, Resting, Oviposition module
-#'  * BROM: Blood Feeding, Resting, Oviposition, Mating module
-#'  * BROMS: Blood Feeding, Resting, Oviposition, Mating & Sugar Feeding module
+#'  * BRO: Blood Feeding, Resting, Oviposition module (also including BRO with SUGAR and/or MATE)
 #'  * FULL: Full life cycle M-BITES module (Blood Feeding Search & Attempt, Resting, Oviposition Search & Attempt, Mating, Sugar Feeding)
 #'
 #' @export
@@ -50,7 +48,7 @@ SEARCH.Kernel.Setup <- function(MBITES = "BRO", overwrite = TRUE){
   #################################################################
 
   # male movement does not change betwen female lifecycle modules
-  MosquitoPopMale$set(which = "public",name = "get_movement",
+  Tile$set(which = "public",name = "get_movementMale",
               value = get_MicroKernel_movement_Male,
               overwrite = overwrite
   )
@@ -63,41 +61,28 @@ SEARCH.Kernel.Setup <- function(MBITES = "BRO", overwrite = TRUE){
   # Female Movement
   #################################################################
 
-  if(MBITES == "BRO"){
-
-    Tile$set(which = "public",name = "get_movement",
-                value = get_MicroKernel_movement_BRO,
-                overwrite = overwrite
-    )
-    MosquitoFemale$set(which = "public",name = "moveMe",
-                value = MicroKernel_moveMe_BRO,
-                overwrite = overwrite
-    )
-
-  } else if(MBITES == "BROM"){
-
-    Tile$set(which = "public",name = "get_movement",
-                value = get_MicroKernel_movement_BROM,
-                overwrite = overwrite
-    )
-    MosquitoFemale$set(which = "public",name = "moveMe",
-                value = MicroKernel_moveMe_BROM,
-                overwrite = overwrite
-    )
-
-  } else if(MBITES == "FULL"){
-
-    Tile$set(which = "public",name = "get_movement",
-                value = get_MicroKernel_movement_FULL,
-                overwrite = overwrite
-    )
-    MosquitoFemale$set(which = "public",name = "moveMe",
-                value = MicroKernel_moveMe_FULL,
-                overwrite = overwrite
-    )
-
-  } else {
-    stop("argument MBITES must be a character in 'BRO', 'BROM', or 'FULL'")
-  }
+  switch(MBITES,
+    BRO = {
+      Tile$set(which = "public",name = "get_movement",
+                  value = get_MicroKernel_movement_BRO,
+                  overwrite = overwrite
+      )
+      MosquitoFemale$set(which = "public",name = "moveMe",
+                  value = MicroKernel_moveMe_BRO,
+                  overwrite = overwrite
+      )
+    },
+    FULL = {
+      Tile$set(which = "public",name = "get_movement",
+                  value = get_MicroKernel_movement_FULL,
+                  overwrite = overwrite
+      )
+      MosquitoFemale$set(which = "public",name = "moveMe",
+                  value = MicroKernel_moveMe_FULL,
+                  overwrite = overwrite
+      )
+    },
+    {stop(cat("MBITES module must be a character in 'BRO' or 'FULL', got: ",MBITES,"\n",sep=""))}
+  )
 
 }

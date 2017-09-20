@@ -9,9 +9,7 @@ SEARCH.Kernel.Setup(MBITES = "BRO", overwrite = TRUE)
 \arguments{
 \item{MBITES}{what M-BITES module to run?
 \itemize{
-\item BRO: Blood Feeding, Resting, Oviposition module
-\item BROM: Blood Feeding, Resting, Oviposition, Mating module
-\item BROMS: Blood Feeding, Resting, Oviposition, Mating & Sugar Feeding module
+\item BRO: Blood Feeding, Resting, Oviposition module (also including BRO with SUGAR and/or MATE)
 \item FULL: Full life cycle M-BITES module (Blood Feeding Search & Attempt, Resting, Oviposition Search & Attempt, Mating, Sugar Feeding)
 }}
 }

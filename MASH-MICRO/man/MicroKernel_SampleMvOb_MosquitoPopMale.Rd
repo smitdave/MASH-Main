@@ -14,7 +14,7 @@ MicroKernel_SampleMvOb_MosquitoPopMale(ixS, state, inPointSet)
 \item{inPointSet:}{current point set this mosquito is in}
 }
 \value{
-new index
+integer
 }
 \description{
 This method is a helper for \code{\link{MicroKernel_moveMe}} and samples the appropriate MvOb in MvAll stored in an enclosing \code{\link{Tile}} object.

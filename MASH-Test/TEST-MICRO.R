@@ -106,21 +106,28 @@ SEARCH.Kernel.Setup(MBITES = "BRO")
 
 # landscape parameters
 nAqua = 20
-nFeed = 20
+nFeed = 15
+nSugar = 12
+nMate = 10
 emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
-landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
+landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,nMate = nMate,nSugar = nSugar,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
 
 # human parameters
 human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
 
 # M-BITES parameters
 nMosy = 50
-mbites_par = MBITES.BRO.Parameters(PfEIP=1)
+mbites_par_female = MBITES.BRO.Parameters(PfEIP=1,SUGAR = TRUE,MATE = TRUE)
+mbites_par_male = MBITES.Male.Parameters(maleHistory = TRUE)
 mosquito_par = list(
   N_female = nMosy,
+  N_male = nMosy,
   ix_female = rep(1,nMosy),
+  ix_male = rep(1,nMosy),
   genotype_female = rep(1,nMosy),
-  MBITES_PAR_FEMALE = mbites_par
+  genotype_male = rep(1,nMosy),
+  MBITES_PAR_FEMALE = mbites_par_female,
+  MBITES_PAR_MALE = mbites_par_male
 )
 
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)

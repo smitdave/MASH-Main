@@ -33,6 +33,13 @@
 mbitesBRO_BloodMeal <- function(){
   private$bmSize = self$rBloodMealSize()
 
+  if(!private$mature){
+    private$energyPreG = private$energyPreG - private$FemalePopPointer$get_MBITES_PAR("preGblood")
+    if(private$energyPreG <= 0){
+      private$mature = TRUE
+    }
+  }
+
   # Overfeeding mortality
   if(private$FemalePopPointer$get_MBITES_PAR("OVERFEED")){
     if(runif(1) < self$pOverFeed()){

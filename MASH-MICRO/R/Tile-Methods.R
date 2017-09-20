@@ -18,6 +18,28 @@
 # Getters & Setters
 ###############################################################################
 
+#' Get movementFemale
+#'
+#' Return female movement object
+#'  * This method is bound to \code{Tile$get_movementFemale}
+#'
+get_movementFemale_Tile <- function(){return(private$movementFemale)}
+
+Tile$set(which = "public",name = "get_movementFemale",
+  value = get_movementFemale_Tile, overwrite = TRUE
+)
+
+#' Get movementMale
+#'
+#' Return female movement object
+#'  * This method is bound to \code{Tile$get_movementMale}
+#'
+get_movementMale_Tile <- function(){return(private$movementMale)}
+
+Tile$set(which = "public",name = "get_movementMale",
+  value = get_movementMale_Tile, overwrite = TRUE
+)
+
 #' Get tNow
 #'
 #' Return current simulation time. All agents run events until their next scheduled event overruns the current simulation time, upon which they
