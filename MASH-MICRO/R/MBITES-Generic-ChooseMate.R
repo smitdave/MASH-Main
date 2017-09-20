@@ -32,6 +32,7 @@ mbitesGeneric_chooseMate <- function(){
     ix = sampleIx_utility(x = 1:length(mates$maleID), size = 1, prob = mates$mateFitness)
     private$mateID = mates$maleID[ix]
     private$mateGenotype = mates$maleGenotype[ix]
+    private$history$set_mateID(private$mateID)
   }
 
 }

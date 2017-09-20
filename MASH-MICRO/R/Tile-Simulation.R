@@ -141,14 +141,15 @@ simMICRO_oneStep <- function(verbose = FALSE, trackPop = FALSE){
 
   # log population count
   if(trackPop){
-    # write pops to csv (THIS IS PROBABLY INEFFICIENT; SET UP)
     Fcount = table(unlist(private$FemalePop$get_pop()$apply(tag="get_state",returnVal=TRUE)))
     Fstate = private$FemalePop$get_MBITES_PAR("Fstate")
-    # Fstate = setNames(object = rep(0,length(private$FemalePop$get_MBITES_PAR("stateSpace"))),nm = private$FemalePop$get_MBITES_PAR("stateSpace"))
     Fstate[names(Fcount)] = Fcount
     writeLines(text = paste0(c(private$tNow,Fstate),collapse = ","),con = self$get_FemaleCSVCon(),sep = "\n")
     if(!is.null(private$MalePop)){
-      # do something here
+      Mcount = table(unlist(private$MalePop$get_pop()$apply(tag="get_state",returnVal=TRUE)))
+      Mstate = private$MalePop$get_MBITES_PAR("Mstate")
+      Mstate[names(Mcount)] = Mcount
+      writeLines(text = paste0(c(private$tNow,Mstate),collapse = ","),con = self$get_MaleCSVCon(),sep = "\n")
     }
   }
 

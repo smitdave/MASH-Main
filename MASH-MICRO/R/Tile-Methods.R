@@ -253,7 +253,7 @@ Tile$set(which = "public",name = "set_MaleCSVCon",
 #' Close the text connection used to write population count data to CSV.
 #'  * This method is bound to \code{Tile$close_MaleCSVCon}
 #'
-close_MaleCSVCon_Tile <- function(){close(private$FemaleCSVCon)}
+close_MaleCSVCon_Tile <- function(){close(private$MaleCSVCon)}
 
 Tile$set(which = "public",name = "close_MaleCSVCon",
   value = close_MaleCSVCon_Tile, overwrite = TRUE
