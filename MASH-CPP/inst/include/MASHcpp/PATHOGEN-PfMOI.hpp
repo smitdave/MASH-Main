@@ -16,8 +16,8 @@ public:
 
   humanPfMOI(const int &PfID_init, const double &tInf_init = -1, const int &MOI_init = 0,
     const double &b_init = 0.55, const double &c_init = 0.15,
-    const int &damID_init = -1, const int &sireID_init = -1,
-    const bool &chemoprophylaxis_init = false);
+    const bool &chemoprophylaxis_init = false, const double &N = 20
+  );
 
   ///////////////////////////////////
   // Getters & Setters
@@ -58,18 +58,11 @@ public:
     c = c_new;
   };
 
-  std::vector<int> get_damID(){
-    return(damID);
+  std::vector<std::string> get_vectorInf(){
+    return(vectorInf);
   };
-  void push_damID(const int &damID_new){
-    damID.push_back(damID_new);
-  };
-
-  std::vector<int> get_sireID(){
-    return(sireID);
-  };
-  void push_sireID(const int &sireID_new){
-    sireID.push_back(sireID_new);
+  void push_vectorInf(const std::string &vectorInf_new){
+    vectorInf.push_back(vectorInf_new);
   };
 
   bool get_chemoprophylaxis(){
@@ -84,10 +77,8 @@ public:
   ///////////////////////////////////
 
   // add a new infection
-  void add_Infection(const int &PfID_new, const int &damID_new, const int &sireID_new){
+  void add_Infection(const int &PfID_new){
     PfID.push_back(PfID_new);
-    damID.push_back(damID_new);
-    sireID.push_back(sireID_new);
     MOI += 1;
     // eventually can push back this stuff to some history vectors.
   };
@@ -98,13 +89,11 @@ public:
     auto it = std::find(PfID.begin(), PfID.end(), PfID_ix);
     size_t ix = std::distance(PfID.begin(), it);
     PfID.erase(PfID.begin()+ix);
-    damID.erase(damID.begin()+ix);
-    sireID.erase(sireID.begin()+ix);
     MOI -= 1;
   };
 
   // get all infections where PfID != -1
-  Rcpp::List get_Infection(){
+  std::vector<int> get_Infection(){
 
     std::vector<int> infIx;
     auto it = std::find_if(PfID.begin(), PfID.end(), [](const int &PfID_iter){
@@ -119,25 +108,11 @@ public:
 
     // export these infections that have passed the EIP
     std::vector<int> PfID_out;
-    std::vector<int> damID_out;
-    std::vector<int> sireID_out;
     std::transform(infIx.begin(), infIx.end(), std::back_inserter(PfID_out), [this](size_t ix){
       return(PfID[ix]);
     });
-    std::transform(infIx.begin(), infIx.end(), std::back_inserter(damID_out), [this](size_t ix){
-      return(damID[ix]);
-    });
-    std::transform(infIx.begin(), infIx.end(), std::back_inserter(sireID_out), [this](size_t ix){
-      return(sireID[ix]);
-    });
 
-    return(
-      Rcpp::List::create(
-        Rcpp::Named("PfID") = PfID_out,
-        Rcpp::Named("damID") = damID_out,
-        Rcpp::Named("sireID") = sireID_out
-      )
-    );
+    return(PfID_out);
   };
 
   ///////////////////////////////////
@@ -157,7 +132,8 @@ public:
       Rcpp::List::create(
         Rcpp::Named("events") = events,
         Rcpp::Named("eventT") = eventT,
-        Rcpp::Named("MOI") = MOI_history
+        Rcpp::Named("MOI") = MOI_history,
+        Rcpp::Named("vectorInf") = vectorInf
       )
     );
   };
@@ -169,6 +145,7 @@ private:
   std::vector<std::string> events;
   std::vector<double>      eventT;
   std::vector<int>         MOI_history;
+  std::vector<std::string> vectorInf;
 
   // PfMOI Parameters & State Variables
   std::vector<int> PfID; // pathogen ID
@@ -176,17 +153,20 @@ private:
   int MOI; // multiplicity of infection
   double b; // transmission efficiency: infected mosquito to human
   double c; // transmission efficiency: infected human to mosquito
-  std::vector<int> damID; // female gametocyte mother
-  std::vector<int> sireID; // male gametocyte father
   bool chemoprophylaxis;
 
 };
 
 // inline definition of constructor to accept default argument values
-inline humanPfMOI::humanPfMOI(const int &PfID_init, const double &tInf_init,
-  const int &MOI_init, const double &b_init, const double &c_init,
-  const int &damID_init, const int &sireID_init,
-  const bool &chemoprophylaxis_init){
+inline humanPfMOI::humanPfMOI(
+  const int &PfID_init,
+  const double &tInf_init,
+  const int &MOI_init,
+  const double &b_init,
+  const double &c_init,
+  const bool &chemoprophylaxis_init,
+  const double &N
+){
 
     // set parameters and state variables
     PfID.push_back(PfID_init);
@@ -194,16 +174,16 @@ inline humanPfMOI::humanPfMOI(const int &PfID_init, const double &tInf_init,
     MOI = MOI_init;
     b = b_init;
     c = c_init;
-    damID.push_back(damID_init);
-    sireID.push_back(sireID_init);
     chemoprophylaxis = chemoprophylaxis_init;
 
     // reserve memory for history
-    events.reserve(50);
+    events.reserve(N);
     events.push_back("init");
-    eventT.reserve(50);
+    eventT.reserve(N);
     eventT.push_back(-1);
-    MOI_history.reserve(50);
+    MOI_history.reserve(N);
+    vectorInf.reserve(N);
+    vectorInf.push_back("init");
 
   }
 
@@ -217,9 +197,12 @@ public:
   // Mosquito Stage PfMOI Constructor
   ///////////////////////////////////
 
-  mosquitoPfMOI(const int &PfID_init = -1, const double &tInf_init = -1,
-    const int &MOI_init = 0,
-    const int &damID_init = -1, const int &sireID_init = -1);
+  mosquitoPfMOI(
+    const int &PfID_init,
+    const std::string &MosquitoID_init,
+    const double &tInf_init = -1,
+    const int &MOI_init = 0
+  );
 
   ///////////////////////////////////
   // Getters & Setters
@@ -230,7 +213,14 @@ public:
   };
   void push_PfID(const int &PfID_new){
     PfID.push_back(PfID_new);
-  }
+  };
+
+  std::string get_MosquitoID(){
+    return(MosquitoID);
+  };
+  void set_MosquitoID(const std::string &MosquitoID_new){
+    MosquitoID = MosquitoID_new;
+  };
 
   std::vector<double> get_tInf(){
     return(tInf);
@@ -246,18 +236,23 @@ public:
     MOI = MOI_new;
   }
 
-  std::vector<int> get_damID(){
-    return(damID);
+  std::vector<std::string> get_humanInf(){
+    return(humanInf);
   };
-  void push_damID(const int &damID_new){
-    damID.push_back(damID_new);
+  void push_humanInf(const std::string &humanInf_new){
+    humanInf.push_back(humanInf_new);
   };
 
-  std::vector<int> get_sireID(){
-    return(sireID);
-  };
-  void push_sireID(const int &sireID_new){
-    sireID.push_back(sireID_new);
+  Rcpp::List get_history(){
+    return(
+      Rcpp::List::create(
+        Rcpp::Named("PfID") = PfID,
+        Rcpp::Named("MosquitoID") = MosquitoID,
+        Rcpp::Named("tInf") = tInf,
+        Rcpp::Named("MOI") = MOI,
+        Rcpp::Named("humanInf") = humanInf
+      )
+    );
   };
 
   ///////////////////////////////////
@@ -265,11 +260,10 @@ public:
   ///////////////////////////////////
 
   // add a new infection
-  void add_Infection(const int &PfID_new, const double &tInf_new, const int &damID_new, const int &sireID_new){
+  void add_Infection(const int &PfID_new, const double &tInf_new, const std::string &humanInf_new){
     PfID.push_back(PfID_new);
     tInf.push_back(tInf_new);
-    damID.push_back(damID_new);
-    sireID.push_back(sireID_new);
+    humanInf.push_back(humanInf_new);
     MOI += 1;
   };
 
@@ -280,8 +274,7 @@ public:
     return(
       Rcpp::List::create(
         Rcpp::Named("PfID") = PfID[ix],
-        Rcpp::Named("damID") = damID[ix],
-        Rcpp::Named("sireID") = sireID[ix]
+        Rcpp::Named("humanInf") = humanInf[ix]
       )
     );
   };
@@ -291,8 +284,7 @@ public:
     return(
       Rcpp::List::create(
         Rcpp::Named("PfID") = PfID[ix],
-        Rcpp::Named("damID") = damID[ix],
-        Rcpp::Named("sireID") = sireID[ix]
+        Rcpp::Named("humanInf") = humanInf[ix]
       )
     );
   };
@@ -315,23 +307,18 @@ public:
 
     // export these infections that have passed the EIP
     std::vector<int> PfID_out;
-    std::vector<int> damID_out;
-    std::vector<int> sireID_out;
+    std::vector<std::string> humanInf_out;
     std::transform(incubationIx.begin(), incubationIx.end(), std::back_inserter(PfID_out), [this](size_t ix){
       return(PfID[ix]);
     });
-    std::transform(incubationIx.begin(), incubationIx.end(), std::back_inserter(damID_out), [this](size_t ix){
-      return(damID[ix]);
-    });
-    std::transform(incubationIx.begin(), incubationIx.end(), std::back_inserter(sireID_out), [this](size_t ix){
-      return(sireID[ix]);
+    std::transform(incubationIx.begin(), incubationIx.end(), std::back_inserter(humanInf_out), [this](size_t ix){
+      return(humanInf[ix]);
     });
 
     return(
       Rcpp::List::create(
         Rcpp::Named("PfID") = PfID_out,
-        Rcpp::Named("damID") = damID_out,
-        Rcpp::Named("sireID") = sireID_out
+        Rcpp::Named("humanInf") = humanInf_out
       )
     );
   };
@@ -359,27 +346,28 @@ private:
 
   // PfMOI Parameters & State Variables
   std::vector<int>              PfID;
+  std::string                   MosquitoID;
   std::vector<double>           tInf;
   int                           MOI;
-  std::vector<int>              damID;
-  std::vector<int>              sireID;
+  std::vector<std::string>      humanInf;
 
 };
 
 // inline definition of constructor to accept default argument values
-inline mosquitoPfMOI::mosquitoPfMOI(const int &PfID_init, const double &tInf_init, const int &MOI_init,
-  const int &damID_init, const int &sireID_init){
+inline mosquitoPfMOI::mosquitoPfMOI(
+  const int &PfID_init,
+  const std::string &MosquitoID_init,
+  const double &tInf_init,
+  const int &MOI_init
+){
 
     // set parameters and state variables
     PfID.clear();
     tInf.clear();
-    damID.clear();
-    sireID.clear();
 
+    MosquitoID = MosquitoID_init;
     PfID.push_back(PfID_init);
     tInf.push_back(tInf_init);
-    damID.push_back(damID_init);
-    sireID.push_back(sireID_init);
     MOI = MOI_init;
 
   }

@@ -5,8 +5,7 @@
 \title{PfMOI Human Stage Pathogen Class}
 \usage{
 humanPfMOI(PfID_init, tInf_init = -1, MOI_init = 0, b_init = 0.55,
-  c_init = 0.15, damID_init = -1, sireID_init = -1,
-  chemoprophylaxis_init = FALSE)
+  c_init = 0.15, chemoprophylaxis_init = FALSE, N = 20)
 }
 \arguments{
 \item{PfID_init}{PfID derived from the tile level PfPedigree}
@@ -15,11 +14,11 @@ humanPfMOI(PfID_init, tInf_init = -1, MOI_init = 0, b_init = 0.55,
 
 \item{MOI_init}{initial multiplicity of infection}
 
+\item{chemoprophylaxis_init}{chemoprophylaxis protection status}
+
 \item{damID_init}{initial female gametocyte 'mother'}
 
 \item{sireID_init}{initial male gametocyte 'father'}
-
-\item{chemoprophylaxis_init}{chemoprophylaxis protection status}
 }
 \description{
 A class for storing parameters and state variables of human-stage PfMOI infections.

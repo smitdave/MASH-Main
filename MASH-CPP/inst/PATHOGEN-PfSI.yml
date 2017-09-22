@@ -10,10 +10,9 @@ humanPfSI:
       @param tInf_init time of current infection (successful mosquito to human transmission event)
       @param b_init infected mosquito to human transmission efficiency
       @param c_init infected human to mosquito transmission efficiency
-      @param damID_init female gametocyte 'mother'
-      @param sireID_init male gametocyte 'father'
       @param infected_init infection status
       @param chemoprophylaxis_init chemoprophylaxis protection status
+      @param N size to preallocate output vectors
       @section Methods:
         * get_PfID:
         * push_PfID:
@@ -23,10 +22,8 @@ humanPfSI:
         * set_b:
         * get_c:
         * set_c:
-        * get_damID:
-        * push_damID:
-        * get_sireID:
-        * push_sireID:
+        * get_vectorInf:
+        * push_vectorInf:
         * get_infected:
         * set_infected:
         * get_chemoprophylaxis:
@@ -40,10 +37,9 @@ humanPfSI:
       - tInf_init: double = -1
       - b_init: double = 0.55
       - c_init: double = 0.15
-      - damID_init: int = -1
-      - sireID_init: int = -1
       - infected_init: bool = FALSE
       - chemoprophylaxis_init: bool = FALSE
+      - N: int = 20
   methods:
 
     get_PfID:
@@ -76,18 +72,11 @@ humanPfSI:
         - c_new: double
       return_type: void
 
-    get_damID:
-      return_type: "std::vector<int>"
-    push_damID:
+    get_vectorInf:
+      return_type: "std::vector<std::string>"
+    push_vectorInf:
       args:
-        - damID_new: int
-      return_type: void
-
-    get_sireID:
-      return_type: "std::vector<int>"
-    push_sireID:
-      args:
-        - sireID_new: int
+        - vectorInf_new: "std::string"
       return_type: void
 
     get_infected:
@@ -122,18 +111,14 @@ mosquitoPfSI:
       @title PfSI Mosquito Stage Pathogen Class
       @param PfID_init PfID derived from the infecting human's gametocytes
       @param tInf_init time of current infection (successful human to mosquito transmission event)
-      @param damID_init female gametocyte 'mother'
-      @param sireID_init male gametocyte 'father'
       @param infected_init infection status
       @section Methods:
         * get_PfID:
         * set_PfID:
         * get_tInf:
         * set_tInf:
-        * get_damID:
-        * set_damID:
-        * get_sireID:
-        * set_sireID:
+        * get_humanInf:
+        * set_humanInf:
         * get_infected:
         * set_infected:
       @section Fields:
@@ -142,9 +127,8 @@ mosquitoPfSI:
       @export
     args:
       - PfID_init: int
+      - MosquitoID_init: "std::string"
       - tInf_init: double = -1
-      - damID_init: int = -1
-      - sireID_init: int = -1
       - infected_init: bool = FALSE
   methods:
 
@@ -155,6 +139,13 @@ mosquitoPfSI:
         - PfID_new: int
       return_type: void
 
+    get_MosquitoID:
+      return_type: "std::string"
+    set_MosquitoID:
+      args:
+        - MosquitoID_new: "std::string"
+      return_type: void
+
     get_tInf:
       return_type: double
     set_tInf:
@@ -162,18 +153,11 @@ mosquitoPfSI:
         - tInf_new: double
       return_type: void
 
-    get_damID:
-      return_type: int
-    set_damID:
+    get_humanInf:
+      return_type: "std::string"
+    set_humanInf:
       args:
-        - damID_new: int
-      return_type: void
-
-    get_sireID:
-      return_type: int
-    set_sireID:
-      args:
-        - sireID_new: int
+        - humanInf_new: "std::string"
       return_type: void
 
     get_infected:
@@ -182,3 +166,6 @@ mosquitoPfSI:
       args:
         - infected_new: bool
       return_type: void
+
+    get_history:
+      return_type: "Rcpp::List"

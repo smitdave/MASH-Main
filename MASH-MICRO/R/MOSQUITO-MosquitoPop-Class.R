@@ -48,9 +48,16 @@ MosquitoPopFemale <- R6::R6Class(classname = "MosquitoPopFemale",
                          # Initializer
                          ##############################################################
 
-                         initialize = function(N, time_init, ix_init, genotype_init, MBITES_PAR, module){
+                         initialize = function(N, ix_init, genotype_init, MBITES_PAR){
 
-                           private$pop = MASHcpp::HashMap$new(N = N)
+                           private$MBITES_PAR = MBITES_PAR
+
+                           private$pop = MASHcpp::HashMap$new(N = N+500L)
+                           for(i in 1:N){
+                             ID = paste0("0_",i,"_",genotype_init[i])
+                             private$pop$assign(key = ID, value = MosquitoFemale$new(id=ID,time=0,ix=ix_init[i],genotype=genotype_init[i],state=private$MBITES_PAR$initState,eggT=MBITES_PAR$eggT,eggP=MBITES_PAR$eggP,energyPreG=MBITES_PAR$energyPreG))
+                             private$pop$get(ID)$set_FemalePopPointer(self)
+                           }
 
                          } # end initializer
 
@@ -60,11 +67,10 @@ MosquitoPopFemale <- R6::R6Class(classname = "MosquitoPopFemale",
 
                          # Fields
                          pop = NULL,               # mosquito population
-                         initState = character(1),         # initial state for newly emerging females
                          MBITES_PAR = list(),        # MBITES Parameters
 
                          # Pointers
-                         MalePopPointer = NULL,    # Point to MicroMosquitoPopMale in the same microsimulation Tile
+                         MalePopPointer = NULL,    # Point to MosquitoPopMale in the same microsimulation Tile
                          LandscapePointer = NULL,  # Point to Landscape object in same microsimulation Tile
                          HumansPointer = NULL,     # Point to HumanPop object in same microsimulation Tile
                          TilePointer = NULL        # Point to enclosing microsimulation Tile
@@ -107,9 +113,17 @@ MosquitoPopMale <- R6::R6Class(classname = "MosquitoPopMale",
                          # Initializer
                          ##############################################################
 
-                         initialize = function(N, time_init, ix_init, genotype_init, MBITES_PAR, module){
+                         initialize = function(N, ix_init, genotype_init, MBITES_PAR){
 
-                           private$pop = MASHcpp::HashMap$new(N = N)
+                           private$initState = MBITES_PAR$initStateMale
+                           private$MBITES_PAR = MBITES_PAR
+
+                           private$pop = MASHcpp::HashMap$new(N = N+500L)
+                           for(i in 1:N){
+                             ID = paste0("0_",i,"_",genotype_init[i])
+                             private$pop$assign(key = ID, value = MosquitoMale$new(id=ID,time=0,ix=ix_init[i],genotype=genotype_init[i],state=private$MBITES_PAR$initState,mateFitness=1))
+                             private$pop$get(ID)$set_MalePopPointer(self)
+                           }
 
                          } # end initializer
 
@@ -119,11 +133,10 @@ MosquitoPopMale <- R6::R6Class(classname = "MosquitoPopMale",
 
                          # Fields
                          pop = NULL,               # mosquito population
-                         initState = character(1),         # initial state for newly emerging females
                          MBITES_PAR = list(),        # MBITES Parameters
 
                          # Pointers
-                         FemalePopPointer = NULL,    # Point to MicroMosquitoPopMale in the same microsimulation Tile
+                         FemalePopPointer = NULL,    # Point to MosquitoPopMale in the same microsimulation Tile
                          LandscapePointer = NULL,  # Point to Landscape object in same microsimulation Tile
                          HumansPointer = NULL,     # Point to HumanPop object in same microsimulation Tile
                          TilePointer = NULL        # Point to enclosing microsimulation Tile

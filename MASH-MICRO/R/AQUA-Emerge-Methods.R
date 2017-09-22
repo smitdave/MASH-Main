@@ -1,49 +1,17 @@
-#################################################################
+###############################################################################
 #
-#   MASH
-#   MICRO Aquatic Ecology: Emerge
-#   Method definitions
-#   Hector Sanchez & David Smith, Hector Sanchez, Sean Wu
-#   May 10, 2017
+#      ___   ____  __  _____
+#     /   | / __ \/ / / /   |
+#    / /| |/ / / / / / / /| |
+#   / ___ / /_/ / /_/ / ___ |
+#  /_/  |_\___\_\____/_/  |_|
 #
-#################################################################
-
-#################################################################
-# Standalone functions for lambda
-#################################################################
-
-#' MICRO: Generate Seasonal Emergence (Lambda) for \code{Emerge} model of Aquatic Ecology
-#'
-#' Generate lambda for all sites.
-#'
-#' @param aquaPars a list of the following structure
-#'  * N: number of aquatic habitats (required)
-#'  * lambda: number of emerging adult females per human per day averaged over one year for the entire \code{\link{Landscape}} (required)
-#'  * lambdaWeight: vector of weights applied to each site (if not specified or set to \code{NULL} initialize to Gamma(1,1) distribution)
-#'  * offset: vector of seasonal offsets in peak emergence applied to each site (if not specified or set to \code{NULL} initialize to 0 for all sites)
-#' @md
-#' @return list \code{lambda} where each element is the daily emergence for that \code{\link{FeedingSite}}
-#' @examples
-#' makeLambda_MicroEmerge(aquaPars= list(lambda = c(2,3,4)))
-#' @export
-makeLambda_Emerge <- function(aquaPars){
-
-  with(aquaPars,{
-
-    if(!exists("lambdaWeight",inherits = FALSE) || is.null(lambdaWeight)){lambdaWeight = rgamma(n = N,shape = 1,rate = 1)}
-
-    K = lambda*lambdaWeight / sum(lambdaWeight)
-    if(!exists("offset",inherits = FALSE) || is.null(lambdaWeight)){offset = rep(0,length=N)}
-
-    lambdaOut = vector(mode="list",length=N)
-    for(ix in 1:N){
-      lambdaOut[[ix]] = K[ix]*(1+sin(2*pi*(1:365-offset[ix])/365))
-    }
-
-    return(lambdaOut)
-  })
-
-}
+#   MASH-MICRO
+#   AQUATIC ECOLOGY: Emerge Methods
+#   MASH-MICRO Team
+#   September 7, 2017
+#
+###############################################################################
 
 
 #################################################################
@@ -92,7 +60,7 @@ oneStep_EmergeSite <- function(tNow){
   lambdaExact = private$lambda[floor(tNow)%%365+1]
   lambdaEmerge = rpois(n = 1, lambda = lambdaExact)
   if(lambdaEmerge > 0){
-    private$ImagoQ$add_ImagoQ(N_new = lambdaEmerge, tEmerge_new = tNow, genotype_new = -1L)
+    private$ImagoQ$add_ImagoQ(N_new = lambdaEmerge, tEmerge_new = tNow, genotype_new = 1L)
   }
 
 }
@@ -107,7 +75,7 @@ oneStep_EmergeSite <- function(tNow){
 #' @md
 oneStep_Emerge <- function(){
   tNow = private$TilePointer$get_tNow()
-  for(ixA in 1:self$AquaSitesN){
+  for(ixA in 1:self$get_AquaSitesN()){
     private$AquaSites[[ixA]]$oneStep_EmergeSite(tNow)
   }
 }
@@ -115,7 +83,7 @@ oneStep_Emerge <- function(){
 
 #' MICRO \code{\link{Landscape}} Method: Get Emerging Adults from ImagoQ and Zero out ImagoQ
 #'
-#' Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MicroMosquitoPopFemale}}.
+#' Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MosquitoPopFemale}}.
 #' This is a helper function for \code{\link{addCohort_MicroEmerge}}.
 #'  * This method is bound to \code{AquaticSite$addCohort_MicroEmergeSite()}.
 #'
@@ -127,6 +95,9 @@ addCohort_EmergeSite <- function(tNow){
   if(length(EmergingAdults) > 0){
     for(i in 1:length(EmergingAdults)){
       private$LandscapePointer$get_FemalePopPointer()$push_pop(N = EmergingAdults[[i]]$N, tEmerge = EmergingAdults[[i]]$tEmerge, ix = private$ix, genotype = EmergingAdults[[i]]$genotype)
+      if(!is.null(private$LandscapePointer$get_MalePopPointer())){
+        private$LandscapePointer$get_MalePopPointer()$push_pop(N = EmergingAdults[[i]]$N, tEmerge = EmergingAdults[[i]]$tEmerge, ix = private$ix, genotype = EmergingAdults[[i]]$genotype)
+      }
     }
   }
 
@@ -136,7 +107,7 @@ addCohort_EmergeSite <- function(tNow){
 
 #' MICRO \code{\link{Landscape}} Method: Get Emerging Adults from ImagoQ and Zero out ImagoQ
 #'
-#' Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MicroMosquitoPopFemale}}.
+#' Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MosquitoPopFemale}}.
 #' This function fills a generic for \code{\link{simMICRO_oneStep}}.
 #'  * This method is bound to \code{Landscape$addCohort()}
 #'
@@ -144,7 +115,7 @@ addCohort_EmergeSite <- function(tNow){
 #' @md
 addCohort_Emerge <- function(){
   tNow = private$TilePointer$get_tNow()
-  for(ixA in 1:self$AquaSitesN){
+  for(ixA in 1:self$get_AquaSitesN()){
     private$AquaSites[[ixA]]$addCohort_MicroEmergeSite(tNow)
   }
 }

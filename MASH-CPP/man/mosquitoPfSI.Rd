@@ -4,17 +4,13 @@
 \alias{mosquitoPfSI}
 \title{PfSI Mosquito Stage Pathogen Class}
 \usage{
-mosquitoPfSI(PfID_init, tInf_init = -1, damID_init = -1, sireID_init = -1,
+mosquitoPfSI(PfID_init, MosquitoID_init, tInf_init = -1,
   infected_init = FALSE)
 }
 \arguments{
 \item{PfID_init}{PfID derived from the infecting human's gametocytes}
 
 \item{tInf_init}{time of current infection (successful human to mosquito transmission event)}
-
-\item{damID_init}{female gametocyte 'mother'}
-
-\item{sireID_init}{male gametocyte 'father'}
 
 \item{infected_init}{infection status}
 }
@@ -28,10 +24,8 @@ A class for storing parameters and state variables of mosquito-stage PfSI infect
 \item set_PfID:
 \item get_tInf:
 \item set_tInf:
-\item get_damID:
-\item set_damID:
-\item get_sireID:
-\item set_sireID:
+\item get_humanInf:
+\item set_humanInf:
 \item get_infected:
 \item set_infected:
 }

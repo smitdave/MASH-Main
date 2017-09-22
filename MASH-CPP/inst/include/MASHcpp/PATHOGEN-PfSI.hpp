@@ -1,3 +1,17 @@
+///////////////////////////////////////////////////////////////////////////////
+//      ____  _________ ____
+//     / __ \/ __/ ___//  _/
+//    / /_/ / /_ \__ \ / /
+//   / ____/ __/___/ // /
+//  /_/   /_/  /____/___/
+//
+//  MASH-MICRO
+//  MICRO: PfSI Methods
+//  MASH-CPP Team
+//  September 7, 2017
+//
+///////////////////////////////////////////////////////////////////////////////
+
 #ifndef _MASHCPP_PFSI_HPP_
 #define _MASHCPP_PFSI_HPP_
 
@@ -16,8 +30,9 @@ public:
 
   humanPfSI(const int &PfID_init, const double &tInf_init = -1,
     const double &b_init = 0.55, const double &c_init = 0.15,
-    const int &damID_init = -1, const int &sireID_init = -1,
-    const bool &infected_init = false, const bool &chemoprophylaxis_init = false);
+    const bool &infected_init = false, const bool &chemoprophylaxis_init = false,
+    const int &N = 20
+  );
 
   ///////////////////////////////////
   // Getters & Setters
@@ -54,18 +69,11 @@ public:
     c = c_new;
   };
 
-  std::vector<int> get_damID(){
-    return(damID);
+  std::vector<std::string> get_vectorInf(){
+    return(vectorInf);
   };
-  void push_damID(const int &damID_new){
-    damID.push_back(damID_new);
-  };
-
-  std::vector<int> get_sireID(){
-    return(sireID);
-  };
-  void push_sireID(const int &sireID_new){
-    sireID.push_back(sireID_new);
+  void push_vectorInf(const std::string &vectorInf_new){
+    vectorInf.push_back(vectorInf_new);
   };
 
   bool get_infected(){
@@ -98,7 +106,8 @@ public:
     return(
       Rcpp::List::create(
         Rcpp::Named("events") = events,
-        Rcpp::Named("eventT") = eventT
+        Rcpp::Named("eventT") = eventT,
+        Rcpp::Named("vectorInf") = vectorInf
       )
     );
   };
@@ -109,14 +118,13 @@ private:
   // PfSI History
   std::vector<std::string> events;
   std::vector<double>      eventT;
+  std::vector<std::string> vectorInf;
 
   // PfSI Parameters & State Variables
   std::vector<int> PfID; // pathogen ID
   std::vector<double> tInf; // time of infection (mosquito to human transmission)
   double b; // transmission efficiency: infected mosquito to human
   double c; // transmission efficiency: infected human to mosquito
-  std::vector<int> damID; // female gametocyte mother
-  std::vector<int> sireID; // male gametocyte father
   bool infected;
   bool chemoprophylaxis;
 
@@ -125,24 +133,23 @@ private:
 // inline definition of constructor to accept default argument values
 inline humanPfSI::humanPfSI(const int &PfID_init, const double &tInf_init,
   const double &b_init, const double &c_init,
-  const int &damID_init, const int &sireID_init,
-  const bool &infected_init, const bool &chemoprophylaxis_init){
+  const bool &infected_init, const bool &chemoprophylaxis_init, const int &N){
 
     // set parameters and state variables
     PfID.push_back(PfID_init);
     tInf.push_back(tInf_init);
     b = b_init;
     c = c_init;
-    damID.push_back(damID_init);
-    sireID.push_back(sireID_init);
     infected = infected_init;
     chemoprophylaxis = chemoprophylaxis_init;
 
     // reserve memory for history
-    events.reserve(50);
+    events.reserve(N);
     events.push_back("init");
-    eventT.reserve(50);
+    eventT.reserve(N);
     eventT.push_back(-1);
+    vectorInf.reserve(N);
+    vectorInf.push_back("init");
 
   }
 
@@ -155,8 +162,11 @@ public:
   // Mosquito Stage PfSI Constructor
   ///////////////////////////////////
 
-  mosquitoPfSI(const int &PfID_init, const double &tInf_init = -1,
-    const int &damID_init = -1, const int &sireID_init = -1, const bool &infected_init = false);
+  mosquitoPfSI(const int &PfID_init,
+    const std::string &MosquitoID_init,
+    const double &tInf_init = -1,
+    const bool &infected_init = false
+  );
 
   ///////////////////////////////////
   // Getters & Setters
@@ -167,6 +177,13 @@ public:
   };
   void set_PfID(const int &PfID_new){
     PfID = PfID_new;
+  };
+
+  std::string get_MosquitoID(){
+    return(MosquitoID);
+  }
+  void set_MosquitoID(const std::string &MosquitoID_new){
+    MosquitoID = MosquitoID_new;
   }
 
   double get_tInf(){
@@ -176,18 +193,11 @@ public:
     tInf = tInf_new;
   };
 
-  int get_damID(){
-    return(damID);
+  std::string get_humanInf(){
+    return(humanInf);
   };
-  void set_damID(const int &damID_new){
-    damID = damID_new;
-  };
-
-  int get_sireID(){
-    return(sireID);
-  };
-  void set_sireID(const int &sireID_new){
-    sireID = sireID_new;
+  void set_humanInf(const std::string &humanInf_new){
+    humanInf = humanInf_new;
   };
 
   bool get_infected(){
@@ -197,27 +207,43 @@ public:
     infected = infected_new;
   };
 
+  // return this PfSI object (used for transmission tracking)
+  Rcpp::List get_history(){
+    return(
+      Rcpp::List::create(
+        Rcpp::Named("PfID") = PfID,
+        Rcpp::Named("MosquitoID") = MosquitoID,
+        Rcpp::Named("tInf") = tInf,
+        Rcpp::Named("humanInf") = humanInf,
+        Rcpp::Named("infected") = infected
+      )
+    );
+  };
+
 // private members
 private:
 
   // PfSI Parameters & State Variables
   int PfID; // pathogen ID
+  std::string MosquitoID; // ID of mosquito this pathogen resides in
   double tInf; // time of infection (human to mosquito transmission)
-  int damID; // female gametocyte mother
-  int sireID; // male gametocyte father
+  std::string humanInf; // id of infecting human
   bool infected; // infection
 
 };
 
 // inline definition of constructor to accept default argument values
-inline mosquitoPfSI::mosquitoPfSI(const int &PfID_init, const double &tInf_init,
-  const int &damID_init, const int &sireID_init, const bool &infected_init){
+inline mosquitoPfSI::mosquitoPfSI(
+    const int &PfID_init,
+    const std::string &MosquitoID_init,
+    const double &tInf_init,
+    const bool &infected_init
+  ){
 
     // set parameters and state variables
     PfID = PfID_init;
+    MosquitoID = MosquitoID_init;
     tInf = tInf_init;
-    damID = damID_init;
-    sireID = sireID_init;
     infected = infected_init;
 
   }

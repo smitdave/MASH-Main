@@ -34,6 +34,7 @@
 #'  * method: im a method!
 #'
 #' @section **Fields**:
+#'  * id: character of format tEmerge_id_genotype (ie; "5_42_2" is the 42nd mosquito emerging on day 5 with genotype 2)
 #'  * field: im a field!
 #'
 #' @export
@@ -50,8 +51,7 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             # Initializer
                             ##############################################################
 
-                            # initialize: needs to take PAR as a parameter because certain module-specific parameter values will be stored there
-                            # pointers are also passed down from enclosing MicroMosquitoPopFemale object
+                            # pointers are also passed down from enclosing MosquitoPopFemale object
                             initialize = function(id, time, ix, genotype, state, eggT = 0, eggP = 0, energyPreG = 0){
 
                               # initialize general fields
@@ -82,9 +82,7 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                               private$eggP   = eggP         # MBITES_PAR the mimimum provision for eggs to mature
 
                               # Maturation & Reproduction
-                              sire        = 0
-                              energyPreG  = energyPreG           # MBITES_PAR pre-gonotrophic energy requirement
-                              hostID      = 0           # the id of the host: -1::none; 0::not human
+                              private$energyPreG  = energyPreG           # MBITES_PAR pre-gonotrophic energy requirement
 
                               # initialize PATHOGEN object
                               # PAR must contain a function mapped to the R6ClassGenerator object needed
@@ -133,16 +131,17 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             eggP   = numeric(1),         # the mimimum provision for eggs to mature
 
                             # Maturation & Reproduction
-                            sire        = integer(1),
-                            energyPreG  = numeric(1),          # pre-gonotrophic energy requirement
-                            hostID      = integer(1),           # the id of the host: -1::none; 0::not human
+                            mateID        = character(1),
+                            mateGenotype  = integer(1),
+                            energyPreG    = numeric(1),          # pre-gonotrophic energy requirement
+                            hostID        = character(1),           # the id of the host: -1::none; 0::not human
 
                             # Pathogens
                             Pathogens      = NULL,
 
                             # Pointers
-                            FemalePopPointer = NULL,  # Point to enclosing MicroMosquitoPopFemale
-                            MalePopPointer = NULL,    # Point to MicroMosquitoPopMale in the same microsimulation Tile
+                            FemalePopPointer = NULL,  # Point to enclosing MosquitoPopFemale
+                            MalePopPointer = NULL,    # Point to MosquitoPopMale in the same microsimulation Tile
                             LandscapePointer = NULL,  # Point to Landscape object in same microsimulation Tile
                             HumansPointer = NULL,     # Point to HumanPop object in same microsimulation Tile
                             TilePointer = NULL        # Point to enclosing microsimulation Tile
@@ -181,7 +180,44 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                         lock_objects = FALSE,
 
                         # public members
-                        public = list(),
+                        public = list(
+
+                          ##############################################################
+                          # Initializer
+                          ##############################################################
+
+                          # pointers are also passed down from enclosing MosquitoPopFemale object
+                          initialize = function(id, time, ix, genotype, state, mateFitness = 1){
+
+                            # initialize general fields
+
+                            # ID and time
+                            private$id        = id        # mosquito id
+                            private$bDay      = time        # time of emergence
+                            private$tNow      = time        # time of last event
+                            private$tNext     = time        # time to next event
+                            private$genotype  = genotype
+
+                            # State and Location
+                            private$state      = state       # {F,B,R,L,O,S,M,E,D}
+                            private$stateNew   = state       # {F,B,R,L,O,S,M,E,D}
+                            private$inPointSet = "l"       # class of site {f,l,s,m}
+                            private$ix         = ix       # index of site
+                            private$mature     = FALSE       # mature
+
+                            # Other State Variables
+                            private$lspot     = "l"        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
+                            private$damage    = 0        # wing tattering
+                            private$energy    = 1        # energy reserves
+                            private$mateFitness = mateFitness
+
+                            # initialize history object
+                            private$history = MASHcpp::MosquitoMaleHistory()
+                            private$history$historyInit(privateEnv = private)
+
+                          } # end initializer
+
+                        ),
 
                         # private members
                         private = list(
@@ -206,12 +242,13 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                           lspot     = character(1),        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
                           damage    = numeric(1),        # wing tattering
                           energy    = numeric(1),        # energy reserves
+                          mateFitness = numeric(1),      # mating fitness
 
                           history = NULL,          # history
 
                           # Pointers
-                          FemalePopPointer = NULL,  # Point to enclosing MicroMosquitoPopFemale
-                          MalePopPointer = NULL,    # Point to MicroMosquitoPopMale in the same microsimulation Tile
+                          FemalePopPointer = NULL,  # Point to enclosing MosquitoPopFemale
+                          MalePopPointer = NULL,    # Point to MosquitoPopMale in the same microsimulation Tile
                           LandscapePointer = NULL,  # Point to Landscape object in same microsimulation Tile
                           HumansPointer = NULL,     # Point to HumanPop object in same microsimulation Tile
                           TilePointer = NULL        # Point to enclosing microsimulation Tile

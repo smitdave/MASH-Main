@@ -1,12 +1,18 @@
-#################################################################
+###############################################################################
 #
-#   MASH
-#   MICRO Aquatic Ecology: Emerge
-#   Setup Function
-#   Hector Sanchez & David Smith, Hector Sanchez, Sean Wu
-#   July 31, 2017
+#      ___   ____  __  _____
+#     /   | / __ \/ / / /   |
+#    / /| |/ / / / / / / /| |
+#   / ___ / /_/ / /_/ / ___ |
+#  /_/  |_\___\_\____/_/  |_|
 #
-#################################################################
+#   MASH-MICRO
+#   AQUATIC ECOLOGY: Emerge Setup
+#   MASH-MICRO Team
+#   September 7, 2017
+#
+###############################################################################
+
 
 #################################################################
 # Setup
@@ -24,7 +30,7 @@
 #' @export
 AQUA.Emerge.Setup <- function(overwrite = TRUE){
 
-  message("initializing 'Emerge' module for Aquatic Ecology")
+  cat("initializing Emerge Aquatic Ecology module\n",sep="")
 
   #################################################################
   # One Day 'Emerge'
@@ -42,14 +48,14 @@ AQUA.Emerge.Setup <- function(overwrite = TRUE){
             overwrite = overwrite
   )
 
-  # ImagoQ to MicroMosquitoPopFemale
+  # ImagoQ to MosquitoPopFemale
   AquaticSite$set(which = "public",name = "addCohort_MicroEmergeSite",
             value = addCohort_EmergeSite,
             overwrite = overwrite
   )
 
-  # ImagoQ to MicroMosquitoPopFemale
-  Landscape$set(which = "public",name = "addCohort",
+  # ImagoQ to MosquitoPopFemale
+  Landscape$set(which = "public",name = "addCohort_AquaticEcology",
             value = addCohort_Emerge,
             overwrite = overwrite
   )

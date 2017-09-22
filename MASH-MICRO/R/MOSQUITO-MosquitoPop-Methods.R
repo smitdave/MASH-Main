@@ -14,7 +14,31 @@
 ###############################################################################
 
 
+###############################################################################
+# Male-specific Methods
+###############################################################################
 
+#' Get mateFitness
+#'
+#' Get the male mating fitness associated with a given genotype.
+#'  * This method is bound to \code{MosquitoPopMale$get_mateFitness}
+#'
+#' @param genotype integer; genotype of male mosquito
+#'
+get_mateFitness_MosquitoPopMale <- function(genotype){
+  return(
+    private$MBITES_PAR$mateFitness[genotype]
+  )
+}
+
+MosquitoPopMale$set(which = "public",name = "get_mateFitness",
+  value = get_mateFitness_MosquitoPopMale, overwrite = TRUE
+)
+
+
+###############################################################################
+# Push Pop
+###############################################################################
 
 #' Push pop
 #'
@@ -28,11 +52,55 @@
 #'
 push_pop_MosquitoPopFemale <- function(N, tEmerge, genotype, ix){
   for(i in 1:N){
+
+    # assign the mosquitoes
     myID = paste0(tEmerge,"_",i,"_",genotype)
-    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=private$initState,eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
+    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=self$get_MBITES_PAR("initState"),eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
+
+    private$pop$get(myID)$set_FemalePopPointer(self)
+    private$pop$get(myID)$set_MalePopPointer(private$MalePopPointer)
+
+    private$pop$get(myID)$set_TilePointer(private$TilePointer)
+    private$pop$get(myID)$set_LandscapePointer(private$LandscapePointer)
+    private$pop$get(myID)$set_HumansPointer(private$HumansPointer)
+
   }
 }
 
+MosquitoPopFemale$set(which = "public",name = "push_pop",
+  value = push_pop_MosquitoPopFemale, overwrite = TRUE
+)
+
+#' Push pop
+#'
+#' Push new male mosquitoes into \code{\link{MosquitoPopMale}}.
+#'  * This method is bound to \code{MosquitoPopMale$push_pop}
+#'
+#' @param N integer; number of emerging mosquitoes
+#' @param tEmerge integer; day of emergence
+#' @param genotype integer; genotype of emerging mosquitoes
+#' @param ix integer; site of emergence
+#'
+push_pop_MosquitoPopMale <- function(N, tEmerge, genotype, ix){
+  for(i in 1:N){
+
+    # assign the mosquitoes
+    myID = paste0(tEmerge,"_",i,"_",genotype)
+    private$pop$assign(key = myID, value = MosquitoMale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=self$get_MBITES_PAR("initState"),mateFitness=self$get_mateFitness(genotype)))
+
+    private$pop$get(myID)$set_FemalePopPointer(private$FemalePopPointer)
+    private$pop$get(myID)$set_MalePopPointer(self)
+
+    private$pop$get(myID)$set_TilePointer(private$TilePointer)
+    private$pop$get(myID)$set_LandscapePointer(private$LandscapePointer)
+    private$pop$get(myID)$set_HumansPointer(private$HumansPointer)
+
+  }
+}
+
+MosquitoPopMale$set(which = "public",name = "push_pop",
+  value = push_pop_MosquitoPopMale, overwrite = TRUE
+)
 
 
 ###############################################################################

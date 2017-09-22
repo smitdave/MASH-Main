@@ -74,7 +74,7 @@ public:
       for(std::vector<int>::iterator it = fullIx.begin(); it != fullIx.end(); it++){
           ImagoQVec[*it].N = 0;
           ImagoQVec[*it].tEmerge = -1;
-          ImagoQVec[*it].genotype = -1;
+          ImagoQVec[*it].genotype = 1;
       }
 
       N -= fullIx.size();
@@ -99,7 +99,7 @@ public:
     for(std::vector<int>::iterator it = timeIx.begin(); it != timeIx.end(); it++){
         ImagoQVec[*it].N = 0;
         ImagoQVec[*it].tEmerge = -1;
-        ImagoQVec[*it].genotype = -1;
+        ImagoQVec[*it].genotype = 1;
     }
 
     N -= timeIx.size();
@@ -214,7 +214,7 @@ public:
       if(clear){
         ImagoQVec[*it].N = 0;
         ImagoQVec[*it].tEmerge = -1;
-        ImagoQVec[*it].genotype = -1;
+        ImagoQVec[*it].genotype = 1;
         N -= 1;
       }
 
@@ -237,7 +237,7 @@ inline ImagoQ::ImagoQ(){
 
   N = 0;
   ImagoQVec.reserve(50);
-  ImagoQVec.insert(ImagoQVec.end(), 10, ImagoSlot(0,-1,-1));
+  ImagoQVec.insert(ImagoQVec.end(), 10, ImagoSlot(0,-1,1));
 
 }
 

@@ -10,6 +10,7 @@ classes:
 
   # MICRO classes
   - inst/MICRO-RiskQ.yml
+  - inst/MICRO-MatingQ.yml
 
   # AQUATIC ECOLOGY classes
   - inst/AQUA-ImagoQ.yml

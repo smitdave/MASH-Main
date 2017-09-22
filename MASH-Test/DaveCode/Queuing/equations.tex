@@ -1,0 +1,14 @@
+\documentclass{article}
+
+\usepackage{Sweave}
+\begin{document}
+\input{equations-concordance}
+
+\begin{equation}
+\begin{array} {rllll}
+\dot y_0 = && r y_1 &- h y_0&  \\ 
+\dot y_i = &-r y_i& + r y_{i+1}& - h y_i &+ h y_{i-1}  \\
+\dot y_N = &-r y_N& & &+ h y_{N-1}  \\
+\end{array}
+\end{equation}
+\end{document}

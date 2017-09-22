@@ -4,15 +4,21 @@
 \alias{Landscape.Parameters}
 \title{MICRO: Generate Parameters for \code{\link{Landscape}} Object}
 \usage{
-Landscape.Parameters(nFeed, nAqua, pointGen = "poisson", module, modulePars,
-  hazV = 0, hazW = 0, hazI = 0, haz = 0, searchFeed = NULL,
-  searchAqua = NULL, enterP = NULL, xLim = c(0, 1), yLim = c(0, 1),
-  aquaSD = 0.025, ...)
+Landscape.Parameters(nFeed, nAqua, nMate = 0, nSugar = 0,
+  pointGen = "poisson", module, modulePars, hazV = 0, hazW = 0,
+  hazI = 0, haz = 0, hazMate = 0, hazSugar = 0, searchFeed = NULL,
+  searchAqua = NULL, searchMate = NULL, searchSugar = NULL,
+  enterP = NULL, xLim = c(0, 1), yLim = c(0, 1), aquaSD = 0.025,
+  mateSD = 0.05, sugarSD = 0.025, ...)
 }
 \arguments{
-\item{nFeed}{number of feeding sites}
+\item{nFeed}{number of blood feeding sites}
 
 \item{nAqua}{number of aquatic habitats}
+
+\item{nMate}{number of mating sites}
+
+\item{nSugar}{number of sugar feeding sites}
 
 \item{pointGen}{character to select spatial point pattern generation function
 \itemize{
@@ -30,17 +36,21 @@ Landscape.Parameters(nFeed, nAqua, pointGen = "poisson", module, modulePars,
 
 \item{modulePars}{additional list of named parameters to be passed to Aquatic Ecology module specific parameter generating functions
 \itemize{
-\item Emerge: should be named list of parameters for \code{\link{makeLambda_MicroEmerge}}
+\item Emerge: should be named list of parameters for \code{\link{simpleLambda_Emerge}}
 \item EL4P: NULL
 }}
 
-\item{hazV}{mean value for feeding site vegetation landing hazard (if 0 it is set to 0 for all sites)}
+\item{hazV}{mean value for blood feeding site vegetation landing hazard (if 0 it is set to 0 for all sites)}
 
-\item{hazW}{mean value for feeding site outside wall landing hazard (if 0 it is set to 0 for all sites)}
+\item{hazW}{mean value for blood feeding site outside wall landing hazard (if 0 it is set to 0 for all sites)}
 
-\item{hazI}{mean value for feeding site indoor wall landing hazard (if 0 it is set to 0 for all sites)}
+\item{hazI}{mean value for blood feeding site indoor wall landing hazard (if 0 it is set to 0 for all sites)}
 
 \item{haz}{mean value for aquatic habitat landing hazard (if 0 it is set to 0 for all sites)}
+
+\item{hazMate}{mean value for mating site landing hazard (if 0 it is set to 0 for all sites)}
+
+\item{hazSugar}{mean value for sugar feeding site landing hazard (if 0 it is set to 0 for all sites)}
 
 \item{searchFeed}{vector of searchWt for feeding sites (if \code{NULL} initialize to Gamma(1,1) distribution)}
 
@@ -52,7 +62,11 @@ Landscape.Parameters(nFeed, nAqua, pointGen = "poisson", module, modulePars,
 
 \item{yLim}{y-axis bounds for simulated points}
 
-\item{aquaSD}{standard deviation of aquatic habitat scatter around feeding sites}
+\item{aquaSD}{standard deviation of aquatic habitat scatter around blood feeding sites}
+
+\item{mateSD}{standard deviation of mating site scatter around blood feeding sites}
+
+\item{sugarSD}{standard deviation of sugar feeding site scatter around blood feeding sites}
 
 \item{...}{additional named arguments for pointGen()}
 }
@@ -67,7 +81,4 @@ a named list of parameters
 This function is a specific instantiation of a generic system to generate parameters for a
 chosen landscape. Any user-specified function can be written to generate parameters, as long as the
 return list is in the same format.
-}
-\examples{
-
 }

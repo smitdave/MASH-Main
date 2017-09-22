@@ -14,6 +14,7 @@
 
 // MICRO classes
 #include <MASHcpp/MICRO-RiskQ.hpp>
+#include <MASHcpp/MICRO-MatingQ.hpp>
 
 // AQUATIC ECOLOGY classes
 #include <MASHcpp/AQUA-ImagoQ.hpp>

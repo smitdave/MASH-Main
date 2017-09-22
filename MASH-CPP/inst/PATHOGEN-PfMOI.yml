@@ -39,9 +39,8 @@ humanPfMOI:
       - MOI_init: int = 0
       - b_init: double = 0.55
       - c_init: double = 0.15
-      - damID_init: int = -1
-      - sireID_init: int = -1
       - chemoprophylaxis_init: bool = FALSE
+      - N: int = 20
   methods:
 
     # getters & setters
@@ -80,18 +79,11 @@ humanPfMOI:
         - c_new: double
       return_type: void
 
-    get_damID:
-      return_type: "std::vector<int>"
-    push_damID:
+    get_vectorInf:
+      return_type: "std::vector<std::string>"
+    push_vectorInf:
       args:
-        - damID_new: int
-      return_type: void
-
-    get_sireID:
-      return_type: "std::vector<int>"
-    push_sireID:
-      args:
-        - sireID_new: int
+        - vectorInf_new: "std::string"
       return_type: void
 
     get_chemoprophylaxis:
@@ -105,8 +97,6 @@ humanPfMOI:
     add_Infection:
       args:
         - PfID_new: int
-        - damID_new: int
-        - sireID_new: int
       return_type: void
 
     clear_Infection:
@@ -115,7 +105,7 @@ humanPfMOI:
       return_type: void
 
     get_Infection:
-      return_type: "Rcpp::List"
+      return_type: "std::vector<int>"
 
     # PfMOI History
     track_history:
@@ -156,10 +146,9 @@ mosquitoPfMOI:
       @export
     args:
       - PfID_init: int
+      - MosquitoID_init: "std::string"
       - tInf_init: double = -1
       - MOI_init: int = 0
-      - damID_init: int = -1
-      - sireID_init: int = -1
   methods:
 
     # getters & setters
@@ -168,6 +157,13 @@ mosquitoPfMOI:
     push_PfID:
       args:
         - PfID_new: int
+      return_type: void
+
+    get_MosquitoID:
+      return_type: "std::string"
+    set_MosquitoID:
+      args:
+        - MosquitoID_new: "std::string"
       return_type: void
 
     get_tInf:
@@ -184,27 +180,22 @@ mosquitoPfMOI:
         - MOI_new: int
       return_type: void
 
-    get_damID:
-      return_type: "std::vector<int>"
-    push_damID:
+    get_humanInf:
+      return_type: "std::vector<std::string>"
+    push_humanInf:
       args:
-        - damID_new: int
+        - humanInf_new: "std::string"
       return_type: void
 
-    get_sireID:
-      return_type: "std::vector<int>"
-    push_sireID:
-      args:
-        - sireID_new: int
-      return_type: void
+    get_history:
+      return_type: "Rcpp::List"
 
     # Infection Dynamics
     add_Infection:
       args:
         - PfID_new: int
         - tInf_new: double
-        - damID_new: int
-        - sireID_new: int
+        - humanInf_new: "std::string"
       return_type: void
 
     get_Infection:

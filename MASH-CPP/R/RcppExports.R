@@ -62,8 +62,8 @@ HistoryTravel__get_travelHistory <- function(obj_) {
     .Call('_MASHcpp_HistoryTravel__get_travelHistory', PACKAGE = 'MASHcpp', obj_)
 }
 
-humanPfSI__ctor <- function(PfID_init, tInf_init, b_init, c_init, damID_init, sireID_init, infected_init, chemoprophylaxis_init) {
-    .Call('_MASHcpp_humanPfSI__ctor', PACKAGE = 'MASHcpp', PfID_init, tInf_init, b_init, c_init, damID_init, sireID_init, infected_init, chemoprophylaxis_init)
+humanPfSI__ctor <- function(PfID_init, tInf_init, b_init, c_init, infected_init, chemoprophylaxis_init, N) {
+    .Call('_MASHcpp_humanPfSI__ctor', PACKAGE = 'MASHcpp', PfID_init, tInf_init, b_init, c_init, infected_init, chemoprophylaxis_init, N)
 }
 
 humanPfSI__get_PfID <- function(obj_) {
@@ -102,20 +102,12 @@ humanPfSI__set_c <- function(obj_, c_new) {
     invisible(.Call('_MASHcpp_humanPfSI__set_c', PACKAGE = 'MASHcpp', obj_, c_new))
 }
 
-humanPfSI__get_damID <- function(obj_) {
-    .Call('_MASHcpp_humanPfSI__get_damID', PACKAGE = 'MASHcpp', obj_)
+humanPfSI__get_vectorInf <- function(obj_) {
+    .Call('_MASHcpp_humanPfSI__get_vectorInf', PACKAGE = 'MASHcpp', obj_)
 }
 
-humanPfSI__push_damID <- function(obj_, damID_new) {
-    invisible(.Call('_MASHcpp_humanPfSI__push_damID', PACKAGE = 'MASHcpp', obj_, damID_new))
-}
-
-humanPfSI__get_sireID <- function(obj_) {
-    .Call('_MASHcpp_humanPfSI__get_sireID', PACKAGE = 'MASHcpp', obj_)
-}
-
-humanPfSI__push_sireID <- function(obj_, sireID_new) {
-    invisible(.Call('_MASHcpp_humanPfSI__push_sireID', PACKAGE = 'MASHcpp', obj_, sireID_new))
+humanPfSI__push_vectorInf <- function(obj_, vectorInf_new) {
+    invisible(.Call('_MASHcpp_humanPfSI__push_vectorInf', PACKAGE = 'MASHcpp', obj_, vectorInf_new))
 }
 
 humanPfSI__get_infected <- function(obj_) {
@@ -142,8 +134,8 @@ humanPfSI__get_history <- function(obj_) {
     .Call('_MASHcpp_humanPfSI__get_history', PACKAGE = 'MASHcpp', obj_)
 }
 
-mosquitoPfSI__ctor <- function(PfID_init, tInf_init, damID_init, sireID_init, infected_init) {
-    .Call('_MASHcpp_mosquitoPfSI__ctor', PACKAGE = 'MASHcpp', PfID_init, tInf_init, damID_init, sireID_init, infected_init)
+mosquitoPfSI__ctor <- function(PfID_init, MosquitoID_init, tInf_init, infected_init) {
+    .Call('_MASHcpp_mosquitoPfSI__ctor', PACKAGE = 'MASHcpp', PfID_init, MosquitoID_init, tInf_init, infected_init)
 }
 
 mosquitoPfSI__get_PfID <- function(obj_) {
@@ -154,6 +146,14 @@ mosquitoPfSI__set_PfID <- function(obj_, PfID_new) {
     invisible(.Call('_MASHcpp_mosquitoPfSI__set_PfID', PACKAGE = 'MASHcpp', obj_, PfID_new))
 }
 
+mosquitoPfSI__get_MosquitoID <- function(obj_) {
+    .Call('_MASHcpp_mosquitoPfSI__get_MosquitoID', PACKAGE = 'MASHcpp', obj_)
+}
+
+mosquitoPfSI__set_MosquitoID <- function(obj_, MosquitoID_new) {
+    invisible(.Call('_MASHcpp_mosquitoPfSI__set_MosquitoID', PACKAGE = 'MASHcpp', obj_, MosquitoID_new))
+}
+
 mosquitoPfSI__get_tInf <- function(obj_) {
     .Call('_MASHcpp_mosquitoPfSI__get_tInf', PACKAGE = 'MASHcpp', obj_)
 }
@@ -162,20 +162,12 @@ mosquitoPfSI__set_tInf <- function(obj_, tInf_new) {
     invisible(.Call('_MASHcpp_mosquitoPfSI__set_tInf', PACKAGE = 'MASHcpp', obj_, tInf_new))
 }
 
-mosquitoPfSI__get_damID <- function(obj_) {
-    .Call('_MASHcpp_mosquitoPfSI__get_damID', PACKAGE = 'MASHcpp', obj_)
+mosquitoPfSI__get_humanInf <- function(obj_) {
+    .Call('_MASHcpp_mosquitoPfSI__get_humanInf', PACKAGE = 'MASHcpp', obj_)
 }
 
-mosquitoPfSI__set_damID <- function(obj_, damID_new) {
-    invisible(.Call('_MASHcpp_mosquitoPfSI__set_damID', PACKAGE = 'MASHcpp', obj_, damID_new))
-}
-
-mosquitoPfSI__get_sireID <- function(obj_) {
-    .Call('_MASHcpp_mosquitoPfSI__get_sireID', PACKAGE = 'MASHcpp', obj_)
-}
-
-mosquitoPfSI__set_sireID <- function(obj_, sireID_new) {
-    invisible(.Call('_MASHcpp_mosquitoPfSI__set_sireID', PACKAGE = 'MASHcpp', obj_, sireID_new))
+mosquitoPfSI__set_humanInf <- function(obj_, humanInf_new) {
+    invisible(.Call('_MASHcpp_mosquitoPfSI__set_humanInf', PACKAGE = 'MASHcpp', obj_, humanInf_new))
 }
 
 mosquitoPfSI__get_infected <- function(obj_) {
@@ -186,8 +178,12 @@ mosquitoPfSI__set_infected <- function(obj_, infected_new) {
     invisible(.Call('_MASHcpp_mosquitoPfSI__set_infected', PACKAGE = 'MASHcpp', obj_, infected_new))
 }
 
-humanPfMOI__ctor <- function(PfID_init, tInf_init, MOI_init, b_init, c_init, damID_init, sireID_init, chemoprophylaxis_init) {
-    .Call('_MASHcpp_humanPfMOI__ctor', PACKAGE = 'MASHcpp', PfID_init, tInf_init, MOI_init, b_init, c_init, damID_init, sireID_init, chemoprophylaxis_init)
+mosquitoPfSI__get_history <- function(obj_) {
+    .Call('_MASHcpp_mosquitoPfSI__get_history', PACKAGE = 'MASHcpp', obj_)
+}
+
+humanPfMOI__ctor <- function(PfID_init, tInf_init, MOI_init, b_init, c_init, chemoprophylaxis_init, N) {
+    .Call('_MASHcpp_humanPfMOI__ctor', PACKAGE = 'MASHcpp', PfID_init, tInf_init, MOI_init, b_init, c_init, chemoprophylaxis_init, N)
 }
 
 humanPfMOI__get_PfID <- function(obj_) {
@@ -230,20 +226,12 @@ humanPfMOI__set_c <- function(obj_, c_new) {
     invisible(.Call('_MASHcpp_humanPfMOI__set_c', PACKAGE = 'MASHcpp', obj_, c_new))
 }
 
-humanPfMOI__get_damID <- function(obj_) {
-    .Call('_MASHcpp_humanPfMOI__get_damID', PACKAGE = 'MASHcpp', obj_)
+humanPfMOI__get_vectorInf <- function(obj_) {
+    .Call('_MASHcpp_humanPfMOI__get_vectorInf', PACKAGE = 'MASHcpp', obj_)
 }
 
-humanPfMOI__push_damID <- function(obj_, damID_new) {
-    invisible(.Call('_MASHcpp_humanPfMOI__push_damID', PACKAGE = 'MASHcpp', obj_, damID_new))
-}
-
-humanPfMOI__get_sireID <- function(obj_) {
-    .Call('_MASHcpp_humanPfMOI__get_sireID', PACKAGE = 'MASHcpp', obj_)
-}
-
-humanPfMOI__push_sireID <- function(obj_, sireID_new) {
-    invisible(.Call('_MASHcpp_humanPfMOI__push_sireID', PACKAGE = 'MASHcpp', obj_, sireID_new))
+humanPfMOI__push_vectorInf <- function(obj_, vectorInf_new) {
+    invisible(.Call('_MASHcpp_humanPfMOI__push_vectorInf', PACKAGE = 'MASHcpp', obj_, vectorInf_new))
 }
 
 humanPfMOI__get_chemoprophylaxis <- function(obj_) {
@@ -254,8 +242,8 @@ humanPfMOI__set_chemoprophylaxis <- function(obj_, chemoprophylaxis_new) {
     invisible(.Call('_MASHcpp_humanPfMOI__set_chemoprophylaxis', PACKAGE = 'MASHcpp', obj_, chemoprophylaxis_new))
 }
 
-humanPfMOI__add_Infection <- function(obj_, PfID_new, damID_new, sireID_new) {
-    invisible(.Call('_MASHcpp_humanPfMOI__add_Infection', PACKAGE = 'MASHcpp', obj_, PfID_new, damID_new, sireID_new))
+humanPfMOI__add_Infection <- function(obj_, PfID_new) {
+    invisible(.Call('_MASHcpp_humanPfMOI__add_Infection', PACKAGE = 'MASHcpp', obj_, PfID_new))
 }
 
 humanPfMOI__clear_Infection <- function(obj_, PfID_ix) {
@@ -274,8 +262,8 @@ humanPfMOI__get_history <- function(obj_) {
     .Call('_MASHcpp_humanPfMOI__get_history', PACKAGE = 'MASHcpp', obj_)
 }
 
-mosquitoPfMOI__ctor <- function(PfID_init, tInf_init, MOI_init, damID_init, sireID_init) {
-    .Call('_MASHcpp_mosquitoPfMOI__ctor', PACKAGE = 'MASHcpp', PfID_init, tInf_init, MOI_init, damID_init, sireID_init)
+mosquitoPfMOI__ctor <- function(PfID_init, MosquitoID_init, tInf_init, MOI_init) {
+    .Call('_MASHcpp_mosquitoPfMOI__ctor', PACKAGE = 'MASHcpp', PfID_init, MosquitoID_init, tInf_init, MOI_init)
 }
 
 mosquitoPfMOI__get_PfID <- function(obj_) {
@@ -284,6 +272,14 @@ mosquitoPfMOI__get_PfID <- function(obj_) {
 
 mosquitoPfMOI__push_PfID <- function(obj_, PfID_new) {
     invisible(.Call('_MASHcpp_mosquitoPfMOI__push_PfID', PACKAGE = 'MASHcpp', obj_, PfID_new))
+}
+
+mosquitoPfMOI__get_MosquitoID <- function(obj_) {
+    .Call('_MASHcpp_mosquitoPfMOI__get_MosquitoID', PACKAGE = 'MASHcpp', obj_)
+}
+
+mosquitoPfMOI__set_MosquitoID <- function(obj_, MosquitoID_new) {
+    invisible(.Call('_MASHcpp_mosquitoPfMOI__set_MosquitoID', PACKAGE = 'MASHcpp', obj_, MosquitoID_new))
 }
 
 mosquitoPfMOI__get_tInf <- function(obj_) {
@@ -302,24 +298,20 @@ mosquitoPfMOI__set_MOI <- function(obj_, MOI_new) {
     invisible(.Call('_MASHcpp_mosquitoPfMOI__set_MOI', PACKAGE = 'MASHcpp', obj_, MOI_new))
 }
 
-mosquitoPfMOI__get_damID <- function(obj_) {
-    .Call('_MASHcpp_mosquitoPfMOI__get_damID', PACKAGE = 'MASHcpp', obj_)
+mosquitoPfMOI__get_humanInf <- function(obj_) {
+    .Call('_MASHcpp_mosquitoPfMOI__get_humanInf', PACKAGE = 'MASHcpp', obj_)
 }
 
-mosquitoPfMOI__push_damID <- function(obj_, damID_new) {
-    invisible(.Call('_MASHcpp_mosquitoPfMOI__push_damID', PACKAGE = 'MASHcpp', obj_, damID_new))
+mosquitoPfMOI__push_humanInf <- function(obj_, humanInf_new) {
+    invisible(.Call('_MASHcpp_mosquitoPfMOI__push_humanInf', PACKAGE = 'MASHcpp', obj_, humanInf_new))
 }
 
-mosquitoPfMOI__get_sireID <- function(obj_) {
-    .Call('_MASHcpp_mosquitoPfMOI__get_sireID', PACKAGE = 'MASHcpp', obj_)
+mosquitoPfMOI__get_history <- function(obj_) {
+    .Call('_MASHcpp_mosquitoPfMOI__get_history', PACKAGE = 'MASHcpp', obj_)
 }
 
-mosquitoPfMOI__push_sireID <- function(obj_, sireID_new) {
-    invisible(.Call('_MASHcpp_mosquitoPfMOI__push_sireID', PACKAGE = 'MASHcpp', obj_, sireID_new))
-}
-
-mosquitoPfMOI__add_Infection <- function(obj_, PfID_new, tInf_new, damID_new, sireID_new) {
-    invisible(.Call('_MASHcpp_mosquitoPfMOI__add_Infection', PACKAGE = 'MASHcpp', obj_, PfID_new, tInf_new, damID_new, sireID_new))
+mosquitoPfMOI__add_Infection <- function(obj_, PfID_new, tInf_new, humanInf_new) {
+    invisible(.Call('_MASHcpp_mosquitoPfMOI__add_Infection', PACKAGE = 'MASHcpp', obj_, PfID_new, tInf_new, humanInf_new))
 }
 
 mosquitoPfMOI__get_Infection <- function(obj_, PfID_ix) {
@@ -382,8 +374,8 @@ RiskQ__get_HumanHost <- function(obj_) {
     .Call('_MASHcpp_RiskQ__get_HumanHost', PACKAGE = 'MASHcpp', obj_)
 }
 
-RiskQ__get_HumanHostIx <- function(obj_, ix) {
-    .Call('_MASHcpp_RiskQ__get_HumanHostIx', PACKAGE = 'MASHcpp', obj_, ix)
+RiskQ__get_HumanHostID <- function(obj_, ID) {
+    .Call('_MASHcpp_RiskQ__get_HumanHostID', PACKAGE = 'MASHcpp', obj_, ID)
 }
 
 RiskQ__clear_HumanHost <- function(obj_) {
@@ -404,6 +396,26 @@ RiskQ__add_OtherHost <- function(obj_, otherW_new, typeID_new) {
 
 RiskQ__get_OtherHost <- function(obj_) {
     .Call('_MASHcpp_RiskQ__get_OtherHost', PACKAGE = 'MASHcpp', obj_)
+}
+
+MatingQ__ctor <- function() {
+    .Call('_MASHcpp_MatingQ__ctor', PACKAGE = 'MASHcpp')
+}
+
+MatingQ__get_N <- function(obj_) {
+    .Call('_MASHcpp_MatingQ__get_N', PACKAGE = 'MASHcpp', obj_)
+}
+
+MatingQ__add_male2Q <- function(obj_, maleID_new, mateFitness_new, maleGenotype_new) {
+    invisible(.Call('_MASHcpp_MatingQ__add_male2Q', PACKAGE = 'MASHcpp', obj_, maleID_new, mateFitness_new, maleGenotype_new))
+}
+
+MatingQ__get_MatingQ <- function(obj_) {
+    .Call('_MASHcpp_MatingQ__get_MatingQ', PACKAGE = 'MASHcpp', obj_)
+}
+
+MatingQ__clear_MatingQ <- function(obj_) {
+    invisible(.Call('_MASHcpp_MatingQ__clear_MatingQ', PACKAGE = 'MASHcpp', obj_))
 }
 
 ImagoQ__ctor <- function() {
@@ -634,6 +646,10 @@ MosquitoFemaleHistory__historyInit <- function(obj_, privateEnv) {
     invisible(.Call('_MASHcpp_MosquitoFemaleHistory__historyInit', PACKAGE = 'MASHcpp', obj_, privateEnv))
 }
 
+MosquitoFemaleHistory__set_mateID <- function(obj_, mateID_new) {
+    invisible(.Call('_MASHcpp_MosquitoFemaleHistory__set_mateID', PACKAGE = 'MASHcpp', obj_, mateID_new))
+}
+
 MosquitoFemaleHistory__historyTrack <- function(obj_, privateEnv, alive) {
     invisible(.Call('_MASHcpp_MosquitoFemaleHistory__historyTrack', PACKAGE = 'MASHcpp', obj_, privateEnv, alive))
 }
@@ -648,5 +664,21 @@ MosquitoFemaleHistory__calcBionomics <- function(obj_) {
 
 MosquitoFemaleHistory__exportHistory <- function(obj_) {
     .Call('_MASHcpp_MosquitoFemaleHistory__exportHistory', PACKAGE = 'MASHcpp', obj_)
+}
+
+MosquitoMaleHistory__ctor <- function() {
+    .Call('_MASHcpp_MosquitoMaleHistory__ctor', PACKAGE = 'MASHcpp')
+}
+
+MosquitoMaleHistory__historyInit <- function(obj_, privateEnv) {
+    invisible(.Call('_MASHcpp_MosquitoMaleHistory__historyInit', PACKAGE = 'MASHcpp', obj_, privateEnv))
+}
+
+MosquitoMaleHistory__historyTrack <- function(obj_, privateEnv, alive) {
+    invisible(.Call('_MASHcpp_MosquitoMaleHistory__historyTrack', PACKAGE = 'MASHcpp', obj_, privateEnv, alive))
+}
+
+MosquitoMaleHistory__exportHistory <- function(obj_) {
+    .Call('_MASHcpp_MosquitoMaleHistory__exportHistory', PACKAGE = 'MASHcpp', obj_)
 }
 

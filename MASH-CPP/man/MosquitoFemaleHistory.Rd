@@ -7,7 +7,7 @@
 MosquitoFemaleHistory()
 }
 \description{
-Class to store female mosquito histories; \code{\link{MicroMosquitoFemale}} and \code{\link{MicroMosquito}}
+Class to store female mosquito histories
 }
 \section{Methods}{
 

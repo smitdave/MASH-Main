@@ -17,7 +17,7 @@
 #' Human Class Definition
 #'
 #' This is a generic human being blah blah ...
-#' Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
+#' Each instance of a \code{Human} lives in a \code{\link{Human}}
 #'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object
@@ -27,38 +27,38 @@
 #'  * item 1:
 #'
 #' @section Methods:
-#'  * get_myID: see \code{\link{get_myID_human}}
-#'  * set_myID: see \code{\link{set_myID_human}}
-#'  * get_houseID: see \code{\link{get_houseID_human}}
-#'  * set_houseID: see \code{\link{set_houseID_human}}
-#'  * get_patchID: see \code{\link{get_patchID_human}}
-#'  * set_patchID: see \code{\link{et_patchID_human}}
-#'  * get_bDay: see \code{\link{get_bDay_human}}
-#'  * set_bDay: see \code{\link{set_bDay_human}}
-#'  * get_EventQ: see \code{\link{get_EventQ_human}}
-#'  * get_Alive: see \code{\link{get_Alive_human}}
-#'  * set_Alive: see \code{\link{set_Alive_human}}
-#'  * get_sex: see \code{\link{get_sex_human}}
-#'  * set_sex: see \code{\link{set_sex_human}}
-#'  * get_bWeight: see \code{\link{get_bWeight_human}}
-#'  * set_bWeight: see \code{\link{set_bWeight_human}}
-#'  * set_Pathogens: see \code{\link{set_Pathogens_human}}
-#'  * get_HumansPointer: see \code{\link{get_HumansPointer_human}}
-#'  * set_HumansPointer: see \code{\link{set_HumansPointer_human}}
-#'  * oneEvent: see \code{\link{oneEvent_human}}
-#'  * runEvent: see \code{\link{runEvent_human}}
-#'  * liveLife: see \code{\link{liveLife_human}}
-#'  * event_maxDeath: see \code{\link{event_maxDeath_human}}
-#'  * death: see \code{\link{death_human}}
-#'  * track_history: see \code{\link{track_history_human}}
-#'  * get_history: see \code{\link{get_history_human}}
+#'  * get_myID: see \code{\link{get_myID_Human}}
+#'  * set_myID: see \code{\link{set_myID_Human}}
+#'  * get_houseID: see \code{\link{get_houseID_Human}}
+#'  * set_houseID: see \code{\link{set_houseID_Human}}
+#'  * get_patchID: see \code{\link{get_patchID_Human}}
+#'  * set_patchID: see \code{\link{et_patchID_Human}}
+#'  * get_bDay: see \code{\link{get_bDay_Human}}
+#'  * set_bDay: see \code{\link{set_bDay_Human}}
+#'  * get_EventQ: see \code{\link{get_EventQ_Human}}
+#'  * get_Alive: see \code{\link{get_Alive_Human}}
+#'  * set_Alive: see \code{\link{set_Alive_Human}}
+#'  * get_sex: see \code{\link{get_sex_Human}}
+#'  * set_sex: see \code{\link{set_sex_Human}}
+#'  * get_bWeight: see \code{\link{get_bWeight_Human}}
+#'  * set_bWeight: see \code{\link{set_bWeight_Human}}
+#'  * set_Pathogens: see \code{\link{set_Pathogens_Human}}
+#'  * get_HumansPointer: see \code{\link{get_HumansPointer_Human}}
+#'  * set_HumansPointer: see \code{\link{set_HumansPointer_Human}}
+#'  * oneEvent: see \code{\link{oneEvent_Human}}
+#'  * runEvent: see \code{\link{runEvent_Human}}
+#'  * liveLife: see \code{\link{liveLife_Human}}
+#'  * event_maxDeath: see \code{\link{event_maxDeath_Human}}
+#'  * death: see \code{\link{death_Human}}
+#'  * track_history: see \code{\link{track_history_Human}}
+#'  * get_history: see \code{\link{get_history_Human}}
 #'
 #' @section Fields:
 #'  * **myID**: character identifier of this human, first digits are integer ID and digits after underscore (_) are the patchID; houseID is not necessary because
 #'             location is not resolved to house level in MACRO and MICRO only needs houseID to distribute risk onto \code{\link{feedingSite}} rather than to store humans.
 #'             myID is needed to resolve location to patch level in order to move people between patches in either MICRO or MACRO.
 #'
-#' @md
+#'
 #' @export
 Human <- R6::R6Class(classname="Human",
                      portable = TRUE,
@@ -75,6 +75,7 @@ Human <- R6::R6Class(classname="Human",
 
                        initialize = function(myID, houseID = NULL, patchID = NULL, bDay = NULL, bWeight = NULL){
                          private$myID = myID
+                         private$Alive = TRUE
                          private$houseID = houseID
                          private$patchID = patchID
                          private$bDay = bDay
@@ -89,12 +90,12 @@ Human <- R6::R6Class(classname="Human",
                      private = list(
 
                        #General Information
-                       myID = NULL, # string
-                       houseID = NULL, # integer
-                       patchID = NULL, # integer
-                       Alive = TRUE, # boolean
-                       bDay = NULL, # double
-                       sex = NULL, # integer
+                       myID = character(1), # string
+                       houseID = integer(1), # integer
+                       patchID = integer(1), # integer
+                       Alive = logical(1), # boolean
+                       bDay = numeric(1), # double
+                       sex = integer(1), # integer
 
                        #Event Queue
                        EventQueue = NULL, # see HUMANS-EventQ.hpp
@@ -103,7 +104,7 @@ Human <- R6::R6Class(classname="Human",
                        History = NULL, # see HUMANS-History.hpp
 
                        # Health & Related
-                       bWeight = NULL, # double
+                       bWeight = numeric(1), # double
 
                        # Pathogens
                        Pathogens = NULL, # see PATHOGEN-XX.hpp
@@ -131,12 +132,12 @@ Human <- R6::R6Class(classname="Human",
 #'
 #' More details
 #'
-get_myID_human = function(){
+get_myID_Human <- function(){
 return(private$myID)
 }
 
 Human$set(which="public", name="get_myID",
-	value=get_myID_human,
+	value=get_myID_Human,
 	overwrite=TRUE)
 
 
@@ -146,12 +147,12 @@ Human$set(which="public", name="get_myID",
 #'
 #' More details
 #'
-set_myID_human = function(myID){
+set_myID_Human <- function(myID){
  private$myID = myID
 }
 
 Human$set(which="public", name="set_myID",
-	value=set_myID_human,
+	value=set_myID_Human,
 	overwrite=TRUE)
 
 
@@ -161,12 +162,12 @@ Human$set(which="public", name="set_myID",
 #'
 #' More details
 #'
-get_houseID_human = function(){
+get_houseID_Human <- function(){
  return(private$houseID)
 }
 
 Human$set(which="public", name="get_houseID",
-	value=get_houseID_human,
+	value=get_houseID_Human,
 	overwrite=TRUE)
 
 
@@ -176,12 +177,12 @@ Human$set(which="public", name="get_houseID",
 #'
 #' More details
 #'
-set_houseID_human = function(houseID){
+set_houseID_Human <- function(houseID){
  private$houseID = houseID
 }
 
 Human$set(which="public", name="set_houseID",
-	value=set_houseID_human,
+	value=set_houseID_Human,
 	overwrite=TRUE)
 
 
@@ -191,12 +192,12 @@ Human$set(which="public", name="set_houseID",
 #'
 #' More details
 #'
-get_patchID_human = function(){
+get_patchID_Human <- function(){
  return(private$patchID)
 }
 
 Human$set(which="public", name="get_patchID",
-	value=get_patchID_human,
+	value=get_patchID_Human,
 	overwrite=TRUE)
 
 
@@ -206,12 +207,12 @@ Human$set(which="public", name="get_patchID",
 #'
 #' More details
 #'
-set_patchID_human = function(patchID){
+set_patchID_Human <- function(patchID){
  private$patchID = patchID
 }
 
 Human$set(which="public", name="set_patchID",
-	value=set_patchID_human,
+	value=set_patchID_Human,
 	 overwrite=TRUE)
 
 
@@ -221,12 +222,12 @@ Human$set(which="public", name="set_patchID",
 #'
 #' More details
 #'
-get_bDay_human = function(){
+get_bDay_Human <- function(){
  return(private$bDay)
 }
 
 Human$set(which="public", name="get_bDay",
-	value=get_bDay_human,
+	value=get_bDay_Human,
 	 overwrite=TRUE)
 
 
@@ -236,12 +237,12 @@ Human$set(which="public", name="get_bDay",
 #'
 #' More details
 #'
-set_bDay_human = function(bDay){
+set_bDay_Human <- function(bDay){
  private$bDay = bDay
 }
 
 Human$set(which="public", name="set_bDay",
-	value=set_bDay_human,
+	value=set_bDay_Human,
 	overwrite=TRUE)
 
 
@@ -251,13 +252,13 @@ Human$set(which="public", name="set_bDay",
 #'
 #' More details
 #'
-get_EventQ_human = function(){
+get_EventQ_Human <- function(){
  return(private$EventQueue)
 }
 
-Human$set(which="public", name="get_bDay",
-	value=get_bDay_human,
-	overwrite=TRUE)
+Human$set(which="public", name="get_EventQ",
+	value=get_EventQ_Human, overwrite=TRUE
+)
 
 
 #' Human: Get Life Status
@@ -266,12 +267,12 @@ Human$set(which="public", name="get_bDay",
 #'
 #' More details
 #'
-get_Alive_human = function(){
+get_Alive_Human <- function(){
  return(private$Alive)
 }
 
 Human$set(which="public", name="get_Alive",
-	value=get_Alive_human,
+	value=get_Alive_Human,
 	 overwrite=TRUE)
 
 
@@ -281,12 +282,12 @@ Human$set(which="public", name="get_Alive",
 #'
 #' More details
 #'
-set_Alive_human = function(Alive){
+set_Alive_Human <- function(Alive){
  private$Alive = Alive
 }
 
 Human$set(which="public", name="set_Alive",
-	value=set_Alive_human,
+	value=set_Alive_Human,
 	overwrite=TRUE)
 
 
@@ -296,12 +297,12 @@ Human$set(which="public", name="set_Alive",
 #'
 #' More details
 #'
-get_sex_human = function(){
+get_sex_Human <- function(){
  return(private$sex)
 }
 
 Human$set(which="public", name="get_sex",
-	value=get_sex_human,
+	value=get_sex_Human,
 	 overwrite=TRUE)
 
 
@@ -311,12 +312,12 @@ Human$set(which="public", name="get_sex",
 #'
 #' More details
 #'
-set_sex_human = function(sex){
+set_sex_Human <- function(sex){
  private$sex = sex
 }
 
 Human$set(which="public", name="set_sex",
-	value=set_sex_human,
+	value=set_sex_Human,
 	overwrite=TRUE)
 
 
@@ -326,12 +327,12 @@ Human$set(which="public", name="set_sex",
 #'
 #' More details
 #'
-get_bWeight_human = function(){
+get_bWeight_Human <- function(){
  return(private$bWeight)
 }
 
 Human$set(which="public", name="get_bWeight",
-	value=get_bWeight_human,
+	value=get_bWeight_Human,
 	 overwrite=TRUE)
 
 
@@ -341,12 +342,12 @@ Human$set(which="public", name="get_bWeight",
 #'
 #' More details
 #'
-set_bWeight_human = function(bWeight){
+set_bWeight_Human <- function(bWeight){
  private$bWeight = bWeight
 }
 
 Human$set(which="public", name="set_bWeight",
-	value=set_bWeight_human,
+	value=set_bWeight_Human,
 	overwrite=TRUE)
 
 
@@ -356,12 +357,12 @@ Human$set(which="public", name="set_bWeight",
 #'
 #' More details
 #'
-get_Pathogens_human = function(){
+get_Pathogens_Human <- function(){
  return(private$Pathogens)
 }
 
 Human$set(which="public", name="get_Pathogens",
-	value=get_Pathogens_human,
+	value=get_Pathogens_Human,
 	 overwrite=TRUE)
 
 
@@ -371,13 +372,26 @@ Human$set(which="public", name="get_Pathogens",
 #'
 #' More details
 #'
-set_Pathogens_human = function(Pathogens){
+set_Pathogens_Human <- function(Pathogens){
  private$Pathogens = Pathogens
 }
 
 Human$set(which="public", name="set_Pathogens",
-	value=set_Pathogens_human,
-	overwrite=TRUE)
+	value=set_Pathogens_Human,overwrite=TRUE
+)
+
+#' Human: Set Pathogen History
+#'
+#' Calls \code{Pathogens$get_history} which should be defined for all human-stage pathogen objects.
+#'
+#'
+get_PathogensHistory_Human <- function(){
+  return(private$Pathogens$get_history())
+}
+
+Human$set(which="public", name="get_PathogensHistory",
+	value=get_PathogensHistory_Human,overwrite=TRUE
+)
 
 
 ###############################################################################
@@ -391,13 +405,14 @@ Human$set(which="public", name="set_Pathogens",
 #'
 #' More details
 #'
-get_HumansPointer_human = function(){
+get_HumansPointer_Human <- function(){
  return(private$HumansPointer)
 }
 
 Human$set(which="public", name="get_HumansPointer",
-	value=get_HumansPointer_human,
-	overwrite=TRUE)
+	value=get_HumansPointer_Human,
+	overwrite=TRUE
+)
 
 
 #' Human: Set Human Pointer
@@ -406,14 +421,46 @@ Human$set(which="public", name="get_HumansPointer",
 #'
 #' More details
 #'
-set_HumansPointer_human = function(HumansPointer){
+set_HumansPointer_Human <- function(HumansPointer){
  private$HumansPointer = HumansPointer
 }
 
 
 Human$set(which="public", name="set_HumansPointer",
-	value=set_HumansPointer_human,
-	overwrite=TRUE)
+	value=set_HumansPointer_Human,
+	overwrite=TRUE
+)
+
+#' Get Tile Pointer
+#'
+#' Return either microsimulation \code{\link[MASHmicro]{Tile}} or macrosimulation \code{\link{Tile}} enclosing this site.
+#'  * This method is bound to \code{Human$get_TilePointer}
+#'
+get_TilePointer_Human <- function(){
+ return(private$TilePointer)
+}
+
+Human$set(which="public", name="get_TilePointer",
+	value = get_TilePointer_Human, overwrite=TRUE
+)
+
+
+#' Set Tile Pointer
+#'
+#' Set either microsimulation \code{\link[MASHmicro]{Tile}} or macrosimulation \code{\link{Tile}} enclosing this site.
+#'  * This method is bound to \code{Human$set_TilePointer}
+#'
+#' @param TilePointer an environment
+#'
+set_TilePointer_Human <- function(TilePointer){
+ private$TilePointer = TilePointer
+}
+
+
+Human$set(which="public", name="set_TilePointer",
+	value = set_TilePointer_Human, overwrite=TRUE
+)
+
 
 
 ###############################################################################
@@ -427,15 +474,15 @@ Human$set(which="public", name="set_HumansPointer",
 #'
 #' More details
 #'
-oneEvent_human = function(tPause){
-event = private$EventQueue$firstEvent()
-self$runEvent(tEvent = event$tEvent, PAR = event$PAR, tag = event$tag)
-private$EventQueue$rmFirstEventFromQ()
+oneEvent_Human <- function(tPause){
+  event = private$EventQueue$firstEvent()
+  self$runEvent(tEvent = event$tEvent, PAR = event$PAR, tag = event$tag)
+  private$EventQueue$rmFirstEventFromQ()
 }
 
 Human$set(which="public", name="oneEvent",
-	value=oneEvent_human,
-	 overwrite=TRUE)
+	value=oneEvent_Human, overwrite=TRUE
+)
 
 
 #' Human: Run Event
@@ -444,22 +491,22 @@ Human$set(which="public", name="oneEvent",
 #'
 #' More details
 #'
-runEvent_human = function(tEvent, PAR, tag){
+runEvent_Human <- function(tEvent, PAR, tag){
  self[[tag]](tEvent, PAR)
 }
 
 Human$set(which="public", name="runEvent",
-	value=runEvent_human,
-	 overwrite=TRUE)
+	value=runEvent_Human, overwrite=TRUE
+)
 
 
-#' Human: liveLife
+#' Human: simHuman
 #'
-#' Initializes liveLife
+#' Simulate a human up until time \code{tPause}
 #'
-#' More details
+#' @param tPause numeric; run human simulation until this point
 #'
-liveLife_human = function(tPause){
+simHuman_Human <- function(tPause){
   while(private$Alive & private$EventQueue$firstTime() < tPause){
     self$oneEvent(tPause)
     if(private$EventQueue$get_queueN()==0){
@@ -469,9 +516,9 @@ liveLife_human = function(tPause){
 
 }
 
-Human$set(which="public", name="lifeLife",
-	value=liveLife_human,
-	 overwrite=TRUE)
+Human$set(which="public", name="simHuman",
+	value = simHuman_Human, overwrite = TRUE
+)
 
 
 #################################################
@@ -485,13 +532,12 @@ Human$set(which="public", name="lifeLife",
 #'
 #' More details
 #'
-event_maxDeath_human = function(tEvent = 73000, PAR = NULL, tag = "death"){
+event_maxDeath_Human <- function(tEvent = 73000, PAR = NULL, tag = "death"){
  list(tEvent = tEvent, PAR = PAR, tag = tag)
 }
 
 Human$set(which="public", name="event_maxDeath",
-	value=event_maxDeath_human,
-	 overwrite=TRUE)
+	value = event_maxDeath_Human, overwrite=TRUE)
 
 
 #' Human: Death
@@ -501,13 +547,13 @@ Human$set(which="public", name="event_maxDeath",
 #' More details
 #'
 # death: the death event
-death_human = function(tEvent, PAR){
+death_Human <- function(tEvent, PAR){
  self$track_history(tEvent = tEvent, event = "D")
  private$Alive = FALSE
 }
 
 Human$set(which="public", name="death",
-	value=death_human,
+	value=death_Human,
 	 overwrite=TRUE)
 
 
@@ -522,12 +568,12 @@ Human$set(which="public", name="death",
 #'
 #' More details
 #'
-track_history_human = function(tEvent, event){
+track_history_Human <- function(tEvent, event){
  private$History$track_history(tEvent, event)
 }
 
 Human$set(which="public", name="track_history",
-	value=track_history_human,
+	value=track_history_Human,
 	 overwrite=TRUE)
 
 
@@ -537,10 +583,10 @@ Human$set(which="public", name="track_history",
 #'
 #' More details
 #'
-get_history_human = function(){
+get_history_Human <- function(){
  return(private$History$get_history())
 }
 
 Human$set(which="public", name="get_history",
-	value=get_history_human,
+	value=get_history_Human,
 	 overwrite=TRUE)

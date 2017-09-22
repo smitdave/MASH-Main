@@ -19,11 +19,13 @@ namespace MASHcpp { class mosquitoPfSI; }
 namespace MASHcpp { class humanPfMOI; }
 namespace MASHcpp { class mosquitoPfMOI; }
 namespace MASHcpp { class RiskQ; }
+namespace MASHcpp { class MatingQ; }
 namespace MASHcpp { class ImagoQ; }
 namespace MASHcpp { class EggQ; }
 namespace MASHcpp { class EL4P; }
 namespace MASHcpp { class ELP; }
 namespace MASHcpp { class MosquitoFemaleHistory; }
+namespace MASHcpp { class MosquitoMaleHistory; }
 
 namespace Rcpp {
 template <typename T> SEXP wrap(const MASHcpp::RcppR6::RcppR6<T>&);
@@ -47,6 +49,8 @@ template <> SEXP wrap(const MASHcpp::mosquitoPfMOI&);
 template <> MASHcpp::mosquitoPfMOI as(SEXP);
 template <> SEXP wrap(const MASHcpp::RiskQ&);
 template <> MASHcpp::RiskQ as(SEXP);
+template <> SEXP wrap(const MASHcpp::MatingQ&);
+template <> MASHcpp::MatingQ as(SEXP);
 template <> SEXP wrap(const MASHcpp::ImagoQ&);
 template <> MASHcpp::ImagoQ as(SEXP);
 template <> SEXP wrap(const MASHcpp::EggQ&);
@@ -57,6 +61,8 @@ template <> SEXP wrap(const MASHcpp::ELP&);
 template <> MASHcpp::ELP as(SEXP);
 template <> SEXP wrap(const MASHcpp::MosquitoFemaleHistory&);
 template <> MASHcpp::MosquitoFemaleHistory as(SEXP);
+template <> SEXP wrap(const MASHcpp::MosquitoMaleHistory&);
+template <> MASHcpp::MosquitoMaleHistory as(SEXP);
 }
 
 #endif

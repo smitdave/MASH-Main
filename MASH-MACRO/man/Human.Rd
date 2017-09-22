@@ -10,7 +10,7 @@ Human
 }
 \description{
 This is a generic human being blah blah ...
-Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
+Each instance of a \code{Human} lives in a \code{\link{Human}}
 }
 \section{Constructor}{
 
@@ -22,31 +22,31 @@ Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
 \section{Methods}{
 
 \itemize{
-\item get_myID: see \code{\link{get_myID_human}}
-\item set_myID: see \code{\link{set_myID_human}}
-\item get_houseID: see \code{\link{get_houseID_human}}
-\item set_houseID: see \code{\link{set_houseID_human}}
-\item get_patchID: see \code{\link{get_patchID_human}}
-\item set_patchID: see \code{\link{et_patchID_human}}
-\item get_bDay: see \code{\link{get_bDay_human}}
-\item set_bDay: see \code{\link{set_bDay_human}}
-\item get_EventQ: see \code{\link{get_EventQ_human}}
-\item get_Alive: see \code{\link{get_Alive_human}}
-\item set_Alive: see \code{\link{set_Alive_human}}
-\item get_sex: see \code{\link{get_sex_human}}
-\item set_sex: see \code{\link{set_sex_human}}
-\item get_bWeight: see \code{\link{get_bWeight_human}}
-\item set_bWeight: see \code{\link{set_bWeight_human}}
-\item set_Pathogens: see \code{\link{set_Pathogens_human}}
-\item get_HumansPointer: see \code{\link{get_HumansPointer_human}}
-\item set_HumansPointer: see \code{\link{set_HumansPointer_human}}
-\item oneEvent: see \code{\link{oneEvent_human}}
-\item runEvent: see \code{\link{runEvent_human}}
-\item liveLife: see \code{\link{liveLife_human}}
-\item event_maxDeath: see \code{\link{event_maxDeath_human}}
-\item death: see \code{\link{death_human}}
-\item track_history: see \code{\link{track_history_human}}
-\item get_history: see \code{\link{get_history_human}}
+\item get_myID: see \code{\link{get_myID_Human}}
+\item set_myID: see \code{\link{set_myID_Human}}
+\item get_houseID: see \code{\link{get_houseID_Human}}
+\item set_houseID: see \code{\link{set_houseID_Human}}
+\item get_patchID: see \code{\link{get_patchID_Human}}
+\item set_patchID: see \code{\link{et_patchID_Human}}
+\item get_bDay: see \code{\link{get_bDay_Human}}
+\item set_bDay: see \code{\link{set_bDay_Human}}
+\item get_EventQ: see \code{\link{get_EventQ_Human}}
+\item get_Alive: see \code{\link{get_Alive_Human}}
+\item set_Alive: see \code{\link{set_Alive_Human}}
+\item get_sex: see \code{\link{get_sex_Human}}
+\item set_sex: see \code{\link{set_sex_Human}}
+\item get_bWeight: see \code{\link{get_bWeight_Human}}
+\item set_bWeight: see \code{\link{set_bWeight_Human}}
+\item set_Pathogens: see \code{\link{set_Pathogens_Human}}
+\item get_HumansPointer: see \code{\link{get_HumansPointer_Human}}
+\item set_HumansPointer: see \code{\link{set_HumansPointer_Human}}
+\item oneEvent: see \code{\link{oneEvent_Human}}
+\item runEvent: see \code{\link{runEvent_Human}}
+\item liveLife: see \code{\link{liveLife_Human}}
+\item event_maxDeath: see \code{\link{event_maxDeath_Human}}
+\item death: see \code{\link{death_Human}}
+\item track_history: see \code{\link{track_history_Human}}
+\item get_history: see \code{\link{get_history_Human}}
 }
 }
 
