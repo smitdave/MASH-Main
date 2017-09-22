@@ -215,29 +215,29 @@ dLinkedList$set(which = "public",name = "ls",
 #'
 #' @param llist is an instance of the doubly linked list class
 #'
-delElement<-function(llist, pos=NULL){
-if(is.null(pos)) warning("Nothing to delete")
-listsize<-sizeLinkList(llist)
-if(pos>listsize) stop("Position greater than size of list")
-if (isEmpty(llist)) {
-warning("Empty List")
-} else if(pos==1){
-PreviousNode<-llist$nextnode
-} else
-{
-PreviousNode<-linkListNode(llist$element)
-for(i in 1:(listsize-1)){
-if(pos==(i+1)){
-PreviousNode$nextnode<-setNextNode(llist$nextnode)
-} else
-{
-PreviousNode$nextnode<-llist$nextnode
-llist<-llist$nextnode
-}
-}
-}
-return(PreviousNode)
-}
+# delElement<-function(llist, pos=NULL){
+# if(is.null(pos)) warning("Nothing to delete")
+# listsize<-sizeLinkList(llist)
+# if(pos>listsize) stop("Position greater than size of list")
+# if (isEmpty(llist)) {
+# warning("Empty List")
+# } else if(pos==1){
+# PreviousNode<-llist$nextnode
+# } else
+# {
+# PreviousNode<-linkListNode(llist$element)
+# for(i in 1:(listsize-1)){
+# if(pos==(i+1)){
+# PreviousNode$nextnode<-setNextNode(llist$nextnode)
+# } else
+# {
+# PreviousNode$nextnode<-llist$nextnode
+# llist<-llist$nextnode
+# }
+# }
+# }
+# return(PreviousNode)
+# }
 
 
 
