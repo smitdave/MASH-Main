@@ -208,5 +208,5 @@ MBITES.Generic.Setup <- function(
 #'
 #' @export
 mbitesGeneric_NULL <- list(
-  id = "NULL"
+  ID = "NULL"
 )
