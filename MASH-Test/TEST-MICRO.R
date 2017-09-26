@@ -101,7 +101,6 @@ MBITES.Generic.Setup()
 MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential",SUGAR = TRUE,MATE = TRUE)
 MBITES.Male.Setup(timing = "exponential")
 
-# fix this function; wont work!
 SEARCH.Kernel.Setup(MBITES = "BRO")
 
 # landscape parameters
@@ -149,6 +148,36 @@ MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE)
+
+
+###############################################################################
+# M-BITES: Complex Female + MBITES-Male Run with Emerge
+###############################################################################
+
+rm(list=ls());gc()
+library(MASHmicro)
+# set.seed(42L)
+
+DEBUG.MASHMICRO()
+MASHcpp::DEBUG.MASHCPP()
+MASHmacro::DEBUG.MASHMACRO()
+
+# make a tile
+DIR = "/Users/slwu89/Desktop/MASHOUT/"
+
+# setup
+Humans.MICRO.Setup()
+PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
+AQUA.Emerge.Setup()
+
+
+MBITES.Generic.Setup()
+MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential",SUGAR = TRUE,MATE = TRUE)
+MBITES.Male.Setup(timing = "exponential")
+
+SEARCH.Kernel.Setup(MBITES = "BRO")
+
+
 
 
 
