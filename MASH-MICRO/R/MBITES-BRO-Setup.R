@@ -162,20 +162,6 @@ MBITES.BRO.Setup <- function(
     )
 
     #################################################################
-    # MBITES-BRO-HostEncounter.R
-    #################################################################
-
-    MosquitoFemale$set(which = "public",name = "humanEncounter",
-              value = mbitesBRO_humanEncounter,
-              overwrite = overwrite
-    )
-
-    MosquitoFemale$set(which = "public",name = "zooEncounter",
-              value = mbitesBRO_zooEncounter,
-              overwrite = overwrite
-    )
-
-    #################################################################
     # MBITES-BRO-Survival.R
     #################################################################
 

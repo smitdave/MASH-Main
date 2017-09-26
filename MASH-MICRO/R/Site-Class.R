@@ -143,7 +143,7 @@ AquaticSite <- R6::R6Class(classname = "AquaticSite",
                         EL4P = {
                           private$numGenotypes = numGenotypes
                           private$EL4P = EL4P$new(N_genotypes = numGenotypes)
-                          # private$EggQ = MASHcpp::EggQ()
+                          private$EggQ = MASHcpp::EggQ()
                           # private$EL4P = MASHcpp::EL4P(numGenotypes=numGenotypes,psi_new=0,alpha_new=0,p_new=0)
                         },
                         {stop("unrecognized Aquatic Ecology module")}

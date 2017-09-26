@@ -21,7 +21,7 @@
 #' After calling \code{\link{mbitesGeneric_chooseHost}}, the mosquito encounters the human host and attempts to feed.
 #'  * This method is bound to \code{MosquitoFemale$humanEncounter()}.
 #' @md
-mbitesBRO_humanEncounter <- function(){
+mbitesGeneric_humanEncounter <- function(){
   if(runif(1) < 1-private$FemalePopPointer$get_MBITES_PAR("surviveH")){ # does not survive to probe
     private$stateNew = "D"
   } else { # survives to probe
@@ -57,7 +57,7 @@ mbitesBRO_humanEncounter <- function(){
 #' After calling \code{\link{mbitesGeneric_chooseHost}}, the mosquito encounters the non-human host and attempts to feed.
 #'  * This method is bound to \code{MosquitoFemale$zooEncounter()}.
 #' @md
-mbitesBRO_zooEncounter <- function(){
+mbitesGeneric_zooEncounter <- function(){
 
   if(runif(1) < 1-private$FemalePopPointer$get_MBITES_PAR("surviveZ")){ # does not survive to feed
     private$stateNew = "D"
