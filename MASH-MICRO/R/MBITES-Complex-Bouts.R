@@ -8,7 +8,7 @@
 #   MASH-MICRO
 #   M-BITES: Bouts
 #   MASH-MICRO Team
-#   September, 2017
+#   September 2017
 #
 ###############################################################################
 
@@ -20,7 +20,7 @@
 #' M-BITES: Exponential Timing for \code{MosquitoFemale}
 #'
 #' Method for exponentially-distributed bout lengths (model mosquitoes as a Markov process).
-#'  * This method is bound to \code{MosquitoFemale$timingExponential()}.
+#'  * This method is bound to \code{MosquitoFemale$timing()}.
 #'
 mbites_timingExponential <- function(){
   if(self$isActive()){
@@ -40,7 +40,7 @@ mbites_timingExponential <- function(){
 #' M-BITES: Gamma Timing for \code{MosquitoFemale}
 #'
 #' Method for Gamma-distributed bout lengths (model mosquitoes as a semi-Markov process).
-#'  * This method is bound to \code{MosquitoFemale$timingExponential()}.
+#'  * This method is bound to \code{MosquitoFemale$timing()}.
 #'
 mbites_timingGamma <- function(){
   if(self$isActive()){
@@ -369,7 +369,7 @@ mbites_boutS <- function(){
 #' A mosquito performs mating bout (all actions taken launch to launch when resting required).
 #' Upon entering the mating behavioral state, the mosquito will move to a \code{\link{MatingSite}} and
 #' finds a mate in the \code{\link[MASHcpp]{MatingQ}}.
-#'  * This method is bound to \code{MosquitoFemale$boutR()}.
+#'  * This method is bound to \code{MosquitoFemale$boutM()}.
 #'
 mbites_boutM <- function(){
 
@@ -461,8 +461,8 @@ mbites_oneBout <- function(){
 
 #' M-BITES: Run Simulation for \code{\link{MosquitoFemale}}
 #'
-#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{MicroTile}}.
-#' This method calls \code{\link{mbitesBRO_oneBout}} to simulate each life stage.
+#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{Tile}}.
+#' This method calls \code{\link{mbites_oneBout}} to simulate each life stage.
 #'  * This method is bound to \code{MosquitoFemale$MBITES()}.
 #'
 mbites_oneMosquito_MBITES <- function(){
@@ -481,8 +481,8 @@ mbites_oneMosquito_MBITES <- function(){
 
 #' M-BITES: Run Simulation for \code{\link{MosquitoPopFemale}}
 #'
-#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{MicroTile}}.
-#' This method calls \code{\link{mbitesBRO_oneMosquito_MBITES}} one each living mosquito sequentially.
+#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{Tile}}.
+#' This method calls \code{\link{mbites_oneMosquito_MBITES}} one each living mosquito sequentially.
 #'  * This method is bound to \code{MosquitoPopFemale$MBITES()}.
 #'
 mbites_Pop_MBITES <- function(){

@@ -11,6 +11,6 @@ A mosquito performs mating bout (all actions taken launch to launch when resting
 Upon entering the mating behavioral state, the mosquito will move to a \code{\link{MatingSite}} and
 finds a mate in the \code{\link[MASHcpp]{MatingQ}}.
 \itemize{
-\item This method is bound to \code{MosquitoFemale$boutR()}.
+\item This method is bound to \code{MosquitoFemale$boutM()}.
 }
 }

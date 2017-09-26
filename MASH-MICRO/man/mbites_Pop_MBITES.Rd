@@ -7,8 +7,8 @@
 mbites_Pop_MBITES()
 }
 \description{
-Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{MicroTile}}.
-This method calls \code{\link{mbitesBRO_oneMosquito_MBITES}} one each living mosquito sequentially.
+Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{Tile}}.
+This method calls \code{\link{mbites_oneMosquito_MBITES}} one each living mosquito sequentially.
 \itemize{
 \item This method is bound to \code{MosquitoPopFemale$MBITES()}.
 }

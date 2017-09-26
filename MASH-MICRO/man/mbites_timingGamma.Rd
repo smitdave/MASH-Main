@@ -9,6 +9,6 @@ mbites_timingGamma()
 \description{
 Method for Gamma-distributed bout lengths (model mosquitoes as a semi-Markov process).
 \itemize{
-\item This method is bound to \code{MosquitoFemale$timingExponential()}.
+\item This method is bound to \code{MosquitoFemale$timing()}.
 }
 }
