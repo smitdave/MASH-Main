@@ -50,7 +50,7 @@ mbitesGeneric_chooseHost <- function(){
 mbitesCohort_chooseHost <- function(){
 
   if(private$inPointSet != "f"){ #check M is in a feeding site
-    cat("chooseHost error; mosy ",M$id," inPointSet: ",M$inPointSet," , not in a feeding site\n",sep="")
+    cat("chooseHost error; mosy ",private$id," inPointSet: ",private$inPointSet," , not in a feeding site\n",sep="")
   }
 
   # human host
