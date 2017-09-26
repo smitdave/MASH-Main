@@ -357,7 +357,6 @@ mbites_boutS <- function(){
     }
   }
 
-
 }
 
 
@@ -384,137 +383,110 @@ mbites_boutM <- function(){
 }
 
 
+#################################################################
+# M-BITES: Generic Bout
+#################################################################
+
+#' M-BITES: One Bout \code{MosquitoFemale}
+#'
+#' Mosquito behavior has a finite set of states (state space of model), within which there are certain biological functions that are always evaluated.
+#' A bout is the actions taken by a mosquito between a launch and landing; \code{mbites_oneBout} handles all the biological imperatives that occur during a bout,
+#' while specialized bout action methods handle the events that occur due to the purpose of the bout.
+#'  * \code{\link{mbites_boutF}}: blood feeding search bout
+#'  * \code{\link{mbites_boutB}}: blood feeding attempt bout
+#'  * \code{\link{mbites_boutR}}: post-prandial resting bout
+#'  * \code{\link{mbites_boutL}}: egg laying search bout
+#'  * \code{\link{mbites_boutO}}: egg laying attempt bout
+#'  * \code{\link{mbites_boutS}}: sugar feeding attempt bout
+#'  * \code{\link{mbites_boutM}}: mating bout
+#'
+#' The generic bout runs necessary updates of timing, state, survival, energetics, and queue checks prior to calling the nested
+#' specific bout action, and checks that the mosquito is alive/active before calling the bout. It updates \code{tNext} and \code{stateNew}.
+#'
+#' This corresponds to the following Gillespie-style algorithm:
+#'
+#' 1. tNow is set to tNext from previous bout
+#' 2. moveMe: movement between point classes (if needed)
+#' 3. boutFun: run bout function
+#' 4. run energetics and check if alive
+#' 5. run landingSpot and check if alive
+#' 6. run surviveResting/surviveFlight and check if alive
+#' 7. update tNext
+#' 8. update state to stateNew which is determined in the bout
+#'
+#'  * This method is bound to \code{MosquitoFemale$oneBout()}.
+#'
+mbites_oneBout <- function(){
+
+  # update time and state
+  private$tNow = private$tNext # update time
+  private$state = private$stateNew # update current state
+  self$timing() # update tNext
+
+  # movement
+  self$moveMe()
+
+  # landing spot
+  self$landingSpot()
+
+  # bout
+  switch(private$state,
+    F = {self$boutF()},
+    B = {self$boutB()},
+    R = {self$boutR()},
+    L = {self$boutL()},
+    O = {self$boutO()},
+    M = {self$boutM()},
+    S = {self$boutS()},
+    {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
+  )
+
+  # energetics
+  if(private$FemalePopPointer$get_MBITES_PAR("SUGAR")){
+    self$sugarEnergetics()  # MBITES-Generic-Energetics.R
+  }
+
+  # survival
+  self$surviveResting()     # MBITES-Generic-Survival.R
+  self$surviveFlight()      # MBITES-Generic-Survival.R
+
+  # log history
+  private$history$historyTrack(privateEnv = private, alive = self$isAlive())
+}
 
 
-# #################################################################
-# #  Blood Feeding Search Bout :: F
-# #################################################################
-#
-# boutF <- function(M,P){
-#   if(M$lspot != "l" && rbinom(n=1,size=1,prob=P$F.s)){
-#     M$stateNew = "B"
-#   }
-#
-#   return(M)
-# }
-#
-#
-# #################################################################
-# #  Blood Feeding Attempt Bout :: B
-# #################################################################
-#
-# boutB <- function(M,P){
-#   if(rbinom(1,1,P$B.s)){
-#     M = chooseHost(M) # MBITES-ChooseHost.R
-#   } else {
-#     M$hostID = 0
-#   }
-#
-#   if(M$hostID > 0){
-#     M = humanEncounter(M,P) # MBITES-HostEncounter.R
-#   } else if(M$hostID == -1){
-#     M = zooEncounter(M,P) # MBITES-HostEncounter.R
-#   } else if(M$hostID == 0){
-#     M = nullEncounter(M,P) # MBITES-HostEncounter.R
-#   } else {
-#     stop("hostID of mosy id: ",M$id," not a recognized host ID")
-#   }
-#
-#   return(M)
-# }
-#
-#
-# #################################################################
-# #  Post-Prandial Resting Bout :: R
-# #################################################################
-#
-# boutR <- function(M,P){
-#   #. boutR: Mosquito resting bout
-#   if(!rbinom(1,1,P$R.p)){
-#     M$stateNew = "D"
-#   } else {
-#     if(M$female){ # female behavior
-#       if(!M$mature){ # immature female
-#         M$stateNew = sample(x = c("F","S"),size = 1)
-#       } else { # mature female
-#         M = reFeed(M,P) # MBITES-Energetics.R
-#       }
-#     } else { # male behavior
-#       M$stateNew = "M"
-#     }
-#   }
-#
-#   return(M)
-# }
-#
-# #################################################################
-# #  Egg Laying Search Bout :: L
-# #################################################################
-#
-# boutL <- function(M,P){
-#   if(rbinom(1,1,P$L.s)){
-#     M$stateNew = "O"
-#   }
-#
-#   return(M)
-# }
-#
-#
-# #################################################################
-# #  Egg Laying Attempt Bout :: O
-# #################################################################
-#
-# layEggs <- function(M,P){
-#   if(rbinom(1,1,P$O.s)){
-#     makeBatches(M) # MBITES-Energetics.R
-#     M$batch = 0
-#     M$stateNew = "F"
-#   }
-#
-#   return(M)
-# }
-#
-# boutO <- function(M,P){
-#   # M=fOvitrap(M)
-#   if(isAlive(M)){
-#     M = layEggs(M,P)
-#   }
-#   return(M)
-# }
-#
-#
-# #################################################################
-# #  Sugar Feeding Attempt Bout :: O
-# #################################################################
-#
-# boutS <- function(M,P){
-#   with(P,{
-#     if(M$female){
-#
-#       # female behavior
-#       M$stateNew = sample(x = c("F","D"), size = 1, prob = c(S.s,1-S.s))
-#       if(isAlive(M)){
-#         M$energy = 1
-#
-#         if(!M$mature){
-#           M$energyPreG = M$energyPreG - preGsugar
-#           if(M$energyPreG <= 0){
-#             M$mature = TRUE
-#           }
-#         }
-#       }
-#
-#     } else {
-#
-#       # male behavior
-#       M$stateNew = sample(x = c("R","D"), size = 1, prob = c(S.s,1-S.s))
-#       if(isAlive(M)){
-#         M$energy = 1
-#       }
-#
-#     }
-#
-#     # M=fATSB(M)
-#     return(M)
-#   })
-# }
+#################################################################
+# M-BITES: Simulation
+#################################################################
+
+#' M-BITES: Run Simulation for \code{\link{MosquitoFemale}}
+#'
+#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{MicroTile}}.
+#' This method calls \code{\link{mbitesBRO_oneBout}} to simulate each life stage.
+#'  * This method is bound to \code{MosquitoFemale$MBITES()}.
+#'
+mbites_oneMosquito_MBITES <- function(){
+
+  # run algorithm while alive and has not overrun tile time
+  while(private$tNext < private$TilePointer$get_tNow() & private$stateNew != "D"){
+    self$oneBout()
+  }
+
+  # if mosquito is dead output data if asked and remove it from the enclosing storage object
+  if(private$stateNew == "D"){
+    self$writeAndDelete(conHist = private$TilePointer$get_FemaleHistoryCon(), conPath = private$TilePointer$get_MosquitoPathogenCon())
+  }
+
+}
+
+#' M-BITES: Run Simulation for \code{\link{MosquitoPopFemale}}
+#'
+#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{MicroTile}}.
+#' This method calls \code{\link{mbitesBRO_oneMosquito_MBITES}} one each living mosquito sequentially.
+#'  * This method is bound to \code{MosquitoPopFemale$MBITES()}.
+#'
+mbites_Pop_MBITES <- function(){
+
+  private$pop$apply(tag="MBITES",returnVal=FALSE)
+
+}

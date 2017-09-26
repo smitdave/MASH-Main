@@ -214,7 +214,7 @@ mbitesBRO_boutB <- function(){
 #'  * This method is bound to \code{MosquitoFemale$boutR()}.
 #'
 mbitesBRO_boutR <- function(){
-  
+
   if(self$isAlive()){
     if(private$FemalePopPointer$get_MBITES_PAR("REFEED")){
       if(runif(1) < self$pReFeed()){
