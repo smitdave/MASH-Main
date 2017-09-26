@@ -34,7 +34,7 @@ MBITES.Complex.Setup <- function(
   overwrite = TRUE,
   aquaModule = "emerge",
   timing = "exponential"
-  ){
+){
 
   # alert user
   cat("initializing M-BITES complex module\n",sep="")
@@ -45,6 +45,18 @@ MBITES.Complex.Setup <- function(
 
   MosquitoFemale$set(which = "public",name = "BloodMeal",
             value = mbites_BloodMeal, overwrite = overwrite
+  )
+
+  ##############################################################
+  # MBITES-Complex-Survival.R
+  ##############################################################
+
+  MosquitoFemale$set(which = "public",name = "get_surviveFlightProb",
+            value = mbites_get_surviveFlightProb, overwrite = overwrite
+  )
+
+  MosquitoFemale$set(which = "public",name = "get_restHaz",
+            value = mbites_get_restHaz, overwrite = overwrite
   )
 
 

@@ -85,6 +85,7 @@ simMICRO_oneRun <- function(tMax, verbose = FALSE, trackPop = FALSE){
     cat(jsonlite::toJSON(x = mbitesGeneric_NULL,pretty = TRUE),"\n",sep="",file = self$get_MaleHistoryCon()) # male EOF
     writeLines(text = "]",con = self$get_MaleHistoryCon())
   }
+  cat(jsonlite::toJSON(x = PfSI_NULL,pretty = TRUE),"\n",sep="",file = self$get_MosquitoPathogenCon()) # male EOF
   writeLines(text = "]",con = self$get_MosquitoPathogenCon())
 
   # close connections

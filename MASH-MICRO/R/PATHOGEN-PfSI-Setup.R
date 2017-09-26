@@ -498,3 +498,13 @@ PfSI.MICRO.Setup <- function(
   )
 
 }
+
+
+#' PfSI \code{NULL} Mosquito Pathogen History
+#'
+#' This is used to pad the final entry when mosquito-stage pathogen histories are being written to JSON by \code{\link[jsonlite]{toJSON}}.
+#'
+#' @export
+PfSI_NULL <- list(
+  PfID = "NULL"
+)
