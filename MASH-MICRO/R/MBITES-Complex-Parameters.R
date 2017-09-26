@@ -20,25 +20,41 @@
 #'
 #' Generate named list of parameters used throughout MICRO/M-BITES. All arguments have default values which are listed below before the definition.
 #'
-#' @param B_wts landing spot weights
-#' @param R_wts landing spot weights
-#' @param O_wts landing spot weights
-#' @param InAndOut matrix of landing probabilities
-#' @param gammaShape shape parameter for Gamma distributed dwell times; if gammaShape = 1 same as exponential, variance decreases as gammaShape becomes large (see \code{\link{mbitesBRO_timingGamma}})
-#' @param B_surv Blood feeding bout baseline survival probability \code{\link{mbitesGeneric_surviveFlight}}
-#' @param B_succeed Blood feeding bout probability of success (if succeed call \code{\link{mbitesGeneric_chooseHost}})
-#' @param B_time Blood feeding bout mean time elapsed (in days); alternatively the waiting time until next state transition
+#' @param F_time mean time elapsed (in days) during blood feeding search bout
+#' @param B_time mean time elapsed (in days) during blood feeding attempt bout
+#' @param R_time mean time elapsed (in days) during post-prandial resting bout
+#' @param L_time mean time elapsed (in days) during egg laying search bout
+#' @param O_time mean time elapsed (in days) during egg laying attempt bout
+#' @param M_time mean time elapsed (in days) during mating bout
+#' @param S_time mean time elapsed (in days) during sugar feeding attempt bout
+#' @param gammaShape shape parameter for Gamma distributed dwell times; if gammaShape = 1 same as exponential, variance decreases as gammaShape becomes large (see \code{\link{mbites_timingGamma}})
+#' @param F_succeed blood feeding search bout probability of success
+#' @param B_succeed blood feeding attempt bout probability of success
+#' @param L_succeed egg laying search bout probability of success
+#' @param O_succeed egg laying attempt bout probability of success
+#' @param M_succeed mating bout probability of success
+#' @param S_succeed sugar feeding attempt bout probability of success
+#' @param F_surv blood feeding search bout baseline survival probaility (see \code{\link{mbitesGeneric_surviveFlight}})
+#' @param B_surv blood feeding attempt bout baseline survival probaility (see \code{\link{mbitesGeneric_surviveFlight}})
+#' @param R_surv post-prandial resting bout baseline survival probaility (see \code{\link{mbitesGeneric_surviveFlight}})
+#' @param L_surv egg laying search bout baseline survival probaility (see \code{\link{mbitesGeneric_surviveFlight}})
+#' @param O_surv egg laying attempt bout baseline survival probaility (see \code{\link{mbitesGeneric_surviveFlight}})
+#' @param M_surv mating bout baseline survival probaility (see \code{\link{mbitesGeneric_surviveFlight}})
+#' @param S_surv sugar feeding attempt bout baseline survival probaility (see \code{\link{mbitesGeneric_surviveFlight}})
+#' @param F_wts blood feeding search bout landing spot weights (see \code{\link{mbites_get_WTS}})
+#' @param B_wts blood feeding attempt bout landing spot weights (see \code{\link{mbites_get_WTS}})
+#' @param R_wts post-prandial resting bout landing spot weights (see \code{\link{mbites_get_WTS}})
+#' @param L_wts egg laying search bout landing spot weights (see \code{\link{mbites_get_WTS}})
+#' @param O_wts egg laying attempt bout landing spot weights (see \code{\link{mbites_get_WTS}})
+#' @param M_wts mating bout landing spot weights (see \code{\link{mbites_get_WTS}})
+#' @param S_wts sugar feeding attempt bout landing spot weights (see \code{\link{mbites_get_WTS}})
+#' @param InAndOut unnormalized transition matrix of landing probabilities
 #' @param surviveH human host encounter survival probability of initial encounter (proceed to probe)
 #' @param probeH human host encounter probability undeterred and begin probing
 #' @param surviveprobeH human host encounter survival probability of probing
 #' @param feedH human host encounter probability to successfully blood feed
 #' @param surviveZ non-human host encounter survival probability of initial encounter (proceed to feed)
 #' @param feedZ non-human host encounter probability to successfully blood feed
-#' @param R_surv Post Prandial Resting bout baseline survival probability \code{\link{mbitesGeneric_surviveFlight}}
-#' @param R_time Post Prandial Resting bout mean time elapsed (in days); alternatively the waiting time until next state transition
-#' @param O_surv Egg Laying bout baseline survival probability \code{\link{mbitesGeneric_surviveFlight}}
-#' @param O_succeed Egg Laying bout probability of success (if successfull call \code{layEggs})
-#' @param O_time Egg Laying bout mean time elapsed (in days); alternatively the waiting time until next state transition
 #' @param bm.a shape param for bloodmeal size (see \code{\link{mbitesGeneric_rBloodMealSize}})
 #' @param bm.b shape param for bloodmeal size (see \code{\link{mbitesGeneric_rBloodMealSize}})
 #' @param REFEED control boolean for refeeding behavior during resting bout
@@ -56,19 +72,11 @@
 #' @param ttsz.b shape param for tattering damage (see \code{\link{mbitesGeneric_rTatterSize}})
 #' @param ttr.a exp param for tattering survival (see \code{\link{mbitesGeneric_pTatter}})
 #' @param ttr.b exp param for tattering survival (see \code{\link{mbitesGeneric_pTatter}})
-#' @param SUGAR logical; enable sugar bouts and energetics (see \code{\link{mbitesBROS_boutS}} and \code{\link{mbitesGeneric_sugarEnergetics}})
-#' @param S_succeed probability to successfully locate sugar source and replenish energy in sugar feeding bout
-#' @param S_time average duration of time spent in sugar feeding state (unconditional on next state)
-#' @param S_wts landing spot weights
 #' @param S.u per-bout energy expenditure
 #' @param S.a shape parameter of per-bout probability of survival as function of energy reserves
 #' @param S.b shape parameter of per-bout probability of survival as function of energy reserves
 #' @param S.sa shape parameter of probability to queue sugar bout as function of energy reserves
 #' @param S.sb shape parameter of probability to queue sugar bout as function of energy reserves
-#' @param MATE logical; enable mating (see \code{\link{mbitesBROM_boutM}})
-#' @param M_succeed probability to successfully locate a mating swarm and call \code{\link{mbitesGeneric_chooseMate}}
-#' @param M_time average duration of time spent in mating state (unconditional on next state)
-#' @param M_wts landing spot weights
 #' @param bs.m mean of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})
 #' @param bs.v standard deviation of normally-distributed egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeNorm}})
 #' @param maxBatch maximum egg batch size (used in \code{\link{mbitesGeneric_rBatchSizeBms}})
@@ -83,300 +91,227 @@
 #' @param Q human blood index (used in \code{\link{mbitesCohort_chooseHost}})
 #' @return a named list of parameters
 #' @examples
-#' MBITES.BRO.Parameters()
+#' MBITES.Complex.Parameters()
 #' @export
-MBITES.BRO.Parameters <- function(
+MBITES.Complex.Parameters <- function(
 
-  ##########################################
-  # Landing Spot
-  ##########################################
-  B_wts = rep(1,5),
-  R_wts = rep(1,5),
-  O_wts = rep(1,5),
-  InAndOut = matrix(data = c(4,2,2,1,6,
-                             2,1,1,1,4,
-                             1,1,1,1,2,
-                             0,0,0,0,1,
-                             1,1,2,1,0),
-                             nrow = 5,ncol = 5,byrow = TRUE,dimnames = list(c("i","w","v","r","l"),c("i","w","v","r","l"))),
+  # dwell time parameters
+  F_time                  = 1,
+  B_time                  = 0.75,
+  R_time                  = 1.5,
+  L_time                  = 0.75,
+  O_time                  = 1,
+  M_time                  = 1.5,
+  S_time                  = 0.5,
 
+  gammaShape              = 8,
 
-  ##########################################
-  # Timing
-  ##########################################
-  gammaShape = 8,
+  # success parameters
+  F_succeed               = 0.99,
+  B_succeed               = 0.99,
+  L_succeed               = 0.99,
+  O_succeed               = 0.99,
+  M_succeed               = 0.95,
+  S_succeed               = 0.95,
 
-  ##########################################
-  # Blood Feeding Bout
-  ##########################################
+  # survival parameters
+  F_surv                  = 0.95,
+  B_surv                  = 0.98,
+  R_surv                  = 0.98,
+  L_surv                  = 0.80,
+  O_surv                  = 0.98,
+  M_surv                  = 0.98,
+  S_surv                  = 0.98,
 
-  B_surv = 0.85, # baseline survival for surviveFlight
-  B_succeed = 0.8, # prob success (for boutB)
-  B_time = 3/4,  # Blood Feed Attempt . Mean Time Elapsed (in Days)
+  # landing spot weights
+  F_wts                   = rep(1,5),
+  B_wts                   = rep(1,5),
+  R_wts                   = rep(1,5),
+  L_wts                   = rep(1,5),
+  O_wts                   = rep(1,5),
+  M_wts                   = rep(1,5),
+  S_wts                   = rep(1,5),
 
-  ##########################################
+  InAndOut                = matrix(data = c(4,2,2,1,6,
+                                            2,1,1,1,4,
+                                            1,1,1,1,2,
+                                            0,0,0,0,1,
+                                            1,1,2,1,0),
+                                            nrow = 5,ncol = 5,byrow = TRUE,dimnames = list(c("i","w","v","r","l"),c("i","w","v","r","l"))),
   # Host Encounter
-  ##########################################
-
   # human host
-  surviveH = 1, # survival probability for initial encounter (survive to probe)
-  probeH = 1, # probability that undeterred during probing
-  surviveprobeH = 1, # survival probability for host probing
-  feedH = 1, # probability to successfully feed
+  surviveH                = 1, # survival probability for initial encounter (survive to probe)
+  probeH                  = 1, # probability that undeterred during probing
+  surviveprobeH           = 1, # survival probability for host probing
+  feedH                   = 1, # probability to successfully feed
 
   #animal host
-  surviveZ = 1, # survival probability for initial encounter (survive to feed)
-  feedZ = 1, # probability to successfully feed
+  surviveZ                = 1, # survival probability for initial encounter (survive to feed)
+  feedZ                   = 1, # probability to successfully feed
 
-  ##########################################
-  # Post Prandial Resting
-  ##########################################
-  R_surv = 0.9, # baseline survival for surviveFlight
-  R_time = 0.8,  # Resting . Mean Time Elapsed (in Days)
-
-  ##########################################
-  # Egg Laying Bout
-  ##########################################
-  O_surv = 0.80, # baseline survival for surviveFlight
-  O_succeed = .7,   # Egg Laying Attempt . Prob Success
-  O_time = 1.3,    # Egg Laying Attempt . Mean Time Elapsed
-
-  ##########################################
   # BloodMeal
-  ##########################################
-  bm.a = 7.5, #shape param for bloodmeal size
-  bm.b = 2.5, #shape param for bloodmeal size
+  bm.a                    = 7.5, #shape param for bloodmeal size
+  bm.b                    = 2.5, #shape param for bloodmeal size
 
-  ##########################################
   # ReFeed
-  ##########################################
-  REFEED = FALSE,
-  rf.a = 60, #exp param for refeeding as function of bmSize
-  rf.b = 5e3, #exp param for refeeding as function of bmSize
+  REFEED                  = FALSE,
+  rf.a                    = 60, #exp param for refeeding as function of bmSize
+  rf.b                    = 5e3, #exp param for refeeding as function of bmSize
 
-  ##########################################
   # Overfeed
-  ##########################################
-  OVERFEED = FALSE,
-  of.a = 5, #exp param for overfeeding as function of bmSize
-  of.b = 5e3, #exp param for overfeeding as function of bmSize
+  OVERFEED                = FALSE,
+  of.a                    = 5, #exp param for overfeeding as function of bmSize
+  of.b                    = 5e3, #exp param for overfeeding as function of bmSize
 
-  ##########################################
   # SENESCE
-  ##########################################
-  SENESCE = FALSE,
-  sns.a = 0.1, #exp param for senescence
-  sns.b = 100, #exp param for senescence
+  SENESCE                 = FALSE,
+  sns.a                   = 0.085, #exp param for senescence
+  sns.b                   = 100, #exp param for senescence
 
-  ##########################################
   # TATTER
-  ##########################################
-  TATTER = FALSE,
-  ttsz.p = 0.5, #zero-inflation for tattering damage
-  ttsz.a = 5, #shape param for tattering damage
-  ttsz.b = 95, #shape param for tattering damage
-  ttr.a = 15, #exp param for tattering survival
-  ttr.b = 500, #exp param for tattering survival
+  TATTER                  = FALSE,
+  ttsz.p                  = 0.5, #zero-inflation for tattering damage
+  ttsz.a                  = 5, #shape param for tattering damage
+  ttsz.b                  = 95, #shape param for tattering damage
+  ttr.a                   = 15, #exp param for tattering survival
+  ttr.b                   = 500, #exp param for tattering survival
 
-  ##########################################
   # SUGAR
-  ##########################################
-  SUGAR = FALSE,
-  S_succeed = 0.95,
-  S_time = 0.25,
-  S_wts = rep(1,5),
-  S_surv = 0.9,
-  S.u = 1/5,
-  S.a = 20,
-  S.b = 10,
-  S.sa = 15,
-  S.sb = 5,
+  S.u                     = 1/7,
+  S.a                     = 20,
+  S.b                     = 10,
+  S.sa                    = 15,
+  S.sb                    = 5,
 
-  ##########################################
-  # MATING
-  ##########################################
-  MATE = FALSE,
-  M_succeed = 0.95,
-  M_time = 0.5,
-  M_wts = rep(1,5),
-  M_surv = 0.95,
-
-  ##########################################
   # Reproduction & Development
-  ##########################################
-  bs.m = 30, # used in mbitesGeneric_rBatchSizeNorm
-  bs.v = 5, # used in mbitesGeneric_rBatchSizeNorm
-  maxBatch = 30, # maximum egg batch size (used in mbitesGeneric_rBatchSizeBms)
-  emt.m = 3, # used in mbitesGeneric_rEggMaturationTimeNorm
-  emt.v = 1, # used in mbitesGeneric_rEggMaturationTimeNorm
-  eggT = 0, # minimum time to egg maturation
-  eggP = 0, # minimum provision to produce eggs
-  energyPreG = 0, # pre-gonotrophic energy requirement
-  preGsugar = 0, # sugar units to fill pre-gonotrophic energy requirement
-  preGblood = 0, # blood units to fill pre-gonotrophic energy requirement
+  bs.m                    = 30, # used in mbitesGeneric_rBatchSizeNorm
+  bs.v                    = 5, # used in mbitesGeneric_rBatchSizeNorm
+  maxBatch                = 30, # maximum egg batch size (used in mbitesGeneric_rBatchSizeBms)
+  emt.m                   = 3, # used in mbitesGeneric_rEggMaturationTimeNorm
+  emt.v                   = 1, # used in mbitesGeneric_rEggMaturationTimeNorm
+  eggT                    = 0, # minimum time to egg maturation
+  eggP                    = 0, # minimum provision to produce eggs
+  energyPreG              = 0, # pre-gonotrophic energy requirement
+  preGsugar               = 0, # sugar units to fill pre-gonotrophic energy requirement
+  preGblood               = 0, # blood units to fill pre-gonotrophic energy requirement
 
-  ##########################################
   # Pathogen Transmission
-  ##########################################
+  PfEIP                   = 12,
 
-  PfEIP = 12,
-
-  ##########################################
-  # MBITES-BRO-Cohort Parameters
-  ##########################################
-
-  Q = 0.9 # human blood index
-
+  # MBITES-Complex-Cohort Parameters
+  Q                       = 0.9 # human blood index
 ){
 
   out = list(
 
-    B_wts = B_wts,
-    R_wts = R_wts,
-    O_wts = O_wts,
-    InAndOut =InAndOut,
-    gammaShape = gammaShape,
+    # dwell time parameters
+    F_time                  = F_time,
+    B_time                  = B_time,
+    R_time                  = R_time,
+    L_time                  = L_time,
+    O_time                  = O_time,
+    M_time                  = M_time,
+    S_time                  = S_time,
 
-    ##########################################
-    # Blood Feeding Bout
-    ##########################################
+    gammaShape              = gammaShape,
 
-    B_surv = B_surv, # baseline survival for surviveFlight
-    B_succeed = B_succeed, # prob success (for boutB)
-    B_time = B_time,  # Blood Feed Attempt . Mean Time Elapsed (in Days)
+    # success parameters
+    F_succeed               = F_succeed,
+    B_succeed               = B_succeed,
+    L_succeed               = L_succeed,
+    O_succeed               = O_succeed,
+    M_succeed               = M_succeed,
+    S_succeed               = S_succeed,
 
-    ##########################################
+    # survival parameters
+    F_surv                  = F_surv,
+    B_surv                  = B_surv,
+    R_surv                  = R_surv,
+    L_surv                  = L_surv,
+    O_surv                  = O_surv,
+    M_surv                  = M_surv,
+    S_surv                  = S_surv,
+
+    # landing spot weights
+    F_wts                   = F_wts,
+    B_wts                   = B_wts,
+    R_wts                   = R_wts,
+    L_wts                   = L_wts,
+    O_wts                   = O_wts,
+    M_wts                   = M_wts,
+    S_wts                   = S_wts,
+
+    InAndOut                = InAndOut,
     # Host Encounter
-    ##########################################
-
     # human host
-    surviveH = surviveH, # survival probability for initial encounter (survive to probe)
-    probeH = probeH, # probability that undeterred during probing
-    surviveprobeH = surviveprobeH, # survival probability for host probing
-    feedH = feedH, # probability to successfully feed
+    surviveH                = surviveH,
+    probeH                  = probeH,
+    surviveprobeH           = surviveprobeH,
+    feedH                   = feedH,
 
     #animal host
-    surviveZ = surviveZ, # survival probability for initial encounter (survive to feed)
-    feedZ = feedZ, # probability to successfully feed
+    surviveZ                = surviveZ,
+    feedZ                   = feedZ,
 
-    ##########################################
-    # Post Prandial Resting
-    ##########################################
-    R_surv = R_surv, # baseline survival for surviveFlight
-    R_time = R_time,  # Resting . Mean Time Elapsed (in Days)
-
-    ##########################################
-    # Egg Laying Bout
-    ##########################################
-    O_surv = O_surv, # baseline survival for surviveFlight
-    O_succeed = O_succeed,   # Egg Laying Attempt . Prob Success
-    O_time = O_time,    # Egg Laying Attempt . Mean Time Elapsed
-
-    ##########################################
     # BloodMeal
-    ##########################################
-    bm.a = bm.a, #shape param for bloodmeal size
-    bm.b = bm.b, #shape param for bloodmeal size
+    bm.a                    = bm.a,
+    bm.b                    = bm.b,
 
-    ##########################################
     # ReFeed
-    ##########################################
-    REFEED = REFEED,
-    rf.a = rf.a, #exp param for refeeding as function of bmSize
-    rf.b = rf.b, #exp param for refeeding as function of bmSize
+    REFEED                  = REFEED,
+    rf.a                    = rf.a,
+    rf.b                    = rf.b,
 
-    ##########################################
     # Overfeed
-    ##########################################
-    OVERFEED = OVERFEED,
-    of.a = of.a, #exp param for overfeeding as function of bmSize
-    of.b = of.b, #exp param for overfeeding as function of bmSize
+    OVERFEED                = OVERFEED,
+    of.a                    = of.a,
+    of.b                    = of.b,
 
-    ##########################################
     # SENESCE
-    ##########################################
-    SENESCE = SENESCE,
-    sns.a = sns.a, #exp param for senescence
-    sns.b = sns.b, #exp param for senescence
+    SENESCE                 = SENESCE,
+    sns.a                   = sns.a,
+    sns.b                   = sns.b,
 
-    ##########################################
     # TATTER
-    ##########################################
-    TATTER = TATTER,
-    ttsz.p = ttsz.p, #zero-inflation for tattering damage
-    ttsz.a = ttsz.a, #shape param for tattering damage
-    ttsz.b = ttsz.b, #shape param for tattering damage
-    ttr.a = ttr.a, #exp param for tattering survival
-    ttr.b = ttr.b, #exp param for tattering survival
+    TATTER                  = TATTER,
+    ttsz.p                  = ttsz.p,
+    ttsz.a                  = ttsz.a,
+    ttsz.b                  = ttsz.b,
+    ttr.a                   = ttr.a,
+    ttr.b                   = ttr.b,
 
-    ##########################################
+    # SUGAR
+    S.u                     = S.u,
+    S.a                     = S.a,
+    S.b                     = S.b,
+    S.sa                    = S.sa,
+    S.sb                    = S.sb,
+
     # Reproduction & Development
-    ##########################################
-    bs.m = bs.m,
-    bs.v = bs.v,
-    maxBatch = maxBatch,
-    emt.m = emt.m,
-    emt.v = emt.v,
-    eggT = eggT, # minimum time to egg maturation
-    eggP = eggP, # minimum provision to produce eggs
-    energyPreG = energyPreG, # pre-gonotrophic energy requirement
-    preGsugar = preGsugar,
-    preGblood = preGblood,
+    bs.m                    = bs.m,
+    bs.v                    = bs.v,
+    maxBatch                = maxBatch,
+    emt.m                   = emt.m,
+    emt.v                   = emt.v,
+    eggT                    = eggT,
+    eggP                    = eggP,
+    energyPreG              = energyPreG,
+    preGsugar               = preGsugar,
+    preGblood               = preGblood,
 
-    ##########################################
     # Pathogen Transmission
-    ##########################################
-    PfEIP = PfEIP,
+    PfEIP                   = PfEIP,
 
-    ##########################################
-    # MBITES-BRO-Cohort
-    ##########################################
-    Q = Q,
+    # MBITES-Complex-Cohort Parameters
+    Q                       = Q,
 
-    ##########################################
     # State Space
-    ##########################################
-
-    stateSpace = c("B","R","O"),
-    initState = "B",
+    stateSpace = c("F","B","R","L","O","M","S"),
+    initState = "M",
     lspot = c("i","w","v","r","l"),
-    Fstate = c(B=0,R=0,O=0)
+    Fstate = c(F=0,B=0,R=0,L=0,O=0,M=0,S=0)
 
   )
 
-  out$SUGAR = SUGAR
-  out$MATE = MATE
-
-  ##########################################
-  # SUGAR
-  ##########################################
-  if(SUGAR){
-    out$stateSpace = c(out$stateSpace,"S")
-    out$Fstate = c(out$Fstate,c(S=0))
-    out$S_succeed = S_succeed
-    out$S_time = S_time
-    out$S_wts = S_wts
-    out$S_surv = S_surv
-    out$S.u = S.u
-    out$S.a = S.a
-    out$S.b = S.b
-    out$S.sa = S.sa
-    out$S.sb = S.sb
-  }
-
-  ##########################################
-  # MATING
-  ##########################################
-  if(MATE){
-    out$stateSpace = c(out$stateSpace,"M")
-    out$initState = "M"
-    out$Fstate = c(out$Fstate,c(M=0))
-    out$M_succeed = M_succeed
-    out$M_time = M_time
-    out$M_wts = M_wts
-    out$M_surv = M_surv
-  }
-
   return(out)
-
 }

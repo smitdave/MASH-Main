@@ -442,9 +442,7 @@ mbites_oneBout <- function(){
   )
 
   # energetics
-  if(private$FemalePopPointer$get_MBITES_PAR("SUGAR")){
-    self$sugarEnergetics()  # MBITES-Generic-Energetics.R
-  }
+  self$sugarEnergetics()  # MBITES-Generic-Energetics.R
 
   # survival
   self$surviveResting()     # MBITES-Generic-Survival.R
