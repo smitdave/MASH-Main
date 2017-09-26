@@ -14,7 +14,7 @@
 
 
 #################################################################
-# MBITES-BRO: timingExponential
+# MBITES-BRO: Dwell Times
 #################################################################
 
 #' MBITES-BRO: Exponential Timing for \code{MosquitoFemale}

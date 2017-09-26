@@ -32,6 +32,13 @@ mbitesBROS_boutS <- function(){
         }
       }
 
+      # if mosquito has eggs she transitions to oviposition; otherwise she goes to blood feeding
+      if(private$batch > 0){
+        private$stateNew = "O"
+      } else {
+        private$stateNew = "B"
+      }
+
     } else {
       private$stateNew = "R"
     }
