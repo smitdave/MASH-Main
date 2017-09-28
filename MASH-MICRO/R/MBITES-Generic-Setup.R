@@ -39,6 +39,20 @@ MBITES.Generic.Setup <- function(
   # alert user
   cat("initializing M-BITES shared methods\n",sep="")
 
+  #################################################################
+  # MBITES-HostEncounter.R
+  #################################################################
+
+  MosquitoFemale$set(which = "public",name = "humanEncounter",
+            value = mbitesGeneric_humanEncounter,
+            overwrite = overwrite
+  )
+
+  MosquitoFemale$set(which = "public",name = "zooEncounter",
+            value = mbitesGeneric_zooEncounter,
+            overwrite = overwrite
+  )
+
   ##############################################################
   # MBITES-ChooseHost.R
   ##############################################################
@@ -194,5 +208,5 @@ MBITES.Generic.Setup <- function(
 #'
 #' @export
 mbitesGeneric_NULL <- list(
-  id = "NULL"
+  ID = "NULL"
 )

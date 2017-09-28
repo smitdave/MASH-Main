@@ -50,7 +50,7 @@ Tile <- R6::R6Class(classname = "Tile",
                    # MosquitoPop_PAR: MicroMosquitoPop.Setup (MOSQUITO-MosquitoPop-Parameters.R)
                    # directory: directory to write data to (ex: "/Users/slwu89/Desktop/mash.out/")
                    initialize = function(Landscape_PAR, HumanPop_PAR, MosquitoPop_PAR, directory){
-
+                     
                      #################################################
                      # Set Objects
                      #################################################

@@ -165,44 +165,48 @@ MicroKernel_exactAll <- function(Landscape,male=FALSE,sigma=3,eps=0.1,beta=0){
     # move to feeding site
     MvAll$F2F = MicroKernel_exactMvOb(S = Landscape$get_FeedingSites(),D = Landscape$get_FeedingSites(),sigma,eps,beta)
     MvAll$L2F = MicroKernel_exactMvOb(S = Landscape$get_AquaSites(),D = Landscape$get_FeedingSites(),sigma,eps,beta)
-    if(!is.null(Landscape$get_SugarSitesN())){
+    if(!is.null(Landscape$get_SugarSitesN()) & Landscape$get_SugarSitesN() != 0){
       MvAll$S2F = MicroKernel_exactMvOb(S = Landscape$get_SugarSites(),D = Landscape$get_FeedingSites(),sigma,eps,beta)
     }
-    if(!is.null(Landscape$get_MatingSitesN())){
+    if(!is.null(Landscape$get_MatingSitesN()) & Landscape$get_MatingSitesN() != 0){
       MvAll$M2F = MicroKernel_exactMvOb(S = Landscape$get_MatingSites(),D = Landscape$get_FeedingSites(),sigma,eps,beta)
     }
 
     # move to aquatic habitat
     MvAll$F2L = MicroKernel_exactMvOb(S = Landscape$get_FeedingSites(),D = Landscape$get_AquaSites(),sigma,eps,beta)
     MvAll$L2L = MicroKernel_exactMvOb(S = Landscape$get_AquaSites(),D = Landscape$get_AquaSites(),sigma,eps,beta)
-    if(!is.null(Landscape$get_SugarSitesN())){
+    if(!is.null(Landscape$get_SugarSitesN()) & Landscape$get_SugarSitesN() != 0){
       MvAll$S2L = MicroKernel_exactMvOb(S = Landscape$get_SugarSites(),D = Landscape$get_AquaSites(),sigma,eps,beta)
     }
-    if(!is.null(Landscape$get_MatingSitesN())){
+    if(!is.null(Landscape$get_MatingSitesN()) & Landscape$get_MatingSitesN() != 0){
       MvAll$M2L = MicroKernel_exactMvOb(S = Landscape$get_MatingSites(),D = Landscape$get_AquaSites(),sigma,eps,beta)
     }
 
     # move to sugar site
-    if(!is.null(Landscape$get_SugarSitesN())){
+    if(!is.null(Landscape$get_SugarSitesN()) & Landscape$get_SugarSitesN() != 0){
       MvAll$F2S = MicroKernel_exactMvOb(S = Landscape$get_FeedingSites(),D = Landscape$get_SugarSites(),sigma,eps,beta)
       MvAll$L2S = MicroKernel_exactMvOb(S = Landscape$get_AquaSites(),D = Landscape$get_SugarSites(),sigma,eps,beta)
       MvAll$S2S = MicroKernel_exactMvOb(S = Landscape$get_SugarSites(),D = Landscape$get_SugarSites(),sigma,eps,beta)
-      if(!is.null(Landscape$get_MatingSitesN())){
+      if(!is.null(Landscape$get_MatingSitesN()) & Landscape$get_MatingSitesN() != 0){
         MvAll$M2S = MicroKernel_exactMvOb(S = Landscape$get_MatingSites(),D = Landscape$get_SugarSites(),sigma,eps,beta)
       }
     }
 
     # move to mating site
-    if(!is.null(Landscape$get_MatingSitesN())){
+    if(!is.null(Landscape$get_MatingSitesN()) & Landscape$get_MatingSitesN() != 0){
       MvAll$F2M = MicroKernel_exactMvOb(S = Landscape$get_FeedingSites(),D = Landscape$get_MatingSites(),sigma,eps,beta)
       MvAll$M2M = MicroKernel_exactMvOb(S = Landscape$get_MatingSites(),D = Landscape$get_MatingSites(),sigma,eps,beta)
       MvAll$L2M = MicroKernel_exactMvOb(S = Landscape$get_AquaSites(),D = Landscape$get_MatingSites(),sigma,eps,beta)
-      if(!is.null(Landscape$get_SugarSitesN())){
+      if(!is.null(Landscape$get_SugarSitesN()) & Landscape$get_SugarSitesN() != 0){
         MvAll$S2M = MicroKernel_exactMvOb(S = Landscape$get_SugarSites(),D = Landscape$get_MatingSites(),sigma,eps,beta)
       }
     }
   # male movement kernel
   } else {
+
+    if(is.null(Landscape$get_MatingSitesN()) | Landscape$get_MatingSitesN() == 0 | is.null(Landscape$get_SugarSitesN()) | Landscape$get_SugarSitesN() == 0){
+      stop(cat("calculating male movement matrix; Landscape object must have mating sites and sugar sites\n",sep=""))
+    }
 
     # move to sugar site
     MvAll$L2S = MicroKernel_exactMvOb(S = Landscape$get_AquaSites(),D = Landscape$get_SugarSites(),sigma,eps,beta)

@@ -8,7 +8,7 @@
 #   MASH-MICRO
 #   SEARCH: Kernel Setup
 #   MASH-MICRO Team
-#   September 7, 2017
+#   September 2017
 #
 ###############################################################################
 

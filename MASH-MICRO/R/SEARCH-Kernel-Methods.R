@@ -77,16 +77,25 @@ MicroKernel_SampleMvOb_MosquitoPopMale <- function(ixS, state, inPointSet){
 #'
 MicroKernel_moveMe_FULL <- function(){
 
-  # pSetNew = switch(private$state,
-  #     F = {"f"},
-  #     L = {"l"},
-  #     S = {"s"},
-  #     M = {"m"},
-  #     {private$inPointSet}
-  #   )
-  #
-  # private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-  # private$inPointSet = pSetNew
+  switch(private$state,
+    F = {
+      private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+      private$inPointSet = "f"
+    },
+    L = {
+      private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+      private$inPointSet = "l"
+    },
+    M = {
+      private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+      private$inPointSet = "m"
+    },
+    S = {
+      private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
+      private$inPointSet = "s"
+    },
+    {return(NULL)}
+  )
 
 }
 
@@ -118,23 +127,6 @@ MicroKernel_moveMe_BRO <- function(){
     )
 
 }
-
-# #' MICRO Search Kernels: \code{\link{MosquitoFemale}} Movement Function for Full M-BITES Lifecycle Model
-# #'
-# #' Move one mosquito based on site and next behavioral state. This method is bound to \code{MosquitoFemale$moveMe()}
-# #'
-# MicroKernel_moveMe_BROM <- function(){
-#
-#   private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-#   switch(private$state,
-#     B = {private$inPointSet = "f"},
-#     O = {private$inPointSet = "l"},
-#     M = {private$inPointSet = "m"},
-#     S = {private$inPointSet = "s"},
-#     {return(NULL)}
-#   )
-#
-# }
 
 #' MICRO Search Kernels: \code{\link{MosquitoMale}} Movement Function for Full M-BITES Lifecycle Model
 #'
@@ -203,17 +195,7 @@ get_MicroKernel_movement_FULL<- function(ixS, state, inPointSet){
 #'  *  This method bound to \code{MicroTile$get_movement}
 #'
 get_MicroKernel_movement_BRO <- function(ixS, state, inPointSet){
-  # switch(state,
-  #   B = {
-  #       if(inPointSet=="f"){return(private$movementFemale$F2F[[ixS]])}
-  #       if(inPointSet=="l"){return(private$movementFemale$L2F[[ixS]])}
-  #     },
-  #   O = {
-  #       if(inPointSet=="f"){return(private$movementFemale$F2L[[ixS]])}
-  #       if(inPointSet=="l"){return(private$movementFemale$L2L[[ixS]])}
-  #     },
-  #   {return(NULL)}
-  # )
+
   switch(state,
     B = {
         if(inPointSet=="f"){return(private$movementFemale$F2F[[ixS]])}
@@ -239,32 +221,6 @@ get_MicroKernel_movement_BRO <- function(ixS, state, inPointSet){
         if(inPointSet=="s"){return(private$movementFemale$S2M[[ixS]])}
         if(inPointSet=="l"){return(private$movementFemale$L2M[[ixS]])}
     },
-    {return(NULL)}
-  )
-}
-
-#' MICRO Search Kernels: \code{\link{MicroTile}} Access MvAll Object for Female M-BITES BROM Lifecycle Model
-#'
-#' Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementFemale} field of a microsimulation tile.
-#'  *  This method bound to \code{MicroTile$get_movement}
-#'
-get_MicroKernel_movement_BROM <- function(ixS, state, inPointSet){
-  switch(state,
-    B = {
-        if(inPointSet=="f"){return(private$movementFemale$F2F[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2F[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2F[[ixS]])}
-      },
-    O = {
-        if(inPointSet=="f"){return(private$movementFemale$F2L[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2L[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2L[[ixS]])}
-      },
-    M = {
-        if(inPointSet=="f"){return(private$movementFemale$F2M[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2M[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2M[[ixS]])}
-      },
     {return(NULL)}
   )
 }

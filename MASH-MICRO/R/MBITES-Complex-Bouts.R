@@ -6,27 +6,29 @@
 #   /_/  /_/     /_____/___/ /_/ /_____//____/
 #
 #   MASH-MICRO
-#   MBITES-BRO: Bouts
+#   M-BITES: Bouts
 #   MASH-MICRO Team
-#   September 7, 2017
+#   September 2017
 #
 ###############################################################################
 
 
 #################################################################
-# MBITES-BRO: Dwell Times
+# M-BITES: Dwell Times
 #################################################################
 
-#' MBITES-BRO: Exponential Timing for \code{MosquitoFemale}
+#' M-BITES: Exponential Timing for \code{MosquitoFemale}
 #'
 #' Method for exponentially-distributed bout lengths (model mosquitoes as a Markov process).
-#'  * This method is bound to \code{MosquitoFemale$timingExponential()}.
+#'  * This method is bound to \code{MosquitoFemale$timing()}.
 #'
-mbitesBRO_timingExponential <- function(){
+mbites_timingExponential <- function(){
   if(self$isActive()){
     duration = switch(private$state,
+      F = {private$FemalePopPointer$get_MBITES_PAR("F_time")},
       B = {private$FemalePopPointer$get_MBITES_PAR("B_time")},
       R = {private$FemalePopPointer$get_MBITES_PAR("R_time")},
+      L = {private$FemalePopPointer$get_MBITES_PAR("L_time")},
       O = {private$FemalePopPointer$get_MBITES_PAR("O_time")},
       M = {private$FemalePopPointer$get_MBITES_PAR("M_time")},
       S = {private$FemalePopPointer$get_MBITES_PAR("S_time")}
@@ -35,16 +37,18 @@ mbitesBRO_timingExponential <- function(){
   }
 }
 
-#' MBITES-BRO: Gamma Timing for \code{MosquitoFemale}
+#' M-BITES: Gamma Timing for \code{MosquitoFemale}
 #'
 #' Method for Gamma-distributed bout lengths (model mosquitoes as a semi-Markov process).
-#'  * This method is bound to \code{MosquitoFemale$timingExponential()}.
+#'  * This method is bound to \code{MosquitoFemale$timing()}.
 #'
-mbitesBRO_timingGamma <- function(){
+mbites_timingGamma <- function(){
   if(self$isActive()){
     duration = switch(private$state,
+      F = {private$FemalePopPointer$get_MBITES_PAR("F_time")},
       B = {private$FemalePopPointer$get_MBITES_PAR("B_time")},
       R = {private$FemalePopPointer$get_MBITES_PAR("R_time")},
+      L = {private$FemalePopPointer$get_MBITES_PAR("L_time")},
       O = {private$FemalePopPointer$get_MBITES_PAR("O_time")},
       M = {private$FemalePopPointer$get_MBITES_PAR("M_time")},
       S = {private$FemalePopPointer$get_MBITES_PAR("S_time")}
@@ -55,7 +59,7 @@ mbitesBRO_timingGamma <- function(){
 
 
 #################################################################
-#  MBITES-BRO: Post-bout Landing, House Entering, and Resting
+#  M-BITES: Post-bout Landing, House Entering, and Resting
 #
 #  HOUSE ENTERING & RESTING BEHAVIOR:
 #  At the end of the search bout, attempt bout, or after Egg
@@ -69,7 +73,7 @@ mbitesBRO_timingGamma <- function(){
 #
 #################################################################
 
-#' MBITES-BRO: Return Site Type \code{MosquitoFemale}
+#' M-BITES: Return Site Type \code{MosquitoFemale}
 #'
 #' Method to return integer corresponding to site type of \code{\link{MicroSite}} this mosquito is currently at.
 #'  Site Types:
@@ -79,7 +83,7 @@ mbitesBRO_timingGamma <- function(){
 #'  * This method is bound to \code{MosquitoFemale$get_MySiteType()}.
 #'
 #' @return vector of landing spot weights
-mbitesBRO_get_MySiteType <- function(){
+mbites_get_MySiteType <- function(){
   switch(private$inPointSet,
     f = {return(private$LandscapePointer$get_FeedingSites(private$ix)$get_siteType())},
     l = {return(private$LandscapePointer$get_AquaSites(private$ix)$get_siteType())},
@@ -89,16 +93,18 @@ mbitesBRO_get_MySiteType <- function(){
   )
 }
 
-#' MBITES-BRO: Return Landing Spot Weights for \code{MosquitoFemale}
+#' M-BITES: Return Landing Spot Weights for \code{MosquitoFemale}
 #'
 #' Method for return landing spot weights based on behavioral state of mosquito.
 #'  * This method is bound to \code{MosquitoFemale$get_WTS()}.
 #'
 #' @return vector of landing spot weights
-mbitesBRO_get_WTS <- function(){
+mbites_get_WTS <- function(){
   switch(private$state,
+    F = private$FemalePopPointer$get_MBITES_PAR("F_wts"),
     B = private$FemalePopPointer$get_MBITES_PAR("B_wts"),
     R = private$FemalePopPointer$get_MBITES_PAR("R_wts"),
+    L = private$FemalePopPointer$get_MBITES_PAR("L_wts"),
     O = private$FemalePopPointer$get_MBITES_PAR("O_wts"),
     M = private$FemalePopPointer$get_MBITES_PAR("M_wts"),
     S = private$FemalePopPointer$get_MBITES_PAR("S_wts"),
@@ -106,9 +112,9 @@ mbitesBRO_get_WTS <- function(){
   )
 }
 
-#' MBITES-BRO: Generate New Landing Spot for \code{MosquitoFemale}
+#' M-BITES: Generate New Landing Spot for \code{MosquitoFemale}
 #'
-#' Method for return a new landing spot based on behavioral state of mosquito and weights from \code{\link{mbitesBRO_get_WTS}}.
+#' Method for return a new landing spot based on behavioral state of mosquito and weights from \code{\link{mbites_get_WTS}}.
 #' New landing spots generated at the end of the search bout, attempt bout, or after oviposition a mosquito has entered
 #' the area around a feeding site and either rested or attempted to rest. If the site is not a \code{\link{FeedingSite}} or peri-domestic the mosquito always rests on vegetation.
 #'  * i: rest on the inside wall of a structure
@@ -120,7 +126,7 @@ mbitesBRO_get_WTS <- function(){
 #'  * This method is bound to \code{MosquitoFemale$newSpot()}.
 #'
 #' @return integer value corresponding to new landing spot
-mbitesBRO_newSpot <- function(){
+mbites_newSpot <- function(){
   if(self$get_MySiteType() == 1){
     probs = private$FemalePopPointer$get_MBITES_PAR("InAndOut")[private$lspot,] * self$get_WTS()
     sample(x = private$FemalePopPointer$get_MBITES_PAR("lspot"),size = 1,prob = probs)
@@ -129,12 +135,12 @@ mbitesBRO_newSpot <- function(){
   }
 }
 
-#' MBITES-BRO: Attempt to Enter a House for \code{MosquitoFemale}
+#' M-BITES: Attempt to Enter a House for \code{MosquitoFemale}
 #'
 #' Method to simulate attempted house entry for mosquito, and call appropriate events if the mosquito enters.
 #'  * This method is bound to \code{MosquitoFemale$enterHouse()}.
 #'
-mbitesBRO_enterHouse <- function(){
+mbites_enterHouse <- function(){
   if(runif(1) < private$LandscapePointer$get_FeedingSites(private$ix)$get_enterP()){
     # mosquito is inside of house
   } else {
@@ -147,10 +153,10 @@ mbitesBRO_enterHouse <- function(){
   }
 }
 
-#' MBITES-BRO: Land After Flight \code{MosquitoFemale}
+#' M-BITES: Land After Flight \code{MosquitoFemale}
 #'
 #' Mosquito lands after a flight (choose a landing spot), which may cause various events.
-#' This function always calls \code{\link{mbitesBRO_newSpot}} and may call \code{\link{mbitesBRO_enterHouse}}
+#' This function always calls \code{\link{mbites_newSpot}} and may call \code{\link{mbites_enterHouse}}
 #' Landing spots include:
 #'  * i: 1 rest on the inside wall of a structure
 #'  * w: 2 rest on the outside wall of a structure
@@ -160,7 +166,7 @@ mbitesBRO_enterHouse <- function(){
 #'
 #'  * This method is bound to \code{MosquitoFemale$landingSpot()}.
 #'
-mbitesBRO_landingSpot <- function(){
+mbites_landingSpot <- function(){
   if(self$isActive()){
     oldSpot = private$lspot
     private$lspot = self$newSpot() # choose new lspot
@@ -172,28 +178,53 @@ mbitesBRO_landingSpot <- function(){
 
 
 #################################################################
-# MBITES-BRO: Blood Feeding Bout
+#
+# M-BITES: Bouts
+#
 #################################################################
 
-#' MBITES-BRO: Blood Feeding Bout \code{MosquitoFemale}
+#################################################################
+# M-BITES: Blood Feeding Search Bout :: F
+#################################################################
+
+#' M-BITES: Blood Feeding Search Bout (F) \code{MosquitoFemale}
 #'
-#' A mosquito performs a blood feeding bout (all actions taken launch to launch when blood feeding required).
-#'  * This method is bound to \code{MosquitoFemale$boutB()}.
+#' write me!
 #'
-mbitesBRO_boutB <- function(){
+mbites_boutF <- function(){
+
+  # mosquito transitions to attempting a blood feeding attempt if she isn't leaving the area and succeeds
+  if(private$lspot != "l" & runif(1) < private$FemalePopPointer$get_MBITES_PAR("F_succeed")){
+    private$stateNew = "B"
+  } else {
+    private$stateNew = "F"
+  }
+
+}
+
+
+#################################################################
+# M-BITES: Blood Feeding Attempt Bout :: B
+#################################################################
+
+#' M-BITES: Blood Feeding Attempt Bout (B) \code{MosquitoFemale}
+#'
+#' write me!
+#'
+mbites_boutB <- function(){
 
   if(self$isAlive()){
     # check success
     if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("B_succeed")){
-      self$chooseHost() # MBITES-BRO-ChooseHost.R
+      self$chooseHost() # MBITES-Generic-ChooseHost.R
     } else {
       private$hostID = 0L
     }
 
     if(private$hostID > 0){
-      self$humanEncounter() # MBITES-BRO-HostEncounter.R
+      self$humanEncounter() # MBITES-HostEncounter.R
     } else if(private$hostID == -1){
-      self$zooEncounter() # MBITES-BRO-HostEncounter.R
+      self$zooEncounter() # MBITES-HostEncounter.R
     } else if(private$hostID == 0){
       return(NULL)
     } else {
@@ -205,20 +236,19 @@ mbitesBRO_boutB <- function(){
 
 
 #################################################################
-# MBITES-BRO: Post-Prandial Resting Bout
+# M-BITES: Post-Prandial Resting Bout :: R
 #################################################################
 
-#' MBITES-BRO: Post-Prandial Resting Bout \code{MosquitoFemale}
+#' M-BITES: Post-Prandial Resting Bout (R) \code{MosquitoFemale}
 #'
-#' A mosquito performs a post-prandial resting bout (all actions taken launch to launch when resting required).
-#'  * This method is bound to \code{MosquitoFemale$boutR()}.
+#' write me!
 #'
-mbitesBRO_boutR <- function(){
+mbites_boutR <- function(){
 
   if(self$isAlive()){
     if(private$FemalePopPointer$get_MBITES_PAR("REFEED")){
       if(runif(1) < self$pReFeed()){
-        private$stateNew = "B"
+        private$stateNew = "F"
       } else {
         private$stateNew = "O"
       }
@@ -231,61 +261,144 @@ mbitesBRO_boutR <- function(){
 
 
 #################################################################
-# MBITES-BRO: Egg Laying Bout
+# M-BITES: Egg Laying Search Bout :: L
 #################################################################
 
-#' MBITES-BRO: Egg Laying Bout \code{\link{MosquitoFemale}}
+#' M-BITES: Egg Laying Search Bout (L) \code{MosquitoFemale}
 #'
-#' A mosquito performs a oviposition bout (all actions taken launch to launch when oviposition required).
-#'  * This method is bound to \code{MosquitoFemale$boutO()}.
+#' write me!
 #'
-#' @md
-mbitesBRO_boutO <- function(){
+mbites_boutL <- function(){
+
+  if(self$isAlive()){
+    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("L_succeed")){
+      private$stateNew = "O"
+    }
+  }
+
+}
+
+
+#################################################################
+# M-BITES: Egg Laying Attempt Bout :: O
+#################################################################
+
+#' M-BITES: Egg Laying Attempt Bout (O) \code{MosquitoFemale}
+#'
+#' write me!
+#'
+mbites_boutO <- function(){
+
   if(self$isAlive()){
     self$layEggs()
   }
+
 }
 
-#' MBITES-BRO: Lay Eggs for 'Emerge' \code{\link{MosquitoFemale}}
+#' M-BITES: Lay Eggs for 'Emerge' \code{\link{MosquitoFemale}}
 #'
-#' During an oviposition bout \code{\link{mbitesBRO_boutO}}, lay eggs (this is just a filler to clear out the \code{batch} field of the mosquito; egg laying is not implemented in any modules relying on "Emerge" Aquatic Ecology module)
+#' During an oviposition bout \code{\link{mbites_boutO}}, lay eggs (this is just a filler to clear out the \code{batch} field of the mosquito; egg laying is not implemented in any modules relying on "Emerge" Aquatic Ecology module)
 #'  * This method is bound to \code{MosquitoFemale$layEggs()}.
 #'
-#' @md
-mbitesBRO_layEggs_Emerge <- function(){
+mbites_layEggs_Emerge <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("O_succeed")){
     private$batch = 0
-    private$stateNew = "B"
+    private$stateNew = "F"
   }
 }
 
-#' MBITES-BRO: Lay Eggs for 'EL4P' \code{\link{MosquitoFemale}}
+#' M-BITES: Lay Eggs for 'EL4P' \code{\link{MosquitoFemale}}
 #'
-#' During an oviposition bout \code{\link{mbitesBRO_boutO}}, lay eggs for 'EL4P' module of Aquatic Ecology.
+#' During an oviposition bout \code{\link{mbites_boutO}}, lay eggs for 'EL4P' module of Aquatic Ecology.
 #'  * This method is bound to \code{MosquitoFemale$layEggs()}.
 #'
-#' @md
-mbitesBRO_layEggs_EL4P <- function(){
+mbites_layEggs_EL4P <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("O_succeed")){
     private$LandscapePointer$get_AquaSites(private$ix)$get_EggQ()$add_EggQ(N_new=private$batch,tOviposit_new=private$tNow,genotype_new=1L)
     private$batch = 0
-    private$stateNew = "B"
+    private$stateNew = "F"
   }
 }
 
 
 #################################################################
-# MBITES-BRO: Generic Bout
+# M-BITES: Sugar Feeding Attempt Bout :: S
 #################################################################
 
-#' MBITES-BRO: One Bout \code{MosquitoFemale}
+#' M-BITES: Sugar Feeding Bout (S) \code{MosquitoFemale}
+#'
+#' A mosquito performs a sugar feeding bout (all actions taken launch to launch when resting required).
+#' Upon entering the sugar feeding behavioral state prompted by \code{\link{mbitesGeneric_queueSugarBout}}, the mosquito will move to a \code{\link{SugarSite}} and
+#' sugar feed .
+#'  * This method is bound to \code{MosquitoFemale$boutS()}.
+#'
+mbites_boutS <- function(){
+
+  if(self$isAlive()){
+    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("S_succeed")){
+      private$energy = 1
+
+      if(!private$mature){
+        private$energyPreG = private$energyPreG - private$FemalePopPointer$get_MBITES_PAR("preGsugar")
+        if(private$energyPreG <= 0){
+          private$mature = TRUE
+        }
+      }
+
+      # if mosquito has eggs she transitions to oviposition; otherwise she goes to blood feeding
+      if(private$batch > 0){
+        private$stateNew = "L"
+      } else {
+        private$stateNew = "F"
+      }
+
+    } else {
+      private$stateNew = "R"
+    }
+  }
+
+}
+
+
+#################################################################
+# M-BITES: Mating Bout :: M
+#################################################################
+
+#' M-BITES: Mating Bout (M) \code{MosquitoFemale}
+#'
+#' A mosquito performs mating bout (all actions taken launch to launch when resting required).
+#' Upon entering the mating behavioral state, the mosquito will move to a \code{\link{MatingSite}} and
+#' finds a mate in the \code{\link[MASHcpp]{MatingQ}}.
+#'  * This method is bound to \code{MosquitoFemale$boutM()}.
+#'
+mbites_boutM <- function(){
+
+  if(self$isAlive()){
+    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("M_succeed")){
+      self$chooseMate()
+      private$stateNew = "F"
+    }
+  }
+
+}
+
+
+#################################################################
+# M-BITES: Generic Bout
+#################################################################
+
+#' M-BITES: One Bout \code{MosquitoFemale}
 #'
 #' Mosquito behavior has a finite set of states (state space of model), within which there are certain biological functions that are always evaluated.
-#' A bout is the actions taken by a mosquito between a launch and landing; \code{mbitesBRO_oneBout} handles all the biological imperatives that occur during a bout,
+#' A bout is the actions taken by a mosquito between a launch and landing; \code{mbites_oneBout} handles all the biological imperatives that occur during a bout,
 #' while specialized bout action methods handle the events that occur due to the purpose of the bout.
-#'  * \code{\link{mbitesBRO_boutB}}: blood feeding bout
-#'  * \code{\link{mbitesBRO_boutR}}: resting feeding bout
-#'  * \code{\link{mbitesBRO_boutO}}: oviposition bout
+#'  * \code{\link{mbites_boutF}}: blood feeding search bout
+#'  * \code{\link{mbites_boutB}}: blood feeding attempt bout
+#'  * \code{\link{mbites_boutR}}: post-prandial resting bout
+#'  * \code{\link{mbites_boutL}}: egg laying search bout
+#'  * \code{\link{mbites_boutO}}: egg laying attempt bout
+#'  * \code{\link{mbites_boutS}}: sugar feeding attempt bout
+#'  * \code{\link{mbites_boutM}}: mating bout
 #'
 #' The generic bout runs necessary updates of timing, state, survival, energetics, and queue checks prior to calling the nested
 #' specific bout action, and checks that the mosquito is alive/active before calling the bout. It updates \code{tNext} and \code{stateNew}.
@@ -303,8 +416,7 @@ mbitesBRO_layEggs_EL4P <- function(){
 #'
 #'  * This method is bound to \code{MosquitoFemale$oneBout()}.
 #'
-#' @md
-mbitesBRO_oneBout <- function(){
+mbites_oneBout <- function(){
 
   # update time and state
   private$tNow = private$tNext # update time
@@ -319,8 +431,10 @@ mbitesBRO_oneBout <- function(){
 
   # bout
   switch(private$state,
+    F = {self$boutF()},
     B = {self$boutB()},
     R = {self$boutR()},
+    L = {self$boutL()},
     O = {self$boutO()},
     M = {self$boutM()},
     S = {self$boutS()},
@@ -328,32 +442,28 @@ mbitesBRO_oneBout <- function(){
   )
 
   # energetics
-  if(private$FemalePopPointer$get_MBITES_PAR("SUGAR")){
-    self$sugarEnergetics()  # MBITES-Generic-Energetics.R
-  }
+  self$sugarEnergetics()  # MBITES-Generic-Energetics.R
 
   # survival
-  self$surviveResting()     # MBITES-Survival.R
-  self$surviveFlight()      # MBITES-Survival.R
+  self$surviveResting()     # MBITES-Generic-Survival.R
+  self$surviveFlight()      # MBITES-Generic-Survival.R
 
   # log history
   private$history$historyTrack(privateEnv = private, alive = self$isAlive())
-
 }
 
 
 #################################################################
-# MBITES-BRO: Simulation
+# M-BITES: Simulation
 #################################################################
 
-#' MBITES-BRO: Run Simulation for \code{\link{MosquitoFemale}}
+#' M-BITES: Run Simulation for \code{\link{MosquitoFemale}}
 #'
-#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{MicroTile}}.
-#' This method calls \code{\link{mbitesBRO_oneBout}} to simulate each life stage.
+#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{Tile}}.
+#' This method calls \code{\link{mbites_oneBout}} to simulate each life stage.
 #'  * This method is bound to \code{MosquitoFemale$MBITES()}.
 #'
-#' @md
-mbitesBRO_oneMosquito_MBITES <- function(){
+mbites_oneMosquito_MBITES <- function(){
 
   # run algorithm while alive and has not overrun tile time
   while(private$tNext < private$TilePointer$get_tNow() & private$stateNew != "D"){
@@ -367,14 +477,13 @@ mbitesBRO_oneMosquito_MBITES <- function(){
 
 }
 
-#' MBITES-BRO: Run Simulation for \code{\link{MosquitoPopFemale}}
+#' M-BITES: Run Simulation for \code{\link{MosquitoPopFemale}}
 #'
-#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{MicroTile}}.
-#' This method calls \code{\link{mbitesBRO_oneMosquito_MBITES}} one each living mosquito sequentially.
+#' Run the M-BITES life cycle simulation algorithm while alive and has not overrun time in enclosing \code{\link{Tile}}.
+#' This method calls \code{\link{mbites_oneMosquito_MBITES}} one each living mosquito sequentially.
 #'  * This method is bound to \code{MosquitoPopFemale$MBITES()}.
 #'
-#' @md
-mbitesBRO_Pop_MBITES <- function(){
+mbites_Pop_MBITES <- function(){
 
   private$pop$apply(tag="MBITES",returnVal=FALSE)
 
