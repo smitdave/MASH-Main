@@ -1,4 +1,5 @@
-setwd("~/Downloads")
+#setwd("~/Downloads")
+setwd("C:/Users/Biyonka/OneDrive/MASH-Main/MASH-Docs")
 require(jsonlite)
 require(data.table)
 require(HiveR)
@@ -35,19 +36,23 @@ humanForMosquito = function(name){
 mylist = lapply(names(hp), humanForMosquito)
 myList = Filter(Negate(is.null),mylist)
 df = bind_rows(myList)
-df["edge_weight"] = rep(0.15, length(df$source))
 
 #check if pfid = -1
+#if PfID = -1, then we need to remove that name
 m = mp[mp$PfID != -1, ]
-mosquito_df = data.frame(source = unlist(mp$MosquitoID), sink = unlist(mp$humanInf), stringsAsFactors = FALSE)
+
+mosquito_df = data.frame(source = unlist(m$MosquitoID), sink = unlist(m$humanInf), stringsAsFactors = FALSE)
 finaldf = bind_rows(df, mosquito_df)
+
+finaldf["edge_weight"] = rep(0.05, length(finaldf$source))
 
 #first attempt
 hive1 <- edge2HPD(edge_df = finaldf)
-hive2 <- mineHPD(hive1, option = "size <- tot.edge.count")
-hive1$nodes$radius = c(seq(1, 87*10, 10), seq(1, 394*10, 10))
-hive1$nodes$color = rep("white", 481)
-hive1$nodes$size = c(.1, rep(c(.1, .2, .3), 481/3))
+#hive2 <- mineHPD(hive1, option = "size <- tot.edge.count")
+hive1$nodes$radius = c(seq(1, 1765*10, 10))
+hive1$nodes$color = rep("white", 1765)
+hive1$edges$color = c(rep("blue", 543), rep("gray", 1678))
+hive1$nodes$size = c(.1, rep(c(.1, .2, .3), 1765/3))
 hive3 <- mineHPD(hive1, option = "axis <- source.man.sink")
 plotHive(hive3, method = "abs", bkgnd = "black", axLabs = c("humans", "mosquitos"), axLab.pos = 1)
 
