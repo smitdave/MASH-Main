@@ -81,8 +81,8 @@ Archive/
 *.jp2
 *.eps
 #*.pdf
-*.doc
-*.docx
+#*.doc
+#*.docx
 
 ######################################
 # User-specific files
