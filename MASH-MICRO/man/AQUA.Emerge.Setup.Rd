@@ -7,10 +7,7 @@
 AQUA.Emerge.Setup(overwrite = TRUE)
 }
 \arguments{
-\item{dunno}{sdf}
-}
-\value{
-stuff
+\item{overwrite}{overwrite existing methods}
 }
 \description{
 This function initializes methods and fields for the 'Emerge' MODULE of Aquatic Ecology COMPONENT.

@@ -45,7 +45,7 @@ EL4P <- R6::R6Class(classname = "EL4P",
                       # Constructor
                       #################################################
 
-                      initialize = function(K, dE, dL, dP, muE, muL, muP, N_genotypes = 1, deltaT = 0.01){
+                      initialize = function(K, d_E, d_L, d_P, mu_E, mu_L, mu_P, N_genotypes = 1, deltaT = 0.01){
 
                         if(deltaT > 1){
                           stop("time step deltaT cannot currently be greater than 1 day; time steps greater than 0.1 may be numerically unstable")
@@ -54,12 +54,12 @@ EL4P <- R6::R6Class(classname = "EL4P",
                         private$N_genotypes = N_genotypes
 
                         private$K = K
-                        private$dE = dE
-                        private$dL = dL
-                        private$dP = dP
-                        private$muE = muE
-                        private$muL = muL
-                        private$muP = muP
+                        private$d_E = d_E
+                        private$d_L = d_L
+                        private$d_P = d_P
+                        private$mu_E = mu_E
+                        private$mu_L = mu_L
+                        private$mu_P = mu_P
 
                         private$E = rep(0,times=N_genotypes)
                         private$L1 = rep(0,times=N_genotypes)
@@ -104,12 +104,12 @@ EL4P <- R6::R6Class(classname = "EL4P",
                       P_lag = NULL,
 
                       K = numeric(1),
-                      dE = numeric(1),
-                      dL = numeric(1),
-                      dP = numeric(1),
-                      muE = numeric(1),
-                      muL = numeric(1),
-                      muP = numeric(1),
+                      d_E = numeric(1),
+                      d_L = numeric(1),
+                      d_P = numeric(1),
+                      mu_E = numeric(1),
+                      mu_L = numeric(1),
+                      mu_P = numeric(1),
 
                       L = numeric(1)
 
