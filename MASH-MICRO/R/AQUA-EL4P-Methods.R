@@ -86,13 +86,21 @@ EL4P$set(which = "public",name = "oneDay_EL4P",
 #
 # }
 #
-# checkVar_EL4P <- function(M, beta, mu_M, tMax = 800, tol = 0.1){
-#
-#   lambda = rep(0,tMax)
-#
-#   #
-#
-# }
+checkVar_EL4P <- function(M, beta, mu_M, tMax = 800, tol = 0.1){
+
+  M = private$lambda # init adult population
+
+  lambdaH = vector(mode="numeric",length=tMax+1)
+  lambdaH[1] = private$lambda
+
+  for(i in 1:tMax){ # run full simulation
+    pop = oneDay_GEL4P(ix = ix, psi = psi, pop = pop, PAR = PAR)
+    PAR$M[ix] = ((exp(-1/PAR$lifespan))*PAR$M[ix]) + pop$lambda # simulate adult population dynamics
+    lambdaH[i+1] = pop$lambda
+  }
+  return(lambdaH)
+
+}
 
 
 #' EL4P Add Egg Batch

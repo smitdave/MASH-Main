@@ -277,7 +277,7 @@ Landscape.Aqua.Parameters <- function(nAqua, siteXY, module , modulePars, search
   if(module == "emerge"){
     Landscape_Aqua_PAR$lambda = simpleLambda_Emerge(modulePars$N,modulePars$lambda,modulePars$lambdaWeight,modulePars$offset)
   } else if(module == "el4p"){
-
+    # nothing to do.
   } else {
     stop(paste0("module: expected character in 'emerge', 'el4p', got: ",module))
   }
