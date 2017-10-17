@@ -164,18 +164,24 @@ mbites_enterHouse <- function(){
 #'  * r: 4 reattempt without resting
 #'  * l: 5 leave the area
 #'
-#'  * This method is bound to \code{MosquitoFemale$landingSpot()}.
+#'  * This method is bound to \code{MosquitoFemale$restingSpot()}.
 #'
-mbites_landingSpot <- function(){
+mbites_restingSpot <- function(){
   if(self$isActive()){
-    oldSpot = private$lspot
-    private$lspot = self$newSpot() # choose new lspot
-    if(oldSpot != "i" & private$lspot == "i"){
-      self$enterHouse() # enterHouse
+    if(self$searchFail()){
+      private$lspot = "l" 
+    } else {   
+      oldSpot = private$lspot
+      private$lspot = self$newSpot() # choose new lspot
+      if(oldSpot != "i" & private$lspot == "i"){
+        self$enterHouse() # enterHouse
+      }
     }
   }
 }
 
+#searchFail()
+# if L->L or F->F return TRUE  
 
 #################################################################
 #
@@ -409,7 +415,7 @@ mbites_boutM <- function(){
 #' 2. moveMe: movement between point classes (if needed)
 #' 3. boutFun: run bout function
 #' 4. run energetics and check if alive
-#' 5. run landingSpot and check if alive
+#' 5. run restingSpot and check if alive
 #' 6. run surviveResting/surviveFlight and check if alive
 #' 7. update tNext
 #' 8. update state to stateNew which is determined in the bout
@@ -426,9 +432,6 @@ mbites_oneBout <- function(){
   # movement
   self$moveMe()
 
-  # landing spot
-  self$landingSpot()
-
   # bout
   switch(private$state,
     F = {self$boutF()},
@@ -440,6 +443,9 @@ mbites_oneBout <- function(){
     S = {self$boutS()},
     {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
   )
+
+  # landing spot
+  self$restingSpot()
 
   # energetics
   self$sugarEnergetics()  # MBITES-Generic-Energetics.R
