@@ -169,8 +169,8 @@ mbites_enterHouse <- function(){
 mbites_restingSpot <- function(){
   if(self$isActive()){
     if(self$searchFail()){
-      private$lspot = "l" 
-    } else {   
+      private$lspot = "l"
+    } else {
       oldSpot = private$lspot
       private$lspot = self$newSpot() # choose new lspot
       if(oldSpot != "i" & private$lspot == "i"){
@@ -181,7 +181,7 @@ mbites_restingSpot <- function(){
 }
 
 #searchFail()
-# if L->L or F->F return TRUE  
+# if L->L or F->F return TRUE
 
 #################################################################
 #
@@ -277,8 +277,10 @@ mbites_boutR <- function(){
 mbites_boutL <- function(){
 
   if(self$isAlive()){
-    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("L_succeed")){
+    if(private$lspot != "l" & runif(1) < private$FemalePopPointer$get_MBITES_PAR("L_succeed")){
       private$stateNew = "O"
+    } else {
+      private$stateNew = "L"
     }
   }
 
@@ -459,7 +461,7 @@ mbites_oneBout <- function(){
 }
 
 # if you were searching in L or F and you are marked "l", you need to compute all hazards and then try again.
-# this is all determined by the landingSpot() function (to be renamed restingSpot).
+# this is all determined by the restingSpot() function (to be renamed restingSpot).
 # just making sure F->F or L->L is working correctly.
 
 # boutL should match boutF

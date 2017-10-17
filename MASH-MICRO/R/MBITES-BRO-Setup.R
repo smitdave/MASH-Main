@@ -101,8 +101,8 @@ MBITES.BRO.Setup <- function(
               overwrite = overwrite
     )
 
-    MosquitoFemale$set(which = "public",name = "landingSpot",
-              value = mbitesBRO_landingSpot,
+    MosquitoFemale$set(which = "public",name = "restingSpot",
+              value = mbitesBRO_restingSpot,
               overwrite = overwrite
     )
 
@@ -175,8 +175,8 @@ MBITES.BRO.Setup <- function(
               overwrite = overwrite
     )
 
-    MosquitoFemale$set(which = "public",name = "landingSpot",
-              value = mbitesBRO_landingSpot,
+    MosquitoFemale$set(which = "public",name = "restingSpot",
+              value = mbitesBRO_restingSpot,
               overwrite = overwrite
     )
 
