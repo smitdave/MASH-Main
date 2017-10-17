@@ -180,6 +180,22 @@ mbites_restingSpot <- function(){
   }
 }
 
+#' M-BITES: Check State Transition for Resting Spot \code{MosquitoFemale}
+#'
+#' Return \code{TRUE} if mosquito stays in "L" or "F" state.
+#'
+#'  * This method is bound to \code{MosquitoFemale$searchFail()}.
+#'
+mbites_searchFail <- function(){
+  if(private$state == "L" & private$stateNew == "L"){
+    return(TRUE)
+  } else if(private$state == "F" & private$stateNew == "F"){
+    return(TRUE)
+  } else {
+    return(FALSE)
+  }
+}
+
 #searchFail()
 # if L->L or F->F return TRUE
 

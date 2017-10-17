@@ -16,6 +16,13 @@ eapply_HashMap(tag, returnVal = FALSE, ...)
 
 \item{...}{additional named arguments passed to method}
 
+\item{llist}{is an instance of the doubly linked list class
+
+MASH-CPP: HashMap Call a Method Over All Values in HashMap
+
+Use \code{\link[base]{eapply}} to call a method found by argument \code{tag} for all values stored in the HashMap \code{private$storage}.
+The HashMap class is intended to only store instantiations of R6 objects from a single class, it must not store mixed data types.}
+
 \item{tag}{character tag of the method to call for each element in the HashMap}
 
 \item{returnVal}{do we want to capture the ouput of \code{\link[base]{eapply}} and return; if \code{FALSE} apply the function invisibly and return \code{NULL}}
@@ -26,6 +33,5 @@ eapply_HashMap(tag, returnVal = FALSE, ...)
 Use \code{\link[base]{eapply}} to call a method found by argument \code{tag} for all values stored in the HashMap \code{private$storage}.
 The HashMap class is intended to only store instantiations of R6 objects from a single class, it must not store mixed data types.
 
-Use \code{\link[base]{eapply}} to call a method found by argument \code{tag} for all values stored in the HashMap \code{private$storage}.
-The HashMap class is intended to only store instantiations of R6 objects from a single class, it must not store mixed data types.
+Does a value exist in \code{private$storage} or not.
 }
