@@ -196,8 +196,6 @@ mbites_searchFail <- function(){
   }
 }
 
-#searchFail()
-# if L->L or F->F return TRUE
 
 #################################################################
 #
