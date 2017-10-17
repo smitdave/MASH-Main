@@ -256,10 +256,10 @@ mbites_boutR <- function(){
       if(runif(1) < self$pReFeed()){
         private$stateNew = "F"
       } else {
-        private$stateNew = "O"
+        private$stateNew = "L"
       }
     } else {
-      private$stateNew = "O"
+      private$stateNew = "L"
     }
   }
 
