@@ -452,6 +452,12 @@ mbites_oneBout <- function(){
   private$history$historyTrack(privateEnv = private, alive = self$isAlive())
 }
 
+# if you were searching in L or F and you are marked "l", you need to compute all hazards and then try again.
+# this is all determined by the landingSpot() function (to be renamed restingSpot).
+# just making sure F->F or L->L is working correctly.
+
+# boutL should match boutF
+
 
 #################################################################
 # M-BITES: Simulation
