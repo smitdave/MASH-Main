@@ -137,9 +137,9 @@ mbitesMale_enterHouse <- function(){
 #'  * r: reattempt without resting
 #'  * l: leave the area
 #'
-#'  * This method is bound to \code{MosquitoMale$landingSpot()}.
+#'  * This method is bound to \code{MosquitoMale$restingSpot()}.
 #'
-mbitesMale_landingSpot <- function(){
+mbitesMale_restingSpot <- function(){
   if(self$isActive()){
     oldSpot = private$lspot
     private$lspot = self$newSpot() # choose new lspot
@@ -235,7 +235,7 @@ mbitesMale_boutR <- function(){
 #' 2. moveMe: movement between point classes (if needed)
 #' 3. boutFun: run bout function
 #' 4. run energetics and check if alive
-#' 5. run landingSpot and check if alive
+#' 5. run restingSpot and check if alive
 #' 6. run surviveResting/surviveFlight and check if alive
 #' 7. update tNext
 #' 8. update state to stateNew which is determined in the bout
@@ -254,7 +254,7 @@ mbitesMale_oneBout <- function(){
   self$moveMe()             # SEARCH-Kernel-Methods.R
 
   # landing spot
-  self$landingSpot()        # MBITES-Male-Bouts.R
+  self$restingSpot()        # MBITES-Male-Bouts.R
 
   # bout
   switch(private$state,

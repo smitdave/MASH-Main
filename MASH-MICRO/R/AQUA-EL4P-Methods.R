@@ -34,19 +34,73 @@ oneDay_EL4P <- function(){
   private$L4_lag    = private$L4
   private$P_lag     = private$P
 
-  private$E         = exp(-private$muEgg)*(1-(1-exp(-1/private$dEgg)))*private$E_lag
-  private$L1        = exp(-private$muEgg)*(1-exp(-1/private$dEgg))*private$E_lag + exp(-private$muLarva*(1+(private$L/private$K)))*(1-(1-exp(-4/private$dLarva)))*private$L1_lag
-  private$L2        = exp(-private$muLarva*(1+(private$L/private$K)))*((1-exp(-4/private$dLarva))*private$L1_lag + (1-(1-exp(-4/private$dLarva)))*private$L2_lag)
-  private$L3        = exp(-private$muLarva*(1+(private$L/private$K)))*((1-exp(-4/private$dLarva))*private$L2_lag + (1-(1-exp(-4/private$dLarva)))*private$L3_lag)
-  private$L4        = exp(-private$muLarva*(1+(private$L/private$K)))*((1-exp(-4/private$dLarva))*private$L3_lag + (1-(1-exp(-4/private$dLarva)))*private$L4_lag)
-  private$P         = exp(-private$muLarva*(1+(private$L/private$K)))*(1-exp(-4/private$dLarva))*private$L4_lag + exp(-private$muPupae)*(1-(1-exp(-1/private$dPupae)))*private$P_lag
-  private$lambda    = exp(-private$muPupae)*(1-exp(-1/(2*private$dPupae)))*private$P_lag
+  private$E         = exp(-private$mu_E*private$deltaT) * (1-(1-exp(-private$deltaT/private$d_E))) * E_lag
+  private$L1        = exp(-private$mu_E*private$deltaT) * (1-exp(-private$deltaT/private$d_E)) * E_lag + exp(-private$mu_L*private$deltaT*(1+(L/private$K))) * (1-(1-exp(-4*private$deltaT/private$d_L))) * L1_lag
+  private$L2        = exp(-private$mu_L*private$deltaT*(1+(L/private$K))) * ((1-exp(-4*private$deltaT/private$d_L)) * L1_lag + (1-(1-exp(-4*private$deltaT/private$d_L))) * L2_lag)
+  private$L3        = exp(-private$mu_L*private$deltaT*(1+(L/private$K))) * ((1-exp(-4*private$deltaT/private$d_L)) * L2_lag + (1-(1-exp(-4*private$deltaT/private$d_L))) * L3_lag)
+  private$L4        = exp(-private$mu_L*private$deltaT*(1+(L/private$K))) * ((1-exp(-4*private$deltaT/private$d_L)) * L3_lag + (1-(1-exp(-4*private$deltaT/private$d_L))) * L4_lag)
+  private$P         = exp(-private$mu_L*private$deltaT*(1+(L/private$K))) * (1-exp(-4*private$deltaT/private$d_L)) * L4_lag + exp(-private$mu_P*private$deltaT) * (1-(1-exp(-private$deltaT/private$d_P))) * P_lag
+  private$lambda    = exp(-private$mu_P*private$deltaT) * (1-exp(-private$deltaT/(2*private$d_P))) * P_lag
 
 }
 
 EL4P$set(which = "public",name = "oneDay_EL4P",
           value = oneDay_EL4P, overwrite = TRUE
 )
+
+# L1o = pop$L1; L2o=pop$L2; L3o=pop$L3; L4o=pop$L4
+# D   = sum(L1o+L2o+L3o+L4o)
+# s1  = exp(-alpha[ix])
+# s2  = exp(-(alpha[ix]+ psi*D))
+# pop$lambda = s1*pop$P
+# pop$P  = s2*p*L4o
+# pop$L4 = s2*(p*L3o + (1-p)*L4o)
+# pop$L3 = s2*(p*L2o + (1-p)*L3o)
+# pop$L2 = s2*(p*L1o + (1-p)*L2o)
+# pop$L1 = pop$eggs + s2*(1-p)*L1o
+# pop$eggs = M[ix]*aquaEq[ix]*(G/lifespan)
+# return(pop)
+
+# #' EL4P Run to Equilibrium
+# #'
+# #' Run a single aquatic population's dynamics using simulated adult dynamics and egg laying from Ross-MacDonald parameters.
+# #' Adult dynamics follow the simple equation \eqn{( e^{-1/lifespan} * M) + \lambda}
+# #'
+# #'  * This method is bound to \code{EL4P$run2Eq}
+# #'
+# #' @param M equilibrium adult female density (from \code{\link{EL4P_fitK}})
+# #' @param beta daily rate of oviposition of eggs (units in 1/day * 1/female mosquito)
+# #' @param mu_M adult female daily mortality rate
+# #' @param tMax maximum number of time steps
+# #' @param tol target minimum variance in lambda
+# #'
+# #'
+# run2Eq_EL4P <- function(M, beta, mu_M, tMax = 800, tol = 0.1){
+#
+#   # burn in adult population
+#   for(i in 1:100){
+#     M = (exp(-mu_M)*M) + private$lambda
+#   }
+#
+#   #
+#
+# }
+#
+checkVar_EL4P <- function(M, beta, mu_M, tMax = 800, tol = 0.1){
+
+  M = private$lambda # init adult population
+
+  lambdaH = vector(mode="numeric",length=tMax+1)
+  lambdaH[1] = private$lambda
+
+  for(i in 1:tMax){ # run full simulation
+    pop = oneDay_GEL4P(ix = ix, psi = psi, pop = pop, PAR = PAR)
+    PAR$M[ix] = ((exp(-1/PAR$lifespan))*PAR$M[ix]) + pop$lambda # simulate adult population dynamics
+    lambdaH[i+1] = pop$lambda
+  }
+  return(lambdaH)
+
+}
 
 
 #' EL4P Add Egg Batch
@@ -71,6 +125,12 @@ EL4P$set(which = "public",name = "addBatch_EL4P",
 ###############################################################################
 # Getters & Setters
 ###############################################################################
+
+# get EL4P from outside AquaticSite
+
+get_EL4P_AquaticSite <- function(){
+  return(private$EL4P)
+}
 
 # get all
 
@@ -374,170 +434,170 @@ EL4P$set(which = "public",name = "set_K",
           value = set_K_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Get dEgg
+#' EL4P: Get d_E
 #'
-#' Return dEgg
-#'  * This method is bound to \code{EL4P$get_dEgg}
+#' Return d_E
+#'  * This method is bound to \code{EL4P$get_d_E}
 #'
-get_dEgg_EL4P <- function(){
-  return(private$dEgg)
+get_d_E_EL4P <- function(){
+  return(private$d_E)
 }
 
-EL4P$set(which = "public",name = "get_dEgg",
-          value = get_dEgg_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "get_d_E",
+          value = get_d_E_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Set dEgg
+#' EL4P: Set d_E
 #'
-#' Set dEgg
-#'  * This method is bound to \code{EL4P$set_dEgg}
+#' Set d_E
+#'  * This method is bound to \code{EL4P$set_d_E}
 #'
-#' @param dEgg numeric
+#' @param d_E numeric
 #'
-set_dEgg_EL4P <- function(dEgg){
-  private$dEgg = dEgg
+set_d_E_EL4P <- function(d_E){
+  private$d_E = d_E
 }
 
-EL4P$set(which = "public",name = "set_dEgg",
-          value = set_dEgg_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "set_d_E",
+          value = set_d_E_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Get dLarva
+#' EL4P: Get d_L
 #'
-#' Return dLarva
-#'  * This method is bound to \code{EL4P$get_dLarva}
+#' Return d_L
+#'  * This method is bound to \code{EL4P$get_d_L}
 #'
-get_dLarva_EL4P <- function(){
-  return(private$dLarva)
+get_d_L_EL4P <- function(){
+  return(private$d_L)
 }
 
-EL4P$set(which = "public",name = "get_dLarva",
-          value = get_dLarva_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "get_d_L",
+          value = get_d_L_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Set dLarva
+#' EL4P: Set d_L
 #'
-#' Set dLarva
-#'  * This method is bound to \code{EL4P$set_dLarva}
+#' Set d_L
+#'  * This method is bound to \code{EL4P$set_d_L}
 #'
-#' @param dLarva numeric
+#' @param d_L numeric
 #'
-set_dLarva_EL4P <- function(dLarva){
-  private$dLarva = dLarva
+set_d_L_EL4P <- function(d_L){
+  private$d_L = d_L
 }
 
-EL4P$set(which = "public",name = "set_dLarva",
-          value = set_dLarva_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "set_d_L",
+          value = set_d_L_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Get dPupae
+#' EL4P: Get d_P
 #'
-#' Return dPupae
-#'  * This method is bound to \code{EL4P$get_dPupae}
+#' Return d_P
+#'  * This method is bound to \code{EL4P$get_d_P}
 #'
-get_dPupae_EL4P <- function(){
-  return(private$dPupae)
+get_d_P_EL4P <- function(){
+  return(private$d_P)
 }
 
-EL4P$set(which = "public",name = "get_dPupae",
-          value = get_dPupae_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "get_d_P",
+          value = get_d_P_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Set dPupae
+#' EL4P: Set d_P
 #'
-#' Set dPupae
-#'  * This method is bound to \code{EL4P$set_dPupae}
+#' Set d_P
+#'  * This method is bound to \code{EL4P$set_d_P}
 #'
-#' @param dPupae numeric
+#' @param d_P numeric
 #'
-set_dPupae_EL4P <- function(dPupae){
-  private$dPupae = dPupae
+set_d_P_EL4P <- function(d_P){
+  private$d_P = d_P
 }
 
-EL4P$set(which = "public",name = "set_dPupae",
-          value = set_dPupae_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "set_d_P",
+          value = set_d_P_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Get muEgg
+#' EL4P: Get mu_E
 #'
-#' Return muEgg
-#'  * This method is bound to \code{EL4P$get_muEgg}
+#' Return mu_E
+#'  * This method is bound to \code{EL4P$get_mu_E}
 #'
-get_muEgg_EL4P <- function(){
-  return(private$muEgg)
+get_mu_E_EL4P <- function(){
+  return(private$mu_E)
 }
 
-EL4P$set(which = "public",name = "get_muEgg",
-          value = get_muEgg_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "get_mu_E",
+          value = get_mu_E_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Set muEgg
+#' EL4P: Set mu_E
 #'
-#' Set muEgg
-#'  * This method is bound to \code{EL4P$set_muEgg}
+#' Set mu_E
+#'  * This method is bound to \code{EL4P$set_mu_E}
 #'
-#' @param muEgg numeric
+#' @param mu_E numeric
 #'
-set_muEgg_EL4P <- function(muEgg){
-  private$muEgg = muEgg
+set_mu_E_EL4P <- function(mu_E){
+  private$mu_E = mu_E
 }
 
-EL4P$set(which = "public",name = "set_muEgg",
-          value = set_muEgg_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "set_mu_E",
+          value = set_mu_E_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Get muLarva
+#' EL4P: Get mu_L
 #'
-#' Return muLarva
-#'  * This method is bound to \code{EL4P$get_muLarva}
+#' Return mu_L
+#'  * This method is bound to \code{EL4P$get_mu_L}
 #'
-get_muLarva_EL4P <- function(){
-  return(private$muLarva)
+get_mu_L_EL4P <- function(){
+  return(private$mu_L)
 }
 
-EL4P$set(which = "public",name = "get_muLarva",
-          value = get_muLarva_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "get_mu_L",
+          value = get_mu_L_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Set muLarva
+#' EL4P: Set mu_L
 #'
-#' Set muLarva
-#'  * This method is bound to \code{EL4P$set_muLarva}
+#' Set mu_L
+#'  * This method is bound to \code{EL4P$set_mu_L}
 #'
-#' @param muLarva numeric
+#' @param mu_L numeric
 #'
-set_muLarva_EL4P <- function(muLarva){
-  private$muLarva = muLarva
+set_mu_L_EL4P <- function(mu_L){
+  private$mu_L = mu_L
 }
 
-EL4P$set(which = "public",name = "set_muLarva",
-          value = set_muLarva_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "set_mu_L",
+          value = set_mu_L_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Get muPupae
+#' EL4P: Get mu_P
 #'
-#' Return muPupae
-#'  * This method is bound to \code{EL4P$get_muPupae}
+#' Return mu_P
+#'  * This method is bound to \code{EL4P$get_mu_P}
 #'
-get_muPupae_EL4P <- function(){
-  return(private$muPupae)
+get_mu_P_EL4P <- function(){
+  return(private$mu_P)
 }
 
-EL4P$set(which = "public",name = "get_muPupae",
-          value = get_muPupae_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "get_mu_P",
+          value = get_mu_P_EL4P, overwrite = TRUE
 )
 
-#' EL4P: Set muPupae
+#' EL4P: Set mu_P
 #'
-#' Set muPupae
-#'  * This method is bound to \code{EL4P$set_muPupae}
+#' Set mu_P
+#'  * This method is bound to \code{EL4P$set_mu_P}
 #'
-#' @param muPupae numeric
+#' @param mu_P numeric
 #'
-set_muPupae_EL4P <- function(muPupae){
-  private$muPupae = muPupae
+set_mu_P_EL4P <- function(mu_P){
+  private$mu_P = mu_P
 }
 
-EL4P$set(which = "public",name = "set_muPupae",
-          value = set_muPupae_EL4P, overwrite = TRUE
+EL4P$set(which = "public",name = "set_mu_P",
+          value = set_mu_P_EL4P, overwrite = TRUE
 )

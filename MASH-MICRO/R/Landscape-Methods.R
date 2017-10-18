@@ -18,6 +18,52 @@
 # Getters & Setters
 ###############################################################################
 
+#' Get Point Set of Sites
+#'
+#' Return point set of sites and associated search weights of a landscape.
+#'  * This method is bound to \code{Landscape$get_PointSet}
+#'
+#'
+#' @return list
+get_PointSet_Landscape <- function(){
+
+  pointSet = list()
+
+  pointSet$AquaSites = replicate(n=private$AquaSitesN,expr={list(xy=numeric(2),wt=numeric(1))},simplify=FALSE)
+  for(i in 1:private$AquaSitesN){
+    pointSet$AquaSites[[i]]$xy = private$AquaSites[[i]]$get_siteXY()
+    pointSet$AquaSites[[i]]$wt = private$AquaSites[[i]]$get_searchWt()
+  }
+
+  pointSet$FeedingSites = replicate(n=private$FeedingSitesN,expr={list(xy=numeric(2),wt=numeric(1))},simplify=FALSE)
+  for(i in 1:private$FeedingSitesN){
+    pointSet$FeedingSites[[i]]$xy = private$FeedingSites[[i]]$get_siteXY()
+    pointSet$FeedingSites[[i]]$wt = private$FeedingSites[[i]]$get_searchWt()
+  }
+
+  if(private$SugarSitesN != 0){
+    pointSet$SugarSites = replicate(n=private$SugarSitesN,expr={list(xy=numeric(2),wt=numeric(1))},simplify=FALSE)
+    for(i in 1:private$SugarSitesN){
+      pointSet$SugarSites[[i]]$xy = private$SugarSites[[i]]$get_siteXY()
+      pointSet$SugarSites[[i]]$wt = private$SugarSites[[i]]$get_searchWt()
+    }
+  }
+
+  if(private$MatingSitesN != 0){
+    pointSet$MatingSites = replicate(n=private$MatingSitesN,expr={list(xy=numeric(2),wt=numeric(1))},simplify=FALSE)
+    for(i in 1:private$MatingSitesN){
+      pointSet$MatingSites[[i]]$xy = private$MatingSites[[i]]$get_siteXY()
+      pointSet$MatingSites[[i]]$wt = private$MatingSites[[i]]$get_searchWt()
+    }
+  }
+
+  return(pointSet)
+}
+
+Landscape$set(which = "public",name = "get_PointSet",
+  value = get_PointSet_Landscape, overwrite = TRUE
+)
+
 #' Get Blood Feeding Sites
 #'
 #' Return single \code{\link{FeedingSite}} or all sites.

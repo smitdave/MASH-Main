@@ -97,8 +97,12 @@ MBITES.Complex.Setup <- function(
             value = mbites_enterHouse, overwrite = overwrite
   )
 
-  MosquitoFemale$set(which = "public",name = "landingSpot",
-            value = mbites_landingSpot, overwrite = overwrite
+  MosquitoFemale$set(which = "public",name = "restingSpot",
+            value = mbites_restingSpot, overwrite = overwrite
+  )
+
+  MosquitoFemale$set(which = "public",name = "searchFail",
+            value = mbites_searchFail, overwrite = overwrite
   )
 
   MosquitoFemale$set(which = "public",name = "boutF",

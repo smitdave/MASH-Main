@@ -158,9 +158,9 @@ mbitesBRO_enterHouse <- function(){
 #'  * r: 4 reattempt without resting
 #'  * l: 5 leave the area
 #'
-#'  * This method is bound to \code{MosquitoFemale$landingSpot()}.
+#'  * This method is bound to \code{MosquitoFemale$restingSpot()}.
 #'
-mbitesBRO_landingSpot <- function(){
+mbitesBRO_restingSpot <- function(){
   if(self$isActive()){
     oldSpot = private$lspot
     private$lspot = self$newSpot() # choose new lspot
@@ -296,7 +296,7 @@ mbitesBRO_layEggs_EL4P <- function(){
 #' 2. moveMe: movement between point classes (if needed)
 #' 3. boutFun: run bout function
 #' 4. run energetics and check if alive
-#' 5. run landingSpot and check if alive
+#' 5. run restingSpot and check if alive
 #' 6. run surviveResting/surviveFlight and check if alive
 #' 7. update tNext
 #' 8. update state to stateNew which is determined in the bout
@@ -315,7 +315,7 @@ mbitesBRO_oneBout <- function(){
   self$moveMe()
 
   # landing spot
-  self$landingSpot()
+  self$restingSpot()
 
   # bout
   switch(private$state,

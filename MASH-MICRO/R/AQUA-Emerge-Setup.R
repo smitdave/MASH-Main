@@ -23,8 +23,7 @@
 #' This function initializes methods and fields for the 'Emerge' MODULE of Aquatic Ecology COMPONENT.
 #' It modifies \code{\link{AquaticSite}} and \code{\link{Landscape}} classes.
 #'
-#' @param dunno sdf
-#' @return stuff
+#' @param overwrite overwrite existing methods
 #' @examples
 #' Aqua.Emerge.Setup()
 #' @export

@@ -26,7 +26,7 @@ This corresponds to the following Gillespie-style algorithm:
 \item moveMe: movement between point classes (if needed)
 \item boutFun: run bout function
 \item run energetics and check if alive
-\item run landingSpot and check if alive
+\item run restingSpot and check if alive
 \item run surviveResting/surviveFlight and check if alive
 \item update tNext
 \item update state to stateNew which is determined in the bout

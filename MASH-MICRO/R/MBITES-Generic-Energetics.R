@@ -23,15 +23,16 @@
 #'  * This method is bound to \code{MosquitoFemale$sugarEnergetics()}.
 #'
 mbitesGeneric_sugarEnergetics <- function(){
-  if(self$isAlive()){
-    private$energy = max(0,private$energy - private$MalePopPointer$get_MBITES_PAR("S.u"))
+  if(private$state != "R"){
+    if(self$isAlive()){
+      private$energy = max(0,private$energy - private$MalePopPointer$get_MBITES_PAR("S.u"))
 
-    if(runif(1) < 1-self$pEnergySurvival()){
-      private$stateNew = "D"
-    } else {
-      self$queueSugarBout()
+      if(runif(1) < 1-self$pEnergySurvival()){
+        private$stateNew = "D"
+      } else {
+        self$queueSugarBout()
+      }
     }
-
   }
 }
 

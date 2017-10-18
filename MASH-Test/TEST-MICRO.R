@@ -224,6 +224,79 @@ MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE,trackPop = TRUE)
 
 ###############################################################################
 # 
+#   TEST MAKING KERNEL CDF/PDF GRAPHICS FOR MANUSCRIPT
+# 
+###############################################################################
+
+
+rm(list=ls());gc()
+library(MASHmicro)
+# set.seed(42L)
+
+DEBUG.MASHMICRO()
+MASHcpp::DEBUG.MASHCPP()
+MASHmacro::DEBUG.MASHMACRO()
+
+# make a tile
+DIR = "/Users/slwu89/Desktop/MASHOUT/"
+
+# setup
+Humans.MICRO.Setup()
+PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
+AQUA.Emerge.Setup()
+
+# MBITES setup
+MBITES.Generic.Setup()
+MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential")
+# MBITES.BRO.Cohort.Setup()
+
+# SEARCH setup
+SEARCH.Kernel.Setup(MBITES = "BRO")
+
+# landscape parameters
+nAqua = 1
+nFeed = 50
+emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
+landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
+
+# human parameters
+human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
+
+# M-BITES parameters
+nMosy = 50
+mbites_par = MBITES.BRO.Parameters(PfEIP=1)
+mosquito_par = list(
+  N_female = nMosy,
+  ix_female = rep(1,nMosy),
+  genotype_female = rep(1,nMosy),
+  MBITES_PAR_FEMALE = mbites_par
+)
+
+MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
+
+
+pointSet = MicroTile$get_Landscape()$get_PointSet()
+
+
+sigma = 3
+eps = 0.1
+beta = 0.9
+startXY = pointSet$AquaSites[[1]]$xy
+endPts = pointSet$FeedingSites
+
+dist = numeric(length = length(endPts))
+for(i in 1:length(endPts)){
+  dist[i] = sqrt((startXY[1]-endPts[[i]]$xy[1])^2 + (startXY[2]-endPts[[i]]$xy[2])^2)
+}
+
+endWts = vapply(X = endPts,FUN = function(x){x$wt},FUN.VALUE = numeric(1),USE.NAMES = FALSE)
+prob = endWts^(-beta*dist) * (eps + dist)^-sigma
+prob = prob/sum(prob)
+
+
+
+###############################################################################
+# 
 #   DEPRECATED TEST CODE
 # 
 ###############################################################################

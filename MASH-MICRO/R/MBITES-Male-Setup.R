@@ -119,8 +119,8 @@ MBITES.Male.Setup <- function(
             value = mbitesMale_enterHouse, overwrite = overwrite
   )
 
-  MosquitoMale$set(which = "public",name = "landingSpot",
-            value = mbitesMale_landingSpot, overwrite = overwrite
+  MosquitoMale$set(which = "public",name = "restingSpot",
+            value = mbitesMale_restingSpot, overwrite = overwrite
   )
 
   MosquitoMale$set(which = "public",name = "boutM",

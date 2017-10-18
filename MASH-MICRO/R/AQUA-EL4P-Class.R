@@ -45,17 +45,21 @@ EL4P <- R6::R6Class(classname = "EL4P",
                       # Constructor
                       #################################################
 
-                      initialize = function(K, dEgg, dLarva, dPupae, muEgg, muLarva, muPupae, N_genotypes = 1){
+                      initialize = function(K, d_E, d_L, d_P, mu_E, mu_L, mu_P, N_genotypes = 1, deltaT = 0.01){
+
+                        if(deltaT > 1){
+                          stop("time step deltaT cannot currently be greater than 1 day; time steps greater than 0.1 may be numerically unstable")
+                        }
 
                         private$N_genotypes = N_genotypes
 
                         private$K = K
-                        private$dEgg = dEgg
-                        private$dLarva = dLarva
-                        private$dPupae = dPupae
-                        private$muEgg = muEgg
-                        private$muLarva = muLarva
-                        private$muPupae = muPupae
+                        private$d_E = d_E
+                        private$d_L = d_L
+                        private$d_P = d_P
+                        private$mu_E = mu_E
+                        private$mu_L = mu_L
+                        private$mu_P = mu_P
 
                         private$E = rep(0,times=N_genotypes)
                         private$L1 = rep(0,times=N_genotypes)
@@ -100,12 +104,12 @@ EL4P <- R6::R6Class(classname = "EL4P",
                       P_lag = NULL,
 
                       K = numeric(1),
-                      dEgg = numeric(1),
-                      dLarva = numeric(1),
-                      dPupae = numeric(1),
-                      muEgg = numeric(1),
-                      muLarva = numeric(1),
-                      muPupae = numeric(1),
+                      d_E = numeric(1),
+                      d_L = numeric(1),
+                      d_P = numeric(1),
+                      mu_E = numeric(1),
+                      mu_L = numeric(1),
+                      mu_P = numeric(1),
 
                       L = numeric(1)
 
