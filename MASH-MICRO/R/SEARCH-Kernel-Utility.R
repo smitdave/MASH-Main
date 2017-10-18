@@ -17,6 +17,40 @@
 # SEARCH-MicroKernels
 #################################################################
 
+#' MICRO Search Kernels: Plot CDF and PDF for One Starting Site
+#'
+#' for manuscript. write me!
+#'
+#'
+#' @param startXY
+#' @param endPts list of end points and weights (output of \code{\link{get_PointSet_Landscape}})
+#' @param sigma a param
+#' @param eps a param
+#' @param beta a param
+#'
+#' @export
+MicroKernelPlotOne_utility <- function(startXY, endPts){
+
+  dist = numeric(length = length(endPts))
+  for(i in 1:length(endPts)){
+    dist[i] = sqrt((startXY[1]-endPts[[i]]$xy[1])^2 + (startXY[2]-endPts[[i]]$xy[2])^2)
+  }
+
+  endWts = vapply(X = endPts,FUN = function(x){x$wt},FUN.VALUE = numeric(1),USE.NAMES = FALSE)
+  prob = endWts^(-beta*dist) * (eps + dist)^-sigma
+
+  for(ix in 1:length(S)){
+    allProb = dW^(-beta*dS2D[ix,]) * (eps + dS2D[ix,])^-sigma
+    S2D[ix,] = allProb / sum(allProb)
+  }
+
+
+
+
+
+
+}
+
 #' MICRO Search Kernels: Plot Kernel Functions
 #'
 #'
