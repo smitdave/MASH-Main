@@ -29,7 +29,7 @@
 #' @param beta a param
 #'
 #' @export
-MicroKernelPlotOne_utility <- function(startXY, endPts){
+MicroKernelPlotOne_utility <- function(startXY, endPts, sigma = 3, eps = 0.1, beta = 0){
 
   dist = numeric(length = length(endPts))
   for(i in 1:length(endPts)){
@@ -38,12 +38,7 @@ MicroKernelPlotOne_utility <- function(startXY, endPts){
 
   endWts = vapply(X = endPts,FUN = function(x){x$wt},FUN.VALUE = numeric(1),USE.NAMES = FALSE)
   prob = endWts^(-beta*dist) * (eps + dist)^-sigma
-
-  for(ix in 1:length(S)){
-    allProb = dW^(-beta*dS2D[ix,]) * (eps + dS2D[ix,])^-sigma
-    S2D[ix,] = allProb / sum(allProb)
-  }
-
+  prob = prob/sum(prob)
 
 
 

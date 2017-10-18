@@ -278,6 +278,23 @@ MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,Mosq
 pointSet = MicroTile$get_Landscape()$get_PointSet()
 
 
+sigma = 3
+eps = 0.1
+beta = 0
+startXY = pointSet$AquaSites[[1]]$xy
+endPts = pointSet$FeedingSites
+
+dist = numeric(length = length(endPts))
+for(i in 1:length(endPts)){
+  dist[i] = sqrt((startXY[1]-endPts[[i]]$xy[1])^2 + (startXY[2]-endPts[[i]]$xy[2])^2)
+}
+
+endWts = vapply(X = endPts,FUN = function(x){x$wt},FUN.VALUE = numeric(1),USE.NAMES = FALSE)
+prob = endWts^(-beta*dist) * (eps + dist)^-sigma
+prob = prob/sum(prob)
+
+
+
 ###############################################################################
 # 
 #   DEPRECATED TEST CODE
