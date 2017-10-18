@@ -1,0 +1,20 @@
+NOTES:
+
+1. Get the tent function working
+2. Get prInfectMosquito working (generic)
+3. Get infectMosquito working
+
+1. Mosquito bite to bloodstream infection
+
+2. Asexual blood stage infection to gametocytes
+  a. fever & disease
+  b. immunity (affecting future infections)
+  c. gametocytogenesis
+
+3. Mature gametocytes to mosquito infection
+
+Three models to get running: 
+
+1. The basic queueing model, with the PfTentTimeCourse
+   1a. with fever
+   1b. with treatment 
