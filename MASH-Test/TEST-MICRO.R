@@ -280,7 +280,7 @@ pointSet = MicroTile$get_Landscape()$get_PointSet()
 
 sigma = 3
 eps = 0.1
-beta = 0.9
+beta = 1.3
 startXY = pointSet$AquaSites[[1]]$xy
 endPts = pointSet$FeedingSites
 
@@ -293,6 +293,37 @@ endWts = vapply(X = endPts,FUN = function(x){x$wt},FUN.VALUE = numeric(1),USE.NA
 prob = endWts^(-beta*dist) * (eps + dist)^-sigma
 prob = prob/sum(prob)
 
+# plot(x = dist,y = prob,pch=16)
+# x = ecdf(x = prob)
+
+cols = viridis::viridis(n = length(prob))
+plot(x = dist,y = prob,pch=16,)
+
+
+
+# # compute pdf and cdf of kernel for Q matrix
+# 
+# # vectorize the matrix
+# Q_vec = as.vector(Q)
+# 
+# # make bins according to unique distances
+# bins = unique(as.vector(dist.F))
+# 
+# # empirical pdf and cdf
+# Q_pdf.emp = normalize(sapply(bins, function(dd) sum(Q_vec[which(distVec.F == dd)])))
+# Q_cdf.emp = sapply(bins, function(dd) sum(Q_vec[which(distVec.F <= dd)]))
+# Q_cdf.emp = Q_cdf.emp / max(Q_cdf.emp)
+# 
+# # smoothed cdf
+# Q_cdf.sth = ksmooth(bins[2 : length(bins)], Q_cdf.emp[2 : length(bins)], kernel = 'normal', bandwidth = 5 * dpill(bins, Q_cdf.emp))
+# 
+# # differentiate the smoothed cdf to obtain a smoothed pdf
+# Q_pdf.sth = list(x = Q_cdf.sth$x[3 : (length(Q_cdf.sth$x) - 2)],
+#                  y = normalize(numDiff(Q_cdf.sth$x, Q_cdf.sth$y)))
+# 
+# # redefine the smoothed cdf to be exactly consistent with the smoothed pdf
+# Q_cdf.sth$x = Q_pdf.sth$x
+# Q_cdf.sth$y = cumsum(Q_pdf.sth$y)
 
 
 ###############################################################################
