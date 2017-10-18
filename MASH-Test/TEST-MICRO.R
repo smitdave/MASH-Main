@@ -19,12 +19,16 @@ rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
 
-DEBUG.MASHMICRO()
-MASHcpp::DEBUG.MASHCPP()
-MASHmacro::DEBUG.MASHMACRO()
+#DEBUG.MASHMICRO()
+#MASHcpp::DEBUG.MASHCPP()
+#MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
-DIR = "/Users/slwu89/Desktop/MASHOUT/"
+if(system("whoami",intern=TRUE)=="slwu89"){
+  DIR="/Users/slwu89/Desktop/MASHOUT/"
+}else if(system("whoami",intern=TRUE)=="chipdelmal"){
+  DIR = "/Users/chipdelmal/Desktop/MASHOUT/"
+}
 
 # setup
 Humans.MICRO.Setup()
@@ -179,7 +183,7 @@ MBITES.Generic.Setup()
 MBITES.Complex.Setup(aquaModule = "emerge",timing = "exponential")
 MBITES.Male.Setup(timing = "exponential")
 
-# SEARCH setup 
+# SEARCH setup
 SEARCH.Kernel.Setup(MBITES = "FULL")
 
 # landscape parameters
@@ -223,9 +227,9 @@ MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE,trackPop = TRUE)
 
 
 ###############################################################################
-# 
+#
 #   TEST MAKING KERNEL CDF/PDF GRAPHICS FOR MANUSCRIPT
-# 
+#
 ###############################################################################
 
 
@@ -296,9 +300,9 @@ prob = prob/sum(prob)
 
 
 ###############################################################################
-# 
+#
 #   DEPRECATED TEST CODE
-# 
+#
 ###############################################################################
 
 
@@ -315,12 +319,12 @@ prob = prob/sum(prob)
 
 # par = MBITES.BRO.Parameters()
 # mosyF = MosquitoPopFemale$new(N= 10,ix_init = rep(1,10),genotype_init = rep(1,10),MBITES_PAR = par)
-# 
+#
 # mosyF$get_pop()$get("0_1_1")$get_history()
 # mosyF$get_pop()$get("0_1_1")$rmSelf()
-# 
+#
 # mosyF$get_pop()$ls()
-# 
+#
 # mosyF$push_pop(N = 5,tEmerge = 10,genotype = 5,ix = 3)
-# 
+#
 # mosyF$get_pop()$ls()
