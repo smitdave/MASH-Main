@@ -280,7 +280,7 @@ pointSet = MicroTile$get_Landscape()$get_PointSet()
 
 sigma = 3
 eps = 0.1
-beta = 0
+beta = 0.9
 startXY = pointSet$AquaSites[[1]]$xy
 endPts = pointSet$FeedingSites
 
