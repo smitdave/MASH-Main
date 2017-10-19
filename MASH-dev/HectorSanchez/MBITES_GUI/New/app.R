@@ -1,7 +1,6 @@
 ################################################################################################################
 # MBITES: Gadget
 # October 2017
-# Instructions: set the working directory to the folder this file is stored in
 ################################################################################################################
 library(shiny)
 library(miniUI)
@@ -26,7 +25,7 @@ INITIAL_GUI_WIDTH=2000
 INITIAL_GUI_HEIGHT=1000
 VAR_DESCR_COL_WIDTH=3
 VAR_SLIDE_COL_WIDTH=4
-THEME="flatly"
+THEME="flatly"#themeSource="https://bootswatch.com/flatly/"
 ################################################################################################################
 mbitesGadget=function(...){
   #########################################################################################
@@ -73,7 +72,22 @@ mbitesGadget=function(...){
                       #####################################################################
                       tabPanel("B","Test"),
                       #####################################################################
-                      tabPanel("R","Test"),
+                      tabPanel("R", 
+                               fluidRow(h1("")),
+                               fluidRow(
+                                 column(VAR_DESCR_COL_WIDTH,helpText("ppr.p: Probability of surviving a resting attempt.")),
+                                 column(VAR_SLIDE_COL_WIDTH,sliderInput("ppr.p",NULL,min=0,max=1,value=.9))
+                               ),
+                               fluidRow(
+                                 column(VAR_DESCR_COL_WIDTH,helpText("ppr.p: Mean resting time (days).")),
+                                 column(VAR_SLIDE_COL_WIDTH,sliderInput("ppr.t",NULL,min=0,max=5,value=4/5,step=.05))
+                               ),
+                               fluidRow(
+                                 column(VAR_DESCR_COL_WIDTH,helpText("reFeed: Re-feeding probability.")),
+                                 column(VAR_SLIDE_COL_WIDTH,sliderInput("reFeed",NULL,min=0,max=1,value=.9))
+                               ),
+                               h1(),h1()
+                       ),
                       #####################################################################
                       tabPanel("O","Test"),
                       #####################################################################
@@ -83,13 +97,11 @@ mbitesGadget=function(...){
                       #####################################################################
                       tabPanel("E","Test")
                   ),
-                  h1(""),
-                  h1(""),
-                  h1(""),
+                  h1(""),h1(""),h1(""),
                   tags$hr(),
                   fluidRow(
-                    column(6,actionButton("button","Export Bouts Parameters",width="100%")),
-                    column(6,actionButton("button","Read Bouts Parameters",width="100%"))
+                    column(6,actionButton("button","Export Bouts Parameters",width="100%",class="btn btn-warning")),
+                    column(6,actionButton("button","Read Bouts Parameters",width="100%",class="btn btn-success"))
                   )
                 ),
                 ###########################################################################
@@ -97,9 +109,19 @@ mbitesGadget=function(...){
               )
            ),
           #################################################################################
-          tabPanel("Run the Model"),
+          tabPanel("Run the Model",
+            fluidRow(
+              tags$hr(),
+              column(12,actionButton("button","Run!",width="100%",class="btn btn-danger"))
+            )
+          ),
           #################################################################################
-          tabPanel("Analyse Data"),
+          tabPanel("Analyse Data",                  
+            fluidRow(
+              tags$hr(),
+              column(12,actionButton("button","Load Data",width="100%",class="btn btn-success"))
+            )
+          ),
           #################################################################################
           tabPanel("Read More",
             tabsetPanel(selected="The Project",
