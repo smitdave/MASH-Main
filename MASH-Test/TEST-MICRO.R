@@ -308,9 +308,7 @@ kern = kern[order(kern[,1],decreasing = FALSE),]
 kern = cbind(kern,cumProb = cumsum(kern[,"prob"]))
 
 plot(x = kern[,"dist"],y = kern[,"cumProb"],type="b",pch=16,ylim=c(0,1))
-for(i in 1:nrow(kern)){
-  points(kern[i,"dist"],kern[i,"prob"],pch=16,col="red")
-}
+points(kern[,"dist"],kern[,"prob"],pch=16,col="steelblue")
 
 # # compute pdf and cdf of kernel for Q matrix
 # 
