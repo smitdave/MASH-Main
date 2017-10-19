@@ -301,9 +301,16 @@ prob = prob/sum(prob)
 # x = ecdf(x = prob)
 
 cols = viridis::viridis(n = length(prob))
-plot(x = dist,y = prob,pch=16,)
+plot(x = dist,y = prob,pch=16)
 
+kern = cbind(dist,prob)
+kern = kern[order(kern[,1],decreasing = FALSE),]
+kern = cbind(kern,cumProb = cumsum(kern[,"prob"]))
 
+plot(x = kern[,"dist"],y = kern[,"cumProb"],type="b",pch=16,ylim=c(0,1))
+for(i in 1:nrow(kern)){
+  points(kern[i,"dist"],kern[i,"prob"],pch=16,col="red")
+}
 
 # # compute pdf and cdf of kernel for Q matrix
 # 
