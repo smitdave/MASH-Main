@@ -81,9 +81,6 @@ FeedingSite <- R6::R6Class(classname = "FeedingSite",
                    enterP = numeric(1),    # house entry probability
                    RiskQ = NULL,           # host risk queue
 
-                   # peri-domestic sites
-                   
-
                    # Pointers
                    LandscapePointer = NULL
 
@@ -166,7 +163,6 @@ AquaticSite <- R6::R6Class(classname = "AquaticSite",
                    siteType = integer(1),   # an aquatic or sugar site could be inside of a house, for example.
 
                    # AquaticSite fields
-
                    haz = numeric(1),
                    ImagoQ = NULL,
                    EggQ = NULL,
