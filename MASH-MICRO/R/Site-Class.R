@@ -81,6 +81,9 @@ FeedingSite <- R6::R6Class(classname = "FeedingSite",
                    enterP = numeric(1),    # house entry probability
                    RiskQ = NULL,           # host risk queue
 
+                   # peri-domestic sites
+                   
+
                    # Pointers
                    LandscapePointer = NULL
 

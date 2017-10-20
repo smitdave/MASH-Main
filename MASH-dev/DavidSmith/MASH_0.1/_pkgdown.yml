@@ -1,0 +1,204 @@
+template:
+  params:
+    bootswatch: yeti
+
+reference:
+  - title: MASH
+    desc: Modular Analysis & Simulation for Human Health
+    contents:
+    - MASH
+  - title: MICRO
+    desc:  Microsimulation TILE classes, methods, fields, and functions
+    contents:
+    - add_MicroEggQ
+    - add_MicroImagoQ
+    - add_riskList
+    - addCohort_MicroEmerge
+    - AquaticSite
+    - clear_MicroEggQ
+    - clear_MicroImagoQ
+    - emergingAdults_MicroEmerge
+    - empty_MicroEggQ
+    - empty_MicroImagoQ
+    - extend_MicroEggQ
+    - extend_MicroImagoQ
+    - extend_riskList
+    - FeedingSite
+    - full_MicroEggQ
+    - full_MicroImagoQ
+    - get_MicroEggQ
+    - get_MicroImagoQ
+    - get_MicroLambda
+    - init_riskList
+    - Landscape.Aqua.Parameters
+    - Landscape.Feeding.Parameters
+    - Landscape.Parameters
+    - Landscape
+    - makeLambda_Micro
+    - MICRO.Aqua.Setup
+    - MICRO.Emerge.Setup
+    - MICRO.Tile.Parameters
+    - MicroSite
+    - MicroTile
+    - oneDay_MicroEmerge
+    - oneDay_MicroEmergeSite
+    - set_MicroEggQ
+    - set_MicroHuman_ActivitySpace
+    - set_MicroHuman_FemalePopPointer
+    - set_MicroHuman_LandscapePointer
+    - set_MicroHuman_TilePointer
+    - set_MicroHumanPop_FemalePopPointer
+    - set_MicroHumanPop_LandscapePointer
+    - set_MicroHumanPop_TilePointer
+    - set_MicroImagoQ
+    - set_MicroLambda
+    - zero_MicroEggQ
+    - zero_MicroImagoQ
+    - track_MicroEggQ
+    - track_MicroImagoQ
+  - title: MACRO
+    desc: Macrosimulation TILE classes, methods, fields, and functions
+    contents:
+    - addCohort_MacroEmerge
+    - emergingAdults_MacroEmerge
+    - extend_PatchesImagoQ
+    - get_PatchesEggQ
+    - get_PatchesImagoQ
+    - get_season
+    - getEIP_MacroMosquitoPop
+    - layEggs_MacroMosquitoPop
+    - MACRO.MosquitoPop.Parameters
+    - MACRO.Patch.Emerge.Setup
+    - MACRO.Patch.Parameters
+    - MACRO.Tile.Parameters
+    - MacroMosquitoPop
+    - MacroPatch
+    - MacroTile
+    - makeLambda_Macro
+    - manage_PatchesImagoQ
+    - oneDay_MacroEmerge
+    - oneDay_RM
+    - set_PatchesEggQ
+    - set_PatchesImagoQ
+    - set_PatchPf
+    - set_season
+    - simMacro
+  - title: HUMAN
+    desc: The HUMAN component
+    contents:
+    - get_MicroHuman_ActivitySpace
+    - get_MicroHuman_FemalePopPointer
+    - get_MicroHuman_LandscapePointer
+    - get_MicroHuman_TilePointer
+    - get_MicroHumanPop_FemalePopPointer
+    - get_MicroHumanPop_LandscapePointer
+    - get_MicroHumanPop_TilePointer
+    - Human
+    - HumanPop.Parameters
+    - HumanPop
+    - init_MicroHuman_ActivitySpace
+    - init_MicroHumanPop_ActivitySpace
+    - MICRO.Humans.Setup
+    - sim_MicroHuman_ActivitySpace
+    - sim_MicroHumanPop_ActivitySpace
+    - siteAges
+    - sitePops
+  - title: MACRO HUMAN Methods
+    desc: Bititng and Travel related methods for MACRO
+    contents:
+    - MACRO.Humans.Setup
+    - matches("MacroHuman")
+  - title: PATHOGEN
+    desc: The PATHOGEN component
+    contents:
+    - get_PatchPf
+    - humanPfSI
+    - MACRO.PatchPf.Setup
+    - MacroPatchPf
+    - mosquitoPfSI
+    - PfSI.Parameters
+    - PfSI.Setup
+    - plot_PfSI
+    - plot_PfSIOneTrajectory
+    - queueBitesNegBinom_SimBitePfSI
+    - SimBitePfSI.Setup
+  - title: PATHOGEN PfSI
+    desc: PfSI (Enhanced SIS Model for Plasmodium falciparum Transmission)
+    contents:
+    - matches("PfSI")
+  - title: PATHOGEN PfMOI
+    desc: PfMOI (Multiplicity of Infection Compartmental Model for Plasmodium falciparum Transmission)
+    contents:
+    - matches("PfMOI")
+  - title: PATHOGEN SimBite
+    desc: Simulate infected bites on humans without explicitly modeling mosquitos. Contains methods to construct biting as stochastic processes and to construct parametric biting distributins on individuals.
+    contents:
+    - matches("SimBite")
+  - title: M-BITES
+    desc: Mosquito Bout-based and Individual-based Transmission Ecology Simulation
+    contents:
+    - init.mbitesEnergetics
+    - MBITES.Parameters
+    - MicroMosquito
+    - MicroMosquitoFemale
+    - MicroMosquitoMale
+    - MicroMosquitoPop
+    - MosquitoFemaleHistory
+    - MosquitoMaleHistory
+  - title: M-BITES Generic Methods
+    desc: M-BITES methods shared across lifecycle modules.
+    contents:
+    - matches("mbitesGeneric")
+  - title: M-BITES BRO Methods
+    desc: M-BITES Blood Feeding, Resting, Oviposition lifecycle module.
+    contents:
+    - matches("mbitesBRO")
+  - title: MICRO Search Kernels
+    desc: Kernel (probability density) based mosquito movement.
+    contents:
+    - matches("MicroKernel")
+  - title: Auxiliary
+    desc: Miscellaneous MASH classes, methods, fields, and functions
+    contents:
+    - allocEggQ
+    - allocImagoQ
+    - newEgg
+    - newImago
+    - betaRootA
+    - betaRootB
+    - gammaRates
+    - pointsClustered
+    - pointsLattice
+    - pointsOverdispersed
+    - pointsPoisson
+    - SimBite_MeanBites
+    - SimBite_WaitingTime
+    - util_List2Df
+    - util_PfSIHistory
+    - util_PfSISlice
+
+articles:
+  - title: "Documentation & Code"
+    desc: Articles describing documentation and code conventions.
+    contents:
+    - Conventions
+    - ToDo
+  - title: "MACRO"
+    desc: Macrosimulation
+    contents:
+      - MACRO-LandscapeAnalysis
+      - MACRO-SpatialDynamics
+      - MACRO-Example
+  - title: "MICRO"
+    desc: Microsimulation
+    contents:
+    - test
+  - title: "HUMAN"
+    desc: The Human simulation component of MASH
+    contents:
+      - HumanEventQueue
+  - title: "PATHOGEN"
+    desc: the Pathogen simulation component of MASH
+    contents:
+      - PathogenPfLOME
+      - PathogenPfMOI

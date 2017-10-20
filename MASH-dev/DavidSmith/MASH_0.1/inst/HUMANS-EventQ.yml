@@ -1,0 +1,42 @@
+HumanEventQ:
+  name_cpp: MASH::HumanEventQ
+  forward_declare: true
+  constructor:
+    roxygen: |
+      A class for queueing human events. Header file defined [here](https://github.com/slwu89/RcppQueues/blob/master/inst/include/RcppQueues/HumanEventQ.hpp) and `RcppR6` export handled [here](https://github.com/slwu89/RcppQueues/blob/master/inst/HumanEventQ.yml). Bound to \code{Human$EventQueue} in class \code{\link{Human}}
+      @title Human Event Queue
+      @param initQ reserve memory for \code{initQ} number of events
+      @section Methods:
+        * firstEvent: return first event in queue as named R list
+        * firstTime: return 'tEvent' slot in first event in queue
+        * rmFirstEventFromQ: remove first event in queue and update \code{queueN}
+        * rmTagFromQ(const std::string &tag): remove all events with certain tag from queue and update \code{queueN}
+        * get_queueN: return \code{queueN}
+        * get_EventQ: return entire \code{EventQ} as R list
+        * addEvent2Q(Rcpp::List event): add a list to the \code{EventQ} in correct time order and update \code{queueN}
+      @section Fields:
+        * EventQ: \code{std::vector<Rcpp::List>}
+        * queueN: integer value of size of queue.
+      @md
+      @export
+    args:
+      - initQ: int = 100
+  methods:
+    firstEvent:
+      return_type: "Rcpp::List"
+    firstTime:
+      return_type: int
+    rmFirstEventFromQ:
+      return_type: void
+    rmTagFromQ:
+      args:
+        - tag: "std::string"
+      return_type: void
+    get_queueN:
+      return_type: int
+    addEvent2Q:
+      args:
+        - event: "Rcpp::List"
+      return_type: void
+    get_EventQ:
+      return_type: "Rcpp::List"

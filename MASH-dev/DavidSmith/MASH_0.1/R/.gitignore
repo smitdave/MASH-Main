@@ -1,0 +1,28 @@
+#####################################
+# R related files
+#####################################
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+
+
+#####################################
+# OS generated files
+#####################################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+
+#####################################
+# R runtime files
+#####################################
+.RData
+.RHistory
+.Rhistory
+.R.Rout
