@@ -1,0 +1,58 @@
+---
+title: "Documentation & Code Conventions"
+author: "Sean Wu"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Conventions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# Guide to Writing Components and Modules for MASH
+
+  * Note: `XX` refers to generic function or class and is purely for illustrative example.
+  * Note: proper documentation should use `roxygen2`.
+
+## Classes
+
+## Methods
+
+  * Conventions for Writing Public Methods (initialized in `public` list and accessed by `self$XX()`):
+    * get_XX() : return the thing. potentially with ix arg for lists (if `ix = NULL` then return the whole list)
+    * set_XX() : set the thing, potentially with (XX, ix) arg for setting an element of list `(if ix = NULL` set the entire object)
+    * push_XX() : push to the end of the thing; useful for growing vectors
+    * accumulate_XX() : add to the thing, sort of like XX += YY
+    * increment_XX(): increment the thing by 1; like the above but just for one
+    * track_XX(): add to the history of XX (ie; track_Travel records travel history...)
+    * extend_XX(): add empty/NULL values to end of lists for memory allocation
+    * add_XX(): useful for when you need to add very specific information to something
+    with a specific structure (ie: add_riskList)
+    * clear_XX(): zero out multiple entries in this list object according to some logic
+    * zero_XX(): similar to clear_XX() but takes as an argument an integer index; only zeros out a single element.
+    * full_XX(): return indices of full slots (0L if none)
+    * empty_XX(): return indices of empty slots (0L if none)
+    * init_XX(): used to initalize routines (see init_MacroHuman_travel() in MACRO-Human-Travel.R)
+    * sim_XX(): simulate a thing (eg sim_ActivitySpace)
+        * need to turn simMacro into sim_Macro()
+
+  * Getters & Setters:
+    * `set_XX(XX, ix = NULL)`: `XX` is the new replacement, if the field `XX` is indexed (ie; a vector or list), `ix` is the index to replace. If `ix = NULL`, the entire field is replaced.
+    * `get_XX(ix = NULL)`: If the field `XX` is indexed (ie; a vector or list), `ix` is the index to get If `ix = NULL`, the entire field is returned.
+
+  * Pointers:
+
+## Fields
+
+## Setup Functions
+
+`XX.Setup()` are functions called before any `R6Class` objects are created in an environment, and directly add/modify methods and fields in `R6ClassGenerator` objects.
+
+## Init Methods
+
+`XX.Init()` are methods attached to `R6ClassGenerator` objects that initialize certain parameters or fields of `R6Class` objects that already exist in an environment. They are not typically called during construction of the object and are usually called afterwards, with user input, prior to beginning a simulation.
+
+## Parameters Functions
+
+`XX.Parameters()` are functions that usually return a list of parameters, and are typically called with default arguments during initialization and whose output is typically assigned to a private field of the form `private$XX_PAR`.
+
+## Utility Functions

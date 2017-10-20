@@ -1,0 +1,53 @@
+HistoryGeneric:
+  name_cpp: MASH::HistoryGeneric
+  forward_declare: true
+  constructor:
+    roxygen: |
+      A class for recording generic histories comprised of event times (double precision floats) and events (strings).
+      @title Generic History
+      @param N reserve memory for \code{N} number of events
+      @section Methods:
+        * track_history: record an event from arguments 'tEvent' (double) and 'event' (string)
+        * get_history: return history as a named list
+      @section Fields:
+        * eventT: \code{std::vector<double>}
+        * events: \code{std::vector<std::string>}
+      @md
+      @export
+    args:
+      - N: int = 100
+  methods:
+    track_history:
+      args:
+        - tEvent: double
+        - event: "std::string"
+      return_type: void
+    get_history:
+      return_type: "Rcpp::List"
+
+HistoryTravel:
+  name_cpp: MASH::HistoryTravel
+  forward_declare: true
+  constructor:
+    roxygen: |
+      A class for recording travel histories comprised of event times (double precision floats) and locations (integers).
+      @title Travel History
+      @param N reserve memory for \code{N} number of events
+      @section Methods:
+        * track_travel: record an event from arguments 'tEvent' (double) and 'event' (string)
+        * get_travelHistory: return history as a named list
+      @section Fields:
+        * tTravel: \code{std::vector<double>}
+        * locationH: \code{std::vector<int>}
+      @md
+      @export
+    args:
+      - N: int = 100
+  methods:
+    track_travel:
+      args:
+        - tTravel: double
+        - locationH: int
+      return_type: void
+    get_travelHistory:
+      return_type: "Rcpp::List"

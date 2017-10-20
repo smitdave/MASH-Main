@@ -1,0 +1,48 @@
+Package: MASH
+Type: Package
+Title: MASH (Modular Analysis and Simulation for Human Health)
+Version: 0.1
+Authors@R: c(
+          person(given = "David L.", family = "Smith", email = "smitdave@gmail.com", role = c("cre","aut")),
+          person(given = "Héctor Manuel", family = "Sánchez Castellanos", email = "sanchez.hmsc@gmail.com", role= c("aut")),
+          person(given = "Sean", family = "Wu", email = "slwu89@berkeley.edu", role= c("aut")),
+          person(given = "Robert C.", family = "Reiner, Jr.", email = "bcreiner@uw.edu", role= "aut"),
+          person(given = "Amit", family = "Verma", email = "amit.verma13@gmail.com", role= "aut"),
+          person(given = "Arnaud", family = "Le Menach", role= "ctb"),
+          person(given = "Nick", family = "Ruktanonchai", role= "ctb"),
+          person(given = "Samson", family = "Kiware", role= "ctb"),
+          person(given = "Gerry", family = "Killeen", role= "ctb"),
+          person(given = "Tom", family = "Scott", role= "ctb"),
+          person(given = "Ellis", family = "McKenzie", role= "ctb"),
+          person(given = "Steven W.", family = "Lindsay", role= "ctb"),
+          person(given = "Willem", family = "Takken", role= "ctb"),
+          person(given = "Philip", family = "Eckhoff", role= "ctb"),
+          person(given = "Nicole", family = "Achee", role= "ctb"),
+          person(given = "Chris", family = "Barker", role= "ctb"),
+          person(given = "Nakul", family = "Chitnis", role= "ctb"),
+          person(given = "Justin", family = "Cohen", role= "ctb"),
+          person(given = "Su Yun", family = "Kang", role= "ctb"),
+          person(given = "Audrey", family = "Lenhart", role= "ctb"),
+          person(given = "John", family = "Marshall", role= "ctb"),
+          person(given = "Phil", family = "McCall", role= "ctb"),
+          person(given = "Catherine", family = "Moyes", role= "ctb"),
+          person(given = "Doug", family = "Norris", role= "ctb"),
+          person(given = "Alex", family = "Perkins", role= "ctb"),
+          person(given = "Chris", family = "Stone", role= "ctb"),
+          person(given = "Edward", family = "Wenger", role= "ctb"),
+          person(given = "Anne", family = "Wilson", role= "ctb"),
+          person(given = "Andrew J.", family = "Dolgert", role= "ctb"))
+Description: At the beginning, I had several goals for the project. First, I wanted to develop a simulation framework for malaria that would lower the barriers to developing, analyzing and comparing models, including spatially explicit micro-simulation models. The purpose of this was not just simulation but development of theory. Second, I was interested in the control of malaria, and analyzing effectiveness, cost-effectiveness, and establishing intervention coverage targets and intervention mixes for elimination. Third, I was interested in the problem of adaptive management in public health. Fourth, I wanted to bridge the world of maps and models, which involved managing, synthesizing, and analyzing information. What is the difference between a model of malaria in an unspecified location and a model of malaria in Uganda? Fifth, I was interested in the problem of relevant detail – what details make a difference? Goals 3-5 are more intimately connected than they might appear at given glance, for the available evidence constrains the sort of analysis that is appropriate for any place. Knowing what data to collect next involves understanding what details are relevant. These are the core activities of adaptive management. Sixth, I wanted to raise the standard for developing public software that would include the following features: benchmarking, version control, and ease of use. All of these problems were related, and they all seemed to have a common solution: develop a flexible, extensible, modular framework for simulating malaria.
+    Developing the initial prototype involved defining the independent parts of a model, each one hereafter called a COMPONENT, and an application program interface (API). Each variant of the algorithm in each COMPONENT is called a MODULE. The aim of the design is to achieve true plug-and-play modularity. To accomplish this, I set out to design one simple and one exquisitely complicated MODULE for each COMPONENT. Simulation and analysis require development of utilities. A core need is to develop the synthetic populations that initialize any simulation. Analysis, COMPONENT by COMPONENT, requires developing a set of simplifying models to connect each exquisitely complicated model with simpler approximating models, hopefully identifying a simple model that is “good-enough,” or as my Grandpa would say, pretty-damned good.
+    By the time I had worked out the API for malaria, I realized that the separate bits of the malaria could be considered a set of options for simulating virtually any problem in human health. This was the genesis of MASH.
+    -Professor David L Smith, Institute for Health Metrics & Evaluation, University of Washington
+License: MIT License
+URL: https://github.com/smitdave/MASH
+BugReports: https://github.com/smitdave/MASH/issues
+ByteCompile: yes
+Encoding: UTF-8
+LazyData: true
+SystemRequirements: C++11
+LinkingTo: Rcpp
+Imports: Rcpp, R6, spatstat, viridis, viridisLite, MASS, jsonlite, parallel, deSolve, rootSolve
+RoxygenNote: 6.0.1

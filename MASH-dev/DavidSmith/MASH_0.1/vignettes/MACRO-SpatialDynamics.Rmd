@@ -1,0 +1,17 @@
+---
+title: "Inference for Complex Spatial Dynamics"
+author: "Sean Wu"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{MACRO-SpatialDynamics}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# Inference for Complex Spatial Dynamics
+
+Population dynamic processes are intrinsically spatial. The need to understand these spatial dynamics, for purposes such as curiosity-driven basic science, reserve design for fisheries and conservation, and malaria and other infectious disease control, suggests the need for basic statistical inferential methodology.  Given the spatial scales characterizing populations and the distribution of habitats, what definitions of a “population” work best for various purposes? Is it possible to rigorously measure whether a population is a source or a sink?  What is the functional relevance of connectivity?  These questions are difficult to answer in real systems, where there are enormous practical challenges. One way forward is to pioneer theory using study systems where the entire inferential process can be manipulated.
+
+An exquisitely detailed individual-based mosquito simulation model has been developed that couples adult behaviors (e.g. blood feeding, sugar feeding, mating, egg laying) to structured aquatic habitats and ecology. In these models, spatial structure is imposed by the locations of habitats and other resources (vertebrate hosts, sugar sources) as well as their quality (e.g. the carrying capacity of each habitat patch). The mosquito components are linked to humans through a malaria transmission component, so that it is also possible to investigate the complex transmission dynamics of mosquito-borne pathogens. Complex mosquito population and pathogen infection dynamics emerge from the underlying resource landscape, which can be developed from environmental covariate layers using “realistic” algorithms.
+
+A basic challenge is whether statistical inference can be developed for this in silico system, where everything is known, but where there is little beyond the basic concepts (i.e. populations, source-sink dynamics, persistence) to use as a basis for establishing theory. The advantage of this system is that at low cost, it can be investigated through event logging or simulated studies, and some analytical tools have already been developed to analyze the resulting model structure. What can be known about such systems by an omniscient observer, and what can be learned through sampling and manipulation?
