@@ -1,0 +1,300 @@
+<!doctype html>
+<html>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<title>MBITES</title>
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/ucsf.css">
+	<link rel="stylesheet" href="lib/css/codeHighlighter.css">
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement( 'link' );
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+	<script src="./lib/w3.js"></script>
+</head>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<body>
+	<div class="reveal">
+		<!--<img src="./images/logos.png" alt="ITESM" height="50px"  style="border-radius: 5px; position: fixed; left: 25px;bottom: 25px; z-index: 10;   border-radius:5px; border-color:#000; border-width: 0px; border-style: solid" >-->
+		<div class="slides">
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--Title and Agenda .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<section data-background="./images/ITN_OVI_ResponseSurface.png">
+				<section style="background-color:rgba(0,0,0,1);">
+					<div style=" font-size: 20px; background-color:rgba(1,1,1,1); border-radius:20px; border-color:#000000; border-width: 10px; border-style: solid">
+						<br><h1 style="color:#FFF"><i>"A model should be as simple as possible, but no simpler."</i></h1><br>
+						<br><h1 style="color:#FFF"><i>-Albert Einstein</i></h1><br><br><br>
+                        <br><p style="color:#FFF">(press spacebar to move through the slides)</p><br>
+					</div>
+				</section>
+				<section style="border-width:10px;">
+					<br>
+					<sectionTitleStyle style="font-size:30px">Highly realistic individual-based simulation of mosquito population behavior, dynamics, and control</sectionTitleStyle><br><br>
+					<!--<img src="./images/ITN_ARE_ResponseSurface.gif" style="width:15%; border-radius: 5px;">-->
+					<img src="./images/life.png" style="width:50%; border-radius: 5px;">
+					<img src="./images/ARE_OVI_ResponseSurface.gif" style="width:25%; border-radius: 5px;">
+					<br>
+					<p style="font-size:20px; color:#555;">MBITES: Mosquito Bout-based and Individual-based Transmission Ecology Simulation</p>
+				</section>
+				<section style="border-width:10px;">
+						<br><sectionTitleStyle>Agenda</sectionTitleStyle><br><br>
+						<p3>I. Description and Philosophy | </p3><p1>David L. Smith</p1 style="color:#FFFFFF"><br>
+						<p3>II. Landscape and Mosquitoes | </p3><p1>Sean L. Wu</p1 style="color:#FFFFFF"><br>
+						<p3>III. Vector Control Evaluation | </p3><p1>Héctor M. Sánchez C.</p1 style="color:#FFFFFF"><br>
+						<p3>IV. Closing Remarks</p3><p1></p1 style="color:#FFFFFF"><br>
+						<br>
+				</section>
+			</section>
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--General Description .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<section data-background="./images/ITN_OVI_ResponseSurface.png">
+				<section style="background-color:rgba(0,0,0,1);">
+					<div style="background-color:rgba(0,0,0,1); border-radius:20px; border-color:#000000; border-width: 10px; border-style: solid">
+						<br><h1 style="color:#FFFFFF">I. Description and Philosophy</h1><br>
+						<p style="color:#FFFFFF; font-size:20px">
+							<!--1. Introduction<br>
+							2. Description<br>-->
+						</p>
+					</div>
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>What is a model?</sectionTitleStyle><br>
+					<img src="./images/d00.png" style="width:75%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>MASH</sectionTitleStyle><br>
+					<img src="./images/d01.png" style="width:50%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>M-BITES</sectionTitleStyle><br>
+					<img src="./images/d02.png" style="width:65%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>M-BITES</sectionTitleStyle><br>
+					<img src="./images/d03.png" style="width:75%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>Why M-BITES?</sectionTitleStyle><br>
+					<img src="./images/d04.png" style="width:75%; border-radius: 5px;">
+				</section>
+			</section>
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--General Description .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<section data-background="./images/ITN_OVI_ResponseSurface.png">
+				<section style="background-color:rgba(0,0,0,1);">
+					<div style="background-color:rgba(0,0,0,1); border-radius:20px; border-color:#000000; border-width: 10px; border-style: solid">
+						<br><h1 style="color:#FFFFFF">II. Landscape and Mosquitoes</h1><br>
+						<p style="color:#FFFFFF; font-size:20px">
+							1. Life Cycle and Movement<br>
+							2. Population Dynamics<br>
+							3. Individuals-Level Analysis<br>
+							4. Aquatic Stages<br>
+						</p><br>
+					</div>
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>1. Mosquito Life Cycle</sectionTitleStyle><br>
+					<img src="./images/lifeCycle.png" style="width:45%; border-radius: 5px;">
+					<img src="./images/key.png" style="width:37.5%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>1. Movement and Heterogeneity</sectionTitleStyle>
+					<iframe src="./images/landscape.html" width="700px" height="600px" class="foo" scrolling="no"></iframe>
+					<!--<img src="./images/cohortSpatial.png" style="width:40%; border-radius: 5px;">-->
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>1. Movement and Heterogeneity</sectionTitleStyle><br>
+					<img src="./images/MASH_v2.gif" style="width:40%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Population Dynamics</sectionTitleStyle><br><br>
+          <img src="./images/F_plot 2.png" style="width:37.5%; border-radius: 5px;">
+					<img src="./images/cohortStateSpace.png" style="width:30.5%; border-radius: 5px;">
+					<img src="./images/key.png" style="width:22%; border-radius: 5px;"><br>
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Population Dynamics</sectionTitleStyle><br>
+					<img src="./images/chord2.png" style="width:45%; border-radius: 5px;">
+					<img src="./images/key.png" style="width:37.5%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Mosquito Bionomics</sectionTitleStyle><br>
+					<img src="./images/bionomics.png" style="width:100%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>3. Mosquito Dissection</sectionTitleStyle><br>
+					<iframe src="./images/dissection.html" width="700px" height="500px" class="foo" scrolling="no"></iframe>
+					<img src="./images/key.png" style="width:35%; border-radius: 5px;">
+				</section>
+<!--					<section style="border-width:10px;">
+					<br><sectionTitleStyle>3. Mosquito Dissection</sectionTitleStyle><br>
+					<iframe src="./images/dissection2.html" width="700px" height="500px" class="foo" scrolling="no"></iframe>
+					<img src="./images/key.png" style="width:35%; border-radius: 5px;">
+				</section>-->
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>4. Aquatic Stages</sectionTitleStyle><br>
+					<!--<iframe src="./images/dissection2.html" width="700px" height="500px" class="foo" scrolling="no"></iframe>-->
+					<img src="./images/EL4P.png" style="width:60%; border-radius: 5px;">
+				</section>
+<!--				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Pathogen Transmission</sectionTitleStyle><br>
+					<img src="./images/infections.png" style="width:50%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Transmission Chains</sectionTitleStyle><br>
+					<iframe src="./images/uninterpretableChain.html" width="1000px" height="500px" class="foo" scrolling="no"></iframe>
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Transmission Chains</sectionTitleStyle><br>
+					<img src="./images/SPA.gif" style="width:35%; border-radius: 5px;">
+				</section>-->
+
+<!--				<section style="border-width:10px;">
+					<br><sectionTitleStyle>3. Mosquito Bionomics</sectionTitleStyle><br>
+					<iframe src="./images/lifespans.html" width="1000px" height="500px" class="foo" scrolling="no"></iframe>
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>3. Mosquito Bionomics</sectionTitleStyle><br>
+					<img src="./images/cohortStateSpace.png" style="width:50%; border-radius: 5px;">
+				</section>-->
+			</section>
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--General Description .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<section data-background="./images/ITN_OVI_ResponseSurface.png">
+				<section style="background-color:rgba(0,0,0,1);">
+					<div style="background-color:rgba(0,0,0,1); border-radius:20px; border-color:#000000; border-width: 10px; border-style: solid">
+						<br><h1 style="color:#FFFFFF">III. Vector Control</h1><br>
+						<p style="color:#FFFFFF; font-size:20px">
+							1. Life Cycle With Vector Control Interventions<br>
+							2. Vector Control Analysis Tools<br>
+							3. Transmission Networks<br>
+						</p><br>
+					</div>
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>1. Life Cycle With Interventions</sectionTitleStyle><br>
+					<img src="./images/lifeFull.png" style="width:75%; border-radius: 5px;">
+				</section>
+				<!--<section style="border-width:10px;">
+				<iframe src="./images/dissection2.html" width="500px" height="500px" class="foo" scrolling="no"></iframe>
+					<br><sectionTitleStyle>3. Population History Exploration</sectionTitleStyle><br>
+					<img src="./images/graphStruct.png" style="width:45%; border-radius: 5px;">
+				</section>-->
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Vector Control Flexibility</sectionTitleStyle><br><br>
+          <img src="./images/F_plot 2.png" style="width:40%; border-radius: 5px;">
+					<img src="./images/F_plot 4.png" style="width:40%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Coverage Effects Comparison</sectionTitleStyle><br><br>
+          <!--<img src="./images/linear.png" style="width:45%; border-radius: 5px;">-->
+					<img src="./images/gifRadial.gif" style="width:30%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Exploration and Optimisation</sectionTitleStyle><br>
+					<video data-autoplay width=60% controls><source src="./images/Factorial.mov"></video>
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>3. Transmission Networks</sectionTitleStyle><br>
+					<iframe src="./images/uninterpretableChain.html" width="1000px" height="500px" class="foo" scrolling="no"></iframe>
+				</section>
+				<!--<section style="border-width:10px;">
+					<br><sectionTitleStyle>3. Transmission Networks</sectionTitleStyle><br>
+					<img src="./images/SPA.gif" style="width:40%; border-radius: 5px;">
+				</section>-->
+			</section>
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--General Description .-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<section data-background="./images/ITN_OVI_ResponseSurface.png">
+				<section style="background-color:rgba(0,0,0,1);">
+					<div style="background-color:rgba(0,0,0,1); border-radius:20px; border-color:#000000; border-width: 10px; border-style: solid">
+						<br><h1 style="color:#FFFFFF">IV. Closing Remarks</h1><br>
+						<p style="color:#FFFFFF; font-size:20px">
+							1. Extreme Realism<br>
+							2. Next Steps<br>
+							3. The Team<br>
+						</p><br>
+					</div>
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>1. Extreme Realism and Heterogeneity</sectionTitleStyle><br>
+					<img src="./images/HighResNetwork.png" style="width:35%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Next Steps: Implementation and Debugging</sectionTitleStyle><br>
+					<img src="./images/debugging.png" style="width:75%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle>2. Next Steps: Gene Drive</sectionTitleStyle><br>
+					<img src="./images/MGDrive2.png" style="width:90%; border-radius: 5px;">
+				</section>
+				<section style="border-width:10px;">
+				<br><sectionTitleStyle>3. The Team</sectionTitleStyle><br><br>
+					<p style="font-size:15px; color: #000">
+						<p4>Core:</p4><p1> David L Smith, Amit Verma, Nick Ruktanonchai, Arnaud Le Menac'h, Robert C. Reiner, Jr., Héctor M. Sánchez C., Sean Wu </p1><br><br>
+						<p4>Human Mobility Team:</p4><p1> T Alex Perkins, Moritz Kraemer, Andy Tatem, David L Smith</p1><br><br>
+						<p4>LOME Development Team:</p4><p1> Robert C. Reiner, Jr., Isabel Rodriguez, Bryan Greenhouse, Sean Wu</p1><br><br>
+						<p4>MBITES Development Team:</p4><p1> Nick Ruktanonchai, Arnaud Le Menac'h, Robert C. Reiner, Jr., Héctor M. Sánchez C., Sean Wu</p1><br><br>
+						<p4>Malaria Synthetic Populations Team:</p4><p1> Robert C. Reiner, Jr., David L. Smith, Nick Ruktanonchai</p1><br><br>
+ 						<p4>Spatial Analysis Team:</p4><p1> Donal Bisanzio</p1><br><br>
+						<p4>Bioko Island Malaria Team:</p4><p1> Carlos A. Guerra, Dianna Hergott, Guillermo Garcia Contreras, David L Smith, Sean Wu</p1><br><br>
+ 						<p4>Uganda Malaria Team (PRISM):</p4><p1> Victor Alegana, Andy Tatem, Kilama Maxwell, Bryan Greenhouse, Isabel Rodriguez</p1><br><br>
+						<p4>Zambia Malaria Team:</p4><p1> Kelly Searle, Bill Moss, Doug Norris, David L Smith</p1><br><br>
+						<p4>Haiti Malaria Elimination Team:</p4><p1> Su Yun Kang, Katherine Battle</p1><br><br>
+					</p>
+				</section>
+				<section style="border-width:10px;"><br>
+					<!--<br><sectionTitleStyle>Questions</sectionTitleStyle><br><br>-->
+					<img src="./images/ihme.png" style="width:30%; border-radius: 5px;">
+          <img src="./images/berkeley.jpg" style="width:30%; border-radius: 5px;"><br>
+          <img src="./images/gates.png" style="width:60%; border-radius: 5px;"><br><br>
+				</section>
+			</section>
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+		</div>
+	</div>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+	<script>w3.includeHTML();</script>
+	<script>
+	// More info https://github.com/hakimel/reveal.js#configuration
+	Reveal.initialize({
+		controls: false,
+		progress: false,
+		history: true,
+		center: true,
+		transition: 'slide', // none/fade/slide/convex/concave/zoom
+		// More info https://github.com/hakimel/reveal.js#dependencies
+		dependencies: [
+			{src:'lib/js/classList.js', condition: function() { return !document.body.classList;}},
+			{src:'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' );}},
+			{src:'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' );}},
+			{src:'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad();}},
+			{src:'plugin/zoom-js/zoom.js', async: true},
+			{src:'plugin/notes/notes.js', async: true}
+		]
+	});
+	</script>
+</body>
+</html>
