@@ -101,7 +101,7 @@ mbitesBRO_cohort_simCohort <- function(N){
   for(i in 1:N){
     # assign the mosquitoes
     myID = paste0("0_",i,"_1")
-    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=0,ix=aquaStart[i],genotype=1L,state=private$initState,eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
+    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=0,locNow=aquaStart[i],genotype=1L,state=private$initState,eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
 
     private$pop$get(myID)$set_FemalePopPointer(self)
     private$pop$get(myID)$set_MalePopPointer(private$MalePopPointer)

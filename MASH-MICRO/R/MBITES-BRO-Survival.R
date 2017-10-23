@@ -44,10 +44,10 @@ mbitesBRO_get_surviveFlightProb <- function(){
 #' @md
 mbitesBRO_get_restHaz <- function(){
   switch(private$inPointSet,
-    f = {return(private$LandscapePointer$get_FeedingSites(private$ix)$get_hazLspot(private$lspot))},
-    l = {return(private$LandscapePointer$get_AquaSites(private$ix)$get_haz())},
-    m = {return(private$LandscapePointer$get_MatingSites(private$ix)$get_haz())},
-    s = {return(private$LandscapePointer$get_SugarSites(private$ix)$get_haz())},
+    f = {return(private$LandscapePointer$get_FeedingSites(private$locNow)$get_hazLspot(private$lspot))},
+    l = {return(private$LandscapePointer$get_AquaSites(private$locNow)$get_haz())},
+    m = {return(private$LandscapePointer$get_MatingSites(private$locNow)$get_haz())},
+    s = {return(private$LandscapePointer$get_SugarSites(private$locNow)$get_haz())},
     {stop("illegal point set for MBITES-BRO")}
   )
 }

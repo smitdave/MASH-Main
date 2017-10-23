@@ -61,7 +61,13 @@ MicroKernel_PowerKernel <- function(S, D, sigma = 3, eps = 0.1, beta = 0){
     S2D[ix,] = allProb / sum(allProb)
   }
 
-  return(S2D)
+  # return(S2D)
+  return(
+    list(
+      S2D=S2D, # movement probabilities
+      dS2D=dS2D # distance matrix
+    )
+  )
 }
 
 #' MICRO Search Kernels: Sort ID and Probabilities
@@ -75,11 +81,12 @@ MicroKernel_PowerKernel <- function(S, D, sigma = 3, eps = 0.1, beta = 0){
 #'  * pr: sorted and normalized probabilities
 #'
 #' @export
-MicroKernel_prSort <- function(id, pr){
+MicroKernel_prSort <- function(id, pr, dist){
   ot = order(pr,decreasing = TRUE)
   return(list(
     id = id[ot],
-    pr = pr[ot]/sum(pr)
+    pr = pr[ot]/sum(pr),
+    dist = dist[ot]
   ))
 }
 
@@ -108,15 +115,22 @@ MicroKernel_prSort <- function(id, pr){
 MicroKernel_exactMvOb <- function(S,D,sigma=3,eps=0.1,beta=0){
 
   ixS = vapply(X = S,FUN = function(x){x$get_ix()},FUN.VALUE = integer(1)) #id of starting sites
-  prS2D = MicroKernel_PowerKernel(S,D,sigma,eps,beta) #movement matrix between S to D
+  kernel = MicroKernel_PowerKernel(S,D,sigma,eps,beta) #movement matrix between S to D
   MvOb = vector(mode="list",length = length(S)) #empty movement object
   nD = length(D) #number of D sites
 
   if(identical(S,D)){ # movement within same class of site
+
+    # iterate through all starting sites
     for(i in 1:length(S)){
+
+      # pull out stuff for MicroKernel_prSort and sort probabilities
       id = (1:nD)[-i]
-      pr = prS2D[i,-i]
-      sortedPr = MicroKernel_prSort(id,pr)
+      pr = kernel$S2D[i,-i]
+      dist = kernel$dS2D[i,-i]
+      sortedPr = MicroKernel_prSort(id,pr,dist)
+
+      # make the movement object for movement from site i
       MvOb[[i]] = list(
         ix = ixS[i],
         PR = c(0,1,0), # PR = c(pr[i],1-pr[i],0),
@@ -126,8 +140,16 @@ MicroKernel_exactMvOb <- function(S,D,sigma=3,eps=0.1,beta=0){
       )
     }
   } else { # movement between classes of sites
+
+    # iterate through all starting sites
     for(i in 1:length(S)){
-      sortedPr = MicroKernel_prSort(1:nD,prS2D[i,])
+
+      # pull out stuff for MicroKernel_prSort and sort probabilities
+      id = 1:nD
+      pr = kernel$S2D[i,]
+      dist = kernel$dS2D[i,]
+      sortedPr = MicroKernel_prSort(id,pr,dist)
+
       MvOb[[i]] = list(
         ix = ixS[i],
         PR = c(0,1,0), # PR = c(pr[i],1-pr[i],0),

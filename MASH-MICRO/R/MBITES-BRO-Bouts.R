@@ -81,10 +81,10 @@ mbitesBRO_timingGamma <- function(){
 #' @return vector of landing spot weights
 mbitesBRO_get_MySiteType <- function(){
   switch(private$inPointSet,
-    f = {return(private$LandscapePointer$get_FeedingSites(private$ix)$get_siteType())},
-    l = {return(private$LandscapePointer$get_AquaSites(private$ix)$get_siteType())},
-    m = {return(private$LandscapePointer$get_MatingSites(private$ix)$get_siteType())},
-    s = {return(private$LandscapePointer$get_SugarSites(private$ix)$get_siteType())},
+    f = {return(private$LandscapePointer$get_FeedingSites(private$locNow)$get_siteType())},
+    l = {return(private$LandscapePointer$get_AquaSites(private$locNow)$get_siteType())},
+    m = {return(private$LandscapePointer$get_MatingSites(private$locNow)$get_siteType())},
+    s = {return(private$LandscapePointer$get_SugarSites(private$locNow)$get_siteType())},
     {stop("illegal point set for M-BITES")}
   )
 }
@@ -135,7 +135,7 @@ mbitesBRO_newSpot <- function(){
 #'  * This method is bound to \code{MosquitoFemale$enterHouse()}.
 #'
 mbitesBRO_enterHouse <- function(){
-  if(runif(1) < private$LandscapePointer$get_FeedingSites(private$ix)$get_enterP()){
+  if(runif(1) < private$LandscapePointer$get_FeedingSites(private$locNow)$get_enterP()){
     # mosquito is inside of house
   } else {
     # mosquito is not inside of house
@@ -267,7 +267,7 @@ mbitesBRO_layEggs_Emerge <- function(){
 #' @md
 mbitesBRO_layEggs_EL4P <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("O_succeed")){
-    private$LandscapePointer$get_AquaSites(private$ix)$get_EggQ()$add_EggQ(N_new=private$batch,tOviposit_new=private$tNow,genotype_new=1L)
+    private$LandscapePointer$get_AquaSites(private$locNow)$get_EggQ()$add_EggQ(N_new=private$batch,tOviposit_new=private$tNow,genotype_new=1L)
     private$batch = 0
     private$stateNew = "B"
   }

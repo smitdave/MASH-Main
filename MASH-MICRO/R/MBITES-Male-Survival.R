@@ -37,8 +37,8 @@ mbitesMale_surviveResting <- function(){
 #'
 mbitesMale_get_restHaz <- function(){
   switch(private$inPointSet,
-    m = {return(private$LandscapePointer$get_MatingSites(private$ix)$get_haz())},
-    s = {return(private$LandscapePointer$get_SugarSites(private$ix)$get_haz())},
+    m = {return(private$LandscapePointer$get_MatingSites(private$locNow)$get_haz())},
+    s = {return(private$LandscapePointer$get_SugarSites(private$locNow)$get_haz())},
     {stop(cat("illegal point set for MBITES-Male: ",private$inPointSet,"\n",sep=""))}
   )
 }

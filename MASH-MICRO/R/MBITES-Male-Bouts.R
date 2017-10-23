@@ -66,8 +66,8 @@ mbitesMale_timingGamma <- function(){
 #' @return vector of landing spot weights
 mbitesMale_get_MySiteType <- function(){
   switch(private$inPointSet,
-    m = {return(private$LandscapePointer$get_FeedingSites(private$ix)$get_siteType())},
-    s = {return(private$LandscapePointer$get_AquaSites(private$ix)$get_siteType())},
+    m = {return(private$LandscapePointer$get_FeedingSites(private$locNow)$get_siteType())},
+    s = {return(private$LandscapePointer$get_AquaSites(private$locNow)$get_siteType())},
     {stop("illegal point set for MBITES-Male")}
   )
 }
@@ -114,7 +114,7 @@ mbitesMale_newSpot <- function(){
 #'  * This method is bound to \code{MosquitoMale$enterHouse()}.
 #'
 mbitesMale_enterHouse <- function(){
-  if(runif(1) < private$LandscapePointer$get_FeedingSites(private$ix)$get_enterP()){
+  if(runif(1) < private$LandscapePointer$get_FeedingSites(private$locNow)$get_enterP()){
     # mosquito is inside of house
   } else {
     # mosquito is not inside of house
@@ -162,7 +162,7 @@ mbitesMale_restingSpot <- function(){
 mbitesMale_boutM <- function(){
 
   if(self$isAlive() & runif(1) < private$MalePopPointer$get_MBITES_PAR("M_succeed")){
-    private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$add_male2Q(private$id,private$mateFitness,private$genotype)
+    private$LandscapePointer$get_MatingSites(private$locNow)$get_MatingQ()$add_male2Q(private$id,private$mateFitness,private$genotype)
     private$stateNew = "R"
   }
 
