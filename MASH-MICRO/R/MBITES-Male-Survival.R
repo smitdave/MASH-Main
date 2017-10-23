@@ -36,10 +36,10 @@ mbitesMale_surviveResting <- function(){
 #'  * This method is bound to \code{MosquitoMale$get_restHaz()}.
 #'
 mbitesMale_get_restHaz <- function(){
-  switch(private$inPointSet,
+  switch(private$pSetNow,
     m = {return(private$LandscapePointer$get_MatingSites(private$locNow)$get_haz())},
     s = {return(private$LandscapePointer$get_SugarSites(private$locNow)$get_haz())},
-    {stop(cat("illegal point set for MBITES-Male: ",private$inPointSet,"\n",sep=""))}
+    {stop(cat("illegal point set for MBITES-Male: ",private$pSetNow,"\n",sep=""))}
   )
 }
 

@@ -84,7 +84,7 @@ mbites_timingGamma <- function(){
 #'
 #' @return vector of landing spot weights
 mbites_get_MySiteType <- function(){
-  switch(private$inPointSet,
+  switch(private$pSetNow,
     f = {return(private$LandscapePointer$get_FeedingSites(private$locNow)$get_siteType())},
     l = {return(private$LandscapePointer$get_AquaSites(private$locNow)$get_siteType())},
     m = {return(private$LandscapePointer$get_MatingSites(private$locNow)$get_siteType())},

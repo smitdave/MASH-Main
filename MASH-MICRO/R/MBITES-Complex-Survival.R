@@ -45,7 +45,7 @@ mbites_get_surviveFlightProb <- function(){
 #'  * This method is bound to \code{MosquitoFemale$get_restHaz()}.
 #'
 mbites_get_restHaz <- function(){
-  switch(private$inPointSet,
+  switch(private$pSetNow,
     f = {return(private$LandscapePointer$get_FeedingSites(private$locNow)$get_hazLspot(private$lspot))},
     l = {return(private$LandscapePointer$get_AquaSites(private$locNow)$get_haz())},
     m = {return(private$LandscapePointer$get_MatingSites(private$locNow)$get_haz())},

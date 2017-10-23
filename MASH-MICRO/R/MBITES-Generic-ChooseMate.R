@@ -19,8 +19,8 @@
 #'
 mbitesGeneric_chooseMate <- function(){
 
-  if(private$inPointSet != "m"){
-    stop(cat("mosquito is calling chooseMate from outside a mating site: ",private$locNow," ",private$inPointSet,"\n",sep=""))
+  if(private$pSetNow != "m"){
+    stop(cat("mosquito is calling chooseMate from outside a mating site: ",private$locNow," ",private$pSetNow,"\n",sep=""))
   }
 
   if(private$LandscapePointer$get_MatingSites(private$locNow)$get_MatingQ()$get_N() == 0){

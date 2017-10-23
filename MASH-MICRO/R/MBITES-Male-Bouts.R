@@ -65,7 +65,7 @@ mbitesMale_timingGamma <- function(){
 #'
 #' @return vector of landing spot weights
 mbitesMale_get_MySiteType <- function(){
-  switch(private$inPointSet,
+  switch(private$pSetNow,
     m = {return(private$LandscapePointer$get_FeedingSites(private$locNow)$get_siteType())},
     s = {return(private$LandscapePointer$get_AquaSites(private$locNow)$get_siteType())},
     {stop("illegal point set for MBITES-Male")}
