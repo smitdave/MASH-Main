@@ -1,5 +1,6 @@
 \documentclass{article}
 \usepackage{mathtools}
+\renewcommand{\baselinestretch}{1.2} 
 
 \usepackage{Sweave}
 \begin{document}
@@ -8,13 +9,7 @@
 
 \section{Mosquito Bouts}
 
-In computing the outcome of a flight bout, variables track the
-mosquito's current state and the time when it started the bout,
-and the mosquito's next state and the time when it will start the
-next bout. The start of a bout, is \verb1tNext1, a variable that
-was checked to be sure other elements of the simulation it
-depends on have already been correctly set. Upon entering the
-bout, we update the mosquitoes time, state, and location:
+In computing the outcome of a flight bout, variables track the  mosquito's present and future state (\verb1state1, and \verb1stateNew1); event times (\verb1tNow1, and \verb1tNext1) | the moment when it started the bout, and location (\verb1locNow1, and \verb1locNext1). Before starting a new flight bout, \verb1tNext1 is was checked to be sure other elements of the simulation it depends on have already been correctly set. Upon entering the bout, we update the mosquitoes time, state, and location:
 \begin{itemize}
 \item \verb1tNow = tNext1
 \item \verb1tNext = timing()1
@@ -22,16 +17,16 @@ bout, we update the mosquitoes time, state, and location:
 \item \verb1locNow = locNext1
 \item \verb1locNext = moveMe()1
 \end{itemize}
-All calculations within a bout use \verb1tNow1, \verb1state1, and \verb1locNow1. 
+All calculations within a bout use the time, state and location at the present: \verb1tNow1, \verb1state1, and \verb1locNow1. 
+
+\paragraph{Implementation}
+
+All bouts are implemented within a generic bout framework, in the function \verb1mbites_oneBout()1.
+
 
 \subsection{Blood Feeding Search Bout [F]}
 
-If a female mosquito is not in the neighborhood of a blood meal
-host, it  must search for one. She might also initiate a search
-for blood, even if she is at a suitable place to feed. In some
-cases, such as peri-domestic breeding, where it is not necessary
-to move to find a bloodmeal host, the mosquito might bypass a
-blood meal search flight.
+If a female mosquito is not in the neighborhood of a blood meal host, she must search for one. She might also initiate a new search bout, even if the site she occupies is suitable for blood feeding. In some cases, such as peri-domestic breeding, where it is not necessary to move to find a bloodmeal host, she might initiate a blood feeding attempt bout without a blood meal search bout. 
 
 A flight search bout for blood feeding could begin anywhere, but
 it always ends at a {\em feeding site} or {\em haunt}:
@@ -54,7 +49,7 @@ frustrated search attempt without a change of behavioral state.
 
 \begin{itemize}
 %
-\item A function is called to determine the next location
+\item The function \verb1rMove()1 is called to determine the mosquito's next location. 
 %
 \item A parameter, \verb1bfsb.s1, determines whether a mosquito
 has a ``success'' on its approach to the haunt. If the flight was
@@ -66,37 +61,16 @@ mosquito can fail to find a suitable resting place and thus
 decided to leave (denoted \verb1bfrs.f1) in which case its
 behavioral state is set to {\bf F}.
 %
-\item The functions \verb1flightStress()1 is then called, which
-computes the probability of surviving the flight, \verb1bfsb.fs1.
-If a mosquito dies, its state is set to {\bf D}.
-%
-\item The functions \verb1restingHazards()1 is then called, which
-computes the probability of surviving from landing through
-launch, \verb1bfsb.rs1. If a mosquito dies, its state is set to
-{\bf D}.
-%
-\end{itemize}
-\paragraph{Implementation}
-
-\begin{itemize}
-%
-\item A function is called to determine the next location
-%
-\item A parameter, \verb1bfsb.s1, determines whether a mosquito
-has a ``success'' on its approach to the haunt. If the flight was
-a ''success,'' then its behavioral state is set to {\bf B}.
-Otherwise, it remains in state {\bf F}.
-%
-\item The function  \verb1restingSpot()1 is then called. A
+\item The function  \verb1sugarEnergetics()1 is then called. A
 mosquito can fail to find a suitable resting place and thus
 decided to leave (denoted \verb1bfrs.f1) in which case its
 behavioral state is set to {\bf F}.
 %
-\item The functions \verb1flightStress()1 is then called, which
+\item The functions \verb1surviveFlight()1 is then called, which
 computes the probability of surviving the flight, \verb1bfsb.fs1.
 If a mosquito dies, its state is set to {\bf D}.
 %
-\item The functions \verb1restingHazards()1 is then called, which
+\item The functions \verb1surviveResting()1 is then called, which
 computes the probability of surviving from landing through
 launch, \verb1bfsb.rs1. If a mosquito dies, its state is set to
 {\bf D}.
@@ -106,10 +80,10 @@ launch, \verb1bfsb.rs1. If a mosquito dies, its state is set to
 The mosquito's ending state is:
 
 \begin{itemize}
-\item[{\bf D}] with probabilty $P_{FD} = 1 - bfsb.fs \times
-bfsb.rs $.
-\item[{\bf F}] with probability $P_{FF} = (1-P_{FD}) (bfrs.f +
-(1-bfrs.f)(1-bfsb.s))$.
+\item[{\bf D}] with probabilty $P_{FD} = 1 - $\verb1bfsb.fs1 $\times$
+\verb1bfsb.rs1
+\item[{\bf F}] with probability $P_{FF} = (1-P_{FD}) ($\verb1bfrs.f1 $+
+(1-$\verb1bfrs.f1$)(1-$\verb1bfsb.s1$))$.
 \item[{\bf B}] with probability $P_{FB} = 1-P_{FF}$.
 \end{itemize}
 
@@ -337,9 +311,14 @@ feeding search bout at some point in the future.
 \section{Options}
 
 
-\subsection{Survive Flight}
+\subsection{Surviving the Flight}
 
-\subsection{Resting Spot}
+This discusses implementation and options for \verb1surviveFlight()1. 
+
+\subsection{Resting Hazards}
+
+This discusses implementation and options for \verb1surviveResting()1. 
+
 
 \subsection{Senescence}
 

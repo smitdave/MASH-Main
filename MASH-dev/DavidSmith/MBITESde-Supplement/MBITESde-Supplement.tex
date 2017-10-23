@@ -1,0 +1,244 @@
+\documentclass{article}
+\usepackage{mathtools}
+\renewcommand{\baselinestretch}{1.2} 
+\usepackage{Sweave}
+\begin{document}
+\input{MBITESde-Supplement-concordance}
+\newcommand{\eg}{{\em e.g., }}
+\newcommand{\ie}{{\em i.e., }}
+
+
+\section{Supplementary Methods: MBITES-de}
+
+Let the behavioral state variable name from MBITES denote the expected number of mosquitoes of a given chronological age ($a$), that are in each behavioral state. Similarly, let the waiting times to events be modeled as a rate that is dependent on the behavioral state ($x$), age, and time ($t$): $\gamma_x(a,t)$. The proportion of mosquitoes that transition from state $x$ to state $y$ at the end of a bout is denoted $P_{xy}$. Death rates can be age dependent (\ie due to senescence), which affects the proportions transitioning to other states, so we write $P_{xy}(a)$. To deal with the event-driven nature of these bouts and the possibility some bouts may be repeated many times before transitioning to another state, we index mosquitoes by the $i^{th}$ attempt to repeat the same event as a way of computing waiting times properly; for example, a mosquito repeating a blood feeding attempt bout transitions from $B_n(a)$ to $B_{n+1}(a)$. Finally, we let $\Lambda(t)$ represent the rate of emergence of adult female mosquitoes. The following system of coupled PDEs is homologous to MBITES: 
+\begin{equation}\begin{array}{rl}
+F_1(0,t)=& \Lambda(t) \\ 
+%
+\frac{\partial F_1(a,t)}{\partial t} + \frac{\partial F_1(a,t)}{\partial a} =& 
+\gamma_O(a,t) P_{OF}(a) \sum_i O_i(a,t) 
++ \gamma_B(a,t) P_{BF}(a)  \sum_i B_i(a,t) \\&
++ \gamma_R(a,t) P_{RF}(a) R(a,t) 
+- \gamma_F(a,t) F_1(a,t) \\ 
+%
+\frac{\partial F_i(a,t)}{\partial t} + \frac{\partial F_i(a,t)}{\partial a} =& \gamma_F(a,t) P_{FF}(a) F_{i-1} (a,t) - \gamma_F(a,t) F_i(a,t) \\ 
+%
+%
+\frac{\partial B_1(a,t)}{\partial t} + \frac{\partial B_1(a,t)}{\partial a} =&  
+\gamma_O(a,t) P_{OB}(a) \sum_i O_i(a,t) 
++ \gamma_F(a,t) P_{FB}(a) \sum_i F_i(a,t)\\& 
++ \gamma_R(a,t) P_{RB}(a) R(a,t)
+\\&
+- \gamma_B(a,t) B_1(a,t) \\ 
+%
+\frac{\partial B_i(a,t)}{\partial t} + \frac{\partial B_i(a,t)}{\partial a} =& \gamma_B(a,t) P_{BB}(a) B_{i-1}(a,t) -
+\gamma_B(a,t) B_i(a,t) 
+\\
+%
+\frac{\partial R(a,t)}{\partial t} + \frac{\partial R(a,t)}{\partial a} =&  \gamma_B(a,t) P_{BR}(a) \sum_i B_i(a,t) - \gamma_R(a,t) R(a,t)\\ 
+%
+\frac{\partial L_1(a,t)}{\partial t} + \frac{\partial L_1(a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R(a,t) + 
+\gamma_O(a,t) P_{OL}(a) \sum_i O_i(a,t)\\& - \gamma_L(a,t) L_1(a,t)
+\\ 
+%
+\frac{\partial L_i(a,t)}{\partial t} + \frac{\partial L_i(a,t)}{\partial a} =& \gamma_L(a,t) P_{LL}(a) L_{i-1} (a,t) - \gamma_L(a,t) L_i(a,t)
+\\ 
+%
+\frac{\partial O_1(a,t)}{\partial t} + \frac{\partial O_1(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) \sum_i L_i(a,t) 
++ \gamma_R(a,t) P_{RO}(a) R(a,t) \\&
+- \gamma_O(a,t) O_1(a,t)
+\\ 
+%
+\frac{\partial O_i(a,t)}{\partial t} + \frac{\partial O_i(a,t)}{\partial a} =& \gamma_O(a,t) P_{OO}(a) O_{i-1} (a,t)   - \gamma_O(a,t) O_i(a,t)
+\\ 
+%
+\end{array}\end{equation}
+
+It is a nuisance to deal with an infinite set of equations, but if the state transitions are Markovian, then a change of variables to lump the even$^{th}$ and odd$^{th}$ states together: $x_o = x_1 + x_3 + x_5 + ...$ and $x_e = x_2 + x_4 + x_6 + ...$, and $x = x_o + x_e$:  
+%
+\begin{equation}\begin{array}{rl}
+F_o(0,t) =& \Lambda(t) \\ 
+%
+\frac{\partial F_o(a,t)}{\partial t} + \frac{\partial F_o(a,t)}{\partial a} =& 
+\gamma_O(a,t) P_{OF}(a) O(a,t) 
++ \gamma_B(a,t) P_{BF}(a) B(a,t) \\&
+ + \gamma_R(a,t) P_{RF}(a) R(a,t)
++ \gamma_F(a,t) P_{FF}(a) F_e(a,t) \\ &
+- \gamma_F(a,t) F_o(a,t) \\ 
+%
+\frac{\partial F_e(a,t)}{\partial t} + \frac{\partial F_e(a,t)}{\partial a} =&  \gamma_F(a,t) P_{FF}(a) F_o (a,t) - \gamma_F(a,t) F_e(a,t) \\ 
+%
+%
+\frac{\partial B_o(a,t)}{\partial t} + \frac{\partial B_o(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O(a,t) + \gamma_F(a,t) P_{FB}(a) F(a,t) \\ & 
++ \gamma_R(a,t) P_{RB}(a) R(a,t) 
++ \gamma_B(a,t) P_{BB}(a) B_e(a,t)\\ & 
+- \gamma_B(a,t) B_o(a,t) \\ 
+%
+\frac{\partial B_e(a,t)}{\partial t} + \frac{\partial B_e(a,t)}{\partial a} =& \gamma_B(a,t) P_{BB}(a) B_o(a,t) -
+\gamma_B(a,t) B_e(a,t) 
+\\
+%
+\frac{\partial R(a,t)}{\partial t} + \frac{\partial R(a,t)}{\partial a} =&  \gamma_B(a,t) P_{BR}(a) B(a,t) - \gamma_R(a,t) R(a,t)\\ 
+%
+\frac{\partial L_o(a,t)}{\partial t} + \frac{\partial L_o(a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R(a,t) + 
+\gamma_O(a,t) P_{OL}(a) O(a,t) \\&
++ \gamma_L(a,t)  P_{LL}(a) L_e(a,t)
+- \gamma_L(a,t) L_o(a,t)
+\\ 
+%
+\frac{\partial L_e(a,t)}{\partial t} + \frac{\partial L_e(a,t)}{\partial a} =& \gamma_L(a,t) P_{LL}(a) L_o (a,t) - \gamma_L(a,t) L_e(a,t)
+\\ 
+%
+\frac{\partial O_o(a,t)}{\partial t} + \frac{\partial O_o(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) L(a,t) 
++ \gamma_R(a,t) P_{RO}(a) R(a,t)  
+\\& 
++ \gamma_O(a,t) P_{OO}(a) O_e(a,t)
+- \gamma_O(a,t) O_o(a,t)
+\\ 
+%
+\frac{\partial O_e(a,t)}{\partial t} + \frac{\partial O_e(a,t)}{\partial a} =& \gamma_O(a,t) P_{OO}(a) O_o (a,t) - \gamma_O(a,t) O_e(a,t)
+\\ 
+%
+\end{array}\end{equation}
+
+
+\subsection{The MBITES-de for Cohorts}
+
+Finally, we want a version of these equations to model changes in a cohort of individuals with respect to age (assuming all the mosquitoes emerge from aquatic habitats at the same time of day): 
+\begin{equation}\begin{array}{rcl}
+F_o(0) &=& 1 \\ 
+%
+{\dot F}_o&=& 
+\gamma_O(a) P_{OF}(a) O(a) 
++ \gamma_B(a) P_{BF}(a) B(a) 
+ + \gamma_R(a,t) P_{RF}(a) R(a)
+\\ &&
++ \gamma_F(a) P_{FF}(a) F_e(a) 
+- \gamma_F(a) F_o(a) \\ 
+%
+{\dot F}_e &=&  \gamma_F(a) P_{FF}(a) F_o (a) - \gamma_F(a) F_e(a) \\ 
+%
+%
+{\dot B}_o &=&  \gamma_O(a) P_{OB}(a) O(a) + \gamma_F(a) P_{FB}(a) F(a) 
++ \gamma_R(a) P_{RB}(a) R(a) \\ && 
++ \gamma_B(a) P_{BB}(a) B_e(a)
+- \gamma_B(a) B_o(a)\\
+%
+{\dot B}_e &=& \gamma_B(a) P_{BB}(a) B_o(a) -
+\gamma_B(a) B_e(a) 
+\\
+%
+{\dot R} &=&  \gamma_B(a) P_{BR}(a) \sum_i B_i(a) - \gamma_R(a) R(a)\\ 
+%
+{\dot L}_o&=& \gamma_R(a) P_{RL}(a) R(a) + 
+\gamma_O(a) P_{OL}(a) O(a) \\&&
++ \gamma_L(a)  P_{LL}(a) L_e(a)
+- \gamma_L(a) L_o(a)
+\\ 
+%
+{\dot L}_e &=& \gamma_L(a) P_{LL}(a) L_o (a) - \gamma_L(a) L_e(a)
+\\ 
+%
+{\dot O}_o &=& \gamma_L(a) P_{LO}(a) L(a) 
++ \gamma_R(a) P_{RO}(a) R(a)  
+\\&& 
++ \gamma_O(a) P_{OO}(a) O_e(a)
+- \gamma_O(a) O_o(a)
+\\ 
+%
+{\dot O}_e &=& \gamma_O(a) P_{OO}(a) O_o (a) - \gamma_O(a) O_e(a)
+\\ 
+%
+\end{array}\end{equation}
+
+\subsection{Infection Dynamics in the MBITES-de Equations}
+
+To simulate infection dynamics in MBITES-de, we subdivide each variable $X$ into new variables $X_x$, $x \in \left\{ U, Y, Z \right\}$, to represent the fraction of mosquitoes in behavioral state $X$ that are uninfected, $U$, infected, $Y$, or infected and infectious $Z$.  These lead to the following systems of coupled differential equations that remain unchanged, but for the equation describing resting mosquitoes. We let  $Q\kappa(t)$ the proportion of mosquitoes becoming infected after blood feeding at time $t$. 
+%
+\begin{equation}\begin{array}{rl}
+%
+\frac{\partial R_U(a,t)}{\partial t} + \frac{\partial
+R_U(a,t)}{\partial a} =& \left(1-Q \kappa(t) \right) \gamma_B(a,t) P_{BR}(a) B_U(a,t)
+- \gamma_R(a,t) R_U(a,t)\\
+
+\frac{\partial R_Y(a,t)}{\partial t} + \frac{\partial
+R_Y(a,t)}{\partial a} =&  Q \kappa(t) \gamma_B(a,t) P_{BR}(a) B_U(a,t)\\&
++ \gamma_B(a,t) P_{BR}(a) B_Y(a,t) 
+- \gamma_R(a,t) R_Y(a,t)\\
+\end{array}\end{equation}
+%
+We let $\tau(t)$ denote the (possibly time-dependent) extrinsic incubation period. Because $\tau(t)$ is time dependent, we let $\hat t$ denote that point in the past when the mosquito became infected in order to become infectious at time $t$: \ie $t = \hat t + \tau(\hat t)$. Let $\rho(t)$ the proportion of mosquitoes surviving through the extrinsic incubation period (\ie from $\hat t$ to $t = \hat t +\tau (\hat t)$). An equation describing the proportion of infectious mosquitoes is:
+%
+\begin{equation}\begin{array}{rl}
+\frac{\partial R_Z(a,t)}{\partial t} + \frac{\partial
+R_Z(a,t)}{\partial a} =&  \rho(t) Q \kappa \left( \hat t \right) \gamma_B(a,t) P_{BR}(a) B_U(a,t) \\&
++ \gamma_B(a,t) P_{BR}(a) B_Z(a,t)
+- \gamma_R(a,t) R_Z(a,t)\\
+%
+\end{array}\end{equation}
+
+
+The remaining equations remain as follows: 
+%
+\begin{equation}\begin{array}{rl}
+F_{o,x}(0,t) =& \Lambda(t) \\
+%
+\frac{\partial F_{o,x}(a,t)}{\partial t} + \frac{\partial
+F_{o,x}(a,t)}{\partial a} =&
+\gamma_O(a,t) P_{OF}(a) O_x(a,t)
++ \gamma_B(a,t) P_{BF}(a) B_x(a,t)\\ &
+ + \gamma_R(a,t) P_{RF}(a) R_x(a,t)
++ \gamma_F(a,t) P_{FF}(a) F_{e,x}(a,t)\\ &
+- \gamma_F(a,t) F_{o,X}(a,t) \\
+%
+\frac{\partial F_{e,x}(a,t)}{\partial t} + \frac{\partial
+F_{e,x}(a,t)}{\partial a} =&  \gamma_F(a,t) P_{FF}(a) F_{o,X} (a,t) -
+\gamma_F(a,t) F_{e,x}(a,t) \\
+%
+%
+\frac{\partial B_{o,x}(a,t)}{\partial t} + \frac{\partial
+B_{o,x}(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O_x(a,t) +
+\gamma_F(a,t) P_{FB}(a) F(a,t)\\ &
++ \gamma_R(a,t) P_{RB}(a) R_x(a,t) 
++ \gamma_B(a,t) P_{BB}(a) B_{e,x}(a,t)\\ &
+- \gamma_B(a,t) B_{o,x}(a,t) \\
+%
+\frac{\partial B_{e,x}(a,t)}{\partial t} + \frac{\partial
+B_{e,x}(a,t)}{\partial a} =& \gamma_B(a,t) P_{BB}(a) B_{o,x}(a,t) -
+\gamma_B(a,t) B_{e,x}(a,t)
+\\
+
+\frac{\partial L_{o,x} (a,t)}{\partial t} + \frac{\partial
+L_{o,x} (a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R_x(a,t) +
+\gamma_O(a,t) P_{OL}(a) O_x(a,t) \\&
++ \gamma_L(a,t)  P_{LL}(a) L_{e,x}(a,t)
+- \gamma_L(a,t) L_{o,x} (a,t)
+\\
+%
+\frac{\partial L_{e,x}(a,t)}{\partial t} + \frac{\partial
+L_{e,x}(a,t)}{\partial a} =& \gamma_L(a,t) P_{LL}(a) L_{o,x}  (a,t) -
+\gamma_L(a,t) L_{e,x}(a,t)
+\\
+%
+\frac{\partial O_{o,x}(a,t)}{\partial t} + \frac{\partial
+O_{o,x}(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) L(a,t)
++ \gamma_R(a,t) P_{RO}(a) R_x(a,t)
+\\&
++ \gamma_O(a,t) P_{OO}(a) O_{e,x}(a,t)
+- \gamma_O(a,t) O_{o,x}(a,t)
+\\
+%
+\frac{\partial O_{e,x}(a,t)}{\partial t} + \frac{\partial
+O_{e,x}(a,t)}{\partial a} =& \gamma_O(a,t) P_{OO}(a) O_{o,x} (a,t) -
+\gamma_O(a,t) O_{e,x}(a,t)
+\\
+%
+\end{array}\end{equation}
+%
+
+
+
+
+
+
+
+\end{document}
