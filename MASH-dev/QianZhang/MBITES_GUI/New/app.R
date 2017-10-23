@@ -14,8 +14,8 @@ library(igraph)
 if(system("whoami",intern=TRUE)=="chipdelmal"){
   DIR="/Users/chipdelmal/Documents/Github/MASH-MAIN/MASH-dev/HectorSanchez/MBITES_GUI/New/"
   setwd(DIR)
-}else if(system("whoami",intern=TRUE)=="QIAN"){
-  DIR="/Users/QIAN/Desktop/Documents/Github/MASH-MAIN/MASH-dev/HectorSanchez/MBITES_GUI/New/"
+}else if(system("whoami",intern=TRUE)=="qianzh"){
+  DIR="/Users/qianzh/project/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
 }
 ################################################################################################################
@@ -48,6 +48,21 @@ mbitesGadget=function(...){
                   tabsetPanel(
                      ######################################################################
                      tabPanel("F",
+                              fluidRow(h1("Blood feeding search bout")),
+                              fluidRow(
+                                column(VAR_DESCR_COL_WIDTH,helpText("bfs.t: mean time elapsed (in days).")),
+                                column(VAR_SLIDE_COL_WIDTH,sliderInput("bfa.p",NULL,min=0,max=1,value=.9))
+                              ),
+                              # fluidRow(
+                              #   column(VAR_DESCR_COL_WIDTH,helpText("bsa.s: Probability of success in a blood-feed search.")),
+                              #   column(VAR_SLIDE_COL_WIDTH,sliderInput("bfa.s",NULL,min=0,max=1,value=.3))
+                              # ),
+                              h1(),h1()
+                      ),
+                      #####################################################################
+                      tabPanel("L","Test"),
+                      #####################################################################
+                      tabPanel("B",
                               fluidRow(h1("")),
                               fluidRow(
                                 column(VAR_DESCR_COL_WIDTH,helpText("bfa.p: Probability of surviving a blood-feed attempt.")),
@@ -66,11 +81,8 @@ mbitesGadget=function(...){
                                 column(VAR_SLIDE_COL_WIDTH,sliderInput("Q",NULL,min=0,max=1,value=.9))
                               ),
                               h1(),h1()
+
                       ),
-                      #####################################################################
-                      tabPanel("L","Test"),
-                      #####################################################################
-                      tabPanel("B","Test"),
                       #####################################################################
                       tabPanel("R", 
                                fluidRow(h1("")),
