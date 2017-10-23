@@ -22,14 +22,14 @@
 #' This method is a helper for \code{\link{MicroKernel_moveMe}} and samples the appropriate MvOb in MvAll stored in an enclosing \code{\link{Tile}} object.
 #'  * This function is bound to \code{MosquitoPopFemale$SampleMove}
 #'
-#' @param ixS: current site index \code{ix} of this mosquito
+#' @param locNow: current site index \code{ix} of this mosquito
 #' @param state: current behavioral state of this mosquito
 #' @param inPointSet: current point set this mosquito is in
 #' @return new index
 #' @md
-MicroKernel_SampleMvOb_MosquitoPopFemale <- function(ixS, state, inPointSet){
+MicroKernel_SampleMvOb_MosquitoPopFemale <- function(locNow, state, pSetNow){
 
-  MvOb = private$TilePointer$get_movement(ixS,state,inPointSet)
+  MvOb = private$TilePointer$get_movement(locNow,state,pSetNow)
 
   x = runif(1)
 
@@ -53,14 +53,14 @@ MicroKernel_SampleMvOb_MosquitoPopFemale <- function(ixS, state, inPointSet){
 #' This method is a helper for \code{\link{MicroKernel_moveMe}} and samples the appropriate MvOb in MvAll stored in an enclosing \code{\link{Tile}} object.
 #'  * This function is bound to \code{MosquitoPopMale$SampleMove}
 #'
-#' @param ixS: current site index \code{ix} of this mosquito
+#' @param locNow: current site index \code{locNow} of this mosquito
 #' @param state: current behavioral state of this mosquito
 #' @param inPointSet: current point set this mosquito is in
 #' @return integer
 #'
-MicroKernel_SampleMvOb_MosquitoPopMale <- function(ixS, state, inPointSet){
+MicroKernel_SampleMvOb_MosquitoPopMale <- function(locNow, state, pSetNow){
 
-  MvOb = private$TilePointer$get_movementMale(ixS,state,inPointSet)
+  MvOb = private$TilePointer$get_movementMale(locNow,state,pSetNow)
   sampleIx_utility(x = MvOb$near$id, size = 1, prob = MvOb$near$pr)
 
 }
@@ -79,20 +79,20 @@ MicroKernel_moveMe_FULL <- function(){
 
   switch(private$state,
     F = {
-      private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-      private$inPointSet = "f"
+      private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+      private$pSetNow = "f"
     },
     L = {
-      private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-      private$inPointSet = "l"
+      private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+      private$pSetNow = "l"
     },
     M = {
-      private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-      private$inPointSet = "m"
+      private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+      private$pSetNow = "m"
     },
     S = {
-      private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-      private$inPointSet = "s"
+      private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+      private$pSetNow = "s"
     },
     {return(NULL)}
   )
@@ -108,20 +108,20 @@ MicroKernel_moveMe_BRO <- function(){
 
     switch(private$state,
       B = {
-        private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-        private$inPointSet = "f"
+        private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+        private$pSetNow = "f"
       },
       O = {
-        private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-        private$inPointSet = "l"
+        private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+        private$pSetNow = "l"
       },
       M = {
-        private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-        private$inPointSet = "m"
+        private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+        private$pSetNow = "m"
       },
       S = {
-        private$ix = private$FemalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-        private$inPointSet = "s"
+        private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+        private$pSetNow = "s"
       },
       {return(NULL)}
     )
@@ -137,12 +137,12 @@ MicroKernel_moveMe_Male <- function(){
   switch(private$state,
 
       M = {
-          private$ix = private$MalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-          private$inPointSet = "m"
+          private$locNow = private$MalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+          private$pSetNow = "m"
         },
       S = {
-          private$ix = private$MalePopPointer$SampleMove(ixS = private$ix, state = private$state, inPointSet = private$inPointSet)
-          private$inPointSet = "s"
+          private$locNow = private$MalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+          private$pSetNow = "s"
         },
       {return(NULL)}
     )
@@ -159,31 +159,31 @@ MicroKernel_moveMe_Male <- function(){
 #' Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementFemale} field of a microsimulation tile.
 #'  *  This method bound to \code{MicroTile$get_movement}
 #'
-get_MicroKernel_movement_FULL<- function(ixS, state, inPointSet){
+get_MicroKernel_movement_FULL<- function(locNow,state,pSetNow){
   switch(state,
     F = {
-        if(inPointSet=="f"){return(private$movementFemale$F2F[[ixS]])}
-        if(inPointSet=="s"){return(private$movementFemale$S2F[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2F[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2F[[ixS]])}
+        if(pSetNow=="f"){return(private$movementFemale$F2F[[locNow]])}
+        if(pSetNow=="s"){return(private$movementFemale$S2F[[locNow]])}
+        if(pSetNow=="m"){return(private$movementFemale$M2F[[locNow]])}
+        if(pSetNow=="l"){return(private$movementFemale$L2F[[locNow]])}
       },
     L = {
-        if(inPointSet=="f"){return(private$movementFemale$F2L[[ixS]])}
-        if(inPointSet=="s"){return(private$movementFemale$S2L[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2L[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2L[[ixS]])}
+        if(pSetNow=="f"){return(private$movementFemale$F2L[[locNow]])}
+        if(pSetNow=="s"){return(private$movementFemale$S2L[[locNow]])}
+        if(pSetNow=="m"){return(private$movementFemale$M2L[[locNow]])}
+        if(pSetNow=="l"){return(private$movementFemale$L2L[[locNow]])}
       },
     S = {
-        if(inPointSet=="f"){return(private$movementFemale$F2S[[ixS]])}
-        if(inPointSet=="s"){return(private$movementFemale$S2S[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2S[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2S[[ixS]])}
+        if(pSetNow=="f"){return(private$movementFemale$F2S[[locNow]])}
+        if(pSetNow=="s"){return(private$movementFemale$S2S[[locNow]])}
+        if(pSetNow=="m"){return(private$movementFemale$M2S[[locNow]])}
+        if(pSetNow=="l"){return(private$movementFemale$L2S[[locNow]])}
       },
     M = {
-        if(inPointSet=="f"){return(private$movementFemale$F2M[[ixS]])}
-        if(inPointSet=="s"){return(private$movementFemale$S2M[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2M[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2M[[ixS]])}
+        if(pSetNow=="f"){return(private$movementFemale$F2M[[locNow]])}
+        if(pSetNow=="s"){return(private$movementFemale$S2M[[locNow]])}
+        if(pSetNow=="m"){return(private$movementFemale$M2M[[locNow]])}
+        if(pSetNow=="l"){return(private$movementFemale$L2M[[locNow]])}
       },
     {return(NULL)}
   )
@@ -194,32 +194,32 @@ get_MicroKernel_movement_FULL<- function(ixS, state, inPointSet){
 #' Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementFemale} field of a microsimulation tile.
 #'  *  This method bound to \code{MicroTile$get_movement}
 #'
-get_MicroKernel_movement_BRO <- function(ixS, state, inPointSet){
+get_MicroKernel_movement_BRO <- function(locNow,state,pSetNow){
 
   switch(state,
     B = {
-        if(inPointSet=="f"){return(private$movementFemale$F2F[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2F[[ixS]])}
-        if(inPointSet=="s"){return(private$movementFemale$S2F[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2F[[ixS]])}
+        if(pSetNow=="f"){return(private$movementFemale$F2F[[locNow]])}
+        if(pSetNow=="m"){return(private$movementFemale$M2F[[locNow]])}
+        if(pSetNow=="s"){return(private$movementFemale$S2F[[locNow]])}
+        if(pSetNow=="l"){return(private$movementFemale$L2F[[locNow]])}
       },
     O = {
-        if(inPointSet=="f"){return(private$movementFemale$F2L[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2L[[ixS]])}
-        if(inPointSet=="s"){return(private$movementFemale$S2L[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2L[[ixS]])}
+        if(pSetNow=="f"){return(private$movementFemale$F2L[[locNow]])}
+        if(pSetNow=="m"){return(private$movementFemale$M2L[[locNow]])}
+        if(pSetNow=="s"){return(private$movementFemale$S2L[[locNow]])}
+        if(pSetNow=="l"){return(private$movementFemale$L2L[[locNow]])}
       },
     M = {
-        if(inPointSet=="f"){return(private$movementFemale$F2M[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2M[[ixS]])}
-        if(inPointSet=="s"){return(private$movementFemale$S2M[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2M[[ixS]])}
+        if(pSetNow=="f"){return(private$movementFemale$F2M[[locNow]])}
+        if(pSetNow=="m"){return(private$movementFemale$M2M[[locNow]])}
+        if(pSetNow=="s"){return(private$movementFemale$S2M[[locNow]])}
+        if(pSetNow=="l"){return(private$movementFemale$L2M[[locNow]])}
       },
     S = {
-        if(inPointSet=="f"){return(private$movementFemale$F2M[[ixS]])}
-        if(inPointSet=="m"){return(private$movementFemale$M2M[[ixS]])}
-        if(inPointSet=="s"){return(private$movementFemale$S2M[[ixS]])}
-        if(inPointSet=="l"){return(private$movementFemale$L2M[[ixS]])}
+        if(pSetNow=="f"){return(private$movementFemale$F2M[[locNow]])}
+        if(pSetNow=="m"){return(private$movementFemale$M2M[[locNow]])}
+        if(pSetNow=="s"){return(private$movementFemale$S2M[[locNow]])}
+        if(pSetNow=="l"){return(private$movementFemale$L2M[[locNow]])}
     },
     {return(NULL)}
   )
@@ -230,17 +230,17 @@ get_MicroKernel_movement_BRO <- function(ixS, state, inPointSet){
 #' Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementMale} field of a microsimulation tile.
 #'  *  This method bound to \code{MicroTile$get_movementMale}
 #'
-get_MicroKernel_movement_Male <- function(ixS, state, inPointSet){
+get_MicroKernel_movement_Male <- function(locNow,state,pSetNow){
   switch(state,
     M = {
-        if(inPointSet=="l"){return(private$movementMale$L2M[[ixS]])}
-        if(inPointSet=="m"){return(private$movementMale$M2M[[ixS]])}
-        if(inPointSet=="s"){return(private$movementMale$S2M[[ixS]])}
+        if(pSetNow=="l"){return(private$movementMale$L2M[[locNow]])}
+        if(pSetNow=="m"){return(private$movementMale$M2M[[locNow]])}
+        if(pSetNow=="s"){return(private$movementMale$S2M[[locNow]])}
       },
     S = {
-        if(inPointSet=="l"){return(private$movementMale$L2S[[ixS]])}
-        if(inPointSet=="m"){return(private$movementMale$M2S[[ixS]])}
-        if(inPointSet=="s"){return(private$movementMale$S2S[[ixS]])}
+        if(pSetNow=="l"){return(private$movementMale$L2S[[locNow]])}
+        if(pSetNow=="m"){return(private$movementMale$M2S[[locNow]])}
+        if(pSetNow=="s"){return(private$movementMale$S2S[[locNow]])}
       },
     {return(NULL)}
   )

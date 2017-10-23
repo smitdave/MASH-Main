@@ -50,7 +50,7 @@ Tile <- R6::R6Class(classname = "Tile",
                    # MosquitoPop_PAR: MicroMosquitoPop.Setup (MOSQUITO-MosquitoPop-Parameters.R)
                    # directory: directory to write data to (ex: "/Users/slwu89/Desktop/mash.out/")
                    initialize = function(Landscape_PAR, HumanPop_PAR, MosquitoPop_PAR, directory){
-                     
+
                      #################################################
                      # Set Objects
                      #################################################
@@ -70,7 +70,7 @@ Tile <- R6::R6Class(classname = "Tile",
                      # generate female mosquito object
                      private$FemalePop = MosquitoPopFemale$new(
                        N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
-                       ix_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
+                       locNow_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
                        genotype_init = MosquitoPop_PAR$genotype_female,  # genotypes of females
                        MBITES_PAR = MosquitoPop_PAR$MBITES_PAR_FEMALE  # M-BITES parameters
                     )
@@ -81,7 +81,7 @@ Tile <- R6::R6Class(classname = "Tile",
 
                       private$MalePop = MosquitoPopMale$new(
                         N = MosquitoPop_PAR$N_male,
-                        ix_init = MosquitoPop_PAR$ix_male,
+                        locNow_init = MosquitoPop_PAR$ix_male,
                         genotype_init = MosquitoPop_PAR$genotype_male,
                         MBITES_PAR = MosquitoPop_PAR$MBITES_PAR_MALE
                       )

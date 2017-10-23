@@ -4,10 +4,10 @@
 \alias{MicroKernel_SampleMvOb_MosquitoPopFemale}
 \title{MICRO Search Kernels: \code{\link{MosquitoPopFemale}} Sample MvOb}
 \usage{
-MicroKernel_SampleMvOb_MosquitoPopFemale(ixS, state, inPointSet)
+MicroKernel_SampleMvOb_MosquitoPopFemale(locNow, state, pSetNow)
 }
 \arguments{
-\item{ixS:}{current site index \code{ix} of this mosquito}
+\item{locNow:}{current site index \code{ix} of this mosquito}
 
 \item{state:}{current behavioral state of this mosquito}
 

@@ -26,9 +26,7 @@
 #' @param genotype integer; genotype of male mosquito
 #'
 get_mateFitness_MosquitoPopMale <- function(genotype){
-  return(
-    private$MBITES_PAR$mateFitness[genotype]
-  )
+  return(private$MBITES_PAR$mateFitness[genotype])
 }
 
 MosquitoPopMale$set(which = "public",name = "get_mateFitness",
@@ -48,14 +46,14 @@ MosquitoPopMale$set(which = "public",name = "get_mateFitness",
 #' @param N integer; number of emerging mosquitoes
 #' @param tEmerge integer; day of emergence
 #' @param genotype integer; genotype of emerging mosquitoes
-#' @param ix integer; site of emergence
+#' @param locNow integer; site of emergence
 #'
-push_pop_MosquitoPopFemale <- function(N, tEmerge, genotype, ix){
+push_pop_MosquitoPopFemale <- function(N, tEmerge, genotype, locNow){
   for(i in 1:N){
 
     # assign the mosquitoes
     myID = paste0(tEmerge,"_",i,"_",genotype)
-    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=self$get_MBITES_PAR("initState"),eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
+    private$pop$assign(key = myID, value = MosquitoFemale$new(id=myID,time=tEmerge,locNow=locNow,genotype=genotype,state=self$get_MBITES_PAR("initState"),eggT=self$get_MBITES_PAR("eggT"),eggP=self$get_MBITES_PAR("eggP"),energyPreG=self$get_MBITES_PAR("energyPreG")))
 
     private$pop$get(myID)$set_FemalePopPointer(self)
     private$pop$get(myID)$set_MalePopPointer(private$MalePopPointer)
@@ -79,14 +77,14 @@ MosquitoPopFemale$set(which = "public",name = "push_pop",
 #' @param N integer; number of emerging mosquitoes
 #' @param tEmerge integer; day of emergence
 #' @param genotype integer; genotype of emerging mosquitoes
-#' @param ix integer; site of emergence
+#' @param locNow integer; site of emergence
 #'
-push_pop_MosquitoPopMale <- function(N, tEmerge, genotype, ix){
+push_pop_MosquitoPopMale <- function(N, tEmerge, genotype, locNow){
   for(i in 1:N){
 
     # assign the mosquitoes
     myID = paste0(tEmerge,"_",i,"_",genotype)
-    private$pop$assign(key = myID, value = MosquitoMale$new(id=myID,time=tEmerge,ix=ix,genotype=genotype,state=self$get_MBITES_PAR("initState"),mateFitness=self$get_mateFitness(genotype)))
+    private$pop$assign(key = myID, value = MosquitoMale$new(id=myID,time=tEmerge,locNow=locNow,genotype=genotype,state=self$get_MBITES_PAR("initState"),mateFitness=self$get_mateFitness(genotype)))
 
     private$pop$get(myID)$set_FemalePopPointer(private$FemalePopPointer)
     private$pop$get(myID)$set_MalePopPointer(self)

@@ -19,16 +19,16 @@
 #'
 mbitesGeneric_chooseMate <- function(){
 
-  if(private$inPointSet != "m"){
-    stop(cat("mosquito is calling chooseMate from outside a mating site: ",private$ix," ",private$inPointSet,"\n",sep=""))
+  if(private$pSetNow != "m"){
+    stop(cat("mosquito is calling chooseMate from outside a mating site: ",private$locNow," ",private$pSetNow,"\n",sep=""))
   }
 
-  if(private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$get_N() == 0){
+  if(private$LandscapePointer$get_MatingSites(private$locNow)$get_MatingQ()$get_N() == 0){
     # if no males present, leave the area
     private$lspot = "l"
   } else {
     # choose a mate based on male mating fitness
-    mates = private$LandscapePointer$get_MatingSites(private$ix)$get_MatingQ()$get_MatingQ()
+    mates = private$LandscapePointer$get_MatingSites(private$locNow)$get_MatingQ()$get_MatingQ()
     ix = sampleIx_utility(x = 1:length(mates$maleID), size = 1, prob = mates$mateFitness)
     private$mateID = mates$maleID[ix]
     private$mateGenotype = mates$maleGenotype[ix]
