@@ -6,6 +6,8 @@
 \newcommand{\eg}{{\em e.g., }}
 \SweaveOpts{concordance=TRUE}
 
+The following sections describe the Landscape, the Bouts, and the Options for MBITES.  Each section begins with a brief summary or heuristic followed by implementation notes, relevant details, and finally a bit of R code. 
+
 \section{Landscape}
 
 MBITES uses a landscape structure called \verb1MICRO1 that is a set of {\em sites}. Each site has a type that determines the types of resting spots that are present (described in greater detail below in Options : Resting Hazards). There are four types of functions that can occur at each site:
@@ -23,7 +25,6 @@ There are also other properties of each site. Each site has a pair of numbers th
 Other properties of a site include a set of queues that coordinate information sharing from one \verb1COMPONENT1 to another. 
 
 \subsection{Time at Risk}
-
 
 \subsection{Egg Laying}
 
