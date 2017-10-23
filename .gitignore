@@ -72,14 +72,14 @@ Archive/
 # Media and other bloat-prone files
 #####################################
 # *.png (NEED FOR VIGNETTES AND ARTICLE GRAPHICS)
-*.jpg
-*.ppt
-*.pptx
-*.mov
-*.avi
-*.jpeg
-*.jp2
-*.eps
+#*.jpg
+#*.ppt
+#*.pptx
+#*.mov
+#*.avi
+#*.jpeg
+#*.jp2
+#*.eps
 #*.pdf
 #*.doc
 #*.docx
