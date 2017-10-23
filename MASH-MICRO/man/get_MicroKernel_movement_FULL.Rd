@@ -4,7 +4,7 @@
 \alias{get_MicroKernel_movement_FULL}
 \title{MICRO Search Kernels: \code{\link{MicroTile}} Access MvAll Object for Female Full M-BITES Lifecycle Model}
 \usage{
-get_MicroKernel_movement_FULL(ixS, state, inPointSet)
+get_MicroKernel_movement_FULL(locNow, state, pSetNow)
 }
 \description{
 Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementFemale} field of a microsimulation tile.

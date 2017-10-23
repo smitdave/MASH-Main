@@ -52,7 +52,7 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             ##############################################################
 
                             # pointers are also passed down from enclosing MosquitoPopFemale object
-                            initialize = function(id, time, ix, genotype, state, eggT = 0, eggP = 0, energyPreG = 0){
+                            initialize = function(id, time, locNow, genotype, state, eggT = 0, eggP = 0, energyPreG = 0){
 
                               # initialize general fields
 
@@ -66,8 +66,8 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                               # State and Location
                               private$state      = state       # {F,B,R,L,O,S,M,E,D}
                               private$stateNew   = state       # {F,B,R,L,O,S,M,E,D}
-                              private$inPointSet = "l"       # class of site {f,l,s,m}
-                              private$ix         = ix       # index of site
+                              private$pSetNow    = "l"       # class of site {f,l,s,m}
+                              private$locNow     = locNow       # index of site
                               private$mature     = FALSE       # mature
 
                               # Other State Variables
@@ -111,8 +111,10 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             # State and Location
                             state      = character(1),       # {F,B,R,L,O,S,M,E,D}
                             stateNew   = character(1),       # {F,B,R,L,O,S,M,E,D}
-                            inPointSet = character(1),       # class of site {f,l,s,m}
-                            ix         = integer(1),       # index of site
+                            pSetNow    = character(1),       # class of site {f,l,s,m}
+                            pSetNext   = character(1),
+                            locNow     = integer(1),       # index of site
+                            locNext    = integer(1),
                             mature     = logical(1),       # mature
 
                             # Other State Variables
@@ -187,7 +189,7 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                           ##############################################################
 
                           # pointers are also passed down from enclosing MosquitoPopFemale object
-                          initialize = function(id, time, ix, genotype, state, mateFitness = 1){
+                          initialize = function(id, time, locNow, genotype, state, mateFitness = 1){
 
                             # initialize general fields
 
@@ -201,8 +203,8 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                             # State and Location
                             private$state      = state       # {F,B,R,L,O,S,M,E,D}
                             private$stateNew   = state       # {F,B,R,L,O,S,M,E,D}
-                            private$inPointSet = "l"       # class of site {f,l,s,m}
-                            private$ix         = ix       # index of site
+                            private$pSetNow    = "l"       # class of site {f,l,s,m}
+                            private$locNow     = locNow       # index of site
                             private$mature     = FALSE       # mature
 
                             # Other State Variables
@@ -234,8 +236,10 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                           # State and Location
                           state      = character(1),       # {F,B,R,L,O,S,M,E,D}
                           stateNew   = character(1),       # {F,B,R,L,O,S,M,E,D}
-                          inPointSet = character(1),       # class of site {f,l,s,m}
-                          ix         = integer(1),       # index of site
+                          pSetNow    = character(1),       # class of site {f,l,s,m}
+                          pSetNext   = character(1),
+                          locNow     = integer(1),       # index of site
+                          locNext    = integer(1),
                           mature     = logical(1),       # mature
 
                           # Other State Variables

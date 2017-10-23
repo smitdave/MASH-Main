@@ -1,0 +1,69 @@
+---
+title: "PfLOME (Lifetime Ontogeny of Malaria Epidemiology)"
+author: "Sean Wu"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PathogenPfLOME}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# How does LOME work?
+
+1. Infections begin when mosquitoes probe prior to blood feeding.
+LOME defines the function probeHost(ixH, spz, t, x, y, MosqPf);
+
+  ixH :: the index of the host being probed
+  spz :: the mosquitoes sporozoite status (TRUE/FALSE)
+  t, x, y :: the time and location of the bite
+  MosqPf :: an object with information about Pf in the mosquito
+
+The probeHost algorithm does the following
+
+  a. counts the bite (hbr)  
+  b. if (spz == TRUE)
+     - counts the infectious bite (eir)
+     - draws a random # of sporozoites passed
+     - determines survival of sporozoites from non-specific responses
+     - identify the clonal recombinant of each SPZ
+     - get the SPZ PE types
+     - reduce # for type-specific PE immunity
+     - count nSPZ reaching the liver
+     - reduce # for type-specific liver immunity
+  c. if(nSPZ>0) add each spz clone to the eventQ and pedigree  
+
+2. The human object activates an infection from the eventQ
+  a. create the time course for the infection & (possibly) queue fever
+  3. Modifies the time course of other infections
+
+3. Updating the model requires
+  1. updateImmunity
+  2. updateInfection
+  3. OPTIONAL: updateHistory
+
+4. When a mosquito takes a bloodmeal
+  1. draw a random number to infect mosquito
+  2. If infected
+     a. how many oocysts form?  
+     b. return the PfID of each parent
+
+### NOTES:
+
+1. Get the tent function working
+2. Get prInfectMosquito working (generic)
+3. Get infectMosquito working
+
+1. Mosquito bite to bloodstream infection
+
+2. Asexual blood stage infection to gametocytes
+  a. fever & disease
+  b. immunity (affecting future infections)
+  c. gametocytogenesis
+
+3. Mature gametocytes to mosquito infection
+
+Three models to get running:
+
+1. The basic queueing model, with the PfTentTimeCourse
+   1a. with fever
+   1b. with treatment

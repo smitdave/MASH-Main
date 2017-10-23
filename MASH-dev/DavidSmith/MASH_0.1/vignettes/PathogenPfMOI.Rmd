@@ -1,0 +1,66 @@
+---
+title: "PfMOI (Multiplicity of Infection Compartmental Model for Plasmodium falciparum Transmission)"
+author: "Sean Wu"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{PathogenPfMOI}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+# State Space:
+
+Describe the state space of PfMOI:
+
+  * S: Susceptible
+  * I: Infection Event (increment MOI by 1)
+  * C: Clearance Event (decrement MOI by 1)
+  * F: Fever Event
+  * P: Chemophylactic Protection
+  * PP: End of Chemophylactic Protection
+  * MOI: Integer valued state variable
+
+# Example SimBitePfMOI Simulation
+
+SimBite modules run humans in an abstract space, running each human as an IID sample of an ensemble of humans without mosquito or spatial dynamics. The human random variable is parameterized by setup functions that can be set by the user.
+
+## Initialize Classes Needed for SimBitePfMOI
+
+```{r}
+# attach the MASH package
+library(MASH)
+
+# setup class methods for PfMOI and SimBite modules;
+# these functions take arguments for parameters
+PfMOI.Setup()
+SimBitePfMOI.Setup()
+```
+
+## Generate SimBitePfMOI Objects
+
+```{r}
+# make a population of 200 people
+nHumans = 200
+HumanPop_PAR = HumanPop.Parameters(nSite = 1,bWeight = NULL,siteSize = nHumans,siteMin = nHumans)
+HumanPopulation = HumanPop$new(HumanPop_PAR)
+```
+
+## Simulate SimBitePfMOI
+
+```{r}
+# set up PfMOI module with all MOI initially 0
+PfMOI_PAR = PfMOI.Parameters()
+HumanPopulation$set_PfMOI_PAR(PfMOI_PAR = PfMOI_PAR)
+HumanPopulation$init_MICRO_PfMOI(PfMOI = NULL)
+
+# queue bites and PE vaccination
+tMax = 365*5
+bites = SimBite_MeanBites(nH = nHumans,meanNumberBites = 100,days = tMax,plot = FALSE)
+HumanPopulation$queueBites_SimBitePfMOI(bites = bites)
+HumanPopulation$queueVaccination_SimBitePfMOI(tVaccine = 365*3,tTreat = (365*3)+1,fracPop = 0.25)
+
+HumanPopulation$simHumans(tPause = tMax+10)
+
+# get history
+HumanPopulation$get_PfMOI_history()
+```

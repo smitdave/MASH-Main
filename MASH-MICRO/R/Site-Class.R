@@ -163,7 +163,6 @@ AquaticSite <- R6::R6Class(classname = "AquaticSite",
                    siteType = integer(1),   # an aquatic or sugar site could be inside of a house, for example.
 
                    # AquaticSite fields
-
                    haz = numeric(1),
                    ImagoQ = NULL,
                    EggQ = NULL,

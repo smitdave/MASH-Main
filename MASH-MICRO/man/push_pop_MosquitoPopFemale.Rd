@@ -4,7 +4,7 @@
 \alias{push_pop_MosquitoPopFemale}
 \title{Push pop}
 \usage{
-push_pop_MosquitoPopFemale(N, tEmerge, genotype, ix)
+push_pop_MosquitoPopFemale(N, tEmerge, genotype, locNow)
 }
 \arguments{
 \item{N}{integer; number of emerging mosquitoes}
@@ -13,7 +13,7 @@ push_pop_MosquitoPopFemale(N, tEmerge, genotype, ix)
 
 \item{genotype}{integer; genotype of emerging mosquitoes}
 
-\item{ix}{integer; site of emergence}
+\item{locNow}{integer; site of emergence}
 }
 \description{
 Push new female mosquitoes into \code{\link{MosquitoPopFemale}}.
