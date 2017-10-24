@@ -32,6 +32,18 @@ mbitesGadget=function(...){
   # UI
   #########################################################################################
   ui=shinyUI(fluidPage(theme=shinytheme(THEME),
+      tags$head(tags$script("
+        window.onload = function() {
+            $('#nav a:contains(\"Options\")').parent().addClass('hide');
+            $('#nav a:contains(\"Bouts\")').parent().addClass('hide');
+            $('#nav a:contains(\"Landscape\")').parent().addClass('hide');
+            $('#nav a:contains(\"Ecology\")').parent().addClass('hide');
+        };
+
+        Shiny.addCustomMessageHandler('activeNavs', function(nav_label) {
+            $('#nav a:contains(\"' + nav_label + '\")').parent().removeClass('hide');
+        });
+   ")),
                        
       titlePanel(h1("MBITES Gadget")),
       navbarPage("Welcome ", id = "nav",
@@ -53,23 +65,22 @@ mbitesGadget=function(...){
                       "Work on an existing project" = "exist")),
                   uiOutput("prepath.box"),
                   hr(),
-                  actionButton("launch.go", "Go!")
+                  actionButton("launchgo", "Go!")
                 )
               )
            ),
           #################################################################################
-          tabPanel("Options",
+          tabPanel(title = "Options", value = "options",
             fluidRow(
               tags$hr(),
-              column(12,actionButton("button","Run!",width="100%",class="btn btn-danger"))
+              column(12,radioButtons("boutbutton", "", 
+                                     c("Love MASH" = "love",
+                                       "MASH is awesome" = "awesome"))
             )
-          ),
+          )),
           #################################################################################
-          tabPanel("Bouts",                  
-            fluidRow(
-              tags$hr(),
-              column(12,actionButton("button","Load Data",width="100%",class="btn btn-success"))
-            )
+          tabPanel(title = "Bouts",   value = "bouts",              
+            helpText("test")
           ),
           #################################################################################
           tabPanel("Landscape",                  
@@ -96,6 +107,7 @@ mbitesGadget=function(...){
       )
     )
   )
+
   #########################################################################################
   # SERVER
   #########################################################################################
@@ -103,6 +115,23 @@ mbitesGadget=function(...){
     cat(getwd())
     output$plot <- renderPlot({
       ggplot(data, aes_string(xvar, yvar)) + geom_point()
+    })
+    observe({
+        if (input$launchgo > 0) {
+            session$sendCustomMessage('activeNavs', 'Options')
+        }
+    })
+
+    observe({
+        if (input$launchgo > 0) {
+            session$sendCustomMessage('activeNavs', 'Bouts')
+        }
+    })
+
+    observe({
+        if (input$launchgo > 0) {
+            session$sendCustomMessage('activeNavs', 'Landscape')
+        }
     })
     output$prepath.box <- renderUI({
       if(input$project == "exist"){
