@@ -24,5 +24,5 @@ Python script that uses OSMnx to parse building's coordinates and streets into S
 
 
 <center>
-  <img src="https://chipdelmal.github.io/images/mangoGuitar.jpg" alt="Drawing" style="width: 75px;" align="middle"/>
+  <img src="https://chipdelmal.github.io/images/mangoGuitar.jpg" alt="Drawing" style="width: 50px;" align="middle"/>
 </center>
