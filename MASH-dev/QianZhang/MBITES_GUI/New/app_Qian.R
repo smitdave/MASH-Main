@@ -126,27 +126,52 @@ mbitesGadget = function(...){
           tabPanel(title = "Bouts",   value = "bouts",
             fluidPage(
               sidebarLayout(position = "right",
-                sidebarPanel(
+                sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
                   helpText("Please Select the Bouts and Set Parameters:"),
                   checkboxInput("showF", "F: Blood Feeding Search", FALSE),
                   conditionalPanel(condition = "input.showF",
                     wellPanel(sliderInput(inputId = "f_time", label ="Mean Time Elapsed (in days)",
                               value = 1, min = 0, max = 10, step = 0.1))
                     ),
+
                   checkboxInput("showB", "B: Blood Feeding Attempt", FALSE),
                   conditionalPanel(condition = "input.showB",
                     wellPanel(sliderInput(inputId = "b_time", label ="Mean Time Elapsed (in days)",
                               value = 0.75, min = 0, max = 10, step = 0.05))
+                    ),
+                  
+                  checkboxInput("showR", "R: Post-prandial Resting", FALSE),
+                  conditionalPanel(condition = "input.showR",
+                    wellPanel(sliderInput(inputId = "r_time", label ="Mean Time Elapsed (in days)",
+                              value = 1.5, min = 0, max = 10, step = 0.5))),
+                  
+                  checkboxInput("showL", "L: Egg Laying Search", FALSE),
+                  conditionalPanel(condition = "input.showL",
+                    wellPanel(sliderInput(inputId = "l_time", label ="Mean Time Elapsed (in days)",
+                              value = 0.75, min = 0, max = 5, step = 0.05))
+                    ),
+                  
+                  checkboxInput("showO", "O: Egg Laying Attempt", FALSE),
+                  conditionalPanel(condition = "input.showO",
+                    wellPanel(sliderInput(inputId = "o_time", label ="Mean Time Elapsed (in days)",
+                              value = 0.99, min = 0, max = 5, step = 0.01))
+                    ),
+
+                  checkboxInput("showM", "M: Mating", FALSE),
+                  conditionalPanel(condition = "input.showM",
+                    wellPanel(sliderInput(inputId = "m_time", label ="Mean Time Elapsed (in days)",
+                              value = 1.5, min = 0, max = 10, step = 0.5))
+                    ),
+
+                  checkboxInput("showS", "S: Sugar Feeding Attempt", FALSE),
+                  conditionalPanel(condition = "input.showS",
+                    wellPanel(sliderInput(inputId = "s_time", label ="Mean Time Elapsed (in days)",
+                              value = 0.95, min = 0, max = 5, step = 0.05))
                     )
-
-
-
-
-
                   ),
                 
                 mainPanel(
-                  helpText("mainPanel")
+                  helpText("Output Plots")
                   )
                 )
             )),
