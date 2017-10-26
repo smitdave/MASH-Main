@@ -606,7 +606,7 @@ event_endprophylaxisPfSI <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 endprophylaxisPfSI <- function(tEvent, PAR){
   # End Prophylaxis
-  private$Pathogens$track_history(tEvent = tEvent, event = "S")
+  private$Pathogens$track_history(tEvent = tEvent, event = "P2S")
   private$Pathogens$set_chemoprophylaxis(FALSE)
 
 }
