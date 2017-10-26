@@ -43,6 +43,11 @@ mbitesGeneric_surviveFlight <- function(){
 # Wing Tattering
 #################################################################
 
+mbitesGeneric_rTatterSize_Exact <- function(){
+
+}
+
+
 #' MBITES-Generic: Wing Tattering for \code{\link{MosquitoFemale}}
 #'
 #' Draw from a zero-inflated Beta distribution for additive wing damage from tattering.

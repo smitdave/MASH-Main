@@ -7,9 +7,9 @@
 MBITES.Cohort.Setup(overwrite = TRUE)
 }
 \arguments{
-\item{batchSize}{character switch that should be one of \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed}
+\item{batchSize}{character switch in \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed}
 
-\item{eggMatT}{character switch that should be one of \code{"off","norm"} for egg batch maturation time turned off or normally distributed}
+\item{eggMatT}{character switch in \code{"off","norm"} for egg batch maturation time turned off or normally distributed}
 }
 \value{
 modifies the \code{\link{MosquitoFemale}} and \code{\link{MosquitoMale}} classes.
