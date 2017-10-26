@@ -35,6 +35,9 @@ MicroKernel_FitExpCDF <- function(d,q,up=1){
   return(sol$minimum)
 }
 
+
+# MicroKernel_FitBeta <- function()
+
 #################################################################
 # SEARCH-MicroKernels
 #################################################################
