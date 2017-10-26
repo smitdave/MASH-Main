@@ -19,9 +19,9 @@ rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
 
-#DEBUG.MASHMICRO()
-#MASHcpp::DEBUG.MASHCPP()
-#MASHmacro::DEBUG.MASHMACRO()
+DEBUG.MASHMICRO()
+MASHcpp::DEBUG.MASHCPP()
+MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
 if(system("whoami",intern=TRUE)=="slwu89"){

@@ -112,9 +112,9 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             state      = character(1),       # {F,B,R,L,O,S,M,E,D}
                             stateNew   = character(1),       # {F,B,R,L,O,S,M,E,D}
                             pSetNow    = character(1),       # class of site {f,l,s,m}
-                            pSetNext   = character(1),
+                            pSetOld    = character(1),
                             locNow     = integer(1),       # index of site
-                            locNext    = integer(1),
+                            locOld     = integer(1),
                             mature     = logical(1),       # mature
 
                             # Other State Variables
@@ -237,9 +237,9 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                           state      = character(1),       # {F,B,R,L,O,S,M,E,D}
                           stateNew   = character(1),       # {F,B,R,L,O,S,M,E,D}
                           pSetNow    = character(1),       # class of site {f,l,s,m}
-                          pSetNext   = character(1),
+                          pSetOld   = character(1),
                           locNow     = integer(1),       # index of site
-                          locNext    = integer(1),
+                          locOld    = integer(1),
                           mature     = logical(1),       # mature
 
                           # Other State Variables

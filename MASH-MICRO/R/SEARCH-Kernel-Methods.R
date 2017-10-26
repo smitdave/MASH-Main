@@ -79,18 +79,26 @@ MicroKernel_moveMe_FULL <- function(){
 
   switch(private$state,
     F = {
+      private$locOld = private$locNow
+      private$pSetOld = private$pSetNow
       private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
       private$pSetNow = "f"
     },
     L = {
+      private$locOld = private$locNow
+      private$pSetOld = private$pSetNow
       private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
       private$pSetNow = "l"
     },
     M = {
+      private$locOld = private$locNow
+      private$pSetOld = private$pSetNow
       private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
       private$pSetNow = "m"
     },
     S = {
+      private$locOld = private$locNow
+      private$pSetOld = private$pSetNow
       private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
       private$pSetNow = "s"
     },
@@ -108,18 +116,26 @@ MicroKernel_moveMe_BRO <- function(){
 
     switch(private$state,
       B = {
+        private$locOld = private$locNow
+        private$pSetOld = private$pSetNow
         private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
         private$pSetNow = "f"
       },
       O = {
+        private$locOld = private$locNow
+        private$pSetOld = private$pSetNow
         private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
         private$pSetNow = "l"
       },
       M = {
+        private$locOld = private$locNow
+        private$pSetOld = private$pSetNow
         private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
         private$pSetNow = "m"
       },
       S = {
+        private$locOld = private$locNow
+        private$pSetOld = private$pSetNow
         private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
         private$pSetNow = "s"
       },
@@ -137,13 +153,17 @@ MicroKernel_moveMe_Male <- function(){
   switch(private$state,
 
       M = {
-          private$locNow = private$MalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
-          private$pSetNow = "m"
-        },
+        private$locOld = private$locNow
+        private$pSetOld = private$pSetNow
+        private$locNow = private$MalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+        private$pSetNow = "m"
+      },
       S = {
-          private$locNow = private$MalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
-          private$pSetNow = "s"
-        },
+        private$locOld = private$locNow
+        private$pSetOld = private$pSetNow
+        private$locNow = private$MalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
+        private$pSetNow = "s"
+      },
       {return(NULL)}
     )
 

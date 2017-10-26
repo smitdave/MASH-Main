@@ -405,40 +405,40 @@ MosquitoMale$set(which = "public",name = "set_pSetNow",
   value = set_pSetNow_Mosquito, overwrite = TRUE
 )
 
-#' Get pSetNext
+#' Get pSetOld
 #'
-#' Return next mosquito point set (\code{character}). With \code{locNext}, the next site of the mosquito's spatial location is resolved.
-#'  * This method is bound to \code{MosquitoFemale$get_pSetNext} and \code{MosquitoMale$get_pSetNext}
+#' Return next mosquito point set (\code{character}). With \code{locOld}, the next site of the mosquito's spatial location is resolved.
+#'  * This method is bound to \code{MosquitoFemale$get_pSetOld} and \code{MosquitoMale$get_pSetOld}
 #'
-get_pSetNext_Mosquito <- function(){
-  return(private$pSetNext)
+get_pSetOld_Mosquito <- function(){
+  return(private$pSetOld)
 }
 
-MosquitoFemale$set(which = "public",name = "get_pSetNext",
-  value = get_pSetNext_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_pSetOld",
+  value = get_pSetOld_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "get_pSetNext",
-  value = get_pSetNext_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "get_pSetOld",
+  value = get_pSetOld_Mosquito, overwrite = TRUE
 )
 
-#' Set pSetNext
+#' Set pSetOld
 #'
 #' Set current mosquito point set (\code{character}). With \code{locNow}, the mosquito spatial location is resolved.
-#'  * This method is bound to \code{MosquitoFemale$set_pSetNext} and \code{MosquitoMale$set_pSetNext}
+#'  * This method is bound to \code{MosquitoFemale$set_pSetOld} and \code{MosquitoMale$set_pSetOld}
 #'
 #' @param pSet character
 #'
-set_pSetNext_Mosquito <- function(pSet){
-  private$pSetNext = pSet
+set_pSetOld_Mosquito <- function(pSet){
+  private$pSetOld = pSet
 }
 
-MosquitoFemale$set(which = "public",name = "set_pSetNext",
-  value = set_pSetNext_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "set_pSetOld",
+  value = set_pSetOld_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "set_pSetNext",
-  value = set_pSetNext_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "set_pSetOld",
+  value = set_pSetOld_Mosquito, overwrite = TRUE
 )
 
 #' Get locNow
@@ -477,40 +477,40 @@ MosquitoMale$set(which = "public",name = "set_locNow",
   value = set_locNow_Mosquito, overwrite = TRUE
 )
 
-#' Get locNext
+#' Get locOld
 #'
-#' Return next mosquito point set (\code{character}). With \code{pSetNext}, the next site of the mosquito's spatial location is resolved.
-#'  * This method is bound to \code{MosquitoFemale$get_locNext} and \code{MosquitoMale$get_locNext}
+#' Return next mosquito point set (\code{character}). With \code{pSetOld}, the next site of the mosquito's spatial location is resolved.
+#'  * This method is bound to \code{MosquitoFemale$get_locOld} and \code{MosquitoMale$get_locOld}
 #'
-get_locNext_Mosquito <- function(){
-  return(private$locNext)
+get_locOld_Mosquito <- function(){
+  return(private$locOld)
 }
 
-MosquitoFemale$set(which = "public",name = "get_locNext",
-  value = get_locNext_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "get_locOld",
+  value = get_locOld_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "get_locNext",
-  value = get_locNext_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "get_locOld",
+  value = get_locOld_Mosquito, overwrite = TRUE
 )
 
-#' Set locNext
+#' Set locOld
 #'
-#' Set current mosquito point set (\code{character}). With \code{pSetNext}, the mosquito spatial location is resolved.
-#'  * This method is bound to \code{MosquitoFemale$set_locNext} and \code{MosquitoMale$set_locNext}
+#' Set current mosquito point set (\code{character}). With \code{pSetOld}, the mosquito spatial location is resolved.
+#'  * This method is bound to \code{MosquitoFemale$set_locOld} and \code{MosquitoMale$set_locOld}
 #'
 #' @param loc character
 #'
-set_locNext_Mosquito <- function(loc){
-  private$locNext = loc
+set_locOld_Mosquito <- function(loc){
+  private$locOld = loc
 }
 
-MosquitoFemale$set(which = "public",name = "set_locNext",
-  value = set_locNext_Mosquito, overwrite = TRUE
+MosquitoFemale$set(which = "public",name = "set_locOld",
+  value = set_locOld_Mosquito, overwrite = TRUE
 )
 
-MosquitoMale$set(which = "public",name = "set_locNext",
-  value = set_locNext_Mosquito, overwrite = TRUE
+MosquitoMale$set(which = "public",name = "set_locOld",
+  value = set_locOld_Mosquito, overwrite = TRUE
 )
 
 #' Get mature
