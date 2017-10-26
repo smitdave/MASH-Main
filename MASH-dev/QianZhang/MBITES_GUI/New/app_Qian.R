@@ -11,6 +11,7 @@ library(shinydashboard)
 library(plotly)
 library(markdown)
 library(igraph)
+library(jsonlite)
 if(system("whoami",intern=TRUE) == "chipdelmal"){
   DIR = "/Users/chipdelmal/Documents/Github/MASH-MAIN/MASH-dev/HectorSanchez/MBITES_GUI/New/"
   setwd(DIR)
@@ -74,7 +75,7 @@ mbitesGadget = function(...){
           tabPanel(title = "Options", value = "options",
             fluidPage(
               helpText("Please choose parameters:"),
-              navlistPanel(widths = c(2,4),
+              navlistPanel(widths = c(2,10),
                 #########################################################################
                 tabPanel("Senescence",
                   checkboxInput(inputId = "senesce", label = "Mortality during Generic Flight", value = FALSE),
@@ -100,7 +101,21 @@ mbitesGadget = function(...){
                 ################################################################################
                 tabPanel("Blood Feeding"
                   ),
-                tabPanel("Energetics"
+                tabPanel("Energetics",
+                  sliderInput(inputId = "S.u", label ="Per-bout Energy Expenditure",
+                              value = 1/7, min = 0, max = 1, step = 0.01),
+                  hr(),
+                  tags$h4("As Function of Energy Reserves:"),
+                  sliderInput(inputId = "S.a", label ="Shape Param a of per-bout Probabilityof Survival",
+                              value = 20, min = 0, max = 100, step = 1),
+                  sliderInput(inputId = "S.b", label ="Shape Param b of per-bout Probabilityof Survival",
+                              value = 10, min = 0, max = 100, step = 1),
+                  sliderInput(inputId = "S.sa", label ="Shape Param a of Probability to queue Sugar bout",
+                              value = 20, min = 0, max = 100, step = 1),
+                  sliderInput(inputId = "S.sb", label ="Shape Param b of Probability to queue Sugar bout",
+                              value = 10, min = 0, max = 100, step = 1),
+                  sliderInput(inputId = "energypreg", label ="Pre-gonotrophic Energy Requirement",
+                              value = 0, min = 0, max = 100, step = 1)
                   ),
                 tabPanel("Sugar Feeding"
                   ),
@@ -114,9 +129,28 @@ mbitesGadget = function(...){
                   ),
                 tabPanel("Timing",
                   sliderInput(inputId = "gammaShape", label ="Shape Param for Gamma Distributed Dwell Times:",
-                              value = 8, min = 0.1, max = 10, step = 0.1)
+                              value = 8, min = 0.1, max = 10, step = 0.1),
+                  sliderInput(inputId = "pfeip", label ="Entomological Inoculation Period for Plasmodium falciparum During MosquitoFemale$probing()",
+                              value = 12, min = 0, max = 100, step = 1)
                   ),
                 tabPanel("Resting Spot"
+                  ),
+                tabPanel("Egg",
+                  sliderInput(inputId = "bs_m", label ="Mean of Normally-distributed Egg Batch Size",
+                              value = 30, min = 0, max = 100, step = 1),
+                  sliderInput(inputId = "bs_v", label ="Standard Deviation of Normally-distributed Egg Batch Size",
+                              value = 30, min = 0, max = 100, step = 1),
+                  sliderInput(inputId = "maxbatch", label ="Maximum Egg Batch Size",
+                              value = 30, min = 0, max = 100, step = 1),
+                  sliderInput(inputId = "emt_m", label ="Mean of Normally-distributed Egg Batch Maturation Time",
+                              value = 3, min = 0, max = 10, step = 1),
+                  sliderInput(inputId = "emt_v", label ="Standard Deviation of Normally-distributed Egg Batch Maturation Time",
+                              value = 1, min = 0, max = 10, step = 1),
+                  sliderInput(inputId = "eggT", label ="Minimum Time to Egg Maturation",
+                              value = 0, min = 0, max = 10, step = 1),
+                  sliderInput(inputId = "eggP", label ="Minimum Provision to Produce Eggs",
+                              value = 0, min = 0, max = 10, step = 1)
+
                   )
 
                 )
@@ -148,7 +182,41 @@ mbitesGadget = function(...){
                               value = 0.99, min = 0, max = 1, step = 0.01),
                               sliderInput(inputId = "b_surv", label ="Baseline Probability of Survival",
                               value = 0.98, min = 0, max = 1, step = 0.01),
-                              textInput("b_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
+                              textInput("b_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+                              checkboxInput("showhuman", "Human Host Encounter", FALSE),
+                              conditionalPanel(condition = "input.showhuman",
+                                wellPanel(sliderInput(inputId = "surviveH", label ="Survival Probability of Initial Encounter (Proceed to Probe)",
+                              value = 1, min = 0, max = 1, step = 0.01),
+                                          sliderInput(inputId = "probeH", label ="Probability Undeterred and Begin Probing",
+                              value = 1, min = 0, max = 1, step = 0.01),
+                                          sliderInput(inputId = "surviveprobeH", label ="Survival Probability of Probing",
+                              value = 1, min = 0, max = 1, step = 0.01),
+                                          sliderInput(inputId = "feedH", label ="Probability to Successfully blood feed",
+                              value = 1, min = 0, max = 1, step = 0.01)
+                                )),
+                              checkboxInput("shownonhuman", "Non-human Host Encounter", FALSE),
+                              conditionalPanel(condition = "input.shownonhuman",
+                                wellPanel(sliderInput(inputId = "surviveZ", label ="Survival Probability of Initial Encounter (Proceed to Feed)",
+                              value = 1, min = 0, max = 1, step = 0.01),
+                                          sliderInput(inputId = "feedZ", label ="Probability to Successfully Blood Feed",
+                              value = 1, min = 0, max = 1, step = 0.01)
+                                  )
+                                ),
+                              sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
+                              value = 7.5, min = 0, max = 20, step = 0.5),
+                              sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
+                              value = 2.5, min = 0, max = 20, step = 0.5),
+                              checkboxInput("overfeed", "Overfeed", FALSE),
+                              conditionalPanel(condition = "input.overfeed",
+                                sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
+                                  value = 5, min = 0, max = 100, step = 1),
+                                sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
+                                  value = 5000, min = 0, max = 10000, step = 100)),
+                              sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement",
+                              value = 0, min = 0, max = 100, step = 1),
+                              sliderInput(inputId = "q", label ="Human Blood Index",
+                              value = 0.9, min = 0, max = 1, step = 0.1)
+                              )
                     ),
                   
                   checkboxInput("showR", "R: Post-prandial Resting", FALSE),
@@ -157,7 +225,13 @@ mbitesGadget = function(...){
                               value = 1.5, min = 0, max = 10, step = 0.5),
                               sliderInput(inputId = "r_surv", label ="Baseline Probability of Survival",
                               value = 0.98, min = 0, max = 1, step = 0.01),
-                              textInput("r_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
+                              textInput("r_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+                              checkboxInput("refeed", "Refeed", FALSE),
+                              conditionalPanel(condition = "input.refeed",
+                                sliderInput(inputId = "rf_a", "Exp Param a for refeeding as function of bmSize",
+                                  value = 60, min = 0, max = 100, step = 1),
+                                sliderInput(inputId = "rf_b", "Exp Param b for refeeding as function of bmSize",
+                                  value = 5000, min = 0, max = 10000, step = 100)))
                     ),
                   
                   checkboxInput("showL", "L: Egg Laying Search", FALSE),
@@ -201,7 +275,9 @@ mbitesGadget = function(...){
                               value = 0.95, min = 0, max = 1, step = 0.01),
                               sliderInput(inputId = "s_surv", label ="Baseline Probability of Survival",
                               value = 0.98, min = 0, max = 1, step = 0.01),
-                              textInput("s_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
+                              textInput("s_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+                              sliderInput(inputId = "pregsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement",
+                              value = 0, min = 0, max = 100, step = 1))
                     ),
                   
                   checkboxInput("showE", "E: Estivation", FALSE),
