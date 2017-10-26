@@ -26,6 +26,7 @@
 #' @param q numeric quantile (must be between 0 and 1)
 #' @param up numeric upper limit on rate parameter (can be set to 1/(max distance anything could happen at))
 #'
+#' @return numeric; fitted value of lambda (rate parameter)
 #' @export
 MicroKernel_FitExpCDF <- function(d,q,up=1){
   f_opt = function(x){
@@ -35,8 +36,20 @@ MicroKernel_FitExpCDF <- function(d,q,up=1){
   return(sol$minimum)
 }
 
-
-# MicroKernel_FitBeta <- function()
+#' MICRO Kernels: Fit Beta Parameters
+#'
+#' Fit parameters of a Beta distribution such that it will have a given mean and coefficient of variation.
+#'
+#' @param mean desired mean of Beta distribution (must be between 0 and 1)
+#' @param cv desired coefficient of variation of Beta distribution (0,inf)
+#'
+#' @return list; alpha (shape1) and beta (shape2) parameters of Beta distribution
+#' @export
+MicroKernel_FitBeta <- function(mean,cv){
+  alpha = (1-mean-(mean*(cv^2))) / (cv^2)
+  beta = ((mean-1)*(-1+mean+(mean*(cv^2)))) / (mean*(cv^2))
+  return(list(alpha=alpha,beta=beta))
+}
 
 #################################################################
 # SEARCH-MicroKernels

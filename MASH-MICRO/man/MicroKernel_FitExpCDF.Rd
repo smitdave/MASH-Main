@@ -13,6 +13,9 @@ MicroKernel_FitExpCDF(d, q, up = 1)
 
 \item{up}{numeric upper limit on rate parameter (can be set to 1/(max distance anything could happen at))}
 }
+\value{
+numeric; fitted value of lambda (rate parameter)
+}
 \description{
 Fit an exponential distribution by quantile such that 'quantile' amount of activity
 occurs at less than or equal to input 'distance' d. Returns fitted rate parameter fitted from \code{\link[base]{optimise}}.
