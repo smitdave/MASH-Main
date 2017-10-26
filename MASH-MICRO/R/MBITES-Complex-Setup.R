@@ -23,8 +23,8 @@
 #'  * Sugar Feeding Attempt Bout: see \code{\link{mbites_boutS}}
 #'  * Mating Bout: see \code{\link{mbites_boutM}}
 #'
-#' @param batchSize character switch that should be one of \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed
-#' @param eggMatT character switch that should be one of \code{"off","norm"} for egg batch maturation time turned off or normally distributed
+#' @param batchSize character switch in \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed
+#' @param eggMatT character switch in \code{"off","norm"} for egg batch maturation time turned off or normally distributed
 #'
 #'
 #'

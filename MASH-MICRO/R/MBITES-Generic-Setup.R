@@ -23,8 +23,10 @@
 #' switches for this function modify only the methods that are added to the \code{\link{MosquitoFemale}}
 #' and \code{\link{MosquitoMale}} classes.
 #'
-#' @param batchSize character switch that should be one of \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed
-#' @param eggMatT character switch that should be one of \code{"off","norm"} for egg batch maturation time turned off or normally distributed
+#' @param tattering character switch in \code{"mean","exact"}, mean will sample wing tattering from \code{\link{mbitesGeneric_rTatterSize}} regardless of flight distance
+#' @param energy character switch in \code{"mean","exact"}, mean will sample energy consumption 
+#' @param batchSize character switch in \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed
+#' @param eggMatT character switch in \code{"off","norm"} for egg batch maturation time turned off or normally distributed
 #'
 #'
 #'
@@ -32,6 +34,8 @@
 #' @export
 MBITES.Generic.Setup <- function(
   overwrite = TRUE,
+  tattering = "mean",
+  energy = "mean",
   batchSize = "bms",
   eggMatT = "off"
   ){

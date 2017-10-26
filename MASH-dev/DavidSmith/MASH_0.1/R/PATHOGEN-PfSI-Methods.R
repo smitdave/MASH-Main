@@ -459,6 +459,7 @@ event_endPfSI <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 endPfSI <- function(tEvent, PAR){
   if(private$Pathogens$get_infected()){
+    private$EventQueue$rmTagFromQ(tag = "feverPfSI")
     private$Pathogens$track_history(tEvent = tEvent, event = "S") # track history
     private$Pathogens$set_infected(FALSE)
   }
@@ -605,7 +606,7 @@ event_endprophylaxisPfSI <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 endprophylaxisPfSI <- function(tEvent, PAR){
   # End Prophylaxis
-  private$Pathogens$track_history(tEvent = tEvent, event = "S")
+  private$Pathogens$track_history(tEvent = tEvent, event = "P2S")
   private$Pathogens$set_chemoprophylaxis(FALSE)
 
 }

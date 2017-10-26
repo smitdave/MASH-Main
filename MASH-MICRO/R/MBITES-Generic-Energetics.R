@@ -25,6 +25,8 @@
 mbitesGeneric_sugarEnergetics <- function(){
   if(private$state != "R"){
     if(self$isAlive()){
+
+      # REPLACE THIS WITH SOMETHING ELSE WHEN WE DO MEAN VS EXACT CALCULATION
       private$energy = max(0,private$energy - private$MalePopPointer$get_MBITES_PAR("S.u"))
 
       if(runif(1) < 1-self$pEnergySurvival()){
