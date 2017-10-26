@@ -44,7 +44,7 @@ mbitesGeneric_surviveFlight <- function(){
 #################################################################
 
 mbitesGeneric_rTatterSize_Exact <- function(){
-  
+
 }
 
 
