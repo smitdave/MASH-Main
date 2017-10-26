@@ -131,43 +131,96 @@ mbitesGadget = function(...){
                   checkboxInput("showF", "F: Blood Feeding Search", FALSE),
                   conditionalPanel(condition = "input.showF",
                     wellPanel(sliderInput(inputId = "f_time", label ="Mean Time Elapsed (in days)",
-                              value = 1, min = 0, max = 10, step = 0.1))
+                              value = 1, min = 0, max = 10, step = 0.1),
+                              sliderInput(inputId = "f_succeed", label ="Probability of Success",
+                              value = 0.99, min = 0, max = 1, step = 0.01),
+                              sliderInput(inputId = "f_surv", label ="Baseline Probability of Survival",
+                              value = 0.95, min = 0, max = 1, step = 0.01),
+                              textInput("f_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+                              )
                     ),
 
                   checkboxInput("showB", "B: Blood Feeding Attempt", FALSE),
                   conditionalPanel(condition = "input.showB",
                     wellPanel(sliderInput(inputId = "b_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.75, min = 0, max = 10, step = 0.05))
+                              value = 0.75, min = 0, max = 10, step = 0.05),
+                              sliderInput(inputId = "b_succeed", label ="Probability of Success",
+                              value = 0.99, min = 0, max = 1, step = 0.01),
+                              sliderInput(inputId = "b_surv", label ="Baseline Probability of Survival",
+                              value = 0.98, min = 0, max = 1, step = 0.01),
+                              textInput("b_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
                     ),
                   
                   checkboxInput("showR", "R: Post-prandial Resting", FALSE),
                   conditionalPanel(condition = "input.showR",
                     wellPanel(sliderInput(inputId = "r_time", label ="Mean Time Elapsed (in days)",
-                              value = 1.5, min = 0, max = 10, step = 0.5))),
+                              value = 1.5, min = 0, max = 10, step = 0.5),
+                              sliderInput(inputId = "r_surv", label ="Baseline Probability of Survival",
+                              value = 0.98, min = 0, max = 1, step = 0.01),
+                              textInput("r_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
+                    ),
                   
                   checkboxInput("showL", "L: Egg Laying Search", FALSE),
                   conditionalPanel(condition = "input.showL",
                     wellPanel(sliderInput(inputId = "l_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.75, min = 0, max = 5, step = 0.05))
+                              value = 0.75, min = 0, max = 5, step = 0.05),
+                              sliderInput(inputId = "l_succeed", label ="Probability of Success",
+                              value = 0.99, min = 0, max = 1, step = 0.01),
+                              sliderInput(inputId = "l_surv", label ="Baseline Probability of Survival",
+                              value = 0.8, min = 0, max = 1, step = 0.01),
+                              textInput("l_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
                     ),
                   
                   checkboxInput("showO", "O: Egg Laying Attempt", FALSE),
                   conditionalPanel(condition = "input.showO",
                     wellPanel(sliderInput(inputId = "o_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.99, min = 0, max = 5, step = 0.01))
+                              value = 0.99, min = 0, max = 5, step = 0.01),
+                              sliderInput(inputId = "o_succeed", label ="Probability of Success",
+                              value = 0.99, min = 0, max = 1, step = 0.01),
+                              sliderInput(inputId = "o_surv", label ="Baseline Probability of Survival",
+                              value = 0.98, min = 0, max = 1, step = 0.01),
+                              textInput("o_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
                     ),
 
                   checkboxInput("showM", "M: Mating", FALSE),
                   conditionalPanel(condition = "input.showM",
                     wellPanel(sliderInput(inputId = "m_time", label ="Mean Time Elapsed (in days)",
-                              value = 1.5, min = 0, max = 10, step = 0.5))
+                              value = 1.5, min = 0, max = 10, step = 0.5),
+                              sliderInput(inputId = "m_succeed", label ="Probability of Success",
+                              value = 0.95, min = 0, max = 1, step = 0.01),
+                              sliderInput(inputId = "m_surv", label ="Baseline Probability of Survival",
+                              value = 0.98, min = 0, max = 1, step = 0.01),
+                              textInput("m_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
                     ),
 
                   checkboxInput("showS", "S: Sugar Feeding Attempt", FALSE),
                   conditionalPanel(condition = "input.showS",
                     wellPanel(sliderInput(inputId = "s_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.95, min = 0, max = 5, step = 0.05))
+                              value = 0.95, min = 0, max = 5, step = 0.05),
+                              sliderInput(inputId = "s_succeed", label ="Probability of Success",
+                              value = 0.95, min = 0, max = 1, step = 0.01),
+                              sliderInput(inputId = "s_surv", label ="Baseline Probability of Survival",
+                              value = 0.98, min = 0, max = 1, step = 0.01),
+                              textInput("s_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
+                    ),
+                  
+                  checkboxInput("showE", "E: Estivation", FALSE),
+                  conditionalPanel(condition = "input.showE",
+                    wellPanel(helpText("test"))
+                  ),
+
+                  checkboxInput("showMale", "Male Mosquitoes", FALSE),
+                  conditionalPanel(condition = "input.showMale",
+                    wellPanel(
+                      checkboxInput("showMaleS", "Sugar Feeding", FALSE),
+                      conditionalPanel(condition = "input.showMaleS",
+                        wellPanel("test")),
+                      checkboxInput("showMaleM", "Mating", FALSE),
+                      conditionalPanel(condition = "input.showMaleM",
+                        wellPanel("test"))
+                        )
                     )
+
                   ),
                 
                 mainPanel(
@@ -176,18 +229,56 @@ mbitesGadget = function(...){
                 )
             )),
           #################################################################################
-          tabPanel("Landscape",                  
-            fluidRow(
-              tags$hr(),
-              column(12,actionButton("button","Load Data",width="100%",class="btn btn-success"))
-            )
-          ),
+          tabPanel(title = "Landscape", value = 'landscape',                 
+            sidebarLayout(position = "right",
+              sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                helpText("Please set the parameters"),
+                checkboxInput("showPoints", "Points", FALSE),
+                conditionalPanel(condition = "input.showPoints",
+                  wellPanel(
+                    helpText("f"),
+                    helpText("m"),
+                    helpText("s")
+                    )
+                  ),
+                checkboxInput("showKernels", "Kernels(Female)", FALSE),
+                conditionalPanel(condition = "input.showKernels",
+                  wellPanel(
+                    helpText("f"),
+                    helpText("l"),
+                    helpText("m"),
+                    helpText("s")
+                    )
+                  ),
+                checkboxInput("show_land_male", "Males", FALSE),
+                conditionalPanel(condition = "input.show_land_male",
+                  wellPanel(
+                    helpText("M"),
+                    helpText("s")
+                    )
+                  )
+                ),
+              mainPanel(
+                helpText("test output")
+                )
+          )),
           #################################################################################
-          tabPanel("Ecology",                  
-            fluidRow(
-              tags$hr(),
-              column(12,actionButton("button","Load Data",width="100%",class="btn btn-success"))
-            )
+          tabPanel(title = "Ecology", value = "ecology",              
+            sidebarLayout(position = "right",
+              sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                checkboxInput("showEmerge", "Emerge", FALSE),
+                conditionalPanel(condition = "input.showEmerge",
+                  helpText("Parameters")
+                  ),
+                checkboxInput("showEL4P", "EL4P", FALSE),
+                conditionalPanel(condition = "input.showEL4P",
+                  helpText("Parameters")
+                  )
+                ),
+              mainPanel(
+                helpText("test output")
+                )
+              )
           ),
           #################################################################################
           tabPanel("About",
@@ -223,6 +314,11 @@ mbitesGadget = function(...){
     observe({
         if (input$launchgo > 0) {
             session$sendCustomMessage('activeNavs', 'Landscape')
+        }
+    })
+    observe({
+        if (input$launchgo > 0) {
+            session$sendCustomMessage('activeNavs', 'Ecology')
         }
     })
     output$prepath.box <- renderUI({
