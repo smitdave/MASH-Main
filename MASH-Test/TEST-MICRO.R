@@ -258,8 +258,8 @@ MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential")
 SEARCH.Kernel.Setup(MBITES = "BRO")
 
 # landscape parameters
-nAqua = 1
-nFeed = 50
+nAqua = 3
+nFeed = 3
 emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
 landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
 

@@ -4,12 +4,17 @@
 \alias{MBITES.Generic.Setup}
 \title{Initialize Generic Methods for M-BITES}
 \usage{
-MBITES.Generic.Setup(overwrite = TRUE, batchSize = "bms", eggMatT = "off")
+MBITES.Generic.Setup(overwrite = TRUE, tattering = "mean",
+  energy = "mean", batchSize = "bms", eggMatT = "off")
 }
 \arguments{
-\item{batchSize}{character switch that should be one of \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed}
+\item{tattering}{character switch in \code{"mean","exact"}, mean will sample wing tattering from \code{\link{mbitesGeneric_rTatterSize}} regardless of flight distance}
 
-\item{eggMatT}{character switch that should be one of \code{"off","norm"} for egg batch maturation time turned off or normally distributed}
+\item{energy}{character switch in \code{"mean","exact"}, mean will sample energy consumption}
+
+\item{batchSize}{character switch in \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed}
+
+\item{eggMatT}{character switch in \code{"off","norm"} for egg batch maturation time turned off or normally distributed}
 }
 \value{
 writes methods to \code{\link{MosquitoFemale}} and \code{\link{MosquitoMale}} classes.

@@ -14,6 +14,28 @@
 
 
 #################################################################
+# Exponential Kernels for Energy/Wing Tattering
+#################################################################
+
+#' MICRO Kernels: Fit Exponential Lambda
+#'
+#' Fit an exponential distribution by quantile such that 'quantile' amount of activity
+#' occurs at less than or equal to input 'distance' d. Returns fitted rate parameter fitted from \code{\link[base]{optimise}}.
+#'
+#' @param d numeric distance
+#' @param q numeric quantile (must be between 0 and 1)
+#' @param up numeric upper limit on rate parameter (can be set to 1/(max distance anything could happen at))
+#'
+#' @export
+MicroKernel_FitExpCDF <- function(d,q,up=1){
+  f_opt = function(x){
+    abs(d - qexp(p = q,rate = x))
+  }
+  sol = optimise(f = f_opt,lower = 0,upper = up,maximum = FALSE)
+  return(sol$minimum)
+}
+
+#################################################################
 # SEARCH-MicroKernels
 #################################################################
 
