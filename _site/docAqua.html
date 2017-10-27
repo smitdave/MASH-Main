@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="The Aquatic Ecology routines govern how mosquitoes emerge from aquatic habitats/laying sites. There are two main modules provided: EL4P and Emerge. EL4P is a...">
+<meta name="keywords" content=" ">
+<title>Aquatic Ecology Documentation | MASH</title>
+<link rel="stylesheet" href="css/syntax.css">
+
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="css/lavish-bootstrap.css">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/theme-blue.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="js/jquery.navgoco.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<link rel="shortcut icon" href="images/favicon.ico">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="" href="http://idratherbewriting.comfeed.xml">
+
+    <script>
+        $(document).ready(function() {
+            // Initialize navgoco with default options
+            $("#mysidebar").navgoco({
+                caretHtml: '',
+                accordion: true,
+                openClass: 'active', // open
+                save: false, // leave false or nav highlighting doesn't work right
+                cookie: {
+                    name: 'navgoco',
+                    expires: false,
+                    path: '/'
+                },
+                slide: {
+                    duration: 400,
+                    easing: 'swing'
+                }
+            });
+
+            $("#collapseAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', false);
+            });
+
+            $("#expandAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', true);
+            });
+
+        });
+
+    </script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    
+
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="fa fa-home fa-lg navbar-brand" href="index.html">&nbsp;<span class="projectTitle"> MASH</span></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- entries without drop-downs appear here -->
+                
+                
+                
+                <li><a href="https://github.com/smitdave/MASH-Development" target="_blank">MASH on GitHub</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+			<li><a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:smitdave@uw.edu?subject=MASH Feedback f eedback&body=I have some feedback about the Aquatic Ecology Documentation page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a><li>
+
+		
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="js/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Aquatic Ecology Documentation">{title}</a></li>',
+                    noResultsText: 'No results found.',
+                            limit: 10,
+                            fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+        </div>
+        <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+    <div class="col-lg-12">&nbsp;</div>
+    <!-- Content Row -->
+    <div class="row">
+        <!-- Sidebar Column -->
+        <div class="col-md-3">
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<ul id="mysidebar" class="nav">
+    <li class="sidebarTitle">MASH 0.75</li>
+    
+    
+    
+        
+    
+    <li>
+        <a href="#">Overview</a>
+        <ul>
+            
+            
+            
+            <li><a href="main.html">Get started</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="oveDevTeam.html">The Team</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="news.html">News</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+    
+    <li>
+        <a href="#">Release Notes</a>
+        <ul>
+            
+            
+            
+            <li><a href="relRelease10.html">Release Notes 1.0</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+    
+    <li>
+        <a href="#">Documentation</a>
+        <ul>
+            
+            
+            
+            <li><a href="docOverview.html">Overview</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docGitHub.html">GitHub</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docStructure.html">Structure</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docStyle.html">Style</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docMosquito.html">Mosquito</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docHumans.html">Human</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docActivitySpace.html">Activity Space</a></li>
+            
+            
+            
+            
+            
+            
+            <li class="active"><a href="docAqua.html">Aquatic Ecology</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docDHM.html">DHM</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docDHM-Basic.html">DHM-Basic</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docDHMP.html">DHM Parameters</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docPathogens.html">Pathogens</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docVectorControl.html">Vector Control</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docKnownBugs.html">Known Bugs</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+    
+    <li>
+        <a href="#">Licensing and Publications</a>
+        <ul>
+            
+            
+            
+            <li><a href="licLicense.html">License</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="licPublications.html">Publications</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+        
+        <!-- if you aren't using the accordion, uncomment this block:
+           <p class="external">
+               <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+           </p>
+           -->
+    </li>
+</ul>
+</div>
+
+<!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");</script>
+
+    <!-- Content Column -->
+    <div class="col-md-9">
+        <div class="post-header">
+   <h1 class="post-title-main">Aquatic Ecology Documentation</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+    <div class="summary">The Aquatic Ecology routines govern how mosquitoes emerge from aquatic habitats/laying sites. There are two main modules provided: EL4P and Emerge. EL4P is a detailed model that incorporates mating and oviposition into aquatic habitats and simulates the maturation of egg batches through the larval and pupal stages to emergence. Emerge is a simplified model of mosquito emergence that takes into account seasonality and stochastic variation in productivity of aquatic habitats but does not simulate the larval or pupal stages of mosquito development.</div>
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+    
+
+    
+
+    
+
+  <h2 id="emerge">Emerge</h2>
+<p>Emerge generates mosquito emergence such that the mean emergence from all aquatic habitats on a landscape over one year is equal to LAMBDA. The seasonal forcing of emergence rate is controlled via ‘offset’ parameter. Lambda is calculated for each aquatic habitat for each day; the mean lambda for a single day across all habitats varies based on seasonality but the mean emergence aggregated over all days of the year is equal to LAMBDA.</p>
+
+<h3 id="makeaquapop-routines">makeAquaPop Routines</h3>
+
+<h4 id="makeaquapopemerge">makeAquaPop.emerge</h4>
+<p>makeAquaPop.emerge generates the Aquatic Ecology object, given input parameters.</p>
+
+<p>Initialization Parameters:</p>
+
+<ul>
+  <li>N.l: number of aquatic habitats on landscape</li>
+  <li>LAMBDA: total number of emerging adult female mosquitoes per human at equilibrium over all aquatic habitats.</li>
+  <li>a: shape parameter for gamma distribution of W</li>
+  <li>b: scale parameter for gamma distribution of W</li>
+  <li>offset: controls seasonality by adjusting rate of emergence over days in year. An offset of 180 corresponds to maximal emergence at the middle of the year; offset is measured in degrees.</li>
+  <li>plot: plot lambda over days in year.</li>
+</ul>
+
+<p>makeAquaPop.emerge generates several parameters in the initialization process:</p>
+
+<ul>
+  <li>W: gamma distributed weights applied to Lambda; W introduces heterogeneity in K.</li>
+  <li>K: habitat-specific carrying capacity; must sum to Lambda over all habitats (PLoS 2013: Mosquito Population Regulation…)</li>
+  <li>season: matrix of lambda values; rows are habitats, columns are days.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">makeAquaPop.emerge</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">N.l</span><span class="p">,</span> <span class="n">LAMBDA</span><span class="p">,</span> <span class="n">a</span><span class="o">=</span><span class="m">1</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="m">1</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="m">0</span><span class="p">,</span> <span class="n">plot</span><span class="o">=</span><span class="n">TRUE</span><span class="p">){</span>
+
+  <span class="n">season</span> <span class="o">=</span> <span class="n">matrix</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="n">N.l</span><span class="p">,</span><span class="m">365</span><span class="p">)</span>
+  <span class="n">W</span> <span class="o">=</span> <span class="n">rgamma</span><span class="p">(</span><span class="n">N.l</span><span class="p">,</span><span class="n">a</span><span class="p">,</span><span class="n">b</span><span class="p">)</span>
+  <span class="n">K</span> <span class="o">=</span> <span class="n">LAMBDA</span> <span class="o">*</span> <span class="n">W</span> <span class="o">/</span> <span class="n">sum</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
+  <span class="k">if</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span><span class="o">==</span><span class="m">1</span><span class="p">){</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">rep</span><span class="p">(</span><span class="n">offset</span><span class="p">,</span><span class="n">N.l</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">N.l</span><span class="p">){</span>
+    <span class="n">season</span><span class="p">[</span><span class="n">i</span><span class="p">,]</span> <span class="o">=</span> <span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="m">1</span><span class="o">+</span><span class="n">sin</span><span class="p">(</span><span class="m">2</span><span class="o">*</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">365</span><span class="p">)</span><span class="o">-</span><span class="n">offset</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="m">365</span><span class="p">))</span>
+  <span class="p">}</span>
+
+  <span class="k">if</span><span class="p">(</span><span class="n">plot</span><span class="p">){</span>
+    <span class="n">plot</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">365</span><span class="p">,</span><span class="n">season</span><span class="p">[</span><span class="m">1</span><span class="p">,],</span><span class="n">type</span><span class="o">=</span><span class="s2">"l"</span><span class="p">,</span><span class="n">ylim</span><span class="o">=</span><span class="n">range</span><span class="p">(</span><span class="n">season</span><span class="p">),</span><span class="n">xlab</span><span class="o">=</span><span class="s2">"Days"</span><span class="p">,</span><span class="n">ylab</span><span class="o">=</span><span class="s2">"Per-habitat Emergence"</span><span class="p">)</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">N.l</span><span class="p">){</span>
+      <span class="n">lines</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">365</span><span class="p">,</span><span class="n">season</span><span class="p">[</span><span class="n">i</span><span class="p">,])</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+
+  <span class="k">return</span><span class="p">(</span>
+    <span class="n">list</span><span class="p">(</span>
+      <span class="n">Nl</span> <span class="o">=</span> <span class="n">N.l</span><span class="p">,</span>
+      <span class="n">K</span> <span class="o">=</span> <span class="n">K</span><span class="p">,</span>
+      <span class="n">Pops</span> <span class="o">=</span> <span class="n">list</span><span class="p">(</span>
+        <span class="n">season</span> <span class="o">=</span> <span class="n">season</span><span class="p">,</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">offset</span>
+        <span class="c1"># lambda = matrix(N.l,N.types)
+</span>      <span class="p">),</span>
+      <span class="n">oneDay</span> <span class="o">=</span> <span class="n">oneDay.emerge</span><span class="p">,</span>
+      <span class="n">PAR</span> <span class="o">=</span> <span class="n">NULL</span>
+    <span class="p">)</span>
+  <span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4 id="onedayemerge">oneDay.emerge</h4>
+<p>oneDay.emerge handles daily emergence of mosquitoes from all aquatic habitats. The habitat-specific value of lambda for day ‘t’ is used as the mean parameter for Poisson-distributed emergence for all sites. These counts of mosquito emergence are added to the adult emergence queue (ImagoQ) for each habitat.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">oneDay.emerge</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">t</span><span class="p">,</span> <span class="n">AquaPOP</span><span class="p">){</span>
+
+  <span class="n">lambda</span> <span class="o">=</span> <span class="n">AquaPOP</span><span class="o">$</span><span class="n">Pops</span><span class="o">$</span><span class="n">season</span><span class="p">[,</span><span class="n">floor</span><span class="p">(</span><span class="n">t</span><span class="p">)</span><span class="o">%%</span><span class="m">365+1</span><span class="p">]</span>
+  <span class="n">lambdaEmerge</span> <span class="o">=</span> <span class="n">rpois</span><span class="p">(</span><span class="n">length</span><span class="p">(</span><span class="n">lambda</span><span class="p">),</span><span class="n">lambda</span><span class="p">)</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">AquaPOP</span><span class="o">$</span><span class="n">Nl</span><span class="p">){</span>
+    <span class="n">addAdults2Q</span><span class="p">(</span><span class="n">lambda</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">t</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">,</span> <span class="m">0</span><span class="p">)</span>
+  <span class="p">}</span>
+
+<span class="p">}</span></code></pre></figure>
+
+<h2 id="el4p">EL4P</h2>
+<p>EL4P must be fitted (calibrated) with a given set of DHM parameters (generated from Pset(…) and using equilibrium bionomics calculated through Monte Carlo simulation by dhmBasicCohort(…)) to its equilibrium values prior to running the simulation.</p>
+
+<p>The fitting routine is as follows:</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1">#run DHM-Basic and generate basic diagnostic plots
+</span><span class="n">M</span> <span class="o">&lt;-</span> <span class="n">makeM</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+<span class="n">P</span> <span class="o">&lt;-</span> <span class="n">Pset</span><span class="p">()</span>
+<span class="n">plotDhmPar</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+<span class="n">cohortOut</span> <span class="o">&lt;-</span> <span class="n">dhmBasicCohort</span><span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="n">M</span><span class="o">=</span><span class="m">5e3</span><span class="p">)</span>
+<span class="n">plotDhmBasicCohort</span><span class="p">(</span><span class="n">cohortOut</span><span class="o">=</span><span class="n">cohortOut</span><span class="p">)</span>
+
+<span class="c1">#setup AquaticEcology queue objects
+</span><span class="n">ImagoQ</span> <span class="o">&lt;-</span> <span class="n">allocImagoQ</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="m">100</span><span class="p">)</span>
+<span class="n">EggQ</span> <span class="o">&lt;-</span> <span class="n">allocEggQ</span><span class="p">(</span><span class="n">N</span><span class="o">=</span><span class="m">100</span><span class="p">)</span>
+
+<span class="c1">#make AquaPop and setup EL4P
+</span><span class="n">Aq.PAR</span> <span class="o">&lt;-</span> <span class="n">makeAq.PAR</span><span class="p">(</span><span class="n">N.l</span><span class="o">=</span><span class="m">200</span><span class="p">,</span><span class="n">cohortOut</span><span class="o">=</span><span class="n">cohortOut</span><span class="p">,</span><span class="n">R0</span><span class="o">=</span><span class="m">5</span><span class="p">,</span><span class="n">nHumans</span><span class="o">=</span><span class="m">100</span><span class="p">)</span>
+<span class="n">AquaPOP</span> <span class="o">&lt;-</span> <span class="n">makeAquaPop.EL4P</span><span class="p">(</span><span class="n">N.l</span><span class="o">=</span><span class="m">200</span><span class="p">,</span><span class="n">PAR</span><span class="o">=</span><span class="n">Aq.PAR</span><span class="p">)</span>
+
+<span class="err">#</span><span class="n">fit</span> <span class="n">EL4P</span> <span class="n">to</span> <span class="n">equilibrium</span> <span class="n">values</span></code></pre></figure>
+
+<h3 id="makeaquapop-routines-generate-aquapop-and-aqpar">makeAquaPop Routines (Generate AquaPOP and Aq.PAR)</h3>
+
+<h4 id="makeaqpar">makeAq.PAR</h4>
+<p>makeAq.PAR generates basic parameters of the Aquatic Ecology model, including the equilibrium value of Lambda to sustain a given value of R0 for a given number of human hosts. makeAq.PAR requires input “cohortOut” which is basic bionomics generated from DHM-Basic run on a cohort of mosquitoes under certain parameters of DHM (parameters of mosquito biology).</p>
+
+<p>Aq.PAR:</p>
+
+<ul>
+  <li>M: habitat-specific ratio of adult female mosquitoes to humans (Int Health 2015: Adult vector control, mosquito ecology and malaria transmission)</li>
+  <li>G: lifetime egg production, per adult (Int Health 2015: Adult vector control, mosquito ecology and malaria transmission)</li>
+  <li>p: UNCERTAIN: used in calculating larval survival (might be density dependent survival from egg to adult)</li>
+  <li>P: density independent survival from egg to adult</li>
+  <li>a: shape parameter for gamma distribution of W (see makeAquaPop.EL4P)</li>
+  <li>b: scale parameter for gamma distribution of W (see makeAquaPop.EL4P)</li>
+  <li>Lambda: total number of emerging adult female mosquitoes per human at equilibrium over all aquatic habitats.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">makeAq.PAR</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">N.l</span><span class="p">,</span><span class="n">cohortOut</span><span class="p">,</span><span class="n">R0</span><span class="p">,</span><span class="n">nHumans</span><span class="p">,</span><span class="k">...</span><span class="p">){</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">list</span><span class="p">(</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="n">rep</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="n">N.l</span><span class="p">),</span>
+    <span class="n">G</span> <span class="o">=</span> <span class="n">cohortOut</span><span class="o">$</span><span class="n">smry</span><span class="o">$</span><span class="n">m.eg</span><span class="p">,</span>
+    <span class="n">p</span> <span class="o">=</span> <span class="m">0.9</span><span class="p">,</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="m">0.8</span><span class="p">,</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+    <span class="n">b</span> <span class="o">=</span> <span class="m">1</span><span class="p">,</span>
+    <span class="n">Lambda</span> <span class="o">=</span> <span class="n">getLAMBDA</span><span class="p">(</span><span class="n">R0</span><span class="p">,</span><span class="n">cohortOut</span><span class="p">,</span><span class="n">nHumans</span><span class="p">,</span><span class="k">...</span><span class="p">)</span>
+  <span class="p">))</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4 id="getlambda">getLAMBDA</h4>
+<p>getLAMBDA gives a mean value of Lambda over the entire landscape; eg; it is the total number of emerging adult female mosquitoes per human per day required to maintain R0 at equilibrium for a given population of humans based on mean mosquito bionomics that are calculated via Monte Carlo simulation from DHM-Basic.</p>
+
+<p>getLAMBDA requires several input parameters:</p>
+
+<ul>
+  <li>S: mean mosquito lifespan</li>
+  <li>r: mean rate of recovery; inverse of mean duration of infectiousness (1/38)</li>
+  <li>b: not sure</li>
+  <li>P: proportion of a cohort that survives the extrinsic inoculation period \( e^{-EIP*g} \); g is the force of mortality and given by inverse of mean lifespan.</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">getLAMBDA</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">R0</span><span class="p">,</span><span class="n">cohortOut</span><span class="p">,</span><span class="n">nHumans</span><span class="p">,</span><span class="n">EIP</span><span class="o">=</span><span class="m">21</span><span class="p">){</span>
+  <span class="n">S</span> <span class="o">=</span> <span class="n">cohortOut</span><span class="o">$</span><span class="n">smry</span><span class="o">$</span><span class="n">N</span>
+  <span class="n">r</span> <span class="o">=</span> <span class="m">1</span><span class="o">/</span><span class="m">38</span>
+  <span class="n">b</span> <span class="o">=</span> <span class="m">0.55</span>
+  <span class="n">P</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">EIP</span> <span class="o">/</span> <span class="n">cohortOut</span><span class="o">$</span><span class="n">smry</span><span class="o">$</span><span class="n">L</span><span class="p">)</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">R0</span><span class="o">*</span><span class="n">nHumans</span><span class="o">/</span><span class="n">P</span><span class="o">/</span><span class="n">S</span><span class="o">^</span><span class="m">2</span><span class="o">/</span><span class="n">b</span><span class="o">*</span><span class="n">r</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<h4 id="makeaquapopel4p">makeAquaPop.EL4P</h4>
+<p>makeAquaPop.EL4P generates the Aquatic Ecology object, AquaPOP given Aquatic Ecology parameters (Aq.PAR).</p>
+
+<p>AquaPOP generates several parameters in the initialization process:</p>
+
+<ul>
+  <li>W: gamma distributed weights applied to Lambda; W introduces heterogeneity in K.</li>
+  <li>K: habitat-specific carrying capacity; must sum to Lambda over all habitats (PLoS 2013: Mosquito Population Regulation…)</li>
+  <li>pp:</li>
+  <li>alpha: habitat-specific maturation rate of larvae (PLoS 2013: Mosquito Population Regulation…)</li>
+  <li>psi: habitat-specific increase in per-capita mortality in response to larval density (PLoS 2013: Mosquito Population Regulation…)</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">makeAquaPop.EL4P</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">N.l</span><span class="p">,</span><span class="n">PAR</span><span class="p">){</span><span class="n">with</span><span class="p">(</span><span class="n">PAR</span><span class="p">,{</span>
+
+  <span class="n">W</span> <span class="o">=</span> <span class="n">rgamma</span><span class="p">(</span><span class="n">N.l</span><span class="p">,</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+  <span class="n">K</span> <span class="o">=</span> <span class="n">Lambda</span><span class="o">*</span><span class="n">W</span><span class="o">/</span><span class="n">sum</span><span class="p">(</span><span class="n">W</span><span class="p">)</span>
+  <span class="n">pp</span> <span class="o">=</span> <span class="o">-</span><span class="n">log</span><span class="p">(</span><span class="n">P</span><span class="o">^</span><span class="p">((</span><span class="m">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">/</span><span class="m">5</span><span class="p">))</span>
+  <span class="n">alpha</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">rnorm</span><span class="p">(</span><span class="n">n</span> <span class="o">=</span> <span class="n">N.l</span><span class="p">,</span><span class="n">mean</span> <span class="o">=</span> <span class="n">pp</span><span class="p">,</span><span class="n">sd</span> <span class="o">=</span> <span class="m">4e-3</span><span class="p">))</span>
+  <span class="n">psi</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">/</span><span class="n">K</span>
+
+  <span class="n">Pops</span> <span class="o">=</span> <span class="n">vector</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">"list"</span><span class="p">,</span><span class="n">length</span><span class="o">=</span><span class="n">N.l</span><span class="p">)</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">N.l</span><span class="p">){</span>
+    <span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span> <span class="o">=</span> <span class="n">aquapop</span><span class="p">()</span>
+  <span class="p">}</span>
+
+  <span class="n">list</span><span class="p">(</span>
+    <span class="n">Nl</span> <span class="o">=</span> <span class="n">N.l</span><span class="p">,</span>  
+    <span class="n">Np</span> <span class="o">=</span> <span class="n">rep</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="n">N.l</span><span class="p">),</span>  
+    <span class="n">Pops</span> <span class="o">=</span> <span class="n">Pops</span><span class="p">,</span>
+    <span class="n">PAR</span> <span class="o">=</span> <span class="n">PAR</span><span class="p">,</span>
+    <span class="n">oneDay</span> <span class="o">=</span> <span class="n">oneDay.EL4P</span><span class="p">,</span>
+    <span class="n">K</span> <span class="o">=</span> <span class="n">K</span><span class="p">,</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">,</span>  
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">psi</span>
+  <span class="p">)</span>
+<span class="p">})}</span></code></pre></figure>
+
+<h3 id="gel4p-routines-generate-el4p">GEL4P Routines (Generate EL4P)</h3>
+
+<h4 id="fitel4p">fit.EL4P</h4>
+<p>fit.EL4P requires Aq.PAR and AquaPOP, which are derived by running DHM-Basic Cohort version, which runs each mosquito as a continuous time Markov Process for a given cohort and summarizes their basic bionomics to estimate values needed to calculate lambda over the entire landscape (in Aq.PAR) and generate AquaPOP, which is the object that contains all the aquatic habitats and relevant parameters. fit.EL4P sets the values of psi so that lambda = K at (p,G) for all aquatic habitats.</p>
+
+<h3 id="checkdxgel4p">checkDX.GEL4P</h3>
+<p>checkDX.GEL4P is a function that runs the aquatic ecology model until variance in Lambda summed over all aquatic habitats is below a certain threshold.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">checkDX.GEL4P</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">LL</span><span class="p">,</span> <span class="n">maxT</span><span class="o">=</span><span class="m">30</span><span class="p">){</span>
+  <span class="n">M</span> <span class="o">=</span> <span class="n">popLambda</span><span class="p">(</span><span class="n">LL</span><span class="p">)</span>
+  <span class="n">llist</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+  <span class="n">M</span> <span class="o">=</span> <span class="m">0.9</span><span class="o">*</span><span class="n">M</span> <span class="o">+</span> <span class="n">M</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">maxT</span><span class="p">){</span>
+    <span class="n">LL</span><span class="o">$</span><span class="n">PAR</span><span class="o">$</span><span class="n">M</span> <span class="o">=</span> <span class="n">M</span>
+    <span class="n">LL</span><span class="o">$</span><span class="n">Pops</span> <span class="o">=</span> <span class="n">oneDay.GEL4P</span><span class="p">(</span><span class="n">LL</span><span class="p">)</span>
+    <span class="n">M</span> <span class="o">=</span> <span class="m">0.9</span><span class="o">*</span><span class="n">M</span> <span class="o">+</span> <span class="n">popLambda</span><span class="p">(</span><span class="n">LL</span><span class="p">)</span>
+    <span class="n">llist</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="n">llist</span><span class="p">,</span> <span class="n">sum</span><span class="p">(</span><span class="n">popLambda</span><span class="p">(</span><span class="n">LL</span><span class="p">)))</span>
+  <span class="p">}</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">llist</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="run2eqgel4p">run2Eq.GEL4P</h3>
+<p>run2Eq.GEL4P is a function that runs the aquatic ecology model to its equilibrium state.</p>
+
+<h3 id="burningel4p">burnin.GEL4P</h3>
+<p>burnin.GEL4P is a helper function for run2Eq.GEL4P to run aquatic ecology dynamics for all aquatic habitats for a given amount of time maxT.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">burnin.GEL4P</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">LL</span><span class="p">,</span><span class="n">maxT</span><span class="o">=</span><span class="m">800</span><span class="p">){</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">maxT</span><span class="p">){</span>
+    <span class="n">LL</span><span class="o">$</span><span class="n">Pops</span> <span class="o">=</span> <span class="n">oneDay.GEL4P</span><span class="p">(</span><span class="n">LL</span><span class="p">)</span>
+  <span class="p">}</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">LL</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="g2kgel4p">G2K.GEL4P</h3>
+<p>G2K.GEL4P is a helper function for run2Eq.GEL4P to run aquatic ecology dynamics for all aquatic habitats for a given amount of time maxT while updating M.</p>
+
+<h3 id="psifit">psiFit</h3>
+<p>psiFit is a helper function to fit.EL4P, which sets values of psi so that lambda = K (set emergence equal to carrying capacity) at (p,G), which are given in Aq.PAR.</p>
+
+<ul>
+  <li>x: parameter (psi) provided to optimize with respect to</li>
+  <li>i: index of aquatic habitat</li>
+  <li>LL: AquaPOP/EL4P object</li>
+  <li>PAR: Aq.PAR object</li>
+  <li>maxT: maximum time to allow aquatic ecology to equilibriate</li>
+  <li>Mo: default M value of PAR</li>
+</ul>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">psiFit</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">i</span> <span class="p">,</span> <span class="n">LL</span><span class="p">,</span> <span class="n">PAR</span><span class="p">,</span> <span class="n">maxT</span><span class="p">,</span> <span class="n">Mo</span><span class="p">){</span>
+  <span class="n">LL</span><span class="o">$</span><span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">abs</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+  <span class="n">K</span> <span class="o">=</span> <span class="n">LL</span><span class="o">$</span><span class="n">K</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+  <span class="n">pop</span> <span class="o">=</span> <span class="n">runOne.GEL4P</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">LL</span><span class="p">,</span><span class="n">PAR</span><span class="p">,</span><span class="n">maxT</span><span class="p">,</span><span class="n">Mo</span><span class="p">)</span>
+  <span class="k">return</span><span class="p">((</span><span class="n">pop</span><span class="o">$</span><span class="n">lambda</span> <span class="o">-</span> <span class="n">K</span><span class="p">)</span><span class="o">^</span><span class="m">2</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="meshkel4p">meshK.EL4P</h3>
+
+<h3 id="runonegel4p">runOne.GEL4P</h3>
+<p>runOne.GEL4P runs a single aquatic habitat for maxT days. Mo is the user-specified equilibrium ratio of mosquitoes to humans.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">runOne.GEL4P</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">EL4P</span><span class="p">,</span> <span class="n">PAR</span><span class="p">,</span> <span class="n">maxT</span><span class="o">=</span><span class="m">200</span><span class="p">,</span> <span class="n">Mo</span><span class="o">=</span><span class="m">10</span><span class="p">){</span>
+  <span class="n">PAR</span><span class="o">$</span><span class="n">M</span> <span class="o">=</span> <span class="n">rep</span><span class="p">(</span><span class="n">Mo</span><span class="p">,</span><span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">(</span><span class="n">PAR</span><span class="o">$</span><span class="n">M</span><span class="p">))</span>
+  <span class="n">pop</span> <span class="o">=</span> <span class="n">EL4P</span><span class="o">$</span><span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span>
+  <span class="n">psi</span> <span class="o">=</span> <span class="n">EL4P</span><span class="o">$</span><span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+  <span class="n">alpha</span> <span class="o">=</span> <span class="n">EL4P</span><span class="o">$</span><span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+  <span class="n">ts</span> <span class="o">=</span> <span class="n">NULL</span>
+  <span class="k">for</span><span class="p">(</span><span class="n">j</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">maxT</span><span class="p">){</span>
+    <span class="n">pop</span> <span class="o">=</span> <span class="n">oneDay.GEL4Pi</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">pop</span><span class="p">,</span><span class="n">psi</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">PAR</span><span class="p">)</span>
+    <span class="n">ts</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="n">ts</span><span class="p">,</span><span class="n">pop</span><span class="o">$</span><span class="n">lambda</span><span class="p">)</span> <span class="c1">#update lambda history
+</span>    <span class="n">PAR</span><span class="o">$</span><span class="n">M</span> <span class="o">=</span> <span class="m">0.9</span><span class="o">*</span><span class="n">Mo</span> <span class="o">+</span> <span class="n">pop</span><span class="o">$</span><span class="n">lambda</span> <span class="c1">#update mosy density
+</span>  <span class="p">}</span>
+  <span class="k">return</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="onedaygel4pi">oneDay.GEL4Pi</h3>
+<p>oneDay.GEL4Pi is a helper function for runOne.GEL4P, which advances aquatic ecology in a single habitat by one day. It assumes that eggs are laid in this habitat to correspond to the equilibrium parameters implied by Aq.PAR and K evaluated in meshK.EL4P.</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">oneDay.GEL4Pi</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">pop</span><span class="p">,</span><span class="n">psi</span><span class="p">,</span><span class="n">alpha</span><span class="p">,</span><span class="n">PAR</span><span class="p">){</span>
+  <span class="n">with</span><span class="p">(</span><span class="n">PAR</span><span class="p">,{</span>
+    <span class="n">eggslaid</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">a</span><span class="o">*</span><span class="n">G</span> <span class="c1">#number of eggs laid at this site
+</span>
+    <span class="n">L1.0</span><span class="o">=</span><span class="n">pop</span><span class="o">$</span><span class="n">L1</span><span class="p">;</span> <span class="n">L2.0</span><span class="o">=</span><span class="n">pop</span><span class="o">$</span><span class="n">L2</span><span class="p">;</span> <span class="n">L3.0</span><span class="o">=</span><span class="n">pop</span><span class="o">$</span><span class="n">L3</span><span class="p">;</span> <span class="n">L4.0</span><span class="o">=</span><span class="n">pop</span><span class="o">$</span><span class="n">L4</span>
+    <span class="n">density</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">L1.0</span><span class="p">,</span><span class="n">L2.0</span><span class="p">,</span><span class="n">L3.0</span><span class="p">,</span><span class="n">L4.0</span><span class="p">)</span>
+
+    <span class="n">surv1</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span><span class="p">)</span> <span class="c1">#survival probability of pupae
+</span>    <span class="n">surv2</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">alpha</span> <span class="o">+</span> <span class="n">psi</span><span class="o">*</span><span class="n">density</span><span class="p">))</span> <span class="c1">#survival probability of larvae
+</span>
+    <span class="n">pop</span><span class="o">$</span><span class="n">lambda</span> <span class="o">=</span> <span class="n">surv1</span><span class="o">*</span><span class="n">pop</span><span class="o">$</span><span class="n">P</span> <span class="c1">#emerging adults
+</span>    <span class="n">pop</span><span class="o">$</span><span class="n">P</span> <span class="o">=</span> <span class="n">surv2</span><span class="o">*</span><span class="n">p</span><span class="o">*</span><span class="n">L4.0</span>
+    <span class="n">pop</span><span class="o">$</span><span class="n">L4</span><span class="o">=</span> <span class="n">surv2</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">L3.0</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="n">L4.0</span><span class="p">)</span>
+    <span class="n">pop</span><span class="o">$</span><span class="n">L3</span><span class="o">=</span> <span class="n">surv2</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">L2.0</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="n">L3.0</span><span class="p">)</span>
+    <span class="n">pop</span><span class="o">$</span><span class="n">L2</span><span class="o">=</span> <span class="n">surv2</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">L1.0</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="n">L2.0</span><span class="p">)</span>
+    <span class="n">pop</span><span class="o">$</span><span class="n">L1</span> <span class="o">=</span> <span class="n">pop</span><span class="o">$</span><span class="n">eggs</span> <span class="o">+</span> <span class="n">surv2</span><span class="o">*</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="n">L1.0</span>
+    <span class="n">pop</span><span class="o">$</span><span class="n">eggs</span> <span class="o">=</span> <span class="n">eggslaid</span>
+    <span class="n">pop</span><span class="o">$</span><span class="n">tot</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">pop</span><span class="o">$</span><span class="n">L1</span><span class="p">,</span><span class="n">pop</span><span class="o">$</span><span class="n">L2</span><span class="p">,</span><span class="n">pop</span><span class="o">$</span><span class="n">L3</span><span class="p">,</span><span class="n">pop</span><span class="o">$</span><span class="n">L4</span><span class="p">,</span><span class="n">pop</span><span class="o">$</span><span class="n">P</span><span class="p">)</span>
+
+    <span class="k">return</span><span class="p">(</span><span class="n">pop</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span></code></pre></figure>
+
+<h3 id="onedaygel4p">oneDay.GEL4P</h3>
+<p>oneDay.GEL4P will run single day population dynamics for all aquatic habitats</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">oneDay.GEL4P</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">EL4P</span><span class="p">,</span><span class="n">PAR</span><span class="p">){</span>
+  <span class="n">with</span><span class="p">(</span><span class="n">c</span><span class="p">(</span><span class="n">EL4P</span><span class="p">,</span><span class="n">PAR</span><span class="p">),{</span>
+    <span class="k">for</span><span class="p">(</span><span class="n">i</span> <span class="k">in</span> <span class="m">1</span><span class="o">:</span><span class="n">Nl</span><span class="p">){</span>
+      <span class="n">L1.0</span><span class="o">=</span><span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">L1</span><span class="p">;</span> <span class="n">L2.0</span><span class="o">=</span><span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">L2</span><span class="p">;</span> <span class="n">L3.0</span><span class="o">=</span><span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">L3</span><span class="p">;</span> <span class="n">L4.0</span><span class="o">=</span><span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">L4</span>
+      <span class="n">density</span> <span class="o">=</span> <span class="n">sum</span><span class="p">(</span><span class="n">L1.0</span><span class="p">,</span><span class="n">L2.0</span><span class="p">,</span><span class="n">L3.0</span><span class="p">,</span><span class="n">L4.0</span><span class="p">)</span>
+      <span class="n">surv1</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+      <span class="n">surv2</span> <span class="o">=</span> <span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">psi</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">density</span><span class="p">))</span>
+      <span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">lambda</span> <span class="o">=</span> <span class="n">surv1</span><span class="o">*</span><span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">P</span>
+      <span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">P</span> <span class="o">=</span> <span class="n">surv2</span><span class="o">*</span><span class="n">p</span><span class="o">*</span><span class="n">L4.0</span>
+      <span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">L4</span><span class="o">=</span> <span class="n">surv2</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">L3.0</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="n">L4.0</span><span class="p">)</span>
+      <span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">L3</span><span class="o">=</span> <span class="n">surv2</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">L2.0</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="n">L3.0</span><span class="p">)</span>
+      <span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">L2</span><span class="o">=</span> <span class="n">surv2</span><span class="o">*</span><span class="p">(</span><span class="n">p</span><span class="o">*</span><span class="n">L1.0</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="n">L2.0</span><span class="p">)</span>
+      <span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">L1</span> <span class="o">=</span> <span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">eggs</span> <span class="o">+</span> <span class="n">surv2</span><span class="o">*</span><span class="p">(</span><span class="m">1</span><span class="o">-</span><span class="n">p</span><span class="p">)</span><span class="o">*</span><span class="n">L1.0</span>
+      <span class="n">Pops</span><span class="p">[[</span><span class="n">i</span><span class="p">]]</span><span class="o">$</span><span class="n">eggs</span> <span class="o">=</span> <span class="n">M</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">a</span><span class="o">*</span><span class="n">G</span>
+    <span class="p">}</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">Pops</span><span class="p">)</span>
+  <span class="p">})</span>
+<span class="p">}</span></code></pre></figure>
+
+
+
+    <div class="tags">
+        
+    </div>
+
+    
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+               &copy;2017 MASH. All rights reserved. <br />
+ Site last generated: Apr 4, 2017 <br />
+<p><img src="images/company_logo.png" alt="Company logo"/></p>
+
+<p>Jekyll template downloaded from: <a href="https://github.com/tomjohnson1492/documentation-theme-jekyll">idratherbewriting</a></p>
+                </div>
+            </div>
+</footer>
+
+
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+    </div>
+
+</body>
+
+</html>

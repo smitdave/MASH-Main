@@ -1,0 +1,276 @@
+[
+
+
+
+
+{
+"title": "Activity Space Documentation",
+"tags": "",
+"keywords": "",
+"url": "docActivitySpace.html",
+"summary": "The ActivitySpace structures store information about who is at risk at each feeding station. Each riskList stores information from a human Activity.Space algorithm and is used by a corresponding chooseHost function. These are called only by MICRO as location is resolved only to the patch level in MACRO."
+},
+
+
+
+{
+"title": "Aquatic Ecology Documentation",
+"tags": "",
+"keywords": "",
+"url": "docAqua.html",
+"summary": "The Aquatic Ecology routines govern how mosquitoes emerge from aquatic habitats/laying sites. There are two main modules provided: EL4P and Emerge. EL4P is a detailed model that incorporates mating and oviposition into aquatic habitats and simulates the maturation of egg batches through the larval and pupal stages to emergence. Emerge is a simplified model of mosquito emergence that takes into account seasonality and stochastic variation in productivity of aquatic habitats but does not simulate the larval or pupal stages of mosquito development."
+},
+
+
+
+{
+"title": "DHM-Basic Documentation",
+"tags": "",
+"keywords": "",
+"url": "docDHM-Basic.html",
+"summary": "DHM-Basic is an approximating model to the complete DHM model, which includes spatial heterogeneity, as well as explicit simulation of humans, pathogens, and all mosquito activity. DHM-Basic is a generic term to refer to abstractions of this model. Abstractions come from realizing that the life-course of any individual mosquito can be thought of as a continuous time Markov process with a finite state space."
+},
+
+
+
+{
+"title": "DHM Documentation",
+"tags": "",
+"keywords": "",
+"url": "docDHM.html",
+"summary": "Description of the functions that define the mosquito life-cycle model."
+},
+
+
+
+{
+"title": "DHM Parameters Documentation",
+"tags": "",
+"keywords": "",
+"url": "docDHMP.html",
+"summary": "Description of parameters of the Distributed Hazards Model (DHM)"
+},
+
+
+
+{
+"title": "Documentation",
+"tags": "",
+"keywords": "",
+"url": "docGitHub.html",
+"summary": "The repository is divided into branches for development although the main ones are 'MASH' for the general programming process and 'gh-pages' for the documentation."
+},
+
+
+
+{
+"title": "Human Documentation",
+"tags": "",
+"keywords": "",
+"url": "docHumans.html",
+"summary": "Description of the Human object in MASH. The HUMAN object is a list where each element is a single Human. This page describes the various objects and variables that make up each Human, which is itself a list."
+},
+
+
+
+{
+"title": "Known Bugs",
+"tags": "",
+"keywords": "",
+"url": "docKnownBugs.html",
+"summary": "'Any sufficiently advanced bug is indistinguishable from a feature'- Rich Kulawiec"
+},
+
+
+
+{
+"title": "Mosquito Documentation",
+"tags": "",
+"keywords": "",
+"url": "docMosquito.html",
+"summary": "Description of the variables that make up mosquitos in the model."
+},
+
+
+
+{
+"title": "Documentation",
+"tags": "",
+"keywords": "",
+"url": "docOverview.html",
+"summary": "MASH is being developed with modularity as one of its primary goals. As such most of the components can be plugged in and out as required for a specific application. The documentation presented here shows a brief description of most of the modules found on the main repository."
+},
+
+
+
+{
+"title": "Pathogens",
+"tags": "",
+"keywords": "",
+"url": "docPathogens.html",
+"summary": "Description of pathogen models."
+},
+
+
+
+{
+"title": "Documentation",
+"tags": "",
+"keywords": "",
+"url": "docStructure.html",
+"summary": "Following MASH's modularity principles the repository is divided into sub-folders for each one of the components of the simulation."
+},
+
+
+
+{
+"title": "Style",
+"tags": "",
+"keywords": "",
+"url": "docStyle.html",
+"summary": "The following is a set of guidelines for development of new algorithms for MASH."
+},
+
+
+
+{
+"title": "Vector Control",
+"tags": "",
+"keywords": "",
+"url": "docVectorControl.html",
+"summary": "Description of vector cotrol functions, parameters and how to use them in the simulation."
+},
+
+
+
+
+
+{
+"title": "MASH (Modular Analysis and Simulation for human Health)",
+"tags": "",
+"keywords": "homepage",
+"url": "main.html",
+"summary": "MASH started as a tool for simulating malaria. It has evolved into a tool that is capable of doing simulation and analysis of a wide range of problems in human health."
+},
+
+
+
+{
+"title": "License",
+"tags": "",
+"keywords": "",
+"url": "licLicense.html",
+"summary": ""
+},
+
+
+
+{
+"title": "Publications",
+"tags": "",
+"keywords": "",
+"url": "licPublications.html",
+"summary": ""
+},
+
+
+
+{
+"title": "Scroll layout",
+"tags": "special_layouts",
+"keywords": "json, scrolling, scrollto, jquery plugin",
+"url": "jsmydoc_scroll.html",
+"summary": "This page demonstrates how you the integration of a script called ScrollTo, which is used here to link definitions of a JSON code sample to a list of definitions for that particular term. The scenario here is that the JSON blocks are really long, with extensive nesting and subnesting, which makes it difficult for tables below the JSON to adequately explain the term in a usable way."
+},
+
+
+
+{
+"title": "News",
+"tags": "",
+"keywords": "news, blog, updates, release notes, announcements",
+"url": "news.html",
+"summary": ""
+},
+
+
+
+{
+"title": "News",
+"tags": "",
+"keywords": "news, blog, updates, release notes, announcements",
+"url": "news_archive.html",
+"summary": ""
+},
+
+
+
+{
+"title": "Development Team and Users",
+"tags": "",
+"keywords": "",
+"url": "oveDevTeam.html",
+"summary": "People involved in the MASH project"
+},
+
+
+
+
+
+{
+"title": "Release 1.0",
+"tags": "",
+"keywords": "",
+"url": "relRelease10.html",
+"summary": ""
+},
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{
+"title": "Look at me still talking when there&#39;s science to do.",
+"tags": "",
+"keywords": "",
+"url": "/2016-08-10-gettingThingsDone.html",
+"summary": ""
+}
+
+
+
+]

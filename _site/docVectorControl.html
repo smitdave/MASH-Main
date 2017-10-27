@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Description of vector cotrol functions, parameters and how to use them in the simulation.">
+<meta name="keywords" content=" ">
+<title>Vector Control | MASH</title>
+<link rel="stylesheet" href="css/syntax.css">
+
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="css/lavish-bootstrap.css">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/theme-blue.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="js/jquery.navgoco.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<link rel="shortcut icon" href="images/favicon.ico">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="" href="http://idratherbewriting.comfeed.xml">
+
+    <script>
+        $(document).ready(function() {
+            // Initialize navgoco with default options
+            $("#mysidebar").navgoco({
+                caretHtml: '',
+                accordion: true,
+                openClass: 'active', // open
+                save: false, // leave false or nav highlighting doesn't work right
+                cookie: {
+                    name: 'navgoco',
+                    expires: false,
+                    path: '/'
+                },
+                slide: {
+                    duration: 400,
+                    easing: 'swing'
+                }
+            });
+
+            $("#collapseAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', false);
+            });
+
+            $("#expandAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', true);
+            });
+
+        });
+
+    </script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    
+
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="fa fa-home fa-lg navbar-brand" href="index.html">&nbsp;<span class="projectTitle"> MASH</span></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- entries without drop-downs appear here -->
+                
+                
+                
+                <li><a href="https://github.com/smitdave/MASH-Development" target="_blank">MASH on GitHub</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+			<li><a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:smitdave@uw.edu?subject=MASH Feedback f eedback&body=I have some feedback about the Vector Control page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a><li>
+
+		
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="js/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Vector Control">{title}</a></li>',
+                    noResultsText: 'No results found.',
+                            limit: 10,
+                            fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+        </div>
+        <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+    <div class="col-lg-12">&nbsp;</div>
+    <!-- Content Row -->
+    <div class="row">
+        <!-- Sidebar Column -->
+        <div class="col-md-3">
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<ul id="mysidebar" class="nav">
+    <li class="sidebarTitle">MASH 0.75</li>
+    
+    
+    
+        
+    
+    <li>
+        <a href="#">Overview</a>
+        <ul>
+            
+            
+            
+            <li><a href="main.html">Get started</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="oveDevTeam.html">The Team</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="news.html">News</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+    
+    <li>
+        <a href="#">Release Notes</a>
+        <ul>
+            
+            
+            
+            <li><a href="relRelease10.html">Release Notes 1.0</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+    
+    <li>
+        <a href="#">Documentation</a>
+        <ul>
+            
+            
+            
+            <li><a href="docOverview.html">Overview</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docGitHub.html">GitHub</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docStructure.html">Structure</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docStyle.html">Style</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docMosquito.html">Mosquito</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docHumans.html">Human</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docActivitySpace.html">Activity Space</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docAqua.html">Aquatic Ecology</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docDHM.html">DHM</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docDHM-Basic.html">DHM-Basic</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docDHMP.html">DHM Parameters</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docPathogens.html">Pathogens</a></li>
+            
+            
+            
+            
+            
+            
+            <li class="active"><a href="docVectorControl.html">Vector Control</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docKnownBugs.html">Known Bugs</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+    
+    <li>
+        <a href="#">Licensing and Publications</a>
+        <ul>
+            
+            
+            
+            <li><a href="licLicense.html">License</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="licPublications.html">Publications</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+        
+        <!-- if you aren't using the accordion, uncomment this block:
+           <p class="external">
+               <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+           </p>
+           -->
+    </li>
+</ul>
+</div>
+
+<!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");</script>
+
+    <!-- Content Column -->
+    <div class="col-md-9">
+        <div class="post-header">
+   <h1 class="post-title-main">Vector Control</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+    <div class="summary">Description of vector cotrol functions, parameters and how to use them in the simulation.</div>
+   
+
+    
+    
+<!-- this handles the automatic toc. use ## for subheads to auto-generate the on-page minitoc. if you use html tags, you must supply an ID for the heading element in order for it to appear in the minitoc. -->
+<script>
+$( document ).ready(function() {
+  // Handler for .ready() called.
+
+$('#toc').toc({ minimumHeaders: 0, listType: 'ul', showSpeed: 0, headers: 'h2,h3,h4' });
+
+/* this offset helps account for the space taken up by the floating toolbar. */
+$('#toc').on('click', 'a', function() {
+  var target = $(this.getAttribute('href'))
+    , scroll_target = target.offset().top
+
+  $(window).scrollTop(scroll_target - 10);
+  return false
+})
+  
+});
+</script>
+
+<div id="toc"></div>
+
+    
+
+    
+
+    
+
+    
+
+  <h2 id="description">Description</h2>
+<p>“MOSQUITO/VECTOR.CONTROL/” contains all the sub-folders and files required to setup and activate the vector control interventions. These interventions are activated and distributed in “MOSQUITO/VECTOR.CONTROL/setup.VectorControl.R”.</p>
+
+<p>There are three steps to setup an intervention in a particular landscape:</p>
+
+<ol>
+  <li>Activate its bool controller in “setup.VectorControl.R”</li>
+  <li>Call the <i>setup.VectorControlPackage</i> function. This function is a wrapper that defines probability parameters for the interventions that have been implemented in MASH. The probabilities vectors can be modified for each intervention by setting up the following values (note that not all of these parameters are required or used in each intervention and are kept only for standarisation purposes):
+    <ul>
+      <li>ACTIVE: defines in an intervention should or should not be activated in the simulation</li>
+      <li>SurviveP: probability to survive an encounter with a given intervention</li>
+      <li>ProbeP: probability to probe on a host (if available)</li>
+      <li>RepelP: probability of being repelled by an intervention if encountered</li>
+      <li>FeedP: probability to succesfully feed on a host given the encounter with the intervention</li>
+      <li>SurviveProbeP: probability to survive a probe attempt given the encounter with the intervention</li>
+    </ul>
+  </li>
+  <li>Call either <i>setup.Manually_LANDSCAPE_BasedInterventions</i> or <i>setup.Random_Uniform_LANDSCAPE_BasedInterventions</i> to define where, in the LANDSCAPE object, the interventions should be distributed.</li>
+  <li>INTERVENTIONS_PARAMETERS must be defined as a global as it is the variable that controls the killing probabilities of all the interventions.</li>
+</ol>
+
+<p>These interventions work by adding columns to the LANDSCAPE data frame in which booleans values (0 or 1) define wether an intervention is present in a given point or not. The “MOSQUITO/VECTOR.CONTROL/setup.VectorControl.R” contains examples of how to use these functions.</p>
+
+<h2 id="interventions">Interventions</h2>
+<p>The ones marked with (+) are the ones that have been integrated into the newest version of MASH, the ones marked with (-) were integrated but might be wrong (they depend on a weird check: <i>notInIXFZero=ixf(M)</i>) and the ones marked with (=) were integrated but untested.</p>
+
+<h3 id="atsb--">ATSB (-)</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Attractive</span> <span class="n">sugar</span> <span class="n">baits</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span> <span class="n">Poisoned</span> <span class="n">sugar</span> <span class="n">sources</span> <span class="n">to</span> <span class="n">kill</span> <span class="n">mosquitoes</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">feed.</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span> <span class="n">sugar</span> <span class="n">feeding</span> <span class="n">sites</span> <span class="p">(</span><span class="n">s</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> <span class="n">S</span>
+<span class="o">*</span> <span class="n">Called</span> <span class="n">by</span><span class="o">:</span> <span class="n">SugarFeedingBout</span></code></pre></figure>
+
+<h3 id="arearepel--">AREA.REPEL (-)</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Area</span> <span class="n">repellents</span> 
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span> <span class="n">Mosquitoes</span> <span class="n">get</span> <span class="n">spatially</span> <span class="n">repelled</span> <span class="n">by</span> <span class="n">measures</span> <span class="n">like</span> <span class="n">citronella</span> <span class="n">coils.</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span> <span class="n">haunts</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> <span class="n">F</span>
+<span class="o">*</span> <span class="n">Called</span> <span class="n">by</span><span class="o">:</span> <span class="n">landingSpot</span></code></pre></figure>
+
+<h3 id="baitedtrap--">BAITED.TRAP (-)</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Odor</span> <span class="n">baits</span> 
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span> <span class="n">Traps</span> <span class="n">intended</span> <span class="n">to</span> <span class="n">draw</span> <span class="n">mosquitoes</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">blood</span><span class="o">-</span><span class="n">feed</span> <span class="n">by</span> <span class="n">using</span> <span class="n">human</span> <span class="n">odor</span> <span class="n">as</span> <span class="n">bait.</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span> <span class="n">haunts</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> <span class="n">F</span>
+<span class="o">*</span> <span class="n">Called</span> <span class="n">by</span><span class="o">:</span> <span class="n">BloodFeedingSearchBout</span></code></pre></figure>
+
+<h3 id="biologicalcontrol">BIOLOGICAL.CONTROL</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Larvivorous</span> <span class="n">fish</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> </code></pre></figure>
+
+<h3 id="foulhabitat">FOUL.HABITAT</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Habitat</span> <span class="n">not</span> <span class="n">able</span> <span class="k">for</span> <span class="n">development</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> </code></pre></figure>
+
+<h3 id="eavetube-">EAVE.TUBE (+)</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Eave</span> <span class="n">tubes</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span> <span class="n">House</span> <span class="n">modifications</span> <span class="n">that</span> <span class="n">repel</span> <span class="n">or</span> <span class="n">kill</span> <span class="n">mosquitoes</span> <span class="n">trying</span> <span class="n">to</span> <span class="n">enter</span> <span class="n">a</span> <span class="n">house.</span> 
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span> <span class="n">haunts</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> <span class="n">F</span>
+<span class="o">*</span> <span class="n">Called</span> <span class="n">by</span><span class="o">:</span> <span class="n">enterHouse</span></code></pre></figure>
+
+<h3 id="gm">GM</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Genetically</span> <span class="n">modified</span> <span class="n">mosquitoes</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> </code></pre></figure>
+
+<h3 id="irs--">IRS (-)</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Indoor</span> <span class="n">residual</span> <span class="n">spraying</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span> <span class="n">Indoor</span> <span class="n">spraying</span> <span class="n">of</span> <span class="n">insecticide</span> <span class="n">to</span> <span class="n">kill</span> <span class="n">mosquitoes</span> <span class="n">who</span> <span class="n">rest</span> <span class="n">on</span> <span class="n">walls.</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span> <span class="n">haunts</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> <span class="n">R</span>
+<span class="o">*</span> <span class="n">Called</span> <span class="n">by</span><span class="o">:</span> <span class="n">landingSpot</span></code></pre></figure>
+
+<p>Note: For now inside and outside walls are treated the same (as in they call the same set of parameters). That should be changed later.</p>
+
+<h3 id="itn">ITN</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Insecticide</span><span class="o">-</span><span class="n">treated</span> <span class="n">nets</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> <span class="n">B</span> 
+<span class="o">*</span> <span class="n">Called</span> <span class="n">by</span><span class="o">:</span> <span class="n">humanEncounter</span></code></pre></figure>
+
+<h3 id="swat">SWAT</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Human</span> <span class="n">swatting</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> </code></pre></figure>
+
+<h3 id="ivermectin">IVERMECTIN</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Ivermectin</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> </code></pre></figure>
+
+<h3 id="larvicides">LARVICIDES</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> 
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> </code></pre></figure>
+
+<h3 id="larviciding">LARVICIDING</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Poisoning</span> <span class="n">larvae</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> </code></pre></figure>
+
+<h3 id="improvehome">IMPROVE.HOME</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">House</span> <span class="n">modifications</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span> <span class="n">House</span> <span class="n">are</span> <span class="n">modified</span> <span class="n">to</span> <span class="n">prevent</span> <span class="n">mosquitoes</span> <span class="n">from</span> <span class="n">entering.</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span> <span class="n">haunts</span> <span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> <span class="n">F</span>
+<span class="o">*</span> <span class="n">Called</span> <span class="n">by</span><span class="o">:</span> <span class="n">landingSpot</span></code></pre></figure>
+
+<h3 id="protect">PROTECT</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span></code></pre></figure>
+
+<h3 id="repel">REPEL</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span></code></pre></figure>
+
+<h3 id="personalrepellant">PERSONAL.REPELLANT</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span></code></pre></figure>
+
+<h3 id="ovitrap">OVITRAP</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Traps</span> <span class="k">for</span> <span class="n">eggs</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span></code></pre></figure>
+
+<h3 id="sourcereduction">SOURCE.REDUCTION</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Destruction</span> <span class="n">of</span> <span class="n">aquatic</span> <span class="n">habitats</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span></code></pre></figure>
+
+<h3 id="swarmspraying-">SWARM.SPRAYING (=)</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span> <span class="n">Insecticide</span> <span class="n">spraying</span> <span class="n">of</span> <span class="n">mating</span> <span class="n">swarms</span> 
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span> <span class="n">Spraying</span> <span class="n">insecticide</span> <span class="n">on</span> <span class="n">located</span> <span class="n">swarms</span> <span class="n">to</span> <span class="n">kill</span> <span class="n">potential</span> <span class="n">mates.</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span> <span class="n">mating</span> <span class="n">spots</span> <span class="p">(</span><span class="n">m</span><span class="p">)</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span> <span class="n">M</span>
+<span class="o">*</span> <span class="n">Called</span> <span class="n">by</span><span class="o">:</span> <span class="n">SwarmingBout</span></code></pre></figure>
+
+<h3 id="zoospray">ZOOSPRAY</h3>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="o">*</span> <span class="n">Name</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Description</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">Located</span> <span class="k">in</span><span class="o">:</span>
+<span class="o">*</span> <span class="n">DHM</span> <span class="n">Stage</span><span class="o">:</span></code></pre></figure>
+
+
+    <div class="tags">
+        
+    </div>
+
+    
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+               &copy;2017 MASH. All rights reserved. <br />
+ Site last generated: Apr 4, 2017 <br />
+<p><img src="images/company_logo.png" alt="Company logo"/></p>
+
+<p>Jekyll template downloaded from: <a href="https://github.com/tomjohnson1492/documentation-theme-jekyll">idratherbewriting</a></p>
+                </div>
+            </div>
+</footer>
+
+
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+    </div>
+
+</body>
+
+</html>

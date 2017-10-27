@@ -1,0 +1,171 @@
+<!doctype html>
+<html>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<head>
+
+	<!-- MASH Fonts -->
+	<style>
+	@import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+	@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+	</style>
+	<!-- MASH Fonts -->
+	<style>
+	div.img_holder img
+		{
+				float: left;
+				padding: 50px;
+		}
+	</style>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/ucsf.css">
+	<link rel="stylesheet" href="lib/css/codeHighlighter.css">
+	<title>MICRO @ NCCB</title>
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement( 'link' );
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+	<script src="./lib/w3.js"></script>
+</head>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<body>
+	<div class="reveal">
+		<!--<img src="./images/logos.png" alt="ITESM" height="50px"  style="border-radius: 5px; position: fixed; left: 25px;bottom: 25px; z-index: 10;   border-radius:5px; border-color:#000; border-width: 0px; border-style: solid" >-->
+		<div class="slides">
+
+			<!-- BEGIN: MASH -->
+			<section data-background="./images/MASH_background.png">
+
+				<!-- slide 1 -->
+				<section style="border-width:5px; color:Black;">
+					<!-- title -->
+					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:90px; color:Black;">MICRO</sectionTitleStyle>
+					<p style="font-family: 'Yanone Kaffeesatz'; color:Black;">An Eco-epidemiological Agent-based Framework for the Modeling of Mosquito-borne Pathogens</p>
+					<img src="./images/MASH_moveNetwork.jpg" style="height:300px; border-radius:0px;">
+					<p style="font-family: 'Droid Serif'; font-size:20px; color:Black;">Sean Wu<sup style="font-size:10px;">1</sup>, Héctor M. Sánchez C.<sup style="font-size:10px;">1</sup>, Biyonka Liang<sup style="font-size:10px;">1</sup>, David L. Smith<sup style="font-size:10px;">2</sup></p>
+					<ol style="font-family: 'Droid Serif'; font-size:12.5px; color:Black;">
+						<li>University of California, Berkeley</li>
+						<li>Institute for Health Metrics and Evaluation, Seattle, Washington</li>
+					</ol>
+					<p style="font-size:15px; color:#555;">
+						Move through the slides by hitting the space bar<br>
+						Please wait until the presentation loads completely
+					</p>
+				</section>
+
+				<!-- slide 2 -->
+				<section style="border-width:5px; color:Black;">
+					<!-- title -->
+					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;">Models &amp; Theory</sectionTitleStyle><br>
+					<!-- text 1 -->
+					<ul style="font-family: 'Droid Serif'; font-size:15px; color:Black; margin-left:50px;">
+						<li>Modeling of mosquito-borne pathogens is particularly complex as infection dynamics
+								arise out of the interaction between (at least) three species: humans, pathogens, and mosquitoes</li>
+						<li>MICRO is a process-based description of pathogen transmission through stochastic simulation based on the Gillespie algorithm</li>
+					</ul>
+					<p style="font-family: 'Yanone Kaffeesatz'; font-size:35px; color:Black;">M-BITES: Mosquito Bout-based and Individual-based Transmission Ecology Simulation</p>
+					<div class = "img_holder">
+						<img src="./images/MASH_lifeCycle.png" style="width:22.5%; border-radius:0px;">
+						<img src="./images/MASH_diffusion.png" style="width:25%; border-radius:0px;">
+						<img src="./images/MASH_hive.png" style="width:22.5%; border-radius:0px;">
+					</div>
+				</section>
+
+				<!-- slide 3 -->
+				<!-- <section style="border-width:5px">
+					<br><sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;">Classical Theory &amp; Stochastic Simulation</sectionTitleStyle><br>
+					<img src="./images/MASH_MarkovODE.png" style="width:50%;">
+					<p style="font-family: 'Droid Serif'; font-size:15px; color:Black;">If all holding times are exponentially distributed, we can appeal to mean-field approximation...write me!</p>
+
+				</section> -->
+
+				<!-- slide 4 -->
+				<section style="border-width:5px; color:Black;">
+					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;">Continuous-time Discrete Event Simulation</sectionTitleStyle><br>
+					<img src="./images/MASH_animation.gif" style="width:40%; border-radius:5px;">
+				</section>
+
+				<!-- slide 5 -->
+				<section style="border-width:5px; color:Black;">
+					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;"><i>Plasmodium falciparum</i> Transmission Simulation</sectionTitleStyle><br>
+					<img src="./images/MASH_StaticNetwork.png" style="width:50%;">
+				</section>
+
+				<!-- slide 6 -->
+				<section style="border-width:5px; color:Black;">
+					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;"><i>Plasmodium falciparum</i> Transmission Chains</sectionTitleStyle><br>
+					<iframe src="./images/MASH_transmissionChain.html" width="1000px" height="500px" class="foo" scrolling="no"></iframe>
+				</section>
+
+				<!-- slide 7 -->
+				<section style="border-width:5px; color:Black;">
+					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;">Risk is Heterogeneous on Realistic Landscapes</sectionTitleStyle><br>
+					<img src="./images/MASH_riskscape.png">
+				</section>
+
+				<!-- slide 8 -->
+				<section style="border-width:5px; color:Black;">
+					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;">Optimization of Vector Control Interventions for Transmission Control</sectionTitleStyle><br>
+					<video data-autoplay width=60% controls><source src="./images/MASH_optimization.mp4"></video>
+				</section>
+
+				<!-- slide 9 -->
+				<section style="border-width:5px; color:Black;">
+					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;">Project Status</sectionTitleStyle><br>
+					<ul style="font-family: 'Droid Serif'; font-size:15px; color:Black; margin-left:50px;">
+						<li>MASH is a family of open-source R packages</li>
+						<li>Codebase: object-oriented R6 and object-oriented C++ for computationally heavy elements</li>
+						<li>Integrate MICRO with larger MASH (Modular Analysis &amp; Simulation for Human Health) projects for simulation of infectious disease transmission at national scales</li>
+						<li>Integrate <i>PfLOME</i>, a model of within and between host evolutionary dynamics of malaria</li>
+						<li>More flexible simulation of human movement across scales (neighborhood, city, province, country)</li>
+					</ul>
+					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:40px; color:Black;">Affiliations &amp; Funding</sectionTitleStyle><br>
+					<img src="./images/berkeley.jpg" style="height:75px; border-radius: 5px;">
+					<img src="./images/MASH_ihme.png" style="height:75px; border-radius: 5px;">
+					<img src="./images/MASH_gates.png" style="height:75px; border-radius: 5px;">
+					<img src="./images/DARPA.jpg" style="height:75px; border-radius: 5px;">
+				</section>
+			</section>
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+		</div>
+	</div>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+	<script>w3.includeHTML();</script>
+	<script>
+	// More info https://github.com/hakimel/reveal.js#configuration
+	Reveal.initialize({
+		controls: false,
+		progress: false,
+		history: true,
+		center: true,
+		transition: 'slide', // none/fade/slide/convex/concave/zoom
+		// More info https://github.com/hakimel/reveal.js#dependencies
+		dependencies: [
+			{src:'lib/js/classList.js', condition: function() { return !document.body.classList;}},
+			{src:'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' );}},
+			{src:'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' );}},
+			{src:'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad();}},
+			{src:'plugin/zoom-js/zoom.js', async: true},
+			{src:'plugin/notes/notes.js', async: true}
+		]
+	});
+	</script>
+</body>
+</html>

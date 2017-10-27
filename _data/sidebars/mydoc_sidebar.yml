@@ -1,0 +1,100 @@
+# This is your sidebar TOC. The sidebar code loops through sections here and provides the appropriate formatting.
+
+entries:
+- title: sidebar
+  product: MASH
+  version: 0.75
+  folders:
+
+  - title:
+    output: pdf
+    type: frontmatter
+    folderitems:
+    - title:
+      url: /titlepage
+      output: pdf
+      type: frontmatter
+    - title:
+      url: /tocpage
+      output: pdf
+      type: frontmatter
+
+  - title: Overview
+    output: web, pdf
+    folderitems:
+    - title: Get started
+      url: /index.html
+      output: web, pdf
+      type: homepage
+    - title: The Team
+      url: /oveDevTeam.html
+      output: web, pdf
+    - title: News
+      url: /news.html
+      output: web
+
+  - title: Release Notes
+    output: web, pdf
+    folderitems:
+    - title: Release Notes 1.0
+      url: /relRelease10.html
+      output: web, pdf
+
+  - title: Documentation
+    output: web, pdf
+    folderitems:
+    - title: Overview
+      url: /docOverview.html
+      output: web, pdf
+    - title: GitHub
+      url: /docGitHub.html
+      output: web, pdf
+    - title: Structure
+      url: /docStructure.html
+      output: web, pdf
+    - title: Style
+      url: /docStyle.html
+      output: web, pdf
+    - title: Mosquito
+      url: /docMosquito.html
+      output: web, pdf
+    - title: Human
+      url: /docHumans.html
+      output: web, pdf
+    - title: Activity Space
+      url: /docActivitySpace.html
+      output: web, pdf
+    - title: Aquatic Ecology
+      url: /docAqua.html
+      output: web, pdf
+    - title: M-BITES
+      url: /docDHM.html
+      output: web, pdf
+    - title: DHM-Basic
+      url: /docDHM-Basic.html
+      output: web, pdf
+    - title: DHM Parameters
+      url: /docDHMP.html
+      output: web, pdf
+    - title: Pathogens
+      url: /docPathogens.html
+      output: web, pdf
+    - title: Pathogen Pedigree
+      url: /docPathogenPedigree.html
+      output: web, pdf
+    - title: Vector Control
+      url: /docVectorControl.html
+      output: web, pdf
+    - title: Known Bugs
+      url: /docKnownBugs.html
+      output: web, pdf
+
+  - title: Licensing and Publications
+    output: web, pdf
+    folderitems:
+    - title: License
+      url: /licLicense.html
+      output: web, pdf
+    - title: Publications
+      url: /licPublications.html
+      output: web, pdf

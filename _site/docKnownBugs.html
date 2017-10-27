@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="'Any sufficiently advanced bug is indistinguishable from a feature'- Rich Kulawiec">
+<meta name="keywords" content=" ">
+<title>Known Bugs | MASH</title>
+<link rel="stylesheet" href="css/syntax.css">
+
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+<!--<link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">-->
+<link rel="stylesheet" href="css/modern-business.css">
+<link rel="stylesheet" href="css/lavish-bootstrap.css">
+<link rel="stylesheet" href="css/customstyles.css">
+<link rel="stylesheet" href="css/theme-blue.css">
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script src="js/jquery.navgoco.min.js"></script>
+
+
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/2.0.0/anchor.min.js"></script>
+<script src="js/toc.js"></script>
+<script src="js/customscripts.js"></script>
+
+<link rel="shortcut icon" href="images/favicon.ico">
+
+<!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+<!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+<!--[if lt IE 9]>
+<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+<![endif]-->
+
+<link rel="alternate" type="application/rss+xml" title="" href="http://idratherbewriting.comfeed.xml">
+
+    <script>
+        $(document).ready(function() {
+            // Initialize navgoco with default options
+            $("#mysidebar").navgoco({
+                caretHtml: '',
+                accordion: true,
+                openClass: 'active', // open
+                save: false, // leave false or nav highlighting doesn't work right
+                cookie: {
+                    name: 'navgoco',
+                    expires: false,
+                    path: '/'
+                },
+                slide: {
+                    duration: 400,
+                    easing: 'swing'
+                }
+            });
+
+            $("#collapseAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', false);
+            });
+
+            $("#expandAll").click(function(e) {
+                e.preventDefault();
+                $("#mysidebar").navgoco('toggle', true);
+            });
+
+        });
+
+    </script>
+    <script src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML" type="text/javascript"></script>
+    <script>
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+    </script>
+    
+
+</head>
+<body>
+<!-- Navigation -->
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container topnavlinks">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="fa fa-home fa-lg navbar-brand" href="index.html">&nbsp;<span class="projectTitle"> MASH</span></a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav navbar-right">
+                <!-- entries without drop-downs appear here -->
+                
+                
+                
+                <li><a href="https://github.com/smitdave/MASH-Development" target="_blank">MASH on GitHub</a></li>
+                
+                
+                
+                <!-- entries with drop-downs appear here -->
+                <!-- conditional logic to control which topnav appears for the audience defined in the configuration file.-->
+                
+                
+			<li><a class="email" title="Submit feedback" href="#" onclick="javascript:window.location='mailto:smitdave@uw.edu?subject=MASH Feedback f eedback&body=I have some feedback about the Known Bugs page: ' + window.location.href;"><i class="fa fa-envelope-o"></i> Feedback</a><li>
+
+		
+                <!--comment out this block if you want to hide search-->
+                <li>
+                    <!--start search-->
+                    <div id="search-demo-container">
+                        <input type="text" id="search-input" placeholder="search...">
+                        <ul id="results-container"></ul>
+                    </div>
+                    <script src="js/jekyll-search.js" type="text/javascript"></script>
+                    <script type="text/javascript">
+                            SimpleJekyllSearch.init({
+                                searchInput: document.getElementById('search-input'),
+                                resultsContainer: document.getElementById('results-container'),
+                                dataSource: 'search.json',
+                                searchResultTemplate: '<li><a href="{url}" title="Known Bugs">{title}</a></li>',
+                    noResultsText: 'No results found.',
+                            limit: 10,
+                            fuzzy: true,
+                    })
+                    </script>
+                    <!--end search-->
+                </li>
+            </ul>
+        </div>
+        </div>
+        <!-- /.container -->
+</nav>
+
+<!-- Page Content -->
+<div class="container">
+    <div class="col-lg-12">&nbsp;</div>
+    <!-- Content Row -->
+    <div class="row">
+        <!-- Sidebar Column -->
+        <div class="col-md-3">
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<ul id="mysidebar" class="nav">
+    <li class="sidebarTitle">MASH 0.75</li>
+    
+    
+    
+        
+    
+    <li>
+        <a href="#">Overview</a>
+        <ul>
+            
+            
+            
+            <li><a href="main.html">Get started</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="oveDevTeam.html">The Team</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="news.html">News</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+    
+    <li>
+        <a href="#">Release Notes</a>
+        <ul>
+            
+            
+            
+            <li><a href="relRelease10.html">Release Notes 1.0</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+    
+    <li>
+        <a href="#">Documentation</a>
+        <ul>
+            
+            
+            
+            <li><a href="docOverview.html">Overview</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docGitHub.html">GitHub</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docStructure.html">Structure</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docStyle.html">Style</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docMosquito.html">Mosquito</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docHumans.html">Human</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docActivitySpace.html">Activity Space</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docAqua.html">Aquatic Ecology</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docDHM.html">DHM</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docDHM-Basic.html">DHM-Basic</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docDHMP.html">DHM Parameters</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docPathogens.html">Pathogens</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="docVectorControl.html">Vector Control</a></li>
+            
+            
+            
+            
+            
+            
+            <li class="active"><a href="docKnownBugs.html">Known Bugs</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+    
+    <li>
+        <a href="#">Licensing and Publications</a>
+        <ul>
+            
+            
+            
+            <li><a href="licLicense.html">License</a></li>
+            
+            
+            
+            
+            
+            
+            <li><a href="licPublications.html">Publications</a></li>
+            
+            
+            
+            
+        </ul>
+        
+        
+        
+        <!-- if you aren't using the accordion, uncomment this block:
+           <p class="external">
+               <a href="#" id="collapseAll">Collapse All</a> | <a href="#" id="expandAll">Expand All</a>
+           </p>
+           -->
+    </li>
+</ul>
+</div>
+
+<!-- this highlights the active parent class in the navgoco sidebar. this is critical so that the parent expands when you're viewing a page. This must appear below the sidebar code above. Otherwise, if placed inside customscripts.js, the script runs before the sidebar code runs and the class never gets inserted.-->
+<script>$("li.active").parents('li').toggleClass("active");</script>
+
+    <!-- Content Column -->
+    <div class="col-md-9">
+        <div class="post-header">
+   <h1 class="post-title-main">Known Bugs</h1>
+</div>
+
+
+
+<div class="post-content">
+
+   
+    <div class="summary">'Any sufficiently advanced bug is indistinguishable from a feature'- Rich Kulawiec</div>
+   
+
+    
+
+    
+
+    
+
+    
+
+  <h2 id="to-do-list">To Do List</h2>
+
+<ol>
+  <li>Fix EL4P fitting procedure based on 2004 Statics &amp; Dynamics paper. Do this with JM.</li>
+  <li>Make male DHM-Basic.</li>
+  <li>Incorporate mating into DHM-Basic Cohort simulation.</li>
+  <li>Collective Agent emergent behaviors; look for continuous approximations. See papers from Luca Bortolussi.</li>
+  <li>Run DHM-Basic spatial dynamics based on movement model from 2013 PLoS Heterogeneity… paper.</li>
+</ol>
+
+<h2 id="bugs">Bugs</h2>
+
+<ol>
+  <li>
+    <s> DHM-BloodMeal.R, reFeed function, line 63, references non-existent function reFeedF </s>
+  </li>
+  <li>
+    <s>DHM.R, line 396, energetics function causes bStateNew to be set to "S"; see DHM-Sugar.R, line 76 in function queueSugarBout almost always evaluates to TRUE and causes next behavioral state to go to "S", could be one of two (or both) things:</s>
+    <ul>
+      <li>
+        <s> M$energy is not decreasing as it should be </s>
+        <p><b>It is decreasing correctly each time energetics(M) is called. A function named immatureEnergetics was added for symmetry in energetics.</b></p>
+      </li>
+      <li>
+        <s>The probability pSugarBout is incorrectly specified.</s>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <s> DHM.R; lines 361: isAlive and isActive cannot properly subset M (Error in M$bStateNew : $ operator is invalid for atomic vectors) </s>
+  </li>
+  <li>
+    <s> DHM-Mating/chooseMate does now work (dhmP$nMates does not exist) </s>
+    <p><b> Assigned it to 1 in setup.DHM.R for the time being but need to verify with Dave (should work assuming it is the number of potential mates each female has) </b></p>
+    <ul>
+      <li>
+        <s> not returning mosquito object </s>
+      </li>
+      <li>
+        <s> dhmP.N not initialised </s>
+      </li>
+      <li>
+        <s> Error in runif(1 + rpois(1, dhmP$nMates), 0, N) : object 'N' not found </s>
+      </li>
+    </ul>
+  </li>
+  <li>MatingQs = NULL (“mosquito 182, TRUE, is mating!” Error in MatingQs[[D]] : attempt to select less than one element)
+    <ul>
+      <li>Pops up when D = 0</li>
+    </ul>
+  </li>
+  <li>
+    <s> Corrected an error in "DHM-Bloodmeal/reFeed" </s>
+    <p><b>reFeedF.Pr was returning bStateNew but it was being assign to whole M instead of M$bStateNew </b></p>
+  </li>
+  <li>
+    <s> enterHouse </s>
+    <p><b> This error pops up when mosquito tries to enter a house from m, s or l because there are no houses so it is not an error </b></p>
+    <ul>
+      <li>
+        <s> Error in if (foundGap == TRUE) { : missing value where TRUE/FALSE needed. In addition: Warning message: In rbinom(1, 1, LANDSCAPE$f$enterHouseP[ixf(M)]) : NAs produced </s>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <s> queueSugarBout </s>
+    <ul>
+      <li>
+        <s> Energy levels are sometimes negative M$energy in pSugarBout </s>
+      </li>
+      <li>
+        <s> Error in if (rbinom(1, 1, pSugarBout(M$energy))) M$bStateNew = "S" : argument is not interpretable as logical In addition: Warning message:In rbinom(1, 1, pSugarBout(M$energy)) : NAs produced </s>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <s> surviveFlight </s>
+    <p><b> Added definition of parameters in setup.DHM.R </b></p>
+    <ul>
+      <li>
+        <s> Error in if (!rbinom(1, 1, p)) M$bStateNew = "D" : missing value where TRUE/FALSE needed </s>
+      </li>
+      <li>
+        <s> Tatter is not working: returns NA's </s>
+        <ul>
+          <li>
+            <s> dhmP$ttr.a and dhmP$ttr.b = NULL </s>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <s> ixf </s>
+    <p><b> Added ‘haunt’ column to LANDSCAPE so that when ixf is called when mosquito is in m then can choose a feeding site that the m site is ‘in’. </b></p>
+  </li>
+  <li>
+    <s> SugarFeedingBout causes an error to pop-up in some situations </s>
+    <p><b>Clipped the minimum value of energy to 0 to avoid negative probabilities </b></p>
+    <ul>
+      <li>
+        <s> energetics evaluates to NA </s>
+      </li>
+    </ul>
+  </li>
+  <li>activitySpace.daily.Np.i (in activitySpace.daily.Np.R, line 41): n.d is a poisson distributed count of number of places human i visits besides his/her home location on day t. But line 41 if statement only evaluates as true if n.d &gt; 1; should it actually be &gt;= 1? Need to confirm with Dave.</li>
+  <li>probing function in DHM.R (line 134) has input to probeHost “spz”, which is a now deprecated element in the mosquito object. All p. falciparum objects are now stored in M$Pf. Need to change this when the Pf.infection modules are working.</li>
+  <li>While running DHM with sugar feeding turned off
+    <ul>
+      <li><b> Changed line to: EggQ$batch[[EggQ$ix]] «- allocEggQ(eggs)   [SEE CODE HIGHLIGHT 14]</b></li>
+      <li>
+        <s> Error in allocEggQ() : argument "N" is missing, with no default </s>
+      </li>
+    </ul>
+  </li>
+  <li><b> All mosquitos have a ‘mated’ state == FALSE’</b>
+    <ul>
+      <li><b>Females are emerging in F state so they rarely try to mate again.</b></li>
+    </ul>
+  </li>
+  <li>
+    <s>Mosquitos sugar feed a lot</s>
+    <ul>
+      <li><b>The problem turned out to be that the opportunistic sugar feeding probability was being calculated incorrectly (it should have been the inverse of the one that was being computed). The value also needed to be clipped as sometimes energy level is higher than 1. The change is: pSugarBout(1-clipped)) in queueSugarBout. Some of the dhmP parameters were also changed.</b></li>
+      <li>
+        <s> Turning sugar feeding behaviour seems to make the simulation run correctly [SEE IMAGE 16]</s>
+      </li>
+      <li><b>Another part of the problem is that females are emerging in F state instead of M.</b></li>
+    </ul>
+  </li>
+  <li>
+    <s>Females are not trying to mate.</s>
+    <ul>
+      <li><b>Females are emerging in F state instead of M but until the mating problems are fixed we can not change it back as it would produce errors and stop the simulation from running. The line that should be added is: MPop$MM[[index]] = resetMosy(MPop$MM[[index]], MPop$idMX, t, “M”, “l”, lloc, type, female) instead of:MPop$MM[[index]]=resetMosy(MPop$MM[[index]], MPop$idMX, t, “F”, “l”, lloc, type, female)in DHM-Mosquito.R “renewMosquito”.</b></li>
+    </ul>
+  </li>
+  <li>
+    <s>Females are never entering "O" state</s>
+    <ul>
+      <li>
+        <s>Sugar feeding parametrisation is not allowing them to go through that stage. As soon as mosquitoes find an oviposition spot they need to sugar feed and they have no memory on the last state so they go back to blood feed.</s>
+      </li>
+      <li><b>Turning sugar feeding off “corrects” the error but there is something else. If mosquitos feel the need to sugar feed oportunistically they should return to their previous activity, not draw one at random.</b></li>
+    </ul>
+  </li>
+  <li>
+    <s>Mosquitoes are sugar feeding all the time</s>
+    <ul>
+      <li><b>The blood-feed energetic parameter was way to high!!! Females blood-feed quickly so they never needed to sugar-feed. There might be a problem with the timing of events.</b></li>
+      <li><b>Sugar-feeding related functions were re-parametrised:</b>
+        <ul>
+          <li><b>dhmP$S.sa=100</b></li>
+          <li><b>dhmP$S.sb=500</b></li>
+          <li><b>dhmP$S.sz=1</b></li>
+          <li><b>dhmP$B.energy=1/10</b></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>Female mosy are always emerge with bmSize = 1; after they call BloodMeal this actually decreases!!! Is this biologically correct?</li>
+  <li>Error pops up with “atRisk” list. See figure 21.</li>
+</ol>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="p">(</span><span class="m">14</span><span class="p">)</span>
+
+<span class="k">function</span><span class="p">(</span><span class="n">eggs</span><span class="p">,</span> <span class="n">l.i</span><span class="p">,</span> <span class="n">tm</span><span class="p">,</span> <span class="n">dam</span><span class="p">,</span> <span class="n">sire</span><span class="p">,</span> <span class="n">type</span><span class="p">){</span>
+    <span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span> <span class="o">&lt;&lt;-</span> <span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span> <span class="o">+</span> <span class="m">1</span>
+    <span class="k">if</span><span class="p">(</span><span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span> <span class="o">&gt;</span> <span class="n">EggQ</span><span class="o">$</span><span class="n">mx</span><span class="p">){</span>
+        <span class="c1">#EggQ$batch[[EggQ$ix]] &lt;&lt;- allocEggQ()#MODIFIED IT TEMPORARILY TO MAKE DHM WORK BUT I'M NOT SURE IT'S CORRECT!!!!
+</span>        <span class="n">EggQ</span><span class="o">$</span><span class="n">batch</span><span class="p">[[</span><span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span><span class="p">]]</span> <span class="o">&lt;&lt;-</span> <span class="n">allocEggQ</span><span class="p">(</span><span class="n">eggs</span><span class="p">)</span>
+        <span class="n">EggQ</span><span class="o">$</span><span class="n">mx</span> <span class="o">&lt;&lt;-</span> <span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span>
+    <span class="p">}</span>
+    <span class="n">EggQ</span><span class="o">$</span><span class="n">batch</span><span class="p">[[</span><span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span><span class="p">]]</span><span class="o">$</span><span class="n">nEggs</span>     <span class="o">&lt;&lt;-</span> <span class="n">eggs</span>
+    <span class="n">EggQ</span><span class="o">$</span><span class="n">batch</span><span class="p">[[</span><span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span><span class="p">]]</span><span class="o">$</span><span class="n">l.ix</span>      <span class="o">&lt;&lt;-</span> <span class="n">l.i</span>
+    <span class="n">EggQ</span><span class="o">$</span><span class="n">batch</span><span class="p">[[</span><span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span><span class="p">]]</span><span class="o">$</span><span class="n">tm</span>        <span class="o">&lt;&lt;-</span> <span class="n">tm</span>
+    <span class="n">EggQ</span><span class="o">$</span><span class="n">batch</span><span class="p">[[</span><span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span><span class="p">]]</span><span class="o">$</span><span class="n">dam</span>       <span class="o">&lt;&lt;-</span> <span class="n">dam</span>
+    <span class="n">EggQ</span><span class="o">$</span><span class="n">batch</span><span class="p">[[</span><span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span><span class="p">]]</span><span class="o">$</span><span class="n">sire</span>      <span class="o">&lt;&lt;-</span> <span class="n">sire</span>
+    <span class="n">EggQ</span><span class="o">$</span><span class="n">batch</span><span class="p">[[</span><span class="n">EggQ</span><span class="o">$</span><span class="n">ix</span><span class="p">]]</span><span class="o">$</span><span class="n">type</span>      <span class="o">&lt;&lt;-</span> <span class="n">type</span>
+<span class="p">}</span></code></pre></figure>
+
+<center><figure><img class="docimage" src="images/statesWSugarOff.png" alt="" style="max-width: 650px" /><figcaption>(16)</figcaption></figure>
+</center>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="p">(</span><span class="m">21</span><span class="p">)</span>
+
+<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="s2">"ERROR: atRisk overrun"</span>
+<span class="n">Error</span> <span class="k">in</span> <span class="n">eval</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">envir</span><span class="p">,</span> <span class="n">enclos</span><span class="p">)</span> <span class="o">:</span> <span class="n">object</span> <span class="s1">'N'</span> <span class="n">not</span> <span class="n">found</span>
+<span class="n">In</span> <span class="n">addition</span><span class="o">:</span> <span class="n">There</span> <span class="n">were</span> <span class="m">22</span> <span class="n">warnings</span> <span class="p">(</span><span class="n">use</span> <span class="n">warnings</span><span class="p">()</span> <span class="n">to</span> <span class="n">see</span> <span class="n">them</span><span class="p">)</span>
+<span class="n">Called</span> <span class="n">from</span><span class="o">:</span> <span class="n">eval</span><span class="p">(</span><span class="n">expr</span><span class="p">,</span> <span class="n">envir</span><span class="p">,</span> <span class="n">enclos</span><span class="p">)</span></code></pre></figure>
+
+<h3 id="more-substantial-problems--work-to-do">More Substantial Problems &amp; Work To Do:</h3>
+
+<ol>
+  <li>
+    <s>In Simulations/Default/runit.R: the for loops that runs over the temporal granularity indifference window (Ti) uses a different iterator for time than the main simulation while loop which updates T. This causes problems. NOT SURE, CHECK LATER.</s>
+    <p>Mosy are on different time scale than humans, so it doesn’t matter; mosy run in continuous time, humans run in discrete time. Ti only affects human events (that’s why recovery from Pf is geometric distribution not exponential, which is discrete form of exponential anyway.)</p>
+  </li>
+  <li>
+    <s>In DHM-Sugar.R, function "sugarWeight" has a switch where if the mosquito is in the "s" point set, sugarWeight is 100; might be too high and this could be causing them to only sugar feed?</s>
+    <ul>
+      <li><b>Changing this value makes them sugar feed less. We should probably re-scale all the values in LANDSCAPE$X$sugar to 0-1.</b></li>
+    </ul>
+  </li>
+  <li>
+    <s>Males emerge into the environment as mature = TRUE. Not sure if this is intentional or not; seems to conflict with DHM-Mating.R queueMating function.</s>
+    <ul>
+      <li><b>Not a problem.</b></li>
+    </ul>
+  </li>
+  <li>
+    <s>DHM-Swarming.R: DailyMatingQs is defined in setup.DHM-Swarming.R to MatingQs = DailyMatingQs(ceiling(Ti)), but does not seem to be called in actual simulation (ie; in runit.R). Need to address this and find out when to set up the mating queue/add to it when running the simulation. RELATED TO 2.
+ MatingQs does not update and mosquitoes are not pushed into the mating queue.</s>
+
+    <ul>
+      <li>it’s possible that this happens in enterSwarm function found in DHM-Swarming.R which is called during   the maleDHM. Need to check later that this is properly pushing males into the MatingQs.</li>
+      <li>Nope, subsetting MatingQs is just messed up. MatingQs[[D]]$MatingQ[[M$ix]] should be MatingQs[[D]][[M$ix]]</li>
+      <li>
+        <p>in maleDHM there are some functions shared between male and female mosy; it is necessary to make sure they work with both male and females and also to update the env passing in DHM_swarming.R after it is set up in DHM.R:</p>
+
+        <ul>
+          <li>landingSpot</li>
+          <li>surviveRestingHazard</li>
+          <li>timing</li>
+        </ul>
+      </li>
+      <li>Mating/Swarming has been sorted out!! Will update how routines work in Mosquito and DHM pages later.</li>
+    </ul>
+  </li>
+  <li>
+    <s>clearSwarm in DHM-Swarming.R is never called. Not sure if the MatingQs need to be cleared but just an obervation.</s>
+
+    <ul>
+      <li>Update: Mating now works and MatingQs are created and cleared on daily basis!</li>
+    </ul>
+  </li>
+  <li>
+    <s>enterHouse function in DHM.R is recursive; it calls itself. Compare to original enterHouse from MICRO: </s>
+  </li>
+</ol>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">enterHouse</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">LANDSCAPE</span><span class="p">,</span><span class="n">CMParameters</span><span class="p">,</span><span class="n">Fwts</span><span class="p">,</span><span class="n">Rwts</span><span class="p">,</span><span class="n">Lwts</span><span class="p">,</span><span class="n">dhmP</span><span class="p">,</span><span class="n">SUGAR</span><span class="p">,</span><span class="n">TATTER</span><span class="p">,</span><span class="n">SENESCE</span><span class="p">,</span><span class="n">InAndOut</span><span class="p">){</span>
+    <span class="n">outside</span><span class="o">=</span><span class="n">TRUE</span>
+    <span class="k">while</span><span class="p">(</span><span class="n">outside</span><span class="o">==</span><span class="n">TRUE</span> <span class="o">&amp;</span> <span class="n">M</span><span class="o">$</span><span class="n">pState</span><span class="o">==</span><span class="s2">"F"</span> <span class="o">&amp;</span> <span class="n">M</span><span class="o">$</span><span class="n">iwofle</span><span class="o">!=</span><span class="m">5</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">rbinom</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="n">LANDSCAPE</span><span class="o">$</span><span class="n">f</span><span class="o">$</span><span class="n">eh</span><span class="p">[</span><span class="n">M</span><span class="o">$</span><span class="n">f.i</span><span class="p">])){</span>
+            <span class="n">outside</span><span class="o">=</span><span class="n">FALSE</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">CMParameters</span><span class="o">$</span><span class="n">EAVE.TUBE</span><span class="o">$</span><span class="n">ACTIVE</span><span class="o">==</span><span class="n">TRUE</span><span class="p">)</span> <span class="n">M</span><span class="o">=</span><span class="n">fEaveTube</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">LANDSCAPE</span><span class="p">,</span><span class="n">CMParameters</span><span class="p">)</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">CMParameters</span><span class="o">$</span><span class="n">IMPROVE.HOME</span><span class="o">$</span><span class="n">ACTIVE</span><span class="o">==</span><span class="n">TRUE</span><span class="p">)</span> <span class="n">M</span><span class="o">=</span><span class="n">fImproveHome</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">LANDSCAPE</span><span class="p">,</span><span class="n">CMParameters</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">M</span><span class="o">$</span><span class="n">iwofle</span><span class="o">=</span><span class="n">newSpot</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="n">F.wts</span><span class="o">=</span><span class="n">Fwts</span><span class="o">*</span><span class="n">c</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">0</span><span class="p">),</span><span class="n">Rwts</span><span class="p">,</span><span class="n">Lwts</span><span class="p">,</span><span class="n">InAndOut</span><span class="p">)</span>
+            <span class="c1">#if(CMParameters$IRS$ACTIVE==TRUE) M=fIRS(M,LANDSCAPE,CMParameters) # REMOVED BY HMSC
+</span>            <span class="n">M</span><span class="o">=</span><span class="n">surviveRestingHazard</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">LANDSCAPE</span><span class="p">)</span>
+            <span class="n">M</span><span class="o">=</span><span class="n">surviveFlightStress</span><span class="p">(</span><span class="n">M</span><span class="p">,</span><span class="n">dhmP</span><span class="p">,</span><span class="n">SUGAR</span><span class="p">,</span><span class="n">TATTER</span><span class="p">,</span><span class="n">SENESCE</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<p>Here is the new version of enterHouse:</p>
+
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">enterHouse</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">M</span><span class="p">){</span>
+    <span class="n">foundGap</span> <span class="o">&lt;-</span> <span class="n">rbinom</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="n">LANDSCAPE</span><span class="o">$</span><span class="n">f</span><span class="o">$</span><span class="n">enterHouseP</span><span class="p">[</span><span class="n">ixf</span><span class="p">(</span><span class="n">M</span><span class="p">)])</span>
+    <span class="c1">###PATCH###
+</span>    <span class="k">if</span><span class="p">(</span><span class="n">is.na</span><span class="p">(</span><span class="n">foundGap</span><span class="p">)){</span>
+        <span class="n">M</span><span class="o">$</span><span class="n">lspot</span> <span class="o">&lt;-</span> <span class="s2">"l"</span>
+        <span class="k">return</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="c1">###PATCH###
+</span>    <span class="k">if</span><span class="p">(</span><span class="n">foundGap</span> <span class="o">==</span> <span class="n">TRUE</span><span class="p">){</span>
+        <span class="k">if</span><span class="p">(</span><span class="n">EAVE.TUBE</span> <span class="o">==</span> <span class="n">TRUE</span><span class="p">){</span>
+            <span class="n">M</span> <span class="o">&lt;-</span> <span class="n">fEaveTube</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+        <span class="n">M</span><span class="o">$</span><span class="n">lspot</span> <span class="o">&lt;-</span> <span class="n">newSpot</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+        <span class="n">M</span> <span class="o">&lt;-</span> <span class="n">surviveFlight</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+        <span class="k">if</span><span class="p">(</span><span class="o">!</span><span class="n">isAlive</span><span class="p">(</span><span class="n">M</span><span class="p">)){</span>
+            <span class="k">return</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">M</span><span class="o">$</span><span class="n">lspot</span> <span class="o">==</span> <span class="s2">"i"</span><span class="p">){</span>
+                <span class="n">M</span> <span class="o">&lt;-</span> <span class="n">enterHouse</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+    <span class="k">return</span><span class="p">(</span><span class="n">M</span><span class="p">)</span>
+<span class="p">}</span></code></pre></figure>
+
+<div class="highlighter-rouge"><pre class="highlight"><code>- Not a problem; they repeat if they are not killed by EAVE.TUBE; if so they pick a new spot and surviveFlight,   
+</code></pre>
+</div>
+
+<ol>
+  <li>Added patch to getAtRisk.daily; there is some problems when some mosy tnow/tnext (not sure, check saturday) is less than any of the values of “today” inside of riskList; just made d equal to min of the today vector if this is the case. Need to look more deeply into this phenomenon.</li>
+</ol>
+
+<h3 id="notes">Notes</h3>
+<p>Might or might not be bugs. Some are clearly just temporary developmental decisions for testing.</p>
+
+<ol>
+  <li>Wts’s are all 1</li>
+  <li>
+    <s>probing always finds human'</s>
+    <ul>
+      <li><b>They no longer find always human but the biting function is completely random and doesn’t depend on wether there are humans or not.</b></li>
+    </ul>
+  </li>
+  <li>
+    <s>Females do not appear to be laying eggs into the LANDSCAPE</s>
+    <p>Females now lay eggs into EggQ daily</p>
+  </li>
+</ol>
+
+
+    <div class="tags">
+        
+    </div>
+
+    
+
+</div>
+
+<hr class="shaded"/>
+
+<footer>
+            <div class="row">
+                <div class="col-lg-12 footer">
+               &copy;2017 MASH. All rights reserved. <br />
+ Site last generated: Apr 4, 2017 <br />
+<p><img src="images/company_logo.png" alt="Company logo"/></p>
+
+<p>Jekyll template downloaded from: <a href="https://github.com/tomjohnson1492/documentation-theme-jekyll">idratherbewriting</a></p>
+                </div>
+            </div>
+</footer>
+
+
+    </div>
+    <!-- /.row -->
+</div>
+<!-- /.container -->
+    </div>
+
+</body>
+
+</html>

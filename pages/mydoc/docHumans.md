@@ -1,0 +1,114 @@
+---
+title: Human Documentation
+sidebar: mydoc_sidebar
+permalink: docHumans.html
+folder: mydoc
+toc: true
+summary: "Description of the Human object in MASH. This page describes the various objects and variables attached to each human, as well as the event queueing functions, which are critical to the MASH framework."
+---
+# Event Queue
+
+The event queue is a crucial part of the MASH framework as it handles all events a human could preform. It follows a generic structure that any extensions of MASH should mirror exactly. When extensions are added they must include at a minimum functions of the form <code>add2Q_XX(), event_XX(), XX()</code> for events to be properly called. Descriptions and examples follow.
+
+## Event Queue Management
+
+### addEvent2Q
+
+<code>addEvent2Q()</code> is a crucial function that manages the proper placement of new events to a person's event queue. This function is not called directly but is called by the <code>add2Q_XX()</code> family of functions. This function takes two arguments:
+
+  * ixH: index of human
+  * event: a function of the form <code>event_XX(t, PAR)</code>
+
+Below is a description of how the event queue works and should be followed for any future modules.
+
+{% highlight r %}
+addEvent2Q(ixH, event){
+  ...
+}
+{% endhighlight %}
+
+### add2Q_XX
+
+<code>add2Q_XX()</code> is a generic format for adding event XX to a particular person's event queue. This generic form is used by all functions of this type and are called when some conditions are met that requires a future event to be queued. The function takes two or three arguments:
+
+  * ixH: index of human
+  * t: time the event will occur
+  * PAR: optional argument of generic event parameters
+
+{% highlight r %}
+add2Q_XX(ixH, t, PAR){
+  addEvent2Q(ixH, event_XX(t, PAR))
+}
+{% endhighlight %}
+
+### event_XX
+
+<code>event_XX()</code> is a generic format for an event. This function is a wrapper that creates a list structure that describes a single event which is placed into a person's event queue by <code>addEvent2Q()</code>. This list will lie dormant in the event queue until it the event occurs. The function takes one or two arguments:
+
+  * t: time the event will occur
+  * PAR: optional argument of generic event parameters
+
+It is important that the list returned by this function exactly match the format below as this is the object that will enter the person's event queue and will determine how the event will occur at the appropriate time. The named list has four named slots:
+
+  * t: time the event will occur
+  * PAR: event parameters (if no parameters needed, set to NULL)
+  * F: a function of the form F(ixH, t, PAR) that will execute the event
+  * tag: string of the event name (used for fast lookup)
+
+{% highlight r %}
+event_XX(t, PAR){
+  list(t = t, PAR = PAR, F = XX, tag = "XX")
+}
+{% endhighlight %}
+
+### XX
+
+<code>XX()</code> is a generic format for the actual event. This function is called from the main human event queue simulation through <code>runHumanEventQ</code>.  This function may directly modify the human object that it is acting upon, and may itself queue up more events. It takes three arguments:
+
+  * ixH: index of human
+  * t: time the event will occur
+  * PAR: generic event parameters
+
+{% highlight r %}
+XX(ixH, t, PAR){
+  # preform arbitrary number of operations on human ixH
+  # may itself call functions of add2Q_XX family
+}
+{% endhighlight %}
+
+## Example
+
+The following is an example of how the various event queue functions work together, taken from the PfSI module. Points of interest:
+
+  * <code>simbite_PfSI()</code>, the equivalent of <code>XX()</code> in the generic family is able to queue multiple future events from itself.
+  * <code>add2Q_startPfSI()</code> shows the versatility of the PAR argument; virtually any object can be passed in the third slot because it is not directly handled by <code>addEvent2Q()</code> as long as PAR is appropriately handled by other functions in the event family.
+
+{% highlight r %}
+add2Q_startPfSI <- function(ixH, t, pfid){
+  addEvent2Q(ixH, event_startPfSI(t, pfid))
+}
+
+event_startPfSI <- function(t, pfid){
+  #if(NOISY == TRUE) {print(c(t=t,"adding infection")); browser()}
+  if(NOISY == TRUE) {print(c(t=t,"adding infection"))}
+  list(t=t, PAR=pfid, F=infectHuman_PfSI, tag="infectHuman_PfSI")
+}
+
+infectHuman_PfSI <- function(ixH, t, pfid){
+  if(NOISY == TRUE){print("infectHuman")}
+  #Infect
+  if(HUMANS[[ixH]]$Pathogens$Pf$infected == FALSE & HUMANS[[ixH]]$Pathogens$Pf$chemoprophylaxis == FALSE){
+      if(NOISY==TRUE) print("Infect")
+      PfSIHistory(ixH, t, "I")
+      HUMANS[[ixH]]$Pathogens$Pf$infected <<- TRUE
+      HUMANS[[ixH]]$Pathogens$Pf$t0 <<- t
+      HUMANS[[ixH]]$Pathogens$Pf$pfid <<- pfid
+      if(rbinom(1,1,FeverPf)){
+        add2Q_feverPfSI(ixH, t)
+      }
+      add2Q_endPfSI(ixH, t, pfid)
+    }
+}
+{% endhighlight %}
+
+# Human Object
