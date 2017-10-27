@@ -41,8 +41,9 @@ SimBitePfSI.Setup()
 MACRO.Patch.Emerge.Setup() # 'Emerge' model
 
 # patch parameters
-nPatch = 10
-tileParameters = MACRO.Tile.Parameters(N = nPatch,aquaModule = "emerge",aquaPars = list(N=nPatch,lambda=rep(50,nPatch)),pathogenModule = "PfSI")
+nPatch = 194
+lambdaFromFile = scan("bioko.lambda.txt", header = TRUE)
+tileParameters = MACRO.Tile.Parameters(N = nPatch,aquaModule = "emerge",aquaPars = list(N=nPatch,lambda=lambdaFromFile),pathogenModule = "PfSI")
 tileParameters$MacroMosquitoPop_PAR$M_density = rep(200,nPatch)
 tile = MacroTile$new(MacroTile_PAR = tileParameters)
 
