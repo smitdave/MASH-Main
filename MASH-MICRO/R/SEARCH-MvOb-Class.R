@@ -62,23 +62,47 @@ MovementObject <- R6::R6Class(classname = "MovementObject",
 #' Get SitePointer
 #'
 #' Return pointer to my enclosing site
-#'  * This method is bound to \code{FeedingSite$get_ix}
+#'  * This method is bound to \code{MovementObject$get_SitePointer}
 #'
-get_SitePointer_MovementObject <- function(){return(private$ix)}
+get_SitePointer_MovementObject <- function(){return(private$SitePointer)}
 
-FeedingSite$set(which = "public",name = "get_ix",
-  value = get_ix_FeedingSite, overwrite = TRUE
+MovementObject$set(which = "public",name = "get_SitePointer",
+  value = get_SitePointer_MovementObject, overwrite = TRUE
 )
 
-#' Set ix
+#' Set SitePointer
 #'
-#' Set site index \code{ix}
-#'  * This method is bound to \code{FeedingSite$set_ix}
+#' Set pointer to my enclosing site
+#'  * This method is bound to \code{MovementObject$set_SitePointer}
 #'
-#' @param ix integer
+#' @param Site a \code{\link[R6]{R6Class}} environment
 #'
-set_SitePointer_MovementObject <- function(ix){private$ix = ix}
+set_SitePointer_MovementObject <- function(Site){private$SitePointer = Site}
 
-FeedingSite$set(which = "public",name = "set_ix",
-  value = set_ix_FeedingSite, overwrite = TRUE
+MovementObject$set(which = "public",name = "set_SitePointer",
+  value = set_SitePointer_MovementObject, overwrite = TRUE
+)
+
+#' Get LandscapePointer
+#'
+#' Return pointer to my enclosing site
+#'  * This method is bound to \code{MovementObject$get_LandscapePointer}
+#'
+get_LandscapePointer_MovementObject <- function(){return(private$LandscapePointer)}
+
+MovementObject$set(which = "public",name = "get_LandscapePointer",
+  value = get_LandscapePointer_MovementObject, overwrite = TRUE
+)
+
+#' Set LandscapePointer
+#'
+#' Set pointer to my enclosing site
+#'  * This method is bound to \code{MovementObject$set_LandscapePointer}
+#'
+#' @param Landscape a \code{\link{Landscape}} environment
+#'
+set_LandscapePointer_MovementObject <- function(Landscape){private$LandscapePointer = Landscape}
+
+MovementObject$set(which = "public",name = "set_LandscapePointer",
+  value = set_LandscapePointer_MovementObject, overwrite = TRUE
 )
