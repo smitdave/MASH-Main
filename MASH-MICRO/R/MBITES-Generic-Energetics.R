@@ -25,10 +25,7 @@
 mbitesGeneric_sugarEnergetics <- function(){
   if(private$state != "R"){
     if(self$isAlive()){
-
-      # REPLACE THIS WITH SOMETHING ELSE WHEN WE DO MEAN VS EXACT CALCULATION
-      private$energy = max(0,private$energy - private$MalePopPointer$get_MBITES_PAR("S.u"))
-
+      self$flightEnergetics()
       if(runif(1) < 1-self$pEnergySurvival()){
         private$stateNew = "D"
       } else {
@@ -36,6 +33,25 @@ mbitesGeneric_sugarEnergetics <- function(){
       }
     }
   }
+}
+
+#' MBITES-Generic: Mean Flight Energetics for \code{\link{MosquitoFemale}}
+#'
+#' Reduce this mosquito's energy reserves by mean amount averaged over possible flight distances.
+#'  * This method is bound to \code{MosquitoFemale$flightEnergetics()}.
+#'
+mbitesGeneric_flightEnergetics_Mean <- function(){
+  private$energy = max(0,private$energy - private$FemalePopPointer$get_MBITES_PAR("S.u"))
+}
+
+#' MBITES-Generic: Exact Flight Energetics for \code{\link{MosquitoFemale}}
+#'
+#' Reduce this mosquito's energy reserves by Beta-distributed random variable as a function of flight distance.
+#'  * This method is bound to \code{MosquitoFemale$flightEnergetics()}.
+#'
+mbitesGeneric_flightEnergetics_Exact <- function(){
+  cat("write me! i should give beta-distributed energy consumption as function of flight distance\n")
+  stop()
 }
 
 #' MBITES-Generic: Queue Sugar Bout due to Energy Reserves for \code{\link{MosquitoFemale}}

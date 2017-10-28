@@ -23,8 +23,8 @@
 #' switches for this function modify only the methods that are added to the \code{\link{MosquitoFemale}}
 #' and \code{\link{MosquitoMale}} classes.
 #'
-#' @param tattering character switch in \code{"mean","exact"}, mean will sample wing tattering from \code{\link{mbitesGeneric_rTatterSize}} regardless of flight distance
-#' @param energy character switch in \code{"mean","exact"}, mean will sample energy consumption 
+#' @param tattering character switch in \code{"mean","exact"}, mean will sample wing tattering from \code{\link{mbitesGeneric_WingTattering}} regardless of flight distance
+#' @param energy character switch in \code{"mean","exact"}, mean will sample energy consumption
 #' @param batchSize character switch in \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed
 #' @param eggMatT character switch in \code{"off","norm"} for egg batch maturation time turned off or normally distributed
 #'
@@ -104,9 +104,24 @@ MBITES.Generic.Setup <- function(
   ##############################################################
 
   MosquitoFemale$set(which = "public",name = "sugarEnergetics",
-            value = mbitesGeneric_sugarEnergetics,
-            overwrite = overwrite
+            value = mbitesGeneric_sugarEnergetics, overwrite = overwrite
   )
+
+  if(energy=="mean"){
+
+    MosquitoFemale$set(which = "public",name = "flightEnergetics",
+              value = mbitesGeneric_flightEnergetics_Mean, overwrite = overwrite
+    )
+
+  } else if(energy=="exact"){
+
+    MosquitoFemale$set(which = "public",name = "flightEnergetics",
+              value = mbitesGeneric_flightEnergetics_Exact, overwrite = overwrite
+    )
+
+  } else {
+    stop(cat("unrecognized entry for energy, expected character in 'mean', 'exact', got: ",energy,"\n",sep=""))
+  }
 
   MosquitoFemale$set(which = "public",name = "queueSugarBout",
             value = mbitesGeneric_queueSugarBout,
@@ -182,8 +197,24 @@ MBITES.Generic.Setup <- function(
             overwrite = overwrite
   )
 
-  MosquitoFemale$set(which = "public",name = "rTatterSize",
-            value = mbitesGeneric_rTatterSize,
+  if(tattering=="mean"){
+
+    MosquitoFemale$set(which = "public",name = "WingTattering",
+              value = mbitesGeneric_WingTattering_Mean, overwrite = overwrite
+    )
+
+  } else if(tattering=="exact"){
+
+    MosquitoFemale$set(which = "public",name = "WingTattering",
+              value = mbitesGeneric_WingTattering_Exact, overwrite = overwrite
+    )
+
+  } else {
+    stop(cat("unrecognized entry for tattering, expected character in 'mean', 'exact', got: ",energy,"\n",sep=""))
+  }
+
+  MosquitoFemale$set(which = "public",name = "WingTattering",
+            value = mbitesGeneric_WingTattering,
             overwrite = overwrite
   )
 
