@@ -26,7 +26,7 @@ mbitesGeneric_surviveFlight <- function(){
   if(self$isActive()){
     p = self$get_surviveFlightProb()
     if(private$FemalePopPointer$get_MBITES_PAR("TATTER")){
-      private$damage = private$damage + self$rTatterSize()
+      private$damage = private$damage + self$WingTattering()
       p = p * self$pTatter()
     }
     if(private$FemalePopPointer$get_MBITES_PAR("SENESCE")){
@@ -43,12 +43,19 @@ mbitesGeneric_surviveFlight <- function(){
 # Wing Tattering
 #################################################################
 
-mbitesGeneric_rTatterSize_Exact <- function(){
-
+#' MBITES-Generic: Exact Wing Tattering for \code{\link{MosquitoFemale}}
+#'
+#' write me!
+#'
+#'  * This method is bound to \code{MosquitoFemale$WingTattering()}.
+#'
+mbitesGeneric_WingTattering_Exact <- function(){
+  cat("write me! i should give beta-distributed wing tattering as function of flight distance\n")
+  stop()
 }
 
 
-#' MBITES-Generic: Wing Tattering for \code{\link{MosquitoFemale}}
+#' MBITES-Generic: Mean Wing Tattering for \code{\link{MosquitoFemale}}
 #'
 #' Draw from a zero-inflated Beta distribution for additive wing damage from tattering.
 #' Wing damage is given by \deqn{ \left\{\begin{matrix}
@@ -56,9 +63,9 @@ mbitesGeneric_rTatterSize_Exact <- function(){
 #' \\
 #' x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
 #' \end{matrix}\right. }
-#'  * This method is bound to \code{MosquitoFemale$rTatterSize()}.
-#' @md
-mbitesGeneric_rTatterSize <- function(){
+#'  * This method is bound to \code{MosquitoFemale$WingTattering()}.
+#'
+mbitesGeneric_WingTattering_Mean <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("ttsz.p")){
     return(0)
   } else {

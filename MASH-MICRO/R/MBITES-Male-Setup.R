@@ -50,8 +50,8 @@ MBITES.Male.Setup <- function(
             value = mbitesMale_pSenesce, overwrite = overwrite
   )
 
-  MosquitoMale$set(which = "public",name = "rTatterSize",
-            value = mbitesMale_rTatterSize, overwrite = overwrite
+  MosquitoMale$set(which = "public",name = "WingTattering",
+            value = mbitesMale_WingTattering, overwrite = overwrite
   )
 
   MosquitoMale$set(which = "public",name = "pTatter",

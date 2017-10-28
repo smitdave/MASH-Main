@@ -87,8 +87,22 @@ MovementObject_Kernel <- R6::R6Class(classname = "MovementObject_Kernel",
 # Class Methods
 ###############################################################################
 
+#' moveMosquito
+#'
+#' This function deals with movement of mosquitoes and is a point of access between a \code{\link{MosquitoMale}} or \code{\link{MosquitoFemale}}.
+#' This function will return a packet of data to the calling mosquito that it will use to update its location. At a minimum, it will return
+#' a new site index (to update locNow) and a new site type (to update pSetNow). If using "Exact" module for wing tattering and flight energetics,
+#' it will additionally return parameters for the sampling distribution of \code{\link{mbitesGeneric_WingTattering_Exact}} and
+#'
+#'  * This method is bound to \code{MovementObject$get_SitePointer}
+#'
+moveMosquito_MovementObject_Kernel <- function(female=TRUE){
+  if(female){
 
+  } else {
 
+  }
+}
 
 
 #' Get SitePointer
