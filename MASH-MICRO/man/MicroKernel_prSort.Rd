@@ -4,7 +4,7 @@
 \alias{MicroKernel_prSort}
 \title{MICRO Search Kernels: Sort ID and Probabilities}
 \usage{
-MicroKernel_prSort(id, pr)
+MicroKernel_prSort(id, pr, dist)
 }
 \arguments{
 \item{id}{vector of IDs}

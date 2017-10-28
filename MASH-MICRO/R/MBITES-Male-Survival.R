@@ -36,10 +36,10 @@ mbitesMale_surviveResting <- function(){
 #'  * This method is bound to \code{MosquitoMale$get_restHaz()}.
 #'
 mbitesMale_get_restHaz <- function(){
-  switch(private$inPointSet,
-    m = {return(private$LandscapePointer$get_MatingSites(private$ix)$get_haz())},
-    s = {return(private$LandscapePointer$get_SugarSites(private$ix)$get_haz())},
-    {stop(cat("illegal point set for MBITES-Male: ",private$inPointSet,"\n",sep=""))}
+  switch(private$pSetNow,
+    m = {return(private$LandscapePointer$get_MatingSites(private$locNow)$get_haz())},
+    s = {return(private$LandscapePointer$get_SugarSites(private$locNow)$get_haz())},
+    {stop(cat("illegal point set for MBITES-Male: ",private$pSetNow,"\n",sep=""))}
   )
 }
 
@@ -58,7 +58,7 @@ mbitesMale_surviveFlight <- function(){
   if(self$isAlive()){
     p = self$get_surviveFlightProb()
     if(private$MalePopPointer$get_MBITES_PAR("TATTER")){
-      private$damage = private$damage + self$rTatterSize()
+      private$damage = private$damage + self$WingTattering()
       p = p * self$pTatter()
     }
     if(private$MalePopPointer$get_MBITES_PAR("SENESCE")){
@@ -88,9 +88,9 @@ mbitesMale_pSenesce <- function(){
 #' \\
 #' x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
 #' \end{matrix}\right. }
-#'  * This method is bound to \code{MosquitoMale$rTatterSize()}.
+#'  * This method is bound to \code{MosquitoMale$WingTattering()}.
 #' @md
-mbitesMale_rTatterSize <- function(){
+mbitesMale_WingTattering <- function(){
   if(runif(1) < private$MalePopPointer$get_MBITES_PAR("ttsz.p")){
     return(0)
   } else {

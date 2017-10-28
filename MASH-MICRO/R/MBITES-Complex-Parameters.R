@@ -67,9 +67,9 @@
 #' @param sns.a exp param for senescence (see \code{\link{mbitesGeneric_pSenesce}})
 #' @param sns.b exp param for senescence (see \code{\link{mbitesGeneric_pSenesce}})
 #' @param TATTER control boolean for wing tattering during \code{\link{mbitesGeneric_surviveFlight}}
-#' @param ttsz.p zero-inflation for tattering damage (see \code{\link{mbitesGeneric_rTatterSize}})
-#' @param ttsz.a shape param for tattering damage (see \code{\link{mbitesGeneric_rTatterSize}})
-#' @param ttsz.b shape param for tattering damage (see \code{\link{mbitesGeneric_rTatterSize}})
+#' @param ttsz.p zero-inflation for tattering damage (see \code{\link{mbitesGeneric_WingTattering}})
+#' @param ttsz.a shape param for tattering damage (see \code{\link{mbitesGeneric_WingTattering}})
+#' @param ttsz.b shape param for tattering damage (see \code{\link{mbitesGeneric_WingTattering}})
 #' @param ttr.a exp param for tattering survival (see \code{\link{mbitesGeneric_pTatter}})
 #' @param ttr.b exp param for tattering survival (see \code{\link{mbitesGeneric_pTatter}})
 #' @param S.u per-bout energy expenditure

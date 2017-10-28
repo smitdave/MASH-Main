@@ -34,7 +34,7 @@ MACRO.Humans.Setup(pathogenModule = "PfSI")
 
 # setup class methods for PfSI and SimBite modules
 # MACRO relies on SimBitePfSI module for adding bites to humans
-PfSI.Setup()
+PfSI.Setup(TreatPf = 0.0)
 SimBitePfSI.Setup()
 
 # MACRO Patch initialization
@@ -46,11 +46,14 @@ tileParameters = MACRO.Tile.Parameters(N = nPatch,aquaModule = "emerge",aquaPars
 tileParameters$MacroMosquitoPop_PAR$M_density = rep(200,nPatch)
 tile = MacroTile$new(MacroTile_PAR = tileParameters)
 
+tile$get_HumanPop()$queueVaccination_SimBitePfSI(tVaccine = (365*1),tTreat = (365*1)+1,fracPop = 0.75)
+
 PfPR = c(rep(0,nPatch/2),rep(0.75,nPatch/2))
 # PfPR = rep(0,nPatch)
 tile$init_PfSI(PfPR = PfPR)
 
-tile$simMacro(500)
+tMax = (365)*3
+tile$simMacro(tMax)
 
 pfsiHist = tile$get_HumanPop()$get_PfSI_history()
 plot_PfSI(pfsiHist)

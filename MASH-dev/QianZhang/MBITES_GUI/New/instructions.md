@@ -4,9 +4,7 @@ MBITES-BRO is the <b>B</b>loodfeed-<b>R</b>est-<b>O</b>viposit version of the MB
 
 ## Instructions
 
-Select the parameters needed in the "Inputs" tab and hit the "Run Model" button.
-
-After doing so, click the "Outputs" tab to look at the results of running MBITES-BRO with the selected parameters set.
+To start, please choose the "Launch a project" on the left.
 
 ## More Information
 

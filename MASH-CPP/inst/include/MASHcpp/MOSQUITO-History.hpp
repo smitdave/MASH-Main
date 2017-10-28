@@ -38,8 +38,8 @@ public:
   // historyInit: set initial values site of emergence when mosy born
   void historyInit(const Rcpp::Environment &privateEnv){
     ID = Rcpp::as<std::string>(privateEnv["id"]); // mosquito ID
-    ixH.push_back(privateEnv["ix"]);
-    pSetH.push_back(privateEnv["inPointSet"]);
+    ixH.push_back(privateEnv["locNow"]);
+    pSetH.push_back(privateEnv["pSetNow"]);
     timeH.push_back(privateEnv["tNow"]);
     stateH.push_back("emerge");
   };
@@ -59,8 +59,8 @@ public:
     if(alive){
       stateH.push_back(privateEnv["state"]);  // state trajectory
       timeH.push_back(privateEnv["tNow"]);  // transition times
-      ixH.push_back(privateEnv["ix"]);  // sites visited
-      pSetH.push_back(privateEnv["inPointSet"]);  // point sets visited
+      ixH.push_back(privateEnv["locNow"]);  // sites visited
+      pSetH.push_back(privateEnv["pSetNow"]);  // point sets visited
     } else {
       stateH.push_back(privateEnv["stateNew"]); // state trajectory
       timeH.push_back(privateEnv["tNext"]); // transition times
@@ -235,8 +235,8 @@ public:
   // historyInit: set initial values site of emergence when mosy born
   void historyInit(const Rcpp::Environment &privateEnv){
     ID = Rcpp::as<std::string>(privateEnv["id"]); // mosquito ID
-    ixH.push_back(privateEnv["ix"]);
-    pSetH.push_back(privateEnv["inPointSet"]);
+    ixH.push_back(privateEnv["locNow"]);
+    pSetH.push_back(privateEnv["pSetNow"]);
     timeH.push_back(privateEnv["tNow"]);
     stateH.push_back("emerge");
 
@@ -253,8 +253,8 @@ public:
     if(alive){
       stateH.push_back(privateEnv["state"]);  // state trajectory
       timeH.push_back(privateEnv["tNow"]);  // transition times
-      ixH.push_back(privateEnv["ix"]);  // sites visited
-      pSetH.push_back(privateEnv["inPointSet"]);  // point sets visited
+      ixH.push_back(privateEnv["locNow"]);  // sites visited
+      pSetH.push_back(privateEnv["pSetNow"]);  // point sets visited
     } else {
       stateH.push_back(privateEnv["stateNew"]); // state trajectory
       timeH.push_back(privateEnv["tNext"]); // transition times

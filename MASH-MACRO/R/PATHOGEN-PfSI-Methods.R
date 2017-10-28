@@ -344,6 +344,7 @@ event_endPfSI <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 endPfSI <- function(tEvent, PAR){
   if(private$Pathogens$get_infected()){
+    private$EventQueue$rmTagFromQ("feverPfSI")
     private$Pathogens$track_history(tEvent = tEvent, event = "S") # track history
     private$Pathogens$set_infected(FALSE)
   }

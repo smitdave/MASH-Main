@@ -4,7 +4,7 @@
 \alias{get_MicroKernel_movement_BRO}
 \title{MICRO Search Kernels: \code{\link{MicroTile}} Access MvAll Object for Female M-BITES BRO Lifecycle Model}
 \usage{
-get_MicroKernel_movement_BRO(ixS, state, inPointSet)
+get_MicroKernel_movement_BRO(locNow, state, pSetNow)
 }
 \description{
 Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementFemale} field of a microsimulation tile.
