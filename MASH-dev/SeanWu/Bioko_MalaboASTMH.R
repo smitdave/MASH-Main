@@ -69,6 +69,11 @@ tileParameters$MacroMosquitoPop_PAR$M_density = rep(200,nPatch)
 # Initialize PfPR on each tile
 PfPR <- bioko$pfpr[1:nPatch]
 
+tile <-  MacroTile$new(MacroTile_PAR = tileParameters)
+tile$init_PfSI(PfPR = PfPR)
+tile$simMacro(5*365)
+pfsiHist = tile$get_HumanPop()$get_PfSI_history()
+
 ###############################################################################
 # Run simulations in parallel
 ###############################################################################
@@ -78,7 +83,8 @@ library(snow)
 library(foreach)
 library(doSNOW)
 
-n = parallel::detectCores()
+# n = parallel::detectCores()
+n=2
 cluster <- snow::makeCluster(spec = n,type = "SOCK") # make a cluster
 doSNOW::registerDoSNOW(cluster) # register the cluster with the SNOW package so that it will work with foreach()
 
