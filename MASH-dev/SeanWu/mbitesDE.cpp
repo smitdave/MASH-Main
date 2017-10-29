@@ -32,11 +32,8 @@ inline arma::Mat<double> makeTransitionMatrix(){
     {1,1,1,0,1},
     {6,4,2,1,0} 
   };
-  arma::vec sums(MM.n_rows);
-  for(size_t i=0; i<MM.n_rows; i++){
-    sums.at(i) = arma::sum(MM.row(i));
-  }
-  MM.each_row() /= sums.t();
+  MM.each_row() /= arma::sum(MM,1).t();
+  MM.print();
   return MM;
 }
 
@@ -200,74 +197,70 @@ Rcpp::NumericVector mbitesDE_cpp(const double &Fo, const double &Fe, const doubl
 //   
 //   return out;
 // };
-// 
-// // [[Rcpp::export]]
-// // void upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
+
+// [[Rcpp::export]]
+void upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
 // arma::Cube<double> upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
-// 
-//   // make parameters
-//   parameters p;
-//   parameters* par = &p;
-//   par->M = makeTransitionMatrix();
-//   
-//   int ttot = int(tfin / dt);
-//   int xtot = int(xfin / dx);
-//   
-//   // // DEBUG
-//   // std::cout << par->PB << std::endl;
-//   // std::cout << "    " << std::endl;
-//   // (*par).M.print();
-//   // std::cout << "    " << std::endl;
-//   // // DEBUG
-//   
-//   arma::Mat<double> m(xtot+1,xtot+1);
-//   m.eye();
-//   for(size_t i=1; i<m.n_rows; i++){
-//     m.at(i,i-1) = -1;
-//   }
-//   m = m * double(dt/dx);
-// 
-//   // // DEBUG
-//   // m.print();
-//   // // DEBUG
-//   
-//   // x = 0:xtot*dx
-//   // t = 0:ttot*dt  
-//   
-//   // array to contain all 9 matrices (time x age for each state variable)
-//   arma::Mat<double> v(xtot+1,9);
-//   v.zeros();
-//   v(0,0) = 1000;
-//   
-//   arma::Mat<double> w = v;
-//   
-//   arma::Cube<double> A(ttot+1,xtot+1,9);
-//   A.zeros();
-//   A(0,0,0) = 1000;
-//   
-//   for(int i=0; i<ttot; i++){
-//     for(int k=0; k<9; k++){
-//       
-//       w.col(k) = v.col(k) - m * v.col(k);
-//       
-//       // boundary condition - emerge from eggs
-//       if(k==0){
-//         if( (dt*i+dt/2.0) <= par->tau ){
-//           v(0,k) = 0;
-//         } else {
-//           v(0,k) = par->e*arma::accu(v.col(7)+v.col(8));
-//         }
-//       }
-//       
-//       for(int j=1; j<xtot+1; j++){
-//         arma::Row<double> rhs = mbitesDE(A,i,j,dt,par);
-//         v(j,k) = w(j,k) + dt*rhs(k);
-//       }
-//       v.print();
-//       // A.tube(i,0,i,A.n_cols) ;
-//       // A.subcube(i,0,0,i,A.n_cols,A.n_slices);
-//     }
-//   }
-//   
-//   return(A);
-// };
+
+  // make parameters
+  parameters p;
+  parameters* par = &p;
+  par->M = makeTransitionMatrix();
+
+  // int ttot = int(tfin / dt);
+  int xtot = int(xfin / dx);
+
+  // // DEBUG
+  // std::cout << par->PB << std::endl;
+  // std::cout << "    " << std::endl;
+  // (*par).M.print();
+  // std::cout << "    " << std::endl;
+  // // DEBUG
+  
+  arma::Mat<double> m(xtot+1,xtot+1);
+  m.eye();
+  m.diag(-1).fill(-1);
+
+  m = m * double(dt/dx);
+
+  // DEBUG
+  m.print();
+  // DEBUG
+
+  // // array to contain all 9 matrices (time x age for each state variable)
+  // arma::Mat<double> v(xtot+1,9);
+  // v.zeros();
+  // v(0,0) = 1000;
+  // 
+  // arma::Mat<double> w = v;
+  // 
+  // arma::Cube<double> A(ttot+1,xtot+1,9);
+  // A.zeros();
+  // A(0,0,0) = 1000;
+  // 
+  // for(int i=0; i<ttot; i++){
+  //   for(int k=0; k<9; k++){
+  // 
+  //     w.col(k) = v.col(k) - m * v.col(k);
+  // 
+  //     // boundary condition - emerge from eggs
+  //     if(k==0){
+  //       if( (dt*i+dt/2.0) <= par->tau ){
+  //         v(0,k) = 0;
+  //       } else {
+  //         v(0,k) = par->e*arma::accu(v.col(7)+v.col(8));
+  //       }
+  //     }
+  // 
+  //     for(int j=1; j<xtot+1; j++){
+  //       arma::Row<double> rhs = mbitesDE(A,i,j,dt,par);
+  //       v(j,k) = w(j,k) + dt*rhs(k);
+  //     }
+  //     v.print();
+  //     // A.tube(i,0,i,A.n_cols) ;
+  //     // A.subcube(i,0,0,i,A.n_cols,A.n_slices);
+  //   }
+  // }
+
+  // return(A);
+};

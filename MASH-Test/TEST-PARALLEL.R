@@ -6,7 +6,7 @@
 #    / ___ |/ / / / /_/ / / / / / / /_/ / / /_/ / /_/ (__  )  / /  / / /_/ / /_/  __/ /  / / /_/ / (__  )
 #   /_/  |_/_/ /_/\____/_/ /_/ /_/\__,_/_/\____/\__,_/____/  /_/  /_/\__,_/\__/\___/_/  /_/\__,_/_/____/
 #
-#   Test Non-trivia Parallel Applications
+#   Test Non-trivial Parallel Applications
 #
 ##############################################################################################################
 
@@ -58,10 +58,14 @@ parallel::clusterEvalQ(cl = cl,expr = {
   testClass <<- R6::R6Class(classname = "test",
                            public = list(
                              x = 10,
-                             y = 20
+                             y = 20,
+                             conOut = vector(mode="list",length=3)
                            )
   )
+  classObj <<- testClass$new()
 })
+
+parallel::clusterEvalQ(cl = cl,expr = {ls()})
 
 # send data to node 1 and do a 'calculation'
 parallel:::sendCall(con = cl[[1]],fun = function(x){
@@ -84,6 +88,10 @@ node1specific = parallel::clusterCall(cl = cl[1],fun = function(){
 parallel:::sendCall(con = cl[[2]],fun = function(DIR){
   x <<- rexp(n = 10)
   con = file(description = paste0(DIR,"node2out.txt"),open = "wt")
+  pid = Sys.getpid()
+  name = Sys.info()["nodename"]
+  str = paste("Node 2 reporting in, running on", name, "with PID", pid, "!")
+  writeLines(text = str,con =con)
   writeLines(text = paste0("node 2 is printing! the results of x were: ",x),con =con)
   close(con)
 },args = list(DIR = DIR),return = FALSE,tag = 2)
@@ -101,6 +109,9 @@ parallel:::sendCall(con = cl[[3]],fun = function(DIR){
 parallel:::sendCall(con = cl[[3]],fun = function(){
   con = file(description = paste0(DIR,"node3out.txt"),open = "wt")
   pid = Sys.getpid()
+  name = Sys.info()["nodename"]
+  str = paste("Node 3 reporting in, running on", name, "with PID", pid, "!")
+  writeLines(text = str,con =con)
   writeLines(text = paste0("node 3 is printing from pid: ",pid),con = con)
   for(i in 1:1e3){
     writeLines(text = paste0(i),con = get(x = "con"))
@@ -126,7 +137,10 @@ rm(cl)
 
 
 
+# ###############################################################################
 # # parallel test
+# ###############################################################################
+# 
 # cl = parallel::makeCluster(spec = 2,type = "PSOCK")
 # 
 # parallel::clusterEvalQ(cl = cl,expr = {
