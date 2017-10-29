@@ -13,7 +13,6 @@
 #include <math.h> // for M_PI
 
 // [[Rcpp::depends(RcppArmadillo)]]
-// [[Rcpp::depends(RcppProgress)]]
 // [[Rcpp::plugins(cpp11)]]
 
 using namespace Rcpp;
@@ -26,20 +25,27 @@ using namespace Rcpp;
  */
 
 // parameters struct
-typedef struct {
-  int e = 5;                // expected number of eggs in each clutch that makes it to adulthood
-  double PF = 0.99;            // probability of success at event
+typedef struct parameters {
+  // parameters
+  int e = 5;                    // expected number of eggs in each clutch that makes it to adulthood
+  double PF = 0.99;             // probability of success at event
   double PB = 0.99;
   double PR = 0.99;
   double PL = 0.99;
   double PO = 0.99;
-  double sF = 0.95;            // probabiltiy of surviving event
+  double sF = 0.95;             // probabiltiy of surviving event
   double sB = 0.98;
   double sR = 0.98;
   double sL = 0.80;
   double sO = 0.98;
-  arma::Mat<double> M;  // transition probabilities given success
-  double tau = 21.0;           // time from eggs being laid to adult-mosquito-hood
+  double tau = 21.0;            // time from eggs being laid to adult-mosquito-hood
+  arma::Mat<double> M;          // transition probabilities given success
+  // constructor
+  parameters(const int &_e, 
+             const double &_PF, const double &_PB, const double &_PR, const double &_PL, const double &_PO, 
+             const double &_sF, const double &_sB, const double &_sR, const double &_sL, const double &_sO, 
+             const double &_tau) : e(_e), PF(_PF), PB(_PB), PR(_PR), PL(_PL), PO(_PO), sF(_sF), sB(_sB), sR(_sR), sL(_sL), sO(_sO), tau(_tau) {};
+  ~parameters(){};
 } parameters;
 
 // normalize arma::Mat
@@ -65,8 +71,11 @@ inline void free_parameters(parameters* ptr){
 typedef Rcpp::XPtr<parameters, Rcpp::PreserveStorage, free_parameters> parameters_ptr;
 
 // [[Rcpp::export]]
-SEXP make_parameters(){
-  parameters *par = new parameters;
+SEXP make_parameters(const int &e = 5, 
+                     const double &PF = 0.99, const double &PB = 0.99, const double &PR = 0.99, const double &PL = 0.99, const double &PO = 0.99, 
+                     const double &sF = 0.95, const double &sB = 0.98, const double &sR = 0.98, const double &sL = 0.80, const double &sO = 0.98, 
+                     const double &tau = 21.0){
+  parameters *par = new parameters(e,PF,PB,PR,PL,PO,sF,sB,sR,sL,sO,tau);
   par->M = makeTransitionMatrix();
   parameters_ptr ptr(par,true);
   return ptr;
@@ -219,11 +228,15 @@ inline arma::Row<double> mbitesDE_cppInline(const arma::Cube<double> &array, con
 };
 
 // [[Rcpp::export]]
-arma::Cube<double> upwindSolveCPP(const double &dt, const int &tfin, const double &dx, const int &xfin){
+arma::Cube<double> upwindSolveCPP(const double &dt, const int &tfin, const double &dx, const int &xfin,
+                                  const int &e = 5, 
+                                  const double &PF = 0.99, const double &PB = 0.99, const double &PR = 0.99, const double &PL = 0.99, const double &PO = 0.99, 
+                                  const double &sF = 0.95, const double &sB = 0.98, const double &sR = 0.98, const double &sL = 0.80, const double &sO = 0.98, 
+                                  const double &tau = 21.0){
 // void upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
 
   // make parameters
-  parameters *par = new parameters;
+  parameters *par = new parameters(e,PF,PB,PR,PL,PO,sF,sB,sR,sL,sO,tau);
   par->M = makeTransitionMatrix();
 
   int ttot = int(tfin / dt);
