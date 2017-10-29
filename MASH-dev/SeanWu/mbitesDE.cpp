@@ -162,9 +162,19 @@ Rcpp::NumericVector mbitesDE_cpp(const double &Fo, const double &Fe, const doubl
 
 
 
-
-
-
+// [[Rcpp::export]]
+arma::Cube<double> testCube(){
+  arma::Cube<double> a(3,4,5);
+  double i = 1.0;
+  for(arma::cube::iterator it = a.begin(); it != a.end(); it++){
+    (*it) = i;
+    i+=1.0;
+  }
+  // a.slice(0).print();
+  a.subcube(0,0,0,0,a.n_cols-1,a.n_slices-1).print();
+  // corresponds to: x = array(data = 1:(3*4*5),dim = c(3,4,5)); x[1,,]
+  return(a);
+};
 
 
 
@@ -198,69 +208,69 @@ Rcpp::NumericVector mbitesDE_cpp(const double &Fo, const double &Fe, const doubl
 //   return out;
 // };
 
-// [[Rcpp::export]]
-void upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
-// arma::Cube<double> upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
-
-  // make parameters
-  parameters p;
-  parameters* par = &p;
-  par->M = makeTransitionMatrix();
-
-  // int ttot = int(tfin / dt);
-  int xtot = int(xfin / dx);
-
-  // // DEBUG
-  // std::cout << par->PB << std::endl;
-  // std::cout << "    " << std::endl;
-  // (*par).M.print();
-  // std::cout << "    " << std::endl;
-  // // DEBUG
-  
-  arma::Mat<double> m(xtot+1,xtot+1);
-  m.eye();
-  m.diag(-1).fill(-1);
-
-  m = m * double(dt/dx);
-
-  // DEBUG
-  m.print();
-  // DEBUG
-
-  // // array to contain all 9 matrices (time x age for each state variable)
-  // arma::Mat<double> v(xtot+1,9);
-  // v.zeros();
-  // v(0,0) = 1000;
-  // 
-  // arma::Mat<double> w = v;
-  // 
-  // arma::Cube<double> A(ttot+1,xtot+1,9);
-  // A.zeros();
-  // A(0,0,0) = 1000;
-  // 
-  // for(int i=0; i<ttot; i++){
-  //   for(int k=0; k<9; k++){
-  // 
-  //     w.col(k) = v.col(k) - m * v.col(k);
-  // 
-  //     // boundary condition - emerge from eggs
-  //     if(k==0){
-  //       if( (dt*i+dt/2.0) <= par->tau ){
-  //         v(0,k) = 0;
-  //       } else {
-  //         v(0,k) = par->e*arma::accu(v.col(7)+v.col(8));
-  //       }
-  //     }
-  // 
-  //     for(int j=1; j<xtot+1; j++){
-  //       arma::Row<double> rhs = mbitesDE(A,i,j,dt,par);
-  //       v(j,k) = w(j,k) + dt*rhs(k);
-  //     }
-  //     v.print();
-  //     // A.tube(i,0,i,A.n_cols) ;
-  //     // A.subcube(i,0,0,i,A.n_cols,A.n_slices);
-  //   }
-  // }
-
-  // return(A);
-};
+// // [[Rcpp::export]]
+// void upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
+// // arma::Cube<double> upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
+// 
+//   // make parameters
+//   parameters p;
+//   parameters* par = &p;
+//   par->M = makeTransitionMatrix();
+// 
+//   // int ttot = int(tfin / dt);
+//   int xtot = int(xfin / dx);
+// 
+//   // // DEBUG
+//   // std::cout << par->PB << std::endl;
+//   // std::cout << "    " << std::endl;
+//   // (*par).M.print();
+//   // std::cout << "    " << std::endl;
+//   // // DEBUG
+//   
+//   arma::Mat<double> m(xtot+1,xtot+1);
+//   m.eye();
+//   m.diag(-1).fill(-1);
+// 
+//   m = m * double(dt/dx);
+// 
+//   // DEBUG
+//   m.print();
+//   // DEBUG
+// 
+//   // // array to contain all 9 matrices (time x age for each state variable)
+//   // arma::Mat<double> v(xtot+1,9);
+//   // v.zeros();
+//   // v(0,0) = 1000;
+//   // 
+//   // arma::Mat<double> w = v;
+//   // 
+//   // arma::Cube<double> A(ttot+1,xtot+1,9);
+//   // A.zeros();
+//   // A(0,0,0) = 1000;
+//   // 
+//   // for(int i=0; i<ttot; i++){
+//   //   for(int k=0; k<9; k++){
+//   // 
+//   //     w.col(k) = v.col(k) - m * v.col(k);
+//   // 
+//   //     // boundary condition - emerge from eggs
+//   //     if(k==0){
+//   //       if( (dt*i+dt/2.0) <= par->tau ){
+//   //         v(0,k) = 0;
+//   //       } else {
+//   //         v(0,k) = par->e*arma::accu(v.col(7)+v.col(8));
+//   //       }
+//   //     }
+//   // 
+//   //     for(int j=1; j<xtot+1; j++){
+//   //       arma::Row<double> rhs = mbitesDE(A,i,j,dt,par);
+//   //       v(j,k) = w(j,k) + dt*rhs(k);
+//   //     }
+//   //     v.print();
+//   //     // A.tube(i,0,i,A.n_cols) ;
+//   //     // A.subcube(i,0,0,i,A.n_cols,A.n_slices);
+//   //   }
+//   // }
+// 
+//   // return(A);
+// };
