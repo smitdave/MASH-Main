@@ -1,10 +1,29 @@
+/*
+ * ################################################################################
+ * #
+ * #  MBITES-DE
+ * #  PDE approximation of semi-markov model of mosquito life-cycle
+ * #  MBITES Team
+ * #  October 2017
+ * #
+ * ################################################################################
+ */
+
 #include <RcppArmadillo.h>
 #include <math.h> // for M_PI
 
 // [[Rcpp::depends(RcppArmadillo)]]
+// [[Rcpp::depends(RcppProgress)]]
 // [[Rcpp::plugins(cpp11)]]
 
 using namespace Rcpp;
+
+
+/*
+ * ################################################################################
+ * #  Helper functions and parameters setup
+ * ################################################################################
+ */
 
 // parameters struct
 typedef struct {
@@ -33,7 +52,6 @@ inline arma::Mat<double> makeTransitionMatrix(){
     {6,4,2,1,0} 
   };
   MM.each_row() /= arma::sum(MM,1).t();
-  MM.print();
   return MM;
 }
 
@@ -127,12 +145,20 @@ inline double aO(const double &t, const parameters* par){
   return (1 - par->PO) * par->sO / gammaO(t);
 };
 
+
+/*
+ * ################################################################################
+ * #  Function to calculate derivatives for John Henry's solver
+ * ################################################################################
+ */
+
 // [[Rcpp::export]]
-Rcpp::NumericVector mbitesDE_cpp(const double &Fo, const double &Fe, const double &Bo, const double &Be,
-                             const double &R,
-                             const double &Lo, const double &Le,
-                             const double &Oo, const double &Oe,
-                             const int &t, const double &dt, const SEXP &p){
+Rcpp::NumericVector mbitesDE_cpp(const double &Fo, const double &Fe, 
+                                 const double &Bo, const double &Be,
+                                 const double &R,
+                                 const double &Lo, const double &Le,
+                                 const double &Oo, const double &Oe,
+                                 const int &t, const double &dt, const SEXP &p){
 
 
   Rcpp::NumericVector out(9);
@@ -155,122 +181,132 @@ Rcpp::NumericVector mbitesDE_cpp(const double &Fo, const double &Fe, const doubl
 };
 
 
+/*
+ * ################################################################################
+ * #  Standalone C++ implementation of John Henry's upwind first order scheme
+ * #  TO DO: avoid extra memory copy at end of loop over compartments 1...K
+ * ################################################################################
+ */
 
+// PDE system
+inline arma::Row<double> mbitesDE_cppInline(const arma::Cube<double> &array, const int &t, const int &a, const double &dt, const double &da, const parameters* par){
 
+  double Fo = array.at(t,a,0);
+  double Fe = array.at(t,a,1);
+  double Bo = array.at(t,a,2);
+  double Be = array.at(t,a,3);
+  double R = array.at(t,a,4);
+  double Lo = array.at(t,a,5);
+  double Le = array.at(t,a,6);
+  double Oo = array.at(t,a,7);
+  double Oe = array.at(t,a,8);
 
+  arma::Row<double> out(9);
 
+  double tt = (t-1)*dt;
 
+  out.at(0) = rO(tt,par)*par->M.at(4,0)*(Oe+Oo) + rB(tt,par)*par->M.at(1,0)*(Be+Bo) + rR(tt,par)*par->M.at(2,0)*R + (rF(tt,par)*par->M.at(0,0)+aF(tt,par))*Fe - dF(tt)*Fo; // Fo
+  out.at(1) = (rF(tt,par)*par->M.at(0,0)+aF(tt,par))*Fo - dF(tt)*Fe; // Fe
+  out.at(2) = rO(tt,par)*par->M.at(2,1)*(Oe+Oo) + rF(tt,par)*par->M.at(0,1)*(Fe+Fo) + rR(tt,par)*par->M.at(2,1)*R + rB(tt,par)*(par->M.at(1,1)+aB(tt,par))*Bo - dB(tt)*Bo; // Bo
+  out.at(3) = (rB(tt,par)*par->M.at(1,1)+aB(tt,par))*Bo - dB(tt)*Be;
+  out.at(4) = rB(tt,par)*par->M.at(1,2)*(Be+Bo) - dR(tt)*R;
+  out.at(5) = rR(tt,par)*par->M.at(2,3)*R + rO(tt,par)*par->M.at(4,3)*(Oe+Oo) + (rL(tt,par)*par->M.at(3,3)+aL(tt,par))*Le - dL(tt)*Lo;
+  out.at(6) = (rL(tt,par)*par->M.at(3,3)+aL(tt,par))*Lo - dL(tt)*Le;
+  out.at(7) = rL(tt,par)*par->M.at(3,4)*(Le+Lo)+ rR(tt,par)*par->M.at(2,4)*R + (rO(tt,par)*par->M.at(4,4)+aO(tt,par))*Oe - dO(tt)*Oo;
+  out.at(8) = (rO(tt,par)*par->M.at(4,4)+aO(tt,par))*Oo - dO(tt)*Oe;
 
+  return out;
+};
 
 // [[Rcpp::export]]
-arma::Cube<double> testCube(){
-  arma::Cube<double> a(3,4,5);
-  double i = 1.0;
-  for(arma::cube::iterator it = a.begin(); it != a.end(); it++){
-    (*it) = i;
-    i+=1.0;
+arma::Cube<double> upwindSolveCPP(const double &dt, const int &tfin, const double &dx, const int &xfin){
+// void upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
+
+  // make parameters
+  parameters *par = new parameters;
+  par->M = makeTransitionMatrix();
+
+  int ttot = int(tfin / dt);
+  int xtot = int(xfin / dx);
+
+  arma::Mat<double> m(xtot+1,xtot+1);
+  m.eye();
+  m.diag(-1).fill(-1);
+  m = m * double(dt/dx);
+
+  // array to contain all 9 matrices (time x age for each state variable)
+  arma::Mat<double> v(xtot+1,9);
+  v.zeros();
+  v(0,0) = 1000;
+
+  arma::Mat<double> w = v;
+
+  arma::Cube<double> A(ttot+1,xtot+1,9);
+  A.zeros();
+  A(0,0,0) = 1000;
+
+  for(int i=0; i<ttot; i++){
+    for(int k=0; k<9; k++){
+
+      w.col(k) = v.col(k) - m * v.col(k);
+
+      // boundary condition - emerge from eggs
+      if(k==0){
+        if( (dt*i+dt/2.0) <= par->tau ){
+          v(0,k) = 0;
+        } else {
+          v(0,k) = par->e*arma::accu(v.col(7)+v.col(8));
+        }
+      }
+
+      for(int j=1; j<xtot+1; j++){
+        arma::Row<double> rhs = mbitesDE_cppInline(A,i,j,dt,dx,par);
+        v(j,k) = w(j,k) + dt*rhs(k);
+      }
+      
+      arma::cube newCube((const double*)v.begin(),1,xtot+1,9); // annoying memory copy...must be a way to avoid this
+      A(arma::span(i+1,i+1),arma::span::all,arma::span::all) = newCube;
+    }
   }
-  // a.slice(0).print();
-  a.subcube(0,0,0,0,a.n_cols-1,a.n_slices-1).print();
-  // corresponds to: x = array(data = 1:(3*4*5),dim = c(3,4,5)); x[1,,]
-  return(a);
+
+  return(A);
 };
 
 
-
-// // PDE system
-// inline arma::Row<double> mbitesDE(const arma::Cube<double> &array, const int &t, const int &a, const double &dt, const parameters* par){
-//   
-//   double Fo = array.at(t,a,0);
-//   double Fe = array.at(t,a,1);
-//   double Bo = array.at(t,a,2);
-//   double Be = array.at(t,a,3);
-//   double R = array.at(t,a,4);
-//   double Lo = array.at(t,a,5);
-//   double Le = array.at(t,a,6);
-//   double Oo = array.at(t,a,7);
-//   double Oe = array.at(t,a,8);
-//   
-//   arma::Row<double> out(9);
-//   
-//   double tt = (t-1)*dt;
-//   
-//   out.at(0) = rO(tt,par)*par->M.at(4,0)*(Oe+Oo) + rB(tt,par)*par->M.at(1,0)*(Be+Bo) + rR(tt,par)*par->M.at(2,0)*R + (rF(tt,par)*par->M.at(0,0)+aF(tt,par))*Fe - dF(tt)*Fo; // Fo
-//   out.at(1) = (rF(tt,par)*par->M.at(0,0)+aF(tt,par))*Fo - dF(tt)*Fe; // Fe
-//   out.at(2) = rO(tt,par)*par->M.at(2,1)*(Oe+Oo) + rF(tt,par)*par->M.at(0,1)*(Fe+Fo) + rR(tt,par)*par->M.at(2,1)*R + rB(tt,par)*(par->M.at(1,1)+aB(tt,par))*Bo - dB(tt)*Bo; // Bo
-//   out.at(3) = (rB(tt,par)*par->M.at(1,1)+aB(tt,par))*Bo - dB(tt)*Be;
-//   out.at(4) = rB(tt,par)*par->M.at(1,2)*(Be+Bo) - dR(tt)*R;
-//   out.at(5) = rR(tt,par)*par->M.at(2,3)*R + rO(tt,par)*par->M.at(4,3)*(Oe+Oo) + (rL(tt,par)*par->M.at(3,3)+aL(tt,par))*Le - dL(tt)*Lo;
-//   out.at(6) = (rL(tt,par)*par->M.at(3,3)+aL(tt,par))*Lo - dL(tt)*Le;
-//   out.at(7) = rL(tt,par)*par->M.at(3,4)*(Le+Lo)+ rR(tt,par)*par->M.at(2,4)*R + (rO(tt,par)*par->M.at(4,4)+aO(tt,par))*Oe - dO(tt)*Oo;
-//   out.at(8) = (rO(tt,par)*par->M.at(4,4)+aO(tt,par))*Oo - dO(tt)*Oe;
-//   
-//   return out;
-// };
+/*
+ * ################################################################################
+ * #  DEPRECATED CODE
+ * ################################################################################
+ */
 
 // // [[Rcpp::export]]
-// void upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
-// // arma::Cube<double> upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
-// 
-//   // make parameters
-//   parameters p;
-//   parameters* par = &p;
-//   par->M = makeTransitionMatrix();
-// 
-//   // int ttot = int(tfin / dt);
-//   int xtot = int(xfin / dx);
-// 
-//   // // DEBUG
-//   // std::cout << par->PB << std::endl;
-//   // std::cout << "    " << std::endl;
-//   // (*par).M.print();
-//   // std::cout << "    " << std::endl;
-//   // // DEBUG
+// arma::Cube<double> testCube(){
+//   arma::Cube<double> a(3,4,5);
+//   double i = 1.0;
+//   for(arma::cube::iterator it = a.begin(); it != a.end(); it++){
+//     (*it) = i;
+//     i+=1.0;
+//   }
+//   a.print();
+//   // a.subcube(0,0,0,0,a.n_cols-1,a.n_slices-1).print();
+//   // std::cout << "span " << std::endl;
+//   // std::cout << std::endl;
+//   a(arma::span(0,0),arma::span::all,arma::span::all).print();
+//   // corresponds to: x = array(data = 1:(3*4*5),dim = c(3,4,5)); x[1,,]
 //   
-//   arma::Mat<double> m(xtot+1,xtot+1);
-//   m.eye();
-//   m.diag(-1).fill(-1);
-// 
-//   m = m * double(dt/dx);
-// 
-//   // DEBUG
-//   m.print();
-//   // DEBUG
-// 
-//   // // array to contain all 9 matrices (time x age for each state variable)
-//   // arma::Mat<double> v(xtot+1,9);
-//   // v.zeros();
-//   // v(0,0) = 1000;
-//   // 
-//   // arma::Mat<double> w = v;
-//   // 
-//   // arma::Cube<double> A(ttot+1,xtot+1,9);
-//   // A.zeros();
-//   // A(0,0,0) = 1000;
-//   // 
-//   // for(int i=0; i<ttot; i++){
-//   //   for(int k=0; k<9; k++){
-//   // 
-//   //     w.col(k) = v.col(k) - m * v.col(k);
-//   // 
-//   //     // boundary condition - emerge from eggs
-//   //     if(k==0){
-//   //       if( (dt*i+dt/2.0) <= par->tau ){
-//   //         v(0,k) = 0;
-//   //       } else {
-//   //         v(0,k) = par->e*arma::accu(v.col(7)+v.col(8));
-//   //       }
-//   //     }
-//   // 
-//   //     for(int j=1; j<xtot+1; j++){
-//   //       arma::Row<double> rhs = mbitesDE(A,i,j,dt,par);
-//   //       v(j,k) = w(j,k) + dt*rhs(k);
-//   //     }
-//   //     v.print();
-//   //     // A.tube(i,0,i,A.n_cols) ;
-//   //     // A.subcube(i,0,0,i,A.n_cols,A.n_slices);
-//   //   }
-//   // }
-// 
-//   // return(A);
+//   arma::Mat<double> MM = {
+//     {5,4,3,2,1},
+//     {6,5,4,3,2},
+//     {7,6,5,4,3},
+//     {8,7,6,5,4}
+//   };
+//   // std::cout << "print MM    " << std::endl;
+//   // MM.print();
+//   
+//   arma::cube newCube((const double*)MM.begin(),1,4,5);
+//   // newCube.print();
+//   
+//   a(arma::span(0,0),arma::span::all,arma::span::all) = newCube;
+//   a.print();
+//   return(a);
 // };
