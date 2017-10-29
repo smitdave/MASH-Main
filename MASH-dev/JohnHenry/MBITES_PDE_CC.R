@@ -120,9 +120,9 @@ upwind1 = function(dt,tfin,dx,xfin,rhs,k) {
   A[1,1,1] = 1000
   for(i in 1:ttot){
     for(k in 1:9){
-#      z = w[length(x),k]
+      #      z = w[length(x),k]
       w[,k] = v[,k] - m%*%v[,k]
-#      w[length(x),k] = w[length(x),k]+z
+      #      w[length(x),k] = w[length(x),k]+z
       ##boundary condition - emerge from eggs
       if(k==1){
         v[1,k] = ifelse(ceiling(dt*i+dt/2)<=tau,0,e*sum(v[,8]+v[,9]))
@@ -191,12 +191,12 @@ plot(x,Ua[length(t),]/N[length(t)],type="l")
 ##video showing proportions in 
 saveHTML({
   for(i in 1:length(t)){
-#    par(mfrow=c(3,2))
-#    plot(x,(U[i,,1]+U[i,,2])/N[i],type="l",ylim=c(0,.2),main="Searching for Blood")
-#    plot(x,(U[i,,3]+U[i,,4])/N[i],type="l",ylim=c(0,.05),main="Bloodfeeding")
-#    plot(x,U[i,,5]/N[i],type="l",ylim=c(0,.1),main="Resting")
-#    plot(x,(U[i,,6]+U[i,,7])/N[i],type="l",ylim=c(0,.008),main="Searching for Water")
-#    plot(x,(U[i,,8]+U[i,,9])/N[i],type="l",ylim=c(0,.025),main="Ovipositing")
+    #    par(mfrow=c(3,2))
+    #    plot(x,(U[i,,1]+U[i,,2])/N[i],type="l",ylim=c(0,.2),main="Searching for Blood")
+    #    plot(x,(U[i,,3]+U[i,,4])/N[i],type="l",ylim=c(0,.05),main="Bloodfeeding")
+    #    plot(x,U[i,,5]/N[i],type="l",ylim=c(0,.1),main="Resting")
+    #    plot(x,(U[i,,6]+U[i,,7])/N[i],type="l",ylim=c(0,.008),main="Searching for Water")
+    #    plot(x,(U[i,,8]+U[i,,9])/N[i],type="l",ylim=c(0,.025),main="Ovipositing")
     plot(x,Ua[i,]/N[i],type="l",ylim=c(0,.5),main="Age Structure Over Time")
   }
 },interval = 0.1, ani.width = 1000, ani.height = 400)
