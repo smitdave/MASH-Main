@@ -78,34 +78,35 @@ pfsiHist = tile$get_HumanPop()$get_PfSI_history()
 # Run simulations in parallel
 ###############################################################################
 
-library(parallel)
-library(snow)
-library(foreach)
-library(doSNOW)
-
-# n = parallel::detectCores()
-n=2
-cluster <- snow::makeCluster(spec = n,type = "SOCK") # make a cluster
-doSNOW::registerDoSNOW(cluster) # register the cluster with the SNOW package so that it will work with foreach()
-
-out = foreach(i=1:n,.inorder = FALSE,.packages = c("MASH"),.export = c("PfPR","tileParameters"),.verbose = TRUE) %dopar% {
-  set.seed(i)
-
-  # initialize classes for MACRO
-  MACRO.Humans.Setup(pathogenModule = "PfSI")
-  PfSI.Setup()
-  SimBitePfSI.Setup()
-  MACRO.Patch.Emerge.Setup() # 'Emerge' model
-
-  tile <-  MacroTile$new(MacroTile_PAR = tileParameters)
-  tile$init_PfSI(PfPR = PfPR)
-  tile$simMacro(5*365)
-  pfsiHist = tile$get_HumanPop()$get_PfSI_history()
-
-  # PID = Sys.getpid()
-  # saveRDS(object = pfsiHist,file = paste0("/Users/slwu89/Desktop/MASH-dev/SeanWu/bioko_island_baseline_output_",PID,"_",i,".rds"))
-}
-saveRDS(object = out,file = paste0("/Users/slwu89/Desktop/MASH-dev/SeanWu/bioko_island_baseline_output.rds"))
+# library(parallel)
+# library(snow)
+# library(foreach)
+# library(doSNOW)
+# 
+# # n = parallel::detectCores()
+# n=2
+# cluster <- snow::makeCluster(spec = n,type = "SOCK") # make a cluster
+# doSNOW::registerDoSNOW(cluster) # register the cluster with the SNOW package so that it will work with foreach()
+# 
+# out = foreach(i=1:n,.inorder = FALSE,.packages = c("MASH"),.export = c("PfPR","tileParameters"),.verbose = TRUE) %dopar% {
+#   set.seed(i)
+# 
+#   # initialize classes for MACRO
+#   MACRO.Humans.Setup(pathogenModule = "PfSI")
+#   PfSI.Setup()
+#   SimBitePfSI.Setup()
+#   MACRO.Patch.Emerge.Setup() # 'Emerge' model
+# 
+#   tile <-  MacroTile$new(MacroTile_PAR = tileParameters)
+#   tile$init_PfSI(PfPR = PfPR)
+#   tile$simMacro(5*365)
+#   pfsiHist = tile$get_HumanPop()$get_PfSI_history()
+# 
+#   # PID = Sys.getpid()
+#   # saveRDS(object = pfsiHist,file = paste0("/Users/slwu89/Desktop/MASH-dev/SeanWu/bioko_island_baseline_output_",PID,"_",i,".rds"))
+# }
+saveRDS(object = pfsiHist,file = paste0("/Users/slwu89/Desktop/MASH-Main/MASH-dev/SeanWu/bioko_island_baseline_output.rds"))
+saveRDS(object = hold,file = paste0("/Users/slwu89/Desktop/MASH-Main/MASH-dev/SeanWu/MACROprofile.rds"))
 
 # # try to do the above thing in parallel
 # library(parallel)
