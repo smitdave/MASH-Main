@@ -3,12 +3,14 @@
 // properties of human
 human::human(const int &id_new){
     id = id_new;
+    event_queue.reserve(100);
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " being born at memory location: " << this << std::endl;;
     #endif
 };
 
 human::~human(){
+    event_queue.clear();
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " getting killed at memory location: " << this << std::endl;
     #endif
@@ -86,6 +88,13 @@ pathogen* human::get_pathogen(){
 void human::set_pathogen(pathogen* p){
     // p->set_human_ptr(this);
     pathogen_ptr = p;
+}
+
+// event queue
+void human::add2Q_set_state(const std::string &state_new){
+  
+  // event_queue.push_back([] {})
+  // q.push_back( [&x] { x.foo1(1); } );
 }
 
 //debug

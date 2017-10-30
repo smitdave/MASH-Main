@@ -2,9 +2,13 @@
 #define human_hpp
 
 #include <stdio.h>
-#include <string>
-#include <tuple>
 #include <iostream>
+#include <string>
+
+#include <tuple>        // for address tuple
+#include <functional>   // std::invoke
+#include <vector>       // for event queue
+
 
 #include "DEBUG.hpp"
 
@@ -13,6 +17,7 @@ class tile;             // forward declare tile
 class pathogen;         // forward declare pathogen
 
 typedef std::tuple<patch*,tile*> address;
+
 
 class human {
 public:
@@ -42,6 +47,9 @@ public:
     // pathogen: pathogens infecting me
     pathogen*                   get_pathogen();
     void                        set_pathogen(pathogen* p);
+    
+    // event queue
+    void                        add2Q_set_state(const std::string &state_new);
 
     void                        get_memLoc();
 
@@ -54,9 +62,13 @@ private:
     address                     home_address;       // home address
     address                     current_address;    // current address
 
-    pathogen*                   pathogen_ptr;
+    pathogen*                   pathogen_ptr;       // pathogen object
+    
+    std::vector<std::function<void()>>   event_queue;
 
 };
+
+
 
 
 #endif /* human_hpp */
