@@ -8,6 +8,7 @@
 * Need to get MACRO running in C++ ASAP:
   * Need to implement PTMF for event queue (queue of pointer to memeber function; will need to use std::function and std::bind to bind function pointer and necessary arguments...need to check with a C++ guru on this).
   * Each event will have to be a struct, other stuff will include the time of event and the tag.
+  * How to use `delete this` with smart pointers (`std::unique_ptr`)? When object suicides will all pointers to it also be deleted? or will they go stale? This will be necessary for mosquitoes, which need to manage their own lifetimes, less relevant for MACRO.
  
  ### MBITES:
  *  Have to give a talk on MBITES at computational biology retreat (Nov 18). Will need to run simulations on MBITES-DE and present interesting graphs; talk to John Henry about this. C++ version of upwind PDE solver should help.
