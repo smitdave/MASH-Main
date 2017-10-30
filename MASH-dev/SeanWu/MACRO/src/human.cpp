@@ -40,9 +40,9 @@ address human::get_home_address(){
     return(home_address);
 };
 
-void human::set_home_address(patch* h, tile* b){
-    std::get<0>(home_address) = h;
-    std::get<1>(home_address) = b;
+void human::set_home_address(patch* p, tile* t){
+    std::get<0>(home_address) = p;
+    std::get<1>(home_address) = t;
 };
 
 patch* human::get_home_patch(){
@@ -57,10 +57,18 @@ address human::get_current_address(){
     return(current_address);
 };
 
-void human::set_current_address(patch* h, tile* b){
-    std::get<0>(current_address) = h;
-    std::get<1>(current_address) = b;
+void human::set_current_address(patch* p, tile* t){
+    std::get<0>(current_address) = p;
+    std::get<1>(current_address) = t;
 };
+
+void human::set_current_patch(patch* p){
+  std::get<0>(current_address) = p;
+}
+
+void human::set_current_tile(tile* t){
+  std::get<1>(current_address) = t;
+}
 
 patch* human::get_current_patch(){
     return std::get<0>(current_address);

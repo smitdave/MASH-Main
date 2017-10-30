@@ -27,13 +27,15 @@ public:
 
     // home address: my patch and tile
     address                     get_home_address();
-    void                        set_home_address(patch* h, tile* b);
+    void                        set_home_address(patch* p, tile* t);
     patch*                      get_home_patch();
     tile*                       get_home_tile();
 
     // current address: my patch and tile
     address                     get_current_address();
-    void                        set_current_address(patch* h, tile* b);
+    void                        set_current_address(patch* p, tile* t);
+    void                        set_current_patch(patch* p);
+    void                        set_current_tile(tile* t);
     patch*                      get_current_patch();
     tile*                       get_current_tile();
 
