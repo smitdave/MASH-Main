@@ -101,6 +101,12 @@ void human::add2Q_set_state(const double &tEvent, std::string state_new){
   // deferred.push_back(std::bind(&Class1::action1, this, arg1, arg2));
 };
 
+void human::fireEvent(){
+  for(auto f : event_queue){
+    f();
+  }
+};
+
 
 //debug
 void human::get_memLoc(){

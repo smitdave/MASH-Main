@@ -59,6 +59,7 @@ public:
     void                        set_pathogen(pathogen* p);
     
     // event queue
+    void                        fireEvent();
     void                        add2Q_set_state(const double &tEvent, std::string state_new);
 
 
