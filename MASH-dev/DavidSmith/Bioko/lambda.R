@@ -6,13 +6,13 @@ datlam<-data.frame(cbind(id=areadat$id, lambda=lambda, l=lambda*H/(1-p)))
 
 
 #PARAMETERS:
-f=1/3
-Q=0.95
-p=0.90
-c=0.1
+f=.3
+Q=0.9
+p=0.9
+c=0.15
 n=12
 eir=eirarea/365
-PfPR=areadat$PfPR/100
+PfPR=areadat$PfPR#/100
 H=areadat$H
 
 lambda=(eir*(1-p)*H)/(f*Q*c*PfPR)

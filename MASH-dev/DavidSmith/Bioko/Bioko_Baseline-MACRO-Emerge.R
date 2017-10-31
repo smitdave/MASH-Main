@@ -41,7 +41,7 @@ MACRO.Patch.Emerge.Setup() # 'Emerge' model
 
 # Patch Parameters:
 # Set working directory to where the bioko data is
-setwd("MASH/MASH-Main/MASH-dev/DavidSmith/Bioko/")
+#setwd("MASH/MASH-Main/MASH-dev/DavidSmith/Bioko/")
 biokoPOP <- read.csv("bioko_areas.csv")
 # load in PfPR for bioko island
 biokoPFPR <- read.csv("pfprmap_area_CAGcorrectNA.csv")
