@@ -89,11 +89,13 @@ public:
     void                        set_pathogen(pathogen* p);
 
     // event queue
-    void                        fireEvent();
-    void                        add2Q_set_state(const double &tEvent, std::string state_new);
+    void                        fireEventTest();
+    void                        add2Q_set_stateTest(const double &tEvent, std::string state_new);
 
     void                        addEvent2Q(const event &e);
     void                        rmTagFromQ(const std::string &tag);
+    void                        fireEvent();
+    void                        printEventQ();
 
 
     void                        get_memLoc();

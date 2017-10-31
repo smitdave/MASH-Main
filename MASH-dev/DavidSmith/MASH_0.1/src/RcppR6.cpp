@@ -10,7 +10,7 @@ Rcpp::List HumanEventQ__firstEvent(MASH::RcppR6::RcppR6<MASH::HumanEventQ> obj_)
   return obj_->firstEvent();
 }
 // [[Rcpp::export]]
-int HumanEventQ__firstTime(MASH::RcppR6::RcppR6<MASH::HumanEventQ> obj_) {
+double HumanEventQ__firstTime(MASH::RcppR6::RcppR6<MASH::HumanEventQ> obj_) {
   return obj_->firstTime();
 }
 // [[Rcpp::export]]

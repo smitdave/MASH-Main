@@ -39,7 +39,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // HumanEventQ__firstTime
-int HumanEventQ__firstTime(MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> obj_);
+double HumanEventQ__firstTime(MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> obj_);
 RcppExport SEXP _MASHcpp_HumanEventQ__firstTime(SEXP obj_SEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

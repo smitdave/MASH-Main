@@ -27,16 +27,16 @@ void testHuman(){
   std::cout << "human 1 id: " << h->get_id() << std::endl;
   h->set_state("state1");
   std::cout << "human 1 state: " << h->get_state() << std::endl;
-  h->add2Q_set_state(1.00,"state2");
-  h->fireEvent();
+  h->add2Q_set_stateTest(1.00,"state2");
+  h->fireEventTest();
   std::cout << "human 1 state: " << h->get_state() << std::endl;
   
   human* h1 = new human(2);
   std::cout << "human 2 id: " << h1->get_id() << std::endl;
   h1->set_state("state53");
   std::cout << "human 2 state: " << h1->get_state() << std::endl;
-  h1->add2Q_set_state(1.00,"state223");
-  h1->fireEvent();
+  h1->add2Q_set_stateTest(1.00,"state223");
+  h1->fireEventTest();
   std::cout << "human 2 state: " << h1->get_state() << std::endl;
   std::cout << "human 1 state: " << h->get_state() << std::endl;
   
