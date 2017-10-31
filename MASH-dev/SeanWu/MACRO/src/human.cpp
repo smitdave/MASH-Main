@@ -1,16 +1,16 @@
 /*
  * ################################################################################
- * 
- *        __  __                          
- *       / / / /_  ______ ___  ____ _____ 
+ *
+ *        __  __
+ *       / / / /_  ______ ___  ____ _____
  *      / /_/ / / / / __ `__ \/ __ `/ __ \
  *     / __  / /_/ / / / / / / /_/ / / / /
- *    /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/ 
+ *    /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/
  *
  *    Human Class Implementation
  *    MASH Team
  *    October 2017
- * 
+ *
  * ################################################################################
  */
 
@@ -19,7 +19,8 @@
 // properties of human
 human::human(const int &id_new){
     id = id_new;
-    event_queue.reserve(100);
+    event_queue.reserve(100); // get rid of later
+    eventQ.reserve(100);
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " being born at memory location: " << this << std::endl;;
     #endif
@@ -115,14 +116,20 @@ void human::set_pathogen(pathogen* p){
     pathogen_ptr = p;
 }
 
-// event queue
+
+/*
+ * ################################################################################
+ *    Event Queue
+ * ################################################################################
+ */
+
 void human::add2Q_set_state(const double &tEvent, std::string state_new){
-  
+
   // std::function<void()> boundF = std::bind(&human::set_state,state_new);
   // std::bind(&human::set_state,state_new);
   event_queue.push_back(std::bind(&human::set_state,this,state_new));
   // event_queue.push_back()
-  
+
   // deferred.push_back(std::bind(&Class1::action1, this, arg1, arg2));
 };
 
@@ -132,8 +139,21 @@ void human::fireEvent(){
   }
 };
 
+// inline definition need to sort the queue
+inline bool compare_tEvent(const event& eventA, const event& eventB) { return eventA.tEvent < eventB.tEvent; }
 
-//debug
+void human::addEvent2Q(const event &e){
+    eventQ.push_back(e);
+    std::sort(eventQ.begin(),eventQ.end(),compare_tEvent);
+};
+
+void human::rmTagFromQ(const std::string &tag){
+    
+};
+
+
+
+// DEBUG
 void human::get_memLoc(){
     std::cout << "human " << id << " at memory location: " << this << std::endl;
 };

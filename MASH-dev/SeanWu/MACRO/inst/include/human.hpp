@@ -1,16 +1,16 @@
 /*
  * ################################################################################
- * 
- *        __  __                          
- *       / / / /_  ______ ___  ____ _____ 
+ *
+ *        __  __
+ *       / / / /_  ______ ___  ____ _____
  *      / /_/ / / / / __ `__ \/ __ `/ __ \
  *     / __  / /_/ / / / / / / /_/ / / / /
- *    /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/ 
+ *    /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/
  *
  *    Human Class Definition
  *    MASH Team
  *    October 2017
- * 
+ *
  * ################################################################################
  */
 
@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <iostream>
 #include <string>
+#include <algorithm>
 
 #include <tuple>        // for address tuple
 #include <functional>   // std::invoke
@@ -39,7 +40,7 @@ typedef std::tuple<patch*,tile*> address;       // address is a tuple of pointer
  *    Event Queue
  * ################################################################################
  */
-  
+
 // event is a struct
 typedef struct event {
   std::string           tag;            // type of the event
@@ -49,10 +50,6 @@ typedef struct event {
     tag(_tag),tEvent(_tEvent),eventF(_eventF) {};
   ~event(){};
 } event;
-
-// need to sort the queue
-inline bool compare_tEvent(const event& eventA, const event& eventB) { return eventA.tEvent < eventB.tEvent; }
-
 
 /*
  * ################################################################################
@@ -90,10 +87,13 @@ public:
     // pathogen: pathogens infecting me
     pathogen*                   get_pathogen();
     void                        set_pathogen(pathogen* p);
-    
+
     // event queue
     void                        fireEvent();
     void                        add2Q_set_state(const double &tEvent, std::string state_new);
+
+    void                        addEvent2Q(const event &e);
+    void                        rmTagFromQ(const std::string &tag);
 
 
     void                        get_memLoc();
@@ -109,9 +109,11 @@ private:
     address                     current_address;    // current address
 
     pathogen*                   pathogen_ptr;       // pathogen object
-    
-    // std::vector<event>          event_queue;
+
     std::vector<std::function<void()>> event_queue;
+
+    // actual event queue definition
+    std::vector<event>          eventQ;
 
 
 };
