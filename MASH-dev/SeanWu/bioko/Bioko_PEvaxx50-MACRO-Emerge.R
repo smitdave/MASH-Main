@@ -99,4 +99,4 @@ system.time(tile$simMacro(5*365))
 
 pfsiHist = tile$get_HumanPop()$get_PfSI_history()
 
-saveRDS(pfsiHist, sprintf(paste(DIR,"bioko_island_baseline_output_",seed,".rds", sep="")))
+saveRDS(pfsiHist, sprintf(paste(DIR,"bioko_island_50_output_",seed,".rds", sep="")))
