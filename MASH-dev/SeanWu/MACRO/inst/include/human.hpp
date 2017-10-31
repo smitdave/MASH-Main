@@ -7,7 +7,7 @@
 
 #include <tuple>        // for address tuple
 #include <functional>   // std::invoke
-#include <vector>       // for event queue (maybe change to linked-list later on)
+#include <vector>       // for event queue
 
 
 #include "DEBUG.hpp"
@@ -27,7 +27,6 @@ typedef struct event {
     tag(_tag),tEvent(_tEvent),eventF(_eventF) {};
   ~event(){};
 } event;
-
 
 
 class human {
@@ -62,6 +61,7 @@ public:
     // event queue
     void                        add2Q_set_state(const double &tEvent, std::string state_new);
 
+
     void                        get_memLoc();
 
 private:
@@ -77,6 +77,7 @@ private:
     
     // std::vector<event>          event_queue;
     std::vector<std::function<void()>> event_queue;
+
 
 };
 
