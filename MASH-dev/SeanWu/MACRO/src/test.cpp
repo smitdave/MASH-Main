@@ -4,6 +4,20 @@
 
 using namespace Rcpp;
 
+void f(int a){
+  std::cout << "function f has integer a: " << a << std::endl;
+};
+
+//'@export
+// [[Rcpp::export]]
+void testEventQueue(){
+  
+  std::vector<event> eventQ; 
+  event anEvent = event("hi",100,std::bind(f,5));
+  eventQ.push_back(anEvent);
+  
+  eventQ[0].eventF();
+};
 
 
 //'@export

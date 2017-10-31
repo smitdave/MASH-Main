@@ -1,3 +1,19 @@
+/*
+ * ################################################################################
+ * 
+ *        __  __                          
+ *       / / / /_  ______ ___  ____ _____ 
+ *      / /_/ / / / / __ `__ \/ __ `/ __ \
+ *     / __  / /_/ / / / / / / /_/ / / / /
+ *    /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/ 
+ *
+ *    Human Class Definition
+ *    MASH Team
+ *    October 2017
+ * 
+ * ################################################################################
+ */
+
 #ifndef human_hpp
 #define human_hpp
 
@@ -17,6 +33,12 @@ class tile;             // forward declare tile
 class pathogen;         // forward declare pathogen
 
 typedef std::tuple<patch*,tile*> address;       // address is a tuple of pointers
+
+/*
+ * ################################################################################
+ *    Event Queue
+ * ################################################################################
+ */
   
 // event is a struct
 typedef struct event {
@@ -28,6 +50,15 @@ typedef struct event {
   ~event(){};
 } event;
 
+// need to sort the queue
+inline bool compare_tEvent(const event& eventA, const event& eventB) { return eventA.tEvent < eventB.tEvent; }
+
+
+/*
+ * ################################################################################
+ *    Human Class
+ * ################################################################################
+ */
 
 class human {
 public:
@@ -39,6 +70,8 @@ public:
     void                        set_state(const std::string &state_new);
     bool                        get_inf();
     void                        set_inf(const bool &i);
+    bool                        get_alive();
+    void                        set_alive(const bool &a);
 
     // home address: my patch and tile
     address                     get_home_address();
@@ -70,6 +103,7 @@ private:
     int                         id;                 // id
     std::string                 state;              // my life state
     bool                        inf;                // my infection status
+    bool                        alive;
 
     address                     home_address;       // home address
     address                     current_address;    // current address

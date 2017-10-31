@@ -1,3 +1,19 @@
+/*
+ * ################################################################################
+ * 
+ *        __  __                          
+ *       / / / /_  ______ ___  ____ _____ 
+ *      / /_/ / / / / __ `__ \/ __ `/ __ \
+ *     / __  / /_/ / / / / / / /_/ / / / /
+ *    /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/ 
+ *
+ *    Human Class Implementation
+ *    MASH Team
+ *    October 2017
+ * 
+ * ################################################################################
+ */
+
 #include "human.hpp"
 
 // properties of human
@@ -35,6 +51,15 @@ bool human::get_inf(){
 void human::set_inf(const bool &i){
     inf = i;
 };
+
+bool human::get_alive(){
+  return alive;
+};
+
+void human::set_alive(const bool &a){
+  alive = a;
+};
+
 
 
 // address
