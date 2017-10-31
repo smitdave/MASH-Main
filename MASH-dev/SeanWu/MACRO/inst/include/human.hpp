@@ -18,38 +18,17 @@ class pathogen;         // forward declare pathogen
 
 typedef std::tuple<patch*,tile*> address;       // address is a tuple of pointers
   
-// // event struct
-// typedef struct event {
-//   // parameters
-//   double tEvent;                  // time the event will fire
-//   std::string tag;                // what event it is
-//   // std::function<void()> event;           
-//   // constructor
-//   event(const double &_tEvent, 
-//         const std::string &_tag,
-//         std::function<void()> _event) : tEvent(_tEvent), tag(_tag), event(_event) {};
-//   // destructor
-//   ~event(){};
-// } event;
-
+// event is a struct
 typedef struct event {
-  
-  double tEvent;
-  std::string tag;
-  std::function<void()> event;
-  
-  event(double _tEvent, std::string _tag): tEvent(_tEvent), tag(_tag) {}
+  std::string           tag;            // type of the event
+  double                tEvent;         // time event will fire
+  std::function<void()> eventF;         // bound function with parameters
+  event(std::string _tag, double _tEvent, std::function<void()> _eventF):
+    tag(_tag),tEvent(_tEvent),eventF(_eventF) {};
   ~event(){};
-  
 } event;
 
-typedef struct Control{
-  char key;
-  std::function<void()> press;
-  std::function<void()> release;
-  Control(char _key, std::function<void()> _press, std::function<void()> _release):
-    key(_key),press(_press),release(_release){}
-} Control;
+
 
 class human {
 public:
@@ -81,7 +60,7 @@ public:
     void                        set_pathogen(pathogen* p);
     
     // event queue
-    void                        add2Q_set_state(const double &tEvent, const std::string &state_new);
+    void                        add2Q_set_state(const double &tEvent, std::string state_new);
 
     void                        get_memLoc();
 
@@ -96,7 +75,8 @@ private:
 
     pathogen*                   pathogen_ptr;       // pathogen object
     
-    std::vector<event>          event_queue;
+    // std::vector<event>          event_queue;
+    std::vector<std::function<void()>> event_queue;
 
 };
 

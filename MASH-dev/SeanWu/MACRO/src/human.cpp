@@ -91,12 +91,12 @@ void human::set_pathogen(pathogen* p){
 }
 
 // event queue
-void human::add2Q_set_state(const double &tEvent, const std::string &state_new){
+void human::add2Q_set_state(const double &tEvent, std::string state_new){
   
-  // event_queue.push_back(
-  //   event(  )
-  // );
-  // 
+  // std::function<void()> boundF = std::bind(&human::set_state,state_new);
+  // std::bind(&human::set_state,state_new);
+  event_queue.push_back(std::bind(&human::set_state,this,state_new));
+  // event_queue.push_back()
   
   // deferred.push_back(std::bind(&Class1::action1, this, arg1, arg2));
 };
