@@ -4,6 +4,10 @@
 
 ### MACRO:
 * Support initial simulations on Bioko Island data through bugfixes.
+  * Recommended Bug Fixes, from DTCitron (10/31/17)
+  * When PfSI.Parameters() is called, does this automatically revert to the hard-coded parameter values?  Can we change this to allow users to view the parameters without re-writing the hard-coded values?
+  * Double-queueing of (P)rophylaxis - it is possible for someone who is already (P)rotected to receive a second (P)rophylaxis - unclear how these two events are handled at the same time, and also makes event logging difficult
+  * Specifying a list of people to infect initially
 * See folder MACRO, it is an R package that is mostly just a wrapper for C++ code (mostly drawn from my pet project https://github.com/slwu89/InfectionSim)
 * Need to get MACRO running in C++ ASAP:
   * Need to implement PTMF for event queue (queue of pointer to memeber function; will need to use std::function and std::bind to bind function pointer and necessary arguments...need to check with a C++ guru on this).
