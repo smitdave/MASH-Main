@@ -6,6 +6,11 @@ rcpp_hello_world <- function() {
 }
 
 #'@export
+testEventQueue <- function() {
+    invisible(.Call('_MACRO_testEventQueue', PACKAGE = 'MACRO'))
+}
+
+#'@export
 testHuman <- function() {
     invisible(.Call('_MACRO_testHuman', PACKAGE = 'MACRO'))
 }

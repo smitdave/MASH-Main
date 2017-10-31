@@ -1,3 +1,19 @@
+/*
+ * ################################################################################
+ * 
+ *        __  __                          
+ *       / / / /_  ______ ___  ____ _____ 
+ *      / /_/ / / / / __ `__ \/ __ `/ __ \
+ *     / __  / /_/ / / / / / / /_/ / / / /
+ *    /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/ 
+ *
+ *    Human Class Implementation
+ *    MASH Team
+ *    October 2017
+ * 
+ * ################################################################################
+ */
+
 #include "human.hpp"
 
 // properties of human
@@ -35,6 +51,15 @@ bool human::get_inf(){
 void human::set_inf(const bool &i){
     inf = i;
 };
+
+bool human::get_alive(){
+  return alive;
+};
+
+void human::set_alive(const bool &a){
+  alive = a;
+};
+
 
 
 // address
@@ -91,11 +116,22 @@ void human::set_pathogen(pathogen* p){
 }
 
 // event queue
-void human::add2Q_set_state(const std::string &state_new){
+void human::add2Q_set_state(const double &tEvent, std::string state_new){
   
-  // event_queue.push_back([] {})
-  // q.push_back( [&x] { x.foo1(1); } );
-}
+  // std::function<void()> boundF = std::bind(&human::set_state,state_new);
+  // std::bind(&human::set_state,state_new);
+  event_queue.push_back(std::bind(&human::set_state,this,state_new));
+  // event_queue.push_back()
+  
+  // deferred.push_back(std::bind(&Class1::action1, this, arg1, arg2));
+};
+
+void human::fireEvent(){
+  for(auto f : event_queue){
+    f();
+  }
+};
+
 
 //debug
 void human::get_memLoc(){
