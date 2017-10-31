@@ -180,6 +180,11 @@ void human::printEventQ(){
   }
 };
 
+void human::add2Q_set_state(const double &tEvent, std::string s){
+  event e = event("setState",tEvent,std::bind(&human::set_state,this,s));
+  this->addEvent2Q(e);
+};
+
 
 // DEBUG
 void human::get_memLoc(){

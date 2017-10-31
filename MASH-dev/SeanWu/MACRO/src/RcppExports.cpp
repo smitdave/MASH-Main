@@ -34,11 +34,21 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// testHumanQ
+void testHumanQ();
+RcppExport SEXP _MACRO_testHumanQ() {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    testHumanQ();
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MACRO_rcpp_hello_world", (DL_FUNC) &_MACRO_rcpp_hello_world, 0},
     {"_MACRO_testEventQueue", (DL_FUNC) &_MACRO_testEventQueue, 0},
     {"_MACRO_testHuman", (DL_FUNC) &_MACRO_testHuman, 0},
+    {"_MACRO_testHumanQ", (DL_FUNC) &_MACRO_testHumanQ, 0},
     {NULL, NULL, 0}
 };
 

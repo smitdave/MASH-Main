@@ -96,8 +96,11 @@ public:
     void                        rmTagFromQ(const std::string &tag);
     void                        fireEvent();
     void                        printEventQ();
+    
+    void                        add2Q_set_state(const double &tEvent, std::string s);
+    
 
-
+    // debug
     void                        get_memLoc();
 
 private:
