@@ -91,11 +91,16 @@ void human::set_pathogen(pathogen* p){
 }
 
 // event queue
-void human::add2Q_set_state(const std::string &state_new){
+void human::add2Q_set_state(const double &tEvent, const std::string &state_new){
   
-  // event_queue.push_back([] {})
-  // q.push_back( [&x] { x.foo1(1); } );
-}
+  // event_queue.push_back(
+  //   event(  )
+  // );
+  // 
+  
+  // deferred.push_back(std::bind(&Class1::action1, this, arg1, arg2));
+};
+
 
 //debug
 void human::get_memLoc(){
