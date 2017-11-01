@@ -482,17 +482,55 @@ probability of surviving.  {\bf I can't find this function}
 \paragraph{Senescence}
 
 Senescence is defined in this model as a reduction in the
-probability of surviving each flight bout that is a function of a
-mosquito's chronological age, $a$. The function describing
-probability is $(2+sns.b)/(1+sns.b) - e^{a*sns.a}/(sns.b + e^{a*sns.a})$ 
+probability of surviving that is associated with a  mosquito's
+chronological age, $a$. In MBITES, senescence has been
+implemented as an increased probability of mortality, per bite,
+that increases with the chronological age of the mosquito when it
+takes a flight bout. The function describing
+the probability of surviving is 
 %
-<<fig=TRUE>>=
+$$\frac{2+sns.b}{1+sns.b} -
+\frac{e^{a*sns.a}}{sns.b + e^{a*sns.a}}.  
+$$ 
+%
+<<fig=TRUE, echo = FALSE>>=
 aa = seq(0,50, by=0.1) 
-senesce = function(a, sns.a=1/20, sns.b=20){
+senesce = function(a, sns.a=1/20, sns.b=40){
  (2+sns.b)/(1+sns.b) - exp(a*sns.a)/(sns.b + exp(a*sns.a)) 
 } 
-plot(aa, senesce(aa), type = "l", xlab = "Chronological Age",
-ylab = "Probability of Surviving, per bout") 
+plot(aa, 1-senesce(aa), type = "l", xlab = "Chronological Age",
+ylab = "Increased Probability of Dying, per bout") 
+@ 
+
+{\bf NOTE: overall survival vs. age is difficult to compute without simulation. 
+It would be good for the GUI to show surival of ~1,000 mosquitoes with and without senescence, 
+and to compute (and show) the average age. Something like this:}  
+
+<<fig=TRUE, echo = FALSE>>=
+
+deathday = rexp(1000, 1/12)
+deathday1 = rexp(1000, 1/12)^0.8
+
+surv = function(a, deathday){
+  ix = sum(deathday>a)/length(deathday)
+}
+
+
+dd = 1:50
+ss = unlist(sapply(dd, surv, deathday=deathday))
+ss1 = unlist(sapply(dd, surv, deathday=deathday1))
+
+par(mfrow=c(2,1))
+plot(dd, ss, type = "l", xlab = "Chronological Age (Days)", ylab = "Proportion of Cohort Surviving")
+lines(dd, ss1, col = "purple", ylim = c(0,1))
+segments(mean(deathday),1,mean(deathday),0)
+segments(mean(deathday1),1,mean(deathday1),0, col = "purple")
+plot(dd[-1], -diff(ss)/ss[-30], type = "l", xlab = "Chronological Age (Days)", ylab = "Mortality Rate", ylim = c(0,1))
+lines(dd[-1], -diff(ss1)/ss1[-30], col = "purple")
+segments(mean(deathday),1,mean(deathday),0)
+segments(mean(deathday1),1,mean(deathday1),0, col = "purple")
+
+
 @ 
 
 \paragraph{Wing Tattering}
