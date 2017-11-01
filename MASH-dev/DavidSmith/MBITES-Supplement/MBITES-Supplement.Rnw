@@ -451,8 +451,55 @@ Mosquito dispersal occurs as the result of a search bout, called by the function
 
 \subsection{Surviving the Flight}
 
+When \verb1surviveFlight()1 is called, a random number is drawn
+to determine whether the mosquito survived the stress associated
+with flight. The function is called from {\bf
+MBITES-GenericSurvival.R} and at the moment, it looks like this: 
+%
+<<>>=
+mbitesGeneric_surviveFlight <- function(){
+  if(self$isActive()){
+    p = self$get_surviveFlightProb()
+    if(private$FemalePopPointer$get_MBITES_PAR("TATTER")){
+      private$damage = private$damage + self$WingTattering()
+      p = p * self$pTatter()
+    }
+    if(private$FemalePopPointer$get_MBITES_PAR("SENESCE")){
+      p = p * self$pSenesce()
+    }
+    if(runif(1) < 1-p){
+      private$stateNew = "D"
+    }
+  }
+}
+@
 
-This discusses implementation and options for \verb1surviveFlight()1. 
+\paragraph{Baseline Survival} 
+
+The function \verb1get_surviveFlightProb()1 returns the
+probability of surviving.  {\bf I can't find this function}   
+ 
+\paragraph{Senescence}
+
+Senescence is defined in this model as a reduction in the
+probability of surviving each flight bout that is a function of a
+mosquito's chronological age, $a$. The function describing
+probability is $$senesce(a) = \frac{2+sns.b}{1+sns.b} - \frac{e^{a*sns.a}}{sns.b + e^{a*sns.a}}.$$
+For $sns.a = 1/80$ and $sns.b = 20$, the function looks like this: 
+
+%
+<<fig=TRUE, echo = FALSE>>=
+aa = seq(0,100, by=0.1) 
+senesce = function(a, sns.a=1/80, sns.b=20){
+ (2+sns.b)/(1+sns.b) - exp(a*sns.a)/(sns.b + exp(a*sns.a)) 
+} 
+plot(aa, senesce(aa), type = "l", xlab = "Chronological Age (Days)",
+ylab = "Probability of Surviving, per bout") 
+@ 
+
+{\bf NOTE:} Because of the complexity of MBITES, it's hard to write down the equation that does survivorship vs. age, but in the GUI, it would be useful if we could quickly simulate a thousand individuals and plot survival for a cohort with and without senescence.} 
+
+\paragraph{Wing Tattering}
 
 \subsection{Resting Hazards}
 
@@ -483,9 +530,6 @@ mbites_restingSpot <- function(){
 
 \subsection{The Blood Meal}
 
-\subsection{Senescence}
-
-\subsection{Wing Tattering}
 
 \subsection{Time to Event} 
 

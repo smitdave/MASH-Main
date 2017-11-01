@@ -10,46 +10,46 @@
 
 \section{Supplementary Methods: MBITES-de}
 
-Let the behavioral state variable name from MBITES denote the expected number of mosquitoes of a given chronological age ($a$), that are in each behavioral state. Similarly, let the waiting times to events be modeled as a rate that is dependent on the behavioral state ($x$), age, and time ($t$): $\gamma_x(a,t)$. The proportion of mosquitoes that transition from state $x$ to state $y$ at the end of a bout is denoted $P_{xy}$. Death rates can be age dependent (\ie due to senescence), which affects the proportions transitioning to other states, so we write $P_{xy}(a)$. To deal with the event-driven nature of these bouts and the possibility some bouts may be repeated many times before transitioning to another state, we index mosquitoes by the $i^{th}$ attempt to repeat the same event as a way of computing waiting times properly; for example, a mosquito repeating a blood feeding attempt bout transitions from $B_n(a)$ to $B_{n+1}(a)$. Finally, we let $\Lambda(t)$ represent the rate of emergence of adult female mosquitoes. The following system of coupled PDEs is homologous to MBITES: 
+Let the behavioral state variable name from MBITES denote the expected number of mosquitoes of a given chronological age ($a$), that are in each behavioral state. Similarly, let the waiting times to events be modeled as a rate that is dependent on the behavioral state ($x$), age, and time ($t$): $\xi_x(a,t)$. The proportion of mosquitoes that transition from state $x$ to state $y$ at the end of a bout is denoted $P_{xy}$. Death rates can be age dependent (\ie due to senescence), which affects the proportions transitioning to other states, so we write $P_{xy}(a)$. To deal with the event-driven nature of these bouts and the possibility some bouts may be repeated many times before transitioning to another state, we index mosquitoes by the $i^{th}$ attempt to repeat the same event as a way of computing waiting times properly; for example, a mosquito repeating a blood feeding attempt bout transitions from $B_n(a)$ to $B_{n+1}(a)$. Finally, we let $\Lambda(t)$ represent the rate of emergence of adult female mosquitoes. The following system of coupled PDEs is homologous to MBITES: 
 
 \begin{equation}\begin{array}{rl}
 F_1(0,t)=& \Lambda(t) \\ &\\
 %
 \frac{\partial F_1(a,t)}{\partial t} + \frac{\partial F_1(a,t)}{\partial a} =& 
-\gamma_O(a,t) P_{OF}(a) \sum_i O_i(a,t) 
-+ \gamma_B(a,t) P_{BF}(a)  \sum_i B_i(a,t) \\&
-+ \gamma_R(a,t) P_{RF}(a) R(a,t) 
-- \gamma_F(a,t) F_1(a,t) \\ &\\
+\xi_O(a,t) P_{OF}(a) \sum_i O_i(a,t) 
++ \xi_B(a,t) P_{BF}(a)  \sum_i B_i(a,t) \\&
++ \xi_R(a,t) P_{RF}(a) R(a,t) 
+- \xi_F(a,t) F_1(a,t) \\ &\\
 %
-\frac{\partial F_i(a,t)}{\partial t} + \frac{\partial F_i(a,t)}{\partial a} =& \gamma_F(a,t) P_{FF}(a) F_{i-1} (a,t) - \gamma_F(a,t) F_i(a,t) \\ &\\
+\frac{\partial F_i(a,t)}{\partial t} + \frac{\partial F_i(a,t)}{\partial a} =& \xi_F(a,t) P_{FF}(a) F_{i-1} (a,t) - \xi_F(a,t) F_i(a,t) \\ &\\
 %
 %
 \frac{\partial B_1(a,t)}{\partial t} + \frac{\partial B_1(a,t)}{\partial a} =&  
-\gamma_O(a,t) P_{OB}(a) \sum_i O_i(a,t) 
-+ \gamma_F(a,t) P_{FB}(a) \sum_i F_i(a,t)\\& 
-+ \gamma_R(a,t) P_{RB}(a) R(a,t)
+\xi_O(a,t) P_{OB}(a) \sum_i O_i(a,t) 
++ \xi_F(a,t) P_{FB}(a) \sum_i F_i(a,t)\\& 
++ \xi_R(a,t) P_{RB}(a) R(a,t)
 \\&
-- \gamma_B(a,t) B_1(a,t) \\ &\\
+- \xi_B(a,t) B_1(a,t) \\ &\\
 %
-\frac{\partial B_i(a,t)}{\partial t} + \frac{\partial B_i(a,t)}{\partial a} =& \gamma_B(a,t) P_{BB}(a) B_{i-1}(a,t) -
-\gamma_B(a,t) B_i(a,t) 
+\frac{\partial B_i(a,t)}{\partial t} + \frac{\partial B_i(a,t)}{\partial a} =& \xi_B(a,t) P_{BB}(a) B_{i-1}(a,t) -
+\xi_B(a,t) B_i(a,t) 
 \\&\\
 %
-\frac{\partial R(a,t)}{\partial t} + \frac{\partial R(a,t)}{\partial a} =&  \gamma_B(a,t) P_{BR}(a) \sum_i B_i(a,t) - \gamma_R(a,t) R(a,t)\\ &\\
+\frac{\partial R(a,t)}{\partial t} + \frac{\partial R(a,t)}{\partial a} =&  \xi_B(a,t) P_{BR}(a) \sum_i B_i(a,t) - \xi_R(a,t) R(a,t)\\ &\\
 %
-\frac{\partial L_1(a,t)}{\partial t} + \frac{\partial L_1(a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R(a,t) + 
-\gamma_O(a,t) P_{OL}(a) \sum_i O_i(a,t)\\& - \gamma_L(a,t) L_1(a,t)
+\frac{\partial L_1(a,t)}{\partial t} + \frac{\partial L_1(a,t)}{\partial a} =& \xi_R(a,t) P_{RL}(a) R(a,t) + 
+\xi_O(a,t) P_{OL}(a) \sum_i O_i(a,t)\\& - \xi_L(a,t) L_1(a,t)
 \\ &\\
 %
-\frac{\partial L_i(a,t)}{\partial t} + \frac{\partial L_i(a,t)}{\partial a} =& \gamma_L(a,t) P_{LL}(a) L_{i-1} (a,t) - \gamma_L(a,t) L_i(a,t)
+\frac{\partial L_i(a,t)}{\partial t} + \frac{\partial L_i(a,t)}{\partial a} =& \xi_L(a,t) P_{LL}(a) L_{i-1} (a,t) - \xi_L(a,t) L_i(a,t)
 \\ &\\
 %
-\frac{\partial O_1(a,t)}{\partial t} + \frac{\partial O_1(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) \sum_i L_i(a,t) 
-+ \gamma_R(a,t) P_{RO}(a) R(a,t) \\&
-- \gamma_O(a,t) O_1(a,t)
+\frac{\partial O_1(a,t)}{\partial t} + \frac{\partial O_1(a,t)}{\partial a} =& \xi_L(a,t) P_{LO}(a) \sum_i L_i(a,t) 
++ \xi_R(a,t) P_{RO}(a) R(a,t) \\&
+- \xi_O(a,t) O_1(a,t)
 \\ &\\
 %
-\frac{\partial O_i(a,t)}{\partial t} + \frac{\partial O_i(a,t)}{\partial a} =& \gamma_O(a,t) P_{OO}(a) O_{i-1} (a,t)   - \gamma_O(a,t) O_i(a,t)
+\frac{\partial O_i(a,t)}{\partial t} + \frac{\partial O_i(a,t)}{\partial a} =& \xi_O(a,t) P_{OO}(a) O_{i-1} (a,t)   - \xi_O(a,t) O_i(a,t)
 \\ 
 %
 \end{array}\end{equation}
@@ -57,12 +57,13 @@ F_1(0,t)=& \Lambda(t) \\ &\\
 It is a nuisance to deal with an infinite set of equations, but
 if the state transitions are Markovian, then a change of
 variables to lump the the $n^{th}$ states together: $x = \sum_i
-x_i$. <John's cool proof>.  
+x_i$, with a rescaled rate variable, $\gamma_x(a,t) =
+\xi(a,t) (1-P_{xx})$   
 
-After rescaling, the leaving times from $\gamma_X(a,t)
-\left(1-P_{XX}\left(a,t\right)\right).$ 
+<Insert John's cool proof>.  
 
-This means we can rewrite the infinite system of equations as a simpler set:
+This means we can rewrite the infinite system of equations as a
+set of 5 differential equations: 
 %
 \begin{equation}\begin{array}{rl}
 F_o(0,t) =& \Lambda(t) \\ 
@@ -73,14 +74,14 @@ F_o(0,t) =& \Lambda(t) \\
 + \gamma_B(a,t) P_{BF}(a) B(a,t) \\&
  + \gamma_R(a,t) P_{RF}(a) R(a,t)
 + \gamma_F(a,t) P_{FF}(a) F_e(a,t) \\ &
-- \gamma_F(a,t) \left( 1-P_{FF}(a) \right) F(a,t) \\ 
+- \gamma_F(a,t) F(a,t) \\ 
 %
 %
 &\\
 \frac{\partial B(a,t)}{\partial t} + \frac{\partial B_o(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O(a,t) + \gamma_F(a,t) P_{FB}(a) F(a,t) \\ & 
 + \gamma_R(a,t) P_{RB}(a) R(a,t) 
 + \gamma_B(a,t) P_{BB}(a) B_e(a,t)\\ & 
-- \gamma_B(a,t) \left( 1-P_{BB}(a) \right) B(a,t) \\ 
+- \gamma_B(a,t) B(a,t) \\ 
 %
 &\\
 \frac{\partial R(a,t)}{\partial t} + \frac{\partial R(a,t)}{\partial a} =&  \gamma_B(a,t) P_{BR}(a) B(a,t) - \gamma_R(a,t) R(a,t)\\ 
@@ -89,7 +90,7 @@ F_o(0,t) =& \Lambda(t) \\
 \frac{\partial L(a,t)}{\partial t} + \frac{\partial L(a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R(a,t) + 
 \gamma_O(a,t) P_{OL}(a) O(a,t) \\&
 + \gamma_L(a,t)  P_{LL}(a) L_e(a,t)
-- \gamma_L(a,t) \left( 1-P_{LL}(a) \right)  L(a,t)
+- \gamma_L(a,t)   L(a,t)
 \\ 
 %
 &\\
@@ -97,7 +98,7 @@ F_o(0,t) =& \Lambda(t) \\
 + \gamma_R(a,t) P_{RO}(a) R(a,t)  
 \\&
 + \gamma_O(a,t) P_{OO}(a) O_e(a,t)
-- \gamma_O(a,t) \left( 1-P_{OO}(a) \right) O_o(a,t)
+- \gamma_O(a,t)  O_o(a,t)
 
 %
 \end{array}\end{equation}
@@ -106,6 +107,7 @@ F_o(0,t) =& \Lambda(t) \\
 \subsection{The MBITES-de for Cohorts}
 
 Finally, we want a version of these equations to model changes in a cohort of individuals with respect to age (assuming all the mosquitoes emerge from aquatic habitats at the same time of day): 
+%
 \begin{equation}\begin{array}{rcl}
 F_o(0) &=& 1 \\ 
 %
