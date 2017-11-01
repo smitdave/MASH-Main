@@ -15,3 +15,8 @@ testHuman <- function() {
     invisible(.Call('_MACRO_testHuman', PACKAGE = 'MACRO'))
 }
 
+#'@export
+testHumanQ <- function() {
+    invisible(.Call('_MACRO_testHumanQ', PACKAGE = 'MACRO'))
+}
+

@@ -16,7 +16,13 @@
 
 #include "human.hpp"
 
-// properties of human
+
+/*
+ * ################################################################################
+ *    Constructor & Destructor
+ * ################################################################################
+ */
+
 human::human(const int &id_new){
     id = id_new;
     event_queue.reserve(100); // get rid of later
@@ -63,7 +69,12 @@ void human::set_alive(const bool &a){
 
 
 
-// address
+/*
+ * ################################################################################
+ *    Address
+ * ################################################################################
+ */
+
 address human::get_home_address(){
     return(home_address);
 };
@@ -106,7 +117,13 @@ tile* human::get_current_tile(){
     return std::get<1>(current_address);
 };
 
-// pathogen
+
+/*
+ * ################################################################################
+ *    Pathogen
+ * ################################################################################
+ */
+
 pathogen* human::get_pathogen(){
     return(pathogen_ptr);
 }
@@ -123,7 +140,7 @@ void human::set_pathogen(pathogen* p){
  * ################################################################################
  */
 
-void human::add2Q_set_state(const double &tEvent, std::string state_new){
+void human::add2Q_set_stateTest(const double &tEvent, std::string state_new){
 
   // std::function<void()> boundF = std::bind(&human::set_state,state_new);
   // std::bind(&human::set_state,state_new);
@@ -133,7 +150,7 @@ void human::add2Q_set_state(const double &tEvent, std::string state_new){
   // deferred.push_back(std::bind(&Class1::action1, this, arg1, arg2));
 };
 
-void human::fireEvent(){
+void human::fireEventTest(){
   for(auto f : event_queue){
     f();
   }
@@ -148,9 +165,32 @@ void human::addEvent2Q(const event &e){
 };
 
 void human::rmTagFromQ(const std::string &tag){
-    
+    eventQ.erase(std::remove_if(
+      eventQ.begin(),eventQ.end(),
+      [tag](const event& e){
+        return(tag.compare(e.tag)==0);
+      }
+    ));
 };
 
+void human::fireEvent(){
+  eventQ.front().eventF();
+  eventQ.erase(eventQ.begin());
+};
+
+void human::printEventQ(){
+  std::cout << "printing event queue for human: " << id << std::endl;
+  for(auto it = eventQ.begin(); it != eventQ.end(); it++){
+    std::cout << "tag: " << (*it).tag << std::endl;
+    std::cout << "tEvent: " << (*it).tEvent << std::endl;
+  }
+};
+
+void human::add2Q_set_state(const double &tEvent, std::string s){
+  this->addEvent2Q(
+    event("setState",tEvent,std::bind(&human::set_state,this,s))
+  );
+};
 
 
 // DEBUG

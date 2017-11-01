@@ -32,7 +32,7 @@ public:
   };
 
   // return time of first event
-  int firstTime(){
+  double firstTime(){
     return(EventQ[0]["tEvent"]);
   };
 
