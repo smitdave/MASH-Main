@@ -64,6 +64,7 @@ bioko$pop <- PopM + PopF
 
 nPatch = nrow(bioko) #nPatch = 10
 
+lambda = 
 # Set up tile parameters
 ll <- 50*2^10
 tileParameters = MACRO.Tile.Parameters(N = nPatch,
