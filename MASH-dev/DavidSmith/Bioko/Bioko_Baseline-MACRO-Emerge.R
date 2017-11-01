@@ -56,8 +56,8 @@ bioko <- merge(biokoPOP, biokoPFPR, by = "areaId", all =FALSE)
 #bioko <- merge(bioko, malabo, by = "areaId", all = FALSE)
 
 # Adjust the population by a factor of 10
-PopM <- ceiling(bioko$popm/10)
-PopF <- ceiling(bioko$popf/10)
+PopM <- ceiling(bioko$popm/100)
+PopF <- ceiling(bioko$popf/100)
 bioko$popm <- PopM
 bioko$popf <- PopF
 bioko$pop <- PopM + PopF
@@ -65,8 +65,9 @@ bioko$pop <- PopM + PopF
 nPatch = nrow(bioko) #nPatch = 10
 
 # Set up tile parameters
+ll <- 50*2^10
 tileParameters = MACRO.Tile.Parameters(N = nPatch,
-                                       aquaModule = "emerge", aquaPars = list(N=nPatch,lambda=rep(50,nPatch)),
+                                       aquaModule = "emerge", aquaPars = list(N=nPatch,lambda=rep(ll,nPatch)),
                                        pathogenModule = "PfSI")
 # Manually set tile parameters using hte bioko data
 popTotal <- sum(bioko$pop[1:nPatch])
