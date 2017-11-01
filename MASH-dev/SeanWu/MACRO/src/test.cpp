@@ -70,3 +70,4 @@ void testHumanQ(){
   delete h1;
   delete h2;
 }
+

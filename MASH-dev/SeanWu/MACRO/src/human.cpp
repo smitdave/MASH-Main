@@ -16,7 +16,13 @@
 
 #include "human.hpp"
 
-// properties of human
+
+/*
+ * ################################################################################
+ *    Constructor & Destructor
+ * ################################################################################
+ */
+
 human::human(const int &id_new){
     id = id_new;
     event_queue.reserve(100); // get rid of later
@@ -181,8 +187,9 @@ void human::printEventQ(){
 };
 
 void human::add2Q_set_state(const double &tEvent, std::string s){
-  event e = event("setState",tEvent,std::bind(&human::set_state,this,s));
-  this->addEvent2Q(e);
+  this->addEvent2Q(
+    event("setState",tEvent,std::bind(&human::set_state,this,s))
+  );
 };
 
 

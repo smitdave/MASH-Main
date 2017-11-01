@@ -14,8 +14,8 @@
  * ################################################################################
  */
 
-#ifndef human_hpp
-#define human_hpp
+#ifndef HUMAN_HPP
+#define HUMAN_HPP
 
 #include <stdio.h>
 #include <iostream>
@@ -26,9 +26,11 @@
 #include <functional>   // std::invoke
 #include <vector>       // for event queue
 
+#include <RcppGSL.h>
 
 #include "DEBUG.hpp"
 
+// forward declarations
 class patch;            // forward declare patch
 class tile;             // forward declare tile
 class pathogen;         // forward declare pathogen
@@ -62,6 +64,7 @@ public:
     human(const int &id_new);
     ~human();
 
+    // basic information
     int                         get_id();
     std::string                 get_state();
     void                        set_state(const std::string &state_new);
@@ -89,9 +92,6 @@ public:
     void                        set_pathogen(pathogen* p);
 
     // event queue
-    void                        fireEventTest();
-    void                        add2Q_set_stateTest(const double &tEvent, std::string state_new);
-
     void                        addEvent2Q(const event &e);
     void                        rmTagFromQ(const std::string &tag);
     void                        fireEvent();
@@ -102,6 +102,8 @@ public:
 
     // debug
     void                        get_memLoc();
+    void                        fireEventTest();
+    void                        add2Q_set_stateTest(const double &tEvent, std::string state_new);
 
 private:
 
@@ -115,15 +117,13 @@ private:
 
     pathogen*                   pathogen_ptr;       // pathogen object
 
+    std::vector<event>          eventQ;             // event queue
+
+    // debug
     std::vector<std::function<void()>> event_queue;
-
-    // actual event queue definition
-    std::vector<event>          eventQ;
-
-
 };
 
 
 
 
-#endif /* human_hpp */
+#endif /* HUMAN_HPP */
