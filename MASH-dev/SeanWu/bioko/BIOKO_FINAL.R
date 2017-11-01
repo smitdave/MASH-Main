@@ -31,7 +31,7 @@ library(MASH)
 # BASELINE: NO VAXX
 ##################################################################################################################################
 
-seed = 42
+seed = 43
 set.seed(seed)
 
 # initialize classes for MACRO
@@ -45,13 +45,15 @@ SimBitePfSI.Setup()
 # MACRO Patch initialization
 MACRO.Patch.Emerge.Setup() # 'Emerge' model
 
-# Patch Parameters:
-# Set working directory to where the bioko data is
+# Patch Parameters
+# Let's start figuring out how to load in our population data for bioko island
 biokoPOP <- read.csv(paste0(DIR_DAVE,"bioko_areas.csv"))
 # load in PfPR for bioko island
-biokoPFPR <- read.csv(paste0(DIR_DAVE,"pfprmap_area_CAGcorrectNA.csv"))
-# Merge the two data sets on the areaIds
-bioko <- merge(biokoPOP, biokoPFPR, by = "areaId", all =FALSE)
+#biokoPFPR <- read.csv("pfprmap_area_CAGcorrectNA.csv")
+# load in Lambda values for bioko island
+biokoLambda <- read.csv(paste0(DIR_DAVE,"data_area.csv"))
+# Merge the two three sets on the areaIds - also has the pfpr values
+bioko <- merge(biokoPOP, biokoLambda, by = "areaId", all =FALSE)
 
 # Try running this with only the Malabo patches
 #malabo <- c(212, 218, 219, 220, 271, 272, 273, 274, 275, 276, 277, 278, 279, 330, 331, 332, 333, 334,
@@ -67,11 +69,11 @@ bioko$popm <- PopM
 bioko$popf <- PopF
 bioko$pop <- PopM + PopF
 
-nPatch = nrow(bioko) #nPatch = 10
+nPatch = nrow(bioko)
 
 # Set up tile parameters
 tileParameters = MACRO.Tile.Parameters(N = nPatch,
-                                       aquaModule = "emerge", aquaPars = list(N=nPatch,lambda=rep(50,nPatch)),
+                                       aquaModule = "emerge", aquaPars = list(N=nPatch, lambda=bioko$lambda[1:nPatch]),
                                        pathogenModule = "PfSI")
 # Manually set tile parameters using hte bioko data
 popTotal <- sum(bioko$pop[1:nPatch])
@@ -98,11 +100,12 @@ tile$init_PfSI(PfPR = PfPR)
 #tile$get_HumanPop()$queueVaccination_SimBitePfSI(tVaccine = (365*1),tTreat = (365*1)+1,fracPop = 0.75)
 
 # Simulate for 5 years, see how long that takes
-system.time(tile$simMacro(5*365))
+system.time(tile$simMacro(365*4))
 
 pfsiHist = tile$get_HumanPop()$get_PfSI_history()
 
-saveRDS(pfsiHist, sprintf(paste(DIR_SEAN,"bioko_island_baseline_output_",seed,".rds", sep="")))
+saveRDS(pfsiHist,paste0(DIR_SEAN,"bioko_island_baseline_output_",seed,".rds"))
+
 
 
 ##################################################################################################################################
@@ -110,11 +113,10 @@ saveRDS(pfsiHist, sprintf(paste(DIR_SEAN,"bioko_island_baseline_output_",seed,".
 ##################################################################################################################################
 
 rm(list=ls());gc()
-
 DIR_SEAN = "/Users/slwu89/Desktop/MASH-Main/MASH-dev/SeanWu/bioko/"
 DIR_DAVE = "/Users/slwu89/Desktop/MASH-Main/MASH-dev/DavidSmith/Bioko/"
 
-seed = 42
+seed = 43
 set.seed(seed)
 
 # initialize classes for MACRO
@@ -128,14 +130,15 @@ SimBitePfSI.Setup()
 # MACRO Patch initialization
 MACRO.Patch.Emerge.Setup() # 'Emerge' model
 
-# Patch Parameters:
-# Set working directory to where the bioko data is
-# setwd("~/MASH/MASH-Main/MASH-dev/DavidSmith/Bioko")
+# Patch Parameters
+# Let's start figuring out how to load in our population data for bioko island
 biokoPOP <- read.csv(paste0(DIR_DAVE,"bioko_areas.csv"))
 # load in PfPR for bioko island
-biokoPFPR <- read.csv(paste0(DIR_DAVE,"pfprmap_area_CAGcorrectNA.csv"))
-# Merge the two data sets on the areaIds
-bioko <- merge(biokoPOP, biokoPFPR, by = "areaId", all =FALSE)
+#biokoPFPR <- read.csv("pfprmap_area_CAGcorrectNA.csv")
+# load in Lambda values for bioko island
+biokoLambda <- read.csv(paste0(DIR_DAVE,"data_area.csv"))
+# Merge the two three sets on the areaIds - also has the pfpr values
+bioko <- merge(biokoPOP, biokoLambda, by = "areaId", all =FALSE)
 
 # Try running this with only the Malabo patches
 #malabo <- c(212, 218, 219, 220, 271, 272, 273, 274, 275, 276, 277, 278, 279, 330, 331, 332, 333, 334,
@@ -151,11 +154,11 @@ bioko$popm <- PopM
 bioko$popf <- PopF
 bioko$pop <- PopM + PopF
 
-nPatch = nrow(bioko) #nPatch = 10
+nPatch = nrow(bioko)
 
 # Set up tile parameters
 tileParameters = MACRO.Tile.Parameters(N = nPatch,
-                                       aquaModule = "emerge", aquaPars = list(N=nPatch,lambda=rep(50,nPatch)),
+                                       aquaModule = "emerge", aquaPars = list(N=nPatch, lambda=bioko$lambda[1:nPatch]),
                                        pathogenModule = "PfSI")
 # Manually set tile parameters using hte bioko data
 popTotal <- sum(bioko$pop[1:nPatch])
@@ -182,23 +185,22 @@ tile$init_PfSI(PfPR = PfPR)
 tile$get_HumanPop()$queueVaccination_SimBitePfSI(tVaccine = (365*1),tTreat = (365*1)+1,fracPop = 0.5)
 
 # Simulate for 5 years, see how long that takes
-system.time(tile$simMacro(5*365))
+system.time(tile$simMacro(365*4))
 
 pfsiHist = tile$get_HumanPop()$get_PfSI_history()
 
-saveRDS(pfsiHist, sprintf(paste(DIR_SEAN,"bioko_island_pevaxx_50_output_",seed,".rds", sep="")))
+saveRDS(pfsiHist,paste0(DIR_SEAN,"bioko_island_pevaxx_50_output_",seed,".rds"))
+
 
 ##################################################################################################################################
 # VAXX: 90%
 ##################################################################################################################################
 
 rm(list=ls());gc()
-
 DIR_SEAN = "/Users/slwu89/Desktop/MASH-Main/MASH-dev/SeanWu/bioko/"
 DIR_DAVE = "/Users/slwu89/Desktop/MASH-Main/MASH-dev/DavidSmith/Bioko/"
 
-
-seed = 42
+seed = 43
 set.seed(seed)
 
 # initialize classes for MACRO
@@ -212,14 +214,15 @@ SimBitePfSI.Setup()
 # MACRO Patch initialization
 MACRO.Patch.Emerge.Setup() # 'Emerge' model
 
-# Patch Parameters:
-# Set working directory to where the bioko data is
-# setwd("~/MASH/MASH-Main/MASH-dev/DavidSmith/Bioko")
+# Patch Parameters
+# Let's start figuring out how to load in our population data for bioko island
 biokoPOP <- read.csv(paste0(DIR_DAVE,"bioko_areas.csv"))
 # load in PfPR for bioko island
-biokoPFPR <- read.csv(paste0(DIR_DAVE,"pfprmap_area_CAGcorrectNA.csv"))
-# Merge the two data sets on the areaIds
-bioko <- merge(biokoPOP, biokoPFPR, by = "areaId", all =FALSE)
+#biokoPFPR <- read.csv("pfprmap_area_CAGcorrectNA.csv")
+# load in Lambda values for bioko island
+biokoLambda <- read.csv(paste0(DIR_DAVE,"data_area.csv"))
+# Merge the two three sets on the areaIds - also has the pfpr values
+bioko <- merge(biokoPOP, biokoLambda, by = "areaId", all =FALSE)
 
 # Try running this with only the Malabo patches
 #malabo <- c(212, 218, 219, 220, 271, 272, 273, 274, 275, 276, 277, 278, 279, 330, 331, 332, 333, 334,
@@ -235,11 +238,11 @@ bioko$popm <- PopM
 bioko$popf <- PopF
 bioko$pop <- PopM + PopF
 
-nPatch = nrow(bioko) #nPatch = 10
+nPatch = nrow(bioko)
 
 # Set up tile parameters
 tileParameters = MACRO.Tile.Parameters(N = nPatch,
-                                       aquaModule = "emerge", aquaPars = list(N=nPatch,lambda=rep(50,nPatch)),
+                                       aquaModule = "emerge", aquaPars = list(N=nPatch, lambda=bioko$lambda[1:nPatch]),
                                        pathogenModule = "PfSI")
 # Manually set tile parameters using hte bioko data
 popTotal <- sum(bioko$pop[1:nPatch])
@@ -266,8 +269,8 @@ tile$init_PfSI(PfPR = PfPR)
 tile$get_HumanPop()$queueVaccination_SimBitePfSI(tVaccine = (365*1),tTreat = (365*1)+1,fracPop = 0.9)
 
 # Simulate for 5 years, see how long that takes
-system.time(tile$simMacro(5*365))
+system.time(tile$simMacro(365*4))
 
 pfsiHist = tile$get_HumanPop()$get_PfSI_history()
 
-saveRDS(pfsiHist, sprintf(paste(DIR_SEAN,"bioko_island_pevaxx_90_output_",seed,".rds", sep="")))
+saveRDS(pfsiHist,paste0(DIR_SEAN,"bioko_island_pevaxx_90_output_",seed,".rds"))
