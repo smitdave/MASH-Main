@@ -18,7 +18,11 @@ if(system("whoami",intern=TRUE) == "chipdelmal"){
 }else if(system("whoami",intern=TRUE) == "qianzh"){
   DIR = "/Users/qianzh/project/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
+}else if(system("whoami",intern=TRUE) == "smitdave"){
+  DIR = "/Users/smitdave/github/MASH-Main/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
+  setwd(DIR)
 }
+
 
 ################################################################################################################
 # CONSTANTS
