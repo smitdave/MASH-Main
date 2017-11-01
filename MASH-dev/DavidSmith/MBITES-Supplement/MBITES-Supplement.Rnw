@@ -484,20 +484,16 @@ probability of surviving.  {\bf I can't find this function}
 Senescence is defined in this model as a reduction in the
 probability of surviving each flight bout that is a function of a
 mosquito's chronological age, $a$. The function describing
-probability is $$senesce(a) = \frac{2+sns.b}{1+sns.b} - \frac{e^{a*sns.a}}{sns.b + e^{a*sns.a}}.$$
-For $sns.a = 1/80$ and $sns.b = 20$, the function looks like this: 
-
+probability is $(2+sns.b)/(1+sns.b) - e^{a*sns.a}/(sns.b + e^{a*sns.a})$ 
 %
-<<fig=TRUE, echo = FALSE>>=
-aa = seq(0,100, by=0.1) 
-senesce = function(a, sns.a=1/80, sns.b=20){
+<<fig=TRUE>>=
+aa = seq(0,50, by=0.1) 
+senesce = function(a, sns.a=1/20, sns.b=20){
  (2+sns.b)/(1+sns.b) - exp(a*sns.a)/(sns.b + exp(a*sns.a)) 
 } 
-plot(aa, senesce(aa), type = "l", xlab = "Chronological Age (Days)",
+plot(aa, senesce(aa), type = "l", xlab = "Chronological Age",
 ylab = "Probability of Surviving, per bout") 
 @ 
-
-{\bf NOTE:} Because of the complexity of MBITES, it's hard to write down the equation that does survivorship vs. age, but in the GUI, it would be useful if we could quickly simulate a thousand individuals and plot survival for a cohort with and without senescence.} 
 
 \paragraph{Wing Tattering}
 
