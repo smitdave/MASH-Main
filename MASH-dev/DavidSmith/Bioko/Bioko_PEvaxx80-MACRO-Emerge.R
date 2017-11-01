@@ -92,11 +92,12 @@ PfPR <- bioko$pfpr[1:nPatch]
 tile$init_PfSI(PfPR = PfPR)
 # Here's Sean's code for queueing up some vaccinations
 # Vaccinations are off for now, this is the baseline simulation
-#tile$get_HumanPop()$queueVaccination_SimBitePfSI(tVaccine = (365*1),tTreat = (365*1)+1,fracPop = 0.75)
+tile$get_HumanPop()$queueVaccination_SimBitePfSI(tVaccine = (365*1),tTreat = (365*1)+1,fracPop = 0.8)
 
 # Simulate for 5 years, see how long that takes
 system.time(tile$simMacro(365*4))
 
 pfsiHist = tile$get_HumanPop()$get_PfSI_history()
 
-saveRDS(pfsiHist, sprintf(paste("bioko_island_baseline_output_",seed,".rds", sep="")))
+
+saveRDS(pfsiHist, sprintf(paste("bioko_island_pevaxx_80_output_",seed,".rds", sep="")))
