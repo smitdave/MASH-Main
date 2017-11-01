@@ -64,6 +64,7 @@ bioko$pop <- PopM + PopF
 
 nPatch = nrow(bioko) #nPatch = 10
 
+lambda = 
 # Set up tile parameters
 tileParameters = MACRO.Tile.Parameters(N = nPatch,
                                        aquaModule = "emerge", aquaPars = list(N=nPatch,lambda=rep(50,nPatch)),
