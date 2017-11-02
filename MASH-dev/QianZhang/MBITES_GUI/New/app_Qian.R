@@ -167,16 +167,16 @@ mbitesGadget = function(...){
                 sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
                   helpText("Please Select the Bouts and Set Parameters:"),
                   checkboxInput("showF", "F: Blood Feeding Search", FALSE),
-                  conditionalPanel(condition = "input.showF",
-                    wellPanel(sliderInput(inputId = "F_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.02, min = 0, max = 1, step = 0.01),
-                              sliderInput(inputId = "F_succeed", label ="Probability of Success",
-                              value = 0.98, min = 0.9, max = 1, step = 0.01),
-                              sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
-                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-                              textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
-                              )
-                    ),
+                  # conditionalPanel(condition = "input.showF",
+                  #   wellPanel(sliderInput(inputId = "F_time", label ="Mean Time Elapsed (in days)",
+                  #             value = 0.02, min = 0, max = 1, step = 0.01),
+                  #             sliderInput(inputId = "F_succeed", label ="Probability of Success",
+                  #             value = 0.98, min = 0.9, max = 1, step = 0.01),
+                  #             sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
+                  #             value = 0.99, min = 0.9, max = 1, step = 0.01),
+                  #             textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+                  #             )
+                  #   ),
 
                   checkboxInput("showB", "B: Blood Feeding Attempt", FALSE),
                   conditionalPanel(condition = "input.showB",
@@ -305,10 +305,53 @@ mbitesGadget = function(...){
                   ),
                 
                 mainPanel(
-                  helpText("Output Plots")
+                  helpText("Output Plots"),
+                                    conditionalPanel(condition = "input.showF",
+                    wellPanel(sliderInput(inputId = "F_time", label ="Mean Time Elapsed (in days)",
+                              value = 0.02, min = 0, max = 1, step = 0.01),
+                              sliderInput(inputId = "F_succeed", label ="Probability of Success",
+                              value = 0.98, min = 0.9, max = 1, step = 0.01),
+                              sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
+                              value = 0.99, min = 0.9, max = 1, step = 0.01),
+                              textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+                              )
+                    )
                   )
                 )
             )),
+          #################################################################################
+          tabPanel(title = "Bout-beta", value = "bout_beta",
+            useShinyjs(),
+            sidebarLayout(position = "right",
+              sidebarPanel(
+                helpText("Please choose the bouts:"),
+                checkboxInput("selectF", "F: XXX ", TRUE),
+                checkboxInput("selectB", "B: XXX", TRUE),
+                checkboxInput("selectR", "R: XXXX", TRUE)
+                ),
+              mainPanel(
+                tabsetPanel(
+                  id = "boutbar",
+                  tabPanel(
+                    title = "F",
+                    value = "beta_f",
+                    h1("test F")
+                    ),
+                  tabPanel(
+                    title = "B",
+                    value = "beta_b",
+                    h1("test B")
+                    ),
+                  tabPanel(
+                    title = "R",
+                    value = "beta_r",
+                    h1("test R")
+                    )
+                  )
+                )
+              )
+            ),
+
           #################################################################################
           tabPanel(title = "Landscape", value = 'landscape',                 
             sidebarLayout(position = "right",
@@ -407,6 +450,19 @@ mbitesGadget = function(...){
         textInput("prepath", "Please provide the previous working directory (the folder contains .json file)", "")
       }
     })
+
+    observe({
+      toggle(condition = input$selectF, selector = "#boutbar li a[data-value=beta_f]")
+    })
+    observe({
+      toggle(condition = input$selectR, selector = "#boutbar li a[data-value=beta_r]")
+    })
+    observe({
+      toggle(condition = input$selectB, selector = "#boutbar li a[data-value=beta_b]")
+    })
+
+
+
     observeEvent(input$done, {
       stopApp(brushedPoints(data, input$brush))
     })
