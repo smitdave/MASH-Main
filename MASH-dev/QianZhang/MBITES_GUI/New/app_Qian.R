@@ -337,7 +337,9 @@ mbitesGadget = function(...){
                   checkboxInput("showMale", "Male Mosquitoes", FALSE)
                   ),
                 mainPanel(
-                  helpText("Set parameters for selected bouts:"),
+                  fluidRow(
+                    column(7,helpText("Set parameters for selected bouts:")),
+                    column(5,actionButton('save_inputs_bout', 'Save inputs',width = "50%"))),
                   tabsetPanel(
                     id = "boutbar",
                     tabPanel(
@@ -663,18 +665,62 @@ mbitesGadget = function(...){
     
     observeEvent(input$save_inputs_bout, {
       # Define inputs to save
-      inputs_to_save_bout <- c('F_time', 'F_wts', 'F_time')
+      f_param_name <- c('F_time', 'F_succeed', 'F_surv',
+        'F_wts')
+      b_param_name <- c('B_time', 'B_succeed', 'B_surv', 'B_wts',
+        'surviveH', 'probeH', 'surviveprobeH', 'feedH',
+        'surviveZ', 'feedZ', 'bm_a', 'bm_b', 'overfeed', 'of_a', 'of_b', 'preGblood',
+        'Q')
+      r_param_name <- c('R_time', 'R_surv', 'R_wts', 'REFEED', 'rf_a', 'rf_b')
+      l_param_name <- c('L_time', 'L_succeed','L_surv', 'L_wts')
+      o_param_name <- c('O_time', 'O_succeed', 'O_surv','O_wts')
+      m_param_name <- c('M_time', 'M_succeed', 'M_surv', 'M_wts')
+      s_param_name <- c('S_time', 'S_succeed', 'S_surv', 'S_wts', 'preGsugar')
       # Declare inputs
       inputs_bout <- NULL
+      inputs_name <- NULL
       # Append all inputs before saving to folder
-      for(input.i in inputs_to_save_bout){
-        inputs_bout <- append(inputs_bout, input[[input.i]])
-      }
+      if(input$showF){
+        inputs_name <- append(inputs_name,f_param_name)
+        for(input.i in f_param_name){
+          inputs_bout <- append(inputs_bout, input[[input.i]])
+      }}
+      if(input$showB){
+        inputs_name <- append(inputs_name,b_param_name)
+        for(input.i in b_param_name){
+          inputs_bout <- append(inputs_bout, input[[input.i]])
+      }}
+      if(input$showR){
+        inputs_name <- append(inputs_name,r_param_name)
+        for(input.i in r_param_name){
+          inputs_bout <- append(inputs_bout, input[[input.i]])
+      }}
+      if(input$showL){
+        inputs_name <- append(inputs_name,l_param_name)
+        for(input.i in l_param_name){
+          inputs_bout <- append(inputs_bout, input[[input.i]])
+      }}
+      if(input$showO){
+        inputs_name <- append(inputs_name,o_param_name)
+        for(input.i in o_param_name){
+          inputs_bout <- append(inputs_bout, input[[input.i]])
+      }}
+      if(input$showM){
+        inputs_name <- append(inputs_name,m_param_name)
+        for(input.i in m_param_name){
+          inputs_bout <- append(inputs_bout, input[[input.i]])
+      }}
+      if(input$showS){
+        inputs_name <- append(inputs_name,s_param_name)
+        for(input.i in s_param_name){
+          inputs_bout <- append(inputs_bout, input[[input.i]])
+      }}
+
       # Inputs data.frame
-      inputs_data_frame <- data.frame(inputId = inputs_to_save_bout, value = inputs_bout)
+      inputs_data_frame <- data.frame(inputId = inputs_name, value = inputs_bout)
       # Save Inputs
       jsonOut=prettify(toJSON(inputs_data_frame))
-      write(jsonOut,paste0(DIR,"/try.json"))
+      write(jsonOut,paste0(DIR,"/bouts.json"))
     }) 
     
   }
