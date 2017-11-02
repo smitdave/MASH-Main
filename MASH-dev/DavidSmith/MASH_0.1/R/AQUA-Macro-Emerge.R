@@ -192,11 +192,7 @@ emergingAdults_MacroEmerge <- function(){
 oneDay_MacroEmerge <- function(){
 
   tNow = self$get_TilePointer()$get_tNow()
-  if(is.list(private$season)){
-    lambdaExact = vapply(X = unlist(private$season),FUN = function(x){x[floor(tNow)%%365+1]},FUN.VALUE = numeric(1))
-  } else {
-    lambdaExact = vapply(X = private$season,FUN = function(x){x[floor(tNow)%%365+1]},FUN.VALUE = numeric(1))
-  }
+  lambdaExact = vapply(X = private$season,FUN = function(x){x[floor(tNow)%%365+1]},FUN.VALUE = numeric(1))
   lambdaEmerge = rpois(n = length(lambdaExact),lambda = lambdaExact)
   for(ixP in 1:private$N){
     # private$ImagoQ$add_ImagoQ(N_new = lambdaEmerge[ixP], tEmerge_new = tNow, genotype_new = -1L, damID_new = "-1", sireID_new = "-1")
