@@ -37,7 +37,8 @@ makeLambda_Macro <- function(aquaPars){
 
     lambdaOut = vector(mode="list",length=N)
     for(ix in 1:N){
-      lambdaOut[[ix]] = K[ix]#*(1+sin(2*pi*(c(1:365)-offset[ix])/365))
+      # lambdaOut[[ix]] = K[ix]*(1+sin(2*pi*(c(1:365)-offset[ix])/365))
+      lambdaOut[[ix]] = rep(K[ix],365)
     }
 
     return(lambdaOut)
