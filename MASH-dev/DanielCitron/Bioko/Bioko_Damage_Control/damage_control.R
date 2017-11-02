@@ -51,9 +51,11 @@ bioko[bioko$areaId==2083,] # this is at the top, with pfpr of .3775, population 
 bioko[bioko$areaId==571,] # this is the upper quintile, with pfpr of 0.210375, pop 600
 # adjust lambda by a factor of 32
 bioko[bioko$areaId==220,] # this is at the middle, with pfpr of .154, population 3300
+# adjust lambda by a factor of 256
 bioko[bioko$areaId==1990,] # this is at the lower quintile, with pfpr of .071, population 100
+# adjust lambda by a factor of 8
 bioko[bioko$areaId==2152,] # this is at the bottom, with pfpr of .02775, population 300
-bioko[bioko$areaId==2918,] # this is at the bottom, with pfpr of .007, population 400
+# adjust lambda by a factor of 18
 
 patchPops <- c(100,100,100)
 popTotal <- sum(patchPops)
@@ -103,7 +105,7 @@ print(pfpr)
 #saveRDS(pfsiHist, sprintf(paste("../../DanielCitron/Bioko/Bioko_adjusted_baseline_",pfpr,"_seed_",seed,".rds", sep="")))
 #saveRDS(pfsiHist, sprintf(paste("../../DanielCitron/Bioko/Bioko_adjusted_pevaxx50_",pfpr,"_seed_",seed,".rds", sep="")))
 #saveRDS(pfsiHist, sprintf(paste("../../DanielCitron/Bioko/Bioko_adjusted_pevaxx80_",pfpr,"_seed_",seed,".rds", sep="")))
-saveRDS(pfsiHist, sprintf(paste("../../DanielCitron/Bioko/Bioko_adjusted_pevaxx90_",pfpr,"_seed_",seed,".rds", sep="")))
+#saveRDS(pfsiHist, sprintf(paste("../../DanielCitron/Bioko/Bioko_adjusted_pevaxx90_",pfpr,"_seed_",seed,".rds", sep="")))
 
 t_grid = seq(0,365*5)
 #pfsiHist <- readRDS("../../DanielCitron/Bioko/Bioko_pevaxx80_037775_seed_44.rds")
@@ -126,6 +128,94 @@ print(pfpr)
 #saveRDS(prev.trajs, sprintf(paste("../../DanielCitron/Bioko/BiokoPrevalence_adjusted_baseline_",pfpr,"_seed_",seed,".rds", sep="")))
 #saveRDS(prev.trajs, sprintf(paste("../../DanielCitron/Bioko/BiokoPrevalence_adjusted_pevaxx50_",pfpr,"_seed_",seed,".rds", sep="")))
 #saveRDS(prev.trajs, sprintf(paste("../../DanielCitron/Bioko/BiokoPrevalence_adjusted_pevaxx80_",pfpr,"_seed_",seed,".rds", sep="")))
-saveRDS(prev.trajs, sprintf(paste("../../DanielCitron/Bioko/BiokoPrevalence_adjusted_pevaxx90_",pfpr,"_seed_",seed,".rds", sep="")))
+#saveRDS(prev.trajs, sprintf(paste("../../DanielCitron/Bioko/BiokoPrevalence_adjusted_pevaxx90_",pfpr,"_seed_",seed,".rds", sep="")))
+
+
+
+### Now, we are going to sort these into the relevant spots on Bioko Island:
+v1 <- bioko[bioko$areaId==2083,]$pfpr # this is at the top, with pfpr of .3775, population 302
+v2 <- bioko[bioko$areaId==571,]$pfpr # this is the upper quintile, with pfpr of 0.210375, pop 600
+v3 <- bioko[bioko$areaId==220,]$pfpr # this is at the middle, with pfpr of .154, population 3300
+v4 <- bioko[bioko$areaId==1990,]$pfpr # this is at the lower quintile, with pfpr of .071, population 100
+v5 <- bioko[bioko$areaId==2152,]$pfpr # this is at the bottom, with pfpr of .02775, population 300
+
+# Divide up the pfpr range into intervals, so we can ballpark the 5 different parameter regimes
+sorter <- c(0, (v5+v4)/2, (v4+v3)/2, (v3+v2)/2, (v1+v2)/2)
+# Here's how we're going to sort each of the areas according to pfpr
+sorter <- findInterval(bioko$pfpr, sorter)
+
+# Read in a stack of baselines:
+b1 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_baseline_00277_seed_45.rds")
+b2 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_baseline_007175_seed_45.rds")
+b3 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_baseline_0154_seed_45.rds")
+b4 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_baseline_0212_seed_45.rds")
+b5 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_baseline_037775_seed_45.rds")
+
+baselines <- list(b1$I/300,b2$I/300,b3$I/300,b4$I/300,b5$I/300)
+
+# Want: a data frame where one col is area ID, the next is pfpr, the next is the I curve?
+
+Bioko.baseline <- data.frame(areaId = bioko$areaId, PfPR = bioko$pfpr, PfPR.t = sorter)
+for (i in 1:length(sorter)){
+  Bioko.baseline[i,]$PfPR.t <- baselines[Bioko.baseline[i,]$PfPR.t[[1]]]
+}
+
+saveRDS(Bioko.baseline, "../../DanielCitron/Bioko/Bioko_Damage_Control/Bioko_baseline_PfPR_vs_t.rds")
+
+# Read in a stack of 50% vaccination scenarios:
+a1 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx50_00277_seed_45.rds")
+a2 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx50_007175_seed_45.rds")
+a3 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx50_0154_seed_45.rds")
+a4 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx50_0212_seed_45.rds")
+a5 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx50_037775_seed_45.rds")
+
+plot(t_grid, a5$I/300)
+
+baselines <- list(a1$I/300,a2$I/300,a3$I/300,a4$I/300,a5$I/300)
+
+Bioko.pevaxx50 <- data.frame(areaId = bioko$areaId, PfPR = bioko$pfpr, PfPR.t = sorter)
+for (i in 1:length(sorter)){
+  Bioko.pevaxx50[i,]$PfPR.t <- baselines[Bioko.pevaxx50[i,]$PfPR.t[[1]]]
+}
+
+saveRDS(Bioko.pevaxx50, "../../DanielCitron/Bioko/Bioko_Damage_Control/Bioko_pevaxx50_PfPR_vs_t.rds")
+
+# Read in a stack of 80% vaccination scenarios:
+a1 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx80_00277_seed_45.rds")
+a2 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx80_007175_seed_45.rds")
+a3 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx80_0154_seed_45.rds")
+a4 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx80_0212_seed_45.rds")
+a5 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx80_037775_seed_45.rds")
+
+plot(t_grid, a1$I/300)
+
+baselines <- list(a1$I/300,a2$I/300,a3$I/300,a4$I/300,a5$I/300)
+
+Bioko.pevaxx80 <- data.frame(areaId = bioko$areaId, PfPR = bioko$pfpr, PfPR.t = sorter)
+for (i in 1:length(sorter)){
+  Bioko.pevaxx80[i,]$PfPR.t <- baselines[Bioko.pevaxx80[i,]$PfPR.t[[1]]]
+}
+
+saveRDS(Bioko.pevaxx80, "../../DanielCitron/Bioko/Bioko_Damage_Control/Bioko_pevaxx80_PfPR_vs_t.rds")
+
+
+
+# Read in a stack of 90% vaccination scenarios:
+a1 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx90_00277_seed_45.rds")
+a2 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx90_007175_seed_45.rds")
+a3 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx90_0154_seed_45.rds")
+a4 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx90_0212_seed_45.rds")
+a5 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adjusted_pevaxx90_037775_seed_45.rds")
+
+plot(t_grid, a4$I/300)
+
+baselines <- list(a1$I/300,a2$I/300,a3$I/300,a4$I/300,a5$I/300)
+
+Bioko.pevaxx90 <- data.frame(areaId = bioko$areaId, PfPR = bioko$pfpr, PfPR.t = sorter)
+for (i in 1:length(sorter)){
+  Bioko.pevaxx90[i,]$PfPR.t <- baselines[Bioko.pevaxx90[i,]$PfPR.t[[1]]]
+}
+
+saveRDS(Bioko.pevaxx90, "../../DanielCitron/Bioko/Bioko_Damage_Control/Bioko_pevaxx90_PfPR_vs_t.rds")
 
 
