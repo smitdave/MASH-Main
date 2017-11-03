@@ -153,6 +153,8 @@ b5 <- readRDS("../../DanielCitron/Bioko/Bioko_Damage_Control/BiokoPrevalence_adj
 
 baselines <- list(b1$I/300,b2$I/300,b3$I/300,b4$I/300,b5$I/300)
 
+b5$I
+
 # Want: a data frame where one col is area ID, the next is pfpr, the next is the I curve?
 
 Bioko.baseline <- data.frame(areaId = bioko$areaId, PfPR = bioko$pfpr, PfPR.t = sorter)
@@ -218,4 +220,21 @@ for (i in 1:length(sorter)){
 
 saveRDS(Bioko.pevaxx90, "../../DanielCitron/Bioko/Bioko_Damage_Control/Bioko_pevaxx90_PfPR_vs_t.rds")
 
+holder <- as.array(rep(0, nrow(Bioko.pevaxx50)))
+for (i in 1:nrow(Bioko.pevaxx50)){
+  holder[i] <- Bioko.pevaxx50[i,]$PfPR.t
+}
 
+as.matrix(holder)
+
+holder <- matrix(0, nrow = nrow(Bioko.pevaxx50), ncol = 5*365)
+for (i in 1:nrow(Bioko.pevaxx50)){
+  for (j in 1:365){
+    holder[i,j] <- Bioko.pevaxx50[i,]$PfPR.t[[1]][j]
+  }
+}
+
+dim(holder)
+
+
+### Now, how did we turn this into an image?
