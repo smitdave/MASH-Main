@@ -82,12 +82,16 @@ mbitesGadget = function(...){
               navlistPanel(widths = c(2,10),
                 #########################################################################
                 tabPanel("Senescence",
+                  column(6,
                   checkboxInput(inputId = "SENEESCE", label = "Mortality during Generic Flight", value = FALSE),
                   sliderInput(inputId = "sns_a", label ="Exp: a",
                               value = 0.085, min = 0, max = 0.1, step = 0.001),
                   sliderInput(inputId = "sns_b", label ="Exp: b",
                               value = 100, min = 0, max = 1000, step = 1)
                   ),
+                  column(6,
+                    plotOutput("senescence_plot")
+                    )),
                 ###########################################################################
                 tabPanel("Wing Tattering",
                   checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
@@ -465,8 +469,17 @@ mbitesGadget = function(...){
     output$plot <- renderPlot({
       ggplot(data, aes_string(xvar, yvar)) + geom_point()
     })
+
+    output$senescence_plot <- renderPlot({
+      age <- seq(0, 50, 0.001)
+      senescence_surv <- function(x, ...){
+        (2 + input$sns_b)/(1 + input$sns_b) - exp(x * input$sns_a)/(input$sns_b + x * input$sns_a)
+      }
+      ggplot(data.frame(age), aes(age)) + stat_function(fun= senescence_surv) + ylim(0,1) +
+        xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
+    })
     observe({
-        if (input$launchgo > 0) {
+        if (input$launchgo > 0) { 
             session$sendCustomMessage('activeNavs', 'Options')
         }
     })
