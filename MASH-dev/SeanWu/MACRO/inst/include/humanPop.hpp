@@ -1,12 +1,12 @@
 /*
  * ################################################################################
- * 
- *        __  __                            ____            
- *      / / / /_  ______ ___  ____ _____  / __ \____  ____ 
+ *
+ *        __  __                            ____
+ *      / / / /_  ______ ___  ____ _____  / __ \____  ____
  *     / /_/ / / / / __ `__ \/ __ `/ __ \/ /_/ / __ \/ __ \
  *    / __  / /_/ / / / / / / /_/ / / / / ____/ /_/ / /_/ /
- *   /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/_/    \____/ .___/ 
- *                                                /_/     
+ *   /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/_/    \____/ .___/
+ *                                                /_/
  *    HumanPop Class Definition
  *    MASH Team
  *    October 2017
@@ -39,16 +39,16 @@ class humanPop {
 public:
   humanPop(const Rcpp::IntegerVector humanIDs);
   ~humanPop();
-  
-  
-  
+
+  humanPtr              get_human(const int &id);
+
   // debug
   void                  printPop();
-  
+
 private:
-  
+
   std::unordered_map<int,humanPtr>            pop;
-  
+
 };
 
 #endif /* HUMANPOP_HPP */
