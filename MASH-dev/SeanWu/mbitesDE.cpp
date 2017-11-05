@@ -51,13 +51,16 @@ typedef struct parameters {
 // normalize arma::Mat
 inline arma::Mat<double> makeTransitionMatrix(){
   arma::Mat<double> MM = {
-    {4,2,1,0,1},
-    {2,1,1,0,1},
-    {2,1,1,0,2},
-    {1,1,1,0,1},
-    {6,4,2,1,0} 
+    {4,2,2,1,6},
+    {2,1,1,1,4},
+    {1,1,1,1,2},
+    {0,0,0,0,1},
+    {1,1,2,1,0} 
   };
-  MM.each_row() /= arma::sum(MM,1).t();
+  arma::colvec rowSums = arma::sum(MM,1);
+  for(size_t i=0; i<5; i++){
+    MM.row(i) = MM.row(i) / rowSums.at(i);
+  }
   return MM;
 }
 

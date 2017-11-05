@@ -61,7 +61,7 @@ tfin = 100
 da = .25
 afin = 40
 # U = upwindCPP(dt = dt,tfin = tfin,dx = da,xfin = afin,par_ptr = par)
-U = upwindSolveCPP(dt = dt,tfin = tfin,dx = da,xfin = afin)
+U = upwindSolveCPP(dt = dt,tfin = tfin,dx = da,xfin = afin,e = 8)
 
 t = 0:(tfin/dt)*dt
 x = 0:(afin/da)*da
@@ -109,4 +109,11 @@ for(i in 1:length(t)){
 
 plot(x,Ua[length(t),]/N[length(t)],type="l")
 
-par(mfrow=c(1,2))
+par(mfrow=c(1,1))
+
+# # surface plots
+# library(plot3D)
+# F_mat = U[,,1] + U[,,2]
+# F_mat[1,1] = 400
+# 
+# persp3D(z=F_mat)
