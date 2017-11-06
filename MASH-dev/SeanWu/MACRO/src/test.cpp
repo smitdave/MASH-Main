@@ -5,7 +5,7 @@
 
 using namespace Rcpp;
 
-void f(int a){
+inline void f(int a){
   std::cout << "function f has integer a: " << a << std::endl;
 };
 
@@ -76,7 +76,8 @@ void testHumanQ(){
 // [[Rcpp::export]]
 void testHumanPop(const Rcpp::IntegerVector pop){
   humanPop h(pop);
-  for(auto it = pop.begin(); it != pop.end(); it++){
-    h.get_human((*it))->get_memLoc();
-  }
+  // for(auto it = pop.begin(); it != pop.end(); it++){
+  //   h.get_human((*it))->get_memLoc();
+  // }
+  h.printPop();
 }

@@ -27,7 +27,8 @@
 class human;
 
 // typedefs
-typedef std::shared_ptr<human> humanPtr;
+// typedef std::shared_ptr<human> humanPtr;
+typedef std::unique_ptr<human> humanPtr;
 
 /*
  * ################################################################################
@@ -40,7 +41,7 @@ public:
   humanPop(const Rcpp::IntegerVector humanIDs);
   ~humanPop();
 
-  humanPtr              get_human(const int &id);
+  humanPtr&              get_human(const int &id);
 
   // debug
   void                  printPop();
