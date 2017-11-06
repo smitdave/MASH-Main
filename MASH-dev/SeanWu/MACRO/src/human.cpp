@@ -15,7 +15,7 @@
  */
 
 #include "human.hpp"
-
+#include "humanPop.hpp"
 
 /*
  * ################################################################################
@@ -68,12 +68,19 @@ void human::set_alive(const bool &a){
 };
 
 
-
 /*
  * ################################################################################
  *    Address
  * ################################################################################
- */
+*/
+
+humanPop* human::get_pop_ptr(){
+  return pop_ptr;
+};
+
+void human::set_pop_ptr(humanPop* h){
+  pop_ptr = h;
+};
 
 address human::get_home_address(){
     return(home_address);
@@ -138,23 +145,7 @@ void human::set_pathogen(pathogen* p){
  * ################################################################################
  *    Event Queue
  * ################################################################################
- */
-
-void human::add2Q_set_stateTest(const double &tEvent, std::string state_new){
-
-  // std::function<void()> boundF = std::bind(&human::set_state,state_new);
-  // std::bind(&human::set_state,state_new);
-  event_queue.push_back(std::bind(&human::set_state,this,state_new));
-  // event_queue.push_back()
-
-  // deferred.push_back(std::bind(&Class1::action1, this, arg1, arg2));
-};
-
-void human::fireEventTest(){
-  for(auto f : event_queue){
-    f();
-  }
-};
+*/
 
 // inline definition need to sort the queue
 inline bool compare_tEvent(const event& eventA, const event& eventB) { return eventA.tEvent < eventB.tEvent; }
@@ -193,7 +184,41 @@ void human::add2Q_set_state(const double &tEvent, std::string s){
 };
 
 
+/*
+ * ################################################################################
+ *    Other
+ * ################################################################################
+*/
+
+void human::death(){
+  pop_ptr->get_pop().erase(id);
+  // delete this;
+};
+
+
+/*
+ * ################################################################################
+ *    DEBUG
+ * ################################################################################
+*/
+
 // DEBUG
 void human::get_memLoc(){
     std::cout << "human " << id << " at memory location: " << this << std::endl;
+};
+
+void human::add2Q_set_stateTest(const double &tEvent, std::string state_new){
+
+  // std::function<void()> boundF = std::bind(&human::set_state,state_new);
+  // std::bind(&human::set_state,state_new);
+  event_queue.push_back(std::bind(&human::set_state,this,state_new));
+  // event_queue.push_back()
+
+  // deferred.push_back(std::bind(&Class1::action1, this, arg1, arg2));
+};
+
+void human::fireEventTest(){
+  for(auto f : event_queue){
+    f();
+  }
 };

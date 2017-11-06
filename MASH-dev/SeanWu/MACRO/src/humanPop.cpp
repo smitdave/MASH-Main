@@ -25,9 +25,10 @@
 
 humanPop::humanPop(const Rcpp::IntegerVector humanIDs){
   for(auto it = humanIDs.begin(); it != humanIDs.end(); it++){
-    // humanPtr h (new human((*it)));
+    // human_ptr h (new human((*it)));
     // pop.emplace((*it),h);
-    pop.emplace((*it),humanPtr(new human(*it)));
+    pop.emplace((*it),human_ptr(new human(*it)));
+    pop.find((*it))->second->set_pop_ptr(this);
   }
   #ifdef DEBUG_INFSIM
   std::cout << "humanPop " << " being born at memory location: " << this << std::endl;;
@@ -42,6 +43,16 @@ humanPop::~humanPop(){
 };
 
 
+/*
+ * ################################################################################
+ *    Getters & Setters
+ * ################################################################################
+ */
+
+pop_hashMap& humanPop::get_pop(){
+  return pop;
+}
+
 
 /*
  * ################################################################################
@@ -49,20 +60,15 @@ humanPop::~humanPop(){
  * ################################################################################
  */
 
-humanPtr& humanPop::get_human(const int &id){
+human_ptr& humanPop::get_human(const int &id){
   return pop.find(id)->second;
 };
-
 
 
 // debug
 void humanPop::printPop(){
   std::cout << "printing population" << std::endl;
   for(auto& it : pop){
-    std::cout << "human id: " << it.first << " with unique_ptr: ";
-    it.second->get_memLoc();
-    std::cout << std::endl;
-    // std::cout << "human id: " << it.first << " with shared_ptr: " << it.second << std::endl;
     it.second->get_memLoc();
   }
 }

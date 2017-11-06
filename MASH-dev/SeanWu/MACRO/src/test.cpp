@@ -80,4 +80,5 @@ void testHumanPop(const Rcpp::IntegerVector pop){
   //   h.get_human((*it))->get_memLoc();
   // }
   h.printPop();
+  h.get_human(pop.at(0))->death();
 }

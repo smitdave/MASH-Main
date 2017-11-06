@@ -31,6 +31,7 @@
 #include "DEBUG.hpp"
 
 // forward declarations
+class humanPop;         // forward declare human population
 class patch;            // forward declare patch
 class tile;             // forward declare tile
 class pathogen;         // forward declare pathogen
@@ -74,6 +75,10 @@ public:
     bool                        get_alive();
     void                        set_alive(const bool &a);
 
+    // population
+    humanPop*                   get_pop_ptr();
+    void                        set_pop_ptr(humanPop* h);
+
     // home address: my patch and tile
     address                     get_home_address();
     void                        set_home_address(patch* p, tile* t);
@@ -97,9 +102,11 @@ public:
     void                        rmTagFromQ(const std::string &tag);
     void                        fireEvent();
     void                        printEventQ();
-    
+
     void                        add2Q_set_state(const double &tEvent, std::string s);
-    
+
+    // other
+    void                        death();
 
     // debug
     void                        get_memLoc();
@@ -113,6 +120,7 @@ private:
     bool                        inf;                // my infection status
     bool                        alive;
 
+    humanPop*                   pop_ptr;
     address                     home_address;       // home address
     address                     current_address;    // current address
 

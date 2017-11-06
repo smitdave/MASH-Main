@@ -27,8 +27,10 @@
 class human;
 
 // typedefs
-// typedef std::shared_ptr<human> humanPtr;
-typedef std::unique_ptr<human> humanPtr;
+// typedef std::shared_ptr<human> human_ptr;
+typedef std::unique_ptr<human> human_ptr;
+
+typedef std::unordered_map<int,human_ptr> pop_hashMap;
 
 /*
  * ################################################################################
@@ -41,14 +43,16 @@ public:
   humanPop(const Rcpp::IntegerVector humanIDs);
   ~humanPop();
 
-  humanPtr&              get_human(const int &id);
+  human_ptr&                        get_human(const int &id);
+  pop_hashMap&                      get_pop();
+  
 
   // debug
-  void                  printPop();
+  void                              printPop();
 
 private:
 
-  std::unordered_map<int,humanPtr>            pop;
+  pop_hashMap                       pop;
 
 };
 
