@@ -236,8 +236,7 @@ arma::Cube<double> upwindSolveCPP(const double &dt, const int &tfin, const doubl
                                   const double &PF = 0.99, const double &PB = 0.99, const double &PR = 0.99, const double &PL = 0.99, const double &PO = 0.99, 
                                   const double &sF = 0.95, const double &sB = 0.98, const double &sR = 0.98, const double &sL = 0.80, const double &sO = 0.98, 
                                   const double &tau = 21.0){
-// void upwindSolve(const double &dt, const int &tfin, const double &dx, const int &xfin){
-
+  
   // make parameters
   parameters *par = new parameters(e,PF,PB,PR,PL,PO,sF,sB,sR,sL,sO,tau);
   par->M = makeTransitionMatrix();
@@ -285,6 +284,7 @@ arma::Cube<double> upwindSolveCPP(const double &dt, const int &tfin, const doubl
     }
   }
 
+  delete par;
   return(A);
 };
 
