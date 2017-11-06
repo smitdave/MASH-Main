@@ -120,6 +120,25 @@ persp.withcol(x = t,y = x,z = feedPop,color = viridis(60),theta=120,phi=30,borde
 
 
 
+library(rgl)
+
+y <- 2000 * feedPop # Exaggerate the relief
+x <- 10 * (1:nrow(y)) # 10 meter spacing (S to N)
+z <- 10 * (1:ncol(y)) # 10 meter spacing (E to W)
+ylim <- range(y)
+ylen <- ylim[2] - ylim[1] + 1
+colorlut <- viridis(ylen) # height color lookup table
+col <- colorlut[ y-ylim[1]+1 ] # assign colors to heights
+rgl.open()
+par3d(windowRect = 50 + c( 0, 0, 800, 800 ) )
+rgl.bg(color = "grey90")
+rgl.viewpoint(theta = -90, phi = 20, zoom = 1)
+rgl.surface(x, z, y, color=col, back="lines")
+movie3d(spin3d(axis = c(0, 1, 0),rpm=-7.5), duration = 8, fps=10, dir = "~/Desktop/git/MASH-Main/MASH-dev/SeanWu/mbitesDE_gif/")
+rgl.close()
+
+
+
 
 
 ################################################################################
