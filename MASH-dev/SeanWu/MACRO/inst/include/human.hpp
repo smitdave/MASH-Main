@@ -109,6 +109,7 @@ public:
     void                        death();
 
     // debug
+    void                        check_inf();
     void                        get_memLoc();
     void                        fireEventTest();
     void                        add2Q_set_stateTest(const double &tEvent, std::string state_new);

@@ -12,7 +12,7 @@
  *    October 2017
  *
  * ################################################################################
- */
+*/
 
 #include "human.hpp"
 #include "humanPop.hpp"
@@ -192,7 +192,6 @@ void human::add2Q_set_state(const double &tEvent, std::string s){
 
 void human::death(){
   pop_ptr->get_pop().erase(id);
-  // delete this;
 };
 
 
@@ -222,3 +221,11 @@ void human::fireEventTest(){
     f();
   }
 };
+
+void human::check_inf(){
+    if(pathogen_ptr == nullptr){
+        std::cout << "i have no pathogens in me!" << std::endl;
+    } else {
+        std::cout << "i'm infected with a pathogen!" << std::endl;
+    }
+}

@@ -12,51 +12,51 @@
  *    November 2017
  *
  * ################################################################################
+*/
+
+#ifndef PATCH_HPP
+#define PATCH_HPP
+
+#include <stdio.h>
+#include <iostream>
+
+#include <RcppGSL.h>
+
+#include "DEBUG.hpp"
+
+// forward declarations
+class tile;
+class human;
+class humanPop;
+
+// typedefs
+typedef std::shared_ptr<humanPop> humanPopPtr;
+
+
+/*
+ * ################################################################################
+ *    Patch Class
+ * ################################################################################
  */
 
- #ifndef PATCH_HPP
- #define PATCH_HPP
+class patch {
+public:
+    patch(const int &id_new);
+    ~patch();
 
- #include <stdio.h>
- #include <iostream>
-
- #include <RcppGSL.h>
-
- #include "DEBUG.hpp"
-
- // forward declarations
- class tile;
- class human;
- class humanPop;
-
- // typedefs
- typedef std::shared_ptr<humanPop> humanPopPtr;
+    void                       set_id(const int &i);
+    int                        get_id();
 
 
- /*
-  * ################################################################################
-  *    Patch Class
-  * ################################################################################
-  */
+private:
 
- class patch {
- public:
-     patch(const int &id_new);
-     ~patch();
+    int                         id;                 // id
 
-     void                       set_id(const int &i);
-     int                        get_id();
+    humanPopPtr                 humans;             // shared pointer to humanPop
 
-
- private:
-
-     int                         id;                 // id
-
-     humanPopPtr                 humans;             // shared pointer to humanPop
-
- };
+};
 
 
 
 
- #endif /* PATCH_HPP */
+#endif /* PATCH_HPP */

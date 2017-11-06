@@ -76,9 +76,7 @@ void testHumanQ(){
 // [[Rcpp::export]]
 void testHumanPop(const Rcpp::IntegerVector pop){
   humanPop h(pop);
-  // for(auto it = pop.begin(); it != pop.end(); it++){
-  //   h.get_human((*it))->get_memLoc();
-  // }
-  h.printPop();
   h.get_human(pop.at(0))->death();
+  h.get_human(pop.at(1))->check_inf();
+  h.printPop();
 }
