@@ -18,8 +18,7 @@
 #define HUMANPOP_HPP
 
 #include <unordered_map>
-
-#include <RcppGSL.h>
+#include <vector>
 
 #include "DEBUG.hpp"
 
@@ -27,20 +26,18 @@
 class human;
 
 // typedefs
-// typedef std::shared_ptr<human> human_ptr;
-typedef std::unique_ptr<human> human_ptr;
-
+typedef std::shared_ptr<human> human_ptr;
 typedef std::unordered_map<int,human_ptr> pop_hashMap;
 
 /*
  * ################################################################################
  *    HumanPop Class
  * ################################################################################
- */
+*/
 
 class humanPop {
 public:
-  humanPop(const Rcpp::IntegerVector humanIDs);
+    humanPop(const std::vector<int> &humanIDs);
   ~humanPop();
 
   human_ptr&                        get_human(const int &id);

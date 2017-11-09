@@ -16,6 +16,7 @@
 
 #include "human.hpp"
 #include "humanPop.hpp"
+#include "immune.hpp"
 
 /*
  * ################################################################################
@@ -27,12 +28,17 @@ human::human(const int &id_new){
     id = id_new;
     event_queue.reserve(100); // get rid of later
     eventQ.reserve(100);
+
+//    immune = new immune_base(*this,"hi");
+     immune = new immune_PfSI(*this,"hi",false);
+
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " being born at memory location: " << this << std::endl;;
     #endif
 };
 
 human::~human(){
+    delete immune;
     event_queue.clear();
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " getting killed at memory location: " << this << std::endl;
@@ -191,6 +197,9 @@ void human::add2Q_set_state(const double &tEvent, std::string s){
 */
 
 void human::death(){
+  #ifdef DEBUG_INFSIM
+  std::cout << "human " << id << " is dying" << std::endl;
+  #endif
   pop_ptr->get_pop().erase(id);
 };
 
@@ -200,6 +209,7 @@ void human::death(){
  *    DEBUG
  * ################################################################################
 */
+
 
 // DEBUG
 void human::get_memLoc(){
@@ -223,9 +233,9 @@ void human::fireEventTest(){
 };
 
 void human::check_inf(){
-    if(pathogen_ptr == nullptr){
-        std::cout << "i have no pathogens in me!" << std::endl;
+    if(pathogen_ptr == nullptr || pathogen_ptr == NULL){
+        std::cout << "human: " << id << " says: i have no pathogens in me!" << std::endl;
     } else {
-        std::cout << "i'm infected with a pathogen!" << std::endl;
+        std::cout << "human: " << id << " says: i'm infected with a pathogen!" << std::endl;
     }
 }

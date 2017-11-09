@@ -31,18 +31,22 @@
 #include "DEBUG.hpp"
 
 // forward declarations
+class immune_base;      // forward declare immune
 class humanPop;         // forward declare human population
 class patch;            // forward declare patch
 class tile;             // forward declare tile
 class pathogen;         // forward declare pathogen
 
+// typedefs
+// typedef std::unique_ptr<immune_base> immune_ptr;
+// typedef std::unique_ptr<immune_base, void (*)(immune_base *)> immune_ptr;
 typedef std::tuple<patch*,tile*> address;       // address is a tuple of pointers
 
 /*
  * ################################################################################
  *    Event Queue
  * ################################################################################
- */
+*/
 
 // event is a struct
 typedef struct event {
@@ -59,9 +63,11 @@ typedef struct event {
  * ################################################################################
  *    Human Class
  * ################################################################################
- */
+*/
 
 class human {
+  // give immune_base class full access to human
+  friend class                              immune_base;
 public:
     human(const int &id_new);
     ~human();
@@ -126,6 +132,8 @@ private:
     address                     current_address;    // current address
 
     pathogen*                   pathogen_ptr;       // pathogen object
+
+    immune_base*                immune;            // my immune system
 
     std::vector<event>          eventQ;             // event queue
 

@@ -11,6 +11,6 @@ License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.12), R6
 LinkingTo: Rcpp, RcppGSL
 RoxygenNote: 6.0.1
-SystemRequirements: C++11
+SystemRequirements: C++14
 ByteCompile: true
 NeedsCompilation: yes
