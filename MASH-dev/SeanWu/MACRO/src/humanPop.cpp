@@ -21,7 +21,7 @@
  * ################################################################################
  *    Constructor & Destructor
  * ################################################################################
- */
+*/
 
 humanPop::humanPop(const Rcpp::IntegerVector humanIDs){
   for(auto it = humanIDs.begin(); it != humanIDs.end(); it++){
