@@ -30,8 +30,10 @@ void testImmune(){
     immune_base* p = new immune_PfSI(*h,"hi",false);
     p->get_immune_model();
     
-//    delete h;
+    std::cout << "killing human " << std::endl;
+    delete h;
     
+    std::cout << "killing immune_PfSI " << std::endl;
     delete p;
 };
 

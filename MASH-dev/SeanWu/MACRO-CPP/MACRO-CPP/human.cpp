@@ -31,6 +31,7 @@ human::human(const int &id_new){
 
 //    immune = new immune_base(*this,"hi");
      immune = new immune_PfSI(*this,"hi",false);
+    
 
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " being born at memory location: " << this << std::endl;;
@@ -38,7 +39,7 @@ human::human(const int &id_new){
 };
 
 human::~human(){
-    delete immune;
+//    delete immune;
     event_queue.clear();
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " getting killed at memory location: " << this << std::endl;

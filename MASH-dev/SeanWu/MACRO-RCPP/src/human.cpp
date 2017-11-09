@@ -37,6 +37,7 @@ human::human(const int &id_new){
 };
 
 human::~human(){
+  delete immune;
     event_queue.clear();
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " getting killed at memory location: " << this << std::endl;

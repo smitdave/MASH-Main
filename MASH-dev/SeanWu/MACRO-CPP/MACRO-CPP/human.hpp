@@ -21,6 +21,7 @@
 #include <iostream>
 #include <string>
 #include <algorithm>
+#include <memory>
 
 #include <tuple>        // for address tuple
 #include <functional>   // std::invoke
@@ -37,6 +38,7 @@ class pathogen;         // forward declare pathogen
 
 // typedefs
 typedef std::tuple<patch*,tile*> address;       // address is a tuple of pointers
+
 
 /*
  * ################################################################################
