@@ -38,7 +38,7 @@ class pathogen;         // forward declare pathogen
 
 // typedefs
 typedef std::tuple<patch*,tile*> address;       // address is a tuple of pointers
-
+typedef std::shared_ptr<immune_base> immune_ptr;
 
 /*
  * ################################################################################
