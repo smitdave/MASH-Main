@@ -133,7 +133,8 @@ private:
 
     pathogen*                   pathogen_ptr;       // pathogen object
 
-    immune_base*                immune;            // my immune system
+    // immune_base*                immune;            // my immune system
+    std::unique_ptr<immune_base> immune;
 
     std::vector<event>          eventQ;             // event queue
 

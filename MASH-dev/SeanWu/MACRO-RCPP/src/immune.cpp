@@ -23,8 +23,8 @@
  * ################################################################################
 */
 
-immune_base::immune_base(human& _my_human, const std::string &_immune_model) :  immune_model(_immune_model) {
-  my_human = std::make_shared<human>(_my_human);
+immune_base::immune_base(const std::string &_immune_model) :  immune_model(_immune_model) {
+  // my_human = std::make_shared<human>(_my_human);
   #ifdef DEBUG_INFSIM
   std::cout << "immune_base " << " being born at memory location: " << this << std::endl;;
   #endif
@@ -53,6 +53,15 @@ bool immune_base::get_infected(){
   return infected;
 };
 
+// factory method
+immune_base* immune_base::make_immune(std::string model){
+  if(model.compare("PfSI")==0){
+    return new immune_PfSI("PfSI",false);
+  } else {
+    std::cout << "not a valid immune model" << std::endl;
+    exit;
+  }
+};
 
 
 
@@ -63,10 +72,10 @@ bool immune_base::get_infected(){
 */
 
 // constructor
-immune_PfSI::immune_PfSI(human& _my_human, const std::string &_immune_model, const bool &_infected) : immune_base(_my_human,_immune_model) {
+immune_PfSI::immune_PfSI(const std::string &_immune_model, const bool &_infected) : immune_base(_immune_model) {
   infected = _infected;
   #ifdef DEBUG_INFSIM
-  std::cout << "immune_PfSI " << " being born at memory location: " << this << " inside human " << _my_human.get_id() << std::endl;;
+  std::cout << "immune_PfSI " << " being born at memory location: " << this << std::endl;;
   #endif
 };
 
