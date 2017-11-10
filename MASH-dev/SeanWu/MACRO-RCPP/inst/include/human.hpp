@@ -68,6 +68,7 @@ typedef struct event {
 class human {
   // give immune_base class full access to human
   friend class                              immune_base;
+  friend class                              immune_PfSI;
 public:
     human(const int &id_new);
     ~human();
@@ -122,21 +123,20 @@ public:
 
 private:
 
-    int                         id;                 // id
-    std::string                 state;              // my life state
-    bool                        inf;                // my infection status
-    bool                        alive;
+    int                          id;                 // id
+    std::string                  state;              // my life state
+    bool                         inf;                // my infection status
+    bool                         alive;
 
-    humanPop*                   pop_ptr;
-    address                     home_address;       // home address
-    address                     current_address;    // current address
+    humanPop*                    pop_ptr;
+    address                      home_address;       // home address
+    address                      current_address;    // current address
 
-    pathogen*                   pathogen_ptr;       // pathogen object
+    pathogen*                    pathogen_ptr;       // pathogen object
 
-    // immune_base*                immune;            // my immune system
     std::unique_ptr<immune_base> immune;
 
-    std::vector<event>          eventQ;             // event queue
+    std::vector<event>           eventQ;             // event queue
 
     // debug
     std::vector<std::function<void()>> event_queue;

@@ -63,7 +63,6 @@ immune_base* immune_base::make_immune(std::string model){
 };
 
 
-
 /*
  * ################################################################################
  *    Immune PfSI
@@ -84,3 +83,6 @@ immune_PfSI::~immune_PfSI(){
   std::cout << "immune_PfSI " << " being killed at memory location: " << this << std::endl;;
   #endif
 };
+
+// void immune_PfSI::pfsi_dynamics(){
+// };

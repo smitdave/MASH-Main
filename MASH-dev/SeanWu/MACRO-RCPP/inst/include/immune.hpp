@@ -42,7 +42,7 @@ class immune_base {
 public:
   immune_base(const std::string &_immune_model);
   virtual ~immune_base();
-  
+
   // factory method
   static immune_base*                       make_immune(std::string model);
 
@@ -68,14 +68,15 @@ protected:
 */
 
 class immune_PfSI : public immune_base {
+  friend class                              human;
 public:
   immune_PfSI(const std::string &_immune_model = "PfSI", const bool &_infected = false);
   ~immune_PfSI();
-  
+
   void                                      pfsi_dynamics();
 
 private:
-  
+
 };
 
 
