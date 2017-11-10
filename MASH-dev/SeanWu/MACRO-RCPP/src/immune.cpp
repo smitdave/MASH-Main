@@ -24,7 +24,6 @@
 */
 
 immune_base::immune_base(const std::string &_immune_model) :  immune_model(_immune_model) {
-  // my_human = std::make_shared<human>(_my_human);
   #ifdef DEBUG_INFSIM
   std::cout << "immune_base " << " being born at memory location: " << this << std::endl;;
   #endif
@@ -40,7 +39,7 @@ std::string immune_base::get_immune_model(){
   return immune_model;
 };
 
-human_ptr immune_base::get_my_human(){
+human* immune_base::get_my_human(){
   return my_human;
 };
 

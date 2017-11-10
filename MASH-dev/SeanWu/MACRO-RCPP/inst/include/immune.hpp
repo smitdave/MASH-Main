@@ -29,7 +29,7 @@
 class human;            // forward declare human
 
 // typedefs
-typedef std::shared_ptr<human> human_ptr;
+// typedef std::shared_ptr<human> human_ptr;
 
 // abstract base class for immune system models
 class immune_base {
@@ -44,7 +44,7 @@ public:
   static immune_base*                       make_immune(std::string model);
 
   std::string                               get_immune_model();
-  human_ptr                                 get_my_human();
+  human*                                    get_my_human();
 
   void                                      set_infected(const bool &i);
   bool                                      get_infected();
@@ -52,7 +52,8 @@ public:
 protected:
 
   std::string                               immune_model;
-  human_ptr                                 my_human;
+  // human_ptr                                 my_human;
+  human*                                    my_human;
   bool                                      infected;
 
 };

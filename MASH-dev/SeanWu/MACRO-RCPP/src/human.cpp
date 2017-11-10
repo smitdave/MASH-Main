@@ -29,8 +29,9 @@ human::human(const int &id_new) : immune(immune_base::make_immune("PfSI")) {
     event_queue.reserve(100); // get rid of later
     eventQ.reserve(100);
 
-    // immune = new immune_PfSI(*this,"PfSI",false);
-
+    // immune->my_human = std::make_shared<human>(this);
+    immune->my_human = this;
+    
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " being born at memory location: " << this << std::endl;;
     #endif
