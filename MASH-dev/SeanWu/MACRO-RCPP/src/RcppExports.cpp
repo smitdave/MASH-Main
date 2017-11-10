@@ -16,6 +16,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// testHumanPop
+void testHumanPop(const Rcpp::IntegerVector pop);
+RcppExport SEXP _MACRO_testHumanPop(SEXP popSEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type pop(popSEXP);
+    testHumanPop(pop);
+    return R_NilValue;
+END_RCPP
+}
 // testEventQueue
 void testEventQueue();
 RcppExport SEXP _MACRO_testEventQueue() {
@@ -43,23 +53,13 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// testHumanPop
-void testHumanPop(const Rcpp::IntegerVector pop);
-RcppExport SEXP _MACRO_testHumanPop(SEXP popSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::IntegerVector >::type pop(popSEXP);
-    testHumanPop(pop);
-    return R_NilValue;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MACRO_rcpp_hello_world", (DL_FUNC) &_MACRO_rcpp_hello_world, 0},
+    {"_MACRO_testHumanPop", (DL_FUNC) &_MACRO_testHumanPop, 1},
     {"_MACRO_testEventQueue", (DL_FUNC) &_MACRO_testEventQueue, 0},
     {"_MACRO_testHuman", (DL_FUNC) &_MACRO_testHuman, 0},
     {"_MACRO_testHumanQ", (DL_FUNC) &_MACRO_testHumanQ, 0},
-    {"_MACRO_testHumanPop", (DL_FUNC) &_MACRO_testHumanPop, 1},
     {NULL, NULL, 0}
 };
 

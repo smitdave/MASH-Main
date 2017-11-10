@@ -28,14 +28,17 @@
 // forward declarations
 class human;            // forward declare human
 
-// typedefs
-// typedef std::shared_ptr<human> human_ptr;
+
+/*
+ * ################################################################################
+ *    Base Immune System Class
+ * ################################################################################
+*/
 
 // abstract base class for immune system models
 class immune_base {
-  // give human class full access to immune_base and inheriting classes
+  // give human class full access to immune_base
   friend class                              human;
-
 public:
   immune_base(const std::string &_immune_model);
   virtual ~immune_base();
@@ -58,14 +61,29 @@ protected:
 
 };
 
+/*
+ * ################################################################################
+ *    PfSI Immune System Class
+ * ################################################################################
+*/
+
 class immune_PfSI : public immune_base {
 public:
   immune_PfSI(const std::string &_immune_model = "PfSI", const bool &_infected = false);
   ~immune_PfSI();
+  
+  void                                      pfsi_dynamics();
 
 private:
   
 };
+
+
+/*
+ * ################################################################################
+ *    PfMOI Immune System Class
+ * ################################################################################
+*/
 
 
 #endif /* IMMUNE_HPP */

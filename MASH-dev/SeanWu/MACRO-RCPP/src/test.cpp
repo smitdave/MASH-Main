@@ -11,6 +11,16 @@ inline void f(int a){
 
 //'@export
 // [[Rcpp::export]]
+void testHumanPop(const Rcpp::IntegerVector pop){
+  humanPop h(pop);
+  h.get_human(pop.at(0))->death();
+  h.get_human(pop.at(1))->check_inf();
+  h.printPop();
+}
+
+
+//'@export
+// [[Rcpp::export]]
 void testEventQueue(){
   
   std::vector<event> eventQ; 
@@ -72,11 +82,3 @@ void testHumanQ(){
   delete h2;
 }
 
-//'@export
-// [[Rcpp::export]]
-void testHumanPop(const Rcpp::IntegerVector pop){
-  humanPop h(pop);
-  h.get_human(pop.at(0))->death();
-  h.get_human(pop.at(1))->check_inf();
-  h.printPop();
-}
