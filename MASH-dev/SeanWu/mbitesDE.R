@@ -119,7 +119,7 @@ feedPop[is.nan(feedPop)] = 0
 persp.withcol(x = t,y = x,z = feedPop,color = viridis(60),theta=120,phi=30,border=NA,xlab="Time",ylab="Age",zlab="Proportion Feeding",ticktype="detailed")
 
 
-
+library(viridis)
 library(rgl)
 
 y <- 2000 * feedPop # Exaggerate the relief
@@ -131,10 +131,10 @@ colorlut <- viridis(ylen) # height color lookup table
 col <- colorlut[ y-ylim[1]+1 ] # assign colors to heights
 rgl.open()
 par3d(windowRect = 50 + c( 0, 0, 800, 800 ) )
-rgl.bg(color = "grey90")
+rgl.bg(color = "grey80",fogtype = "none",alpha=0.5)
 rgl.viewpoint(theta = -90, phi = 20, zoom = 1)
 rgl.surface(x, z, y, color=col, back="lines")
-movie3d(spin3d(axis = c(0, 1, 0),rpm=-7.5), duration = 8, fps=10, dir = "~/Desktop/git/MASH-Main/MASH-dev/SeanWu/mbitesDE_gif/")
+movie3d(spin3d(axis = c(0, 1, 0),rpm=-4.5), duration = 36, fps=20, dir = "~/Desktop/git/MASH-Main/MASH-dev/SeanWu/mbitesDE_gif/")
 rgl.close()
 
 
