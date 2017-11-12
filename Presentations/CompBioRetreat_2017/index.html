@@ -53,9 +53,18 @@
 					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:90px; color:Black;">MASH</sectionTitleStyle>
 					<p style="font-family: 'Yanone Kaffeesatz'; color:Black;">Modular Analysis & Simulation for Human Health</p>
 					<img src="./images/MASH_moveNetwork.jpg" style="height:375px; border-radius:0px;">
-					<p style="font-family: 'Droid Serif'; font-size:20px; color:Black;">Sean Wu<sup style="font-size:10px;">1</sup>, Héctor M. Sánchez C.<sup style="font-size:10px;">1</sup>, Biyonka Liang<sup style="font-size:10px;">1</sup>, David L. Smith<sup style="font-size:10px;">2</sup></p>
+					<p style="font-family: 'Droid Serif'; font-size:20px; color:Black;">
+						Sean Wu<sup style="font-size:10px;">1</sup>,
+						Héctor M. Sánchez C.<sup style="font-size:10px;">1</sup>,
+						Biyonka Liang<sup style="font-size:10px;">1</sup>,
+						Amit Verma<sup style="font-size:10px;">2</sup>,
+						Robert C. Reiner, Jr.<sup style="font-size:10px;">3</sup>,
+						John M. Henry<sup style="font-size:10px;">3</sup>,
+						Daniel Citron<sup style="font-size:10px;">3</sup>,
+						David L. Smith<sup style="font-size:10px;">3</sup>
 					<ol style="font-family: 'Droid Serif'; font-size:12.5px; color:Black;">
 						<li>University of California, Berkeley</li>
+						<li>Emory University, Atlanta, Georgia</li>
 						<li>Institute for Health Metrics and Evaluation, Seattle, Washington</li>
 					</ol>
 				</section>
@@ -108,13 +117,20 @@
 					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;">Models of Human Infection Dynamics</sectionTitleStyle><br>
 					<ul style="font-family: 'Droid Serif'; font-size:15px; color:Black; margin-left:50px;">
 						<li>
-							PfSI: "Enhanced" SIS Model
-								* fsafsa
-								*	fdafas
+							PfSI: "Enhanced" SIS (Susceptible-Infected-Susceptible) Model
+								<br> <font style="font-family: 'Droid Serif'; font-size:12px; color:Black; margin-left:50px;">&#9679; Infection can provoke malarial fever, leads to treatment-seeking behavior.</font>
+								<br> <font style="font-family: 'Droid Serif'; font-size:12px; color:Black; margin-left:50px;">&#9679; Model of basic drug regimen, PE and GS transmission-blocking vaccines.</font>
+							<p>
 							<img src="./images/MASH_PfSI.png" style="width:50%;">
+							</p>
 						</li>
-						<li>PfMOI: Queuing Model of Superinfection</li>
-						<li>PfLOME: Individual gametocyte Model of Within-host Dynamics</li>
+						<li>PfMOI: Queuing Model of Superinfection (Multiplicity of Infection)
+							<br> <font style="font-family: 'Droid Serif'; font-size:12px; color:Black; margin-left:50px;">&#9679; Concurrent infections form a G/G/&#8734; queue.</font>
+							<br> <font style="font-family: 'Droid Serif'; font-size:12px; color:Black; margin-left:50px;">&#9679; Models that do not take into account MOI produce overly optimistic elimination timelines at low transmission.</font>
+						</li>
+						<li>PfLOME: Individual gametocyte Model of Within-host Dynamics (Lifetime Ontogeny of Malaria Epidemiology)
+								<br> <font style="font-family: 'Droid Serif'; font-size:12px; color:Black; margin-left:50px;">&#9679; Currently developing model of within and between host evolutionary dynamics of <i>Plasmodium falciparum</i>.</font>
+						</li>
 					</ul>
 					<!-- <img src="./images/MBITES_PDE.gif" style="width:40%; border-radius:5px;"> -->
 				</section>
@@ -159,12 +175,13 @@
 				<section style="border-width:5px; color:Black;">
 					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:65px; color:Black;">Project Status</sectionTitleStyle><br>
 					<ul style="font-family: 'Droid Serif'; font-size:15px; color:Black; margin-left:50px;">
-						<li>MASH is a family of open-source R packages</li>
-						<li>Codebase: object-oriented R6 and object-oriented C++ for computationally heavy elements</li>
-						<li>Integrate MICRO with larger MASH (Modular Analysis &amp; Simulation for Human Health) projects for simulation of infectious disease transmission at national scales</li>
-						<li>Integrate <i>PfLOME</i>, a model of within and between host evolutionary dynamics of malaria</li>
+						<li>MASH is a family of open-source R packages and C++ executables</li>
+						<li>Updating old C++03 code to C++11/C++14 standard</li>
+						<li>Refining Bioko Island simulations with better data</li>
+						<li>Parameterizing 1200km<sup>2</sup>, 60,000 human simulation of low-transmission environment in conjunction with researchers from JHU</li>
 						<li>More flexible simulation of human movement across scales (neighborhood, city, province, country)</li>
 					</ul>
+					<p></p>
 					<sectionTitleStyle style="font-family: 'Yanone Kaffeesatz'; font-size:40px; color:Black;">Affiliations &amp; Funding</sectionTitleStyle><br>
 					<img src="./images/MASH_Berkeley.jpg" style="height:75px; border-radius: 5px;">
 					<img src="./images/MASH_ihme.png" style="height:75px; border-radius: 5px;">
