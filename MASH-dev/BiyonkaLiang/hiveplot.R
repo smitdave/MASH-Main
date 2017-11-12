@@ -28,6 +28,35 @@ humanForMosquito = function(name){
   data.frame(source = mos, sink = human, stringsAsFactors = FALSE)
 }
 
+# ###############################################################################
+# # BEGIN SEAN EDIT FOR temporalNetwork.R
+# ###############################################################################
+# humanForMosquito = function(name){
+#   if ( hp[[name]]$vectorInf[2] == "initInf" & (length(hp[[name]]$vectorInf) > 2)) {
+#     mos = hp[[name]]$vectorInf[seq(3, length(hp[[name]]$vectorInf), 1)] 
+#   }
+#   else if (length(hp[[name]]$vectorInf) > 2){
+#     mos = hp[[name]]$vectorInf[seq(2, length(hp[[name]]$vectorInf), 1)]
+#   }
+#   else if (length(hp[[name]]$vectorInf) <= 2){
+#     return (NULL)
+#   }
+#   human = rep(name, length(mos))
+#   time = hp[[name]]$eventT[which(hp[[name]]$events == "I")]
+#   if(length(human)!=length(time)){
+#     # browser()
+#     time = time[-1]
+#   }
+#   data.frame(source = mos, sink = human, time = time, stringsAsFactors = FALSE)
+# }
+# 
+# mylist = lapply(names(hp), humanForMosquito)
+# myList = Filter(Negate(is.null),mylist)
+# df = bind_rows(myList)
+# ###############################################################################
+# # END SEAN EDIT FOR temporalNetwork.R
+# ###############################################################################
+
 mylist = lapply(names(hp), humanForMosquito)
 myList = Filter(Negate(is.null),mylist)
 df = bind_rows(myList)
