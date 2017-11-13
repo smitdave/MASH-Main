@@ -463,7 +463,7 @@ updateHistory = function(ixH, t){ with(HUMANS[[ixH]]$Pf, {
   HUMANS[[ixH]]$Pf$History$MOI1 <<- c(History$MOI1, sum(activeP>0))
   HUMANS[[ixH]]$History$RBC <<- c(HUMANS[[ixH]]$History$RBC,HUMANS[[ixH]]$RBC)
   HUMANS[[ixH]]$History$Anemia <<- c(HUMANS[[ixH]]$History$Anemia,HUMANS[[ixH]]$Anemia)
-  HUMANS[[ixH]]$Pf$History$HRP2 <<- c(History$HRP2,HUMANS[[ixH]]$HRP2)
+  HUMANS[[ixH]]$History$HRP2 <<- c(HUMANS[[ixH]]$History$HRP2,HUMANS[[ixH]]$HRP2)
   if(length(ptypes)>0) {
     HUMANS[[ixH]]$Pf$History$ptypes <<- History$ptypes+ptypes
   }

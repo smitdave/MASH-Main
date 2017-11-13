@@ -92,7 +92,7 @@ plotHistory = function(human, bites, moi, age){with(human$Pf$History,{
 #####################################plot function####################
 #plotHistory(human, bites, moi, age)
 
-#years = age/365
+##years = age/365
 #plot(years, human$History$RBC,"l",ylab='RBC (10^13)',ylim=c(0,4))
 #abline(h=2.5/3)
 #plot(human$History$Anemia)

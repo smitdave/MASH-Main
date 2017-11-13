@@ -1106,7 +1106,7 @@ ui = fluidPage(
       M = M[,5:ncol(M)]
       
       quantM = colQuantiles(M,probs=seq(0, 1, 0.1))
-      Mmed = quantM[,5]
+      Mmed = quantM[,6]
       peakD=which(Mmed==max(Mmed))-4
       mxPD = max(Mmed)
       m0 = Mmed[4]
