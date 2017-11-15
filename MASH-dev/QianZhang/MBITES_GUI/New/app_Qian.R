@@ -93,7 +93,7 @@ mbitesGadget = function(...){
                     plotOutput("senescence_plot")
                     )),
                 ###########################################################################
-                tabPanel("Wing Tattering",
+                tabPanel("Damage",
                   checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
                   sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
                               value = 0.5, min = 0, max = 1, step = 0.1),
@@ -141,7 +141,18 @@ mbitesGadget = function(...){
                   sliderInput(inputId = "PfEIP", label ="Entomological Inoculation Period for Plasmodium falciparum During MosquitoFemale$probing()",
                               value = 12, min = 0, max = 100, step = 1)
                   ),
-                tabPanel("Resting Spot"
+                tabPanel("Resting Spot",
+                  h4("Landing Spot Weights: Enter a vector (comma delimited) for each bout"),
+                  textInput("F_wts", "F: Blood Feeding Search", "1,1,1,1,1"),
+                  textInput("B_wts", "B: Blood Feeding Attempt", "1,1,1,1,1"),
+                  textInput("R_wts", "R: Post-prandial Resting", "1,1,1,1,1"),
+                  textInput("L_wts", "L: Egg Laying Search", "1,1,1,1,1"),
+                  textInput("O_wts", "O: Egg Laying Attempt", "1,1,1,1,1"),
+                  textInput("M_wts", "M: Mating", "1,1,1,1,1"),
+                  textInput("S_wts", "S: Sugar Feeding Attempt", "1,1,1,1,1")
+
+                              
+                  
                   ),
                 tabPanel("Egg",
                   sliderInput(inputId = "bs_m", label ="Mean of Normally-distributed Egg Batch Size",
@@ -164,165 +175,6 @@ mbitesGadget = function(...){
                 )
 
             )),
-          #################################################################################
-          # tabPanel(title = "Bouts",   value = "bouts",
-          #   fluidPage(
-          #     sidebarLayout(position = "right",
-          #       sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
-          #         helpText("Please Select the Bouts and Set Parameters:"),
-          #         checkboxInput("showF", "F: Blood Feeding Search", FALSE),
-                  # conditionalPanel(condition = "input.showF",
-                  #   wellPanel(sliderInput(inputId = "F_time", label ="Mean Time Elapsed (in days)",
-                  #             value = 0.02, min = 0, max = 1, step = 0.01),
-                  #             sliderInput(inputId = "F_succeed", label ="Probability of Success",
-                  #             value = 0.98, min = 0.9, max = 1, step = 0.01),
-                  #             sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
-                  #             value = 0.99, min = 0.9, max = 1, step = 0.01),
-                  #             textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
-                  #             )
-                  #   ),
-
-          #         checkboxInput("showB", "B: Blood Feeding Attempt", FALSE),
-          #         conditionalPanel(condition = "input.showB",
-          #           wellPanel(sliderInput(inputId = "B_time", label ="Mean Time Elapsed (in days)",
-          #                     value = 0.04, min = 0, max = 2, step = 0.01),
-          #                     sliderInput(inputId = "B_succeed", label ="Probability of Success",
-          #                     value = 0.95, min = 0.8, max = 1, step = 0.01),
-          #                     sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                     textInput("B_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
-          #                     checkboxInput("showhuman", "Human Host Encounter", FALSE),
-          #                     conditionalPanel(condition = "input.showhuman",
-          #                       wellPanel(sliderInput(inputId = "surviveH", label ="Survival Probability of Initial Encounter (Proceed to Probe)",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                                 sliderInput(inputId = "probeH", label ="Probability Undeterred and Begin Probing",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                                 sliderInput(inputId = "surviveprobeH", label ="Survival Probability of Probing",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                                 sliderInput(inputId = "feedH", label ="Probability to Successfully blood feed",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01)
-          #                       )),
-          #                     checkboxInput("shownonhuman", "Non-human Host Encounter", FALSE),
-          #                     conditionalPanel(condition = "input.shownonhuman",
-          #                       wellPanel(sliderInput(inputId = "surviveZ", label ="Survival Probability of Initial Encounter (Proceed to Feed)",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                                 sliderInput(inputId = "feedZ", label ="Probability to Successfully Blood Feed",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01)
-          #                         )
-          #                       ),
-          #                     sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
-          #                     value = 7.5, min = 0, max = 20, step = 0.5),
-          #                     sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
-          #                     value = 2.5, min = 0, max = 20, step = 0.5),
-          #                     checkboxInput("overfeed", "Overfeed", FALSE),
-          #                     conditionalPanel(condition = "input.overfeed",
-          #                       sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
-          #                         value = 8, min = 5, max = 10, step = 0.01),
-          #                       sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
-          #                         value = 5000, min = 0, max = 10000, step = 100)),
-          #                     sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement",
-          #                     value = 0, min = 0, max = 100, step = 1),
-          #                     sliderInput(inputId = "Q", label ="Human Blood Index",
-          #                     value = 0.9, min = 0, max = 1, step = 0.1)
-          #                     )
-          #           ),
-                  
-                  # checkboxInput("showR", "R: Post-prandial Resting", FALSE),
-                  # conditionalPanel(condition = "input.showR",
-                  #   wellPanel(sliderInput(inputId = "R_time", label ="Mean Time Elapsed (in days)",
-                  #             value = 1, min = 0, max = 3, step = 0.01),
-                  #             sliderInput(inputId = "R_surv", label ="Baseline Probability of Survival",
-                  #             value = 0.99, min = 0.9, max = 1, step = 0.01),
-                  #             textInput("R_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
-                  #             checkboxInput("REFEED", "Refeed", FALSE),
-                  #             conditionalPanel(condition = "input.refeed",
-                  #               sliderInput(inputId = "rf_a", "Exp Param a for refeeding as function of bmSize",
-                  #                 value = 60, min = 0, max = 100, step = 1),
-                  #               sliderInput(inputId = "rf_b", "Exp Param b for refeeding as function of bmSize",
-                  #                 value = 5000, min = 0, max = 10000, step = 100)))
-                  #   ),
-                  
-          #         checkboxInput("showL", "L: Egg Laying Search", FALSE),
-          #         conditionalPanel(condition = "input.showL",
-                    # wellPanel(sliderInput(inputId = "L_time", label ="Mean Time Elapsed (in days)",
-                    #           value = 0.02, min = 0, max = 2, step = 0.01),
-                    #           sliderInput(inputId = "L_succeed", label ="Probability of Success",
-                    #           value = 0.98, min = 0.8, max = 1, step = 0.01),
-                    #           sliderInput(inputId = "L_surv", label ="Baseline Probability of Survival",
-                    #           value = 0.99, min = 0.9, max = 1, step = 0.01),
-                    #           textInput("L_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
-                    # ),
-                  
-          #         checkboxInput("showO", "O: Egg Laying Attempt", FALSE),
-          #         conditionalPanel(condition = "input.showO",
-          #           wellPanel(sliderInput(inputId = "O_time", label ="Mean Time Elapsed (in days)",
-          #                     value = 0.04, min = 0, max = 2, step = 0.01),
-          #                     sliderInput(inputId = "O_succeed", label ="Probability of Success",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                     sliderInput(inputId = "O_surv", label ="Baseline Probability of Survival",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                     textInput("O_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
-          #           ),
-
-          #         checkboxInput("showM", "M: Mating", FALSE),
-          #         conditionalPanel(condition = "input.showM",
-          #           wellPanel(sliderInput(inputId = "M_time", label ="Mean Time Elapsed (in days)",
-          #                     value = 0.02, min = 0, max = 2, step = 0.01),
-          #                     sliderInput(inputId = "M_succeed", label ="Probability of Success",
-          #                     value = 0.95, min = 0.9, max = 1, step = 0.01),
-          #                     sliderInput(inputId = "M_surv", label ="Baseline Probability of Survival",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                     textInput("M_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
-          #           ),
-
-          #         checkboxInput("showS", "S: Sugar Feeding Attempt", FALSE),
-          #         conditionalPanel(condition = "input.showS",
-          #           wellPanel(sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
-          #                     value = 0.02, min = 0, max = 2, step = 0.01),
-          #                     sliderInput(inputId = "S_succeed", label ="Probability of Success",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                     sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                     textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
-          #                     sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement",
-          #                     value = 0, min = 0, max = 100, step = 1))
-          #           ),
-                  
-          #         checkboxInput("showE", "E: Estivation", FALSE),
-          #         conditionalPanel(condition = "input.showE",
-          #           wellPanel(helpText("test"))
-          #         ),
-
-          #         checkboxInput("showMale", "Male Mosquitoes", FALSE),
-          #         conditionalPanel(condition = "input.showMale",
-          #           wellPanel(
-          #             checkboxInput("showMaleS", "Sugar Feeding", FALSE),
-          #             conditionalPanel(condition = "input.showMaleS",
-          #               wellPanel("test")),
-          #             checkboxInput("showMaleM", "Mating", FALSE),
-          #             conditionalPanel(condition = "input.showMaleM",
-          #               wellPanel("test"))
-          #               )
-          #           ),
-          #         actionButton('save_inputs_bout', 'Save inputs')
-
-          #         ),
-                
-          #       mainPanel(
-          #         helpText("Output Plots"),
-          #                           conditionalPanel(condition = "input.showF",
-          #           wellPanel(sliderInput(inputId = "F_time", label ="Mean Time Elapsed (in days)",
-          #                     value = 0.02, min = 0, max = 1, step = 0.01),
-          #                     sliderInput(inputId = "F_succeed", label ="Probability of Success",
-          #                     value = 0.98, min = 0.9, max = 1, step = 0.01),
-          #                     sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
-          #                     value = 0.99, min = 0.9, max = 1, step = 0.01),
-          #                     textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
-          #                     )
-          #           )
-          #         )
-          #       )
-          #   )),
           #################################################################################
           tabPanel(title = "Bouts", value = "bouts",
             useShinyjs(),
@@ -509,25 +361,44 @@ mbitesGadget = function(...){
     #######################################################################
     output$panel_f <- renderUI({
         if (input$showF)
-            wellPanel(
-              sliderInput(inputId = "F_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.02, min = 0, max = 1, step = 0.01),
-              sliderInput(inputId = "F_succeed", label ="Probability of Success",
+            column(6,
+              wellPanel(
+              #sliderInput(inputId = "F_time", label ="Mean Time Elapsed (in days)",
+                              #value = 0.02, min = 0, max = 1, step = 0.01),
+              
+                h5("Mean Time Elapsed: "),
+                fluidRow(
+                column(6,selectInput("F_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+                column(6,selectInput("F_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+                ),
+                sliderInput(inputId = "F_succeed", label ="Probability of Success",
                               value = 0.98, min = 0.9, max = 1, step = 0.01),
-              sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
-                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-              textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
-                              )
+                sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
+                              value = 0.99, min = 0.9, max = 1, step = 0.01)#,
+              #textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+                    )
+              )
+
     })
+
+
+
     output$panel_b <- renderUI({
         if (input$showB)
-            wellPanel(sliderInput(inputId = "B_time", label ="Mean Time Elapsed (in days)",
-                                  value = 0.04, min = 0, max = 2, step = 0.01),
+          column(6,
+            wellPanel(
+                      #sliderInput(inputId = "B_time", label ="Mean Time Elapsed (in days)",
+                                  #value = 0.04, min = 0, max = 2, step = 0.01),
+                      h5("Mean Time Elapsed: "),
+                      fluidRow(
+                        column(6,selectInput("B_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+                        column(6,selectInput("B_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+                              ),
                       sliderInput(inputId = "B_succeed", label ="Probability of Success",
                                   value = 0.95, min = 0.8, max = 1, step = 0.01),                #                     
                       sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",
                                   value = 0.99, min = 0.9, max = 1, step = 0.01),
-                      textInput("B_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+                      #textInput("B_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
                       checkboxInput("showhuman", "Human Host Encounter", FALSE),
                       conditionalPanel(condition = "input.showhuman",
                         wellPanel(sliderInput(inputId = "surviveH", label ="Survival Probability of Initial Encounter (Proceed to Probe)",
@@ -546,92 +417,131 @@ mbitesGadget = function(...){
                                   sliderInput(inputId = "feedZ", label ="Probability to Successfully Blood Feed",
                                      value = 0.99, min = 0.9, max = 1, step = 0.01)
                                   )),
-                      sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
+                      checkboxInput("showBloodMeal", "Blood Meal Size", FALSE),
+                      conditionalPanel(condition = "input.showBloodMeal",
+                        wellPanel(
+                          sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
                                   value = 7.5, min = 0, max = 20, step = 0.5),
-                      sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
-                                  value = 2.5, min = 0, max = 20, step = 0.5),
+                          sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
+                                  value = 2.5, min = 0, max = 20, step = 0.5)
+                          )
+                        ),
                       checkboxInput("overfeed", "Overfeed", FALSE),
                       conditionalPanel(condition = "input.overfeed",
                         sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
                           value = 8, min = 5, max = 10, step = 0.01),
                         sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
                           value = 5000, min = 0, max = 10000, step = 100)),
-                      sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement",
+                      sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
                         value = 0, min = 0, max = 100, step = 1),
                       sliderInput(inputId = "Q", label ="Human Blood Index",
                         value = 0.9, min = 0, max = 1, step = 0.1)
-                      )
+                      ))
         })
     output$panel_r <- renderUI({
         if (input$showR)
+          column(6,
           wellPanel(
             conditionalPanel(condition = "input.showR",
-              wellPanel(sliderInput(inputId = "R_time", label ="Mean Time Elapsed (in days)",
-                value = 1, min = 0, max = 3, step = 0.01),
-              sliderInput(inputId = "R_surv", label ="Baseline Probability of Survival",
+              wellPanel(#sliderInput(inputId = "R_time", label ="Mean Time Elapsed (in days)",
+                #value = 1, min = 0, max = 3, step = 0.01),
+                h5("Mean Time Elapsed: "),
+                fluidRow(
+                column(6,selectInput("R_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+                column(6,selectInput("R_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+                ),
+                sliderInput(inputId = "R_surv", label ="Baseline Probability of Survival",
                 value = 0.99, min = 0.9, max = 1, step = 0.01),
-              textInput("R_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+              #textInput("R_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
               checkboxInput("REFEED", "Refeed", FALSE),
               conditionalPanel(condition = "input.refeed",
                 sliderInput(inputId = "rf_a", "Exp Param a for refeeding as function of bmSize",
                   value = 60, min = 0, max = 100, step = 1),
                 sliderInput(inputId = "rf_b", "Exp Param b for refeeding as function of bmSize",
                   value = 5000, min = 0, max = 10000, step = 100)))
-              ))
+              )))
         })    
     output$panel_l <- renderUI({
         if (input$showL)
+          column(6,
             wellPanel(
-              sliderInput(inputId = "L_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.02, min = 0, max = 2, step = 0.01),
+              #sliderInput(inputId = "L_time", label ="Mean Time Elapsed (in days)",
+                              #value = 0.02, min = 0, max = 2, step = 0.01),
+              h5("Mean Time Elapsed: "),
+                fluidRow(
+                column(6,selectInput("L_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+                column(6,selectInput("L_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+                ),
               sliderInput(inputId = "L_succeed", label ="Probability of Success",
                               value = 0.98, min = 0.8, max = 1, step = 0.01),
               sliderInput(inputId = "L_surv", label ="Baseline Probability of Survival",
-                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-              textInput("L_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
-                    )
+                              value = 0.99, min = 0.9, max = 1, step = 0.01)#,
+              #textInput("L_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+                    ))
     })
     output$panel_o <- renderUI({
         if (input$showO)
+          column(6,
             wellPanel(
-              sliderInput(inputId = "O_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.04, min = 0, max = 2, step = 0.01),
+              #sliderInput(inputId = "O_time", label ="Mean Time Elapsed (in days)",
+                              #value = 0.04, min = 0, max = 2, step = 0.01),
+              h5("Mean Time Elapsed: "),
+                fluidRow(
+                column(6,selectInput("O_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+                column(6,selectInput("O_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+                ),
               sliderInput(inputId = "O_succeed", label ="Probability of Success",
                               value = 0.99, min = 0.9, max = 1, step = 0.01),
               sliderInput(inputId = "O_surv", label ="Baseline Probability of Survival",
-                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-              textInput("O_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
+                              value = 0.99, min = 0.9, max = 1, step = 0.01)#,
+              #textInput("O_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+              ))
     })
     output$panel_m <- renderUI({
         if (input$showM)
+          column(6,
             wellPanel(
-              sliderInput(inputId = "M_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.02, min = 0, max = 2, step = 0.01),
+              #sliderInput(inputId = "M_time", label ="Mean Time Elapsed (in days)",
+                              #value = 0.02, min = 0, max = 2, step = 0.01),
+              h5("Mean Time Elapsed: "),
+                fluidRow(
+                column(6,selectInput("M_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+                column(6,selectInput("M_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+                ),
               sliderInput(inputId = "M_succeed", label ="Probability of Success",
                               value = 0.95, min = 0.9, max = 1, step = 0.01),
               sliderInput(inputId = "M_surv", label ="Baseline Probability of Survival",
-                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-              textInput("M_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"))
+                              value = 0.99, min = 0.9, max = 1, step = 0.01)#,
+              #textInput("M_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+              ))
     })
     output$panel_s <- renderUI({
         if (input$showS)
+          column(6,
             wellPanel(
-              sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
-                              value = 0.02, min = 0, max = 2, step = 0.01),
+              #sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
+                              #value = 0.02, min = 0, max = 2, step = 0.01),
+              h5("Mean Time Elapsed: "),
+                fluidRow(
+                column(6,selectInput("S_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+                column(6,selectInput("S_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+                ),
               sliderInput(inputId = "S_succeed", label ="Probability of Success",
                               value = 0.99, min = 0.9, max = 1, step = 0.01),
               sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",
                               value = 0.99, min = 0.9, max = 1, step = 0.01),
-              textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
-              sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement",
-                              value = 0, min = 0, max = 100, step = 1))
+              #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+              sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+                              value = 0, min = 0, max = 100, step = 1)))
     })    
     output$panel_e <- renderUI({
         if (input$showE)
-            wellPanel(helpText("test"))
+          column(6,
+            wellPanel(helpText("test")))
     })
     output$panel_male <- renderUI({
         if (input$showMale)
+          column(6,
             wellPanel(
               checkboxInput("showMaleS", "Sugar Feeding", FALSE),
               conditionalPanel(condition = "input.showMaleS",
@@ -639,7 +549,7 @@ mbitesGadget = function(...){
               checkboxInput("showMaleM", "Mating", FALSE),
               conditionalPanel(condition = "input.showMaleM",
                 wellPanel("test"))
-              )
+              ))
     }) 
     observe({
       toggle(condition = input$showF, selector = "#boutbar li a[data-value=bout_f]")
@@ -678,7 +588,7 @@ mbitesGadget = function(...){
     
     observeEvent(input$save_inputs_bout, {
       # Define inputs to save
-      f_param_name <- c('F_time', 'F_succeed', 'F_surv',
+      f_param_name <- c('F_time_m', 'F_time_h', 'F_succeed', 'F_surv',
         'F_wts')
       b_param_name <- c('B_time', 'B_succeed', 'B_surv', 'B_wts',
         'surviveH', 'probeH', 'surviveprobeH', 'feedH',
@@ -735,7 +645,6 @@ mbitesGadget = function(...){
       jsonOut=prettify(toJSON(inputs_data_frame))
       write(jsonOut,paste0(DIR,"/bouts.json"))
     }) 
-    
   }
   #########################################################################################
   # RUN
