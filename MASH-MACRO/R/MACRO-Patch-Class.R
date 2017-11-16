@@ -137,7 +137,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                     # Mosquito Feeding
                     bWeightHuman   = NULL,  # biting weight of HumanPop
                     bWeightZoo     = NULL,  # biting weight of livestock
-                    kappa          = NULL,       # relative infectiousness
+                    kappa          = NULL,  # relative infectiousness
 
                     # R6 Classes
                     MosquitoPop = NULL,

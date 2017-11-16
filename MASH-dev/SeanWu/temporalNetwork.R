@@ -53,7 +53,7 @@ add.vertices.networkDynamic(x = pfNet,nv = length(unique(edges$to)),vertex.pid =
 add.vertices.networkDynamic(x = pfNet,nv = length(unique(edges$from)),vertex.pid = unique(edges$from))
 
 pfNet %v% "vertex.names" <- c(unique(edges$to),unique(edges$from))
-pfNet %v% "vertex.col" <- c(rep("#5DAFDB", length(unique(edges$to))),rep("#F7A665",length(unique(edges$from))))
+pfNet %v% "vertex.col" <- c(rep("#4682B4BF", length(unique(edges$to))),rep("#B22222BF",length(unique(edges$from))))
 
 set.network.attribute(pfNet,"vertex.pid","vertex.names")
 add.edges.networkDynamic(pfNet,
@@ -63,10 +63,9 @@ add.edges.networkDynamic(pfNet,
 activate.edges(pfNet, e =  1:nrow(edges), at = edges$active)
 
 
-# slice.par <- list(start = 1, end = max(edges$active)+1, interval = 1, aggregate.dur = 1, rule = "earliest")
-slice.par <- list(start = 1, end = 10, interval = 1, aggregate.dur = 1,rule="earliest")
+slice.par <- list(start = 1, end = max(edges$active)+1, interval = 5, aggregate.dur = 5, rule = "earliest")
 compute.animation(pfNet,
-                  animation.mode = "Graphviz",
+                  animation.mode = "kamadakawai",
                   slice.par = slice.par)
 render.d3movie(pfNet,
                slice.par = slice.par,
