@@ -12,6 +12,7 @@ library(plotly)
 library(markdown)
 library(igraph)
 library(jsonlite)
+library(shinyFiles)
 if(system("whoami",intern=TRUE) == "chipdelmal"){
   DIR = "/Users/chipdelmal/Documents/Github/MASH-MAIN/MASH-dev/HectorSanchez/MBITES_GUI/New/"
   setwd(DIR)
@@ -422,7 +423,9 @@ mbitesGadget = function(...){
     })
     output$landscape_f_file <- renderUI({
       if(input$landscape_f_input %in% c("imp_xy", "imp_xyw")){
-        textInput("landscape_f_filepath", "Please provide the file path:)", "")
+        shinyFilesButton("landscape_f_filepath", "Choose a file",
+        				title = "Please select a file:", multiple = FALSE,
+        				buttonType = "default", class = NULL)
       }
     })
 
