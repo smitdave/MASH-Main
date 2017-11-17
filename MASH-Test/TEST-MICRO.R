@@ -19,8 +19,8 @@ rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
 
-DEBUG.MASHMICRO()
-MASHcpp::DEBUG.MASHCPP()
+DEBUG.MASHMICRO(MASHCPP = TRUE)
+# MASHcpp::DEBUG.MASHCPP()
 MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile

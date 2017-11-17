@@ -9,6 +9,9 @@
 #################################################################
 
 
+# MASHcpp::mosquitoPfSI(PfID_init = -1L, MosquitoID_init = private$id, infected_init = FALSE)
+
+
 #' Initialize SimBite PfSI Module
 #'
 #' Generate a list of parameters PfSI_PAR in \code{\link{HumanPop}} and public methods in \code{\link{Human}}

@@ -85,11 +85,11 @@ MBITES.BRO.Parameters(B_wts = rep(1, 5), R_wts = rep(1, 5), O_wts = rep(1,
 
 \item{TATTER}{control boolean for wing tattering during \code{\link{mbitesGeneric_surviveFlight}}}
 
-\item{ttsz.p}{zero-inflation for tattering damage (see \code{\link{mbitesGeneric_rTatterSize}})}
+\item{ttsz.p}{zero-inflation for tattering damage (see \code{\link{mbitesGeneric_WingTattering}})}
 
-\item{ttsz.a}{shape param for tattering damage (see \code{\link{mbitesGeneric_rTatterSize}})}
+\item{ttsz.a}{shape param for tattering damage (see \code{\link{mbitesGeneric_WingTattering}})}
 
-\item{ttsz.b}{shape param for tattering damage (see \code{\link{mbitesGeneric_rTatterSize}})}
+\item{ttsz.b}{shape param for tattering damage (see \code{\link{mbitesGeneric_WingTattering}})}
 
 \item{ttr.a}{exp param for tattering survival (see \code{\link{mbitesGeneric_pTatter}})}
 

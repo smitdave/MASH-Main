@@ -213,10 +213,6 @@ MBITES.Generic.Setup <- function(
     stop(cat("unrecognized entry for tattering, expected character in 'mean', 'exact', got: ",energy,"\n",sep=""))
   }
 
-  MosquitoFemale$set(which = "public",name = "WingTattering",
-            value = mbitesGeneric_WingTattering,
-            overwrite = overwrite
-  )
 
   MosquitoFemale$set(which = "public",name = "pTatter",
             value = mbitesGeneric_pTatter,

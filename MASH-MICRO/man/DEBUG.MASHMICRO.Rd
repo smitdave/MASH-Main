@@ -4,7 +4,7 @@
 \alias{DEBUG.MASHMICRO}
 \title{Debug Finalizers for Classes}
 \usage{
-DEBUG.MASHMICRO(overwrite = TRUE)
+DEBUG.MASHMICRO(MASHCPP = FALSE, overwrite = TRUE)
 }
 \description{
 Print when objects are garbage collected. For debugging purposes only.

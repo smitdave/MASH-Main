@@ -8,7 +8,7 @@ MBITES.Generic.Setup(overwrite = TRUE, tattering = "mean",
   energy = "mean", batchSize = "bms", eggMatT = "off")
 }
 \arguments{
-\item{tattering}{character switch in \code{"mean","exact"}, mean will sample wing tattering from \code{\link{mbitesGeneric_rTatterSize}} regardless of flight distance}
+\item{tattering}{character switch in \code{"mean","exact"}, mean will sample wing tattering from \code{\link{mbitesGeneric_WingTattering}} regardless of flight distance}
 
 \item{energy}{character switch in \code{"mean","exact"}, mean will sample energy consumption}
 
