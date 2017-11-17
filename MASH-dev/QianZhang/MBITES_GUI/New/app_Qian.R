@@ -258,9 +258,18 @@ mbitesGadget = function(...){
                 checkboxInput("showPoints", "Points", FALSE),
                 conditionalPanel(condition = "input.showPoints",
                   wellPanel(
-                    helpText("f"),
-                    helpText("m"),
-                    helpText("s")
+                    checkboxInput("landscape_point_f", "f", FALSE),
+                    conditionalPanel(condition = "input.landscape_point_f",
+                    	radioButtons(inputId = "landscape_f_input", "Provide the locations and weights:",
+                    		choices = c("Clusters" = "cluster",
+                    					"Import x, y, w" = "imp_xyw",
+                    					"Import x, y" = "imp_xy"
+                    					),
+                    		selected = "cluster"),
+                    	uiOutput("landscape_f_file")
+                    	),
+                    checkboxInput("landscape_point_m", "m", FALSE),
+                    checkboxInput("landscape_point_s", "s", FALSE)
                     )
                   ),
                 checkboxInput("showKernels", "Kernels(Female)", FALSE),
@@ -281,7 +290,14 @@ mbitesGadget = function(...){
                   )
                 ),
               mainPanel(
-                helpText("test output")
+                tabsetPanel(
+                	id = "landscape_output",
+                	tabPanel(
+                		title = "Point: f",
+                		value = "landscape_out_f",
+                		plotOutput("panel_landscape_out_f")
+                		)
+                	)
                 )
           )),
           #################################################################################
@@ -330,6 +346,53 @@ mbitesGadget = function(...){
       ggplot(data.frame(age), aes(age)) + stat_function(fun= senescence_surv) + ylim(0,1) +
         xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
     })
+
+    output$panel_landscape_out_f <- renderPlot({
+    	 if(input$landscape_point_f & input$landscape_f_input == "cluster"){
+    		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+			  set.seed(seed)
+			  xCenters = runif(nCenters, -rng, rng)
+			  yCenters = runif(nCenters, -rng, rng)
+
+			  x = 0
+			  y=0
+
+			  n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
+			  spread = rgamma(nCenters,1,1)*spr
+
+			  for(i in 1:nCenters){
+			    x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
+			    y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
+			  }
+			  x = x[-1]
+			  y = y[-1]
+
+			  plot(x,y, pch = 15, col = "red") 
+			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))  
+			}
+
+			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+			xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+			N_l = length(xy_l[,1])
+			w_l = rgamma(length(xy_f[,1]), 1,1)
+
+			xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+
+			xy_f = rbind(xy_f, xy_f1)
+			N_f = length(xy_f[,1])
+			w_f = rgamma(length(xy_f[,1]), 1,1)
+
+			plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+
+			points(xy_l, pch =15, col = "blue")
+
+
+
+    	 }
+      
+    })
+
+
     observe({
         if (input$launchgo > 0) { 
             session$sendCustomMessage('activeNavs', 'Options')
@@ -355,6 +418,11 @@ mbitesGadget = function(...){
     output$prepath.box <- renderUI({
       if(input$project == "exist"){
         textInput("prepath", "Please provide the previous working directory (the folder contains .json file)", "")
+      }
+    })
+    output$landscape_f_file <- renderUI({
+      if(input$landscape_f_input %in% c("imp_xy", "imp_xyw")){
+        textInput("landscape_f_filepath", "Please provide the file path:)", "")
       }
     })
 
