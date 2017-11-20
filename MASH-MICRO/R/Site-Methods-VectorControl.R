@@ -46,6 +46,27 @@ MatingSite$set(which="public",name="set_aerialSpray",value=set_aerialSpray,overw
 get_aerialSpray=function(){return(private$aerialSpray)}
 MatingSite$set(which="public",name="get_aerialSpray",value=get_aerialSpray,overwrite=TRUE)
 
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_swarmSpray=function(swarmSprayDefinition){private$swarmSpray=swarmSprayDefinition}
+MatingSite$set(which="public",name="set_swarmSpray",value=set_swarmSpray,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_swarmSpray=function(){return(private$swarmSpray)}
+MatingSite$set(which="public",name="get_swarmSpray",value=get_swarmSpray,overwrite=TRUE)
+
 ########################################################################################################
 # Feeding Site Methods
 ########################################################################################################
