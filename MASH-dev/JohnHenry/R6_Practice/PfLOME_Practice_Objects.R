@@ -22,31 +22,10 @@ Pf <- R6Class("Pf",
               inherit = Pathogen,
               
               public = list(
-                initialize = function(){
-                },
-                get_mz0 = function(){
-                  private$mz0
-                },
-                set_mz0 = function(newmz0){
-                  private$mz0 = newmz0
-                },
-                get_peakD = function(){
-                  private$peakD
-                },
-                set_peakD = function(newpeakD){
-                  private$peakD = newpeakD
-                },
-                get_peakT = function(){
-                  private$peakT
-                },
-                set_peakT = function(newpeakT){
-                  private$peakT = newpeakT
-                },
-                get_endT = function(){
-                  private$endT
-                },
-                set_endT = function(newendT){
-                  private$endT = newendT
+                initialize = function(t,pfid){
+                  private$pfid = pfid
+                  private$PAR = tentPAR(t,private.pfid)
+                  private$gtype = getGtype(private.pfid)
                 },
                 get_gtype = function(){
                   private$gtype
@@ -62,24 +41,26 @@ Pf <- R6Class("Pf",
                 },
                 
                 ## update function
-                update_parasite = function(t,Pt=0,PAR,PD=0,IM=0){
+                update_Pathogen = function(t,Pt=private$Pt,PAR=private$PAR,PD=0,IM=0){
                   private$Pt = dPdt_tent(t,private$Pt,PAR,PD,IM)
                 }
               ),
               
               private = list(
                 ## tentPars
-                mz0 = NULL,
-                peakD = NULL,
-                peakT = NULL,
-                endT = NULL,
+                PAR = NULL,
                 ## Parasite Densities (Pt = Asexual, Gt = Gametocyte, 
                 ## St = Sporozoite)
+                activeP = NULL,
+                activeG = NULL,
+                activeS = NULL,
                 Pt = NULL,
                 Ptt = NULL,
+                Ptot = NULL,
                 Gt = NULL,
-                Gtt = NULL,
+                Gtot = NULL,
                 St = NULL,
+                Stot = NULL,
                 ## biological parameters
                 gtype = NULL,
                 ptype = NULL
@@ -95,7 +76,7 @@ ImmuneState <- R6Class("ImmuneState",
                        
 )
 
-HealthState <- R6Class("HealthState",
+ HealthState <- R6Class("HealthState",
                        
                        public = list(
                          
@@ -129,6 +110,8 @@ HealthState <- R6Class("HealthState",
                          },
                          set_RBCCount = function(newRBCCount){
                            private$RBCCount <<- newRBCCount
+                         },
+                         update_ImmuneState = function(){
                          }
                        ),
                        
@@ -138,7 +121,26 @@ HealthState <- R6Class("HealthState",
                          pLDH = NULL,
                          RBCCount = NULL
                        )
-                       
+                      
+)
+
+PfPedigree <- R6Class("PfPedigree",
+                      
+                      public = list(
+                        initialize = function(){
+                          private$pfid = 1
+                        }
+                      ),
+                      
+                      private = list(
+                        
+                        pfid = NULL,
+                        gtype = NULL,
+                        ptype = NULL,
+                        mic = 1,
+                        mac = 1
+                        
+                      )
 )
 
 Human <- R6Class("Human",
@@ -158,19 +160,19 @@ Human <- R6Class("Human",
                    ## Infection Event
                    infectHuman = function(){
                      ## set adds pathogen without overwriting previous
-                     private$pathogen = Pathogen$set()
+                     private$pathogen = Pathogen$set(1)
                    },
                    ## write method to remove particular infection
                    clearPathogen = function(pfid){
-                     private$pathogen 
+                     private$pathogen
                    },
                    infectMosquito = function(){
                    },
                    ## Daily Update
                    dailyUpdate = function(){
-                     updatePathogen()
-                     updateImmuneState()
-                     updateHealthState()
+                     private$pathogen$update_Pathogen()
+                     private$immuneState$update_ImmuneState()
+                     private$healthState$update_HealthState()
                    },
                    
                    ## Accessors
@@ -210,7 +212,7 @@ Human <- R6Class("Human",
                    
                    ## daily update functions
                    update_parasite = function(t,PAR,){
-                     
+                     private$pathogen = update_Parasite
                    }
                    
                    ),
