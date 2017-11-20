@@ -25,9 +25,9 @@ if(system("whoami",intern=TRUE)=="slwu89"){
   DIR="/Users/slwu89/Desktop/MASHOUT/"
 }else if(system("whoami",intern=TRUE)=="sanchez.hmsc"){
   DIR="/Users/sanchez.hmsc/Desktop/MASHOUT/"
-  source("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/AssortedScripts/sourceEntireFolder.R")
-  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
-  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
+  #source("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/AssortedScripts/sourceEntireFolder.R")
+  #sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
+  #sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
 }else if(system("whoami",intern=TRUE)=="chipdelmal"){
   DIR="/Users/chipdelmal/Desktop/MASHOUT/"
   sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
@@ -78,3 +78,5 @@ MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,Mosq
 MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 MicroTile$simMICRO_oneRun(tMax = 50,verbose = TRUE,trackPop = TRUE)
+
+MicroTile$get_Landscape()$get_SugarSites(2)
