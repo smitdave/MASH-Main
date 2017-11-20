@@ -26,8 +26,8 @@ if(system("whoami",intern=TRUE)=="slwu89"){
 }else if(system("whoami",intern=TRUE)=="sanchez.hmsc"){
   DIR="/Users/sanchez.hmsc/Desktop/MASHOUT/"
   source("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/AssortedScripts/sourceEntireFolder.R")
-  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
   sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
+  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
 }else if(system("whoami",intern=TRUE)=="chipdelmal"){
   DIR="/Users/chipdelmal/Desktop/MASHOUT/"
   sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
@@ -94,3 +94,15 @@ MicroTile$get_Landscape()$get_MatingSites(2)$get_swarmSpray()
 # areaRepellentTest=SwarmSpray$new(id=10)
 # MicroTile$get_Landscape()$get_MatingSites(2)$set_swarmSpray(swarmSprayTest)
 # MicroTile$get_Landscape()$get_MatingSites(2)$get_swarmSpray()
+ovitrapTest=Ovitrap$new(id=10)
+MicroTile$get_Landscape()$get_AquaSites(2)$set_ovitrap(ovitrapTest)
+MicroTile$get_Landscape()$get_AquaSites(2)$get_ovitrap()
+larvicidingTest=Larvicide$new(id=10)
+MicroTile$get_Landscape()$get_AquaSites(2)$set_ovitrap(larvicidingTest)
+MicroTile$get_Landscape()$get_AquaSites(2)$get_ovitrap()
+sreTest=SourceReduction$new(id=10)
+MicroTile$get_Landscape()$get_AquaSites(2)$set_sourceReduction(sreTest)
+MicroTile$get_Landscape()$get_AquaSites(2)$get_sourceReduction()
+bioTest=BiologicalControl$new(id=10)
+MicroTile$get_Landscape()$get_AquaSites(2)$set_biologicalControl(bioTest)
+MicroTile$get_Landscape()$get_AquaSites(2)$get_biologicalControl()
