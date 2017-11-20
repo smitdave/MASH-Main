@@ -169,3 +169,25 @@ AquaticSite$set(which="public",name="set_sourceReduction",value=set_sourceReduct
 #'
 get_sourceReduction=function(){return(private$sourceReduction)}
 AquaticSite$set(which="public",name="get_sourceReduction",value=get_sourceReduction,overwrite=TRUE)
+
+######################################################
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_biologicalControl=function(biologicalControlDefinition){private$biologicalControl=biologicalControlDefinition}
+AquaticSite$set(which="public",name="set_biologicalControl",value=set_biologicalControl,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_biologicalControl=function(){return(private$biologicalControl)}
+AquaticSite$set(which="public",name="get_biologicalControl",value=get_biologicalControl,overwrite=TRUE)
