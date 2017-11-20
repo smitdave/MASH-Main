@@ -46,6 +46,7 @@ MatingSite$set(which="public",name="set_aerialSpray",value=set_aerialSpray,overw
 get_aerialSpray=function(){return(private$aerialSpray)}
 MatingSite$set(which="public",name="get_aerialSpray",value=get_aerialSpray,overwrite=TRUE)
 
+######################################################
 
 #' Set swarmSpray
 #'
@@ -66,6 +67,28 @@ MatingSite$set(which="public",name="set_swarmSpray",value=set_swarmSpray,overwri
 #'
 get_swarmSpray=function(){return(private$swarmSpray)}
 MatingSite$set(which="public",name="get_swarmSpray",value=get_swarmSpray,overwrite=TRUE)
+
+# ######################################################
+#
+# #' Set areaRepellent
+# #'
+# #' Change the definition of the Area Repellent
+# #'
+# #'
+# #' @param areaRepellent Object
+# #'
+# set_areaRepellent=function(areaRepellentDefinition){private$areaRepellent=areaRepellentDefinition}
+# MatingSite$set(which="public",name="set_areaRepellent",value=set_areaRepellent,overwrite=TRUE)
+#
+# #' Get swarmSpray
+# #'
+# #' Return the definition of the Swarm Spray
+# #'
+# #'
+# #' @param swarmSpray Object
+# #'
+# get_areaRepellent=function(){return(private$areaRepellent)}
+# MatingSite$set(which="public",name="get_areaRepellent",value=get_areaRepellent,overwrite=TRUE)
 
 ########################################################################################################
 # Feeding Site Methods

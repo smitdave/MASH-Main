@@ -254,8 +254,7 @@ MatingSite <- R6::R6Class(classname = "MatingSite",
 
                    # Vector Control
                    aerialSpray=NULL,
-                   swarmSpray=NULL,
-                   areaRepellent=NULL
+                   swarmSpray=NULL
                  )
 )
 
