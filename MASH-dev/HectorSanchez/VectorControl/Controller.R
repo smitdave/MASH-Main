@@ -55,5 +55,3 @@ deployInterventionAtSite=function(interventionObject,LANDSCAPE_site){
 
 testATSB=ATSB$new()
 deployIntervention(testATSB,LANDSCAPE$feedSites[[1]])
-
-

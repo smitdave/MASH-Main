@@ -13,6 +13,7 @@
 
 rm(list=ls());gc()
 library(MASHmicro)
+library(R6)
 # set.seed(42L)
 
 #DEBUG.MASHMICRO()
@@ -24,7 +25,9 @@ if(system("whoami",intern=TRUE)=="slwu89"){
   DIR="/Users/slwu89/Desktop/MASHOUT/"
 }else if(system("whoami",intern=TRUE)=="sanchez.hmsc"){
   DIR="/Users/sanchez.hmsc/Desktop/MASHOUT/"
+  source("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/AssortedScripts/sourceEntireFolder.R")
   sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
+  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
 }else if(system("whoami",intern=TRUE)=="chipdelmal"){
   DIR="/Users/chipdelmal/Desktop/MASHOUT/"
   sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
