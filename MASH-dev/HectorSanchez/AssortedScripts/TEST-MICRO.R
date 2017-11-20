@@ -13,6 +13,7 @@
 
 rm(list=ls());gc()
 library(MASHmicro)
+library(R6)
 # set.seed(42L)
 
 #DEBUG.MASHMICRO()
@@ -24,6 +25,8 @@ if(system("whoami",intern=TRUE)=="slwu89"){
   DIR="/Users/slwu89/Desktop/MASHOUT/"
 }else if(system("whoami",intern=TRUE)=="sanchez.hmsc"){
   DIR="/Users/sanchez.hmsc/Desktop/MASHOUT/"
+  source("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/AssortedScripts/sourceEntireFolder.R")
+  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
   sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
 }else if(system("whoami",intern=TRUE)=="chipdelmal"){
   DIR="/Users/chipdelmal/Desktop/MASHOUT/"
@@ -74,4 +77,20 @@ mosquito_par = list(
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
 MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
-MicroTile$simMICRO_oneRun(tMax = 50,verbose = TRUE,trackPop = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 20,verbose = TRUE,trackPop = TRUE)
+
+########################################################################################
+###### TESTS ###########################################################################
+########################################################################################
+atsbTest=ATSB$new(id=10)
+MicroTile$get_Landscape()$get_SugarSites(2)$set_attractiveSugarBait(atsbTest)
+MicroTile$get_Landscape()$get_SugarSites(2)$get_attractiveSugarBait()
+aerialTest=AerialSpray$new(id=10)
+MicroTile$get_Landscape()$get_MatingSites(2)$set_aerialSpray(aerialTest)
+MicroTile$get_Landscape()$get_MatingSites(2)$get_aerialSpray()
+swarmSprayTest=SwarmSpray$new(id=10)
+MicroTile$get_Landscape()$get_MatingSites(2)$set_swarmSpray(swarmSprayTest)
+MicroTile$get_Landscape()$get_MatingSites(2)$get_swarmSpray()
+# areaRepellentTest=SwarmSpray$new(id=10)
+# MicroTile$get_Landscape()$get_MatingSites(2)$set_swarmSpray(swarmSprayTest)
+# MicroTile$get_Landscape()$get_MatingSites(2)$get_swarmSpray()

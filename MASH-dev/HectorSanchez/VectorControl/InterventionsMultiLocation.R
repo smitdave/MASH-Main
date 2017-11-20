@@ -4,14 +4,14 @@
 ####################################################################################################
 
 MultiLocationIntervention=R6Class("R6Private",
-  #. SugarIntervention(R6): Virtual class to accomodate characteristics common to sugar-based interventions
+  #. SugarIntervention(R6): Virtual class to accomodate characteristics common to multi-location-based interventions
   inherit=ControlIntervention,portable=TRUE,class=TRUE,cloneable=FALSE,
   private=list(),
   public=list()
 )
 
 AerialSpray=R6Class("R6Private",
-  #. ATSB (R6): Attractive Sugar Baits Intervention
+  #. AerialSpray (R6): Aerial Spray
   inherit=MultiLocationIntervention,portable=TRUE,class=TRUE,cloneable=FALSE,
   private=list(
     name="AERO"
@@ -24,4 +24,3 @@ AerialSpray=R6Class("R6Private",
     }
   )
 )
-
