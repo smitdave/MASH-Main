@@ -239,8 +239,11 @@ MatingSite <- R6::R6Class(classname = "MatingSite",
                    MatingQ = NULL,           # host risk queue
 
                    # Pointers
-                   LandscapePointer = NULL
+                   LandscapePointer = NULL,
 
+                   # Vector Control
+                   aerialSpray=NULL,
+                   swarmSpray=NULL
                  )
 )
 
@@ -305,7 +308,7 @@ SugarSite <- R6::R6Class(classname = "SugarSite",
                    haz = numeric(1),
 
                    # Pointers
-                   LandscapePointer = NULL
+                   LandscapePointer = NULL,
 
                    # Vector Control
                    attractiveSugarBait=NULL

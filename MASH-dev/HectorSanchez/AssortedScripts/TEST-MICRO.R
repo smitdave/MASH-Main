@@ -22,9 +22,14 @@ library(MASHmicro)
 # make a tile
 if(system("whoami",intern=TRUE)=="slwu89"){
   DIR="/Users/slwu89/Desktop/MASHOUT/"
+}else if(system("whoami",intern=TRUE)=="sanchez.hmsc"){
+  DIR="/Users/sanchez.hmsc/Desktop/MASHOUT/"
+  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
 }else if(system("whoami",intern=TRUE)=="chipdelmal"){
   DIR="/Users/chipdelmal/Desktop/MASHOUT/"
 }
+
+
 
 # setup
 Humans.MICRO.Setup()
@@ -68,4 +73,4 @@ mosquito_par = list(
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
 MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
-MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE,trackPop = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 50,verbose = TRUE,trackPop = TRUE)
