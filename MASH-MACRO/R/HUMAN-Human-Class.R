@@ -8,8 +8,8 @@
 #
 #   MASH-MACRO
 #   HUMAN: Human Class Definition
-#   David Smith, Hector Sanchez, Sean Wu
-#   August 17, 2017
+#   MASH Team
+#   November 2017
 #
 ###############################################################################
 
@@ -81,7 +81,6 @@ Human <- R6::R6Class(classname="Human",
                          private$bDay = bDay
                          private$bWeight = bWeight
                          private$EventQueue = MASHcpp::HumanEventQ()
-                         private$History = MASHcpp::HistoryGeneric()
                        }
 
                        ),
@@ -90,27 +89,24 @@ Human <- R6::R6Class(classname="Human",
                      private = list(
 
                        #General Information
-                       myID = character(1), # string
-                       houseID = integer(1), # integer
-                       patchID = integer(1), # integer
-                       Alive = logical(1), # boolean
-                       bDay = numeric(1), # double
-                       sex = integer(1), # integer
+                       myID                = character(1), # string
+                       houseID             = integer(1), # integer
+                       patchID             = integer(1), # integer
+                       Alive               = logical(1), # boolean
+                       bDay                = numeric(1), # double
+                       sex                 = integer(1), # integer
 
                        #Event Queue
-                       EventQueue = NULL, # see HUMANS-EventQ.hpp
-
-                       # Event History
-                       History = NULL, # see HUMANS-History.hpp
+                       EventQueue          = NULL, # see HUMANS-EventQ.hpp
 
                        # Health & Related
-                       bWeight = numeric(1), # double
+                       bWeight             = numeric(1), # double
 
                        # Pathogens
-                       Pathogens = NULL, # see PATHOGEN-XX.hpp
+                       Pathogens           = NULL, # see PATHOGEN-XX.hpp
 
                        # Pointers
-                       HumansPointer = NULL # environment
+                       HumansPointer       = NULL # reference to HumanPop
 
                      )
 
