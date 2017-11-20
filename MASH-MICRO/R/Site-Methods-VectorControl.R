@@ -100,6 +100,28 @@ MatingSite$set(which="public",name="get_swarmSpray",value=get_swarmSpray,overwri
 ########################################################################################################
 ########################################################################################################
 
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_odorBaitedTrap=function(odorBaitedTrapDefinition){private$odorBaitedTrap=odorBaitedTrapDefinition}
+FeedingSite$set(which="public",name="set_odorBaitedTrap",value=set_odorBaitedTrap,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_odorBaitedTrap=function(){return(private$odorBaitedTrap)}
+FeedingSite$set(which="public",name="get_odorBaitedTrap",value=get_odorBaitedTrap,overwrite=TRUE)
+
+######################################################
+
 ########################################################################################################
 ########################################################################################################
 # Aquatic Site Methods
