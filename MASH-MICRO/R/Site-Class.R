@@ -243,7 +243,8 @@ MatingSite <- R6::R6Class(classname = "MatingSite",
 
                    # Vector Control
                    aerialSpray=NULL,
-                   swarmSpray=NULL
+                   swarmSpray=NULL,
+                   areaRepellant=NULL
                  )
 )
 
@@ -311,6 +312,7 @@ SugarSite <- R6::R6Class(classname = "SugarSite",
                    LandscapePointer = NULL,
 
                    # Vector Control
-                   attractiveSugarBait=NULL
+                   attractiveSugarBait=NULL,
+                   aerialSpray=NULL
                  )
 )
