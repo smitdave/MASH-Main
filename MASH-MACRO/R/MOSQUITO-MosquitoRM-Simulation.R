@@ -27,6 +27,20 @@ run_popDynamics_MosquitoRM <- function(){
   private$ZZ[-private$par$maxEIP] = ZZ[-1] # shift up by one
   private$ZZ[EIP] = private$ZZ[EIP] + (private$p^EIP * private$Y0)
 
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
 }
 
 #' MosquitoRM: Run Daily Inter-patch Outbound Migration
