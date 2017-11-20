@@ -17,15 +17,13 @@ Human <- R6Class("Human",
                      private$immuneState = ImmuneState$new()
                      private$healthState = HealthState$new()
                      private$pathogen = Pathogen$new()
-                     private$pfPedigree = PfPedigree$new()
                    },
                    
                    ## Human Methods
                    ## Infection Event
-                   infectHuman = function(t){ ## also pass parasite object
-                     pfid <<- pfid + 1 ### stub - will exist attached to parasite at infection
+                   infectHuman = function(t,pf){ ## also pass pfid
                      #pfid = pf$get_pfid()
-                     private$pathogen$add_Pf(t,pfid)
+                     private$pathogen$add_Pf(t,pf)
                      private$pfPedigree$add2Pedigree(private$pathogen$get_Pf(pfid)) ### in real sim, this occurs in mosquito
                    },
                    ## write method to remove particular infection
@@ -96,11 +94,4 @@ Human <- R6Class("Human",
                  
 )
 
-
-############## artificial pedigree - will exist on tile ################
-
-#PfPedigree = list()
-#pfid = 0
-#nAntigenLoci = 9
-#nptypes = c(3,5,4,3,6,3,2,7,9)
 
