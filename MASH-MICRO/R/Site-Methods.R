@@ -883,23 +883,3 @@ set_LandscapePointer_SugarSite <- function(LandscapePointer){private$LandscapePo
 SugarSite$set(which = "public",name = "set_LandscapePointer",
   value = set_LandscapePointer_SugarSite, overwrite = TRUE
 )
-
-#' Set attractiveSugarBait
-#'
-#' Change the definition of the ATSB in the sugar site
-#'
-#'
-#' @param attractiveSugarBait Object
-#'
-set_attractiveSugarBait=function(atsbDefinition){private$attractiveSugarBait=atsbDefinition}
-SugarSite$set(which="public",name="set_attractiveSugarBait",value=set_attractiveSugarBait,overwrite=TRUE)
-
-#' Get attractiveSugarBait
-#'
-#' Return the ATSB in the sugar site
-#'
-#'
-#' @param attractiveSugarBait Object
-#'
-get_attractiveSugarBait=function(){return(private$attractiveSugarBait)}
-SugarSite$set(which="public",name="get_attractiveSugarBait",value=get_attractiveSugarBait,overwrite=TRUE)

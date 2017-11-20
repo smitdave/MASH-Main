@@ -25,9 +25,9 @@ if(system("whoami",intern=TRUE)=="slwu89"){
   DIR="/Users/slwu89/Desktop/MASHOUT/"
 }else if(system("whoami",intern=TRUE)=="sanchez.hmsc"){
   DIR="/Users/sanchez.hmsc/Desktop/MASHOUT/"
-  #source("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/AssortedScripts/sourceEntireFolder.R")
-  #sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
-  #sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
+  source("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/AssortedScripts/sourceEntireFolder.R")
+  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
+  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
 }else if(system("whoami",intern=TRUE)=="chipdelmal"){
   DIR="/Users/chipdelmal/Desktop/MASHOUT/"
   sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
@@ -79,4 +79,10 @@ MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 MicroTile$simMICRO_oneRun(tMax = 50,verbose = TRUE,trackPop = TRUE)
 
+########################################################################################
+###### TESTS ###########################################################################
+########################################################################################
+atsbTest=ATSB$new(id=10)
 MicroTile$get_Landscape()$get_SugarSites(2)
+MicroTile$get_Landscape()$get_SugarSites(2)$set_attractiveSugarBait(atsbTest)
+MicroTile$get_Landscape()$get_SugarSites(2)$get_attractiveSugarBait()
