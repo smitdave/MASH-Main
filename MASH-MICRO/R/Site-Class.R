@@ -307,5 +307,7 @@ SugarSite <- R6::R6Class(classname = "SugarSite",
                    # Pointers
                    LandscapePointer = NULL
 
+                   # Vector Control
+                   attractiveSugarBait=NULL
                  )
 )
