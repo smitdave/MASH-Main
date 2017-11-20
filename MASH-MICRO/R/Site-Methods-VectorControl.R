@@ -144,6 +144,28 @@ FeedingSite$set(which="public",name="get_eaveTube",value=get_eaveTube,overwrite=
 
 ######################################################
 
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_homeImprovement=function(homeImprovementDefinition){private$homeImprovement=homeImprovementDefinition}
+FeedingSite$set(which="public",name="set_homeImprovement",value=set_homeImprovement,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_homeImprovement=function(){return(private$homeImprovement)}
+FeedingSite$set(which="public",name="get_homeImprovement",value=get_homeImprovement,overwrite=TRUE)
+
+######################################################
+
 ########################################################################################################
 ########################################################################################################
 # Aquatic Site Methods
