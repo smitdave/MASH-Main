@@ -122,6 +122,28 @@ FeedingSite$set(which="public",name="get_odorBaitedTrap",value=get_odorBaitedTra
 
 ######################################################
 
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_eaveTube=function(eaveTubeDefinition){private$eaveTube=eaveTubeDefinition}
+FeedingSite$set(which="public",name="set_eaveTube",value=set_eaveTube,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_eaveTube=function(){return(private$eaveTube)}
+FeedingSite$set(which="public",name="get_eaveTube",value=get_eaveTube,overwrite=TRUE)
+
+######################################################
+
 ########################################################################################################
 ########################################################################################################
 # Aquatic Site Methods
