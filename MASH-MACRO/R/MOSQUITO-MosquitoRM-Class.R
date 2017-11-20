@@ -38,10 +38,7 @@
 #'  * simHumans: see \code{\link{simHumans_HumanPop}}
 #'
 #' @section **Fields**:
-#'  * N: number of human
-#'  * tStart: time to start simulation
-#'  * pop: a object of class \code{\link[MASHcpp]{HashMap}} that stores instantiations of \code{\link{Human}}, see help for more details on the internal structure of this type.
-#'
+#'  * i'm a field: write me
 #'
 #'
 #'
@@ -63,24 +60,24 @@ MosquitoRM <- R6::R6Class(classname="MosquitoRM",
                        # Constructor
                        #################################################
 
-                       initialize = function(patchID, M, Y = 0, Z = 0, par){
+                       initialize = function(MosquitoRM_PAR){
 
-                         # patchID
-                         private$patchID = patchID
+                         N = nrow(MosquitoRM_PAR$psi)
 
-                         # set population state variables
-                         private$M = M
-                         private$Y = Y
-                         private$Z = Z
-                         private$ZZ = matrix(data = rep(0,times=par$maxEIP),ncol=1)
+                         private$p             = MosquitoRM_PAR$p
+                         private$f             = MosquitoRM_PAR$f
+                         private$Q             = MosquitoRM_PAR$Q
+                         private$v             = MosquitoRM_PAR$v
+                         private$EIP           = MosquitoRM_PAR$EIP
+                         private$maxEIP        = MosquitoRM_PAR$maxEIP
 
-                         private$M_out = 0
-                         private$Y_out = 0
-                         private$Y0_out = 0
-                         private$Z_out = 0
+                         private$M             = MosquitoRM_PAR$M_density
+                         private$Y             = rep(0L, N) # infected (incubating)
+                         private$Z             = rep(0L, N) # infectious
+                         private$ZZ            = matrix(data=0L,nrow=MosquitoRM_PAR$maxEIP,ncol=N) # each row is the number that will be added to the infectious state on that day
 
-                         # set par
-                         private$par = par
+                         private$psi           = MosquitoRM_PAR$psi
+                         private$P             = MosquitoRM_PAR$p^c(1:MosquitoRM_PAR$maxEIP) # survival over EIP
 
                        }
 
@@ -89,72 +86,30 @@ MosquitoRM <- R6::R6Class(classname="MosquitoRM",
                      #private members
                      private = list(
 
-                       # fields
-                       patchID = NULL,
+                       # RM parameters
+                       p              = NULL,
+                       f              = NULL,
+                       Q              = NULL,
+                       v              = NULL,
+                       EIP            = NULL,
+                       maxEIP         = NULL,
 
-                       M = NULL,
-                       Y = NULL,
-                       Y0 = NULL,
-                       Z = NULL,
-                       ZZ = NULL,
+                       # Life stages
+                       M              = NULL, # mosquito density
+                       Y              = NULL, # infected (incubating)
+                       Z              = NULL, # infectious
+                       ZZ             = NULL, # each row is the number that will be added to the infectious state on that day
 
-                       M_out = NULL,
-                       Y_out = NULL,
-                       Y0_out = NULL,
-                       Z_out = NULL,
+                       # Survival & Dispersion
+                       psi            = NULL, # rough diffusion matrix
+                       P              = NULL,
 
-                       par = NULL,
+                       # Pointers
+                       TilePointer = NULL, # point to the enclosing metapopulation TILE (MACRO)
+                       PatchesPointer = NULL, # point to the enclosing Patches (a network of patches) in this metapopulation TILE (MACRO)
+                       HumansPointer = NULL # point to the HumanPop class that also lives in this metapopulation TILE
 
-                       # pointers
-                       PatchPointer = NULL,
-                       HumanPopPointer = NULL
 
                      )
 
 ) #end class definition
-
-
-###############################################################################
-# MosquitoRM: Generic & Shared Methods
-###############################################################################
-
-###############################################################################
-# MosquitoRM: Getters & Setters
-###############################################################################
-
-#' MosquitoRM: Return a Named Parameter
-#'
-#' Return a value from \code{private$parameters} given a character key.
-#'
-#' @param key a character key; return that value from the named parameter list.
-#'
-get_parameter_MosquitoRM <- function(key){
-  return(private$par[[key]])
-}
-
-MosquitoRM$set(which = "public",name = "get_parameter",
-  value = get_parameter_MosquitoRM,
-  overwrite = TRUE)
-
-get_migration_MosquitoRM <- function(){
-  private$PatchPointer$get_TilePointer()$get_migrationRow(ix = private$patchID)
-}
-
-MosquitoRM$set(which = "public",name = "get_migration",
-  value = get_migration_MosquitoRM,
-  overwrite = TRUE)
-
-###############################################################################
-# MosquitoRM: Data Output
-###############################################################################
-
-write_CSV_MosquitoRM <- function(){
-
-  popOut = paste0(c(private$PatchPointer$get_tNow(),private$patchID,private$M,private$Y,private$Z),collapse = ",")
-  writeLines(text = popOut, con = private$PatchPointer$conMosquito,sep = "\n")
-
-}
-
-MosquitoRM$set(which = "public",name = "write_CSV",
-  value = write_CSV_MosquitoRM,
-  overwrite = TRUE)
