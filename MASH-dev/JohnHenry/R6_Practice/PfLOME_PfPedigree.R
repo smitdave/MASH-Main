@@ -2,32 +2,23 @@ PfPedigree <- R6Class("PfPedigree",
                       
                       public = list(
                         initialize = function(){
-                          private$pfid = 1
                           private$nAntigenLoci = 9
                           private$nptypes = c(3,5,4,3,6,3,2,7,9)
+                          private$PedLength = 0
                         },
                         
                         add2Pedigree = function(pf){
-                          ## extract all info from pf through get functions
-                          ## record info in pedigree within hash table
-                          PfPedigree[[pfid]] <<- newPfPed(pfid)
-                          if(pfid > 1){
-                            ## need to fix mic/mac pick - should be assigned 
-                            ## to Pf object inside mosquito, passed onto next
-                            ## human
-                            private$mac[[pfid]] <<- getParent()
-                            private$mic[[pfid]] <<- getParent()
-                            private$th[[pfid]] <<- t
-                            private$thEnd[[pfid]] <<- private$pathogen[[pfid]]$tEnd+t
-                            if(PfPedigree[[pfid]]$mic != PfPedigree[[pfid]]$mac) {
-                              PfPedigree[[pfid]]$sib = sample(1:2,2)
-                            }
-                          }
-                          private$gtype[[pfid]] <<- getGtype(pfid)
-                          private$ptype[[pfid]] <<- getPtype(pfid,private$gtype[[pfid]],nptypes)
-                          private$pfid = pfid+1
+                          pfid = pf$get_pfid()
+                          private$gtype[[pfid]] = pf$get_gtype()
+                          private$ptype[[pfid]] = pf$get_ptype()
+                          private$mic[[pfid]] = pf$get_mic()
+                          private$mac[[pfid]] = pf$get_mac()
+                          private$PedLength = private$PedLength +1
                         },
                           
+                        get_PedLength = function(){
+                          private$PedLength
+                        },
                         get_gtype = function(pfid){
                           private$gtype[[pfid]]
                         },
@@ -36,22 +27,45 @@ PfPedigree <- R6Class("PfPedigree",
                           private$ptype[[pfid]]
                         },
                         
-                        get_pfid = function(){
-                          private$pfid
+                        get_mic = function(pfid){
+                          private$mic[[pfid]]
+                        },
+                        
+                        get_mac = function(pfid){
+                          private$mac[[pfid]]
+                        },
+                        
+                        get_th = function(pfid){
+                          private$th[[pfid]]
+                        },
+                        
+                        get_thEnd = function(pfid){
+                          private$thEnd[[pfid]]
+                        },
+                        
+                        get_sib = function(pfid){
+                          private$sib[[pfid]]
+                        },
+                        
+                        get_nAntigenLoci = function(){
+                          private$nAntigenLoci
+                        },
+                        
+                        get_nptypes = function(){
+                          private$nptypes
                         }
                       ),
                       
                       private = list(
-                        
-                        pfid = NULL,
-                        gtype = NULL,
-                        ptype = NULL,
-                        mic = NULL,
-                        mac = NULL,
-                        th = NULL,
-                        thEnd = NULL,
-                        sib = NULL,
-                        nAntigenLoci = NULL,
+                        PedLength = integer(0),
+                        gtype = list(),
+                        ptype = list(),
+                        mic = list(),
+                        mac = list(),
+                        th = list(),
+                        thEnd = list(),
+                        sib = list(),
+                        nAntigenLoci = integer(0),
                         nptypes = NULL
                         
                         
