@@ -39,21 +39,19 @@ VectorControlInterventionsController=R6Class("R6Private",
 )
 
 
-test=ATSB
-LANDSCAPE$feedSites[[1]]$test=test$new(id=0)
-
-testDecay=constantRateKillProbabilityDecay
-LANDSCAPE$feedSites[[1]]$ATSB$testDecay()
-
-
-
-deployInterventionAtSite=function(interventionObject,LANDSCAPE_site){
-  tempName=interventionObject$getName()
-  LANDSCAPE_site[[tempName]]=interventionObject
-  print(LANDSCAPE_site)
-}
-
-testATSB=ATSB$new()
-deployIntervention(testATSB,LANDSCAPE$feedSites[[1]])
-
-
+# test=ATSB
+# LANDSCAPE$feedSites[[1]]$test=test$new(id=0)
+#
+# testDecay=constantRateKillProbabilityDecay
+# LANDSCAPE$feedSites[[1]]$ATSB$testDecay()
+#
+#
+#
+# deployInterventionAtSite=function(interventionObject,LANDSCAPE_site){
+#   tempName=interventionObject$getName()
+#   LANDSCAPE_site[[tempName]]=interventionObject
+#   print(LANDSCAPE_site)
+# }
+#
+# testATSB=ATSB$new()
+# deployIntervention(testATSB,LANDSCAPE$feedSites[[1]])
