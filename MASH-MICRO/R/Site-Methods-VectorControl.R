@@ -114,7 +114,7 @@ MatingSite$set(which="public",name="get_swarmSpray",value=get_swarmSpray,overwri
 #' @param swarmSpray Object
 #'
 set_ovitrap=function(ovitrapDefinition){private$ovitrap=ovitrapDefinition}
-AquaSite$set(which="public",name="set_ovitrap",value=set_ovitrap,overwrite=TRUE)
+AquaticSite$set(which="public",name="set_ovitrap",value=set_ovitrap,overwrite=TRUE)
 
 #' Get swarmSpray
 #'
@@ -124,7 +124,7 @@ AquaSite$set(which="public",name="set_ovitrap",value=set_ovitrap,overwrite=TRUE)
 #' @param swarmSpray Object
 #'
 get_ovitrap=function(){return(private$ovitrap)}
-AquaSite$set(which="public",name="get_ovitrap",value=get_ovitrap,overwrite=TRUE)
+AquaticSite$set(which="public",name="get_ovitrap",value=get_ovitrap,overwrite=TRUE)
 
 ######################################################
 
@@ -136,7 +136,7 @@ AquaSite$set(which="public",name="get_ovitrap",value=get_ovitrap,overwrite=TRUE)
 #' @param swarmSpray Object
 #'
 set_larviciding=function(larvicidingDefinition){private$larviciding=larvicidingDefinition}
-AquaSite$set(which="public",name="set_larviciding",value=set_larviciding,overwrite=TRUE)
+AquaticSite$set(which="public",name="set_larviciding",value=set_larviciding,overwrite=TRUE)
 
 #' Get swarmSpray
 #'
@@ -146,4 +146,26 @@ AquaSite$set(which="public",name="set_larviciding",value=set_larviciding,overwri
 #' @param swarmSpray Object
 #'
 get_larviciding=function(){return(private$larviciding)}
-AquaSite$set(which="public",name="get_larviciding",value=get_larviciding,overwrite=TRUE)
+AquaticSite$set(which="public",name="get_larviciding",value=get_larviciding,overwrite=TRUE)
+
+######################################################
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_sourceReduction=function(sourceReductionDefinition){private$sourceReduction=sourceReductionDefinition}
+AquaticSite$set(which="public",name="set_sourceReduction",value=set_sourceReduction,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_sourceReduction=function(){return(private$sourceReduction)}
+AquaticSite$set(which="public",name="get_sourceReduction",value=get_sourceReduction,overwrite=TRUE)
