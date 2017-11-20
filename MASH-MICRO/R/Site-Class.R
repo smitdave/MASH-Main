@@ -82,8 +82,13 @@ FeedingSite <- R6::R6Class(classname = "FeedingSite",
                    RiskQ = NULL,           # host risk queue
 
                    # Pointers
-                   LandscapePointer = NULL
+                   LandscapePointer = NULL,
 
+                   # Vector Control
+                   odorBaitedTrap=NULL,
+                   eaveTube=NULL,
+                   homeImprovement=NULL,
+                   indoorResidualSpray=NULL
                  )
 )
 
@@ -173,6 +178,12 @@ AquaticSite <- R6::R6Class(classname = "AquaticSite",
                    # Pointers
                    LandscapePointer = NULL
 
+                   # Vector Control
+                   aerialSpray=NULL,
+                   areaRepellent=NULL,
+                   biologicalControl=NULL,
+                   larviciding=NULL,
+                   ovitrap=NULL
                  )
 )
 
@@ -244,7 +255,7 @@ MatingSite <- R6::R6Class(classname = "MatingSite",
                    # Vector Control
                    aerialSpray=NULL,
                    swarmSpray=NULL,
-                   areaRepellant=NULL
+                   areaRepellent=NULL
                  )
 )
 
@@ -313,6 +324,7 @@ SugarSite <- R6::R6Class(classname = "SugarSite",
 
                    # Vector Control
                    attractiveSugarBait=NULL,
-                   aerialSpray=NULL
+                   aerialSpray=NULL,
+                   areaRepellent=NULL
                  )
 )
