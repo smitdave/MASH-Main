@@ -77,12 +77,14 @@ mosquito_par = list(
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
 MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
-MicroTile$simMICRO_oneRun(tMax = 50,verbose = TRUE,trackPop = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 20,verbose = TRUE,trackPop = TRUE)
 
 ########################################################################################
 ###### TESTS ###########################################################################
 ########################################################################################
 atsbTest=ATSB$new(id=10)
-MicroTile$get_Landscape()$get_SugarSites(2)
 MicroTile$get_Landscape()$get_SugarSites(2)$set_attractiveSugarBait(atsbTest)
 MicroTile$get_Landscape()$get_SugarSites(2)$get_attractiveSugarBait()
+aerialTest=AerialSpray$new(id=10)
+MicroTile$get_Landscape()$get_MatingSites(2)$set_aerialSpray(aerialTest)
+MicroTile$get_Landscape()$get_MatingSites(2)$get_aerialSpray()

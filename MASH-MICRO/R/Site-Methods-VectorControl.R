@@ -22,11 +22,29 @@ SugarSite$set(which="public",name="set_attractiveSugarBait",value=set_attractive
 get_attractiveSugarBait=function(){return(private$attractiveSugarBait)}
 SugarSite$set(which="public",name="get_attractiveSugarBait",value=get_attractiveSugarBait,overwrite=TRUE)
 
-
 ########################################################################################################
 # Mating Site Methods
 ########################################################################################################
 
+#' Set aerialSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param aerialSpray Object
+#'
+set_aerialSpray=function(aerialSprayDefinition){private$aerialSpray=aerialSprayDefinition}
+MatingSite$set(which="public",name="set_aerialSpray",value=set_aerialSpray,overwrite=TRUE)
+
+#' Get aerialSpray
+#'
+#' Return the definition of the Aerial Spray
+#'
+#'
+#' @param aerialSpray Object
+#'
+get_aerialSpray=function(){return(private$aerialSpray)}
+MatingSite$set(which="public",name="get_aerialSpray",value=get_aerialSpray,overwrite=TRUE)
 
 ########################################################################################################
 # Feeding Site Methods
