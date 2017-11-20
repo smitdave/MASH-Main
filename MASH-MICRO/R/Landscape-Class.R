@@ -122,7 +122,7 @@ Landscape <- R6::R6Class(classname = "Landscape",
                            private$SugarSitesN = SugarSite_PAR$nSugar
                            for(ix in 1:SugarSite_PAR$nSugar){
 
-                             private$SugarSites[[ix]] = MatingSite$new(
+                             private$SugarSites[[ix]] = SugarSite$new(
                                ix = ix,
                                siteXY = c(SugarSite_PAR$siteXY$x[ix],SugarSite_PAR$siteXY$y[ix]),
                                searchWt = SugarSite_PAR$searchWt[ix],
