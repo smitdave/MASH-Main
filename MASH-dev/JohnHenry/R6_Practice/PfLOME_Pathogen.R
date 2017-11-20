@@ -33,7 +33,7 @@ Pf <- R6Class("Pf",
                 initialize = function(t,pfid){
                   private$pfid = pfid
                   private$activeP = 1
-                  private$PAR = tentPAR(t,private$pfid)
+                  private$PAR = private$tentPAR(t,private$pfid)
                   private$Pt = private$PAR$MZ0
                   private$gtype = getGtype(private$pfid)
                   private$ptype = getPtype(private$pfid,private$gtype,nptypes)
@@ -56,6 +56,19 @@ Pf <- R6Class("Pf",
                 get_Pt = function(){
                   private$Pt
                 },
+                get_mic = function(){
+                  private$mic
+                },
+                get_mac = function(){
+                  private$mac
+                },
+                get_activeP = function(){
+                  private$activeP
+                },
+                get_activeG = function(){
+                  private$activeG
+                },
+                
                 
                 ## update function
                 update_Pf = function(t){
@@ -93,9 +106,34 @@ Pf <- R6Class("Pf",
                 Ptt = NULL,
                 Gt = NULL,
                 St = NULL,
+                mic = NULL,
+                mac = NULL,
                 ## biological parameters
                 gtype = NULL,
-                ptype = NULL
+                ptype = NULL,
+                
+                tentPAR = function(t,pfid){
+                  tEnd          = Pf.Duration()
+                  mxPD          = Pf.MaxPD()
+                  peakD         = Pf.PeakD()
+                  MZ0           = Pf.MZ0()
+                  
+                  gr 		        = (mxPD-MZ0)/peakD
+                  dr            = mxPD/(tEnd-peakD)
+                  gtype         = getGtype(pfid)
+                  
+                  list(
+                    pfid	        = pfid,
+                    t0  	        = t,
+                    gr            = gr,
+                    dr            = dr,
+                    MZ0           = MZ0,
+                    peakD         = peakD,
+                    mxPD          = mxPD,
+                    tEnd          = tEnd,
+                    gtype         = gtype
+                  )
+                }
               )
               
 )

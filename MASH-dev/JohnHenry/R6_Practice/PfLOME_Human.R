@@ -22,10 +22,11 @@ Human <- R6Class("Human",
                    
                    ## Human Methods
                    ## Infection Event
-                   infectHuman = function(t){
-                     pfid = private$pfPedigree$get_pfid()
-                     private$pathogen$PfPathogen[[pfid]] = private$pathogen$add_Pf(t,pfid)
-                     private$pfPedigree[[pfid]]$add2Pedigree(pfid)
+                   infectHuman = function(t){ ## also pass parasite object
+                     pfid <<- pfid + 1 ### stub - will exist attached to parasite at infection
+                     #pfid = pf$get_pfid()
+                     private$pathogen$add_Pf(t,pfid)
+                     private$pfPedigree$add2Pedigree(private$pathogen$get_Pf(pfid)) ### in real sim, this occurs in mosquito
                    },
                    ## write method to remove particular infection
                    clearPathogen = function(pfid){

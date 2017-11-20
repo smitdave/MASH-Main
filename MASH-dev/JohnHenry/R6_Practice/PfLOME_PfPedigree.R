@@ -8,8 +8,15 @@ PfPedigree <- R6Class("PfPedigree",
                         },
                         
                         add2Pedigree = function(pf){
-                          ## extract all info from pf through get functions
-                          ## record info in pedigree within hash table
+                          pfid = pf$get_pfid()
+                          private$gtype[[pfid]] = pf$get_gtype()
+                          private$ptype[[pfid]] = pf$get_ptype()
+                          private$mic[[pfid]] = pf$get_mic()
+                          private$mac[[pfid]] = pf$get_mac()
+                          private$th[[pfid]] = pf$get_th()
+                          private$thEnd[[pfid]] = pf$get_thEnd()
+                          private$sib[[pfid]] = pf$get_sib()
+                          
                           PfPedigree[[pfid]] <<- newPfPed(pfid)
                           if(pfid > 1){
                             ## need to fix mic/mac pick - should be assigned 
@@ -38,20 +45,30 @@ PfPedigree <- R6Class("PfPedigree",
                         
                         get_pfid = function(){
                           private$pfid
-                        }
+                        },
+                        
+                        get_mic = function(){
+                          private$mic
+                        },
+                        
+                        get_mac = function(){
+                          private$mac
+                        },
+                        
+                        get_
                       ),
                       
                       private = list(
                         
                         pfid = NULL,
-                        gtype = NULL,
-                        ptype = NULL,
-                        mic = NULL,
-                        mac = NULL,
-                        th = NULL,
-                        thEnd = NULL,
-                        sib = NULL,
-                        nAntigenLoci = NULL,
+                        gtype = list(),
+                        ptype = list(),
+                        mic = list(),
+                        mac = list(),
+                        th = list(),
+                        thEnd = list(),
+                        sib = list(),
+                        nAntigenLoci = integer(0),
                         nptypes = NULL
                         
                         
