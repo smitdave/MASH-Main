@@ -9,8 +9,8 @@ kerW.i = function(i, xy, XY, w, p=1){
 }
 
 
-LF = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, w=w.f, simplify = "array")
-FL = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, w=w.l, simplify = "array")
+FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, w=w.f, simplify = "array")
+LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, w=w.l, simplify = "array")
 
 LF = t(LF)
 FL = t(FL)
@@ -18,24 +18,25 @@ FL = t(FL)
 Q = LF%*%FL
 
 Q = Q / rowSums(Q)
-
-N = matrix(pmax(0, Q - t(Q)), N.f, N.f) 
+N = matrix(pmax(0, Q - t(Q)), N.l, N.l) 
 CC = Q-N
 
-Q2 = (Q %*% Q)
-Q2 = Q2 / rowSums(Q2)
+par(mfrow = c(2,1), mar = c(0,0,0,0))
+plot(xy.l[,1], xy.l[,2], pch = 16, col = "blue",  xlab = "", xaxt = "n", ylab = "", yaxt = "n", xlim = range(xy.f, xy.l), ylim = range(xy.f, xy.l))
+points(xy.f[,1], xy.f[,2], pch = 16, col = "red")
 
-N2= matrix(pmax(0, Q2 - t(Q2)), 29, 29) 
-C2 = Q2-N2
+for(i in 1:N.l)
+  for(j in i:N.l)
+    segments(xy.l[i,1], xy.l[i,2], xy.l[j,1], xy.l[j,2], lwd = CC[i,j]*2)
 
-plot(xy.f[,1], xy.f[,2], type = "n", pch = 16, col = "blue", ylim = c(-1,12), xlim = c(-1,12), xlab = "", xaxt = "n", ylab = "", yaxt = "n")
+plot(xy.l[,1], xy.l[,2], pch = 16, col = "blue",  xlab = "", xaxt = "n", ylab = "", yaxt = "n", xlim = range(xy.f, xy.l), ylim = range(xy.f, xy.l))
+points(xy.f[,1], xy.f[,2], pch = 16, col = "red")
+for(i in 1:N.l)
+  for(j in 1:N.l)
+    arrows(xy.l[i,1], xy.l[i,2], xy.l[j,1], xy.l[j,2], lwd = N[i,j]*2, length =0.05)
 
-for(i in 1:N.f)
-  for(j in i:N.f)
-    segments(xy.f[i,1], xy.f[i,2], xy.f[j,1], xy.f[j,2], lwd = CC[i,j]*4)
+#plot(xl, yl, type = "n", pch = 16, col = "blue", ylim = c(-1,12), xlim = c(-1,12), xlab = "", xaxt = "n", ylab = "", yaxt = "n")
 
-plot(xl, yl, type = "n", pch = 16, col = "blue", ylim = c(-1,12), xlim = c(-1,12), xlab = "", xaxt = "n", ylab = "", yaxt = "n")
-
-for(i in 1:29)
-  for(j in 1:29)
-    arrows(xl[i], yl[i], xl[j], yl[j], lwd = N2[i,j], length = .05)
+#for(i in 1:29)
+#  for(j in 1:29)
+#    arrows(xl[i], yl[i], xl[j], yl[j], lwd = N2[i,j], length = .05)

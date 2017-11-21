@@ -24,9 +24,9 @@ getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
 xy.f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
 xy.l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
 N.l = length(xy.l[,1])
-w.l = rgamma(length(xy.f[,1]), 1,1)
+w.l = rgamma(length(xy.l[,1]), 1,1)
 
-xy.f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+xy.f1 = getPoints(22,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
 
 xy.f = rbind(xy.f, xy.f1)
 N.f = length(xy.f[,1])
