@@ -1,5 +1,7 @@
 ########################################################################################################
+########################################################################################################
 # Sugar Site Methods
+########################################################################################################
 ########################################################################################################
 
 #' Set attractiveSugarBait
@@ -20,10 +22,12 @@ SugarSite$set(which="public",name="set_attractiveSugarBait",value=set_attractive
 #' @param attractiveSugarBait Object
 #'
 get_attractiveSugarBait=function(){return(private$attractiveSugarBait)}
-SugarSite$set(which="public",name="get_attractiveSugarBait",value=get_attractiveSugarBait,overwrite=TRUE)
-
+SugarSite$set(which="public",name="get_attractiveSugarBait",value=get_attractiveSugarBait,overwrite=TRUE
+)
+########################################################################################################
 ########################################################################################################
 # Mating Site Methods
+########################################################################################################
 ########################################################################################################
 
 #' Set aerialSpray
@@ -91,9 +95,185 @@ MatingSite$set(which="public",name="get_swarmSpray",value=get_swarmSpray,overwri
 # MatingSite$set(which="public",name="get_areaRepellent",value=get_areaRepellent,overwrite=TRUE)
 
 ########################################################################################################
+########################################################################################################
 # Feeding Site Methods
 ########################################################################################################
+########################################################################################################
 
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_odorBaitedTrap=function(odorBaitedTrapDefinition){private$odorBaitedTrap=odorBaitedTrapDefinition}
+FeedingSite$set(which="public",name="set_odorBaitedTrap",value=set_odorBaitedTrap,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_odorBaitedTrap=function(){return(private$odorBaitedTrap)}
+FeedingSite$set(which="public",name="get_odorBaitedTrap",value=get_odorBaitedTrap,overwrite=TRUE)
+
+######################################################
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_eaveTube=function(eaveTubeDefinition){private$eaveTube=eaveTubeDefinition}
+FeedingSite$set(which="public",name="set_eaveTube",value=set_eaveTube,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_eaveTube=function(){return(private$eaveTube)}
+FeedingSite$set(which="public",name="get_eaveTube",value=get_eaveTube,overwrite=TRUE)
+
+######################################################
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_homeImprovement=function(homeImprovementDefinition){private$homeImprovement=homeImprovementDefinition}
+FeedingSite$set(which="public",name="set_homeImprovement",value=set_homeImprovement,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_homeImprovement=function(){return(private$homeImprovement)}
+FeedingSite$set(which="public",name="get_homeImprovement",value=get_homeImprovement,overwrite=TRUE)
+
+######################################################
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_indoorResidualSpray=function(indoorResidualSprayDefinition){private$indoorResidualSpray=indoorResidualSprayDefinition}
+FeedingSite$set(which="public",name="set_indoorResidualSpray",value=set_indoorResidualSpray,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_indoorResidualSpray=function(){return(private$indoorResidualSpray)}
+FeedingSite$set(which="public",name="get_indoorResidualSpray",value=get_indoorResidualSpray,overwrite=TRUE)
+
+########################################################################################################
 ########################################################################################################
 # Aquatic Site Methods
 ########################################################################################################
+########################################################################################################
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_ovitrap=function(ovitrapDefinition){private$ovitrap=ovitrapDefinition}
+AquaticSite$set(which="public",name="set_ovitrap",value=set_ovitrap,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_ovitrap=function(){return(private$ovitrap)}
+AquaticSite$set(which="public",name="get_ovitrap",value=get_ovitrap,overwrite=TRUE)
+
+######################################################
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_larviciding=function(larvicidingDefinition){private$larviciding=larvicidingDefinition}
+AquaticSite$set(which="public",name="set_larviciding",value=set_larviciding,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_larviciding=function(){return(private$larviciding)}
+AquaticSite$set(which="public",name="get_larviciding",value=get_larviciding,overwrite=TRUE)
+
+######################################################
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_sourceReduction=function(sourceReductionDefinition){private$sourceReduction=sourceReductionDefinition}
+AquaticSite$set(which="public",name="set_sourceReduction",value=set_sourceReduction,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_sourceReduction=function(){return(private$sourceReduction)}
+AquaticSite$set(which="public",name="get_sourceReduction",value=get_sourceReduction,overwrite=TRUE)
+
+######################################################
+
+#' Set swarmSpray
+#'
+#' Change the definition of the Aerial Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+set_biologicalControl=function(biologicalControlDefinition){private$biologicalControl=biologicalControlDefinition}
+AquaticSite$set(which="public",name="set_biologicalControl",value=set_biologicalControl,overwrite=TRUE)
+
+#' Get swarmSpray
+#'
+#' Return the definition of the Swarm Spray
+#'
+#'
+#' @param swarmSpray Object
+#'
+get_biologicalControl=function(){return(private$biologicalControl)}
+AquaticSite$set(which="public",name="get_biologicalControl",value=get_biologicalControl,overwrite=TRUE)

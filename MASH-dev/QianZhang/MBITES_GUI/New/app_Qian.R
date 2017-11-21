@@ -84,12 +84,13 @@ mbitesGadget = function(...){
                 #########################################################################
                 tabPanel("Senescence",
                   column(6,
-                  checkboxInput(inputId = "SENEESCE", label = "Mortality during Generic Flight", value = FALSE),
+                  checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = FALSE),
+                  conditionalPanel(condition = "!input.SENESCE",
                   sliderInput(inputId = "sns_a", label ="Exp: a",
                               value = 0.085, min = 0, max = 0.1, step = 0.001),
                   sliderInput(inputId = "sns_b", label ="Exp: b",
                               value = 100, min = 0, max = 1000, step = 1)
-                  ),
+                  )),
                   column(6,
                     plotOutput("senescence_plot")
                     )),
@@ -340,12 +341,19 @@ mbitesGadget = function(...){
     })
 
     output$senescence_plot <- renderPlot({
+    	
       age <- seq(0, 50, 0.001)
       senescence_surv <- function(x, ...){
         (2 + input$sns_b)/(1 + input$sns_b) - exp(x * input$sns_a)/(input$sns_b + x * input$sns_a)
       }
-      ggplot(data.frame(age), aes(age)) + stat_function(fun= senescence_surv) + ylim(0,1) +
+      if(!input$SENESCE){
+      ggplot(data.frame(age), aes(x = age)) + stat_function(fun= senescence_surv) + ylim(0,1) +
         xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
+    	}else{
+    	ggplot(data.frame(age), aes(age)) + geom_hline(aes(yintercept = 1)) + ylim(0,1) + 
+    	scale_x_discrete()+
+        xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
+    	}
     })
 
     output$panel_landscape_out_f <- renderPlot({
@@ -394,6 +402,7 @@ mbitesGadget = function(...){
     })
 
 
+
     observe({
         if (input$launchgo > 0) { 
             session$sendCustomMessage('activeNavs', 'Options')
@@ -428,6 +437,16 @@ mbitesGadget = function(...){
         				buttonType = "default", class = NULL)
       }
     })
+   #  volumes = getVolumes()
+   #  observe({  
+   #  shinyFileChoose(input, "Btn_GetFile", roots = volumes, session = session)
+
+   #  if(!is.null(input$Btn_GetFile)){
+   #    # browser()
+   #    file_selected<-parseFilePaths(volumes, input$Btn_GetFile)
+   #    output$txt_file <- renderText(as.character(file_selected$datapath))
+   #  }
+  	# })
 
     #######################################################################
     output$panel_f <- renderUI({

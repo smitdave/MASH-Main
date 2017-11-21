@@ -29,6 +29,7 @@ getGtype = function(pfid=1){
     gtype = runif(nAntigenLoci)
     return(gtype)
   } else{
+    pfid = PfPedigree$get_pfid()
     mic =  PfPedigree[[pfid]]$mic
     micType =  PfPedigree[[mic]]$gtype
     mac =  PfPedigree[[pfid]]$mac

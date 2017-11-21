@@ -17,15 +17,15 @@ Human <- R6Class("Human",
                      private$immuneState = ImmuneState$new()
                      private$healthState = HealthState$new()
                      private$pathogen = Pathogen$new()
-                     private$pfPedigree = PfPedigree$new()
                    },
                    
                    ## Human Methods
                    ## Infection Event
-                   infectHuman = function(t){
-                     pfid = private$pfPedigree$get_pfid()
-                     private$pathogen$PfPathogen[[pfid]] = private$pathogen$add_Pf(t,pfid)
-                     private$pfPedigree[[pfid]]$add2Pedigree(pfid)
+                   infectHuman = function(t,pfid){
+                     mic = pfped$get_mic(pfid)
+                     mac = pfped$get_mac(pfid)
+                     gtype = pfped$get_gtype(pfid)
+                     private$pathogen$add_Pf(t,pfid,mic,mac,gtype)
                    },
                    ## write method to remove particular infection
                    clearPathogen = function(pfid){
@@ -35,10 +35,10 @@ Human <- R6Class("Human",
                      
                    },
                    ## Daily Update
-                   dailyUpdate = function(){
-                     private$pathogen$update_pathogen()
-                     private$immuneState$update_immuneState()
-                     private$healthState$update_healthState()
+                   dailyUpdate = function(t){
+                     private$pathogen$update_pathogen(t)
+                     private$immuneState$update_immuneState(t)
+                     private$healthState$update_healthState(t)
                    },
                    
                    ## Accessors
@@ -95,11 +95,4 @@ Human <- R6Class("Human",
                  
 )
 
-
-############## artificial pedigree - will exist on tile ################
-
-#PfPedigree = list()
-#pfid = 0
-#nAntigenLoci = 9
-#nptypes = c(3,5,4,3,6,3,2,7,9)
 
