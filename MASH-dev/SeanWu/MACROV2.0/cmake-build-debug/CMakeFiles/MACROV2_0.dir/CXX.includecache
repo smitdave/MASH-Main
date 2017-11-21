@@ -1,0 +1,12 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/SeanWu/MACROV2.0/main.cpp
+iostream
+-
+
