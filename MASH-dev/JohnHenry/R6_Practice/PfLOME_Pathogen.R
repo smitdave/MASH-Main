@@ -2,9 +2,15 @@ Pathogen <- R6Class("Pathogen",
                     
                     public = list(
                       
+                      ## initialization of components
+                      
                       initialize = function(){
-                        PfPathogen = list()
+                        private$PfPathogen = list()
+                        private$PfMOI = 0
                       },
+                      
+                      ## add pf during infection
+                      
                       add_Pf = function(t,pfid,mic,mac,gtype){
                         pf = Pf$new(mic,mac,pfid,TRUE)
                         pf$set_gtype(gtype)
@@ -13,41 +19,82 @@ Pathogen <- R6Class("Pathogen",
                         pf$set_activeP(1)
                         pf$set_activeG(1)
                         private$PfPathogen[[pfid]] = pf
+                        pf$set_PfMOI(pf$get_PfMOI()+1)
                       },
+                      
+                      ## update pathogens
+                      
                       update_pathogen = function(t){
                         for(i in 1:(pfid-1)){
                           private$PfPathogen[[i]]$update_Pf(t)
                         }
                         self$update_Ptot()
+                        self$update_Gtot()
+                        self$update_history()
                       },
+                      
+                      
                       get_Pf = function(){
                         private$PfPathogen
                       },
+                      
+                      
+                      ######### update methods ##########
+                      
+                      
                       update_Ptot = function(){
                         private$Ptot = 0
-                        for(i in 1:(pfid-1)){
+                        for(i in 1:private$PfMOI){
                           private$Ptot = private$Ptot + private$PfPathogen[[i]]$get_Pt()
                         }
                       },
+                      
                       update_Gtot = function(){
                         private$Gtot = 0
-                        for(i in 1:(pfid-1)){
+                        for(i in 1:private$PfMOI){
                           private$Gtot = private$Gtot + private$PfPathogen[[i]]$get_Gt()
                         }
                       },
+                      
+                      update_history = function(){
+                        private$history$Ptot <<- c(private$history$Ptot,private$Ptot)
+                        private$history$Gtot <<- c(private$history$Gtot,private$Gtot)
+                        private$history$PfMOI <<- c(private$history$PfMOI,private$PfMOI)
+                      },
+                      
+                      
+                      ######## accessors #########
+                      
+                      
                       get_Ptot = function(){
                         private$Ptot
                       },
+                      
                       get_Gtot = function(){
                         private$Gtot
+                      },
+                      
+                      get_PfMOI = function(){
+                        private$PfMOI
+                      },
+                      
+                      set_PfMOI = function(newPfMOI){
+                        private$PfMOI = newPfMOI
                       }
+                      
                     ),
+                    
+                    
+                    ########### private fields ##############
+                    
                     
                     private = list(
                       PfPathogen = NULL,
                       Ptot = NULL,
                       Gtot = NULL,
-                      Stot = NULL
+                      Stot = NULL,
+                      PfMOI = NULL,
+                      history = list()
                     )
                     
 )
@@ -55,6 +102,9 @@ Pathogen <- R6Class("Pathogen",
 Pf <- R6Class("Pf",
               
               public = list(
+                
+                ## initialization of components
+                
                 initialize = function(mic,mac,pfid,seed=FALSE){
                   private$pfid = pfid
                   private$mic = mic
@@ -62,6 +112,10 @@ Pf <- R6Class("Pf",
                   private$gtype = self$getGtype(mic,mac,seed)
                   private$ptype = self$getPtype(private$gtype,pfped$get_nptypes())
                 },
+                
+                
+                ######### setting g/p types
+                
                 
                 getGtype = function(mic,mac,seed=FALSE){
                   ifelse(seed==TRUE,{
@@ -87,60 +141,81 @@ Pf <- R6Class("Pf",
                   return(ptype)
                 },
                 
+                
+                ############ accessors ############
+                
+                
                 get_pfid = function(){
                   private$pfid
                 },
+                
                 get_gtype = function(){
                   private$gtype
                 },
+                
                 set_gtype = function(newgtype){
                   private$gtype = newgtype
                 },
                 get_ptype = function(){
                   private$ptype
                 },
+                
                 set_ptype = function(newptype){
                   private$ptype = newptype
                 },
+                
                 get_PAR = function(){
                   private$PAR
                 },
+                
                 set_PAR = function(newPAR){
                   private$PAR = newPAR
                 },
+                
                 get_Pt = function(){
                   private$Pt
                 },
+                
                 set_Pt = function(newPt){
                   private$Pt = newPt
                 },
+                
                 get_Gt = function(){
                   private$Gt
                 },
+                
                 set_Gt = function(newGt){
                   private$Gt = newGt
                 },
+                
                 get_mic = function(){
                   private$mic
                 },
+                
                 get_mac = function(){
                   private$mac
                 },
+                
                 get_activeP = function(){
                   private$activeP
                 },
+                
                 set_activeP = function(activeP){
                   private$activeP = activeP
                 },
+                
                 get_activeG = function(){
                   private$activeG
                 },
+                
                 set_activeG = function(activeG){
                   private$activeG = activeG
                 },
                 
                 
-                ## update function
+                ########## update methods ##########
+                
+                
                 update_Pf = function(t){
                   self$update_Pt(t)
                   self$update_Gt(t)
@@ -148,7 +223,7 @@ Pf <- R6Class("Pf",
                 
                 update_Pt = function(t){
                   if(private$activeP > 0){
-                    private$Pt = dPdt_tent(t,private$Pt,private$PAR)
+                    private$Pt = self$dPdt_tent(t,private$Pt,private$PAR)
                     if(is.na(private$Pt)){
                       private$PAR$tEnd = t - private$PAR$t0
                       private$PfPedigree[[private$pfid]]$t0 = private$PAR$tEnd
@@ -159,8 +234,16 @@ Pf <- R6Class("Pf",
                 
                 update_Gt = function(t){
                   tt = (t+1)%%10+1
-                  private$Gt = log10sum(c(private$Gt - gdk, GamCyGen(t,private$Ptt,private$PAR)))
+                  private$Gt = log10sum(c(private$Gt - gdk, self$GamCyGen(t,private$Ptt,private$PAR)))
                 },
+                
+                GamCyGen = function(t, P, PAR){
+                  P-2
+                }
+                
+                
+                ############### Tent Methods #################
+                
                 
                 tentPAR = function(t,pfid){
                   tEnd          = Pf.Duration()
@@ -182,8 +265,25 @@ Pf <- R6Class("Pf",
                     mxPD          = mxPD,
                     tEnd          = tEnd
                   )
-                }
+                },
+                
+                gr_tent = function(t, PAR){with(PAR,{
+                  ifelse(t<peakD, gr, -dr)
+                })}
+                
+                dPdt_tent = function(t, P, PAR, PD=0, IM=0){with(PAR,{
+                  if(NOISY == TRUE) browser()
+                  age = ifelse(t>=t0, t-t0+1, 0)
+                  P = ifelse(age>=1 & age<=tEnd,
+                             pmin(mxPD, P + self$gr_tent(age,PAR))-PD-IM,
+                             NaN)
+                  ifelse(!is.na(P)&P>0, P, NaN)
+                })}
               ),
+              
+              
+              ############ private fields #################
+              
               
               private = list(
                 pfid = NULL,
