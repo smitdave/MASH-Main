@@ -34,11 +34,11 @@ Human <- R6Class("Human",
                    infectMosquito = function(){
                      
                    },
-                   ## Daily Update
-                   dailyUpdate = function(t){
+                   ## Update Function
+                   updateHuman = function(t){
                      private$pathogen$update_pathogen(t)
-                     private$immuneState$update_immuneState(t)
-                     private$healthState$update_healthState(t)
+                     #private$immuneState$update_immuneState(t)
+                     #private$healthState$update_healthState(t)
                    },
                    
                    ## Accessors
@@ -74,6 +74,12 @@ Human <- R6Class("Human",
                    },
                    set_HRP2 = function(newHRP2){
                      private$healthState$set_HRP2(newHRP2)
+                   },
+                   get_Ptot = function(){
+                     private$pathogen$get_Ptot()
+                   },
+                   get_Gtot = function(){
+                     private$pathogen$get_Gtot()
                    }
                    
                    

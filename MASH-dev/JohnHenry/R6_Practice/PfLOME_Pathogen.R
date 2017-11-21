@@ -15,12 +15,31 @@ Pathogen <- R6Class("Pathogen",
                         private$PfPathogen[[pfid]] = pf
                       },
                       update_pathogen = function(t){
-                        for(i in 1:pfid){
+                        for(i in 1:(pfid-1)){
                           private$PfPathogen[[i]]$update_Pf(t)
                         }
+                        self$update_Ptot()
                       },
                       get_Pf = function(){
                         private$PfPathogen
+                      },
+                      update_Ptot = function(){
+                        private$Ptot = 0
+                        for(i in 1:(pfid-1)){
+                          private$Ptot = private$Ptot + private$PfPathogen[[i]]$get_Pt()
+                        }
+                      },
+                      update_Gtot = function(){
+                        private$Gtot = 0
+                        for(i in 1:(pfid-1)){
+                          private$Gtot = private$Gtot + private$PfPathogen[[i]]$get_Gt()
+                        }
+                      },
+                      get_Ptot = function(){
+                        private$Ptot
+                      },
+                      get_Gtot = function(){
+                        private$Gtot
                       }
                     ),
                     
@@ -94,6 +113,12 @@ Pf <- R6Class("Pf",
                 },
                 set_Pt = function(newPt){
                   private$Pt = newPt
+                },
+                get_Gt = function(){
+                  private$Gt
+                },
+                set_Gt = function(newGt){
+                  private$Gt = newGt
                 },
                 get_mic = function(){
                   private$mic

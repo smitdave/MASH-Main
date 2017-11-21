@@ -1,7 +1,18 @@
 ImmuneState <- R6Class("ImmuneState",
                        
+                       public = list(
+                         initialize = funciton(){
+                           
+                         },
+                         
+                         updateImmuneState = function(t){
+                           
+                         }
+                       ),
+                       
                        private = list(
-                         Counters = NULL
+                         General = NULL,
+                         TypeSpecific = NULL
                        )
                        
 )
