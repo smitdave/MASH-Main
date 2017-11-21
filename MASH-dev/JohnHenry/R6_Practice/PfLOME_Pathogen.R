@@ -5,11 +5,13 @@ Pathogen <- R6Class("Pathogen",
                       initialize = function(){
                         PfPathogen = list()
                       },
-                      add_Pf = function(t,pf){
-                        pfid = pf$get_pfid()
+                      add_Pf = function(t,pfid,mic,mac,gtype){
+                        pf = Pf$new(mic,mac,pfid,TRUE)
+                        pf$set_gtype(gtype)
                         pf$set_PAR(pf$tentPAR(t,pfid))
-                        PAR = pf$get_PAR()
                         pf$set_Pt(PAR$MZ0)
+                        pf$set_activeP(1)
+                        pf$set_activeG(1)
                         private$PfPathogen[[pfid]] = pf
                       },
                       update_pathogen = function(t){
@@ -34,10 +36,8 @@ Pathogen <- R6Class("Pathogen",
 Pf <- R6Class("Pf",
               
               public = list(
-                initialize = function(t,mic,mac,pfid,seed=FALSE){
+                initialize = function(mic,mac,pfid,seed=FALSE){
                   private$pfid = pfid
-                  private$activeP = 1
-                  private$activeG = 1
                   private$mic = mic
                   private$mac = mac
                   private$gtype = self$getGtype(mic,mac,seed)
@@ -49,8 +49,8 @@ Pf <- R6Class("Pf",
                     gtype=runif(pfped$get_nptypes())
                   },
                   {
-                    micType = pfped$gtype[[mic]]
-                    macType =  pfped$gtype[[mac]]
+                    micType = pfped$get_gtype[[mic]]
+                    macType =  pfped$get_gtype[[mac]]
                     micmac = cbind(micType, macType)
                     ix = sample(c(1,2), nAntigenLoci, replace =TRUE)
                     gtype = NULL
@@ -92,6 +92,9 @@ Pf <- R6Class("Pf",
                 get_Pt = function(){
                   private$Pt
                 },
+                set_Pt = function(newPt){
+                  private$Pt = newPt
+                },
                 get_mic = function(){
                   private$mic
                 },
@@ -101,15 +104,21 @@ Pf <- R6Class("Pf",
                 get_activeP = function(){
                   private$activeP
                 },
+                set_activeP = function(activeP){
+                  private$activeP = activeP
+                },
                 get_activeG = function(){
                   private$activeG
+                },
+                set_activeG = function(activeG){
+                  private$activeG = activeG
                 },
                 
                 
                 ## update function
                 update_Pf = function(t){
-                  update_Pt(t)
-                  update_Gt(t)
+                  self$update_Pt(t)
+                  self$update_Gt(t)
                 },
                 
                 update_Pt = function(t){
@@ -126,27 +135,7 @@ Pf <- R6Class("Pf",
                 update_Gt = function(t){
                   tt = (t+1)%%10+1
                   private$Gt = log10sum(c(private$Gt - gdk, GamCyGen(t,private$Ptt,private$PAR)))
-                }
-              ),
-              
-              private = list(
-                pfid = NULL,
-                ## tentPars
-                PAR = NULL,
-                ## Parasite Densities (Pt = Asexual, Gt = Gametocyte, 
-                ## St = Sporozoite)
-                activeP = NULL,
-                activeG = NULL,
-                activeS = NULL,
-                Pt = NULL,
-                Ptt = NULL,
-                Gt = NULL,
-                St = NULL,
-                mic = NULL,
-                mac = NULL,
-                ## biological parameters
-                gtype = NULL,
-                ptype = NULL,
+                },
                 
                 tentPAR = function(t,pfid){
                   tEnd          = Pf.Duration()
@@ -169,6 +158,27 @@ Pf <- R6Class("Pf",
                     tEnd          = tEnd
                   )
                 }
+              ),
+              
+              private = list(
+                pfid = NULL,
+                ## tentPars
+                PAR = NULL,
+                ## Parasite Densities (Pt = Asexual, Gt = Gametocyte, 
+                ## St = Sporozoite)
+                activeP = NULL,
+                activeG = NULL,
+                activeS = NULL,
+                Pt = NULL,
+                Ptt = NULL,
+                Gt = NULL,
+                St = NULL,
+                mic = NULL,
+                mac = NULL,
+                ## biological parameters
+                gtype = NULL,
+                ptype = NULL
+                
               )
               
 )

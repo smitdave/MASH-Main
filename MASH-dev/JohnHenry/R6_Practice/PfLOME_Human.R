@@ -21,10 +21,11 @@ Human <- R6Class("Human",
                    
                    ## Human Methods
                    ## Infection Event
-                   infectHuman = function(t,pf){ ## also pass pfid
-                     #pfid = pf$get_pfid()
-                     private$pathogen$add_Pf(t,pf)
-                     private$pfPedigree$add2Pedigree(private$pathogen$get_Pf(pfid)) ### in real sim, this occurs in mosquito
+                   infectHuman = function(t,pfid){
+                     mic = pfped$get_mic(pfid)
+                     mac = pfped$get_mac(pfid)
+                     gtype = pfped$get_gtype(pfid)
+                     private$pathogen$add_Pf(t,pfid,mic,mac,gtype)
                    },
                    ## write method to remove particular infection
                    clearPathogen = function(pfid){
@@ -34,10 +35,10 @@ Human <- R6Class("Human",
                      
                    },
                    ## Daily Update
-                   dailyUpdate = function(){
-                     private$pathogen$update_pathogen()
-                     private$immuneState$update_immuneState()
-                     private$healthState$update_healthState()
+                   dailyUpdate = function(t){
+                     private$pathogen$update_pathogen(t)
+                     private$immuneState$update_immuneState(t)
+                     private$healthState$update_healthState(t)
                    },
                    
                    ## Accessors
