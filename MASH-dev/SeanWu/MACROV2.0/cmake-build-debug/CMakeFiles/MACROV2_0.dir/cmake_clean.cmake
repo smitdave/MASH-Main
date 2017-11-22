@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/MACROV2_0.dir/main.cpp.o"
+  "CMakeFiles/MACROV2_0.dir/Human.cpp.o"
   "../build/MACROV2_0.pdb"
   "../build/MACROV2_0"
 )

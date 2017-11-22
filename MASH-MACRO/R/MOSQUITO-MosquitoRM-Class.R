@@ -7,9 +7,9 @@
 #   /_/  /_/\____//____/\___\_\____/___/ /_/  \____/
 #
 #   MASH-MACRO
-#   MACRO: MosquitoRM Class Definition
-#   David Smith, Hector Sanchez, Sean Wu
-#   August 20, 2017
+#   MosquitoRM Class Definition
+#   MASH Team
+#   November 2017
 #
 ###############################################################################
 

@@ -123,6 +123,33 @@ MACROV2_0/fast:
 	$(MAKE) -f CMakeFiles/MACROV2_0.dir/build.make CMakeFiles/MACROV2_0.dir/build
 .PHONY : MACROV2_0/fast
 
+Human.o: Human.cpp.o
+
+.PHONY : Human.o
+
+# target to build an object file
+Human.cpp.o:
+	$(MAKE) -f CMakeFiles/MACROV2_0.dir/build.make CMakeFiles/MACROV2_0.dir/Human.cpp.o
+.PHONY : Human.cpp.o
+
+Human.i: Human.cpp.i
+
+.PHONY : Human.i
+
+# target to preprocess a source file
+Human.cpp.i:
+	$(MAKE) -f CMakeFiles/MACROV2_0.dir/build.make CMakeFiles/MACROV2_0.dir/Human.cpp.i
+.PHONY : Human.cpp.i
+
+Human.s: Human.cpp.s
+
+.PHONY : Human.s
+
+# target to generate assembly for a file
+Human.cpp.s:
+	$(MAKE) -f CMakeFiles/MACROV2_0.dir/build.make CMakeFiles/MACROV2_0.dir/Human.cpp.s
+.PHONY : Human.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... MACROV2_0"
+	@echo "... Human.o"
+	@echo "... Human.i"
+	@echo "... Human.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

@@ -82,6 +82,12 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/SeanWu/MACROV2.0/Human.cpp">
+			<Option target="MACROV2_0"/>
+		</Unit>
+		<Unit filename="/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/SeanWu/MACROV2.0/Human.h">
+			<Option target="MACROV2_0"/>
+		</Unit>
 		<Unit filename="/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/SeanWu/MACROV2.0/main.cpp">
 			<Option target="MACROV2_0"/>
 		</Unit>
