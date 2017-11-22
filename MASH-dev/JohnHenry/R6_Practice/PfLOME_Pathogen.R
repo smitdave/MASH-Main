@@ -19,7 +19,7 @@ Pathogen <- R6Class("Pathogen",
                         pf$set_activeP(1)
                         pf$set_activeG(1)
                         private$PfPathogen[[pfid]] = pf
-                        pf$set_PfMOI(pf$get_PfMOI()+1)
+                        private$set_PfMOI(pf$get_PfMOI()+1)
                       },
                       
                       ## update pathogens
@@ -239,7 +239,7 @@ Pf <- R6Class("Pf",
                 
                 GamCyGen = function(t, P, PAR){
                   P-2
-                }
+                },
                 
                 
                 ############### Tent Methods #################
@@ -269,7 +269,7 @@ Pf <- R6Class("Pf",
                 
                 gr_tent = function(t, PAR){with(PAR,{
                   ifelse(t<peakD, gr, -dr)
-                })}
+                })},
                 
                 dPdt_tent = function(t, P, PAR, PD=0, IM=0){with(PAR,{
                   if(NOISY == TRUE) browser()
