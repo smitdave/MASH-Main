@@ -1,5 +1,5 @@
 
-kerW = function(xy, XY, p=1.5){
+kerW = function(xy, XY, p=1){
   d = sqrt((xy[1] - XY[,1])^2 + (xy[2] - XY[,2])^2) 
   exp(-d*p)*XY[,3]
 }
@@ -13,11 +13,11 @@ kerW.i = function(i, xy, XY, w, p=1){
 }
 
 
-FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, simplify = "array")
-LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, simplify = "array")
+FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, p=3, simplify = "array")
+LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, p=3, simplify = "array")
 
-LF = t(LF)
-FL = t(FL)
+LF = as.matrix(t(LF))  
+FL = as.matrix(t(FL)) 
 
 Q = LF%*%FL
 
