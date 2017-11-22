@@ -41,6 +41,6 @@ plotPointSetDispersion = function(xy, wts){
     return(list(d=d, w=w, cdf=cdf)) 
   })
 }
-par(mfrow = c(1,1))
+
 ans = plotPointSetDispersion(xy.f, rpois(N.l^2, 200*Q))
-ker = smoothPointSetDispersal(ans$d, ans$w)
+#ker = smoothPointSetDispersal(ans$d, ans$w)

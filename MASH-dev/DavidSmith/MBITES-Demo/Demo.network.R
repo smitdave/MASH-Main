@@ -4,9 +4,9 @@ kerW = function(xy, XY, p=1.5){
   exp(-d*p)*XY[,3]
 }
 
-xy = c(0,0)
-XY = cbind(1:20, 1:20, rep(1,20))
-plot(1:20, kerW(xy, XY))
+#xy = c(0,0)
+#XY = cbind(1:20, 1:20, rep(1,20))
+#plot(1:20, kerW(xy, XY))
 
 kerW.i = function(i, xy, XY, w, p=1){
   kerW(xy[i,], XY, p)
@@ -25,7 +25,7 @@ Q = Q / rowSums(Q)
 N = matrix(pmax(0, Q - t(Q)), N.l, N.l) 
 CC = Q-N
 
-par(mfrow = c(2,1), mar = c(0,0,0,0))
+#par(mfrow = c(2,1), mar = c(0,0,0,0))
 plot(xy.l[,1], xy.l[,2], pch = 3, col = "blue",  xlab = "", xaxt = "n", ylab = "", yaxt = "n", xlim = range(xy.f, xy.l), ylim = range(xy.f, xy.l))
 points(xy.f[,1], xy.f[,2], pch = 4, col = "red")
 
