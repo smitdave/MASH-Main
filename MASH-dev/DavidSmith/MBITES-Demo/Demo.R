@@ -10,7 +10,7 @@ getCenters = function(nCenters, rng){
 makeCluster = function(x,y,n,s){
   X = x + rnorm(n,0,s)
   Y = y + rnorm(n,0,s)
-  w = rgamma(n,1,1)
+  w = rep(1,n) #rgamma(n,1,1)
   list(x=X, y=Y, w=w)
 }
 
@@ -75,4 +75,6 @@ plot.fl(xy.f, xy.l)
 pointsets[[26]] = list(xy.f =xy.f, xy.l=xy.l)
 
 dev.off(dev.cur()) 
-
+plot.fl(xy.f, xy.l)
+segments(0,0,0,1)
+#xy.l = clusters2xy(lclusters)

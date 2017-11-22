@@ -1,16 +1,20 @@
 
-kerW = function(xy, XY, w, p=1){
-  d = sqrt( (xy[1] - XY[,1])^2 + (xy[2] - XY[,2])^2) 
-  exp(-d*p)*w
+kerW = function(xy, XY, p=1.5){
+  d = sqrt((xy[1] - XY[,1])^2 + (xy[2] - XY[,2])^2) 
+  exp(-d*p)*XY[,3]
 }
+
+xy = c(0,0)
+XY = cbind(1:20, 1:20, rep(1,20))
+plot(1:20, kerW(xy, XY))
 
 kerW.i = function(i, xy, XY, w, p=1){
-  kerW(xy[i,], XY, w[i], p)
+  kerW(xy[i,], XY, p)
 }
 
 
-FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, w=w.f, simplify = "array")
-LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, w=w.l, simplify = "array")
+FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, simplify = "array")
+LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, simplify = "array")
 
 LF = t(LF)
 FL = t(FL)

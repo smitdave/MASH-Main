@@ -33,12 +33,6 @@ plotPointSetDispersion = function(xy, wts){
     points(d, w/max(w), type = "h", col = grey(0.5))
     lines(d, cdf)
     
-    #ker = smoothPointSetDispersal(d,w)
-    #with(ker,{
-    #  lines(dd, sm, col = "red")
-    #  smcdf = cumsum(sm)
-    #  lines(dd, smcdf/max(smcdf), col = "red")
-    #})
     with(smoothPointSetCDF(d,cdf),{
       lines(dd, ccdf, col = "red")
       dcdf = diff(ccdf)
@@ -47,6 +41,6 @@ plotPointSetDispersion = function(xy, wts){
     return(list(d=d, w=w, cdf=cdf)) 
   })
 }
-
+par(mfrow = c(1,1))
 ans = plotPointSetDispersion(xy.f, rpois(N.l^2, 200*Q))
 ker = smoothPointSetDispersal(ans$d, ans$w)
