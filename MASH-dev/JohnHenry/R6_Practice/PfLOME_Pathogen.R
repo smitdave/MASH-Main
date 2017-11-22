@@ -19,7 +19,7 @@ Pathogen <- R6Class("Pathogen",
                         pf$set_activeP(1)
                         pf$set_activeG(1)
                         private$PfPathogen[[pfid]] = pf
-                        private$set_PfMOI(pf$get_PfMOI()+1)
+                        self$set_PfMOI(self$get_PfMOI()+1)
                       },
                       
                       ## update pathogens
@@ -37,6 +37,7 @@ Pathogen <- R6Class("Pathogen",
                       get_Pf = function(){
                         private$PfPathogen
                       },
+
                       
                       
                       ######### update methods ##########
@@ -200,16 +201,16 @@ Pf <- R6Class("Pf",
                   private$activeP
                 },
                 
-                set_activeP = function(activeP){
-                  private$activeP = activeP
+                set_activeP = function(newactiveP){
+                  private$activeP = newactiveP
                 },
                 
                 get_activeG = function(){
                   private$activeG
                 },
                 
-                set_activeG = function(activeG){
-                  private$activeG = activeG
+                set_activeG = function(newactiveG){
+                  private$activeG = newactiveG
                 },
                 
                 
