@@ -18,8 +18,14 @@ Pathogen <- R6Class("Pathogen",
                         pf$set_Pt(PAR$MZ0)
                         pf$set_activeP(1)
                         pf$set_activeG(1)
+                        self$set_Ptot(PAR$MZ0)
                         private$PfPathogen[[pfid]] = pf
                         self$set_PfMOI(self$get_PfMOI()+1)
+                      },
+                      
+                      remove_Pf = function(t,pfid){
+                        private$PfPathogen[[pfid]] = NULL
+                        self$set_PfMOI(self$get_PfMOI()-1)
                       },
                       
                       ## update pathogens
@@ -27,15 +33,13 @@ Pathogen <- R6Class("Pathogen",
                       update_pathogen = function(t){
                         for(i in 1:(pfid-1)){
                           private$PfPathogen[[i]]$update_Pf(t)
+                          #if(is.na(private$PfPathogen[[i]]$Pt)){
+                          #  private$PfPathogen[[i]]$activeP = 0
+                          #}
                         }
                         self$update_Ptot()
                         self$update_Gtot()
                         self$update_history()
-                      },
-                      
-                      
-                      get_Pf = function(){
-                        private$PfPathogen
                       },
 
                       
@@ -58,9 +62,9 @@ Pathogen <- R6Class("Pathogen",
                       },
                       
                       update_history = function(){
-                        private$history$Ptot <<- c(private$history$Ptot,private$Ptot)
-                        private$history$Gtot <<- c(private$history$Gtot,private$Gtot)
-                        private$history$PfMOI <<- c(private$history$PfMOI,private$PfMOI)
+                        private$history$Ptot = c(private$history$Ptot,private$Ptot)
+                        private$history$Gtot = c(private$history$Gtot,private$Gtot)
+                        private$history$PfMOI = c(private$history$PfMOI,private$PfMOI)
                       },
                       
                       
@@ -69,6 +73,10 @@ Pathogen <- R6Class("Pathogen",
                       
                       get_Ptot = function(){
                         private$Ptot
+                      },
+                      
+                      set_Ptot = function(newPtot){
+                        private$Ptot = newPtot
                       },
                       
                       get_Gtot = function(){
@@ -81,6 +89,14 @@ Pathogen <- R6Class("Pathogen",
                       
                       set_PfMOI = function(newPfMOI){
                         private$PfMOI = newPfMOI
+                      },
+                      
+                      get_Pf = function(){
+                        private$PfPathogen
+                      },
+                      
+                      get_history = function(){
+                        private$history
                       }
                       
                     ),
@@ -225,11 +241,11 @@ Pf <- R6Class("Pf",
                 update_Pt = function(t){
                   if(private$activeP > 0){
                     private$Pt = self$dPdt_tent(t,private$Pt,private$PAR)
-                    if(is.na(private$Pt)){
-                      private$PAR$tEnd = t - private$PAR$t0
-                      private$PfPedigree[[private$pfid]]$t0 = private$PAR$tEnd
-                      parasite$PfPathogen[[private$pfid]]$activeP = 0
-                    }
+                    #if(is.na(private$Pt)){
+                    #  private$PAR$tEnd = t - private$PAR$t0
+                    #  private$PfPedigree[[private$pfid]]$t0 = private$PAR$tEnd
+                    #  parasite$PfPathogen[[private$pfid]]$activeP = 0
+                    #}
                   }
                 },
                 
@@ -244,13 +260,35 @@ Pf <- R6Class("Pf",
                 
                 
                 ############### Tent Methods #################
+
+                
+                Pf.MaxPD = function(N=1, mn=10.5, vr=0.5){
+                  rnorm(N,mn,vr)
+                  },
+                
+                Pf.PeakD = function(min=18){
+                  #FIX STUB
+                  # Day when parasitemia first peaks
+                  ceiling(min+rlnorm(1,log(3),.5))
+                },
+                
+                Pf.MZ0 = function(){
+                  #FIX STUB
+                  rnorm(1,4.2,.1)
+                },
+                
+                Pf.Duration = function(peakD,N=1,mn=200){
+                  #FIX STUB
+                  # Time to last parasitemia
+                  peakD + rgeom(N,1/mn)
+                },
                 
                 
                 tentPAR = function(t,pfid){
-                  tEnd          = Pf.Duration()
-                  mxPD          = Pf.MaxPD()
-                  peakD         = Pf.PeakD()
-                  MZ0           = Pf.MZ0()
+                  mxPD          = self$Pf.MaxPD()
+                  peakD         = self$Pf.PeakD()
+                  MZ0           = self$Pf.MZ0()
+                  tEnd          = self$Pf.Duration(peakD)
                   
                   gr 		        = (mxPD-MZ0)/peakD
                   dr            = mxPD/(tEnd-peakD)

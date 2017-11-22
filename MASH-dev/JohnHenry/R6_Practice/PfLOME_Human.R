@@ -103,6 +103,12 @@ Human <- R6Class("Human",
                    
                    get_Gtot = function(){
                      private$pathogen$get_Gtot()
+                   },
+                   
+                   get_history = function(){
+                     private$pathogen$get_history()
+                     #private$healthState$history
+                     #private$immuneState$history
                    }
                    
                    

@@ -9,37 +9,64 @@ HealthState <- R6Class("HealthState",
                            private$pLDH = 0
                          },
                          
+                         
+                         ####### Accessors ########
+                         
+                         
                          get_Fever = function(){
                            private$Fever
                          },
                          set_Fever = function(newFever){
-                           private$Fever <<- newFever
+                           private$Fever = newFever
                          },
                          get_HRP2 = function(){
                            private$HRP2
                          },
                          set_HRP2 = function(newHRP2){
-                           private$HRP2 <<- newHRP2
+                           private$HRP2 = newHRP2
                          },
                          get_pLDH = function(){
                            private$pLDH
                          },
                          set_pLDH = function(newpLDH){
-                           private$pLDH <<- newpLDH
+                           private$pLDH = newpLDH
                          },
                          get_RBC = function(){
                            private$RBC
                          },
                          set_RBC = function(newRBC){
-                           private$RBC <<- newRBC
+                           private$RBC = newRBC
                          },
                          
+                         
+                         ############ Update Methods ##############
+                         
+                         
                          update_healthState = function(){
+                           set_Fever(update_Fever(private$Fever))
                            set_HRP2(update_HRP2(private$HRP2))
                            set_pLDH(update_pLDH(private$pLDH))
                            set_RBC(update_RBC(private$RBC))
+                         },
+                         
+                         update_Fever = function(){
+                           
+                         },
+                         
+                         update_HRP2 = function(HRP2){
+                           
+                         },
+                         
+                         update_pLDH = function(pLDH){
+                           
+                         },
+                         
+                         update_RBC = function(RBC){
+                           
                          }
+                         
                        ),
+                       
                        
                        private = list(
                          Fever = NULL,

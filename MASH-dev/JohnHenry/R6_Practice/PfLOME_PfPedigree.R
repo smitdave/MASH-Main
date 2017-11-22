@@ -57,6 +57,7 @@ PfPedigree <- R6Class("PfPedigree",
                       ),
                       
                       private = list(
+                        
                         PedLength = integer(0),
                         gtype = list(),
                         ptype = list(),
@@ -67,7 +68,6 @@ PfPedigree <- R6Class("PfPedigree",
                         sib = list(),
                         nAntigenLoci = integer(0),
                         nptypes = NULL
-                        
                         
                       )
 )

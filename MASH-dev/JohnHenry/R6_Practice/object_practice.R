@@ -11,10 +11,14 @@ mu = .01 ## mutation rate (most likely should be in pf object)
 someGuy = Human$new(1)
 pf = Pf$new(1,1,1,TRUE) ##mic, mac, pfid, seed
 pfped$add2Pedigree(pf)
-someGuy$infectHuman(1,pf$get_pfid())
-someGuy$get_Ptot()
-someGuy$get_Gtot()
-someGuy$updateHuman(2)
+someGuy$infectHuman(0,pf$get_pfid())
 someGuy$get_Ptot()
 someGuy$get_Gtot()
 pfped$get_PedLength()
+
+
+for(t in 1:300){
+  someGuy$updateHuman(t)
+}
+
+plot(1:300,someGuy$get_history()$Ptot,type="l",ylim=c(0,11))
