@@ -13,15 +13,6 @@ kerW.i = function(i, xy, XY, w, p=1){
 }
 
 
-FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, p=5, simplify = "array")
-LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, p=5, simplify = "array")
-
-LF = as.matrix(t(LF))  
-FL = as.matrix(t(FL)) 
-
-dff = as.matrix(dist(xy.f[,c(1,2)], diag = TRUE, upper = TRUE), N.f, N.f) 
-dll = as.matrix(dist(xy.l[,c(1,2)], diag = TRUE, upper = TRUE), N.l, N.l) 
-Q = LF%*%FL
 
 
 plotByDistance = function(dd,QQ){
@@ -42,28 +33,77 @@ plotByDistance = function(dd,QQ){
 }
 
 
+plotSym = function(xy, Q, mag=1, xy.o=NULL, pset = "l"){
+  if (pset == "l"){
+    ppch = 3
+    ccol = "blue"
+    ppch.o = 4
+    ccol.o = "red"
+  } 
+  if(pset == "f") {
+    ppch = 4
+    ccol = "red"
+    ppch.o = 3
+    ccol.o = "blue"
+  }
+  if(pset == "n") {
+    ppch = ""
+    ccol = "white"
+    ppch.o = ""
+    ccol.o = "white"
+  }
+  rrng = range(xy, xy.o)
+  
+  plot(xy[,1], xy[,2], pch = ppch, col = ccol,  
+       xlab = "", xaxt = "n", ylab = "", yaxt = "n", 
+       xlim = rrng, ylim = rrng)
+  points(xy.o[,1], xy.o[,2], pch = ppch.o, col = ccol.o)
+  
+  N = dim(Q)
+  S = pmin(Q, t(Q))
+  for(i in 1:N)
+    for(j in i:N)
+      segments(xy[i,1], xy[i,2], xy[j,1], xy[j,2], lwd = S[i,j]*mag)
+}
 
-Q = Q / rowSums(Q)
-#plotByDistance(dll,Q)
-N = matrix(pmax(0, Q - t(Q)), N.l, N.l) 
-CC = Q-N
+plotFlow = function(xy, Q, al=0.05, mag=1, xy.o=NULL, pset = "l"){
+  if (pset == "l"){
+    ppch = 3
+    ccol = "blue"
+    ppch.o = 4
+    ccol.o = "red"
+  } 
+  if(pset == "f") {
+    ppch = 4
+    ccol = "red"
+    ppch.o = 3
+    ccol.o = "blue"
+  }
+  if(pset == "n") {
+    ppch = 4
+    ccol = "white"
+    ppch.o = 3
+    ccol.o = "white"
+  }
+  rrng = range(xy, xy.o)
+  
+  plot(xy[,1], xy[,2], pch = ppch, col = ccol,  
+       xlab = "", xaxt = "n", ylab = "", yaxt = "n", 
+       xlim = rrng, ylim = rrng)
+  points(xy.o[,1], xy.o[,2], pch = ppch.o, col = ccol.o)
+  
+  N = dim(Q)
+  S = pmin(Q, t(Q))
+  F = Q-S 
+  for(i in 1:N) for(j in 1:N) if(F[i,j]>0)
+    arrows(xy[i,1], xy[i,2], xy[j,1], xy[j,2], 
+           lwd = F[i,j]*mag, length = al)
+}
 
-#par(mfrow = c(2,1), mar = c(0,0,0,0))
-plot(xy.l[,1], xy.l[,2], pch = 3, col = "blue",  xlab = "", xaxt = "n", ylab = "", yaxt = "n", xlim = range(xy.f, xy.l), ylim = range(xy.f, xy.l))
-points(xy.f[,1], xy.f[,2], pch = 4, col = "red")
-
-for(i in 1:N.l)
-  for(j in i:N.l)
-    segments(xy.l[i,1], xy.l[i,2], xy.l[j,1], xy.l[j,2], lwd = CC[i,j]*2)
-
-plot(xy.l[,1], xy.l[,2], pch = 16, col = "blue",  xlab = "", xaxt = "n", ylab = "", yaxt = "n", xlim = range(xy.f, xy.l), ylim = range(xy.f, xy.l))
-points(xy.f[,1], xy.f[,2], pch = 16, col = "red")
-for(i in 1:N.l)
-  for(j in 1:N.l)
-    arrows(xy.l[i,1], xy.l[i,2], xy.l[j,1], xy.l[j,2], lwd = N[i,j]*2, length =0.05)
-
-#plot(xl, yl, type = "n", pch = 16, col = "blue", ylim = c(-1,12), xlim = c(-1,12), xlab = "", xaxt = "n", ylab = "", yaxt = "n")
-
-#for(i in 1:29)
-#  for(j in 1:29)
-#    arrows(xl[i], yl[i], xl[j], yl[j], lwd = N2[i,j], length = .05)
+#par(mfrow = c(1,1))
+#plotByDistance(dll,LL)
+#plotByDistance(dff,FF)
+#plotSym(xy.l, LL, mag=3, xy.o=xy.f, pset = "n")
+#plotSym(xy.f, FF, mag=3, xy.o=xy.l, pset = "n")
+#plotFlow(xy.l, LL, mag=3, xy.o=xy.f, pset = "n",al=0.05)
+#plotFlow(xy.f, FF, mag=3, xy.o=xy.l, pset = "n", al=0.05)
