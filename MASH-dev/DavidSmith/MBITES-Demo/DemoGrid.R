@@ -1,8 +1,7 @@
 ############################################
 # Make a set of clusters on a grid
 ############################################
-#showIt = TRUE
-showIt = FALSE
+source ("Demo.R")
 
 ######################
 # Set Grid Parameters
@@ -19,7 +18,7 @@ x = matrix(rep(g, lg), lg, lg)
 y = t(x) 
 xy = cbind(as.vector(x),as.vector(y)) 
 
-plot(x,y)
+#plot(x,y)
 
 x=0; y=0; w=0
 for(i in 1:dim(xy)[1]){

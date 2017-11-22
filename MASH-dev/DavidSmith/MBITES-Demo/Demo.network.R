@@ -13,15 +13,38 @@ kerW.i = function(i, xy, XY, w, p=1){
 }
 
 
-FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, p=3, simplify = "array")
-LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, p=3, simplify = "array")
+FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, p=5, simplify = "array")
+LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, p=5, simplify = "array")
 
 LF = as.matrix(t(LF))  
 FL = as.matrix(t(FL)) 
 
+dff = as.matrix(dist(xy.f[,c(1,2)], diag = TRUE, upper = TRUE), N.f, N.f) 
+dll = as.matrix(dist(xy.l[,c(1,2)], diag = TRUE, upper = TRUE), N.l, N.l) 
 Q = LF%*%FL
 
+
+plotByDistance = function(dd,QQ){
+  N = dim(dd)[1]
+  par(mfrow = c(2,1), mar = c(5,4,2,1))
+  ot = order(dd[1,])
+  plot(dd[1,ot], QQ[1,ot], type = "l", ylim = c(0,1))
+  for(i in 1:N){
+    ot = order(dd[i,])
+    lines(dd[i,ot], QQ[i,ot]) 
+  }
+  ot = order(dd[1,])
+  plot(dd[1,ot], cumsum(QQ[1,ot]), type = "l", ylim =c(0,1))
+  for(i in 1:N){
+    ot = order(dd[i,])
+    lines(dd[i,ot], cumsum(QQ[i,ot])) 
+  } 
+}
+
+
+
 Q = Q / rowSums(Q)
+#plotByDistance(dll,Q)
 N = matrix(pmax(0, Q - t(Q)), N.l, N.l) 
 CC = Q-N
 

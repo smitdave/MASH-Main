@@ -1,7 +1,6 @@
 
-pointSetDispersion = function(xy, wts){
-  DD = dist(xy[,c(1,2)], diag = TRUE, upper = TRUE)
-  dd = as.vector(DD)
+pointSetDispersion = function(dxx, wts){
+  dd = as.vector(dxx)
   ot = order(dd)
   dd = dd[ot]
   wts = as.vector(wts)[ot]
@@ -42,5 +41,5 @@ plotPointSetDispersion = function(xy, wts){
   })
 }
 
-ans = plotPointSetDispersion(xy.f, rpois(N.l^2, 200*Q))
+ans = plotPointSetDispersion(dll, rpois(N.l^2, 200*Q))
 #ker = smoothPointSetDispersal(ans$d, ans$w)
