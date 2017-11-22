@@ -33,40 +33,40 @@ plotByDistance = function(dd,QQ){
 }
 
 
-plotSym = function(xy, Q, mag=1, xy.o=NULL, pset = "l"){
-  if (pset == "l"){
-    ppch = 3
-    ccol = "blue"
-    ppch.o = 4
-    ccol.o = "red"
-  } 
+plotSym = function(xy, Q, mag=1, xy.o=NULL, pset = "l", pcex = 1){
+
+  ppch = 3
+  ccol = "blue"
+  ppch.o = 4
+  ccol.o = "red"
+  
   if(pset == "f") {
     ppch = 4
     ccol = "red"
     ppch.o = 3
     ccol.o = "blue"
   }
-  if(pset == "n") {
-    ppch = ""
-    ccol = "white"
-    ppch.o = ""
-    ccol.o = "white"
-  }
+
   rrng = range(xy, xy.o)
   
   plot(xy[,1], xy[,2], pch = ppch, col = ccol,  
        xlab = "", xaxt = "n", ylab = "", yaxt = "n", 
-       xlim = rrng, ylim = rrng)
-  points(xy.o[,1], xy.o[,2], pch = ppch.o, col = ccol.o)
-  
-  N = dim(Q)
+       xlim = rrng, ylim = rrng, cex = pcex)
+  points(xy.o[,1], xy.o[,2], pch = ppch.o, col = ccol.o, cex = pcex)
+  addAdjacency(xy, Q, mag=mag, ccol=ccol)
+}
+
+addAdjacency = function(xy, Q, mag=1, ccol="black"){
+  N = dim(Q)[1]
   S = pmin(Q, t(Q))
   for(i in 1:N)
     for(j in i:N)
-      segments(xy[i,1], xy[i,2], xy[j,1], xy[j,2], lwd = S[i,j]*mag)
+      segments(xy[i,1], xy[i,2], xy[j,1], xy[j,2], lwd = S[i,j]*mag, col = ccol)  
 }
+  
 
-plotFlow = function(xy, Q, al=0.05, mag=1, xy.o=NULL, pset = "l"){
+
+plotFlow = function(xy, Q, al=0.05, mag=1, xy.o=NULL, pset = "l", pcex = 1){
   if (pset == "l"){
     ppch = 3
     ccol = "blue"
@@ -79,26 +79,26 @@ plotFlow = function(xy, Q, al=0.05, mag=1, xy.o=NULL, pset = "l"){
     ppch.o = 3
     ccol.o = "blue"
   }
-  if(pset == "n") {
-    ppch = 4
-    ccol = "white"
-    ppch.o = 3
-    ccol.o = "white"
-  }
   rrng = range(xy, xy.o)
   
   plot(xy[,1], xy[,2], pch = ppch, col = ccol,  
        xlab = "", xaxt = "n", ylab = "", yaxt = "n", 
-       xlim = rrng, ylim = rrng)
-  points(xy.o[,1], xy.o[,2], pch = ppch.o, col = ccol.o)
-  
-  N = dim(Q)
+       xlim = rrng, ylim = rrng, cex=pcex)
+  points(xy.o[,1], xy.o[,2], pch = ppch.o, col = ccol.o, cex=pcex)
+ 
+  addFlow(xy,Q,al,mag,ccol) 
+}
+
+addFlow = function(xy, Q, al=0.05, mag=1, ccol = "black"){
+  N = dim(Q)[1]
   S = pmin(Q, t(Q))
   F = Q-S 
   for(i in 1:N) for(j in 1:N) if(F[i,j]>0)
     arrows(xy[i,1], xy[i,2], xy[j,1], xy[j,2], 
-           lwd = F[i,j]*mag, length = al)
+           lwd = F[i,j]*mag, length = al, col = ccol)
 }
+
+
 
 #par(mfrow = c(1,1))
 #plotByDistance(dll,LL)

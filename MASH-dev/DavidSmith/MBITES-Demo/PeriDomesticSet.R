@@ -25,6 +25,8 @@ plot.fl(xy.f, xy.l)
 pointsets[[26]] = list(xy.f =xy.f, xy.l=xy.l)
 
 dev.off(dev.cur()) 
+
+xy.l = clusters2xy(lclusters)
 plot.fl(xy.f, xy.l)
-segments(0,0,0,1)
+
 #xy.l = clusters2xy(lclusters)
