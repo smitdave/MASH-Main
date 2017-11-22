@@ -22,8 +22,8 @@ N = matrix(pmax(0, Q - t(Q)), N.l, N.l)
 CC = Q-N
 
 par(mfrow = c(2,1), mar = c(0,0,0,0))
-plot(xy.l[,1], xy.l[,2], pch = 16, col = "blue",  xlab = "", xaxt = "n", ylab = "", yaxt = "n", xlim = range(xy.f, xy.l), ylim = range(xy.f, xy.l))
-points(xy.f[,1], xy.f[,2], pch = 16, col = "red")
+plot(xy.l[,1], xy.l[,2], pch = 3, col = "blue",  xlab = "", xaxt = "n", ylab = "", yaxt = "n", xlim = range(xy.f, xy.l), ylim = range(xy.f, xy.l))
+points(xy.f[,1], xy.f[,2], pch = 4, col = "red")
 
 for(i in 1:N.l)
   for(j in i:N.l)
