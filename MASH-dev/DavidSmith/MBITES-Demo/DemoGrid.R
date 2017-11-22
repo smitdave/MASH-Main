@@ -4,6 +4,7 @@
 source ("Demo.R")
 source ("Demo.network.R")
 source ("pointSetDispersion.R")
+source ("pointSetDiagnostic.R")
 
 ######################
 # Set Grid Parameters
@@ -42,5 +43,5 @@ for(i in 1:dim(xy)[1]){
 
 xy.l = cbind(x=x[-1], y=y[-1], w=w[-1]) 
 
-
+pointSetDiagnostic(xy.f, xy.l)
 
