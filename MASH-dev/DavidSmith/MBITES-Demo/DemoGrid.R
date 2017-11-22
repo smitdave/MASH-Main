@@ -45,8 +45,8 @@ xy.l = cbind(x=x[-1], y=y[-1], w=w[-1])
 N.f = dim(xy.f)[1]
 N.l = dim(xy.l)[1]
 
-FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, p=5, simplify = "array")
-LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, p=5, simplify = "array")
+FL = sapply(X=c(1:N.f), FUN=kerW.i, xy = xy.f, XY=xy.l, p=3, simplify = "array")
+LF = sapply(X=c(1:N.l), FUN=kerW.i, xy = xy.l, XY=xy.f, p=3, simplify = "array")
 
 LF = as.matrix(t(LF))  
 FL = as.matrix(t(FL)) 
@@ -60,8 +60,13 @@ FF = FF/rowSums(FF)
 
 
 par(mfrow = c(2,2), mar = c(0,0,0,0))
-plot(x[-1],y[-1], xlab= "", xaxt = "n", ylab= "", yaxt = "n")
+plot(xy.l[,1],xy.l[,2], pch = 4, col = "blue", xlab= "", xaxt = "n", ylab= "", yaxt = "n")
+points(xy.f[,1],xy.f[,2], pch = 3, col = "red")
 plotSym(xy.l, LL, mag=3, xy.o=xy.f, pset = "n")
+points(xy.l[,1],xy.l[,2], pch = 4, col = "blue", cex = .2)
+points(xy.f[,1],xy.f[,2], pch = 3, col = "red", cex = .2)
 plotFlow(xy.l, LL, mag=3, xy.o=xy.f, pset = "n",al=0.05)
+points(xy.l[,1],xy.l[,2], pch = 4, col = "blue", cex = .2)
+points(xy.f[,1],xy.f[,2], pch = 3, col = "red", cex = .2)
 ans = plotPointSetDispersion(dll, LL, 100)
 
