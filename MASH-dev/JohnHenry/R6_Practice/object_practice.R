@@ -30,4 +30,5 @@ for(t in 1:300){
 }
 
 plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",ylim=c(0,11),xlim=c(0,300))
+lines(1:length(someGuy$get_history()$Gtot),someGuy$get_history()$Gtot,lty=2)
 someGuy$get_history()
