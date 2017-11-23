@@ -1,7 +1,5 @@
 source("PfLOME_HealthState.R")
-source("PfLOME_Pathogen.R")
 source("PfLOME_ImmuneState.R")
-source("PfLOME_PfPedigree.R")
 
 Human <- R6Class("Human",
                  
@@ -123,8 +121,7 @@ Human <- R6Class("Human",
                    locH = NULL,
                    pathogen = NULL,
                    immuneState = NULL,
-                   healthState = NULL,
-                   pfPedigree = NULL
+                   healthState = NULL
                    
                  )
                  

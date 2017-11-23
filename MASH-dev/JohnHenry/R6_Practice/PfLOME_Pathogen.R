@@ -7,6 +7,7 @@ Pathogen <- R6Class("Pathogen",
                       initialize = function(){
                         private$PfPathogen = list()
                         private$PfMOI = 0
+                        private$history = list()
                       },
                       
                       ## add pf during infection
@@ -24,18 +25,18 @@ Pathogen <- R6Class("Pathogen",
                       },
                       
                       remove_Pf = function(t,pfid){
-                        private$PfPathogen[[pfid]] = NULL
+                        private$PfPathogen[[pfid]] = NULL ## null out object or just set active P/G to 0?
                         self$set_PfMOI(self$get_PfMOI()-1)
                       },
                       
                       ## update pathogens
                       
                       update_pathogen = function(t){
-                        for(i in 1:(pfid-1)){
+                        for(i in 1:length(private$PfPathogen)){
                           private$PfPathogen[[i]]$update_Pf(t)
-                          #if(is.na(private$PfPathogen[[i]]$Pt)){
-                          #  private$PfPathogen[[i]]$activeP = 0
-                          #}
+                          if(is.na(private$PfPathogen[[i]]$get_Pt())){
+                            self$set_PfMOI(0)
+                          }
                         }
                         self$update_Ptot()
                         self$update_Gtot()
@@ -49,14 +50,14 @@ Pathogen <- R6Class("Pathogen",
                       
                       update_Ptot = function(){
                         private$Ptot = 0
-                        for(i in 1:private$PfMOI){
+                        for(i in 1:length(private$PfPathogen)){
                           private$Ptot = private$Ptot + private$PfPathogen[[i]]$get_Pt()
                         }
                       },
                       
                       update_Gtot = function(){
                         private$Gtot = 0
-                        for(i in 1:private$PfMOI){
+                        for(i in 1:length(private$PfPathogen)){
                           private$Gtot = private$Gtot + private$PfPathogen[[i]]$get_Gt()
                         }
                       },
@@ -111,7 +112,7 @@ Pathogen <- R6Class("Pathogen",
                       Gtot = NULL,
                       Stot = NULL,
                       PfMOI = NULL,
-                      history = list()
+                      history = NULL
                     )
                     
 )
@@ -197,6 +198,14 @@ Pf <- R6Class("Pf",
                   private$Pt = newPt
                 },
                 
+                get_Ptt = function(){
+                  private$Ptt
+                },
+                
+                set_Ptt = function(newPtt){
+                  private$Ptt = newPtt
+                },
+                
                 get_Gt = function(){
                   private$Gt
                 },
@@ -239,13 +248,10 @@ Pf <- R6Class("Pf",
                 },
                 
                 update_Pt = function(t){
-                  if(private$activeP > 0){
-                    private$Pt = self$dPdt_tent(t,private$Pt,private$PAR)
-                    #if(is.na(private$Pt)){
-                    #  private$PAR$tEnd = t - private$PAR$t0
-                    #  private$PfPedigree[[private$pfid]]$t0 = private$PAR$tEnd
-                    #  parasite$PfPathogen[[private$pfid]]$activeP = 0
-                    #}
+                  self$set_Pt(self$dPdt_tent(t,private$Pt,private$PAR))
+                  if(is.na(private$Pt)){
+                    private$PAR$tEnd = t - private$PAR$t0
+                    self$set_activeP(0)
                   }
                 },
                 
