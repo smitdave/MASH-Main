@@ -18,6 +18,7 @@ Pathogen <- R6Class("Pathogen",
                         pf$set_PAR(pf$tentPAR(t,pfid))
                         pf$set_Pt(PAR$MZ0)
                         pf$set_activeP(1)
+                        pf$set_Gt(NaN)
                         pf$set_activeG(1)
                         self$set_Ptot(PAR$MZ0)
                         private$PfPathogen[[pfid]] = pf
@@ -52,14 +53,14 @@ Pathogen <- R6Class("Pathogen",
                       update_Ptot = function(){
                         private$Ptot = NaN
                         for(i in 1:length(private$PfPathogen)){
-                          private$Ptot = log10sum(c(private$Ptot, private$PfPathogen[[i]]$get_Pt()))
+                          private$Ptot = self$log10sum(c(private$Ptot, private$PfPathogen[[i]]$get_Pt()))
                         }
                       },
                       
                       update_Gtot = function(){
                         private$Gtot = NaN
                         for(i in 1:length(private$PfPathogen)){
-                          private$Gtot = log10sum(c(private$Gtot, private$PfPathogen[[i]]$get_Gt()))
+                          private$Gtot = self$log10sum(c(private$Gtot, private$PfPathogen[[i]]$get_Gt()))
                         }
                       },
                       
@@ -99,6 +100,14 @@ Pathogen <- R6Class("Pathogen",
                       
                       get_history = function(){
                         private$history
+                      },
+                      
+                      log10sum = function(x){
+                        log10vals(log10(sum(10^self$log10vals(x), na.rm=TRUE)))
+                      },
+                      
+                      log10vals = function(x){
+                        ifelse(!is.na(x) & is.finite(x) & x>=0, x, NaN)
                       }
                       
                     ),
@@ -128,7 +137,9 @@ Pf <- R6Class("Pf",
                   private$pfid = pfid
                   private$mic = mic
                   private$mac = mac
-                  private$gtype = self$getGtype(mic,mac,seed)
+                  private$mu = .01
+                  private$Ptt = rep(NaN,10)
+                  private$gtype = self$getGtype(mic,mac,private$mu,seed)
                   private$ptype = self$getPtype(private$gtype,pfped$get_nptypes())
                 },
                 
@@ -136,7 +147,7 @@ Pf <- R6Class("Pf",
                 ######### setting g/p types
                 
                 
-                getGtype = function(mic,mac,seed=FALSE){
+                getGtype = function(mic,mac,mu,seed=FALSE){
                   ifelse(seed==TRUE,{
                     gtype=runif(pfped$get_nptypes())
                   },
@@ -149,7 +160,7 @@ Pf <- R6Class("Pf",
                     for(i in 1:nAntigenLoci){
                       gtype = c(gtype,micmac[i,ix[i]])
                     }
-                    gtype = mutate(gtype,mu)
+                    gtype = self$mutate(gtype,mu)
                   })
                   return(gtype)
                 },
@@ -158,6 +169,18 @@ Pf <- R6Class("Pf",
                   ptype = ceiling(gtype*nptypes)
                   ptype[which(ptype==0)]=1
                   return(ptype)
+                },
+                
+                mutate = function(gtype,mu){
+                  #mu is parameter describing mutation probability at each locus - between 0 and 1
+                  ##assuming julia gog forulation with genotypes lying on unit interval:
+                  mutgen = which(rbinom(nAntigenLoci,1,mu)==1)
+                  if(length(mutgen)!=0) {
+                    for(i in 1:length(mutgen)) {
+                      gtype[mutgen[i]] = gtype[mutgen[i]] + runif(1,min=-gtype[mutgen[i]],max=1-gtype[mutgen[i]]) #uniformly random mutation
+                    }
+                  }
+                  return(gtype)
                 },
                 
                 
@@ -245,6 +268,7 @@ Pf <- R6Class("Pf",
                 
                 update_Pf = function(t){
                   self$update_Pt(t)
+                  self$update_Ptt()
                   self$update_Gt(t)
                 },
                 
@@ -262,8 +286,12 @@ Pf <- R6Class("Pf",
                 },
                 
                 update_Gt = function(t){
-                  tt = (t+1)%%10+1
-                  private$Gt = log10sum(c(private$Gt - gdk, self$GamCyGen(t,private$Ptt[tt],private$PAR)))
+                  if(is.na(private$Gt)){
+                    private$Gt = self$GamCyGen(t,private$Ptt[10],private$PAR)
+                  }
+                  if(!is.na(private$Gt)){
+                    private$Gt = self$log10sum(c(private$Gt + gdk, self$GamCyGen(t,private$Ptt[10],private$PAR)))
+                  }
                 },
                 
                 GamCyGen = function(t, P, PAR){
@@ -343,6 +371,14 @@ Pf <- R6Class("Pf",
                     temp[(places+1):length(v)] = v[1:(length(v)-places)]
                     return(temp)
                   }
+                },
+                
+                log10sum = function(x){
+                  log10vals(log10(sum(10^self$log10vals(x), na.rm=TRUE)))
+                },
+                
+                log10vals = function(x){
+                  ifelse(!is.na(x) & is.finite(x) & x>=0, x, NaN)
                 }
                 
               ),
@@ -368,7 +404,8 @@ Pf <- R6Class("Pf",
                 mac = NULL,
                 ## biological parameters
                 gtype = NULL,
-                ptype = NULL
+                ptype = NULL,
+                mu = .01
                 
               )
               
