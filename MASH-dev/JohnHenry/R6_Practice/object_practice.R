@@ -26,6 +26,11 @@ pfped$get_PedLength()
 
 for(t in 1:300){
   someGuy$updateHuman(t)
+  if(t==100){
+    pf = Pf$new(1,1,2)
+    pfped$add2Pedigree(pf)
+    someGuy$infectHuman(t,pf$get_pfid())
+  }
 }
 
 plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",ylim=c(0,11),xlim=c(0,300))

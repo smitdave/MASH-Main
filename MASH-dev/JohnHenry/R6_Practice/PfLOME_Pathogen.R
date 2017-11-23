@@ -33,9 +33,10 @@ Pathogen <- R6Class("Pathogen",
                       
                       update_pathogen = function(t){
                         for(i in 1:length(private$PfPathogen)){
+                          Pttemp = private$PfPathogen[[i]]$get_Pt()
                           private$PfPathogen[[i]]$update_Pf(t)
-                          if(is.na(private$PfPathogen[[i]]$get_Pt())){
-                            self$set_PfMOI(0)
+                          if(is.na(private$PfPathogen[[i]]$get_Pt()) & !is.na(Pttemp)){
+                            self$set_PfMOI(private$PfMOI-1)
                           }
                         }
                         self$update_Ptot()
@@ -49,16 +50,16 @@ Pathogen <- R6Class("Pathogen",
                       
                       
                       update_Ptot = function(){
-                        private$Ptot = 0
+                        private$Ptot = NaN
                         for(i in 1:length(private$PfPathogen)){
-                          private$Ptot = private$Ptot + private$PfPathogen[[i]]$get_Pt()
+                          private$Ptot = log10sum(c(private$Ptot, private$PfPathogen[[i]]$get_Pt()))
                         }
                       },
                       
                       update_Gtot = function(){
-                        private$Gtot = 0
+                        private$Gtot = NaN
                         for(i in 1:length(private$PfPathogen)){
-                          private$Gtot = private$Gtot + private$PfPathogen[[i]]$get_Gt()
+                          private$Gtot = log10sum(c(private$Gtot, private$PfPathogen[[i]]$get_Gt()))
                         }
                       },
                       
@@ -140,8 +141,8 @@ Pf <- R6Class("Pf",
                     gtype=runif(pfped$get_nptypes())
                   },
                   {
-                    micType = pfped$get_gtype[[mic]]
-                    macType =  pfped$get_gtype[[mac]]
+                    micType = pfped$get_gtype(mic)
+                    macType =  pfped$get_gtype(mac)
                     micmac = cbind(micType, macType)
                     ix = sample(c(1,2), nAntigenLoci, replace =TRUE)
                     gtype = NULL
@@ -255,9 +256,14 @@ Pf <- R6Class("Pf",
                   }
                 },
                 
+                update_Ptt = function(){
+                  private$Ptt = self$shift(private$Ptt,1)
+                  private$Ptt[1] = private$Pt
+                },
+                
                 update_Gt = function(t){
                   tt = (t+1)%%10+1
-                  private$Gt = log10sum(c(private$Gt - gdk, self$GamCyGen(t,private$Ptt,private$PAR)))
+                  private$Gt = log10sum(c(private$Gt - gdk, self$GamCyGen(t,private$Ptt[tt],private$PAR)))
                 },
                 
                 GamCyGen = function(t, P, PAR){
@@ -323,7 +329,22 @@ Pf <- R6Class("Pf",
                              pmin(mxPD, P + self$gr_tent(age,PAR))-PD-IM,
                              NaN)
                   ifelse(!is.na(P)&P>0, P, NaN)
-                })}
+                })},
+                
+                shift = function(v,places,dir="right") {
+                  places = places%%length(v)
+                  if(places==0) return(v)
+                  temp = rep(0,length(v))
+                  if(dir=="left"){
+                    places = length(v)-places
+                    dir = "right"}
+                  if(dir=="right"){
+                    temp[1:places] = tail(v,places)
+                    temp[(places+1):length(v)] = v[1:(length(v)-places)]
+                    return(temp)
+                  }
+                }
+                
               ),
               
               
