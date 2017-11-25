@@ -16,11 +16,11 @@ Pathogen <- R6Class("Pathogen",
                         pf = Pf$new(mic,mac,pfid,TRUE)
                         pf$set_gtype(gtype)
                         pf$set_PAR(pf$tentPAR(t,pfid))
-                        pf$set_Pt(PAR$MZ0)
+                        pf$set_Pt(pf$get_PAR()$MZ0)
                         pf$set_activeP(1)
                         pf$set_Gt(NaN)
                         pf$set_activeG(1)
-                        self$set_Ptot(PAR$MZ0)
+                        self$set_Ptot(pf$get_PAR()$MZ0)
                         private$PfPathogen[[pfid]] = pf
                         self$set_PfMOI(self$get_PfMOI()+1)
                       },
@@ -103,7 +103,7 @@ Pathogen <- R6Class("Pathogen",
                       },
                       
                       log10sum = function(x){
-                        log10vals(log10(sum(10^self$log10vals(x), na.rm=TRUE)))
+                        self$log10vals(log10(sum(10^self$log10vals(x), na.rm=TRUE)))
                       },
                       
                       log10vals = function(x){
@@ -155,9 +155,9 @@ Pf <- R6Class("Pf",
                     micType = pfped$get_gtype(mic)
                     macType =  pfped$get_gtype(mac)
                     micmac = cbind(micType, macType)
-                    ix = sample(c(1,2), nAntigenLoci, replace =TRUE)
+                    ix = sample(c(1,2), pfped$get_nAntigenLoci(), replace =TRUE)
                     gtype = NULL
-                    for(i in 1:nAntigenLoci){
+                    for(i in 1:pfped$get_nAntigenLoci()){
                       gtype = c(gtype,micmac[i,ix[i]])
                     }
                     gtype = self$mutate(gtype,mu)
@@ -174,7 +174,7 @@ Pf <- R6Class("Pf",
                 mutate = function(gtype,mu){
                   #mu is parameter describing mutation probability at each locus - between 0 and 1
                   ##assuming julia gog forulation with genotypes lying on unit interval:
-                  mutgen = which(rbinom(nAntigenLoci,1,mu)==1)
+                  mutgen = which(rbinom(pfped$get_nAntigenLoci(),1,mu)==1)
                   if(length(mutgen)!=0) {
                     for(i in 1:length(mutgen)) {
                       gtype[mutgen[i]] = gtype[mutgen[i]] + runif(1,min=-gtype[mutgen[i]],max=1-gtype[mutgen[i]]) #uniformly random mutation
@@ -290,7 +290,7 @@ Pf <- R6Class("Pf",
                     private$Gt = self$GamCyGen(t,private$Ptt[10],private$PAR)
                   }
                   if(!is.na(private$Gt)){
-                    private$Gt = self$log10sum(c(private$Gt + gdk, self$GamCyGen(t,private$Ptt[10],private$PAR)))
+                    private$Gt = self$log10sum(c(private$Gt - private$gdk, self$GamCyGen(t,private$Ptt[10],private$PAR)))
                   }
                 },
                 
@@ -351,7 +351,6 @@ Pf <- R6Class("Pf",
                 })},
                 
                 dPdt_tent = function(t, P, PAR, PD=0, IM=0){with(PAR,{
-                  if(NOISY == TRUE) browser()
                   age = ifelse(t>=t0, t-t0+1, 0)
                   P = ifelse(age>=1 & age<=tEnd,
                              pmin(mxPD, P + self$gr_tent(age,PAR))-PD-IM,
@@ -374,7 +373,7 @@ Pf <- R6Class("Pf",
                 },
                 
                 log10sum = function(x){
-                  log10vals(log10(sum(10^self$log10vals(x), na.rm=TRUE)))
+                  self$log10vals(log10(sum(10^self$log10vals(x), na.rm=TRUE)))
                 },
                 
                 log10vals = function(x){
@@ -391,6 +390,7 @@ Pf <- R6Class("Pf",
                 pfid = NULL,
                 ## tentPars
                 PAR = NULL,
+                gdk = log(2)/6, ## halflife of gametocytes 6 days
                 ## Parasite Densities (Pt = Asexual, Gt = Gametocyte, 
                 ## St = Sporozoite)
                 activeP = NULL,
