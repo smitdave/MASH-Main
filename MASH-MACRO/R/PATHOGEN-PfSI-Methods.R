@@ -6,11 +6,12 @@
 #   /_/   /_/  /____/___/
 #
 #   MASH-MACRO
-#   MACRO: PfSI Setup
-#   MASH-MACRO Team
-#   September 7, 2017
+#   PfSI Methods
+#   MASH Team
+#   November 2017
 #
 ###############################################################################
+
 
 ###################################################################
 # PfSI Parameter Getters & Setters
