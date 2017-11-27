@@ -7,6 +7,7 @@ ImmuneState <- R6Class("ImmuneState",
                            private$wx = c(rep(1/30, 3), rep(1/90, 3), rep(1/270, 3), 1/5/365)
                            private$wn = c(rep(c(1/30, 1/90, 1/270), 3), 0)
                            
+                           BSImmCounters = list()
                            for(i in 1:10){
                              private$BSImmCounters[[i]] = list(
                                PAR = self$gImPAR(wx=private$wx[i], wn=private$wn[i], P50=6, Ps=5),
@@ -14,6 +15,20 @@ ImmuneState <- R6Class("ImmuneState",
                              )
                            }
                            
+                           history = list()
+                           
+                         },
+                         
+                         get_history = function(){
+                           private$history
+                         },
+                         
+                         get_BSImmCounters = function(){
+                           private$BSImmCounters
+                         },
+                         
+                         get_nBSImmCounters = function(){
+                           private$nBSImmCounters
                          },
                          
                          updateImmuneState = function(t){
@@ -127,7 +142,7 @@ ImmuneState <- R6Class("ImmuneState",
                              }
                            }
                            return(crossImmune)
-                         }
+                         },
                          
                          weight = function(dx,dt,dxp,dtp){
                            exp(-(dx*dxp+dt*dtp))
@@ -140,11 +155,14 @@ ImmuneState <- R6Class("ImmuneState",
                        
                        
                        private = list(
-                         nBSImmuneCounters = NULL,
-                         BSImmuneCounters = NULL,
+                         nBSImmCounters = NULL,
+                         BSImmCounters = NULL,
                          wx = NULL,
                          wn = NULL,
-                         TypeCounters = NULL
+                         TypeCounters = NULL,
+                         ptypes = NULL,
+                         ptypesTime = NULL,
+                         history = NULL
                        )
                        
 )

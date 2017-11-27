@@ -10,7 +10,7 @@ source("PfLOME_Pathogen.R")
 pfped = PfPedigree$new()
 
 ############## create human & parasite, add parasite ################
-############## parasite to pedigree, infect human    ################
+##############   parasite to pedigree, infect human  ################
 
 someGuy = Human$new(1)
 pf = Pf$new(1,1,1,TRUE) ##mic, mac, pfid, seed
