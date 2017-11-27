@@ -6,7 +6,7 @@ HealthState <- R6Class("HealthState",
                            private$Fever = FALSE
                            private$feverThresh = 8
                            private$HRP2 = 0
-                           private$RBC = log10(5*10^13)
+                           private$RBC = 2.49
                            private$pLDH = 0
                            private$history = list()
                          },
@@ -47,27 +47,43 @@ HealthState <- R6Class("HealthState",
                          ############ Update Methods ##############
                          
                          
-                         update_healthState = function(){
-                           self$update_Fever()
-                           self$update_HRP2()
-                           self$update_pLDH()
-                           self$update_RBC()
+                         update_healthState = function(Ptot,RBCHist){
+                           self$update_Fever(Ptot)
+                           self$update_HRP2(Ptot)
+                           self$update_pLDH(Ptot)
+                           self$update_RBC(Ptot,RBCHist)
+                           self$update_history()
                          },
                          
-                         update_Fever = function(){
-                           #print(pathogen$get_Ptot())
+                         update_Fever = function(Ptot){
+                           if(!is.na(Ptot)){
+                             private$Fever = ifelse(Ptot >= private$feverThresh, TRUE, FALSE)
+                           }
                          },
                          
-                         update_HRP2 = function(){
-                           
+                         update_HRP2 = function(Ptot){
+                           a = .0019
+                           b = log(2)/3.67
+                           private$HRP2 = ifelse(is.nan(Ptot),log10(10^private$HRP2-b*10^private$HRP2),log10(10^private$HRP2+a*10^Ptot-b*10^private$HRP2))
                          },
                          
-                         update_pLDH = function(){
-                           
+                         update_pLDH = function(Ptot){
+                           a = .13
+                           b = log(2)/2
+                           private$pLDH = (1-b)*private$pLDH + a*10^Ptot
                          },
                          
-                         update_RBC = function(){
-                           
+                         update_RBC = function(Ptot,RBCHist){
+                           a = log(2)/120 #RBC halflife
+                           b = 1
+                           c = 1.7
+                           d = .5
+                           e = 5*10^9
+                           rhat = ifelse(t<7,2.5,RBCHist[t-6])
+                           r = private$RBC
+                           private$RBC = ifelse(is.nan(Ptot),
+                                                        r - a*r + b*exp(-c*rhat),
+                                                        r - a*r + b*exp(-c*rhat) - d*10^Ptot/(e+10^Ptot)*r)
                          },
                          
                          update_history = function(){
