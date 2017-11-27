@@ -43,15 +43,11 @@ Human <- R6Class("Human",
                    
                    
                    updateHuman = function(t){
-                     private$pathogen$update_pathogen(t)
                      #private$immuneState$update_immuneState(t)
-                     private$healthState$update_healthState()
-                     self$update_history()
+                     private$healthState$update_healthState(self$get_Ptot(),self$get_history()$RBC)
+                     private$pathogen$update_pathogen(t)
                    },
                    
-                   update_history = function(){
-                     
-                   },
                    
                    ########## Accessors ##############
                    
@@ -89,7 +85,7 @@ Human <- R6Class("Human",
                    },
                    
                    get_pathogen = function(){
-                     private$pathogen$get_Pf()
+                     private$pathogen
                    },
                    
                    get_HRP2 = function(){
@@ -109,8 +105,7 @@ Human <- R6Class("Human",
                    },
                    
                    get_history = function(){
-                     private$pathogen$get_history()
-                     #private$get_healthState()$get_history()
+                     c(private$pathogen$get_history(), private$healthState$get_history())
                      #private$immuneState$get_history()
                    }
                    
