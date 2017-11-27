@@ -66,6 +66,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                     bWeightHuman              = numeric(1),
                     bWeightZoo                = numeric(1),
                     bWeightZootox             = numeric(1),
+                    kappa                     = numeric(1),
 
                     # Pointers
                     TilePointer               = NULL,     # point to the enclosing metapopulation TILE
