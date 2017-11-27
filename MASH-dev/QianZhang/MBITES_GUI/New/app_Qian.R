@@ -268,6 +268,18 @@ mbitesGadget = function(...){
                     					"Import x, y" = "imp_xy"
                     					),
                     		selected = "cluster"),
+                    	conditionalPanel(condition = "input.landscape_f_input != 'cluster'",
+                    		fileInput('file1', 'Choose CSV File',
+                       			accept=c('text/csv', 
+                                'text/comma-separated-values,text/plain', 
+                                '.csv')),
+                    		wellPanel(checkboxInput('header', 'Header', TRUE),
+                 			radioButtons('sep', 'Separator',
+                              c(Comma=',',
+                                Semicolon=';',
+                                Tab='\t'),
+                              ','))
+                    		),
                     	uiOutput("landscape_f_file")
                     	),
                     checkboxInput("landscape_point_m", "m", FALSE),
@@ -297,7 +309,8 @@ mbitesGadget = function(...){
                 	tabPanel(
                 		title = "Point: f",
                 		value = "landscape_out_f",
-                		plotOutput("panel_landscape_out_f")
+                		plotOutput("panel_landscape_out_f"),
+                		plotOutput("panel_landscape_out_f2")
                 		)
                 	)
                 )
@@ -397,6 +410,9 @@ mbitesGadget = function(...){
 
 
 
+    	 }else{
+    	 	x <- data()[, 1:2]
+	    	plot(x, col="red")
     	 }
       
     })
@@ -430,23 +446,20 @@ mbitesGadget = function(...){
         textInput("prepath", "Please provide the previous working directory (the folder contains .json file)", "")
       }
     })
-    output$landscape_f_file <- renderUI({
-      if(input$landscape_f_input %in% c("imp_xy", "imp_xyw")){
-        shinyFilesButton("landscape_f_filepath", "Choose a file",
-        				title = "Please select a file:", multiple = FALSE,
-        				buttonType = "default", class = NULL)
-      }
-    })
-   #  volumes = getVolumes()
-   #  observe({  
-   #  shinyFileChoose(input, "Btn_GetFile", roots = volumes, session = session)
 
-   #  if(!is.null(input$Btn_GetFile)){
-   #    # browser()
-   #    file_selected<-parseFilePaths(volumes, input$Btn_GetFile)
-   #    output$txt_file <- renderText(as.character(file_selected$datapath))
-   #  }
-  	# })
+    data <- reactive({ 
+	    req(input$file1) 
+	    inFile <- input$file1 
+	    df <- read.csv(inFile$datapath, header = input$header, sep = input$sep)
+	    return(df)
+	  })
+	output$contents <- renderTable({
+	      data()
+	  })
+
+
+
+
 
     #######################################################################
     output$panel_f <- renderUI({
