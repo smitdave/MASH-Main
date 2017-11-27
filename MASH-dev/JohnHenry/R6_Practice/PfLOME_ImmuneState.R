@@ -1,7 +1,18 @@
 ImmuneState <- R6Class("ImmuneState",
                        
                        public = list(
+                         
                          initialize = function(){
+                           
+                           private$wx = c(rep(1/30, 3), rep(1/90, 3), rep(1/270, 3), 1/5/365)
+                           private$wn = c(rep(c(1/30, 1/90, 1/270), 3), 0)
+                           
+                           for(i in 1:10){
+                             private$BSImmCounters[[i]] = list(
+                               PAR = self$gImPAR(wx=private$wx[i], wn=private$wn[i], P50=6, Ps=5),
+                               F = self$dynamicXdt
+                             )
+                           }
                            
                          },
                          
@@ -25,7 +36,7 @@ ImmuneState <- R6Class("ImmuneState",
                          dynamicXdt = function(X, P, PAR){with(PAR,{
                            X = ifelse(is.na(X),0,X)
                            P = ifelse(is.na(P),0,P)
-                           K = sigmoidX(P, P50, Ps, atMax)
+                           K = self$sigmoidX(P, P50, Ps, atMax)
                            a = sign(K-X)
                            b = exp(abs(b))
                            X + (a*((1-exp(-b*abs(K-X)^sigma))*c(wn,0,wx)[a+2])^sigma)
@@ -118,6 +129,10 @@ ImmuneState <- R6Class("ImmuneState",
                            return(crossImmune)
                          }
                          
+                         weight = function(dx,dt,dxp,dtp){
+                           exp(-(dx*dxp+dt*dtp))
+                         }
+                         
                        ),
                        
                        
@@ -125,8 +140,11 @@ ImmuneState <- R6Class("ImmuneState",
                        
                        
                        private = list(
-                         General = NULL,
-                         TypeSpecific = NULL
+                         nBSImmuneCounters = NULL,
+                         BSImmuneCounters = NULL,
+                         wx = NULL,
+                         wn = NULL,
+                         TypeCounters = NULL
                        )
                        
 )
