@@ -6,7 +6,15 @@
 
 #IncludeRegexTransform: 
 
+/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/SeanWu/MACROV2.0/Human.cpp
+Human.h
+/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/SeanWu/MACROV2.0/Human.h
+
+/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/SeanWu/MACROV2.0/Human.h
+
 /Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/SeanWu/MACROV2.0/main.cpp
 iostream
+-
+memory
 -
 
