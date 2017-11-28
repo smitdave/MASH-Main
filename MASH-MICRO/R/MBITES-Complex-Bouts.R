@@ -310,9 +310,16 @@ mbites_boutL <- function(){
 #' write me!
 #'
 mbites_boutO <- function(){
-
-  if(self$isAlive()){
-    self$layEggs()
+  #### Ovitrap #############################################################################################
+  ovitrap=private$LandscapePointer$get_AquaSites(private$locNow)$get_ovitrap()
+  if(is.null(ovitrap)==FALSE){
+    #print("OVI Present")
+    private$stateNew = ovitrap$mosquitoKillEncounter(private$stateNew,interventionType="OVI")
+    #atsb$mosquitoRepelEncounter(private$stateNew,interventionType="ATSB")
+  }else{
+    if(self$isAlive()){
+      self$layEggs()
+    }
   }
 
 }
@@ -377,10 +384,11 @@ mbites_boutS <- function(){
         private$stateNew = "R"
       }
 
-      #### ATSB ################
+      #### ATSB ################################################################################################
       atsb=private$LandscapePointer$get_SugarSites(private$locNow)$get_attractiveSugarBait()
       if(is.null(atsb)==FALSE){
           private$stateNew = atsb$mosquitoKillEncounter(private$stateNew,interventionType="ATSB")
+          #atsb$mosquitoRepelEncounter(private$stateNew,interventionType="ATSB")
       }
   }
 }
