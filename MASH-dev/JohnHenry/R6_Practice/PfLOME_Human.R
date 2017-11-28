@@ -28,11 +28,13 @@ Human <- R6Class("Human",
                      mac = pfped$get_mac(pfid)
                      gtype = pfped$get_gtype(pfid)
                      private$pathogen$add_Pf(t,pfid,mic,mac,gtype)
+                     pfped$set_th(pfid,t)
                    },
                    ## write method to remove particular infection
                    clearPathogen = function(pfid){
                      private$pathogen$PfPathogen[[pfid]] = NULL
                      private$pathogen$set_PfMOI(private$pathogen$get_PfMOI()-1)
+                     pfped$set_thEnd(pfid,t)
                    },
                    infectMosquito = function(){
                      

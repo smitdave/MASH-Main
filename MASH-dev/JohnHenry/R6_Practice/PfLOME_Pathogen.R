@@ -7,6 +7,8 @@ Pathogen <- R6Class("Pathogen",
                       initialize = function(){
                         private$PfPathogen = list()
                         private$PfMOI = 0
+                        private$Ptot = NaN
+                        private$Gtot = NaN
                         private$history = list()
                       },
                       
@@ -20,7 +22,7 @@ Pathogen <- R6Class("Pathogen",
                         pf$set_activeP(1)
                         pf$set_Gt(NaN)
                         pf$set_activeG(1)
-                        self$set_Ptot(pf$get_PAR()$MZ0)
+                        ifelse(is.na(private$Ptot),self$set_Ptot(pf$get_PAR()$MZ0),self$set_Ptot(log10(10^pf$get_PAR()$MZ0+10^private$Ptot)))
                         private$PfPathogen[[pfid]] = pf
                         self$set_PfMOI(self$get_PfMOI()+1)
                       },
