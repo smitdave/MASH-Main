@@ -321,7 +321,6 @@ mbites_boutO <- function(){
       self$layEggs()
     }
   }
-
 }
 
 #' M-BITES: Lay Eggs for 'Emerge' \code{\link{MosquitoFemale}}
@@ -388,7 +387,7 @@ mbites_boutS <- function(){
       atsb=private$LandscapePointer$get_SugarSites(private$locNow)$get_attractiveSugarBait()
       if(is.null(atsb)==FALSE){
           private$stateNew = atsb$mosquitoKillEncounter(private$stateNew,interventionType="ATSB")
-          #atsb$mosquitoRepelEncounter(private$stateNew,interventionType="ATSB")
+          private$lspot = atsb$mosquitoRepelEncounter(private$lspot,interventionType="ATSB")
       }
   }
 }

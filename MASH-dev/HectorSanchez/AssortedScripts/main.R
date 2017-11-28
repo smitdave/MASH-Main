@@ -82,13 +82,13 @@ MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 ### Sugar ######################################################
 sugarSitesNumber=MicroTile$get_Landscape()$get_SugarSitesN()
 for(i in 1:sugarSitesNumber){
-  atsbTest=ATSB$new(id=i,killProbability=0)
+  atsbTest=ATSB$new(id=i,killProbability=0,repelProbability=.01)
   MicroTile$get_Landscape()$get_SugarSites(i)$set_attractiveSugarBait(atsbTest)
 }
 ### Aquatic ####################################################
 aquaSitesNumber=MicroTile$get_Landscape()$get_AquaSitesN()
 for(i in 1:aquaSitesNumber){
-  ovitrapTest=Ovitrap$new(id=i,killProbability=.5)
+  ovitrapTest=Ovitrap$new(id=i,killProbability=0)
   MicroTile$get_Landscape()$get_AquaSites(i)$set_ovitrap(ovitrapTest)
 }
 ###### Run #############################################################################

@@ -32,9 +32,10 @@ ControlIntervention=R6Class("R6Private",
       }
       return(stateNew)
     },
-    mosquitoRepelEncounter=function(M,interventionType="VC"){
+    mosquitoRepelEncounter=function(MosquitoSpot,interventionType="VC"){
+      lspot=MosquitoSpot
       if(binomialEvent(private$repelProbability)){
-        #print(paste0("Repelled by: ",interventionType))
+        print(paste0("Repelled by: ",interventionType))
         lspot="l"
       }
       return(lspot)
