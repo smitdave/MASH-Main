@@ -27,7 +27,8 @@ Human <- R6Class("Human",
                      mic = pfped$get_mic(pfid)
                      mac = pfped$get_mac(pfid)
                      gtype = pfped$get_gtype(pfid)
-                     private$pathogen$add_Pf(t,pfid,mic,mac,gtype)
+                     BSImm = private$immuneState$get_BSImm()
+                     private$pathogen$add_Pf(t,pfid,mic,mac,gtype,BSImm)
                      pfped$set_th(pfid,t)
                    },
                    ## write method to remove particular infection
@@ -45,7 +46,7 @@ Human <- R6Class("Human",
                    
                    
                    updateHuman = function(t){
-                     #private$immuneState$update_immuneState(t)
+                     private$immuneState$update_immuneState(self$get_Ptot())
                      private$healthState$update_healthState(self$get_Ptot(),self$get_history()$RBC)
                      private$pathogen$update_pathogen(t)
                    },
@@ -107,8 +108,9 @@ Human <- R6Class("Human",
                    },
                    
                    get_history = function(){
-                     c(private$pathogen$get_history(), private$healthState$get_history())
-                     #private$immuneState$get_history()
+                     c(private$pathogen$get_history(), 
+                       private$healthState$get_history(),
+                       private$immuneState$get_history())
                    }
                    
                    

@@ -14,10 +14,11 @@ Pathogen <- R6Class("Pathogen",
                       
                       ## add pf during infection
                       
-                      add_Pf = function(t,pfid,mic,mac,gtype){
+                      add_Pf = function(t,pfid,mic,mac,gtype,BSImm){
                         pf = Pf$new(mic,mac,pfid,TRUE)
                         pf$set_gtype(gtype)
                         pf$set_PAR(pf$tentPAR(t,pfid))
+                        pf$immuneMod_Tent(BSImm)
                         pf$set_Pt(pf$get_PAR()$MZ0)
                         pf$set_activeP(1)
                         pf$set_Gt(NaN)
@@ -47,7 +48,6 @@ Pathogen <- R6Class("Pathogen",
                         self$update_history()
                       },
 
-                      
                       
                       ######### update methods ##########
                       
@@ -380,9 +380,25 @@ Pf <- R6Class("Pf",
                 
                 log10vals = function(x){
                   ifelse(!is.na(x) & is.finite(x) & x>=0, x, NaN)
+                },
+                
+                immuneMod_Tent = function(BSImm){
+                  genImm              = 1-prod(1-BSImm) ##total strength of combined general immunity
+                  private$PAR$MZ0     = self$sigmoid01(genImm,.9,-1,private$PAR$MZ0)
+                  private$PAR$mxPD    = self$sigmoid01(genImm,.9,-1,private$PAR$mxPD)
+                  private$PAR$peakD   = self$sigmoid01(genImm,.9,-1,private$PAR$peakD)
+                  private$PAR$tEnd    = self$sigmoid01(genImm,.9,-1,private$PAR$tEnd)
+                },
+                
+                sigmoid01 = function(x,xh,b,max) { ##defined on [0,1] --> [0,max]
+                  #xh is 50th percentile in (0,1)
+                  #b is slope param - b in R\{0}
+                  a = tan(pi/2*xh)^b
+                  max/(a/tan(pi/2*x)^b+1)
                 }
                 
               ),
+              
               
               
               ############ private fields #################

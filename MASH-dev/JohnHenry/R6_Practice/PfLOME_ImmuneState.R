@@ -4,18 +4,25 @@ ImmuneState <- R6Class("ImmuneState",
                          
                          initialize = function(){
                            
+                           private$nBSImmCounters = 10
+                           private$BSImm = rep(0,private$nBSImmCounters)
                            private$wx = c(rep(1/30, 3), rep(1/90, 3), rep(1/270, 3), 1/5/365)
                            private$wn = c(rep(c(1/30, 1/90, 1/270), 3), 0)
                            
                            BSImmCounters = list()
-                           for(i in 1:10){
+                           for(i in 1:private$nBSImmCounters){
                              private$BSImmCounters[[i]] = list(
                                PAR = self$gImPAR(wx=private$wx[i], wn=private$wn[i], P50=6, Ps=5),
                                F = self$dynamicXdt
                              )
                            }
                            
-                           history = list()
+                           private$history = list()
+                           private$history$BSImm = list()
+                           for(i in 1:private$nBSImmCounters){
+                             private$history$BSImm[[i]] = 0
+                           }
+                           private$GenImm = 0
                            
                          },
                          
@@ -31,10 +38,24 @@ ImmuneState <- R6Class("ImmuneState",
                            private$nBSImmCounters
                          },
                          
-                         updateImmuneState = function(t){
-                           
+                         get_BSImm = function(){
+                           private$BSImm
                          },
                          
+                         update_immuneState = function(Ptot){
+                           for(i in 1:private$nBSImmCounters){
+                             private$BSImm[i] = with(private$BSImmCounters[[i]], F(private$BSImm[i], Ptot, PAR)) # bloodstage immune counters
+                           }
+                           private$GenImm = 1-prod(1-private$BSImm)
+                           self$update_history()
+                         },
+                         
+                         update_history = function(){
+                           for(i in 1:private$nBSImmCounters){
+                              private$history$BSImm[[i]] = c(private$history$BSImm[[i]], private$BSImm[i])
+                           }
+                           private$history$GenImm = c(private$history$GenImm, 1-prod(1-private$BSImm))
+                         },
                          
                          ############ General immune methods ################
                          
@@ -43,6 +64,7 @@ ImmuneState <- R6Class("ImmuneState",
                          # The notion here is that we have some underlying dynamic:
                          # dX/dt = r(K(P)-K(X))*(K(P)-X)
                          ##################################################################
+                         
                          
                          sigmoidX = function(X, X50=6, Xs=3, atMax=13){
                            pmin((1/(1+exp(-Xs*(X-X50))) - 1/(1+exp(Xs*X50)))/(1/(1+exp(-Xs*(atMax-X50))) - 1/(1+exp(Xs*X50))),1)
@@ -123,7 +145,7 @@ ImmuneState <- R6Class("ImmuneState",
                                  ptypesTimetemp = ptypesTime[i,1:nptypes[i]]
                                  dt = t-ptypesTimetemp
                                  crossImmunetemp = crossImmune[i,1:nptypes[i]]
-                                 crossImmunetemp = crossImmunetemp + weight(dx,dt,dxp,dtp)*(shift(ptypestemp,dx,"right")+shift(ptypestemp,dx,"left"))
+                                 crossImmunetemp = crossImmunetemp + self$weight(dx,dt,dxp,dtp)*(shift(ptypestemp,dx,"right")+shift(ptypestemp,dx,"left"))
                                  ptypes[i,1:nptypes[i]] = ptypestemp[1:nptypes[i]]
                                  ptypesTime[i,1:nptypes[i]] = ptypesTimetemp[1:nptypes[i]]
                                  crossImmune[i,1:nptypes[i]] = crossImmunetemp[1:nptypes[i]]
@@ -135,7 +157,7 @@ ImmuneState <- R6Class("ImmuneState",
                                ptypesTimetemp = ptypesTime[i,1:nptypes[i]]
                                dt = t-ptypesTimetemp
                                crossImmunetemp = crossImmune[i,1:nptypes[i]]
-                               crossImmunetemp = crossImmunetemp + weight(dx,dt,dxp,dtp)*shift(ptypestemp,dx)
+                               crossImmunetemp = crossImmunetemp + self$weight(dx,dt,dxp,dtp)*shift(ptypestemp,dx)
                                ptypes[i,1:nptypes[i]] = ptypestemp[1:nptypes[i]]
                                ptypesTime[i,1:nptypes[i]] = ptypesTimetemp[1:nptypes[i]]
                                crossImmune[i,1:nptypes[i]] = crossImmunetemp[1:nptypes[i]]
@@ -157,6 +179,8 @@ ImmuneState <- R6Class("ImmuneState",
                        private = list(
                          nBSImmCounters = NULL,
                          BSImmCounters = NULL,
+                         BSImm = NULL,
+                         GenImm = NULL,
                          wx = NULL,
                          wn = NULL,
                          TypeCounters = NULL,

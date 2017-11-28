@@ -31,6 +31,8 @@ for(t in 1:300){
     k = which(bites==t)
     for(i in 1:moi[k]){
       pfid <<- pfid+1
+      mic = sample(1:(pfid-1),1)
+      mac = sample(1:(pfid-1),1)
       pf = Pf$new(1,1,pfid)
       pfped$add2Pedigree(pf)
       someGuy$infectHuman(t,pf$get_pfid())
@@ -38,9 +40,19 @@ for(t in 1:300){
   }
 }
 
-plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",ylim=c(0,11),xlim=c(0,300))
+######################### plotting functions #############################
+
+plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",
+     ylim=c(-2,11),xlim=c(0,300),xlab='days',ylab='log10 iRBC')
 lines(1:length(someGuy$get_history()$Gtot),someGuy$get_history()$Gtot,lty=2)
 lines(1:length(someGuy$get_history()$Fever),someGuy$get_history()$Fever)
 pfped$get_PedLength()
 
-someGuy$get_history()
+lines(1:length(someGuy$get_history()$GenImm),someGuy$get_history()$GenImm-2,type="l")
+
+lines(1:length(someGuy$get_history()$BSImm[[1]]),someGuy$get_history()$BSImm[[1]],type="l")
+for(i in 2:10){
+  lines(1:length(someGuy$get_history()$BSImm[[1]]),someGuy$get_history()$BSImm[[i]])
+}
+
+plot(1:length(someGuy$get_history()$RBC),someGuy$get_history()$RBC,type="l")
