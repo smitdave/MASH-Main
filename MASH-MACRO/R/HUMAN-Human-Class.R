@@ -106,7 +106,8 @@ Human <- R6::R6Class(classname="Human",
                        Pathogens           = NULL, # see PATHOGEN-XX.hpp
 
                        # Pointers
-                       HumansPointer       = NULL # reference to HumanPop
+                       HumansPointer       = NULL, # reference to HumanPop
+                       TilePointer         = NULL # reference to Tile
 
                      )
 

@@ -454,7 +454,6 @@ mbites_oneBout <- function(){
   # update time and state
   private$tNow = private$tNext # update time
   private$state = private$stateNew # update current state
-  self$timing() # update tNext
 
   # movement
   self$moveMe()
@@ -473,6 +472,8 @@ mbites_oneBout <- function(){
 
   # landing spot
   self$restingSpot()
+
+  self$timing() # update tNext
 
   # energetics
   self$sugarEnergetics()  # MBITES-Generic-Energetics.R

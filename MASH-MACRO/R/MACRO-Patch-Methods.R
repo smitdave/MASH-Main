@@ -24,26 +24,26 @@
 #
 #
 
-#' MacroPatch: Run Macrosimulation for Isolated Patch
-#'
-#' Run a single \code{\link{MacroPatch}} as an isolated unit.
-#' Keep in mind that human travel must be correctly initialized for this to work.
-#'
-#' @param tMax maximum time to run simulation
-#'
-run_isolated_MacroPatch <- function(tMax){
-
-  private$tNow = 1
-
-  while(private$tNow < tMax){
-    private$MosquitoPop$run_popDynamics()
-
-    private$HumanPop$simHumans(tPause = private$tNow)
-
-    private$HumanPop$queueInfectiousBites()
-
-    private$tNow = private$tNow + 1
-  }
-
-  # close connections
-}
+# #' MacroPatch: Run Macrosimulation for Isolated Patch
+# #'
+# #' Run a single \code{\link{MacroPatch}} as an isolated unit.
+# #' Keep in mind that human travel must be correctly initialized for this to work.
+# #'
+# #' @param tMax maximum time to run simulation
+# #'
+# run_isolated_MacroPatch <- function(tMax){
+#
+#   private$tNow = 1
+#
+#   while(private$tNow < tMax){
+#     private$MosquitoPop$run_popDynamics()
+#
+#     private$HumanPop$simHumans(tPause = private$tNow)
+#
+#     private$HumanPop$queueInfectiousBites()
+#
+#     private$tNow = private$tNow + 1
+#   }
+#
+#   # close connections
+# }

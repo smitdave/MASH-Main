@@ -4,51 +4,107 @@ HealthState <- R6Class("HealthState",
                          
                          initialize = function(){
                            private$Fever = FALSE
+                           private$feverThresh = 8
                            private$HRP2 = 0
-                           private$RBC = log10(5*10^13)
+                           private$RBC = 2.49
                            private$pLDH = 0
+                           private$history = list()
                          },
+                         
+                         
+                         ####### Accessors ########
+                         
                          
                          get_Fever = function(){
                            private$Fever
                          },
                          set_Fever = function(newFever){
-                           private$Fever <<- newFever
+                           private$Fever = newFever
                          },
                          get_HRP2 = function(){
                            private$HRP2
                          },
                          set_HRP2 = function(newHRP2){
-                           private$HRP2 <<- newHRP2
+                           private$HRP2 = newHRP2
                          },
                          get_pLDH = function(){
                            private$pLDH
                          },
                          set_pLDH = function(newpLDH){
-                           private$pLDH <<- newpLDH
+                           private$pLDH = newpLDH
                          },
                          get_RBC = function(){
                            private$RBC
                          },
                          set_RBC = function(newRBC){
-                           private$RBC <<- newRBC
+                           private$RBC = newRBC
+                         },
+                         get_history = function(){
+                           private$history
                          },
                          
-                         update_healthState = function(){
-                           set_HRP2(update_HRP2(private$HRP2))
-                           set_pLDH(update_pLDH(private$pLDH))
-                           set_RBC(update_RBC(private$RBC))
+                         
+                         ############ Update Methods ##############
+                         
+                         
+                         update_healthState = function(Ptot,RBCHist){
+                           self$update_Fever(Ptot)
+                           self$update_HRP2(Ptot)
+                           self$update_pLDH(Ptot)
+                           self$update_RBC(Ptot,RBCHist)
+                           self$update_history()
+                         },
+                         
+                         update_Fever = function(Ptot){
+                           if(!is.na(Ptot)){
+                             private$Fever = ifelse(Ptot >= private$feverThresh, TRUE, FALSE)
+                           }
+                         },
+                         
+                         update_HRP2 = function(Ptot){
+                           a = .0019
+                           b = log(2)/3.67
+                           private$HRP2 = ifelse(is.nan(Ptot),log10(10^private$HRP2-b*10^private$HRP2),log10(10^private$HRP2+a*10^Ptot-b*10^private$HRP2))
+                         },
+                         
+                         update_pLDH = function(Ptot){
+                           a = .13
+                           b = log(2)/2
+                           private$pLDH = ifelse(!is.na(Ptot),
+                                                 (1-b)*private$pLDH + a*10^Ptot,
+                                                 (1-b)*private$pLDH)
+                         },
+                         
+                         update_RBC = function(Ptot,RBCHist){
+                           a = log(2)/120 #RBC halflife
+                           b = 1
+                           c = 1.7
+                           d = .5
+                           e = 5*10^9
+                           rhat = ifelse(t<7,2.5,RBCHist[t-6])
+                           r = private$RBC
+                           private$RBC = ifelse(is.nan(Ptot),
+                                                        r - a*r + b*exp(-c*rhat),
+                                                        r - a*r + b*exp(-c*rhat) - d*10^Ptot/(e+10^Ptot)*r)
+                         },
+                         
+                         update_history = function(){
+                           private$history$Fever = c(private$history$Fever,private$Fever)
+                           private$history$HRP2 = c(private$history$HRP2,private$HRP2)
+                           private$history$pLDH = c(private$history$pLDH,private$pLDH)
+                           private$history$RBC = c(private$history$RBC,private$RBC)
                          }
+                         
                        ),
+                       
                        
                        private = list(
                          Fever = NULL,
+                         feverThresh = NULL,
                          HRP2 = NULL,
                          pLDH = NULL,
                          RBC = NULL,
-                         Ptot = NULL,
-                         Gtot = NULL,
-                         Stot = NULL
+                         history = NULL
                        )
                        
 )

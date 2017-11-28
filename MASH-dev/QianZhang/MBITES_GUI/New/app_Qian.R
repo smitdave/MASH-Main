@@ -253,7 +253,8 @@ mbitesGadget = function(...){
             ),
 
           #################################################################################
-          tabPanel(title = "Landscape", value = 'landscape',                 
+          tabPanel(title = "Landscape", value = 'landscape',
+          	useShinyjs(),                 
             sidebarLayout(position = "right",
               sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
                 helpText("Please set the parameters"),
@@ -262,16 +263,73 @@ mbitesGadget = function(...){
                   wellPanel(
                     checkboxInput("landscape_point_f", "f", FALSE),
                     conditionalPanel(condition = "input.landscape_point_f",
+                    	wellPanel(
                     	radioButtons(inputId = "landscape_f_input", "Provide the locations and weights:",
                     		choices = c("Clusters" = "cluster",
                     					"Import x, y, w" = "imp_xyw",
                     					"Import x, y" = "imp_xy"
                     					),
                     		selected = "cluster"),
+                    	conditionalPanel(condition = "input.landscape_f_input != 'cluster'",
+                    		fileInput('filef', 'Choose CSV File',
+                       			accept=c('text/csv', 
+                                'text/comma-separated-values,text/plain', 
+                                '.csv')),
+                    		wellPanel(checkboxInput('headerf', 'Header', TRUE),
+                 			radioButtons('sepf', 'Separator',
+                              c(Comma=',',
+                                Semicolon=';',
+                                Tab='\t'),
+                              ','))
+                    		),
                     	uiOutput("landscape_f_file")
-                    	),
+                    	)),
                     checkboxInput("landscape_point_m", "m", FALSE),
-                    checkboxInput("landscape_point_s", "s", FALSE)
+                    conditionalPanel(condition = "input.landscape_point_m",
+                    	wellPanel(
+                    	radioButtons(inputId = "landscape_m_input", "Provide the locations and weights:",
+                    		choices = c("Clusters" = "cluster",
+                    					"Import x, y, w" = "imp_xyw",
+                    					"Import x, y" = "imp_xy"
+                    					),
+                    		selected = "cluster"),
+                    	conditionalPanel(condition = "input.landscape_m_input != 'cluster'",
+                    		fileInput('filem', 'Choose CSV File',
+                       			accept=c('text/csv', 
+                                'text/comma-separated-values,text/plain', 
+                                '.csv')),
+                    		wellPanel(checkboxInput('headerm', 'Header', TRUE),
+                 			radioButtons('sepm', 'Separator',
+                              c(Comma=',',
+                                Semicolon=';',
+                                Tab='\t'),
+                              ','))
+                    		),
+                    	uiOutput("landscape_m_file")
+                    	)),
+                    checkboxInput("landscape_point_s", "s", FALSE),
+                    conditionalPanel(condition = "input.landscape_point_s",
+                    	wellPanel(
+                    	radioButtons(inputId = "landscape_s_input", "Provide the locations and weights:",
+                    		choices = c("Clusters" = "cluster",
+                    					"Import x, y, w" = "imp_xyw",
+                    					"Import x, y" = "imp_xy"
+                    					),
+                    		selected = "cluster"),
+                    	conditionalPanel(condition = "input.landscape_s_input != 'cluster'",
+                    		fileInput('files', 'Choose CSV File',
+                       			accept=c('text/csv', 
+                                'text/comma-separated-values,text/plain', 
+                                '.csv')),
+                    		wellPanel(checkboxInput('headers', 'Header', TRUE),
+                 			radioButtons('seps', 'Separator',
+                              c(Comma=',',
+                                Semicolon=';',
+                                Tab='\t'),
+                              ','))
+                    		),
+                    	uiOutput("landscape_s_file")
+                    	))
                     )
                   ),
                 checkboxInput("showKernels", "Kernels(Female)", FALSE),
@@ -298,6 +356,16 @@ mbitesGadget = function(...){
                 		title = "Point: f",
                 		value = "landscape_out_f",
                 		plotOutput("panel_landscape_out_f")
+                		),
+                	tabPanel(
+                		title = "Point: m",
+                		value = "landscape_out_m",
+                		plotOutput("panel_landscape_out_m")
+                		),
+                	tabPanel(
+                		title = "Point: s",
+                		value = "landscape_out_s",
+                		plotOutput("panel_landscape_out_s")
                 		)
                 	)
                 )
@@ -356,6 +424,38 @@ mbitesGadget = function(...){
     	}
     })
 
+
+
+
+######################################Landscape Output###########################################################
+    dataF <- reactive({ 
+	    req(input$filef) 
+	    inFileF <- input$filef 
+	    dfF <- read.csv(inFileF$datapath, header = input$headerf, sep = input$sepf)
+	    return(dfF)
+	  })
+	output$contentsF <- renderTable({
+	      dataF()
+	  })
+	dataM <- reactive({ 
+	    req(input$filem) 
+	    inFileM <- input$filem 
+	    dfM <- read.csv(inFileM$datapath, header = input$headerm, sep = input$sepm)
+	    return(dfM)
+	  })
+	output$contentsM <- renderTable({
+	      dataM()
+	  })
+	dataS <- reactive({ 
+	    req(input$files) 
+	    inFileS <- input$files 
+	    dfS <- read.csv(inFileS$datapath, header = input$headers, sep = input$seps)
+	    return(dfS)
+	  })
+	output$contentsS <- renderTable({
+	      dataS()
+	  })
+
     output$panel_landscape_out_f <- renderPlot({
     	 if(input$landscape_point_f & input$landscape_f_input == "cluster"){
     		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
@@ -395,14 +495,122 @@ mbitesGadget = function(...){
 
 			points(xy_l, pch =15, col = "blue")
 
-
-
+    	 }else{
+    	 	xF <- dataF()[, 1:2]
+	    	plot(xF, col="red")
     	 }
       
     })
 
 
+    output$panel_landscape_out_m <- renderPlot({
+    	 if(input$landscape_point_m & input$landscape_m_input == "cluster"){
+    		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+			  set.seed(seed)
+			  xCenters = runif(nCenters, -rng, rng)
+			  yCenters = runif(nCenters, -rng, rng)
 
+			  x = 0
+			  y=0
+
+			  n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
+			  spread = rgamma(nCenters,1,1)*spr
+
+			  for(i in 1:nCenters){
+			    x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
+			    y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
+			  }
+			  x = x[-1]
+			  y = y[-1]
+
+			  plot(x,y, pch = 15, col = "red") 
+			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))  
+			}
+
+			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+			xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+			N_l = length(xy_l[,1])
+			w_l = rgamma(length(xy_f[,1]), 1,1)
+
+			xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+
+			xy_f = rbind(xy_f, xy_f1)
+			N_f = length(xy_f[,1])
+			w_f = rgamma(length(xy_f[,1]), 1,1)
+
+			plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+
+			points(xy_l, pch =15, col = "blue")
+
+
+
+    	 }else{
+    	 	xM <- dataM()[, 1:2]
+	    	plot(xM, col="blue")
+    	 }
+      
+    })
+
+    output$panel_landscape_out_s <- renderPlot({
+    	 if(input$landscape_point_s & input$landscape_s_input == "cluster"){
+    		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+			  set.seed(seed)
+			  xCenters = runif(nCenters, -rng, rng)
+			  yCenters = runif(nCenters, -rng, rng)
+
+			  x = 0
+			  y=0
+
+			  n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
+			  spread = rgamma(nCenters,1,1)*spr
+
+			  for(i in 1:nCenters){
+			    x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
+			    y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
+			  }
+			  x = x[-1]
+			  y = y[-1]
+
+			  plot(x,y, pch = 15, col = "red") 
+			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))  
+			}
+
+			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+			xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+			N_l = length(xy_l[,1])
+			w_l = rgamma(length(xy_f[,1]), 1,1)
+
+			xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+
+			xy_f = rbind(xy_f, xy_f1)
+			N_f = length(xy_f[,1])
+			w_f = rgamma(length(xy_f[,1]), 1,1)
+
+			plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+
+			points(xy_l, pch =15, col = "blue")
+
+
+
+    	 }else{
+    	 	xS <- dataS()[, 1:2]
+	    	plot(xS, col="green")
+    	 }
+      
+    })
+
+    observe({
+      toggle(condition = input$landscape_point_f, selector = "#landscape_output li a[data-value=landscape_out_f]")
+    })
+    observe({
+      toggle(condition = input$landscape_point_m, selector = "#landscape_output li a[data-value=landscape_out_m]")
+    })
+    observe({
+      toggle(condition = input$landscape_point_s, selector = "#landscape_output li a[data-value=landscape_out_s]")
+    })
+
+
+######################################################################################################################
     observe({
         if (input$launchgo > 0) { 
             session$sendCustomMessage('activeNavs', 'Options')
@@ -430,23 +638,11 @@ mbitesGadget = function(...){
         textInput("prepath", "Please provide the previous working directory (the folder contains .json file)", "")
       }
     })
-    output$landscape_f_file <- renderUI({
-      if(input$landscape_f_input %in% c("imp_xy", "imp_xyw")){
-        shinyFilesButton("landscape_f_filepath", "Choose a file",
-        				title = "Please select a file:", multiple = FALSE,
-        				buttonType = "default", class = NULL)
-      }
-    })
-   #  volumes = getVolumes()
-   #  observe({  
-   #  shinyFileChoose(input, "Btn_GetFile", roots = volumes, session = session)
 
-   #  if(!is.null(input$Btn_GetFile)){
-   #    # browser()
-   #    file_selected<-parseFilePaths(volumes, input$Btn_GetFile)
-   #    output$txt_file <- renderText(as.character(file_selected$datapath))
-   #  }
-  	# })
+
+
+
+
 
     #######################################################################
     output$panel_f <- renderUI({
