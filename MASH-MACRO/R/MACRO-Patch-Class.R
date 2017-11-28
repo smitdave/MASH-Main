@@ -66,6 +66,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                     bWeightHuman              = numeric(1),
                     bWeightZoo                = numeric(1),
                     bWeightZootox             = numeric(1),
+                    kappa                     = numeric(1),
 
                     # Pointers
                     TilePointer               = NULL,     # point to the enclosing metapopulation TILE
@@ -160,6 +161,10 @@ MacroPatch$set(which = "public",name = "set_bWeightZoo",
 accumulate_bWeightZoo_MacroPatch <- function(bWeightZoo){
   private$bWeightZoo = private$bWeightZoo + bWeightZoo
 }
+
+MacroPatch$set(which = "public",name = "accumulate_bWeightZoo",
+  value = accumulate_bWeightZoo_MacroPatch, overwrite = TRUE
+)
 
 #' MacroPatch: Get Patch \eqn{\Kappa}
 #'

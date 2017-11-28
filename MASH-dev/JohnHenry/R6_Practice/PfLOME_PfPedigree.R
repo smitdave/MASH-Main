@@ -19,6 +19,7 @@ PfPedigree <- R6Class("PfPedigree",
                         get_PedLength = function(){
                           private$PedLength
                         },
+                        
                         get_gtype = function(pfid){
                           private$gtype[[pfid]]
                         },
@@ -39,8 +40,16 @@ PfPedigree <- R6Class("PfPedigree",
                           private$th[[pfid]]
                         },
                         
+                        set_th = function(pfid,thnew){
+                          private$th[[pfid]] = thnew
+                        },
+                        
                         get_thEnd = function(pfid){
                           private$thEnd[[pfid]]
+                        },
+                        
+                        set_thEnd = function(pfid,thEndnew){
+                          private$thEnd[[pfid]] = thEndnew
                         },
                         
                         get_sib = function(pfid){
@@ -57,6 +66,7 @@ PfPedigree <- R6Class("PfPedigree",
                       ),
                       
                       private = list(
+                        
                         PedLength = integer(0),
                         gtype = list(),
                         ptype = list(),
@@ -64,10 +74,13 @@ PfPedigree <- R6Class("PfPedigree",
                         mac = list(),
                         th = list(),
                         thEnd = list(),
+                        ixh = list(),
+                        tm = list(),
+                        tmEnd = list(),
+                        ixm = list(),
                         sib = list(),
                         nAntigenLoci = integer(0),
                         nptypes = NULL
-                        
                         
                       )
 )

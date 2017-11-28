@@ -1,7 +1,5 @@
 source("PfLOME_HealthState.R")
-source("PfLOME_Pathogen.R")
 source("PfLOME_ImmuneState.R")
-source("PfLOME_PfPedigree.R")
 
 Human <- R6Class("Human",
                  
@@ -18,6 +16,7 @@ Human <- R6Class("Human",
                      private$immuneState = ImmuneState$new()
                      private$healthState = HealthState$new()
                      private$pathogen = Pathogen$new()
+                     private$history = list()
                    },
                    
                    
@@ -29,11 +28,13 @@ Human <- R6Class("Human",
                      mac = pfped$get_mac(pfid)
                      gtype = pfped$get_gtype(pfid)
                      private$pathogen$add_Pf(t,pfid,mic,mac,gtype)
+                     pfped$set_th(pfid,t)
                    },
                    ## write method to remove particular infection
                    clearPathogen = function(pfid){
                      private$pathogen$PfPathogen[[pfid]] = NULL
                      private$pathogen$set_PfMOI(private$pathogen$get_PfMOI()-1)
+                     pfped$set_thEnd(pfid,t)
                    },
                    infectMosquito = function(){
                      
@@ -44,9 +45,9 @@ Human <- R6Class("Human",
                    
                    
                    updateHuman = function(t){
-                     private$pathogen$update_pathogen(t)
                      #private$immuneState$update_immuneState(t)
-                     #private$healthState$update_healthState(t)
+                     private$healthState$update_healthState(self$get_Ptot(),self$get_history()$RBC)
+                     private$pathogen$update_pathogen(t)
                    },
                    
                    
@@ -86,7 +87,7 @@ Human <- R6Class("Human",
                    },
                    
                    get_pathogen = function(){
-                     private$pathogen$get_Pf()
+                     private$pathogen
                    },
                    
                    get_HRP2 = function(){
@@ -103,6 +104,11 @@ Human <- R6Class("Human",
                    
                    get_Gtot = function(){
                      private$pathogen$get_Gtot()
+                   },
+                   
+                   get_history = function(){
+                     c(private$pathogen$get_history(), private$healthState$get_history())
+                     #private$immuneState$get_history()
                    }
                    
                    
@@ -118,7 +124,7 @@ Human <- R6Class("Human",
                    pathogen = NULL,
                    immuneState = NULL,
                    healthState = NULL,
-                   pfPedigree = NULL
+                   history = NULL
                    
                  )
                  
