@@ -82,6 +82,16 @@ MicroTile$simMICRO_oneRun(tMax = 20,verbose = TRUE,trackPop = TRUE)
 ########################################################################################
 ###### TESTS ###########################################################################
 ########################################################################################
+
+###### Distribute ######################################################################
+sugarSitesNumber=MicroTile$get_Landscape()$get_SugarSitesN()
+for(i in 1:sugarSitesNumber){
+  atsbTest=ATSB$new(id=i)
+  MicroTile$get_Landscape()$get_SugarSites(i)$set_attractiveSugarBait(atsbTest)
+}
+MicroTile$get_Landscape()$get_SugarSites(2)$get_attractiveSugarBait()
+
+###### Get/Set #########################################################################
 atsbTest=ATSB$new(id=10)
 MicroTile$get_Landscape()$get_SugarSites(2)$set_attractiveSugarBait(atsbTest)
 MicroTile$get_Landscape()$get_SugarSites(2)$get_attractiveSugarBait()
