@@ -56,7 +56,7 @@ MacroHuman_init_travel <- function(n, freqMean = 7, freqSd = 2, lengthMean = 2, 
 
   there = sample(x = c(1:N)[-here], size = n) # where do i often go?
   howOften = 60000+round(rlnorm(n,meanlog=freqMean,sdlog=freqSd))
-  meanLengthOfTrip = 1#+round(rlnorm(n,meanlog=lengthMean,sdlog=lengthSd))
+  meanLengthOfTrip = rep(1, n) #1+round(rlnorm(n,meanlog=lengthMean,sdlog=lengthSd))
 
   # set up the next trip
   tTrip = tNow + rexp(n=1,rate=sum(1/howOften))
