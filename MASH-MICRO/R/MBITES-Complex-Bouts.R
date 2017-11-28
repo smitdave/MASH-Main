@@ -316,7 +316,6 @@ mbites_boutO <- function(){
     #print("OVI Present")
     private$stateNew = ovitrap$mosquitoKillEncounter(private$stateNew,interventionType="OVI")
     private$lspot = ovitrap$mosquitoRepelEncounter(private$lspot,interventionType="OVI")
-    #atsb$mosquitoRepelEncounter(private$stateNew,interventionType="ATSB")
   }else{
     if(self$isAlive()){
       self$layEggs()
