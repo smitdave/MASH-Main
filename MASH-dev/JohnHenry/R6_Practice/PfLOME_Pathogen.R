@@ -384,10 +384,12 @@ Pf <- R6Class("Pf",
                 
                 immuneMod_Tent = function(BSImm){
                   genImm              = 1-prod(1-BSImm) ##total strength of combined general immunity
-                  private$PAR$MZ0     = self$sigmoid01(genImm,.9,-1,private$PAR$MZ0)
-                  private$PAR$mxPD    = self$sigmoid01(genImm,.9,-1,private$PAR$mxPD)
-                  private$PAR$peakD   = self$sigmoid01(genImm,.9,-1,private$PAR$peakD)
-                  private$PAR$tEnd    = self$sigmoid01(genImm,.9,-1,private$PAR$tEnd)
+                  ################### as a stub - have maximum effect of immunity with some effect inevitable (prop here 2/3 to 1/3)
+                  p = 2/3
+                  private$PAR$MZ0     = self$sigmoid01(genImm,.5,-1,private$PAR$MZ0*p)+private$PAR$MZ0*(1-p)
+                  private$PAR$mxPD    = self$sigmoid01(genImm,.5,-1,private$PAR$mxPD*p)+private$PAR$mxPD*(1-p)
+                  private$PAR$peakD   = self$sigmoid01(genImm,.5,-1,private$PAR$peakD*p)+private$PAR$peakD*(1-p)
+                  private$PAR$tEnd    = self$sigmoid01(genImm,.5,-1,private$PAR$tEnd*p)+private$PAR$tEnd*(1-p)
                 },
                 
                 sigmoid01 = function(x,xh,b,max) { ##defined on [0,1] --> [0,max]

@@ -104,6 +104,7 @@ HealthState <- R6Class("HealthState",
                          HRP2 = NULL,
                          pLDH = NULL,
                          RBC = NULL,
+                         Rx = NULL,
                          history = NULL
                        )
                        

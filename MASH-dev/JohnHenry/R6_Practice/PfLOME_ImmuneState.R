@@ -4,10 +4,10 @@ ImmuneState <- R6Class("ImmuneState",
                          
                          initialize = function(){
                            
-                           private$nBSImmCounters = 10
+                           private$nBSImmCounters = 4
                            private$BSImm = rep(0,private$nBSImmCounters)
-                           private$wx = c(rep(1/30, 3), rep(1/90, 3), rep(1/270, 3), 1/5/365)
-                           private$wn = c(rep(c(1/30, 1/90, 1/270), 3), 0)
+                           private$wx = c(1/30, 1/90, 1/270, 1/5/365)
+                           private$wn = c(1/30, 1/90, 1/270, 0)
                            
                            BSImmCounters = list()
                            for(i in 1:private$nBSImmCounters){

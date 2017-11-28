@@ -47,12 +47,11 @@ plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",
 lines(1:length(someGuy$get_history()$Gtot),someGuy$get_history()$Gtot,lty=2)
 lines(1:length(someGuy$get_history()$Fever),someGuy$get_history()$Fever)
 pfped$get_PedLength()
-
 lines(1:length(someGuy$get_history()$GenImm),someGuy$get_history()$GenImm-2,type="l")
 
-lines(1:length(someGuy$get_history()$BSImm[[1]]),someGuy$get_history()$BSImm[[1]],type="l")
-for(i in 2:10){
-  lines(1:length(someGuy$get_history()$BSImm[[1]]),someGuy$get_history()$BSImm[[i]])
+plot(1:length(someGuy$get_history()$GenImm),someGuy$get_history()$GenImm,type="l")
+for(i in 1:10){
+  lines(1:length(someGuy$get_history()$BSImm[[1]]),someGuy$get_history()$BSImm[[i]],lty=2)
 }
 
 plot(1:length(someGuy$get_history()$RBC),someGuy$get_history()$RBC,type="l")
