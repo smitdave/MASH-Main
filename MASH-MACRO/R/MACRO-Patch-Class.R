@@ -162,6 +162,10 @@ accumulate_bWeightZoo_MacroPatch <- function(bWeightZoo){
   private$bWeightZoo = private$bWeightZoo + bWeightZoo
 }
 
+MacroPatch$set(which = "public",name = "accumulate_bWeightZoo",
+  value = accumulate_bWeightZoo_MacroPatch, overwrite = TRUE
+)
+
 #' MacroPatch: Get Patch \eqn{\Kappa}
 #'
 #' \eqn{\Kappa} is the proportion of mosquitoes that would become infected after blood feeding on any human, the net infectiousness of humans.

@@ -71,3 +71,12 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                   )
 
 ) #end class definition
+
+
+get_Patch_MacroTile <- function(ix = NULL){
+  if(!is.null(ix)){
+    return(private$Patches[[ix]])
+  } else {
+    return(private$Patches)
+  }
+}

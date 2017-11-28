@@ -47,14 +47,41 @@ AquaPop_Base <- R6::R6Class(classname = "AquaPop_Base",
                   private = list(
 
                     # Aquatic Populations
+                    EggQ                      = NULL,
                     ImagoQ                    = NULL,
 
                     # Pointers
-                    PatchPointer              = NULL
+                    PatchPointer              = NULL,
+                    TilePointer               = NULL,
+                    MosquitoPointer           = NULL
 
                   )
 
 ) #end class definition
+
+
+
+#' Add Emerging Cohort to Adult Population
+#'
+#' Take emerging aquatic stage mosquitoes from \code{\link[MASHcpp]{ImagoQ}} and add to the adult population.
+#'
+#'  * This method is bound to \code{AquaPop_Base$addCohort_AquaPop}
+#'
+addCohort_AquaPop_Base <- function(){
+  EmergingAdults = private$ImagoQ$get_ImagoQTime(tNow = private$PatchPointer$get_TilePointer()$get_tNow(),clear = TRUE)
+
+  if(length(EmergingAdults) > 0){
+    for(i in 1:length(EmergingAdults)){
+      private$MosquitoPointer$accumulate_M(M=EmergingAdults[[i]]$N,ix=private$PatchPointer$get_patchID())
+    }
+  }
+}
+
+AquaPop_Base$set(which = "public",name = "addCohort",
+  value = addCohort_AquaPop_Base, overwrite = TRUE
+)
+
+# Getters & Setters
 
 #' Get Patch Pointer
 #'
@@ -82,13 +109,54 @@ AquaPop_Base$set(which = "public",name = "set_PatchPointer",
   value = set_PatchPointer_AquaPop_Base, overwrite = TRUE
 )
 
-
-addCohort_AquaPop_Base <- function(){
-  EmergingAdults = private$ImagoQ$get_ImagoQTime(tNow = private$PatchPointer$get_TilePointer()$get_tNow(),clear = TRUE)
-
-  if(length(EmergingAdults) > 0){
-    for(i in 1:length(EmergingAdults)){
-
-    }
-  }
+#' Get Tile Pointer
+#'
+#' Return a pointer to the enclosing \code{\link{MacroTile}}
+#'
+get_TilePointer_AquaPop_Base <- function(){
+  return(private$TilePointer)
 }
+
+AquaPop_Base$set(which = "public",name = "get_TilePointer",
+  value = get_TilePointer_AquaPop_Base, overwrite = TRUE
+)
+
+#' Set Tile Pointer
+#'
+#' Set a pointer to the enclosing \code{\link{MacroTile}}
+#'
+#' @param TilePointer a reference to \code{\link{MacroTile}} object
+#'
+set_TilePointer_AquaPop_Base <- function(TilePointer){
+  private$TilePointer = TilePointer
+}
+
+AquaPop_Base$set(which = "public",name = "set_TilePointer",
+  value = set_TilePointer_AquaPop_Base, overwrite = TRUE
+)
+
+#' Get Mosquito Pointer
+#'
+#' Return a pointer to the enclosing \code{\link{MacroMosquito}}
+#'
+get_MosquitoPointer_AquaPop_Base <- function(){
+  return(private$MosquitoPointer)
+}
+
+AquaPop_Base$set(which = "public",name = "get_MosquitoPointer",
+  value = get_MosquitoPointer_AquaPop_Base, overwrite = TRUE
+)
+
+#' Set Mosquito Pointer
+#'
+#' Set a pointer to the enclosing \code{\link{MacroMosquito}}
+#'
+#' @param MosquitoPointer a reference to \code{\link{MacroMosquito}} object
+#'
+set_MosquitoPointer_AquaPop_Base <- function(MosquitoPointer){
+  private$MosquitoPointer = MosquitoPointer
+}
+
+AquaPop_Base$set(which = "public",name = "set_MosquitoPointer",
+  value = set_MosquitoPointer_AquaPop_Base, overwrite = TRUE
+)

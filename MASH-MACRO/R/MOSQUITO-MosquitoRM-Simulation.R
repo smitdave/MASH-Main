@@ -63,3 +63,12 @@ oneDay_popDynamics_MosquitoRM <- function(){
 MosquitoRM$set(which = "public",name = "oneDay_popDynamics",
           value = oneDay_popDynamics_MosquitoRM, overwrite = TRUE
 )
+
+
+###############################################################################
+# MosquitoRM: Oviposition
+###############################################################################
+
+layEggs_Emerge_MosquitoRM <- function(){
+
+}

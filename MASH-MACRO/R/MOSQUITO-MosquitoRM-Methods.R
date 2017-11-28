@@ -157,6 +157,14 @@ MosquitoRM$set(which = "public",name = "set_M",
           value = set_M_MosquitoRM, overwrite = TRUE
 )
 
+accumulate_M_MosquitoRM <- function(M, ix){
+  private$M[ix] = private$M[ix] + M
+}
+
+MosquitoRM$set(which = "public",name = "accumulate_M",
+          value = accumulate_M_MosquitoRM, overwrite = TRUE
+)
+
 # Y: incubating mosquitoes
 get_Y_MosquitoRM <- function(ix = NULL){
   if(!is.null(ix)){
