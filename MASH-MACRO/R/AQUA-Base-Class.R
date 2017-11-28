@@ -38,7 +38,14 @@ AquaPop_Base <- R6::R6Class(classname = "AquaPop_Base",
                    #################################################
 
                    initialize = function(){
+                     # C++: make this an actual constructor.
+                     # don't forget a !virtual! destructor
                      cat("constructor for AquaPop_Base class should never be called\n")
+                   },
+
+                   oneDay_popDynamics = function(){
+                     # C++: make this a virtual function
+                     cat("oneDay_popDynamics for AquaPop_Base should never be called\n")
                    }
 
                   ),
@@ -65,20 +72,20 @@ AquaPop_Base <- R6::R6Class(classname = "AquaPop_Base",
 #'
 #' Take emerging aquatic stage mosquitoes from \code{\link[MASHcpp]{ImagoQ}} and add to the adult population.
 #'
-#'  * This method is bound to \code{AquaPop_Base$addCohort_AquaPop}
+#'  * This method is bound to \code{AquaPop_Base$oneDay_addCohort}
 #'
-addCohort_AquaPop_Base <- function(){
+oneDay_addCohort_AquaPop_Base <- function(){
   EmergingAdults = private$ImagoQ$get_ImagoQTime(tNow = private$PatchPointer$get_TilePointer()$get_tNow(),clear = TRUE)
 
   if(length(EmergingAdults) > 0){
     for(i in 1:length(EmergingAdults)){
-      private$MosquitoPointer$accumulate_M(M=EmergingAdults[[i]]$N,ix=private$PatchPointer$get_patchID())
+      private$MosquitoPointer$get_emergingAdults(M=EmergingAdults[[i]]$N,ix=private$PatchPointer$get_patchID())
     }
   }
 }
 
-AquaPop_Base$set(which = "public",name = "addCohort",
-  value = addCohort_AquaPop_Base, overwrite = TRUE
+AquaPop_Base$set(which = "public",name = "oneDay_addCohort",
+  value = oneDay_addCohort_AquaPop_Base, overwrite = TRUE
 )
 
 # Getters & Setters
