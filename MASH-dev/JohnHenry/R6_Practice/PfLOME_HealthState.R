@@ -115,7 +115,7 @@ HealthState <- R6Class("HealthState",
                            x = private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
-                         }
+                         },
                          
                          PCR = function(){
                            detect = 1
