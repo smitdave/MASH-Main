@@ -9,53 +9,26 @@
 MacroPatch
 }
 \description{
-Generate a single well-mixed MacroPatch, which can run classical models in standalone mode or be linked in a network of
-other patches in a \code{\link{MacroTile}}
-Each instance of a \code{Human} lives in a \code{\link{HumanPop}}
+write me
 }
 \section{\strong{Constructor}}{
 
 \itemize{
-\item patchID: integer ID of this patch
-\item patchID: integer ID of this patch
-\item patchID: integer ID of this patch
-\item aquaModule: character string giving the MACRO Aquatic Ecology module to use; "MosquitoRM" initializes \code{\link{ELP}}
-\item mosquitoModule: character string giving the MACRO mosquito module to use; "MosquitoRM" initializes \code{\link{MosquitoRM}}
-\item mosquitoPars: named list giving parameters passed to the mosquito class constructor; "MosquitoRM" uses \code{\link{MosquitoRM.Parameters}}
-\item humanPars: named list giving parameters passed to the \code{\link{HumanPop}} class constructor
-\item bWeightZoo = 0: biting weight on livestock
-\item tStart = 1: time to start all simulations
-\item directory: character string giving directory to write output
+\item argument: i'm an argument!
 }
 }
 
 \section{\strong{Methods}}{
 
 \itemize{
-\item get_bWeightHuman: see \code{\link{get_bWeightHuman_MacroPatch}}
-\item set_bWeightHuman: see \code{\link{set_bWeightHuman_MacroPatch}}
-\item accumulate_bWeightHuman: see \code{\link{accumulate_bWeightHuman_MacroPatch}}
-\item get_bWeightZoo: see \code{\link{get_bWeightZoo_MacroPatch}}
-\item set_bWeightZoo: see \code{\link{set_bWeightZoo_MacroPatch}}
-\item get_kappa: see \code{\link{get_kappa_MacroPatch}}
-\item set_kappa: see \code{\link{set_kappa_MacroPatch}}
-\item accumulate_kappa: see \code{\link{accumulate_kappa_MacroPatch}}
-\item get_MosquitoPop: see \code{\link{get_MosquitoPop_MacroPatch}}
-\item set_MosquitoPop: see \code{\link{set_MosquitoPop_MacroPatch}}
-\item get_HumanPop: see \code{\link{get_HumanPop_MacroPatch}}
-\item set_MosquitoPop: see \code{\link{set_HumanPop_MacroPatch}}
-\item get_TilePointer: see \code{\link{get_TilePointer_MacroPatch}}
-\item set_TilePointer: see \code{\link{set_TilePointer_MacroPatch}}
+\item method: i'm a method!
 }
 }
 
 \section{\strong{Fields}}{
 
 \itemize{
-\item patchID: integer ID of this patch
-\item tStart: time to start simulation
-\item tNow: current time of simulation
-\item directory: character string giving directory to write output
+\item field: i'm a field!
 }
 }
 

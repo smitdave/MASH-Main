@@ -77,6 +77,66 @@ mosquito_par = list(
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
 MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+
+
+###### Distribute ######################################################################
+### Sugar ######################################################
+sugarSitesNumber=MicroTile$get_Landscape()$get_SugarSitesN()
+for(i in 1:sugarSitesNumber){
+  atsbTest=ATSB$new(id=i,killProbability=0,repelProbability=0)
+  MicroTile$get_Landscape()$get_SugarSites(i)$set_attractiveSugarBait(atsbTest)
+}
+### Aquatic ####################################################
+aquaSitesNumber=MicroTile$get_Landscape()$get_AquaSitesN()
+for(i in 1:aquaSitesNumber){
+  ovitrapTest=Ovitrap$new(id=i,killProbability=0,repelProbability=0)
+  MicroTile$get_Landscape()$get_AquaSites(i)$set_ovitrap(ovitrapTest)
+}
+###### Run #############################################################################
+MicroTile$simMICRO_oneRun(tMax = 20,verbose = TRUE,trackPop = TRUE)
+
+########################################################################################
+###### TESTS ###########################################################################
+########################################################################################
+
+###### Get/Set #########################################################################
+# atsbTest=ATSB$new(id=10)
+# MicroTile$get_Landscape()$get_SugarSites(2)$set_attractiveSugarBait(atsbTest)
+# MicroTile$get_Landscape()$get_SugarSites(2)$get_attractiveSugarBait()
+# aerialTest=AerialSpray$new(id=10)
+# MicroTile$get_Landscape()$get_MatingSites(2)$set_aerialSpray(aerialTest)
+# MicroTile$get_Landscape()$get_MatingSites(2)$get_aerialSpray()
+# swarmSprayTest=SwarmSpray$new(id=10)
+# MicroTile$get_Landscape()$get_MatingSites(2)$set_swarmSpray(swarmSprayTest)
+# MicroTile$get_Landscape()$get_MatingSites(2)$get_swarmSpray()
+# # areaRepellentTest=SwarmSpray$new(id=10)
+# # MicroTile$get_Landscape()$get_MatingSites(2)$set_swarmSpray(swarmSprayTest)
+# # MicroTile$get_Landscape()$get_MatingSites(2)$get_swarmSpray()
+# ovitrapTest=Ovitrap$new(id=10)
+# MicroTile$get_Landscape()$get_AquaSites(2)$set_ovitrap(ovitrapTest)
+# MicroTile$get_Landscape()$get_AquaSites(2)$get_ovitrap()
+# larvicidingTest=Larvicide$new(id=10)
+# MicroTile$get_Landscape()$get_AquaSites(2)$set_ovitrap(larvicidingTest)
+# MicroTile$get_Landscape()$get_AquaSites(2)$get_ovitrap()
+# sreTest=SourceReduction$new(id=10)
+# MicroTile$get_Landscape()$get_AquaSites(2)$set_sourceReduction(sreTest)
+# MicroTile$get_Landscape()$get_AquaSites(2)$get_sourceReduction()
+# bioTest=BiologicalControl$new(id=10)
+# MicroTile$get_Landscape()$get_AquaSites(2)$set_biologicalControl(bioTest)
+# MicroTile$get_Landscape()$get_AquaSites(2)$get_biologicalControl()
+# obtTest=OdorBaitedTrap$new(id=10)
+# MicroTile$get_Landscape()$get_FeedingSites(2)$set_odorBaitedTrap(obtTest)
+# MicroTile$get_Landscape()$get_FeedingSites(2)$get_odorBaitedTrap()
+# eavTest=EaveTube$new(id=10)
+# MicroTile$get_Landscape()$get_FeedingSites(2)$set_eaveTube(eavTest)
+# MicroTile$get_Landscape()$get_FeedingSites(2)$get_eaveTube()
+# homTest=ImproveHome$new(id=10)
+# MicroTile$get_Landscape()$get_FeedingSites(2)$set_homeImprovement(homTest)
+# MicroTile$get_Landscape()$get_FeedingSites(2)$get_homeImprovement()
+# irsTest=IRS$new(id=10)
+# MicroTile$get_Landscape()$get_FeedingSites(2)$set_indoorResidualSpray(irsTest)
+# MicroTile$get_Landscape()$get_FeedingSites(2)$get_indoorResidualSpray()
+=======
 MicroTile$simMICRO_oneRun(tMax = 20,verbose = TRUE,trackPop = TRUE)
 
 ########################################################################################
@@ -128,3 +188,4 @@ MicroTile$get_Landscape()$get_FeedingSites(2)$get_homeImprovement()
 irsTest=IRS$new(id=10)
 MicroTile$get_Landscape()$get_FeedingSites(2)$set_indoorResidualSpray(irsTest)
 MicroTile$get_Landscape()$get_FeedingSites(2)$get_indoorResidualSpray()
+

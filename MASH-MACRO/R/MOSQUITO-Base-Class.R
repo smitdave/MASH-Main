@@ -13,9 +13,6 @@
 #
 ###############################################################################
 
-
-
-
 #' Mosquito Population Abstract Base Class Definition
 #'
 #' An abstract base class that specific mosquito ecology models will inherit from. This is not strictly necessary in the R6 object-oriented framework but it is intended
@@ -26,14 +23,20 @@
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'  * argument: i'm an argument!
+#'  * The constructor (initialize) method must be overwritten by all inheriting classes.
 #'
 #' @section **Methods**:
-#'  * method: i'm a method!
+#'  * oneDay_popDynamics: this method must be overwritten by all inheriting classes (pure virtual function in C++)
+#'  * oneDay_oviposition: this method must be overwritten by all inheriting classes (pure virtual function in C++)
+#'  * get_emergingAdults: this method must be overwritten by all inheriting classes (pure virtual function in C++)
+#'  * get_HumansPointer: see \code{\link{get_HumansPointer_Mosquito_Base}}
+#'  * set_HumansPointer: see \code{\link{set_HumansPointer_Mosquito_Base}}
+#'  * get_TilePointer: see \code{\link{get_TilePointer_Mosquito_Base}}
+#'  * set_TilePointer: see \code{\link{set_TilePointer_Mosquito_Base}}
 #'
 #' @section **Fields**:
-#'  * field: i'm a field!
-#'
+#'  * HumansPointer: a reference to a \code{\link{HumanPop}} object
+#'  * TilePointer: a reference to a \code{\link{MacroTile}} object
 #'
 #' @md
 #' @export
@@ -84,3 +87,62 @@ Mosquito_Base <- R6::R6Class(classname = "Mosquito_Base",
                   )
 
 ) #end class definition
+
+
+#' Get Humans Pointer
+#'
+#' Return a pointer to this \code{\link{HumanPop}} in this tile.
+#'
+#'  * This method is bound to \code{Mosquito_Base$get_HumansPointer}
+#'
+get_HumansPointer_Mosquito_Base <- function(){
+  return(private$HumansPointer)
+}
+
+Mosquito_Base$set(which = "public",name = "get_HumansPointer",
+  value = get_HumansPointer_Mosquito_Base, overwrite = TRUE
+)
+
+#' Set Humans Pointer
+#'
+#' Set a pointer to this \code{\link{HumanPop}} in this tile.
+#'
+#'  * This method is bound to \code{Mosquito_Base$get_HumansPointer}
+#'
+set_HumansPointer_Mosquito_Base <- function(HumansPointer){
+  if(class(HumansPointer)[1]!="HumanPop"){stop("set_HumansPointer_Mosquito_Base must be set with a 'HumanPop' object reference")}
+  private$HumansPointer = HumansPointer
+}
+
+Mosquito_Base$set(which = "public",name = "set_HumansPointer",
+  value = set_HumansPointer_Mosquito_Base, overwrite = TRUE
+)
+
+#' Get Tile Pointer
+#'
+#' Return a pointer to the enclosing \code{\link{MacroTile}}
+#'
+#'  * This method is bound to \code{Mosquito_Base$get_TilePointer}
+#'
+get_TilePointer_Mosquito_Base <- function(){
+  return(private$TilePointer)
+}
+
+Mosquito_Base$set(which = "public",name = "get_TilePointer",
+  value = get_TilePointer_Mosquito_Base, overwrite = TRUE
+)
+
+#' Set Tile Pointer
+#'
+#' Set a pointer to the enclosing \code{\link{MacroTile}}
+#'
+#'  * This method is bound to \code{Mosquito_Base$set_TilePointer}
+#'
+set_TilePointer_Mosquito_Base <- function(TilePointer){
+  if(class(TilePointer)[1]!="MacroTile"){stop("set_TilePointer_Mosquito_Base must be set with a 'MacroTile' object reference")}
+  private$TilePointer = TilePointer
+}
+
+Mosquito_Base$set(which = "public",name = "set_TilePointer",
+  value = set_TilePointer_Mosquito_Base, overwrite = TRUE
+)

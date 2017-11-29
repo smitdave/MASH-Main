@@ -131,5 +131,3 @@ Human <- R6Class("Human",
                  )
                  
 )
-
-

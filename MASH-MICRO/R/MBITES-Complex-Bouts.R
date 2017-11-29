@@ -310,11 +310,17 @@ mbites_boutL <- function(){
 #' write me!
 #'
 mbites_boutO <- function(){
-
-  if(self$isAlive()){
-    self$layEggs()
+  #### Ovitrap #############################################################################################
+  ovitrap=private$LandscapePointer$get_AquaSites(private$locNow)$get_ovitrap()
+  if(is.null(ovitrap)==FALSE){
+    #print("OVI Present")
+    private$stateNew = ovitrap$mosquitoKillEncounter(private$stateNew,interventionType="OVI")
+    private$lspot = ovitrap$mosquitoRepelEncounter(private$lspot,interventionType="OVI")
+  }else{
+    if(self$isAlive()){
+      self$layEggs()
+    }
   }
-
 }
 
 #' M-BITES: Lay Eggs for 'Emerge' \code{\link{MosquitoFemale}}
@@ -355,32 +361,36 @@ mbites_layEggs_EL4P <- function(){
 #'  * This method is bound to \code{MosquitoFemale$boutS()}.
 #'
 mbites_boutS <- function(){
-
   if(self$isAlive()){
-    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("S_succeed")){
-      private$energy = 1
+      if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("S_succeed")){
+        private$energy = 1
 
-      if(!private$mature){
-        private$energyPreG = private$energyPreG - private$FemalePopPointer$get_MBITES_PAR("preGsugar")
-        if(private$energyPreG <= 0){
-          private$mature = TRUE
+        if(!private$mature){
+          private$energyPreG = private$energyPreG - private$FemalePopPointer$get_MBITES_PAR("preGsugar")
+          if(private$energyPreG <= 0){
+            private$mature = TRUE
+          }
         }
-      }
 
-      # if mosquito has eggs she transitions to oviposition; otherwise she goes to blood feeding
-      if(private$batch > 0){
-        private$stateNew = "L"
+        # if mosquito has eggs she transitions to oviposition; otherwise she goes to blood feeding
+        if(private$batch > 0){
+          private$stateNew = "L"
+        } else {
+          private$stateNew = "F"
+        }
+
       } else {
-        private$stateNew = "F"
+        private$stateNew = "R"
       }
 
-    } else {
-      private$stateNew = "R"
-    }
+      #### ATSB ################################################################################################
+      atsb=private$LandscapePointer$get_SugarSites(private$locNow)$get_attractiveSugarBait()
+      if(is.null(atsb)==FALSE){
+          private$stateNew = atsb$mosquitoKillEncounter(private$stateNew,interventionType="ATSB")
+          private$lspot = atsb$mosquitoRepelEncounter(private$lspot,interventionType="ATSB")
+      }
   }
-
 }
-
 
 #################################################################
 # M-BITES: Mating Bout :: M
