@@ -7,10 +7,6 @@
 SimBitePfSI.Setup(overwrite = TRUE)
 }
 \arguments{
-\item{Pf_c}{0.15; transmission efficiency: infected human to mosquito}
-
-\item{Pf_b}{0.55; transmission efficiency: infected mosquito to human}
-
 \item{DurationPf}{200; duration of infection (How many days does the infection last?)}
 }
 \value{

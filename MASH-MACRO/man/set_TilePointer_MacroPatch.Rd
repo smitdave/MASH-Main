@@ -2,7 +2,7 @@
 % Please edit documentation in R/MACRO-Patch-Class.R
 \name{set_TilePointer_MacroPatch}
 \alias{set_TilePointer_MacroPatch}
-\title{MacroPatch: Set Patch's Pointer to Enclosing \code{\link{MacroTile}}}
+\title{MacroPatch: Set Patch Pointer to Enclosing \code{\link{MacroTile}}}
 \usage{
 set_TilePointer_MacroPatch(TilePointer)
 }

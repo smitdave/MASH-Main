@@ -2,12 +2,12 @@
 % Please edit documentation in R/MACRO-Patch-Class.R
 \name{accumulate_bWeightHuman_MacroPatch}
 \alias{accumulate_bWeightHuman_MacroPatch}
-\title{MacroPatch: Accumulate Patch's Human Biting Weight}
+\title{MacroPatch: Accumulate Patch Human Biting Weight}
 \usage{
 accumulate_bWeightHuman_MacroPatch(bWeightHuman)
 }
 \arguments{
-\item{bWeightHuman}{increment to accumulate}
+\item{bWeightHuman}{numeric}
 }
 \description{
 Accumulate \code{private$bWeightHuman} (equivalent to private$bWeightHuman += bWeightHuman)
