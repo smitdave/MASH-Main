@@ -24,19 +24,21 @@ ControlIntervention=R6Class("R6Private",
     getCyclesCounter=function(){private$cyclesSinceDeployment},
     getRepel=function(){private$repelProbability},
     # Kill and Repel actions
-    mosquitoKillEncounter=function(M,interventionType="VC"){
+    mosquitoKillEncounter=function(MosquitoState,interventionType="VC"){
+      stateNew=MosquitoState
       if(binomialEvent(private$killProbability)){
-        #print(paste0("Killed by: ",interventionType))
-        M$stateNew="D"
+        print(paste0("Killed by: ",interventionType))
+        stateNew="D"
       }
-      return(M)
+      return(stateNew)
     },
-    mosquitoRepelEncounter=function(M,interventionType="VC"){
+    mosquitoRepelEncounter=function(MosquitoSpot,interventionType="VC"){
+      lspot=MosquitoSpot
       if(binomialEvent(private$repelProbability)){
-        #print(paste0("Repelled by: ",interventionType))
-        M$lspot="l"
+        print(paste0("Repelled by: ",interventionType))
+        lspot="l"
       }
-      return(M)
+      return(lspot)
     },
     # Timers
     updateCyclesCounter=function(){
