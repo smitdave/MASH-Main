@@ -11,7 +11,7 @@ Try executing this from the command line using `r < foo.R 3`, or from inside an 
 
 This script is very boring - it prints out the command line arguments passed to it, then selects one of them ("3" in the example above) and saves it in a variable ("seed") if it looks like an integer.  The output of the script is to create a blank file, subscripted with the variable seed.
 
-#### Shells script: r_shell.R
+#### Shells script: r_shell.sh
 This is adapted from IHME's cluster training - it tells the Unix shell to use R (`/usr/local/R-current/bin/R`) to execute a particular script (`<$1 --no-save`) with certain arguments (`$@`).
 
 #### Single job submission: boo.R

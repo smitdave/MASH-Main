@@ -30,7 +30,7 @@
 
 rm(list=ls())
 gc()
-library(MASH, lib.loc = "/ihme/malaria/dtcitron/Rlibs/")
+library(MASH, lib.loc = "/ihme/malaria_modeling/dtcitron/Rlibs/")
 
 # This part is what takes in the seed as an argument when called from the command line
 seed <- as.integer(commandArgs()[6])

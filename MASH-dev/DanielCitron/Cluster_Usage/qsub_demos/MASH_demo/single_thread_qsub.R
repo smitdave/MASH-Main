@@ -1,3 +1,4 @@
+# Create a single qsub job to run Test-MACRO-Emerge-qsub.R
 seed <- 0
 
 jname <- paste0("mash-macro-qsub_", seed)
@@ -7,8 +8,8 @@ holds <- "no_holds"
 
 # Setting up the 
 sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -l mem_free=", mem, "G -hold_jid ", holds,
-                  " -o /homes/dtcitron/Tutorials/qsub_practice/Test-MACRO-Emerge-outputs/test-macro-out",
-                  " -e /homes/dtcitron/Tutorials/qsub_practice/Test-MACRO-Emerge-outputs/test-macro-err")
+                  " -o Test-MACRO-Emerge-outputs/test-macro-out", # Saving the outputs
+                  " -e Test-MACRO-Emerge-outputs/test-macro-err") # Saving the errors
 args <- paste(seed, sep=" ")
 # This is a shell script, says which R to use, and passes arguments to the R script
 shell <- "mash_shell_script.sh" # this shell script may need to call r_dock more explicitly?

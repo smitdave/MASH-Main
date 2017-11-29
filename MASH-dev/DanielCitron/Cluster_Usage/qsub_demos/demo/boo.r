@@ -6,10 +6,10 @@ slots <- 1
 mem <- slots*2
 holds <- "no_holds"
 
-# Setting up the 
+# Setting up the qsub job
 sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -l mem_free=", mem, "G -hold_jid ", holds,
-                  " -o foo_outputs/boo_output",
-                  " -e foo_outputs/boo_errors"
+                  " -o foo_outputs/boo_output", # where output will go
+                  " -e foo_outputs/boo_errors"  # where errors will go
                   )
 args <- paste(seed, sep=" ")
 # This is a shell script, says which R to use, and passes arguments to the R script
