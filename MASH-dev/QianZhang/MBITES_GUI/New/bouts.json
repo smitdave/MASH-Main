@@ -1,23 +1,71 @@
 [
     {
-        "inputId": "F_time_m",
+        "inputId": "B_time_m",
         "value": "30"
     },
     {
-        "inputId": "F_time_h",
+        "inputId": "B_time_h",
         "value": "0"
     },
     {
-        "inputId": "F_succeed",
-        "value": "0.98"
+        "inputId": "B_succeed",
+        "value": "0.95"
     },
     {
-        "inputId": "F_surv",
+        "inputId": "B_surv",
         "value": "0.99"
     },
     {
-        "inputId": "F_wts",
-        "value": "1,1,1,1,1"
+        "inputId": "surviveH",
+        "value": "0.99"
+    },
+    {
+        "inputId": "probeH",
+        "value": "0.99"
+    },
+    {
+        "inputId": "surviveprobeH",
+        "value": "0.99"
+    },
+    {
+        "inputId": "feedH",
+        "value": "0.99"
+    },
+    {
+        "inputId": "surviveZ",
+        "value": "0.99"
+    },
+    {
+        "inputId": "feedZ",
+        "value": "0.99"
+    },
+    {
+        "inputId": "bm_a",
+        "value": "7.5"
+    },
+    {
+        "inputId": "bm_b",
+        "value": "2.5"
+    },
+    {
+        "inputId": "overfeed",
+        "value": "FALSE"
+    },
+    {
+        "inputId": "of_a",
+        "value": "8"
+    },
+    {
+        "inputId": "of_b",
+        "value": "5000"
+    },
+    {
+        "inputId": "preGblood",
+        "value": "0"
+    },
+    {
+        "inputId": "Q",
+        "value": "0.9"
     }
 ]
 
