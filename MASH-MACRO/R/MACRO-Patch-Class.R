@@ -45,9 +45,10 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                    # Constructor
                    #################################################
 
-                   initialize = function(patchID){
+                   initialize = function(patchID, AquaPop, bWeightZoo, bWeightZootox){
 
                      private$patchID = patchID
+                     private$AquaPop = AquaPop
 
                    }
 
@@ -56,11 +57,11 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                   # private methods & fields
                   private = list(
 
+                    # id of this patch
                     patchID                   = integer(1),
 
-                    # population dynamic parameters
-                    EggQ                      = NULL,
-                    ImagoQ                    = NULL,
+                    # AquaPop (in C++ this would be a pointer to base class AquaPop_Base)
+                    AquaPop                   = NULL,
 
                     # infection dynamic parameters
                     bWeightHuman              = numeric(1),
