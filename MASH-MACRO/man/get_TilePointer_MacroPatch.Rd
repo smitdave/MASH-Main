@@ -2,7 +2,7 @@
 % Please edit documentation in R/MACRO-Patch-Class.R
 \name{get_TilePointer_MacroPatch}
 \alias{get_TilePointer_MacroPatch}
-\title{MacroPatch: Get Patch's Pointer to Enclosing \code{\link{MacroTile}}}
+\title{MacroPatch: Get Patch Pointer to Enclosing \code{\link{MacroTile}}}
 \usage{
 get_TilePointer_MacroPatch()
 }

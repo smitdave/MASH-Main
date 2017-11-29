@@ -2,12 +2,12 @@
 % Please edit documentation in R/MACRO-Patch-Class.R
 \name{set_bWeightHuman_MacroPatch}
 \alias{set_bWeightHuman_MacroPatch}
-\title{MacroPatch: Set Patch's Human Biting Weight}
+\title{MacroPatch: Set Patch Human Biting Weight}
 \usage{
 set_bWeightHuman_MacroPatch(bWeightHuman)
 }
 \arguments{
-\item{bWeightHuman}{new human biting weight}
+\item{bWeightHuman}{numeric}
 }
 \description{
 Set \code{private$bWeightHuman}

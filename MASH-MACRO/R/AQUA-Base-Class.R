@@ -1,7 +1,21 @@
+###############################################################################
+#       ___
+#      /   | ____ ___  ______ _
+#     / /| |/ __ `/ / / / __ `/
+#    / ___ / /_/ / /_/ / /_/ /
+#   /_/  |_\__, /\__,_/\__,_/
+#            /_/
+#
+#   MASH-MACRO
+#   AquaPop Abstract Base Class Definition
+#   MASH Team
+#   November 2017
+#
+###############################################################################
 
-
-
-# aqua class
+###############################################################################
+# Class Definition
+###############################################################################
 
 #' Aquatic Population Abstract Base Class Definition
 #'
@@ -13,14 +27,24 @@
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'  * argument: i'm an argument!
+#'  * The constructor (initialize) method must be overwritten by all inheriting classes.
 #'
 #' @section **Methods**:
-#'  * method: i'm a method!
+#'  * oneDay_popDynamics: this method must be overwritten by all inheriting classes (pure virtual function in C++)
+#'  * oneDay_addCohort: see \code{\link{oneDay_addCohort_AquaPop_Base}}
+#'  * get_PatchPointer: see \code{\link{get_PatchPointer_AquaPop_Base}}
+#'  * set_PatchPointer: see \code{\link{set_PatchPointer_AquaPop_Base}}
+#'  * get_TilePointer: see \code{\link{get_TilePointer_AquaPop_Base}}
+#'  * set_TilePointer: see \code{\link{set_TilePointer_AquaPop_Base}}
+#'  * get_MosquitoPointer: see \code{\link{get_MosquitoPointer_AquaPop_Base}}
+#'  * set_MosquitoPointer: see \code{\link{set_MosquitoPointer_AquaPop_Base}}
 #'
 #' @section **Fields**:
-#'  * field: i'm a field!
-#'
+#'  * EggQ: set to \code{NULL} by default, not required by 'Emerge' model of aquatic ecology; see \code{\link[MASHcpp]{EggQ}}
+#'  * ImagoQ: see \code{\link[MASHcpp]{ImagoQ}}
+#'  * PatchPointer: a reference to a \code{\link{MacroPatch}} object
+#'  * TilePointer: a reference to a \code{\link{MacroTile}} object
+#'  * MosquitoPointer: a reference to an object inheriting from \code{\link{Mosquito_Base}}
 #'
 #' @md
 #' @export
@@ -67,10 +91,15 @@ AquaPop_Base <- R6::R6Class(classname = "AquaPop_Base",
 ) #end class definition
 
 
+###############################################################################
+# Base Methods
+###############################################################################
 
 #' Add Emerging Cohort to Adult Population
 #'
 #' Take emerging aquatic stage mosquitoes from \code{\link[MASHcpp]{ImagoQ}} and add to the adult population.
+#' This function interacts with all mosquito models that inherit from \code{\link{Mosquito_Base}}, and requires
+#' those models to have a \code{get_emergingAdults} method defined.
 #'
 #'  * This method is bound to \code{AquaPop_Base$oneDay_addCohort}
 #'
@@ -88,7 +117,10 @@ AquaPop_Base$set(which = "public",name = "oneDay_addCohort",
   value = oneDay_addCohort_AquaPop_Base, overwrite = TRUE
 )
 
+
+###############################################################################
 # Getters & Setters
+###############################################################################
 
 #' Get Patch Pointer
 #'
@@ -144,7 +176,7 @@ AquaPop_Base$set(which = "public",name = "set_TilePointer",
 
 #' Get Mosquito Pointer
 #'
-#' Return a pointer to the enclosing \code{\link{MacroMosquito}}
+#' Return a pointer to the mosquito population inheriting from \code{\link{Mosquito_Base}} in this tile.
 #'
 get_MosquitoPointer_AquaPop_Base <- function(){
   return(private$MosquitoPointer)
@@ -156,7 +188,7 @@ AquaPop_Base$set(which = "public",name = "get_MosquitoPointer",
 
 #' Set Mosquito Pointer
 #'
-#' Set a pointer to the enclosing \code{\link{MacroMosquito}}
+#' Set a pointer to the mosquito population inheriting from \code{\link{Mosquito_Base}} in this tile.
 #'
 #' @param MosquitoPointer a reference to \code{\link{MacroMosquito}} object
 #'

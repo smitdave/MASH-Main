@@ -1,5 +1,4 @@
 ###############################################################################
-#
 #       __  _______  _____ ____  __  ________________
 #      /  |/  / __ \/ ___// __ \/ / / /  _/_  __/ __ \
 #     / /|_/ / / / /\__ \/ / / / / / // /  / / / / / /
@@ -7,7 +6,7 @@
 #   /_/  /_/\____//____/\___\_\____/___/ /_/  \____/
 #
 #   MASH-MACRO
-#   MosquitoRM Class Definition
+#   Mosquito_RM Class Definition
 #   MASH Team
 #   November 2017
 #
@@ -15,39 +14,36 @@
 
 #' MosquitoRM Class Definition
 #'
-#' Generate a single well-mixed mosquito population which lives in a \code{\link{MacroPatch}} which lives according to Ross-Macdonald style difference equations.
+#' Generate a mosquito population living in a \code{\link{MacroTile}}, following Ross-MacDonald stype daily difference equations
+#' and simple diffusion based movement given a transition matrix.
+#' This class inherits form \code{\link{Mosquito_Base}}, this documentation only records
+#' overridden or new methods & fields, please see the base class documentation for more details.
 #'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
+#'  * M: numeric vector of adult female mosquito density of length equal to number of patches
+#'  * EIP: numeric vector of daily EIP of length 365
+#'  * p = 0.9: daily probability of survival
+#'  * f = 0.3: daily feeding rate
+#'  * Q = 0.9: human blood index
+#'  * v = 20: egg batch size
+#'  * psi = \code{NULL}: diffusion matrix, must have rows and columns equal to number of patches
 #'
 #' @section **Methods**:
-#'  * get_pop: see \code{\link{get_pop_HumanPop}}
-#'  * get_human: see \code{\link{get_human_HumanPop}}
-#'  * get_history: see \code{\link{get_history_HumanPop}}
-#'  * simHumans: see \code{\link{simHumans_HumanPop}}
+#'  * oneDay_popDynamics: see \code{\link{oneDay_popDynamics_Mosquito_RM}}
+#'  * oneDay_oviposition: see \code{\link{oneDay_oviposition_Mosquito_RM}}
+#'  * get_emergingAdults: see \code{\link{get_emergingAdults_Mosquito_RM}}
 #'
 #' @section **Fields**:
 #'  * i'm a field: write me
 #'
-#'
-#'
-#'
-#'
-#'
 #' @md
 #' @export
-MosquitoRM <- R6::R6Class(classname="MosquitoRM",
+Mosquito_RM <- R6::R6Class(classname="Mosquito_RM",
+                     inherit = Mosquito_Base,
                      portable = TRUE,
                      cloneable = FALSE,
                      lock_class = FALSE,
@@ -60,24 +56,26 @@ MosquitoRM <- R6::R6Class(classname="MosquitoRM",
                        # Constructor
                        #################################################
 
-                       initialize = function(MosquitoRM_PAR){
+                       initialize = function(M, EIP, p=0.9, f=0.3, Q=0.9, v=20, psi = NULL){
 
-                         N = nrow(MosquitoRM_PAR$psi)
+                         N = nrow(psi)
+                         if(length(EIP)!=365){stop("Mosquito_RM must be initialized with length 365 EIP vector")}
+                         if(length(M)!=N){stop("Mosquito_RM must be initialized with M vector equal to rows of psi matrix")}
 
-                         private$p             = MosquitoRM_PAR$p
-                         private$f             = MosquitoRM_PAR$f
-                         private$Q             = MosquitoRM_PAR$Q
-                         private$v             = MosquitoRM_PAR$v
-                         private$EIP           = MosquitoRM_PAR$EIP
-                         private$maxEIP        = MosquitoRM_PAR$maxEIP
+                         private$p             = p
+                         private$f             = f
+                         private$Q             = Q
+                         private$v             = v
+                         private$EIP           = EIP
+                         private$maxEIP        = max(EIP)+1L
 
-                         private$M             = MosquitoRM_PAR$M_density
+                         private$M             = M
                          private$Y             = rep(0L, N) # infected (incubating)
                          private$Z             = rep(0L, N) # infectious
-                         private$ZZ            = matrix(data=0L,nrow=MosquitoRM_PAR$maxEIP,ncol=N) # each row is the number that will be added to the infectious state on that day
+                         private$ZZ            = matrix(data=0L,nrow=private$maxEIP,ncol=N) # each row is the number that will be added to the infectious state on that day
 
-                         private$psi           = MosquitoRM_PAR$psi
-                         private$P             = MosquitoRM_PAR$p^c(1:MosquitoRM_PAR$maxEIP) # survival over EIP
+                         private$psi           = psi
+                         private$P             = p^c(1:private$maxEIP) # survival over EIP
 
                        }
 
@@ -102,13 +100,7 @@ MosquitoRM <- R6::R6Class(classname="MosquitoRM",
 
                        # Survival & Dispersion
                        psi            = NULL, # rough diffusion matrix
-                       P              = NULL,
-
-                       # Pointers
-                       TilePointer = NULL, # point to the enclosing metapopulation TILE (MACRO)
-                       PatchesPointer = NULL, # point to the enclosing Patches (a network of patches) in this metapopulation TILE (MACRO)
-                       HumansPointer = NULL # point to the HumanPop class that also lives in this metapopulation TILE
-
+                       P              = NULL
 
                      )
 

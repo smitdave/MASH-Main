@@ -2,7 +2,7 @@
 % Please edit documentation in R/MACRO-Patch-Class.R
 \name{get_bWeightHuman_MacroPatch}
 \alias{get_bWeightHuman_MacroPatch}
-\title{MacroPatch: Get Patch's Human Biting Weight}
+\title{MacroPatch: Get Patch Human Biting Weight}
 \usage{
 get_bWeightHuman_MacroPatch()
 }
