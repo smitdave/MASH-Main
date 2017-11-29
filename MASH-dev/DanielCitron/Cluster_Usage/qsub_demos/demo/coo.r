@@ -10,8 +10,8 @@ for (seed in seeds){
   
   # Setting up the 
   sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -l mem_free=", mem, "G -hold_jid ", holds,
-                    " -o /homes/dtcitron/Tutorials/qsub_practice/foo_outputs/coo_output",
-                    " -e /homes/dtcitron/Tutorials/qsub_practice/foo_outputs/coo_errors"
+                    " -o foo_outputs/coo_output",
+                    " -e foo_outputs/coo_errors"
                     )
   args <- paste(seed, sep=" ")
   # This is a shell script, says which R to use, and passes arguments to the R script
