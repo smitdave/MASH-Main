@@ -35,3 +35,26 @@ oneDay_addCohort_Patch <- function(){
 MacroPatch$set(which = "public",name = "oneDay_addCohort",
           value = oneDay_addCohort_Patch, overwrite = TRUE
 )
+
+
+
+
+
+
+
+
+reset_Patch <- function(bWeightZoo, bWeightZootox){
+
+  # reset aquatic population
+  private$AquaPop$reset()
+
+  # reset biting parameters
+  private$kappa = 0
+  private$bWeightHuman = 0
+  private$bWeightZoo = bWeightZoo
+  private$bWeightZootox = bWeightZootox
+}
+
+MacroPatch$set(which = "public",name = "reset",
+          value = reset_Patch, overwrite = TRUE
+)

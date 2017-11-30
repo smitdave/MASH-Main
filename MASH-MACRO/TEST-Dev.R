@@ -8,3 +8,6 @@ mosquitoPar = list(model="RM", M=rep(50,n),EIP = rep(11,365),p=0.9, f=0.3, Q=0.9
 
 tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar)
 tile$simMacro(tMax = 1000)
+tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
+tile$simMacro(tMax = 1000)
+tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)

@@ -70,6 +70,12 @@ AquaPop_Base <- R6::R6Class(classname = "AquaPop_Base",
                    oneDay_popDynamics = function(){
                      # C++: make this a virtual function
                      cat("oneDay_popDynamics for AquaPop_Base should never be called\n")
+                   },
+
+                   reset = function(){
+                     # C++: make this a virtual function
+                     # this resets the aquatic population between simulation runs
+                     cat("oneDay_popDynamics for AquaPop_Base should never be called\n")
                    }
 
                   ),
@@ -83,8 +89,6 @@ AquaPop_Base <- R6::R6Class(classname = "AquaPop_Base",
 
                     # Pointers
                     PatchPointer              = NULL
-                    # TilePointer               = NULL,
-                    # MosquitoPointer           = NULL
 
                   )
 

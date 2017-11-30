@@ -83,3 +83,18 @@ oneDay_popDynamics_AquaPop_Emerge <- function(){
 AquaPop_Emerge$set(which = "public",name = "oneDay_popDynamics",
   value = oneDay_popDynamics_AquaPop_Emerge, overwrite = TRUE
 )
+
+
+#' Reset the Aquatic Population
+#'
+#' Reset this aquatic population between simulation runs
+#'
+#'  * This method is bound to \code{AquaPop_Emerge$reset}
+#'
+reset_AquaPop_Emerge <- function(){
+  private$ImagoQ$clear_ImagoQ()
+}
+
+AquaPop_Emerge$set(which = "public",name = "reset",
+  value = reset_AquaPop_Emerge, overwrite = TRUE
+)

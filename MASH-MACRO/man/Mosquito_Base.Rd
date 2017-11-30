@@ -25,6 +25,7 @@ to mirror a C++ polymorphic implementation.
 \item oneDay_popDynamics: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 \item oneDay_oviposition: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 \item get_emergingAdults: this method must be overwritten by all inheriting classes (pure virtual function in C++)
+\item reset: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 \item get_HumansPointer: see \code{\link{get_HumansPointer_Mosquito_Base}}
 \item set_HumansPointer: see \code{\link{set_HumansPointer_Mosquito_Base}}
 \item get_TilePointer: see \code{\link{get_TilePointer_Mosquito_Base}}

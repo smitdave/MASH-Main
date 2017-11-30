@@ -89,3 +89,25 @@ get_emergingAdults_Mosquito_RM <- function(M,ix){
 Mosquito_RM$set(which = "public",name = "get_emergingAdults",
           value = get_emergingAdults_Mosquito_RM, overwrite = TRUE
 )
+
+
+###############################################################################
+# Reset
+###############################################################################
+
+#' Reset the Mosquito Population
+#'
+#' Reset mosquito population between simulation runs
+#'
+#'  * This method is bound to \code{Mosquito_RM$reset}
+#'
+reset_Mosquito_RM <- function(MosquitoPar){
+  private$M             = MosquitoPar$M
+  private$Y             = private$Y*0
+  private$Z             = private$Z*0
+  private$ZZ            = private$ZZ*0
+}
+
+Mosquito_RM$set(which = "public",name = "reset",
+          value = reset_Mosquito_RM, overwrite = TRUE
+)

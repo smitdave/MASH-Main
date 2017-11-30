@@ -14,7 +14,7 @@
 
 #' Run a MACRO Simulation
 #'
-#' write more stuff!!!!!!!!
+#' write me
 #'
 #'  * This method is bound to \code{MacroTile$simMacro}
 #'
@@ -36,4 +36,26 @@ simMacro <- function(tMax){
 
 MacroTile$set(which = "public",name = "simMacro",
           value = simMacro, overwrite = TRUE
+)
+
+
+#' Reset Tile between Runs
+#'
+#' write me
+#'
+#'  * This method is bound to \code{MacroTile$resetMacro}
+#'
+resetMacro <- function(PatchPar, MosquitoPar){
+
+  # reset patches
+  for(i in 1:private$nPatch){
+    private$Patches$get(as.character(i))$reset(bWeightZoo=PatchPar[[i]]$bWeightZoo, bWeightZootox=PatchPar[[i]]$bWeightZootox)
+  }
+
+  # reset mosquitoes
+  private$Mosquito$reset(MosquitoPar)
+}
+
+MacroTile$set(which = "public",name = "resetMacro",
+          value = resetMacro, overwrite = TRUE
 )

@@ -52,6 +52,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 
                      # initialize patches
                      cat("initializing patches\n")
+                     private$nPatch = nPatch
                      private$Patches = MASHcpp::HashMap$new(N = nPatch)
 
                      for(i in 1:nPatch){
