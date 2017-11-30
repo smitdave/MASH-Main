@@ -111,6 +111,12 @@ Mosquito_RM <- R6::R6Class(classname="Mosquito_RM",
 # Getters & Setters
 ###############################################################################
 
+#' Get Mosquito Density for all Patches
+#'
+#' Return the vector of mosquito densities for all patches
+#'
+#'  * This method is  bound to \code{Mosquito_RM$get_M}
+#'
 get_M_Mosquito_RM <- function(){
   return(private$M)
 }
@@ -119,14 +125,44 @@ Mosquito_RM$set(which = "public",name = "get_M",
           value = get_M_Mosquito_RM, overwrite = TRUE
 )
 
+#' Get Incubating Mosquito Density for all Patches
+#'
+#' Return the vector of incubating mosquito densities for all patches
+#'
+#'  * This method is  bound to \code{Mosquito_RM$get_Y}
+#'
 get_Y_Mosquito_RM <- function(){
   return(private$Y)
 }
 
+Mosquito_RM$set(which = "public",name = "get_Y",
+          value = get_Y_Mosquito_RM, overwrite = TRUE
+)
+
+#' Get Infectious Mosquito Density for all Patches
+#'
+#' Return the vector of infectious mosquito densities for all patches
+#'
+#'  * This method is  bound to \code{Mosquito_RM$get_Y}
+#'
 get_Z_Mosquito_RM <- function(){
   return(private$Z)
 }
 
+Mosquito_RM$set(which = "public",name = "get_Z",
+          value = get_Z_Mosquito_RM, overwrite = TRUE
+)
+
+#' Get EIP Progressing Mosquito Density for all Patches
+#'
+#' Return the matrix of mosquitoes advancing through the EIP for all patches
+#'
+#'  * This method is  bound to \code{Mosquito_RM$get_ZZ}
+#'
 get_ZZ_Mosquito_RM <- function(){
   return(private$ZZ)
 }
+
+Mosquito_RM$set(which = "public",name = "get_ZZ",
+          value = get_ZZ_Mosquito_RM, overwrite = TRUE
+)

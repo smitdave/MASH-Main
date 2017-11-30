@@ -22,8 +22,9 @@
 #'
 #' @section **Constructor**:
 #'  * nPatch: number of patches
-#'  * AquaPar: named list of parameters for aquatic ecology module (see \code{\link{AquaPop_Emerge.Parameters}} or ... for structure)
-#'  * PatchPar:
+#'  * AquaPar: named list of parameters for aquatic ecology model (see \code{\link{AquaPop_Emerge.Parameters}} or ... for structure)
+#'  * PatchPar: list of parameters (length of list must be equal to number of patches and have \code{bWeightZoo} and \code{bWeightZootox} specified)
+#'  * MosquitoPar: named list of parameters for mosquito model
 #'
 #' @section **Methods**:
 #'  * method: i'm a method!
@@ -47,7 +48,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                    # Constructor
                    #################################################
 
-                   initialize = function(nPatch, AquaPar, PatchPar){
+                   initialize = function(nPatch, AquaPar, PatchPar, MosquitoPar){
 
                      # initialize patches
                      cat("initializing patches\n")
@@ -67,10 +68,20 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 
                        patch = MacroPatch$new(patchID=i, AquaPop=AquaPop, bWeightZoo=PatchPar[[i]]$bWeightZoo, bWeightZootox=PatchPar[[i]]$bWeightZootox)
                        private$Patches$assign(key=as.character(i),value=patch)
+                       private$Patches$get(as.character(i))$set_TilePointer(self)
 
                      } # finish initializing patches
 
+                     # initialize mosquito population (in C++ Mosquito is a std::unique_ptr<Mosquito_Base> and then fill it with a derived class)
                      cat("initializing mosquito population\n")
+                     switch(MosquitoPar$model,
+                       RM = {
+                         private$Mosquito = Mosquito_RM$new(M = MosquitoPar$M, EIP = MosquitoPar$EIP, p=MosquitoPar$p, f=MosquitoPar$f, Q=MosquitoPar$Q, v=MosquitoPar$v, psi=MosquitoPar$psi)
+                       },
+                       {stop("invalid mosquito ecology model selected")}
+                     )
+                     private$Mosquito$set_TilePointer(self)
+                     # finish initializing mosquito population
 
                      cat("initializing human population\n")
 
@@ -87,7 +98,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                   private = list(
 
                     # Simulation-level parameters
-                    tStart                    = integer(1),
+                    tStart                    = 0,
                     tNow                      = integer(1),
                     nPatch                    = integer(1),
 
@@ -104,15 +115,78 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 ) #end class definition
 
 
+###############################################################################
+# Getters & Setters
+###############################################################################
 
+#' Get Current Time
+#'
+#' write me
+#'
+#'  * This method is bound to \code{MacroTile$get_tNow}
+#'
+get_tNow_MacroTile <- function(){
+  return(private$tNow)
+}
+
+MacroTile$set(which = "public",name = "get_tNow",
+          value = get_tNow_MacroTile, overwrite = TRUE
+)
+
+#' Get a Patch
+#'
+#' Return a reference to a \code{\link{MacroPatch}}
+#'
+#'  * This method is bound to \code{MacroTile$get_Patch}
+#'
+#' @param patchID a id of the patch that will be coerced to a character string key
+#'
+get_Patch_MacroTile <- function(patchID){
+  return(private$Patches$get(as.character(patchID)))
+}
+
+MacroTile$set(which = "public",name = "get_Patch",
+          value = get_Patch_MacroTile, overwrite = TRUE
+)
+
+#' Get Patches
+#'
+#' Return a reference to the \code{\link[MASHcpp]{HashMap}} object that contains all patches
+#'
+#'  * This method is bound to \code{MacroTile$get_Patches}
+#'
+get_Patches_MacroTile <- function(){
+  return(private$Patches)
+}
+
+MacroTile$set(which = "public",name = "get_Patches",
+          value = get_Patches_MacroTile, overwrite = TRUE
+)
+
+#' Get Patches
+#'
+#' Return a reference to a mosquito population derived from \code{\link{Mosquito_Base}} residing in this tile
+#'
+#'  * This method is bound to \code{MacroTile$get_MosquitoPointer}
+#'
 get_MosquitoPointer_MacroTile <- function(){
-
+  return(private$Mosquito)
 }
 
+MacroTile$set(which = "public",name = "get_MosquitoPointer",
+          value = get_MosquitoPointer_MacroTile, overwrite = TRUE
+)
+
+#' Get Patches
+#'
+#' Return a reference to the \code{\link{HumanPop}} residing in this tile
+#'
+#'  * This method is bound to \code{MacroTile$get_HumansPointer}
+#'
 get_HumansPointer_MacroTile <- function(){
-
+  return(private$HumanPop)
 }
 
-get_PatchesPointer_MacroTile <- function(){
-
-}
+MacroTile$set(which = "public",name = "get_HumansPointer",
+          value = get_HumansPointer_MacroTile, overwrite = TRUE
+)
