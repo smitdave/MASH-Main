@@ -81,54 +81,195 @@ mbitesGadget = function(...){
             fluidPage(
               helpText("Please choose parameters:"),
               navlistPanel(widths = c(2,10),
-                #########################################################################
-                tabPanel("Senescence",
+              	#########################################################################
+                tabPanel("Waiting Time",
                   column(6,
-                  checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = FALSE),
-                  conditionalPanel(condition = "!input.SENESCE",
-                  sliderInput(inputId = "sns_a", label ="Exp: a",
-                              value = 0.085, min = 0, max = 0.1, step = 0.001),
-                  sliderInput(inputId = "sns_b", label ="Exp: b",
-                              value = 100, min = 0, max = 1000, step = 1)
-                  )),
-                  column(6,
-                    plotOutput("senescence_plot")
+                    tabsetPanel(
+                      tabPanel("F",
+                        radioButtons("F_dist", "Distribution type:",
+                          c("Exponentional" = "exp",
+                            "Gamma" = "gamma",
+                            "Diurnal Pattern" = "diur"))),
+                      tabPanel("B",
+                        radioButtons("B_dist", "Distribution type:",
+                          c("Exponentional" = "exp",
+                            "Gamma" = "gamma",
+                            "Diurnal Pattern" = "diur"))),
+                      tabPanel("R",
+                        radioButtons("R_dist", "Distribution type:",
+                          c("Exponentional" = "exp",
+                            "Gamma" = "gamma",
+                            "Diurnal Pattern" = "diur"))),
+                      tabPanel("L",
+                        radioButtons("L_dist", "Distribution type:",
+                          c("Exponentional" = "exp",
+                            "Gamma" = "gamma",
+                            "Diurnal Pattern" = "diur"))),
+                      tabPanel("O",
+                        radioButtons("O_dist", "Distribution type:",
+                          c("Exponentional" = "exp",
+                            "Gamma" = "gamma",
+                            "Diurnal Pattern" = "diur"))),
+                      tabPanel("S",
+                        radioButtons("S_dist", "Distribution type:",
+                          c("Exponentional" = "exp",
+                            "Gamma" = "gamma",
+                            "Diurnal Pattern" = "diur"))),
+                      tabPanel("M",
+                        radioButtons("M_dist", "Distribution type:",
+                          c("Exponentional" = "exp",
+                            "Gamma" = "gamma",
+                            "Diurnal Pattern" = "diur"))),
+                      tabPanel("E",
+                        radioButtons("E_dist", "Distribution type:",
+                          c("Exponentional" = "exp",
+                            "Gamma" = "gamma",
+                            "Diurnal Pattern" = "diur")))
+                      )
+                    )
+                  ),
+                #############################################################################
+                tabPanel("Survival",
+                tabsetPanel(
+                    tabPanel("Flight Energetics",
+                      column(6,
+                    # sliderInput(inputId = "S_u", label ="Per-bout Energy Expenditure",
+                   #              value = 1/7, min = 0, max = 1, step = 0.01),
+                      sliderInput(inputId = "S_u_inv", label ="Numbers of Bouts",
+                                  value = 7, min = 0, max = 20, step = 1),
+                      hr(),
+                      tags$h4("As Function of Energy Reserves:"),
+                      sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probabilityof Survival",
+                                  value = 20, min = 0, max = 100, step = 1),
+                      sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probabilityof Survival",
+                                  value = 10, min = 0, max = 100, step = 1)
                     )),
+                    tabPanel("Senescence",
+                      column(6,
+                      checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = FALSE),
+                      conditionalPanel(condition = "!input.SENESCE",
+                      sliderInput(inputId = "sns_a", label ="Exp: a",
+                                  value = 0.085, min = 0, max = 0.1, step = 0.001),
+                      sliderInput(inputId = "sns_b", label ="Exp: b",
+                                  value = 100, min = 0, max = 1000, step = 1)
+                      )),
+                      column(6,
+                        plotOutput("senescence_plot")
+                        )
+                      ),
+                    tabPanel("Damage",
+                      checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
+                      sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
+                                  value = 0.5, min = 0, max = 1, step = 0.1),
+                      sliderInput(inputId = "ttsz_a", label ="Shape Param: a for Tattering Damage",
+                                  value = 5, min = 0, max = 100, step = 1),
+                      sliderInput(inputId = "ttsz_b", label ="Shape Param: b for Tattering Damage",
+                                  value = 95, min = 0, max = 100, step = 1),
+                      sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
+                                  value = 15, min = 0, max = 100, step = 1),
+                      sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
+                                  value = 500, min = 0, max = 1000, step = 10))
+                      )),
+              	
+              	#########################################################################
+              	tabPanel("Blood Meal",
+              		column(6,
+              			checkboxInput("showB_Option", "Setting Blood Meal Parameters", FALSE),
+              			conditionalPanel(condition = "input.showB_Option",
+              				checkboxInput("showBloodMeal_Option", "Blood Meal Size", FALSE),
+                      		conditionalPanel(condition = "input.showBloodMeal_Option",
+                          	sliderInput(inputId = "bm_a_Option", label ="Shape Param a for Bloodmeal Size",
+                                  value = 7.5, min = 0, max = 20, step = 0.5),
+                          	sliderInput(inputId = "bm_b_Option", label ="Shape Param b for Bloodmeal Size",
+                                  value = 2.5, min = 0, max = 20, step = 0.5)
+                        	),
+	                      	hr(),
+	                      	checkboxInput("overfeed_Option", "Overfeed", FALSE),
+	                      	conditionalPanel(condition = "input.overfeed_Option",
+	                        sliderInput(inputId = "of_a_Option", "Exp Param a for overfeeding as function of bmSize",
+	                          value = 8, min = 5, max = 10, step = 0.01),
+	                        sliderInput(inputId = "of_b_Option", "Exp Param b for overfeeding as function of bmSize",
+	                          value = 5000, min = 0, max = 10000, step = 100)),
+	                      	hr(),
+	                      	sliderInput(inputId = "preGblood_Option", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+	                        value = 0, min = 0, max = 100, step = 1),
+	                      	sliderInput(inputId = "Q_Option", label ="Human Blood Index",
+	                        value = 0.9, min = 0, max = 1, step = 0.1)
+                  	))),
+
+              	#########################################################################
+              	# tabPanel("Energetics",
+              	# 	column(6,
+              	# 	  # sliderInput(inputId = "S_u", label ="Per-bout Energy Expenditure",
+	              #    #              value = 1/7, min = 0, max = 1, step = 0.01),
+	              #     sliderInput(inputId = "S_u_inv", label ="Numbers of Bouts",
+	              #                 value = 7, min = 0, max = 20, step = 1),
+	              #     hr(),
+	              #     tags$h4("As Function of Energy Reserves:"),
+	              #     sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probabilityof Survival",
+	              #                 value = 20, min = 0, max = 100, step = 1),
+	              #     sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probabilityof Survival",
+	              #                 value = 10, min = 0, max = 100, step = 1)
+               #    )),
+              	#########################################################################
+
+              	tabPanel("Sugar Feeding",
+              		column(6,
+                	sliderInput(inputId = "S_sa", label ="Shape Param a of Probability to queue Sugar bout",
+                              value = 20, min = 0, max = 100, step = 1),
+                  	sliderInput(inputId = "S_sb", label ="Shape Param b of Probability to queue Sugar bout",
+                              value = 10, min = 0, max = 100, step = 1),
+                  	sliderInput(inputId = "energyPreG", label ="Pre-gonotrophic Energy Requirement",
+                              value = 0, min = 0, max = 100, step = 1),
+                  	hr(),
+                  	checkboxInput("showS_Option", "Sugar Feeding Parameters:", FALSE),
+                  	conditionalPanel(condition = "input.showS_Option",
+		              #sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
+		                              #value = 0.02, min = 0, max = 2, step = 0.01),
+		              h5("Mean Time Elapsed: "),
+		                fluidRow(
+		                column(3,selectInput("S_time_h_Option", label = "hours", choices = seq(0,24,1) , selected = 0)),
+		                column(3,selectInput("S_time_m_Option", label = "Minutes", choices = seq(0,55,5), selected = 30))
+		                ),
+		              sliderInput(inputId = "S_succeed_Option", label ="Probability of Success",
+		                              value = 0.99, min = 0.9, max = 1, step = 0.01),
+		              sliderInput(inputId = "S_surv_Option", label ="Baseline Probability of Survival",
+		                              value = 0.99, min = 0.9, max = 1, step = 0.01),
+		              #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+		              sliderInput(inputId = "preGsugar_Option", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+		                              value = 0, min = 0, max = 100, step = 1))
+                  		)),
+
+                #########################################################################
+                # tabPanel("Senescence",
+                #   column(6,
+                #   checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = FALSE),
+                #   conditionalPanel(condition = "!input.SENESCE",
+                #   sliderInput(inputId = "sns_a", label ="Exp: a",
+                #               value = 0.085, min = 0, max = 0.1, step = 0.001),
+                #   sliderInput(inputId = "sns_b", label ="Exp: b",
+                #               value = 100, min = 0, max = 1000, step = 1)
+                #   )),
+                #   column(6,
+                #     plotOutput("senescence_plot")
+                #     )),
                 ###########################################################################
-                tabPanel("Damage",
-                  checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
-                  sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
-                              value = 0.5, min = 0, max = 1, step = 0.1),
-                  sliderInput(inputId = "ttsz_a", label ="Shape Param: a for Tattering Damage",
-                              value = 5, min = 0, max = 100, step = 1),
-                  sliderInput(inputId = "ttsz_b", label ="Shape Param: b for Tattering Damage",
-                              value = 95, min = 0, max = 100, step = 1),
-                  sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
-                              value = 15, min = 0, max = 100, step = 1),
-                  sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
-                              value = 500, min = 0, max = 1000, step = 10)
-                  ),
+                # tabPanel("Damage",
+                #   checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
+                #   sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
+                #               value = 0.5, min = 0, max = 1, step = 0.1),
+                #   sliderInput(inputId = "ttsz_a", label ="Shape Param: a for Tattering Damage",
+                #               value = 5, min = 0, max = 100, step = 1),
+                #   sliderInput(inputId = "ttsz_b", label ="Shape Param: b for Tattering Damage",
+                #               value = 95, min = 0, max = 100, step = 1),
+                #   sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
+                #               value = 15, min = 0, max = 100, step = 1),
+                #   sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
+                #               value = 500, min = 0, max = 1000, step = 10)
+                #   ),
                 ################################################################################
-                tabPanel("Blood Feeding"
-                  ),
-                tabPanel("Energetics",
-                  sliderInput(inputId = "S_u", label ="Per-bout Energy Expenditure",
-                              value = 1/7, min = 0, max = 1, step = 0.01),
-                  hr(),
-                  tags$h4("As Function of Energy Reserves:"),
-                  sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probabilityof Survival",
-                              value = 20, min = 0, max = 100, step = 1),
-                  sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probabilityof Survival",
-                              value = 10, min = 0, max = 100, step = 1),
-                  sliderInput(inputId = "S_sa", label ="Shape Param a of Probability to queue Sugar bout",
-                              value = 20, min = 0, max = 100, step = 1),
-                  sliderInput(inputId = "S_sb", label ="Shape Param b of Probability to queue Sugar bout",
-                              value = 10, min = 0, max = 100, step = 1),
-                  sliderInput(inputId = "energyPreG", label ="Pre-gonotrophic Energy Requirement",
-                              value = 0, min = 0, max = 100, step = 1)
-                  ),
-                tabPanel("Sugar Feeding"
-                  ),
+                
+                
                 tabPanel("Estivation"
                   ),
                 tabPanel("Maturation"
@@ -864,7 +1005,116 @@ mbitesGadget = function(...){
     observe({
       toggle(condition = input$showMale, selector = "#boutbar li a[data-value=bout_male]")
     })
-    #########################################################################################
+
+
+    ##################Sync inputs for multiple pages##########################################
+    ##########################Blood Meal######################################
+    observe({
+      	updateCheckboxInput(session, "showB", NULL, value = input$showB_Option)
+  	})
+  	observe({
+      	updateCheckboxInput(session, "showB_Option", NULL, value = input$showB)
+  	})
+
+  	observe({
+      	updateCheckboxInput(session, "showBloodMeal", NULL, value = input$showBloodMeal_Option)
+  	})
+  	observe({
+      	updateCheckboxInput(session, "showBloodMeal_Option", NULL, value = input$showBloodMeal)
+  	})
+
+  	observe({
+      	updateSliderInput(session, "bm_a", NULL, value = input$bm_a_Option)
+  	})
+  	observe({
+      	updateSliderInput(session, "bm_a_Option", NULL, value = input$bm_a)
+  	})
+
+  	observe({
+      	updateSliderInput(session, "bm_b", NULL, value = input$bm_b_Option)
+  	})
+  	observe({
+      	updateSliderInput(session, "bm_b_Option", NULL, value = input$bm_b)
+  	})
+
+  	observe({
+      	updateCheckboxInput(session, "overfeed", NULL, value = input$overfeed_Option)
+  	})
+  	observe({
+      	updateCheckboxInput(session, "overfeed_Option", NULL, value = input$overfeed)
+  	})
+
+  	observe({
+      	updateSliderInput(session, "of_a", NULL, value = input$of_a_Option)
+  	})
+  	observe({
+      	updateSliderInput(session, "of_a_Option", NULL, value = input$of_a)
+  	})
+
+  	observe({
+      	updateSliderInput(session, "of_b", NULL, value = input$of_b_Option)
+  	})
+  	observe({
+      	updateSliderInput(session, "of_b_Option", NULL, value = input$of_b)
+  	})
+
+  	observe({
+      	updateSliderInput(session, "preGblood", NULL, value = input$preGblood_Option)
+  	})
+  	observe({
+      	updateSliderInput(session, "preGblood_Option", NULL, value = input$preGblood)
+  	})
+
+  	observe({
+      	updateSliderInput(session, "Q", NULL, value = input$Q_Option)
+  	})
+  	observe({
+      	updateSliderInput(session, "Q_Option", NULL, value = input$Q)
+  	})
+
+  	##########################Sugar Feeding######################################
+    observe({
+      	updateCheckboxInput(session, "showS", NULL, value = input$showS_Option)
+  	})
+  	observe({
+      	updateCheckboxInput(session, "showS_Option", NULL, value = input$showS)
+  	})
+
+  	observe({
+      	updateSelectInput(session, "S_time_h", NULL, selected = input$S_time_h_Option)
+  	})
+  	observe({
+      	updateSelectInput(session, "S_time_h_Option", NULL, selected  = input$S_time_h)
+  	})
+  	observe({
+      	updateSelectInput(session, "S_time_m", NULL, selected = input$S_time_m_Option)
+  	})
+  	observe({
+      	updateSelectInput(session, "S_time_m_Option", NULL, selected = input$S_time_m)
+  	})
+
+  	observe({
+      	updateSliderInput(session, "S_succeed", NULL, value = input$S_succeed_Option)
+  	})
+  	observe({
+      	updateSliderInput(session, "S_succeed_Option", NULL, value = input$S_succeed)
+  	})
+
+  	observe({
+      	updateSliderInput(session, "S_surv", NULL, value = input$S_surv_Option)
+  	})
+  	observe({
+      	updateSliderInput(session, "S_surv_Option", NULL, value = input$S_surv)
+  	})
+
+  	observe({
+      	updateSliderInput(session, "preGsugar", NULL, value = input$preGsugar_Option)
+  	})
+  	observe({
+      	updateSliderInput(session, "preGsugar_Option", NULL, value = input$preGsugar)
+  	})
+
+    ##########################################################################################
 
 
 
@@ -874,56 +1124,108 @@ mbitesGadget = function(...){
     
     observeEvent(input$save_inputs_bout, {
       # Define inputs to save
-      f_param_name <- c('F_time_m', 'F_time_h', 'F_succeed', 'F_surv',
-        'F_wts')
-      b_param_name <- c('B_time', 'B_succeed', 'B_surv', 'B_wts',
+      f_param_name <- c('F_time_m', 'F_time_h', 'F_succeed', 'F_surv')
+      b_param_name <- c('B_time_m', 'B_time_h','B_succeed', 'B_surv',
         'surviveH', 'probeH', 'surviveprobeH', 'feedH',
         'surviveZ', 'feedZ', 'bm_a', 'bm_b', 'overfeed', 'of_a', 'of_b', 'preGblood',
         'Q')
-      r_param_name <- c('R_time', 'R_surv', 'R_wts', 'REFEED', 'rf_a', 'rf_b')
-      l_param_name <- c('L_time', 'L_succeed','L_surv', 'L_wts')
-      o_param_name <- c('O_time', 'O_succeed', 'O_surv','O_wts')
-      m_param_name <- c('M_time', 'M_succeed', 'M_surv', 'M_wts')
-      s_param_name <- c('S_time', 'S_succeed', 'S_surv', 'S_wts', 'preGsugar')
+      r_param_name <- c('R_time_m', 'R_time_h','R_surv', 'REFEED', 'rf_a', 'rf_b')
+      l_param_name <- c('L_time_m', 'L_time_h','L_succeed','L_surv')
+      o_param_name <- c('O_time_m', 'O_time_h','O_succeed', 'O_surv')
+      m_param_name <- c('M_time_m', 'M_time_h','M_succeed', 'M_surv')
+      s_param_name <- c('S_time_m', 'S_time_h','S_succeed', 'S_surv', 'preGsugar')
       # Declare inputs
       inputs_bout <- NULL
       inputs_name <- NULL
       # Append all inputs before saving to folder
       if(input$showF){
-        inputs_name <- append(inputs_name,f_param_name)
+        
         for(input.i in f_param_name){
+          if(length(input[[input.i]]) != 0){
+          inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
-      }}
+      }}}
+
       if(input$showB){
-        inputs_name <- append(inputs_name,b_param_name)
         for(input.i in b_param_name){
+          if(length(input[[input.i]]) != 0){
+          inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
-      }}
+      }}}
+
       if(input$showR){
-        inputs_name <- append(inputs_name,r_param_name)
         for(input.i in r_param_name){
+          if(length(input[[input.i]]) != 0){
+          inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
-      }}
+      }}}
+
       if(input$showL){
-        inputs_name <- append(inputs_name,l_param_name)
         for(input.i in l_param_name){
+          if(length(input[[input.i]]) != 0){
+          inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
-      }}
+      }}}
+
       if(input$showO){
-        inputs_name <- append(inputs_name,o_param_name)
         for(input.i in o_param_name){
+          if(length(input[[input.i]]) != 0){
+          inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
-      }}
+      }}}
+
       if(input$showM){
-        inputs_name <- append(inputs_name,m_param_name)
         for(input.i in m_param_name){
+          if(length(input[[input.i]]) != 0){
+          inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
-      }}
+      }}}
+
       if(input$showS){
-        inputs_name <- append(inputs_name,s_param_name)
-        for(input.i in s_param_name){
+        for(input.i in m_param_name){
+          if(length(input[[input.i]]) != 0){
+          inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
-      }}
+      }}}
+
+
+
+
+      # if(input$showF){
+      #   inputs_name <- append(inputs_name,f_param_name)
+      #   for(input.i in f_param_name){
+      #     inputs_bout <- append(inputs_bout, input[[input.i]])
+      # }}
+      # if(input$showB){
+      #   inputs_name <- append(inputs_name,b_param_name)
+      #   for(input.i in b_param_name){
+      #     inputs_bout <- append(inputs_bout, input[[input.i]])
+      # }}
+      # if(input$showR){
+      #   inputs_name <- append(inputs_name,r_param_name)
+      #   for(input.i in r_param_name){
+      #     inputs_bout <- append(inputs_bout, input[[input.i]])
+      # }}
+      # if(input$showL){
+      #   inputs_name <- append(inputs_name,l_param_name)
+      #   for(input.i in l_param_name){
+      #     inputs_bout <- append(inputs_bout, input[[input.i]])
+      # }}
+      # if(input$showO){
+      #   inputs_name <- append(inputs_name,o_param_name)
+      #   for(input.i in o_param_name){
+      #     inputs_bout <- append(inputs_bout, input[[input.i]])
+      # }}
+      # if(input$showM){
+      #   inputs_name <- append(inputs_name,m_param_name)
+      #   for(input.i in m_param_name){
+      #     inputs_bout <- append(inputs_bout, input[[input.i]])
+      # }}
+      # if(input$showS){
+      #   inputs_name <- append(inputs_name,s_param_name)
+      #   for(input.i in s_param_name){
+      #     inputs_bout <- append(inputs_bout, input[[input.i]])
+      # }}
 
       # Inputs data.frame
       inputs_data_frame <- data.frame(inputId = inputs_name, value = inputs_bout)

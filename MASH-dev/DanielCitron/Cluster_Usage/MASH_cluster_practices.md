@@ -37,11 +37,11 @@ that you've properly benchmarked your code before starting a large job on prod.
 
 Here's how we're going to organize everything:
 
-* __/ihme/malaria__ - this is our group's main directory.  All group members have access to this.  We will use this location to store data for simulation inputs as well as simulation results.  We will also use this location to store scripts for running the simulation that need to be shared across the group.
-* __/ihme/malaria/[your name]__ - this is your directory within the group's main directory
-* __/ihme/malaria/code)__ - this is where the most recent version of the R code will go. (Already, the MASH_0.1 library has been installed at this location for people to use.)
+* __/ihme/malaria_modeling__ - this is our group's main directory.  All group members have access to this.  We will use this location to store data for simulation inputs as well as simulation results.  We will also use this location to store scripts for running the simulation that need to be shared across the group.
+* __/ihme/malaria_modeling__/[your name]__ - this is your directory within the group's main directory
+* __/ihme/malaria_modeling__/code)__ - this is where the most recent version of the R code will go. (Already, the MASH_0.1 library has been installed at this location for people to use.)
 * __/homes/[your name]__ - this is your personal directory.  Use this location for testing, developing, benchmarking, or performing other tasks that do not need to be shared with the group.
-* __/home/j/Project/malaria__ - this is on the J drive, which is backed up to tape and stored forever.  If you have some results or data that you believe should be stored forever, you can store it here.
+* __/home/j/Project/malaria_modeling__ - this is on the J drive, which is backed up to tape and stored forever.  If you have some results or data that you believe should be stored forever, you can store it here.
 
 We also need to be careful because not all directories are shared across dev and prod.
 Our group directory at /ihme/malaria and our personal directories in /homes can be accessed from both dev and prod, but there are many path locations that are not shared in this way.  If you find that a file or directory mysteriously disappears when switching between dev and prod, this is why.

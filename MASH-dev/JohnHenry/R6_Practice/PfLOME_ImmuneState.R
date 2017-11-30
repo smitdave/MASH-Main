@@ -136,6 +136,19 @@ ImmuneState <- R6Class("ImmuneState",
                            }
                          },
                          
+                         #updateTypeImmunity = function(ixH,t){ # parasites have genotype history
+                        #   ptypes = matrix(0,nAntigenLoci,max(nptypes))
+                        #   ptypesTime <<- matrix(0,nAntigenLoci,max(nptypes))
+                        #   for(j in 1:length(PfPedigree)){
+                        #     if(PfPedigree[[j]]$th > t-1 & PfPedigree[[j]]$th <= t & PfPedigree[[j]]$ixH == ixH){
+                        #       for(i in 1:nAntigenLoci){
+                        #         ptypes[i,pfped[[j]]$ptype[i]] <<- HUMANS[[ixH]]$Pf$ptypes[i,PfPedigree[[j]]$ptype[i]]+1
+                        #         ptypesTime[i,pfped[[j]]$ptype[i]] <<- t
+                        #       }
+                        #     }
+                        #   }
+                        # },
+                         
                          crossImmunity = function(ptypes,ptypesTime,nAntigenLoci,t,dxp,dtp){
                            crossImmune = ptypes
                            for(i in 1:nAntigenLoci){
@@ -145,7 +158,7 @@ ImmuneState <- R6Class("ImmuneState",
                                  ptypesTimetemp = ptypesTime[i,1:nptypes[i]]
                                  dt = t-ptypesTimetemp
                                  crossImmunetemp = crossImmune[i,1:nptypes[i]]
-                                 crossImmunetemp = crossImmunetemp + self$weight(dx,dt,dxp,dtp)*(shift(ptypestemp,dx,"right")+shift(ptypestemp,dx,"left"))
+                                 crossImmunetemp = crossImmunetemp + self$weight(dx,dt,dxp,dtp)*(self$shift(ptypestemp,dx,"right")+self$shift(ptypestemp,dx,"left"))
                                  ptypes[i,1:nptypes[i]] = ptypestemp[1:nptypes[i]]
                                  ptypesTime[i,1:nptypes[i]] = ptypesTimetemp[1:nptypes[i]]
                                  crossImmune[i,1:nptypes[i]] = crossImmunetemp[1:nptypes[i]]
@@ -157,7 +170,7 @@ ImmuneState <- R6Class("ImmuneState",
                                ptypesTimetemp = ptypesTime[i,1:nptypes[i]]
                                dt = t-ptypesTimetemp
                                crossImmunetemp = crossImmune[i,1:nptypes[i]]
-                               crossImmunetemp = crossImmunetemp + self$weight(dx,dt,dxp,dtp)*shift(ptypestemp,dx)
+                               crossImmunetemp = crossImmunetemp + self$weight(dx,dt,dxp,dtp)*self$shift(ptypestemp,dx)
                                ptypes[i,1:nptypes[i]] = ptypestemp[1:nptypes[i]]
                                ptypesTime[i,1:nptypes[i]] = ptypesTimetemp[1:nptypes[i]]
                                crossImmune[i,1:nptypes[i]] = crossImmunetemp[1:nptypes[i]]
@@ -183,9 +196,11 @@ ImmuneState <- R6Class("ImmuneState",
                          GenImm = NULL,
                          wx = NULL,
                          wn = NULL,
-                         TypeCounters = NULL,
+                         typeImm = NULL,
                          ptypes = NULL,
                          ptypesTime = NULL,
+                         dxp = NULL,
+                         dtp = NULL,
                          history = NULL
                        )
                        
