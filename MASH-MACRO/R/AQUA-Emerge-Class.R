@@ -74,7 +74,7 @@ AquaPop_Emerge <- R6::R6Class(classname = "AquaPop_Emerge",
 #'  * This method is bound to \code{AquaPop_Emerge$oneDay_popDynamics}
 #'
 oneDay_popDynamics_AquaPop_Emerge <- function(){
-  tNow = private$TilePointer$get_tNow()
+  tNow = private$PatchPointer$get_TilePointer()$get_tNow()
   lambda = private$lambda[floor(tNow)%%365+1]
   adults = rpois(n=1,lambda=lambda)
   private$ImagoQ$add_ImagoQ(N_new=adults,tEmerge_new=tNow,genotype_new=-1L)

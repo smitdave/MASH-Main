@@ -14,7 +14,10 @@ write me
 \section{\strong{Constructor}}{
 
 \itemize{
-\item argument: i'm an argument!
+\item nPatch: number of patches
+\item AquaPar: named list of parameters for aquatic ecology model (see \code{\link{AquaPop_Emerge.Parameters}} or ... for structure)
+\item PatchPar: list of parameters (length of list must be equal to number of patches and have \code{bWeightZoo} and \code{bWeightZootox} specified)
+\item MosquitoPar: named list of parameters for mosquito model
 }
 }
 

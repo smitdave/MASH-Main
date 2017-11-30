@@ -4,7 +4,10 @@
 \alias{oneDay_addCohort_AquaPop_Base}
 \title{Add Emerging Cohort to Adult Population}
 \usage{
-oneDay_addCohort_AquaPop_Base()
+oneDay_addCohort_AquaPop_Base(ix)
+}
+\arguments{
+\item{ix}{the patch ID passed down from the calling \code{\link{MacroPatch}} in \code{\link{oneDay_addCohort_Patch}}}
 }
 \description{
 Take emerging aquatic stage mosquitoes from \code{\link[MASHcpp]{ImagoQ}} and add to the adult population.
