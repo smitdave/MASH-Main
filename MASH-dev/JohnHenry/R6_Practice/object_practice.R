@@ -21,11 +21,12 @@ someGuy$get_Gtot()
 
 ################ update infection for 300 days ########################
 
-bites = c(100,200) ## unique(sort(make.bites(5, 1, 1, 5, wt=wt, trend = .05)))
+bites = c(100,200,300,400,500)
+#bites = unique(sort(make.bites(70, 10, 1, 5, wt=wt, trend = .05)))
 moi = 1+rnbinom(length(bites), mu=3, size = .3)
 pfid = 1
 
-for(t in 1:300){
+for(t in 1:600){
   someGuy$updateHuman(t)
   if(t %in% bites){
     k = which(bites==t)
@@ -43,7 +44,7 @@ for(t in 1:300){
 ######################### plotting functions #############################
 
 plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",
-     ylim=c(-3,11),xlim=c(0,300),xlab='days',ylab='log10 iRBC')
+     ylim=c(-3,11),xlim=c(0,600),xlab='days',ylab='log10 iRBC')
 lines(1:length(someGuy$get_history()$Gtot),someGuy$get_history()$Gtot,lty=2)
 lines(1:length(someGuy$get_history()$Fever),someGuy$get_history()$Fever)
 pfped$get_PedLength()
@@ -61,3 +62,4 @@ plot(1:length(someGuy$get_history()$RBC),someGuy$get_history()$RBC,type="l")
 plot(1:length(someGuy$get_history()$HRP2),someGuy$get_history()$HRP2,type="l")
 ##pLDH
 plot(1:length(someGuy$get_history()$pLDH),someGuy$get_history()$pLDH,type="l")
+

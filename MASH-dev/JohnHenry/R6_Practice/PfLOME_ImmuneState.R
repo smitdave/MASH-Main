@@ -24,6 +24,12 @@ ImmuneState <- R6Class("ImmuneState",
                            }
                            private$GenImm = 0
                            
+                           private$typeImm = 0
+                           private$dxp = 1
+                           private$dtp = 1/100
+                           ##### this next line assumes pfpedigree is declared and called pfped - be careful here
+                           private$nptypes = pfped$get_nptypes()
+                           
                          },
                          
                          get_history = function(){
@@ -42,11 +48,24 @@ ImmuneState <- R6Class("ImmuneState",
                            private$BSImm
                          },
                          
-                         update_immuneState = function(Ptot){
+                         get_typeImm = function(t,ptype){
+                           weight = self$crossImm(ptype,private$nptypes)
+                           rowSums(weight * private$typeImm)
+                         },
+                         
+                         update_immuneState = function(t,Ptot){
+                           
+                           ##BS immunity update
                            for(i in 1:private$nBSImmCounters){
                              private$BSImm[i] = with(private$BSImmCounters[[i]], F(private$BSImm[i], Ptot, PAR)) # bloodstage immune counters
                            }
                            private$GenImm = 1-prod(1-private$BSImm)
+                           
+                           ##type specific immunity update
+                           
+                           self$update_typeImmunity(t)
+                          
+                           ##history update
                            self$update_history()
                          },
                          
@@ -114,7 +133,8 @@ ImmuneState <- R6Class("ImmuneState",
                          
                          
                          #turns ptype into binary matrix, can more easily compare for cross immunity
-                         ptype2Mat = function(ptype,nAntigenLoci,nptypes){
+                         ptype2Mat = function(ptype,nptypes){
+                           nAntigenLoci = length(ptype)
                            mat = matrix(0,nAntigenLoci,max(nptypes))
                            for(i in 1:nAntigenLoci){
                              mat[i,ptype[i]] = mat[i,ptype[i]]+1
@@ -136,52 +156,29 @@ ImmuneState <- R6Class("ImmuneState",
                            }
                          },
                          
-                         #updateTypeImmunity = function(ixH,t){ # parasites have genotype history
-                        #   ptypes = matrix(0,nAntigenLoci,max(nptypes))
-                        #   ptypesTime <<- matrix(0,nAntigenLoci,max(nptypes))
-                        #   for(j in 1:length(PfPedigree)){
-                        #     if(PfPedigree[[j]]$th > t-1 & PfPedigree[[j]]$th <= t & PfPedigree[[j]]$ixH == ixH){
-                        #       for(i in 1:nAntigenLoci){
-                        #         ptypes[i,pfped[[j]]$ptype[i]] <<- HUMANS[[ixH]]$Pf$ptypes[i,PfPedigree[[j]]$ptype[i]]+1
-                        #         ptypesTime[i,pfped[[j]]$ptype[i]] <<- t
-                        #       }
-                        #     }
-                        #   }
-                        # },
-                         
-                         crossImmunity = function(ptypes,ptypesTime,nAntigenLoci,t,dxp,dtp){
-                           crossImmune = ptypes
-                           for(i in 1:nAntigenLoci){
-                             if(nptypes[i] > 2){
-                               for(dx in 1:(nptypes[i]-2)){
-                                 ptypestemp = ptypes[i,1:nptypes[i]]
-                                 ptypesTimetemp = ptypesTime[i,1:nptypes[i]]
-                                 dt = t-ptypesTimetemp
-                                 crossImmunetemp = crossImmune[i,1:nptypes[i]]
-                                 crossImmunetemp = crossImmunetemp + self$weight(dx,dt,dxp,dtp)*(self$shift(ptypestemp,dx,"right")+self$shift(ptypestemp,dx,"left"))
-                                 ptypes[i,1:nptypes[i]] = ptypestemp[1:nptypes[i]]
-                                 ptypesTime[i,1:nptypes[i]] = ptypesTimetemp[1:nptypes[i]]
-                                 crossImmune[i,1:nptypes[i]] = crossImmunetemp[1:nptypes[i]]
-                               }
-                             }
-                             if(nptypes[i]==2){
-                               dx = 1
-                               ptypestemp = ptypes[i,1:nptypes[i]]
-                               ptypesTimetemp = ptypesTime[i,1:nptypes[i]]
-                               dt = t-ptypesTimetemp
-                               crossImmunetemp = crossImmune[i,1:nptypes[i]]
-                               crossImmunetemp = crossImmunetemp + self$weight(dx,dt,dxp,dtp)*self$shift(ptypestemp,dx)
-                               ptypes[i,1:nptypes[i]] = ptypestemp[1:nptypes[i]]
-                               ptypesTime[i,1:nptypes[i]] = ptypesTimetemp[1:nptypes[i]]
-                               crossImmune[i,1:nptypes[i]] = crossImmunetemp[1:nptypes[i]]
-                             }
-                           }
-                           return(crossImmune)
+                         update_typeImmunity = function(t){
+                           nptypes = pfped$get_nptypes()
+                           private$ptypesTime = pmax(self$ptype2Mat(ptype,nptypes)*t,private$ptypesTime,na.rm=T)
+                           private$typeImm = pmax(exp(-private$dtp*private$ptypesTime),0,na.rm=T)
                          },
                          
-                         weight = function(dx,dt,dxp,dtp){
-                           exp(-(dx*dxp+dt*dtp))
+                         crossImm = function(ptype,nptypes){
+                           ptypes = self$ptype2Mat(ptype,nptypes)
+                           for(i in 1:nAntigenLoci){
+                             a = which(ptypes[i,]==1)
+                             b = which(ptypes[i,]==0)
+                             b = b[1:(nptypes[i]-1)]
+                             c = abs(a-b)
+                             ptypes[i,b]=c
+                             ptypes[i,a]=0
+                             if(nptypes[i]<max(nptypes)){
+                                ptypes[i,(nptypes[i]+1):max(nptypes)]=NaN
+                             }
+                           }
+                           pmax(exp(-private$dxp*ptypes),0,na.rm=T)
                          }
+                         
+                         
                          
                        ),
                        
@@ -196,11 +193,11 @@ ImmuneState <- R6Class("ImmuneState",
                          GenImm = NULL,
                          wx = NULL,
                          wn = NULL,
-                         typeImm = NULL,
-                         ptypes = NULL,
                          ptypesTime = NULL,
+                         typeImm = NULL,
                          dxp = NULL,
                          dtp = NULL,
+                         nptypes = NULL,
                          history = NULL
                        )
                        

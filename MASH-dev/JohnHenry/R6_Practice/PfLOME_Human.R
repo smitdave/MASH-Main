@@ -28,6 +28,7 @@ Human <- R6Class("Human",
                      mac = pfped$get_mac(pfid)
                      gtype = pfped$get_gtype(pfid)
                      BSImm = private$immuneState$get_BSImm()
+                     #typeImm = private$immuneState$get_typeImm(t,ptype)
                      private$pathogen$add_Pf(t,pfid,mic,mac,gtype,BSImm)
                      pfped$set_th(pfid,t)
                    },
@@ -46,7 +47,7 @@ Human <- R6Class("Human",
                    
                    
                    updateHuman = function(t){
-                     private$immuneState$update_immuneState(self$get_Ptot())
+                     private$immuneState$update_immuneState(t,self$get_Ptot())
                      private$healthState$update_healthState(self$get_Ptot(),self$get_history()$RBC)
                      private$pathogen$update_pathogen(t)
                    },
