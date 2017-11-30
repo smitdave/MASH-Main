@@ -22,6 +22,8 @@ if(system("whoami",intern=TRUE) == "chipdelmal"){
 }else if(system("whoami",intern=TRUE) == "smitdave"){
   DIR = "/Users/smitdave/github/MASH-Main/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
+}else{
+  setwd("your directory")
 }
 
 
@@ -88,43 +90,60 @@ mbitesGadget = function(...){
                       tabPanel("F",
                         radioButtons("F_dist", "Distribution type:",
                           c("Exponentional" = "exp",
-                            "Gamma" = "gamma",
-                            "Diurnal Pattern" = "diur"))),
+                            "Gamma" = "gamma"), inline = TRUE),
+                        conditionalPanel(condition = "input.F_dist == 'exp'",
+                          checkboxInput("F_diur", "Diurnal Pattern", FALSE)
+                          )
+                        ),
                       tabPanel("B",
                         radioButtons("B_dist", "Distribution type:",
                           c("Exponentional" = "exp",
-                            "Gamma" = "gamma",
-                            "Diurnal Pattern" = "diur"))),
+                            "Gamma" = "gamma"), inline = TRUE),
+                        conditionalPanel(condition = "input.B_dist == 'exp'",
+                          checkboxInput("B_diur", "Diurnal Pattern", FALSE)
+                          )),
                       tabPanel("R",
                         radioButtons("R_dist", "Distribution type:",
                           c("Exponentional" = "exp",
-                            "Gamma" = "gamma",
-                            "Diurnal Pattern" = "diur"))),
+                            "Gamma" = "gamma"), inline = TRUE),
+                        conditionalPanel(condition = "input.R_dist == 'exp'",
+                          checkboxInput("R_diur", "Diurnal Pattern", FALSE)
+                          )),
                       tabPanel("L",
                         radioButtons("L_dist", "Distribution type:",
                           c("Exponentional" = "exp",
-                            "Gamma" = "gamma",
-                            "Diurnal Pattern" = "diur"))),
+                            "Gamma" = "gamma"), inline = TRUE),
+                        conditionalPanel(condition = "input.L_dist == 'exp'",
+                          checkboxInput("L_diur", "Diurnal Pattern", FALSE)
+                          )),
                       tabPanel("O",
                         radioButtons("O_dist", "Distribution type:",
                           c("Exponentional" = "exp",
-                            "Gamma" = "gamma",
-                            "Diurnal Pattern" = "diur"))),
+                            "Gamma" = "gamma"), inline = TRUE),
+                        conditionalPanel(condition = "input.O_dist == 'exp'",
+                          checkboxInput("O_diur", "Diurnal Pattern", FALSE)
+                          )),
                       tabPanel("S",
                         radioButtons("S_dist", "Distribution type:",
                           c("Exponentional" = "exp",
-                            "Gamma" = "gamma",
-                            "Diurnal Pattern" = "diur"))),
+                            "Gamma" = "gamma"), inline = TRUE),
+                        conditionalPanel(condition = "input.S_dist == 'exp'",
+                          checkboxInput("S_diur", "Diurnal Pattern", FALSE)
+                          )),
                       tabPanel("M",
                         radioButtons("M_dist", "Distribution type:",
                           c("Exponentional" = "exp",
-                            "Gamma" = "gamma",
-                            "Diurnal Pattern" = "diur"))),
+                            "Gamma" = "gamma"), inline = TRUE),
+                        conditionalPanel(condition = "input.M_dist == 'exp'",
+                          checkboxInput("M_diur", "Diurnal Pattern", FALSE)
+                          )),
                       tabPanel("E",
                         radioButtons("E_dist", "Distribution type:",
                           c("Exponentional" = "exp",
-                            "Gamma" = "gamma",
-                            "Diurnal Pattern" = "diur")))
+                            "Gamma" = "gamma"), inline = TRUE),
+                        conditionalPanel(condition = "input.E_dist == 'exp'",
+                          checkboxInput("E_diur", "Diurnal Pattern", FALSE)
+                          ))
                       )
                     )
                   ),
@@ -135,7 +154,7 @@ mbitesGadget = function(...){
                       column(6,
                     # sliderInput(inputId = "S_u", label ="Per-bout Energy Expenditure",
                    #              value = 1/7, min = 0, max = 1, step = 0.01),
-                      sliderInput(inputId = "S_u_inv", label ="Numbers of Bouts",
+                      sliderInput(inputId = "S_u_inv", label ="Number of Bouts",
                                   value = 7, min = 0, max = 20, step = 1),
                       hr(),
                       tags$h4("As Function of Energy Reserves:"),
