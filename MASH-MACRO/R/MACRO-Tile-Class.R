@@ -1,9 +1,9 @@
 ###############################################################################
-#       __  ___                    _______ __
-#      /  |/  /___ _______________/_  __(_) /__
-#     / /|_/ / __ `/ ___/ ___/ __ \/ / / / / _ \
-#    / /  / / /_/ / /__/ /  / /_/ / / / / /  __/
-#   /_/  /_/\__,_/\___/_/   \____/_/ /_/_/\___/
+#     _______ __
+#    /_  __(_) /__
+#     / / / / / _ \
+#    / / / / /  __/
+#   /_/ /_/_/\___/
 #
 #   MASH-MACRO
 #   Tile Class Definition
@@ -21,7 +21,9 @@
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'  * argument: i'm an argument!
+#'  * nPatch: number of patches
+#'  * AquaPar: named list of parameters for aquatic ecology module (see \code{\link{AquaPop_Emerge.Parameters}} or ... for structure)
+#'  * PatchPar:
 #'
 #' @section **Methods**:
 #'  * method: i'm a method!
@@ -45,7 +47,35 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                    # Constructor
                    #################################################
 
-                   initialize = function(){
+                   initialize = function(nPatch, AquaPar, PatchPar){
+
+                     # initialize patches
+                     cat("initializing patches\n")
+                     private$Patches = MASHcpp::HashMap$new(N = nPatch)
+
+                     for(i in 1:nPatch){
+
+                       switch(AquaPar$model,
+                         Emerge = {
+                           AquaPop = AquaPop_Emerge$new(lambda = AquaPar$Patches[[i]]$lambda)
+                         },
+                         EL4P = {
+                           stop("not written yet")
+                         },
+                         {stop("invalid aquatic ecology model selected")}
+                       )
+
+                       patch = MacroPatch$new(patchID=i, AquaPop=AquaPop, bWeightZoo=PatchPar[[i]]$bWeightZoo, bWeightZootox=PatchPar[[i]]$bWeightZootox)
+                       private$Patches$assign(key=as.character(i),value=patch)
+
+                     } # finish initializing patches
+
+                     cat("initializing mosquito population\n")
+
+                     cat("initializing human population\n")
+
+                     cat("setting pointers\n")
+
 
                    } # end constructor
 
@@ -57,8 +87,9 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                   private = list(
 
                     # Simulation-level parameters
-                    tStart                    = NULL,
-                    tNow                      = NULL,
+                    tStart                    = integer(1),
+                    tNow                      = integer(1),
+                    nPatch                    = integer(1),
 
                     # class containers
                     Patches                   = NULL,
@@ -66,17 +97,22 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                     Mosquito                  = NULL,
 
                     # Output Connections
-                    directory                 = NULL
+                    directory                 = character(1)
 
                   )
 
 ) #end class definition
 
 
-get_Patch_MacroTile <- function(ix = NULL){
-  if(!is.null(ix)){
-    return(private$Patches[[ix]])
-  } else {
-    return(private$Patches)
-  }
+
+get_MosquitoPointer_MacroTile <- function(){
+
+}
+
+get_HumansPointer_MacroTile <- function(){
+
+}
+
+get_PatchesPointer_MacroTile <- function(){
+
 }

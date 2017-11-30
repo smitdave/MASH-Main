@@ -82,9 +82,9 @@ AquaPop_Base <- R6::R6Class(classname = "AquaPop_Base",
                     ImagoQ                    = NULL,
 
                     # Pointers
-                    PatchPointer              = NULL,
-                    TilePointer               = NULL,
-                    MosquitoPointer           = NULL
+                    PatchPointer              = NULL
+                    # TilePointer               = NULL,
+                    # MosquitoPointer           = NULL
 
                   )
 
@@ -108,7 +108,7 @@ oneDay_addCohort_AquaPop_Base <- function(){
 
   if(length(EmergingAdults) > 0){
     for(i in 1:length(EmergingAdults)){
-      private$MosquitoPointer$get_emergingAdults(M=EmergingAdults[[i]]$N,ix=private$PatchPointer$get_patchID())
+      private$PatchPointer$get_TilePointer()$get_MosquitoPointer()$get_emergingAdults(M=EmergingAdults[[i]]$N,ix=private$PatchPointer$get_patchID())
     }
   }
 }
@@ -148,54 +148,54 @@ AquaPop_Base$set(which = "public",name = "set_PatchPointer",
   value = set_PatchPointer_AquaPop_Base, overwrite = TRUE
 )
 
-#' Get Tile Pointer
-#'
-#' Return a pointer to the enclosing \code{\link{MacroTile}}
-#'
-get_TilePointer_AquaPop_Base <- function(){
-  return(private$TilePointer)
-}
-
-AquaPop_Base$set(which = "public",name = "get_TilePointer",
-  value = get_TilePointer_AquaPop_Base, overwrite = TRUE
-)
-
-#' Set Tile Pointer
-#'
-#' Set a pointer to the enclosing \code{\link{MacroTile}}
-#'
-#' @param TilePointer a reference to \code{\link{MacroTile}} object
-#'
-set_TilePointer_AquaPop_Base <- function(TilePointer){
-  private$TilePointer = TilePointer
-}
-
-AquaPop_Base$set(which = "public",name = "set_TilePointer",
-  value = set_TilePointer_AquaPop_Base, overwrite = TRUE
-)
-
-#' Get Mosquito Pointer
-#'
-#' Return a pointer to the mosquito population inheriting from \code{\link{Mosquito_Base}} in this tile.
-#'
-get_MosquitoPointer_AquaPop_Base <- function(){
-  return(private$MosquitoPointer)
-}
-
-AquaPop_Base$set(which = "public",name = "get_MosquitoPointer",
-  value = get_MosquitoPointer_AquaPop_Base, overwrite = TRUE
-)
-
-#' Set Mosquito Pointer
-#'
-#' Set a pointer to the mosquito population inheriting from \code{\link{Mosquito_Base}} in this tile.
-#'
-#' @param MosquitoPointer a reference to \code{\link{MacroMosquito}} object
-#'
-set_MosquitoPointer_AquaPop_Base <- function(MosquitoPointer){
-  private$MosquitoPointer = MosquitoPointer
-}
-
-AquaPop_Base$set(which = "public",name = "set_MosquitoPointer",
-  value = set_MosquitoPointer_AquaPop_Base, overwrite = TRUE
-)
+# #' Get Tile Pointer
+# #'
+# #' Return a pointer to the enclosing \code{\link{MacroTile}}
+# #'
+# get_TilePointer_AquaPop_Base <- function(){
+#   return(private$TilePointer)
+# }
+#
+# AquaPop_Base$set(which = "public",name = "get_TilePointer",
+#   value = get_TilePointer_AquaPop_Base, overwrite = TRUE
+# )
+#
+# #' Set Tile Pointer
+# #'
+# #' Set a pointer to the enclosing \code{\link{MacroTile}}
+# #'
+# #' @param TilePointer a reference to \code{\link{MacroTile}} object
+# #'
+# set_TilePointer_AquaPop_Base <- function(TilePointer){
+#   private$TilePointer = TilePointer
+# }
+#
+# AquaPop_Base$set(which = "public",name = "set_TilePointer",
+#   value = set_TilePointer_AquaPop_Base, overwrite = TRUE
+# )
+#
+# #' Get Mosquito Pointer
+# #'
+# #' Return a pointer to the mosquito population inheriting from \code{\link{Mosquito_Base}} in this tile.
+# #'
+# get_MosquitoPointer_AquaPop_Base <- function(){
+#   return(private$MosquitoPointer)
+# }
+#
+# AquaPop_Base$set(which = "public",name = "get_MosquitoPointer",
+#   value = get_MosquitoPointer_AquaPop_Base, overwrite = TRUE
+# )
+#
+# #' Set Mosquito Pointer
+# #'
+# #' Set a pointer to the mosquito population inheriting from \code{\link{Mosquito_Base}} in this tile.
+# #'
+# #' @param MosquitoPointer a reference to \code{\link{MacroMosquito}} object
+# #'
+# set_MosquitoPointer_AquaPop_Base <- function(MosquitoPointer){
+#   private$MosquitoPointer = MosquitoPointer
+# }
+#
+# AquaPop_Base$set(which = "public",name = "set_MosquitoPointer",
+#   value = set_MosquitoPointer_AquaPop_Base, overwrite = TRUE
+# )

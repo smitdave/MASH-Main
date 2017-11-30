@@ -1,14 +1,14 @@
 ###############################################################################
-#       __  ___                      ____        __       __
-#      /  |/  /___ _______________  / __ \____ _/ /______/ /_
-#     / /|_/ / __ `/ ___/ ___/ __ \/ /_/ / __ `/ __/ ___/ __ \
-#    / /  / / /_/ / /__/ /  / /_/ / ____/ /_/ / /_/ /__/ / / /
-#   /_/  /_/\__,_/\___/_/   \____/_/    \__,_/\__/\___/_/ /_/
+#       ____        __       __
+#      / __ \____ _/ /______/ /_
+#     / /_/ / __ `/ __/ ___/ __ \
+#    / ____/ /_/ / /_/ /__/ / / /
+#   /_/    \__,_/\__/\___/_/ /_/
 #
 #   MASH-MACRO
-#   MACRO: MacroPatch Class Definition
-#   David Smith, Hector Sanchez, Sean Wu
-#   August 18, 2017
+#   Patch Class Definition
+#   MASH Team
+#   November 2017
 #
 ###############################################################################
 
@@ -49,6 +49,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
 
                      private$patchID = patchID
                      private$AquaPop = AquaPop
+                     private$AquaPop$set_PatchPointer(self)
 
                    }
 
@@ -60,7 +61,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                     # id of this patch
                     patchID                   = integer(1),
 
-                    # AquaPop (in C++ this would be a pointer to base class AquaPop_Base)
+                    # AquaPop (in C++ this would be a pointer to base class AquaPop_Base; the Patch should take ownership of the AquaPop)
                     AquaPop                   = NULL,
 
                     # infection dynamic parameters

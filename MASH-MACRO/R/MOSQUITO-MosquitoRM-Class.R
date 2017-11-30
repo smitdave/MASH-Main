@@ -105,3 +105,28 @@ Mosquito_RM <- R6::R6Class(classname="Mosquito_RM",
                      )
 
 ) #end class definition
+
+
+###############################################################################
+# Getters & Setters
+###############################################################################
+
+get_M_Mosquito_RM <- function(){
+  return(private$M)
+}
+
+Mosquito_RM$set(which = "public",name = "get_M",
+          value = get_M_Mosquito_RM, overwrite = TRUE
+)
+
+get_Y_Mosquito_RM <- function(){
+  return(private$Y)
+}
+
+get_Z_Mosquito_RM <- function(){
+  return(private$Z)
+}
+
+get_ZZ_Mosquito_RM <- function(){
+  return(private$ZZ)
+}

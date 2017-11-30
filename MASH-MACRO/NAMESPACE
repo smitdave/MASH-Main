@@ -2,6 +2,7 @@
 
 export(AquaPop_Base)
 export(AquaPop_Emerge)
+export(AquaPop_Emerge.Parameters)
 export(DEBUG.MASHMACRO)
 export(Human)
 export(HumanPop)
