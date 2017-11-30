@@ -1,5 +1,21 @@
 [
     {
+        "inputId": "F_time_m",
+        "value": "30"
+    },
+    {
+        "inputId": "F_time_h",
+        "value": "0"
+    },
+    {
+        "inputId": "F_succeed",
+        "value": "0.98"
+    },
+    {
+        "inputId": "F_surv",
+        "value": "0.99"
+    },
+    {
         "inputId": "B_time_m",
         "value": "30"
     },
