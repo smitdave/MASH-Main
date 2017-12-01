@@ -176,7 +176,7 @@ AquaticSite <- R6::R6Class(classname = "AquaticSite",
                    numGenotypes = integer(1),
 
                    # Pointers
-                   LandscapePointer = NULL
+                   LandscapePointer = NULL,
 
                    # Vector Control
                    aerialSpray=NULL,
