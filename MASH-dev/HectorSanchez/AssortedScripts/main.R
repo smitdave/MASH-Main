@@ -33,8 +33,6 @@ if(system("whoami",intern=TRUE)=="slwu89"){
   sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
 }
 
-
-
 # setup
 Humans.MICRO.Setup()
 PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
@@ -92,6 +90,11 @@ for(i in 1:aquaSitesNumber){
   MicroTile$get_Landscape()$get_AquaSites(i)$set_ovitrap(ovitrapTest)
 }
 ### Feeding ####################################################
+feedingSitesNumber=MicroTile$get_Landscape()$get_FeedingSitesN()
+for(i in 1:feedingSitesNumber){
+  irsTest=IRS$new(id=i,killProbability=0,repelProbability=0)
+  MicroTile$get_Landscape()$get_FeedingSites(i)$set_indoorResidualSpray(irsTest)
+}
 ### Mating #####################################################
 matingSitesNumber=MicroTile$get_Landscape()$get_MatingSitesN()
 for(i in 1:matingSitesNumber){

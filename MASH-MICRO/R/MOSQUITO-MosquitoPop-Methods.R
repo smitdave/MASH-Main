@@ -129,7 +129,7 @@ MosquitoPopMale$set(which = "public",name = "get_pop",
 #'
 get_N_MosquitoPop <- function(){
   alive = private$pop$apply(tag="isAlive",returnVal=TRUE)
-  return(sum(alive))
+  return(sum(unlist(alive)))
 }
 
 MosquitoPopFemale$set(which = "public",name = "get_N",
