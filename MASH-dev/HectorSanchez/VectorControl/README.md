@@ -18,7 +18,7 @@ This is a re-implementation of my old mosquito-control routines. The whole set i
     - EaveTube: [ ] [ ] [ ] [ ] [ ]
     - ImproveHome: [ ] [ ] [ ] [ ] [ ]
   - HumanIntervention (virtual)
-    - PersonalRepellant [ ] [ ] [ ] [ ] [ ]
+    - PersonalRepellant: [ ] [ ] [ ] [ ] [ ]
     - ITN: [ ] [ ] [ ] [ ] [ ]
     - Swat: [ ] [ ] [ ] [ ] [ ]
   - MatingIntervention (virtual)
@@ -28,8 +28,8 @@ This is a re-implementation of my old mosquito-control routines. The whole set i
   - MultiLocationIntervention (virtual)
     - AerialSpray: [ ] [ ] [ ] [ ] [ ]
 
-Checkboxes key: addedInLandscape, addedInteractionWithMosquito, runsWithoutErrors, tested, hasBeenVerified
+Checkboxes key: [addedInLandscape/Human, addedInteractionWithMosquito, runsWithoutErrors, tested, hasBeenVerified]
 
 The accessors/mutators have been coded as part of the main package in: https://github.com/smitdave/MASH-Main/blob/master/MASH-MICRO/R/Site-Methods-VectorControl.R; but have not been documented.
 
-_Note: The repellency effects are yet to be tested by SLWU, so these might not be in place yet._
+_Note: The repellency effects are yet to be tested by SLWU, so these might not be in place. See issues tab for more information on missing behaviors._
