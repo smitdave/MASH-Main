@@ -91,6 +91,13 @@ for(i in 1:aquaSitesNumber){
   ovitrapTest=Ovitrap$new(id=i,killProbability=0,repelProbability=0)
   MicroTile$get_Landscape()$get_AquaSites(i)$set_ovitrap(ovitrapTest)
 }
+### Feeding ####################################################
+### Mating #####################################################
+matingSitesNumber=MicroTile$get_Landscape()$get_MatingSitesN()
+for(i in 1:matingSitesNumber){
+  swarmSprayTest=SwarmSpray$new(id=i,killProbability=0,repelProbability=0)
+  MicroTile$get_Landscape()$get_MatingSites(i)$set_swarmSpray(swarmSprayTest)
+}
 ###### Run #############################################################################
 MicroTile$simMICRO_oneRun(tMax = 20,verbose = TRUE,trackPop = TRUE)
 

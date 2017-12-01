@@ -410,6 +410,11 @@ mbites_boutM <- function(){
       self$chooseMate()
       private$stateNew = "F"
     }
+    swarmSpray=private$LandscapePointer$get_MatingSites(private$locNow)$get_swarmSpray()
+    if(is.null(swarmSpray)==FALSE){
+        private$stateNew = swarmSpray$mosquitoKillEncounter(private$stateNew,interventionType="SwarmSpray")
+        private$lspot = swarmSpray$mosquitoRepelEncounter(private$lspot,interventionType="SwarmSpray")
+    }
   }
 
 }
