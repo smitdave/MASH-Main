@@ -22,7 +22,11 @@ if(system("whoami",intern=TRUE) == "chipdelmal"){
 }else if(system("whoami",intern=TRUE) == "smitdave"){
   DIR = "/Users/smitdave/github/MASH-Main/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
-}else{
+}else if(system("whoami",intern=TRUE) == "sanchez.hmsc"){
+  DIR = "/Users/sanchez.hmsc/Documents/github/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
+  setwd(DIR)
+}
+else{
   setwd("your directory")
 }
 
@@ -53,7 +57,7 @@ mbitesGadget = function(...){
             $('#nav a:contains(\"' + nav_label + '\")').parent().removeClass('hide');
         });
    ")),
-                       
+
       titlePanel(h1("MBITES Gadget")),
       navbarPage("Welcome ", id = "nav",
           #################################################################################
@@ -65,10 +69,10 @@ mbitesGadget = function(...){
                 ),
                 ###########################################################################
                 tabPanel("Launch a project",
-                  h2("Welcome to MBITES!"), 
+                  h2("Welcome to MBITES!"),
                   hr(),
                   h4("To launch your project, please choose:"),
-                  radioButtons("project", "", 
+                  radioButtons("project", "",
                     c("First time user (Run our demo project)" = "demo",
                       "Start a new project" = "new",
                       "Work on an existing project" = "exist")),
@@ -200,7 +204,7 @@ mbitesGadget = function(...){
 
                       )
                       )),
-              	
+
               	#########################################################################
               	tabPanel("Blood Meal",
               		column(8,
@@ -313,8 +317,8 @@ mbitesGadget = function(...){
                 #               value = 500, min = 0, max = 1000, step = 10)
                 #   ),
                 ################################################################################
-                
-                
+
+
                 tabPanel("Estivation"
                   ),
                 tabPanel("Maturation"
@@ -339,8 +343,8 @@ mbitesGadget = function(...){
                   textInput("M_wts", "M: Mating", "1,1,1,1,1"),
                   textInput("S_wts", "S: Sugar Feeding Attempt", "1,1,1,1,1")
 
-                              
-                  
+
+
                   ),
                 tabPanel("Egg",
                   sliderInput(inputId = "bs_m", label ="Mean of Normally-distributed Egg Batch Size",
@@ -392,7 +396,7 @@ mbitesGadget = function(...){
                       title = "F",
                       value = "bout_f",
                       uiOutput('panel_f')
-                        
+
                       ),
                     tabPanel(
                       title = "B",
@@ -447,7 +451,7 @@ mbitesGadget = function(...){
 
           #################################################################################
           tabPanel(title = "Landscape", value = 'landscape',
-          	useShinyjs(),                 
+          	useShinyjs(),
             sidebarLayout(position = "right",
               sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
                 helpText("Please set the parameters"),
@@ -465,8 +469,8 @@ mbitesGadget = function(...){
                     		selected = "cluster"),
                     	conditionalPanel(condition = "input.landscape_f_input != 'cluster'",
                     		fileInput('filef', 'Choose CSV File',
-                       			accept=c('text/csv', 
-                                'text/comma-separated-values,text/plain', 
+                       			accept=c('text/csv',
+                                'text/comma-separated-values,text/plain',
                                 '.csv')),
                     		wellPanel(checkboxInput('headerf', 'Header', TRUE),
                  			radioButtons('sepf', 'Separator',
@@ -488,8 +492,8 @@ mbitesGadget = function(...){
                     		selected = "cluster"),
                     	conditionalPanel(condition = "input.landscape_m_input != 'cluster'",
                     		fileInput('filem', 'Choose CSV File',
-                       			accept=c('text/csv', 
-                                'text/comma-separated-values,text/plain', 
+                       			accept=c('text/csv',
+                                'text/comma-separated-values,text/plain',
                                 '.csv')),
                     		wellPanel(checkboxInput('headerm', 'Header', TRUE),
                  			radioButtons('sepm', 'Separator',
@@ -511,8 +515,8 @@ mbitesGadget = function(...){
                     		selected = "cluster"),
                     	conditionalPanel(condition = "input.landscape_s_input != 'cluster'",
                     		fileInput('files', 'Choose CSV File',
-                       			accept=c('text/csv', 
-                                'text/comma-separated-values,text/plain', 
+                       			accept=c('text/csv',
+                                'text/comma-separated-values,text/plain',
                                 '.csv')),
                     		wellPanel(checkboxInput('headers', 'Header', TRUE),
                  			radioButtons('seps', 'Separator',
@@ -564,7 +568,7 @@ mbitesGadget = function(...){
                 )
           )),
           #################################################################################
-          tabPanel(title = "Ecology", value = "ecology",              
+          tabPanel(title = "Ecology", value = "ecology",
             sidebarLayout(position = "right",
               sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
                 checkboxInput("showEmerge", "Emerge", FALSE),
@@ -602,7 +606,7 @@ mbitesGadget = function(...){
     })
 
     output$senescence_plot <- renderPlot({
-    	
+
       age <- seq(0, 50, 0.001)
       senescence_surv <- function(x, ...){
         (2 + input$sns_b)/(1 + input$sns_b) - exp(x * input$sns_a)/(input$sns_b + x * input$sns_a)
@@ -611,7 +615,7 @@ mbitesGadget = function(...){
       ggplot(data.frame(age), aes(x = age)) + stat_function(fun= senescence_surv) + ylim(0,1) +
         xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
     	}else{
-    	ggplot(data.frame(age), aes(age)) + geom_hline(aes(yintercept = 1)) + ylim(0,1) + 
+    	ggplot(data.frame(age), aes(age)) + geom_hline(aes(yintercept = 1)) + ylim(0,1) +
     	scale_x_discrete()+
         xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
     	}
@@ -645,7 +649,7 @@ mbitesGadget = function(...){
         curve(exp(input$S_a * x)/(exp(input$S_a * x) + input$S_b), ylab = "Mortality", xlab = "Energy Reserves")
     })
     output$tattering_exp_plot <- renderPlot({
-        curve(exp(input$ttr_a * x)/(exp(input$ttr_a * x) + input$ttr_b), ylab = "Mortality", xlab = "Wing Tattering", 
+        curve(exp(input$ttr_a * x)/(exp(input$ttr_a * x) + input$ttr_b), ylab = "Mortality", xlab = "Wing Tattering",
           main = "Exponentional Distribution")
     })
 
@@ -659,27 +663,27 @@ mbitesGadget = function(...){
 
 
 ######################################Landscape Output###########################################################
-    dataF <- reactive({ 
-	    req(input$filef) 
-	    inFileF <- input$filef 
+    dataF <- reactive({
+	    req(input$filef)
+	    inFileF <- input$filef
 	    dfF <- read.csv(inFileF$datapath, header = input$headerf, sep = input$sepf)
 	    return(dfF)
 	  })
 	output$contentsF <- renderTable({
 	      dataF()
 	  })
-	dataM <- reactive({ 
-	    req(input$filem) 
-	    inFileM <- input$filem 
+	dataM <- reactive({
+	    req(input$filem)
+	    inFileM <- input$filem
 	    dfM <- read.csv(inFileM$datapath, header = input$headerm, sep = input$sepm)
 	    return(dfM)
 	  })
 	output$contentsM <- renderTable({
 	      dataM()
 	  })
-	dataS <- reactive({ 
-	    req(input$files) 
-	    inFileS <- input$files 
+	dataS <- reactive({
+	    req(input$files)
+	    inFileS <- input$files
 	    dfS <- read.csv(inFileS$datapath, header = input$headers, sep = input$seps)
 	    return(dfS)
 	  })
@@ -707,8 +711,8 @@ mbitesGadget = function(...){
 			  x = x[-1]
 			  y = y[-1]
 
-			  plot(x,y, pch = 15, col = "red") 
-			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))  
+			  plot(x,y, pch = 15, col = "red")
+			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
 			}
 
 			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
@@ -730,7 +734,7 @@ mbitesGadget = function(...){
     	 	xF <- dataF()[, 1:2]
 	    	plot(xF, col="red")
     	 }
-      
+
     })
 
 
@@ -754,8 +758,8 @@ mbitesGadget = function(...){
 			  x = x[-1]
 			  y = y[-1]
 
-			  plot(x,y, pch = 15, col = "red") 
-			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))  
+			  plot(x,y, pch = 15, col = "red")
+			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
 			}
 
 			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
@@ -779,7 +783,7 @@ mbitesGadget = function(...){
     	 	xM <- dataM()[, 1:2]
 	    	plot(xM, col="blue")
     	 }
-      
+
     })
 
     output$panel_landscape_out_s <- renderPlot({
@@ -802,8 +806,8 @@ mbitesGadget = function(...){
 			  x = x[-1]
 			  y = y[-1]
 
-			  plot(x,y, pch = 15, col = "red") 
-			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))  
+			  plot(x,y, pch = 15, col = "red")
+			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
 			}
 
 			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
@@ -827,7 +831,7 @@ mbitesGadget = function(...){
     	 	xS <- dataS()[, 1:2]
 	    	plot(xS, col="green")
     	 }
-      
+
     })
 
     observe({
@@ -843,7 +847,7 @@ mbitesGadget = function(...){
 
 ######################################################################################################################
     observe({
-        if (input$launchgo > 0) { 
+        if (input$launchgo > 0) {
             session$sendCustomMessage('activeNavs', 'Options')
         }
     })
@@ -911,7 +915,7 @@ mbitesGadget = function(...){
                 column(6,selectInput("B_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
                       ),
               sliderInput(inputId = "B_succeed", label ="Probability of Success",
-                          value = 0.95, min = 0.8, max = 1, step = 0.01),                #                     
+                          value = 0.95, min = 0.8, max = 1, step = 0.01),                #
               sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",
                           value = 0.99, min = 0.9, max = 1, step = 0.01),
               #textInput("B_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
@@ -984,7 +988,7 @@ mbitesGadget = function(...){
                 sliderInput(inputId = "rf_b", "Exp Param b for refeeding as function of bmSize",
                   value = 5000, min = 0, max = 10000, step = 100))))
               )
-        })    
+        })
     output$panel_l <- renderUI({
         if (input$showL)
           column(6,
@@ -1057,7 +1061,7 @@ mbitesGadget = function(...){
               #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
               sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
                               value = 0, min = 0, max = 100, step = 1)))
-    })    
+    })
     output$panel_e <- renderUI({
         if (input$showE)
           column(6,
@@ -1073,7 +1077,7 @@ mbitesGadget = function(...){
               conditionalPanel(condition = "input.showMaleM",
                 wellPanel("test")
               ))
-    }) 
+    })
     observe({
       toggle(condition = input$showF, selector = "#boutbar li a[data-value=bout_f]")
     })
@@ -1217,7 +1221,7 @@ mbitesGadget = function(...){
     observeEvent(input$done, {
       stopApp(brushedPoints(data, input$brush))
     })
-    
+
     observeEvent(input$save_inputs_bout, {
       # Define inputs to save
       f_param_name <- c('F_time_m', 'F_time_h', 'F_succeed', 'F_surv')
@@ -1235,7 +1239,7 @@ mbitesGadget = function(...){
       inputs_name <- NULL
       # Append all inputs before saving to folder
       if(input$showF){
-        
+
         for(input.i in f_param_name){
           if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1289,7 +1293,7 @@ mbitesGadget = function(...){
       # Save Inputs
       jsonOut=prettify(toJSON(inputs_data_frame))
       write(jsonOut,paste0(DIR,"/bouts.json"))
-    }) 
+    })
   }
   #########################################################################################
   # RUN
