@@ -23,10 +23,8 @@ Python script that uses OSMnx to parse building's coordinates and streets into S
 
 ## Contact
 
- * sanchez.hmsc@berkeley.edu
- * chipdelmal@gmail.com
  * [chipdelmal.github.io](chipdelmal.github.io)
-
+ * sanchez.hmsc@berkeley.edu
 
 <center>
   <img src="https://chipdelmal.github.io/images/mangoGuitar.jpg" alt="Drawing" style="width: 50px;" align="middle"/>
