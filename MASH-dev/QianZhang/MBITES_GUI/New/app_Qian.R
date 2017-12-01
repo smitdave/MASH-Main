@@ -396,7 +396,8 @@ mbitesGadget = function(...){
                   checkboxInput("showS", "S: Sugar Feeding Attempt", FALSE),
                   checkboxInput("showE", "E: Estivation", FALSE),
                   checkboxInput("showMale", "Male Mosquitoes", FALSE),
-                  actionButton('save_inputs_bout', 'Save inputs',width = "100%")
+                  actionButton('save_inputs_bout', 'Save inputs',width = "100%"),
+                  tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});')))
                 )
                 ,
                 mainPanel(
@@ -919,6 +920,11 @@ mbitesGadget = function(...){
         js_string_4 <-'alert("Folder exists. Please rename your project and try it again!");'
         session$sendCustomMessage(type='jsCode', list(value = js_string_4))
       }
+    })
+
+    observeEvent(input$save_inputs_bout, {
+        js_string_5 <- 'alert("Saved Parameters!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string_5))
     })
 
 
