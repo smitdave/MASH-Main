@@ -21,7 +21,7 @@
 #'
 oneDay_popDynamics_Mosquito_RM <- function(){
 
-  EIP = self$get_EIP(tNow = private$PatchPointer$get_tNow())
+  EIP = private$EIP[private$TilePointer$get_tNow()%%365]
 
   # daily dynamics
   private$M = private$p * private$M
@@ -29,7 +29,8 @@ oneDay_popDynamics_Mosquito_RM <- function(){
   private$Z = private$p * private$Z
 
   # number of newly infected mosquitoes
-  private$Y0 = private$f * private$Q * private$PatchPointer$get_kappa() * (private$M - private$Y)
+  kappa = private$TilePointer$get_Patches()$apply(tag="get_kappa",returnVal=TRUE)
+  private$Y0 = private$f * private$Q * unlist(kappa,use.names = FALSE) * (private$M - private$Y)
   if(any(private$Y0<0)){
     private$Y0[which(private$Y0<0)] = 0
   }
@@ -49,7 +50,7 @@ oneDay_popDynamics_Mosquito_RM <- function(){
   private$ZZ[private$maxEIP,] = 0
 
   if(!is.null(private$psi)){
-    private$ZZ[EIP,] = private$ZZ[EIP,] + private$P[EIP] * private$Psi %*% private$Y0
+    private$ZZ[EIP,] = private$ZZ[EIP,] + private$P[EIP] * private$psi %*% private$Y0
   } else {
     private$ZZ[EIP,] = private$ZZ[EIP,] + private$P[EIP] * private$Y0
   }
@@ -65,7 +66,7 @@ Mosquito_RM$set(which = "public",name = "oneDay_popDynamics",
 #'
 #' Run mosquito populations through single step of Ross-MacDonald style population dynamics and diffusion between patches.
 #'
-#'  * This method is bound to \code{Mosquito_RM$oneDay_popDynamics}
+#'  * This method is bound to \code{Mosquito_RM$oneDay_oviposition}
 #'
 oneDay_oviposition_Mosquito_RM <- function(){
   return(NULL)

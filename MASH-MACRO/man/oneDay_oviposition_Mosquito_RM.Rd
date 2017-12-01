@@ -11,6 +11,6 @@ Run mosquito populations through single step of Ross-MacDonald style population 
 }
 \details{
 \itemize{
-\item This method is bound to \code{Mosquito_RM$oneDay_popDynamics}
+\item This method is bound to \code{Mosquito_RM$oneDay_oviposition}
 }
 }
