@@ -128,6 +128,20 @@ MacroPatch$set(which = "public",name = "accumulate_bWeightHuman",
   value = accumulate_bWeightHuman_MacroPatch, overwrite = TRUE
 )
 
+#' MacroPatch: Decrement Patch Human Biting Weight
+#'
+#' Decrement \code{private$bWeightHuman} (equivalent to private$bWeightHuman -= bWeightHuman)
+#'
+#' @param bWeightHuman numeric
+#'
+decrement_bWeightHuman_MacroPatch <- function(bWeightHuman){
+  private$bWeightHuman = private$bWeightHuman - bWeightHuman
+}
+
+MacroPatch$set(which = "public",name = "decrement_bWeightHuman",
+  value = decrement_bWeightHuman_MacroPatch, overwrite = TRUE
+)
+
 #' MacroPatch: Get Patch Zoo Biting Weight
 #'
 #' Return \code{private$bWeightZoo}
@@ -209,6 +223,21 @@ accumulate_kappa_MacroPatch <- function(kappa){
 
 MacroPatch$set(which = "public",name = "accumulate_kappa",
   value = accumulate_kappa_MacroPatch, overwrite = TRUE
+)
+
+#' MacroPatch: Normalize Patch \eqn{\Kappa}
+#'
+#' \eqn{\Kappa} is the proportion of mosquitoes that would become infected after blood feeding on any human, the net infectiousness of humans.
+#' Normalize \eqn{\frac{\Kappa}{bWeightHuman + bWeightZoo + bWeightZootox}}
+#'
+#'  * This method is bound to \code{MacroPatch$normalize_kappa}
+#'
+normalize_kappa_MacroPatch <- function(){
+  private$kappa = private$kappa / (private$bWeightHuman + private$bWeightZoo + private$bWeightZootox)
+}
+
+MacroPatch$set(which = "public",name = "normalize_kappa",
+  value = normalize_kappa_MacroPatch, overwrite = TRUE
 )
 
 

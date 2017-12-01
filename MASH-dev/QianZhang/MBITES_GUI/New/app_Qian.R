@@ -25,6 +25,9 @@ if(system("whoami",intern=TRUE) == "chipdelmal"){
 }else if(system("whoami",intern=TRUE) == "sanchez.hmsc"){
   DIR = "/Users/sanchez.hmsc/Documents/github/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
+}else if(system("whoami",intern=TRUE) == "slwu89"){
+  DIR = "/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/QianZhang/MBITES_GUI/NEW"
+  setwd(DIR)
 }else{
   setwd("your directory")
 }
