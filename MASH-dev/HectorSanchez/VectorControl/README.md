@@ -13,7 +13,7 @@ This is a re-implementation of my old mosquito-control routines. The whole set i
     - Ivermectin: [ ] [ ] [ ] [ ] [ ]
     - Zoospray: [ ] [ ] [ ] [ ] [ ]
   - FeedingIntervention (virtual)
-    - OdorBaitedTrap [x] [ ] [x] [ ] [ ]
+    - OdorBaitedTrap [ ] [ ] [ ] [ ] [ ]
     - IRS: [ ] [ ] [ ] [ ] [ ]
     - EaveTube: [ ] [ ] [ ] [ ] [ ]
     - ImproveHome: [ ] [ ] [ ] [ ] [ ]
