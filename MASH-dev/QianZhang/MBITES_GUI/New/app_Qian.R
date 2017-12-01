@@ -636,10 +636,20 @@ mbitesGadget = function(...){
 
     output$overfeeding_plot <- renderPlot({
       if(input$overfeed){
-        bm_a <- input$bm_mean * input$bm_v
-        bm_b <- (1 - input$bm_mean) * input$bm_v
+        # bm_a <- input$bm_mean * input$bm_v
+        # bm_b <- (1 - input$bm_mean) * input$bm_v
         a <- input$of_a
         b <- input$of_b
+        curve(exp(a * x)/(exp(a * x) + b),
+          ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1))}
+    })
+
+    output$overfeeding_Option_plot <- renderPlot({
+      if(input$overfeed_Option){
+        # bm_a_Option <- input$bm_mean_Option * input$bm_v_Option
+        # bm_b_Option <- (1 - input$bm_mean_Option) * input$bm_v_Option
+        a <- input$of_a_Option
+        b <- input$of_b_Option
         curve(exp(a * x)/(exp(a * x) + b),
           ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1))}
     })
