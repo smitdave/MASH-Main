@@ -395,12 +395,14 @@ mbitesGadget = function(...){
                   checkboxInput("showM", "M: Mating", FALSE),
                   checkboxInput("showS", "S: Sugar Feeding Attempt", FALSE),
                   checkboxInput("showE", "E: Estivation", FALSE),
-                  checkboxInput("showMale", "Male Mosquitoes", FALSE)
-                  ),
+                  checkboxInput("showMale", "Male Mosquitoes", FALSE),
+                  actionButton('save_inputs_bout', 'Save inputs',width = "100%")
+                )
+                ,
                 mainPanel(
                   fluidRow(
-                    column(7,helpText("Set parameters for selected bouts:")),
-                    column(5,actionButton('save_inputs_bout', 'Save inputs',width = "50%"))),
+                    column(7,helpText("Set parameters for selected bouts:"))
+                    ),
                   # fluidRow(
                   # column(7,
                   tabsetPanel(
@@ -409,7 +411,6 @@ mbitesGadget = function(...){
                       title = "F",
                       value = "bout_f",
                       uiOutput('panel_f')
-
                       ),
                     tabPanel(
                       title = "B",
