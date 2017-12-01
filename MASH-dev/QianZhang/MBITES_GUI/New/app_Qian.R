@@ -162,7 +162,11 @@ mbitesGadget = function(...){
                                   value = 20, min = 0, max = 100, step = 1),
                       sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probabilityof Survival",
                                   value = 10, min = 0, max = 100, step = 1)
-                    )),
+                    ),
+                      column(6,
+                        plotOutput("flight_energetics_plot")
+                        )
+                      ),
                     tabPanel("Senescence",
                       column(6,
                       checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = FALSE),
@@ -177,6 +181,7 @@ mbitesGadget = function(...){
                         )
                       ),
                     tabPanel("Damage",
+                      column(6,
                       checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
                       sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
                                   value = 0.5, min = 0, max = 1, step = 0.1),
@@ -187,7 +192,13 @@ mbitesGadget = function(...){
                       sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
                                   value = 15, min = 0, max = 100, step = 1),
                       sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
-                                  value = 500, min = 0, max = 1000, step = 10))
+                                  value = 500, min = 0, max = 1000, step = 10)),
+                      column(6,
+                        plotOutput("tattering_beta_plot"),
+                        plotOutput("tattering_exp_plot")
+                        )
+
+                      )
                       )),
               	
               	#########################################################################
@@ -627,7 +638,21 @@ mbitesGadget = function(...){
         a <- input$of_a
         b <- input$of_b
         curve(exp(a * x)/(exp(a * x) + b),
-          ylab = "Probability of Death", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1))}
+          ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1))}
+    })
+
+    output$flight_energetics_plot <- renderPlot({
+        curve(exp(input$S_a * x)/(exp(input$S_a * x) + input$S_b), ylab = "Mortality", xlab = "Energy Reserves")
+    })
+    output$tattering_exp_plot <- renderPlot({
+        curve(exp(input$ttr_a * x)/(exp(input$ttr_a * x) + input$ttr_b), ylab = "Mortality", xlab = "Wing Tattering", 
+          main = "Exponentional Distribution")
+    })
+
+    output$tattering_beta_plot <- renderPlot({
+        #bm_a <- input$bm_mean * input$bm_v
+        #bm_b <- (1 - input$bm_mean) * input$bm_v
+        curve(pbeta(x, input$ttsz_a, input$ttsz_b),ylab = "Tattering Damage", xlab = "Wing Tattering", main = "Beta Distribution")
     })
 
 
