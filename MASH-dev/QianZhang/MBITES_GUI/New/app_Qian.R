@@ -22,6 +22,9 @@ if(system("whoami",intern=TRUE) == "chipdelmal"){
 }else if(system("whoami",intern=TRUE) == "smitdave"){
   DIR = "/Users/smitdave/github/MASH-Main/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
+}else if(system("whoami",intern=TRUE) == "dave"){
+  DIR = "/Users/dave/GitHub/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
+  setwd(DIR)
 }else if(system("whoami",intern=TRUE) == "sanchez.hmsc"){
   DIR = "/Users/sanchez.hmsc/Documents/github/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
