@@ -74,10 +74,18 @@ mbitesGadget = function(...){
                   h2("Welcome to MBITES!"),
                   hr(),
                   h4("To launch your project, please choose:"),
+                  tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});'))),
                   radioButtons("project", "",
                     c("First time user (Run our demo project)" = "demo",
                       "Start a new project" = "new",
                       "Work on an existing project" = "exist")),
+                  conditionalPanel(condition = "input.project == 'demo'",
+                    actionButton("createDemoFolder", "Run Demo")
+                    ),
+                  conditionalPanel(condition = "input.project == 'new'",
+                    textInput("new_proj_name", "Name your project/folder)", ""),
+                    actionButton("createNewFolder", "Create")
+                    ),
                   uiOutput("prepath.box"),
                   hr(),
                   actionButton("launchgo", "Go!")
@@ -883,6 +891,29 @@ mbitesGadget = function(...){
     output$prepath.box <- renderUI({
       if(input$project == "exist"){
         textInput("prepath", "Please provide the previous working directory (the folder contains .json file)", "")
+      }
+    })
+
+
+    observeEvent(input$createDemoFolder, {
+      if(!file.exists("demo")){
+        dir.create("demo")
+        js_string <- 'alert("Created Demo Successfully!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string))
+      }else{
+        js_string_2 <-'alert("Demo Folder exists. Please remove/rename the current folder and try it again!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string_2))
+      }
+    })
+
+    observeEvent(input$createNewFolder, {
+      if(!file.exists(input$new_proj_name)){
+        dir.create(input$new_proj_name)
+        js_string_3 <- 'alert("Created New Project Successfully!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string_3))
+      }else{
+        js_string_4 <-'alert("Folder exists. Please rename your project and try it again!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string_4))
       }
     })
 
