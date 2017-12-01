@@ -136,6 +136,41 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 
 
 ###############################################################################
+# Output
+###############################################################################
+
+#' Initialize Output Connections
+#'
+#' Open \code{\link[base]{connection}} objects to write output
+#'
+#'  * This method is bound to \code{MacroTile$initCon}
+#'
+initCon_Tile <- function(){
+  private$conMosquito = file(description=paste0(private$directory,"/Mosquito_Run",private$runID,".csv"),open="wt")
+  # private$conHuman
+}
+
+MacroTile$set(which = "public",name = "initCon",
+          value = initCon_Tile, overwrite = TRUE
+)
+
+#' Close Output Connections
+#'
+#' Close \code{\link[base]{connection}} objects
+#'
+#'  * This method is bound to \code{MacroTile$closeCon}
+#'
+closeCon_Tile <- function(){
+  close(private$conMosquito)
+  # private$conHuman
+}
+
+MacroTile$set(which = "public",name = "closeCon",
+          value = closeCon_Tile, overwrite = TRUE
+)
+
+
+###############################################################################
 # Getters & Setters
 ###############################################################################
 

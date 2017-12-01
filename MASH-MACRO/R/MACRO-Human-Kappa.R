@@ -17,10 +17,25 @@
 # bWeightHuman
 ###############################################################################
 
-updatebWeightHuman_Human <- function(){
+#' Accumulate Patch Biting Weight
+#'
+#' Update my contribution to my current patch human biting weight by calling \code{\link{accumulate_bWeightHuman_MacroPatch}}
+#'
+#'  * This method is bound to \code{Human$accumulate_bWeightHuman}
+#'
+accumulate_bWeightHuman_Human <- function(){
   private$TilePointer$get_Patch(private$patchID)$accumulate_bWeightHuman(private$bWeight)
 }
 
+#' Decrement Patch Biting Weight
+#'
+#' Update my contribution to my current patch human biting weight by calling \code{\link{decrement_bWeightHuman_MacroPatch}}
+#'
+#'  * This method is bound to \code{Human$decrement_bWeightHuman}
+#'
+decrement_bWeightHuman_Human <- function(){
+  private$TilePointer$get_Patch(private$patchID)$decrement_bWeightHuman(private$bWeight)
+}
 
 
 ###############################################################################
@@ -52,12 +67,13 @@ updateKappa_PfMOI_Human <- function(){
 
 #' Update Kappa
 #'
-#' Update contributions to \eqn{|Kappa} for all humans.
+#' Update contributions to \eqn{|Kappa} for all humans and normalize \eqn{\Kappa} for each patch by calling \code{\link{normalize_kappa_MacroPatch}}
 #'
 #'  * This method is bound to \code{HumanPop$updateKappa}
 #'
 updateKappa_HumanPop <- function(){
   private$pop$apply(tag="updateKappa")
+  private$TilePointer$get_Patches()$apply(tag="normalize_kappa")
 }
 
 ###############################################################################
