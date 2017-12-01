@@ -7,7 +7,7 @@
 updateKappa_HumanPop()
 }
 \description{
-Update contributions to \eqn{|Kappa} for all humans.
+Update contributions to \eqn{|Kappa} for all humans and normalize \eqn{\Kappa} for each patch by calling \code{\link{normalize_kappa_MacroPatch}}
 }
 \details{
 \itemize{
