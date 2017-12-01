@@ -95,7 +95,7 @@ for(i in 1:aquaSitesNumber){
 ### Mating #####################################################
 matingSitesNumber=MicroTile$get_Landscape()$get_MatingSitesN()
 for(i in 1:matingSitesNumber){
-  swarmSprayTest=SwarmSpray$new(id=i,killProbability=1,repelProbability=0)
+  swarmSprayTest=SwarmSpray$new(id=i,killProbability=0,repelProbability=0)
   MicroTile$get_Landscape()$get_MatingSites(i)$set_swarmSpray(swarmSprayTest)
 }
 ###### Run #############################################################################
