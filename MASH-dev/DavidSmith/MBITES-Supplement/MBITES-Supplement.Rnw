@@ -100,13 +100,8 @@ There are also other properties of each site. Each site has a pair of numbers th
 
 The main point of a landscape is to provide a template upon which different components of the model can interact. Humans and mosquitoes interact mainly through blood feeding, but for this to occur, there must be a way for humans and mosquitoes to meet up on the landscape.  The structures that allow for components to interact are called queues. 
 
-Other properties of a site include a set of queues that coordinate information sharing from one \verb1COMPONENT1 to another. 
+\subsection{Configuring a Landscape}
 
-\subsection{Time at Risk}
-
-\subsection{Egg Laying}
-
-\subsection{Emergence}
 
 
 \section{Mosquito Bouts}
@@ -132,7 +127,7 @@ Finally, every mosquito event is logged through \verb1historyTrack()1.
 
 All bouts are implemented within a generic bout framework, in the function \verb1mbites_oneBout()1.
 
-In computing the outcome of a flight bout, variables track the   event times (\verb1tNow1, and \verb1tNext1) -- the moment when it started the bout; the mosquito's location among the point sets (\verb1locNow1, and \verb1locNext1); and the mosquito's present and future state (\verb1state1, and \verb1stateNew1). Before starting a new flight bout, \verb1tNext1 has been checked to be sure other dependent elements of the simulation have been correctly set. 
+In computing the outcome of a flight bout, variables track the  event times (\verb1tNow1, and \verb1tNext1) -- the moment when it started the bout; the mosquito's location among the point sets (\verb1locNow1, and \verb1locNext1); and the mosquito's present and future state (\verb1state1, and \verb1stateNew1). Before starting a new flight bout, \verb1tNext1 has been checked to be sure other dependent elements of the simulation have been correctly set. 
 Upon entering the bout, the mosquitoes time, state, and location are updated:
 \begin{itemize}
 \item \verb1tNow = tNext1
@@ -494,6 +489,13 @@ feeding search bout at some point in the future.
 
 \section{Options}
 
+Other properties of a site include a set of queues that coordinate information sharing from one \verb1COMPONENT1 to another. 
+
+\subsection{Time at Risk}
+
+\subsection{Egg Laying}
+
+\subsection{Emergence}
 
 \subsection{Mosquito Dispersal}
 
