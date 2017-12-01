@@ -162,7 +162,11 @@ mbitesGadget = function(...){
                                   value = 20, min = 0, max = 100, step = 1),
                       sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probabilityof Survival",
                                   value = 10, min = 0, max = 100, step = 1)
-                    )),
+                    ),
+                      column(6,
+                        plotOutput("flight_energetics_plot")
+                        )
+                      ),
                     tabPanel("Senescence",
                       column(6,
                       checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = FALSE),
@@ -177,6 +181,7 @@ mbitesGadget = function(...){
                         )
                       ),
                     tabPanel("Damage",
+                      column(6,
                       checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
                       sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
                                   value = 0.5, min = 0, max = 1, step = 0.1),
@@ -187,34 +192,55 @@ mbitesGadget = function(...){
                       sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
                                   value = 15, min = 0, max = 100, step = 1),
                       sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
-                                  value = 500, min = 0, max = 1000, step = 10))
+                                  value = 500, min = 0, max = 1000, step = 10)),
+                      column(6,
+                        plotOutput("tattering_beta_plot"),
+                        plotOutput("tattering_exp_plot")
+                        )
+
+                      )
                       )),
               	
               	#########################################################################
               	tabPanel("Blood Meal",
-              		column(6,
+              		column(8,
               			checkboxInput("showB_Option", "Setting Blood Meal Parameters", FALSE),
               			conditionalPanel(condition = "input.showB_Option",
               				checkboxInput("showBloodMeal_Option", "Blood Meal Size", FALSE),
                       		conditionalPanel(condition = "input.showBloodMeal_Option",
-                          	sliderInput(inputId = "bm_a_Option", label ="Shape Param a for Bloodmeal Size",
-                                  value = 7.5, min = 0, max = 20, step = 0.5),
-                          	sliderInput(inputId = "bm_b_Option", label ="Shape Param b for Bloodmeal Size",
-                                  value = 2.5, min = 0, max = 20, step = 0.5)
-                        	),
+                          	# sliderInput(inputId = "bm_a_Option", label ="Shape Param a for Bloodmeal Size",
+                           #        value = 7.5, min = 0, max = 20, step = 0.5),
+                          	# sliderInput(inputId = "bm_b_Option", label ="Shape Param b for Bloodmeal Size",
+                           #        value = 2.5, min = 0, max = 20, step = 0.5),
+                            fluidRow(
+                            column(6,
+                              sliderInput(inputId = "bm_mean_Option", label ="Average Bloodmeal Size",
+                                    value = 0.5, min = 0, max = 1, step = 0.01),
+                              sliderInput(inputId = "bm_v_Option", label ="Parameter v for a Bloodmeal Size: (a + b) in Beta(a,b)",
+                                    value = 15, min = 0, max = 40, step = 0.5)
+                        	   ),
+                            column(6,
+                              plotOutput("bm_Option_plot")
+                              )
+                            )),
 	                      	hr(),
 	                      	checkboxInput("overfeed_Option", "Overfeed", FALSE),
 	                      	conditionalPanel(condition = "input.overfeed_Option",
-	                        sliderInput(inputId = "of_a_Option", "Exp Param a for overfeeding as function of bmSize",
-	                          value = 8, min = 5, max = 10, step = 0.01),
-	                        sliderInput(inputId = "of_b_Option", "Exp Param b for overfeeding as function of bmSize",
-	                          value = 5000, min = 0, max = 10000, step = 100)),
+                            fluidRow(
+                              column(6,
+    	                        sliderInput(inputId = "of_a_Option", "Exp Param a for overfeeding as function of bmSize",
+    	                          value = 8, min = 5, max = 10, step = 0.01),
+    	                        sliderInput(inputId = "of_b_Option", "Exp Param b for overfeeding as function of bmSize",
+    	                          value = 5000, min = 0, max = 10000, step = 100)),
+                              column(6,
+                                plotOutput("overfeeding_Option_plot")
+                                )),
 	                      	hr(),
 	                      	sliderInput(inputId = "preGblood_Option", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
 	                        value = 0, min = 0, max = 100, step = 1),
 	                      	sliderInput(inputId = "Q_Option", label ="Human Blood Index",
 	                        value = 0.9, min = 0, max = 1, step = 0.1)
-                  	))),
+                  	)))),
 
               	#########################################################################
               	# tabPanel("Energetics",
@@ -358,6 +384,8 @@ mbitesGadget = function(...){
                   fluidRow(
                     column(7,helpText("Set parameters for selected bouts:")),
                     column(5,actionButton('save_inputs_bout', 'Save inputs',width = "50%"))),
+                  # fluidRow(
+                  # column(7,
                   tabsetPanel(
                     id = "boutbar",
                     tabPanel(
@@ -406,10 +434,15 @@ mbitesGadget = function(...){
                       value = "bout_male",
                       uiOutput('panel_male')
                       )
-                    )
-                  )
-                )
-            )
+                    ))
+                # ,
+                #   column(5,
+                #     plotOutput("bm_plot"),
+                #     plotOutput("overfeeding_plot")
+                #     )
+                #   )
+                # )
+            ))
             ),
 
           #################################################################################
@@ -582,6 +615,44 @@ mbitesGadget = function(...){
     	scale_x_discrete()+
         xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
     	}
+    })
+
+    output$bm_Option_plot <- renderPlot({
+      if(input$showBloodMeal_Option){
+        bm_a <- input$bm_mean_Option * input$bm_v_Option
+        bm_b <- (1 - input$bm_mean_Option) * input$bm_v_Option
+        curve(pbeta(x, bm_a, bm_b),ylab = "Probability", xlab = "Blood Meal Size")}
+    })
+
+    output$bm_plot <- renderPlot({
+      if(input$showBloodMeal){
+        bm_a <- input$bm_mean * input$bm_v
+        bm_b <- (1 - input$bm_mean) * input$bm_v
+        curve(pbeta(x, bm_a, bm_b),ylab = "Probability", xlab = "Blood Meal Size")}
+    })
+
+    output$overfeeding_plot <- renderPlot({
+      if(input$overfeed){
+        bm_a <- input$bm_mean * input$bm_v
+        bm_b <- (1 - input$bm_mean) * input$bm_v
+        a <- input$of_a
+        b <- input$of_b
+        curve(exp(a * x)/(exp(a * x) + b),
+          ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1))}
+    })
+
+    output$flight_energetics_plot <- renderPlot({
+        curve(exp(input$S_a * x)/(exp(input$S_a * x) + input$S_b), ylab = "Mortality", xlab = "Energy Reserves")
+    })
+    output$tattering_exp_plot <- renderPlot({
+        curve(exp(input$ttr_a * x)/(exp(input$ttr_a * x) + input$ttr_b), ylab = "Mortality", xlab = "Wing Tattering", 
+          main = "Exponentional Distribution")
+    })
+
+    output$tattering_beta_plot <- renderPlot({
+        #bm_a <- input$bm_mean * input$bm_v
+        #bm_b <- (1 - input$bm_mean) * input$bm_v
+        curve(pbeta(x, input$ttsz_a, input$ttsz_b),ylab = "Tattering Damage", xlab = "Wing Tattering", main = "Beta Distribution")
     })
 
 
@@ -808,10 +879,9 @@ mbitesGadget = function(...){
     output$panel_f <- renderUI({
         if (input$showF)
             column(6,
-              wellPanel(
               #sliderInput(inputId = "F_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.02, min = 0, max = 1, step = 0.01),
-              
+              wellPanel(
                 h5("Mean Time Elapsed: "),
                 fluidRow(
                 column(6,selectInput("F_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
@@ -822,8 +892,7 @@ mbitesGadget = function(...){
                 sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
                               value = 0.99, min = 0.9, max = 1, step = 0.01)#,
               #textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
-                    )
-              )
+              ))
 
     })
 
@@ -831,66 +900,75 @@ mbitesGadget = function(...){
 
     output$panel_b <- renderUI({
         if (input$showB)
+          fluidRow(
           column(6,
+              #sliderInput(inputId = "B_time", label ="Mean Time Elapsed (in days)",
+                          #value = 0.04, min = 0, max = 2, step = 0.01),
             wellPanel(
-                      #sliderInput(inputId = "B_time", label ="Mean Time Elapsed (in days)",
-                                  #value = 0.04, min = 0, max = 2, step = 0.01),
-                      h5("Mean Time Elapsed: "),
-                      fluidRow(
-                        column(6,selectInput("B_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-                        column(6,selectInput("B_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-                              ),
-                      sliderInput(inputId = "B_succeed", label ="Probability of Success",
-                                  value = 0.95, min = 0.8, max = 1, step = 0.01),                #                     
-                      sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",
-                                  value = 0.99, min = 0.9, max = 1, step = 0.01),
-                      #textInput("B_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
-                      checkboxInput("showhuman", "Human Host Encounter", FALSE),
-                      conditionalPanel(condition = "input.showhuman",
-                        wellPanel(sliderInput(inputId = "surviveH", label ="Survival Probability of Initial Encounter (Proceed to Probe)",
+              h5("Mean Time Elapsed: "),
+              fluidRow(
+                column(6,selectInput("B_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+                column(6,selectInput("B_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+                      ),
+              sliderInput(inputId = "B_succeed", label ="Probability of Success",
+                          value = 0.95, min = 0.8, max = 1, step = 0.01),                #                     
+              sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",
                           value = 0.99, min = 0.9, max = 1, step = 0.01),
-                        sliderInput(inputId = "probeH", label ="Probability Undeterred and Begin Probing",
-                          value = 0.99, min = 0.9, max = 1, step = 0.01),
-                        sliderInput(inputId = "surviveprobeH", label ="Survival Probability of Probing",
-                          value = 0.99, min = 0.9, max = 1, step = 0.01),
-                        sliderInput(inputId = "feedH", label ="Probability to Successfully blood feed",
-                          value = 0.99, min = 0.9, max = 1, step = 0.01)
-                        )),
-                      checkboxInput("shownonhuman", "Non-human Host Encounter", FALSE),
-                      conditionalPanel(condition = "input.shownonhuman",
-                        wellPanel(sliderInput(inputId = "surviveZ", label ="Survival Probability of Initial Encounter (Proceed to Feed)",
-                                    value = 0.99, min = 0.9, max = 1, step = 0.01),
-                                  sliderInput(inputId = "feedZ", label ="Probability to Successfully Blood Feed",
-                                     value = 0.99, min = 0.9, max = 1, step = 0.01)
-                                  )),
-                      checkboxInput("showBloodMeal", "Blood Meal Size", FALSE),
-                      conditionalPanel(condition = "input.showBloodMeal",
-                        wellPanel(
-                          sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
-                                  value = 7.5, min = 0, max = 20, step = 0.5),
-                          sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
-                                  value = 2.5, min = 0, max = 20, step = 0.5)
-                          )
-                        ),
-                      checkboxInput("overfeed", "Overfeed", FALSE),
-                      conditionalPanel(condition = "input.overfeed",
-                        sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
-                          value = 8, min = 5, max = 10, step = 0.01),
-                        sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
-                          value = 5000, min = 0, max = 10000, step = 100)),
-                      sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-                        value = 0, min = 0, max = 100, step = 1),
-                      sliderInput(inputId = "Q", label ="Human Blood Index",
-                        value = 0.9, min = 0, max = 1, step = 0.1)
-                      ))
+              #textInput("B_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+              checkboxInput("showhuman", "Human Host Encounter", FALSE),
+              conditionalPanel(condition = "input.showhuman",
+                wellPanel(sliderInput(inputId = "surviveH", label ="Survival Probability of Initial Encounter (Proceed to Probe)",
+                  value = 0.99, min = 0.9, max = 1, step = 0.01),
+                sliderInput(inputId = "probeH", label ="Probability Undeterred and Begin Probing",
+                  value = 0.99, min = 0.9, max = 1, step = 0.01),
+                sliderInput(inputId = "surviveprobeH", label ="Survival Probability of Probing",
+                  value = 0.99, min = 0.9, max = 1, step = 0.01),
+                sliderInput(inputId = "feedH", label ="Probability to Successfully blood feed",
+                  value = 0.99, min = 0.9, max = 1, step = 0.01)
+                )),
+              checkboxInput("shownonhuman", "Non-human Host Encounter", FALSE),
+              conditionalPanel(condition = "input.shownonhuman",
+                wellPanel(sliderInput(inputId = "surviveZ", label ="Survival Probability of Initial Encounter (Proceed to Feed)",
+                            value = 0.99, min = 0.9, max = 1, step = 0.01),
+                          sliderInput(inputId = "feedZ", label ="Probability to Successfully Blood Feed",
+                             value = 0.99, min = 0.9, max = 1, step = 0.01)
+                          )),
+              checkboxInput("showBloodMeal", "Blood Meal Size", FALSE),
+              conditionalPanel(condition = "input.showBloodMeal",
+                wellPanel(
+                  # sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
+                  #         value = 7.5, min = 0, max = 20, step = 0.5),
+                  # sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
+                  #         value = 2.5, min = 0, max = 20, step = 0.5)
+                  sliderInput(inputId = "bm_mean", label ="Average Bloodmeal Size",
+                          value = 0.5, min = 0, max = 1, step = 0.01),
+                  sliderInput(inputId = "bm_v", label ="Sample size for a Bloodmeal Size: (a + b) in Beta(a,b)",
+                          value = 15, min = 0, max = 40, step = 0.5)
+                  )
+                ),
+              checkboxInput("overfeed", "Overfeed", FALSE),
+              conditionalPanel(condition = "input.overfeed",
+                sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
+                  value = 8, min = 5, max = 10, step = 0.01),
+                sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
+                  value = 5000, min = 0, max = 10000, step = 100)),
+              sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+                value = 0, min = 0, max = 100, step = 1),
+              sliderInput(inputId = "Q", label ="Human Blood Index",
+                value = 0.9, min = 0, max = 1, step = 0.1)
+              )),
+          column(6,
+            plotOutput(""),
+            plotOutput("bm_plot"),
+            plotOutput("overfeeding_plot")))
         })
     output$panel_r <- renderUI({
         if (input$showR)
           column(6,
-          wellPanel(
             conditionalPanel(condition = "input.showR",
-              wellPanel(#sliderInput(inputId = "R_time", label ="Mean Time Elapsed (in days)",
+            #sliderInput(inputId = "R_time", label ="Mean Time Elapsed (in days)",
                 #value = 1, min = 0, max = 3, step = 0.01),
+              wellPanel(
                 h5("Mean Time Elapsed: "),
                 fluidRow(
                 column(6,selectInput("R_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
@@ -904,15 +982,15 @@ mbitesGadget = function(...){
                 sliderInput(inputId = "rf_a", "Exp Param a for refeeding as function of bmSize",
                   value = 60, min = 0, max = 100, step = 1),
                 sliderInput(inputId = "rf_b", "Exp Param b for refeeding as function of bmSize",
-                  value = 5000, min = 0, max = 10000, step = 100)))
-              )))
+                  value = 5000, min = 0, max = 10000, step = 100))))
+              )
         })    
     output$panel_l <- renderUI({
         if (input$showL)
           column(6,
-            wellPanel(
               #sliderInput(inputId = "L_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.02, min = 0, max = 2, step = 0.01),
+            wellPanel(
               h5("Mean Time Elapsed: "),
                 fluidRow(
                 column(6,selectInput("L_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
@@ -928,9 +1006,9 @@ mbitesGadget = function(...){
     output$panel_o <- renderUI({
         if (input$showO)
           column(6,
-            wellPanel(
               #sliderInput(inputId = "O_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.04, min = 0, max = 2, step = 0.01),
+            wellPanel(
               h5("Mean Time Elapsed: "),
                 fluidRow(
                 column(6,selectInput("O_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
@@ -946,9 +1024,9 @@ mbitesGadget = function(...){
     output$panel_m <- renderUI({
         if (input$showM)
           column(6,
-            wellPanel(
               #sliderInput(inputId = "M_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.02, min = 0, max = 2, step = 0.01),
+            wellPanel(
               h5("Mean Time Elapsed: "),
                 fluidRow(
                 column(6,selectInput("M_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
@@ -964,9 +1042,9 @@ mbitesGadget = function(...){
     output$panel_s <- renderUI({
         if (input$showS)
           column(6,
-            wellPanel(
               #sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.02, min = 0, max = 2, step = 0.01),
+            wellPanel(
               h5("Mean Time Elapsed: "),
                 fluidRow(
                 column(6,selectInput("S_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
@@ -988,13 +1066,12 @@ mbitesGadget = function(...){
     output$panel_male <- renderUI({
         if (input$showMale)
           column(6,
-            wellPanel(
               checkboxInput("showMaleS", "Sugar Feeding", FALSE),
               conditionalPanel(condition = "input.showMaleS",
                 wellPanel("test")),
               checkboxInput("showMaleM", "Mating", FALSE),
               conditionalPanel(condition = "input.showMaleM",
-                wellPanel("test"))
+                wellPanel("test")
               ))
     }) 
     observe({
@@ -1206,45 +1283,6 @@ mbitesGadget = function(...){
           inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
       }}}
-
-
-
-
-      # if(input$showF){
-      #   inputs_name <- append(inputs_name,f_param_name)
-      #   for(input.i in f_param_name){
-      #     inputs_bout <- append(inputs_bout, input[[input.i]])
-      # }}
-      # if(input$showB){
-      #   inputs_name <- append(inputs_name,b_param_name)
-      #   for(input.i in b_param_name){
-      #     inputs_bout <- append(inputs_bout, input[[input.i]])
-      # }}
-      # if(input$showR){
-      #   inputs_name <- append(inputs_name,r_param_name)
-      #   for(input.i in r_param_name){
-      #     inputs_bout <- append(inputs_bout, input[[input.i]])
-      # }}
-      # if(input$showL){
-      #   inputs_name <- append(inputs_name,l_param_name)
-      #   for(input.i in l_param_name){
-      #     inputs_bout <- append(inputs_bout, input[[input.i]])
-      # }}
-      # if(input$showO){
-      #   inputs_name <- append(inputs_name,o_param_name)
-      #   for(input.i in o_param_name){
-      #     inputs_bout <- append(inputs_bout, input[[input.i]])
-      # }}
-      # if(input$showM){
-      #   inputs_name <- append(inputs_name,m_param_name)
-      #   for(input.i in m_param_name){
-      #     inputs_bout <- append(inputs_bout, input[[input.i]])
-      # }}
-      # if(input$showS){
-      #   inputs_name <- append(inputs_name,s_param_name)
-      #   for(input.i in s_param_name){
-      #     inputs_bout <- append(inputs_bout, input[[input.i]])
-      # }}
 
       # Inputs data.frame
       inputs_data_frame <- data.frame(inputId = inputs_name, value = inputs_bout)
