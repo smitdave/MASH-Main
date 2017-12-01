@@ -48,7 +48,11 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                    # Constructor
                    #################################################
 
-                   initialize = function(nPatch, AquaPar, PatchPar, MosquitoPar){
+                   initialize = function(nPatch, AquaPar, PatchPar, MosquitoPar, directory){
+
+                     private$nPatch = nPatch
+                     private$directory = directory
+                     private$runID = 0
 
                      # initialize patches
                      cat("initializing patches\n")
@@ -85,7 +89,20 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 
                      cat("initializing human population\n")
 
-                     cat("setting pointers\n")
+                     cat("set up output directory\n")
+
+                     # set up output
+                     if(!dir.exists(directory)){
+                       dir.create(directory)
+                     } else {
+                       dirFiles = system(command = paste0("ls ",directory),intern = TRUE)
+                       if(length(dirFiles)>0){
+                         for(i in 1:length(dirFiles)){
+                           cat("removing file: ",directory,"/",dirFiles[i],"\n",sep="")
+                           file.remove(paste0(directory,"/",dirFiles[i]))
+                         }
+                       }
+                     }
 
 
                    } # end constructor
@@ -101,6 +118,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                     tStart                    = 0,
                     tNow                      = integer(1),
                     nPatch                    = integer(1),
+                    runID                     = integer(1),
 
                     # class containers
                     Patches                   = NULL,
@@ -108,7 +126,9 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                     Mosquito                  = NULL,
 
                     # Output Connections
-                    directory                 = character(1)
+                    directory                 = character(1),
+                    conMosquito               = NULL,
+                    conHuman                  = NULL
 
                   )
 
@@ -131,6 +151,20 @@ get_tNow_MacroTile <- function(){
 
 MacroTile$set(which = "public",name = "get_tNow",
           value = get_tNow_MacroTile, overwrite = TRUE
+)
+
+#' Get Number of Patches
+#'
+#' write me
+#'
+#'  * This method is bound to \code{MacroTile$get_nPatch}
+#'
+get_nPatch_MacroTile <- function(){
+  return(private$nPatch)
+}
+
+MacroTile$set(which = "public",name = "get_nPatch",
+          value = get_nPatch_MacroTile, overwrite = TRUE
 )
 
 #' Get a Patch

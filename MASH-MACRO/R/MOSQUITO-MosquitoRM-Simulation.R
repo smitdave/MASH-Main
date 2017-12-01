@@ -39,9 +39,9 @@ oneDay_popDynamics_Mosquito_RM <- function(){
 
   # Migration & Sporozoite Maturation
   if(!is.null(private$psi)){
-    private$M = private$psi %*% private$M
-    private$Y = private$psi %*% private$Y
-    private$Z = private$psi %*% private$Z + private$ZZ[1,]
+    private$M = as.vector(private$psi %*% private$M)
+    private$Y = as.vector(private$psi %*% private$Y)
+    private$Z = as.vector(private$psi %*% private$Z + private$ZZ[1,])
   } else {
     private$Z = private$Z + private$ZZ[1,]
   }
@@ -50,7 +50,7 @@ oneDay_popDynamics_Mosquito_RM <- function(){
   private$ZZ[private$maxEIP,] = 0
 
   if(!is.null(private$psi)){
-    private$ZZ[EIP,] = private$ZZ[EIP,] + private$P[EIP] * private$psi %*% private$Y0
+    private$ZZ[EIP,] = private$ZZ[EIP,] + private$P[EIP] * as.vector(private$psi %*% private$Y0)
   } else {
     private$ZZ[EIP,] = private$ZZ[EIP,] + private$P[EIP] * private$Y0
   }
@@ -88,4 +88,61 @@ get_emergingAdults_Mosquito_RM <- function(M,ix){
 
 Mosquito_RM$set(which = "public",name = "get_emergingAdults",
           value = get_emergingAdults_Mosquito_RM, overwrite = TRUE
+)
+
+
+###############################################################################
+# Output
+###############################################################################
+
+#' Initialize Population Output
+#'
+#' Initialize mosquito population output
+#'
+#'  * This method is bound to \code{Mosquito_RM$initOutput}
+#'
+initOutput_Mosquito_RM <- function(con){
+  writeLines(text = paste0(c("time",paste0("patch",1:private$TilePointer$get_nPatch())),collapse = ","),con = con, sep = "\n")
+}
+
+Mosquito_RM$set(which = "public",name = "initOutput",
+          value = initOutput_Mosquito_RM, overwrite = TRUE
+)
+
+#' Write Population Output
+#'
+#' Write mosquito population output
+#'
+#'  * This method is bound to \code{Mosquito_RM$output}
+#'
+output_Mosquito_RM <- function(con){
+  tNow = private$TilePointer$get_tNow()
+  writeLines(text = paste0(c(tNow,private$M),collapse = ","), con = con, sep = "\n")
+  writeLines(text = paste0(c(tNow,private$Y),collapse = ","), con = con, sep = "\n")
+  writeLines(text = paste0(c(tNow,private$Z),collapse = ","), con = con, sep = "\n")
+}
+
+Mosquito_RM$set(which = "public",name = "output",
+          value = output_Mosquito_RM, overwrite = TRUE
+)
+
+###############################################################################
+# Reset
+###############################################################################
+
+#' Reset the Mosquito Population
+#'
+#' Reset mosquito population between simulation runs
+#'
+#'  * This method is bound to \code{Mosquito_RM$reset}
+#'
+reset_Mosquito_RM <- function(MosquitoPar){
+  private$M             = MosquitoPar$M
+  private$Y             = private$Y*0
+  private$Z             = private$Z*0
+  private$ZZ            = private$ZZ*0
+}
+
+Mosquito_RM$set(which = "public",name = "reset",
+          value = reset_Mosquito_RM, overwrite = TRUE
 )

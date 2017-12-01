@@ -29,6 +29,8 @@
 #'  * oneDay_popDynamics: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 #'  * oneDay_oviposition: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 #'  * get_emergingAdults: this method must be overwritten by all inheriting classes (pure virtual function in C++)
+#'  * output: this method must be overwritten by all inheriting classes (pure virtual function in C++)
+#'  * reset: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 #'  * get_HumansPointer: see \code{\link{get_HumansPointer_Mosquito_Base}}
 #'  * set_HumansPointer: see \code{\link{set_HumansPointer_Mosquito_Base}}
 #'  * get_TilePointer: see \code{\link{get_TilePointer_Mosquito_Base}}
@@ -73,6 +75,24 @@ Mosquito_Base <- R6::R6Class(classname = "Mosquito_Base",
                      # C++: make this a virtual function
                      # this gets emerging adults for any model and it's what AquaPop_Base interacts with
                      cat("get_emergingAdults for Mosquito_Base should never be called\n")
+                   },
+
+                   initOutput = function(con){
+                     # C++: make this a virtual function
+                     # initialize appropriate headers and output for model
+                     cat("initOutput for Mosquito_Base should never be called\n")
+                   },
+
+                   output = function(con){
+                     # C++: make this a virtual function
+                     # this write appropriate output for the model
+                     cat("output for Mosquito_Base should never be called\n")
+                   },
+
+                   reset = function(){
+                     # C++: make this a virtual function
+                     # this resets the mosquito population back to initial values for repeated runs
+                     cat("reset for Mosquito_Base should never be called\n")
                    }
 
                   ),
