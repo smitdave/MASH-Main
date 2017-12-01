@@ -122,6 +122,24 @@ MosquitoPopMale$set(which = "public",name = "get_pop",
   value = get_pop_MosquitoPop, overwrite = TRUE
 )
 
+#' Get Number of Alive Mosquitoes
+#'
+#' Provide the number of living mosquitoes.
+#'  * This method is bound to \code{MosquitoPopFemale$get_N} and \code{MosquitoPopFemale$get_N}
+#'
+get_N_MosquitoPop <- function(){
+  alive = private$pop$apply(tag="isAlive",returnVal=TRUE)
+  return(sum(alive))
+}
+
+MosquitoPopFemale$set(which = "public",name = "get_N",
+  value = get_N_MosquitoPop, overwrite = TRUE
+)
+
+MosquitoPopMale$set(which = "public",name = "get_N",
+  value = get_N_MosquitoPop, overwrite = TRUE
+)
+
 
 #' Get MBITES_PAR
 #'

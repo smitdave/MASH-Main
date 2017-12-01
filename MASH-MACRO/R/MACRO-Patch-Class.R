@@ -64,6 +64,9 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                     # AquaPop (in C++ this would be a pointer to base class AquaPop_Base; the Patch should take ownership of the AquaPop)
                     AquaPop                   = NULL,
 
+                    # human movement
+                    travelWeight              = numeric(1),
+
                     # infection dynamic parameters
                     bWeightHuman              = numeric(1),
                     bWeightZoo                = numeric(1),
