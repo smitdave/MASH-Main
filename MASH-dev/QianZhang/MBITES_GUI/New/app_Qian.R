@@ -906,7 +906,9 @@ mbitesGadget = function(...){
         js_string <- 'alert("Created Demo Successfully!");'
         session$sendCustomMessage(type='jsCode', list(value = js_string))
       }else{
-        js_string_2 <-'alert("Demo Folder exists. Please remove/rename the current folder and try it again!");'
+        unlink("demo", recursive = TRUE)
+        dir.create("demo")
+        js_string_2 <-'alert("New demo created! The previous demo has been removed.");'
         session$sendCustomMessage(type='jsCode', list(value = js_string_2))
       }
     })
