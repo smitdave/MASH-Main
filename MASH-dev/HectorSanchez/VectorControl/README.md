@@ -2,7 +2,7 @@
 
 This is a re-implementation of my old mosquito-control routines. The whole set is coded in R6 object-oriented form with inheritance patterns that obey the following structure:
 
-* ControlIntervention (virtual)
+* ControlIntervention (virtual: implements generic killing and repelling routines)
   - AquaticIntervention (virtual)
     - Ovitrap:  [x] [x] [x] [ ] [ ]
     - Larvicide: [ ] [ ] [ ] [ ] [ ]
@@ -13,16 +13,16 @@ This is a re-implementation of my old mosquito-control routines. The whole set i
     - Ivermectin: [ ] [ ] [ ] [ ] [ ]
     - Zoospray: [ ] [ ] [ ] [ ] [ ]
   - FeedingIntervention (virtual)
-    - OdorBaitedTrap [x] [] [ ] [ ] [ ]
+    - OdorBaitedTrap [x] [ ] [x] [ ] [ ]
     - IRS: [ ] [ ] [ ] [ ] [ ]
     - EaveTube: [ ] [ ] [ ] [ ] [ ]
     - ImproveHome: [ ] [ ] [ ] [ ] [ ]
   - HumanIntervention (virtual)
-    - PersonalRepellant
+    - PersonalRepellant [ ] [ ] [ ] [ ] [ ]
     - ITN: [ ] [ ] [ ] [ ] [ ]
     - Swat: [ ] [ ] [ ] [ ] [ ]
   - MatingIntervention (virtual)
-    - SwarmSpray: [ ] [ ] [ ] [ ] [ ]
+    - SwarmSpray: [x] [x] [x] [ ] [ ]
   - SugarIntervention (virtual)
     - ATSB: [x] [x] [x] [ ] [ ]
   - MultiLocationIntervention (virtual)
