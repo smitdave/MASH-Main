@@ -17,27 +17,12 @@
 # movement is movement within a patch
 ###############################################################################
 
-#' Human: Take a Trip to a Patch
+#' Move \code{Human} Event: Initialize Travel
 #'
-#' Take a trip to a new \code{\link{MacroPatch}} and update the source and destination human biting weight
+#' Initialize travel model when simulation begins by queueing up a trip calling \code{\link{add2Q_takeTrip}}
+#'  * This method is bound to \code{Human$initialize_travel}
 #'
-#' @param patchID the id of the patch to travel to
-#'
-trip_Human <- function(patchID){
-  self$decrement_bWeightHuman()
-  private$patchID = patchID
-  self$accumulate_bWeightHuman(patchID)
-}
-
-
-takeTrip_Human <- function(){
-  travelDest = sample(n = 1,size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight())
-
-
-}
-
-# choose my first trip when simulation begins
-initialize_trip_Human <- function(){
+initialize_travel_Human <- function(){
   tDest = sample(x = 1:private$TilePointer$get_nPatch(),size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight()) # choose where i go
   tTrip = private$TilePointer$get_tNow() + rexp(n=1,rate=private$tripFrequency) # choose when i go
 
@@ -48,7 +33,7 @@ initialize_trip_Human <- function(){
 
 
 ###############################################################################
-# Trip to another patch
+# Trip event to another patch
 ###############################################################################
 
 #' Move \code{Human} Event: Add a Trip to Event Queue
@@ -83,8 +68,8 @@ event_takeTrip <- function(tEvent, PAR = NULL){
 #'
 #' Simulate a between patch trip.
 #' This method is bound to \code{Human$takeTrip()}
-#'  * A Bernoulli event is drawn to determine if this infection produces fever; if so \code{\link{add2Q_feverPfSI}} is called.
-#'  * The end of this PfSI infection is queued by \code{\link{add2Q_endPfSI}}
+#'  * Biting weight at my origin is decremented by \code{\link{decrement_bWeightHuman_Human}} and incremented at my destination by \code{\link{accumulate_bWeightHuman_Human}}
+#'  * The end of this trip is queued after a duration by calling \code{\link{add2Q_returnHome}}
 #'
 #' @param tEvent time of trip
 #' @param PAR must be a list containing character \code{tDest}, the index of the site I am visiting
@@ -99,4 +84,61 @@ takeTrip <- function(tEvent, PAR){
   tReturn = tEvent + rexp(n=1,rate=1/private$tripDuration)
   self$add2Q_returnHome(tEvent = tReturn, PAR = NULL)
 
+}
+
+
+###############################################################################
+# Trip home event
+###############################################################################
+
+#' Move \code{Human} Event: Add Return Home Trip to Event Queue
+#'
+#' Add a trip back home to my event queue.
+#' This method is called from \code{\link{takeTrip}}
+#' This method adds event \code{\link{event_returnHome}} to the event queue.
+#'  * This method is bound to \code{Human$add2Q_returnHome()}
+#'
+#' @param tEvent time to return home
+#' @param PAR \code{NULL}
+#'
+add2Q_returnHome <- function(tEvent, PAR = NULL){
+  private$EventQueue$addEvent2Q(event = self$event_takeTrip(tEvent = tEvent, PAR = PAR))
+}
+
+#' Move \code{Human} Event: Generate a Return Home Event
+#'
+#' Generate a return home event to place in event queue.
+#' This method is called from \code{\link{add2Q_returnHome}}
+#' This method is bound to \code{Human$event_returnHome()}
+#'  * tag: \code{\link{returnHome}}
+#
+#' @param tEvent time to return home
+#' @param PAR \code{NULL}
+#'
+event_returnHome <- function(tEvent, PAR = NULL){
+  return(list(tEvent=tEvent,PAR=PAR,tag="returnHome"))
+}
+
+#' Move \code{Human} Event: Return Home Event
+#'
+#' Simulate my return home
+#' This method is bound to \code{Human$returnHome()}
+#'  * Biting weight at my origin is decremented by \code{\link{decrement_bWeightHuman_Human}} and incremented at my destination by \code{\link{accumulate_bWeightHuman_Human}}
+#'  * My next trip is queued after a duration at home by calling \code{\link{add2Q_takeTrip}}
+#'
+#' @param tEvent time to return home
+#' @param PAR \code{NULL}
+#'
+returnHome <- function(tEvent, PAR){
+
+  self$decrement_bWeightHuman() # decrement the biting weight where I came from
+  private$patchID = private$home_patchID # go back home
+  self$accumulate_bWeightHuman() # increment the biting weight where I go to
+
+  # queue up my next trip
+  tDest = sample(x = 1:private$TilePointer$get_nPatch(),size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight()) # choose where i go
+  tTrip = tEvent + rexp(n=1,rate=private$tripFrequency) # choose when i go
+
+  PAR = list(tDest=tDest)
+  self$add2Q_takeTrip(tEvent = tTrip,PAR = PAR)
 }
