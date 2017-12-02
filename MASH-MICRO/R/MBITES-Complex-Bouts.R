@@ -528,7 +528,6 @@ mbites_oneMosquito_MBITES <- function(){
 #'  * This method is bound to \code{MosquitoPopFemale$MBITES()}.
 #'
 mbites_Pop_MBITES <- function(){
-
   private$pop$apply(tag="MBITES",returnVal=FALSE)
 
 }

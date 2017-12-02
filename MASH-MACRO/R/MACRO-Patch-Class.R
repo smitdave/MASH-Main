@@ -27,7 +27,7 @@
 #'  * method: i'm a method!
 #'
 #' @section **Fields**:
-#'  * field: i'm a field!
+#'  * travelWeight: a 'row' of a stochastic matrix describing human travel from this point (the index corresponding to self to self transition should be set to 0 as we are already conditioning on a person having decided to leave this patch)
 #'
 #'
 #' @md
