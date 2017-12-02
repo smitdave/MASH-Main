@@ -74,9 +74,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                     kappa                     = numeric(1),
 
                     # Pointers
-                    TilePointer               = NULL,     # point to the enclosing metapopulation TILE
-                    MosquitoPointer           = NULL,
-                    HumansPointer             = NULL
+                    TilePointer               = NULL
 
                   )
 

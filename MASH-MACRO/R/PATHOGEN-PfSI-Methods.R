@@ -19,26 +19,22 @@
 
 #' PfSI \code{Human} Method: Get PfSI_PAR
 #'
-#' Get either entire list or one named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
+#' Get named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
 #'  * This method is bound to \code{Human$get_PfSI_PAR()}
 #'
-Human_get_PfSI_PAR <- function(ix = NULL){
+Human_get_PfSI_PAR <- function(ix){
   return(private$HumansPointer$get_PfSI_PAR(ix))
 }
 
 #' PfSI \code{HumanPop} Method: Get PfSI_PAR
 #'
-#' Get either entire list or one named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
+#' Get named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
 #'  * This method is bound to \code{HumanPop$get_PfSI_PAR()}
 #'
-#' @param PfSI_PAR new parameter list, see \code{\link{PfSI.Parameters}}
+#' @param ix name of parameter to return \code{\link{PfSI.Parameters}}
 #'
-HumanPop_get_PfSI_PAR <- function(ix = NULL){
-  if(is.null(ix)){
-    return(private$PfSI_PAR)
-  } else {
-    return(private$PfSI_PAR[[ix]])
-  }
+HumanPop_get_PfSI_PAR <- function(ix){
+  return(private$PfSI_PAR[[ix]])
 }
 
 #' PfSI \code{HumanPop} Method: Set PfSI Paramters for a \code{\link{HumanPop}}

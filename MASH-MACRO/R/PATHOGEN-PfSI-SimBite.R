@@ -12,8 +12,6 @@
 #
 ###############################################################################
 
-# MASHcpp::mosquitoPfSI(PfID_init = -1L, MosquitoID_init = private$id, infected_init = FALSE)
-
 ###############################################################################
 # Setup
 ###############################################################################
@@ -24,12 +22,9 @@
 #'
 #' @param DurationPf 200; duration of infection (How many days does the infection last?)
 #' @return Defines a field (list) PfSI_PAR in \code{\link{HumanPop}} and public methods in \code{\link{Human}}
-#' @examples
-#' SimBitePfSI.Setup()
+#'
 #' @export
-SimBitePfSI.Setup <- function(
-  overwrite = TRUE
-){
+SimBitePfSI.Setup <- function(overwrite = TRUE){
 
   cat("initializing PfSI SimBite module\n")
 
@@ -62,7 +57,7 @@ SimBitePfSI.Setup <- function(
 
 
 ###############################################################################
-# Methods
+# Simulated Bite
 ###############################################################################
 
 #' PfSI SimBite \code{Human} Event: Add PfSI Simulated Bite Event to Event Queue
@@ -110,6 +105,11 @@ SimBitePfSI_Human <- function(tEvent, PAR){
   self$probeHost_PfSI(tEvent, PAR$mosquitoPfSI)
 }
 
+
+###############################################################################
+# Queue Events
+###############################################################################
+
 #' PfSI SimBite \code{Human} Event: Queue Bites
 #'
 #' Queue bites by simulating a homogeneous Poisson process and calling \code{\link{add2Q_SimBitePfSI_Human}}
@@ -120,13 +120,11 @@ SimBitePfSI_Human <- function(tEvent, PAR){
 #' @param bitingRate biting rate
 #'
 queueBites_SimBitePfSI_Human <- function(tMax, bitingRate = 1/20){
-
   nBite = rpois(n=1,lambda=tMax*bitingRate)
   tBite = runif(n=nBite,min=0,max=tMax)
   for(t in tBite){
     self$add2Q_SimBitePfSI(tEvent = t)
   }
-
 }
 
 #' PfSI SimBite \code{Human} Event: Queue Vaccination

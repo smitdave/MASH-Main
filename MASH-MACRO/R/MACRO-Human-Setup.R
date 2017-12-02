@@ -11,10 +11,6 @@
 #' @export
 MACRO.Human.Setup <- function(){
 
-  # my home patch
-  Human$set(which = "private",name = "home_patchID",
-            value = integer(1), overwrite = TRUE
-  )
 
   # trip frequency
   Human$set(which = "private",name = "tripFrequency",

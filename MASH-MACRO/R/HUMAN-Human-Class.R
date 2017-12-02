@@ -89,12 +89,14 @@ Human <- R6::R6Class(classname="Human",
                      private = list(
 
                        #General Information
-                       myID                = character(1), # string
-                       houseID             = integer(1), # integer
-                       patchID             = integer(1), # integer
-                       Alive               = logical(1), # boolean
-                       bDay                = numeric(1), # double
-                       sex                 = integer(1), # integer
+                       myID                = character(1),
+                       houseID             = integer(1),
+                       homeHouseID         = integer(1),
+                       patchID             = integer(1),
+                       homePatchID         = integer(1),
+                       Alive               = logical(1),
+                       bDay                = numeric(1),
+                       sex                 = integer(1),
 
                        #Event Queue
                        EventQueue          = NULL, # see HUMANS-EventQ.hpp
@@ -134,8 +136,8 @@ return(private$myID)
 }
 
 Human$set(which="public", name="get_myID",
-	value=get_myID_Human,
-	overwrite=TRUE)
+	value=get_myID_Human, overwrite=TRUE
+)
 
 
 #' Human: Sets ID
@@ -149,8 +151,8 @@ set_myID_Human <- function(myID){
 }
 
 Human$set(which="public", name="set_myID",
-	value=set_myID_Human,
-	overwrite=TRUE)
+	value=set_myID_Human, overwrite=TRUE
+)
 
 
 #' Human: Gets house ID
@@ -164,8 +166,8 @@ get_houseID_Human <- function(){
 }
 
 Human$set(which="public", name="get_houseID",
-	value=get_houseID_Human,
-	overwrite=TRUE)
+	value=get_houseID_Human, overwrite=TRUE
+)
 
 
 #' Human: Sets house ID
@@ -179,8 +181,37 @@ set_houseID_Human <- function(houseID){
 }
 
 Human$set(which="public", name="set_houseID",
-	value=set_houseID_Human,
-	overwrite=TRUE)
+	value=set_houseID_Human, overwrite=TRUE
+)
+
+#' Human: Gets home house ID
+#'
+#' Gets ID for home house
+#'
+#' More details
+#'
+get_homeHouseID_Human <- function(){
+ return(private$homeHouseID)
+}
+
+Human$set(which="public", name="get_homeHouseID",
+	value=get_homeHouseID_Human, overwrite=TRUE
+)
+
+
+#' Human: Sets home house ID
+#'
+#' Sets ID for home house ID
+#'
+#' More details
+#'
+set_homeHouseID_Human <- function(homeHouseID){
+ private$homeHouseID = homeHouseID
+}
+
+Human$set(which="public", name="set_homeHouseID",
+	value=set_homeHouseID_Human, overwrite=TRUE
+)
 
 
 #' Human: Gets patch ID
@@ -194,8 +225,8 @@ get_patchID_Human <- function(){
 }
 
 Human$set(which="public", name="get_patchID",
-	value=get_patchID_Human,
-	overwrite=TRUE)
+	value=get_patchID_Human, overwrite=TRUE
+)
 
 
 #' Human: Sets patch ID
@@ -209,8 +240,37 @@ set_patchID_Human <- function(patchID){
 }
 
 Human$set(which="public", name="set_patchID",
-	value=set_patchID_Human,
-	 overwrite=TRUE)
+	value=set_patchID_Human, overwrite=TRUE
+)
+
+#' Human: Gets home patch ID
+#'
+#' Gets ID for home patch ID
+#'
+#' More details
+#'
+get_homePatchID_Human <- function(){
+ return(private$homePatchID)
+}
+
+Human$set(which="public", name="get_homePatchID",
+	value=get_homePatchID_Human, overwrite=TRUE
+)
+
+
+#' Human: Sets home patch ID
+#'
+#' Sets ID for home patch ID
+#'
+#' More details
+#'
+set_homePatchID_Human <- function(homePatchID){
+ private$homePatchID = homePatchID
+}
+
+Human$set(which="public", name="set_homePatchID_Human",
+	value=set_homePatchID_Human, overwrite=TRUE
+)
 
 
 #' Human: Get birthday
