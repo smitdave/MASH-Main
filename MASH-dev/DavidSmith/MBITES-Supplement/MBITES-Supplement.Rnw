@@ -8,7 +8,7 @@
 \begin{document}
 
 \begin{centering}
-\huge{MBITES}\\
+\huge{A User's Guide to MBITES}\\
 \vspace{0.3in}
 \Large{Mosquito Bout-based and Individual-based \\ Transmission Ecology Simulator}\\
 
@@ -38,10 +38,10 @@ heuristic followed by implementation notes, relevant details, and a guide to the
 \paragraph{The MASH Framework}
 
 \begin{displayquote}
-{\em {\bf NOTE:} The following section gives some background and vocabulary for understanding some of the basic concepts and design principles of MASH and MBITES. We recommend reading it at some point, but feel free to skip it.}
+{\em {\bf NOTE:} The following section gives some background and vocabulary for understanding some of the basic concepts and design principles of MASH and MBITES. We recommend reading it at some point, but feel free to skip it if you want to get on with learning MBITES.}
 \end{displayquote}
 
-MBITES is a flexible module that runs the adult mosquito component of MASH. The terms ``component,''``module,'' and ``flexible'' all have a specific meaning in MASH. The following section explains the terminology used in MBITES and MASH and the rationale for developing it.  
+MBITES is a flexible module that runs the adult mosquito component of MASH. The terms ``component'' and ``module'' and ``flexible'' all have a specific meaning in MASH. The following section explains the terminology used in MBITES and MASH and the rationale for developing it.  
 
 MASH is a framework for simulating human health events and related phenomena (\eg pathogen transmission by mosquito populations). MASH is a simulation modeling framework, not a simulation model. To put it another way, the problem MASH was trying to solve was how to build a plug-and-play simulator for human health, not how to simulate human health. The core design problem for MASH was how to build an API (application program interface) defining how various components of a model interact. The philosophy of MASH was that every component should have at least two modules: one would be highly realistic and simulate the relevant phenomena in exquisite detail, and the other would be dead simple. The first disease to be implemented within MASH was malaria. 
 
@@ -62,9 +62,7 @@ The structure of MASH is summarized in the following way:
 \item A \verb1Synthetic Population1 is the fully configured set of initial conditions.  
 \end{itemize}
 %
-MASH is a framework for building models that is modular and flexible. 
-
-This gives rise to a complementary vocaublary to describe the models that arise. We consider MBITES to be a CLASS of models: 
+MASH is a framework for building models that is modular and flexible. This gives rise to a complementary vocaublary to describe the models that arise. We consider MBITES to be a CLASS of models: 
 \begin{itemize}
 \item Two models belong to the same ORDER if they belong to the same CLASS and share the same state space. 
 \item Two models belong to the same FAMILY if they belong to the same ORDER and use the same functional forms.
@@ -100,8 +98,6 @@ There are also other properties of each site. Each site has a pair of numbers th
 
 The main point of a landscape is to provide a template upon which different components of the model can interact. Humans and mosquitoes interact mainly through blood feeding, but for this to occur, there must be a way for humans and mosquitoes to meet up on the landscape.  The structures that allow for components to interact are called queues. 
 
-\subsection{Configuring a Landscape}
-
 
 
 \section{Mosquito Bouts}
@@ -119,9 +115,7 @@ A mosquito bout tracks a mosquito from its launch to initiate one bout up to the
 %
 After the bout, a mosquito lands at a particular kind of place, determined by the function \verb1restingSpot()1. The mosquito's energetic state is then updated, with \verb1sugarEnergetics()1.
 
-Mortality can occur as a result of flight stress or from one of the many hazards during landing. At the end, survival is computed by their associated functions: \verb1surviveResting()1 and \verb1surviveFlight()1.
-
-Finally, every mosquito event is logged through \verb1historyTrack()1. 
+Mortality can occur as a result of flight stress or from one of the many hazards during landing. At the end, survival is computed by their associated functions: \verb1surviveResting()1 and \verb1surviveFlight()1.Finally, every mosquito event is logged through \verb1historyTrack()1. 
 
 \paragraph{Implementation Notes}
 
@@ -207,6 +201,9 @@ The outcome of a search bout is either mosquito death, a new
 frustrated search attempt without a change of behavioral state.
 
 The function ${\cal K}_F$ is implemented by \verb1rMove()1, described in the options below. 
+
+\paragraph{Configuring the Blood Feeding Search Bout}
+
 
 \paragraph{Implementation}
 

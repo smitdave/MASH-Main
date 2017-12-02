@@ -1,0 +1,131 @@
+\documentclass{article}
+\usepackage{csquotes}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\begin{centering}
+\huge{Setting up MBITES}\\
+\vspace{0.3in}
+\Large{Mosquito Bout-based and Individual-based \\ Transmission Ecology Simulator}\\
+
+\vspace{0.3in}
+\large{MBITES Development Team: \\ Sean Wu, Hector Sanchez, Qian Zhang, John Henry, Daniel Citron, Amit Verma, Arnaud Le Menach, David L Smith\\}
+
+\end{centering}
+
+
+\paragraph{Introduction} 
+
+\begin{displayquote}
+{\bf \em What do I do with so many parameters?}
+\end{displayquote}
+
+Individual-based models have been criticized for many reasons. Most of them are valid. The objection most often raised is, wasn't William of Occam right? ``Why throw away parsimony?'' With so many parameters, you should be able to fit anything! (There is even an old saying: {\em Give me six parameters and I'll draw an elephant. Give me seven and I'll make it wag it's tail.})  While this is a valid criticism of fitting individual based models to data, there are other problems that arise the moment the model considers scenarios that are not present in the data. 
+
+If the only thing you would ever wanted to do was predict the future, then your best bet would probably be to take the parsimonious model and run it forward. You probably won't get a better prediction, on average, from any single model. There are, however, other things you want to do, and other ways you migh use models to get a better prediction. For example, you might want to evaluate a policy, and here's where the old paradigm breaks down. Are the conclusions of your model robust to all the sources of heterogeneity the parsimonious model averaged over?
+
+Consider a thought experiment. What if you could wave a wand and invent a model with an arbitrary degree of heterogeneity blindly fixing most of the parameters but leaving as many free parameters for fitting as you would have in an abstract and parametrically simple model. The rules of evidence would suggest the fits of these  models would be directly comparable. What gives any {\em a priori} weight to any particular model? A problem for science is that there are so many models like the former, and they are very hard to specify. The problem of evaluating the robustness of some policy boils down to figuring out some way of waving a wand and fitting the very large set of models to the data in some systematic way, and then turning each model around to predict the future.  The prediction made from the ensemble of all those fitted heterogeneous models should be more robust than the simple one. MBITES is an honest stab at doing {\em that}. 
+
+Is there any reason to not ignore heterogeneity? That is, in part, why MBITES exists. The answer is that we don't have a sound basis for saying no. If we're honest about the peformance of predictive models for infectious diseases, we'd have to admit we haven't been very successful. When the problem comes to giving advice, we don't know if we're doing any better. 
+
+Since we can't wave our wands, we need a way of dealing with the daunting problem of heterogeneity, besides the easily accepted answer; ignore it. MBITES has taken a different approach. The flexibility built into MBITES makes it comparatively easy to configure a landscape with any degree of heterogeneity, but it creates a new problem of how to systematically explore heterogeneity.  Our approach is to start from the same point as others -- we begin by anchoring the simulation model to the case that most closely resembles the homogenous approximation, and then we steadily add heterogeneity. There is a logical progression: 
+\begin{itemize}
+\item If it's not necessary, turn it off. 
+\item If it's on, set everything to a constant value. 
+\item If a constant value won't do, try a line. 
+\item If the value isn't the same everywhere, see have far you can get with the simplest way of incorporating noise.
+\item If there's a pattern, base it on a case study.  
+\end{itemize}
+With these principles in mind, we've developed a set of functions and utilities to set up landscapes that roughly follow these rules. 
+
+\section{Configuring a Landscape} 
+
+Mosquitoes need resources to make more mosquitoes: mates, blood, aquatic habitat, and sometimes sugar. The only landscape where these are always available is in the mathematical entomologist's matrix. Reflecting the irony with which Morpheus welcomed Neo onto his ship, we offer the same greeting: "Welcome to the real world." This is not the real world, of course, but it is not like the one where it is possible to enjoy a fake steak. 
+
+MBITES doesn't work without a landscape. The following describes how to build a landscape in MBITES. 
+
+\subsection{Point Sets}
+
+The resources mosquitoes need are not found everywhere.  In MBITES, locations where critial resources can be found are called sites, each site is a location in space, $\left\{ x,y \right\}$. There are four types of sites: mating, blood feeding, aquatic habitat, and sugar.
+
+\subsubsection{A Minimal Point Set}
+
+A useful construct is the ``minimal point set," where there is one representative point of each type to be considered. 
+
+\subsubsection{The Demo Point Set}
+
+The demo version builds point sets around centers. There are so many ways to build a landsdcape that we have not gone beyond a simple set of algorithms. 
+
+\subsubsection{IO}
+
+\subsection{Site Types and Resting Spot}
+
+\subsubsection*{[0] Simple Site Type}
+
+\subsubsection*{[1] The Homestead}
+
+\subsection{Blood Meal Hosts}
+
+Each blood feeding site has an object that stores the hosts present, one of the \verb1QUEUE1 objects that stitches MASH together, called the \verb1atRiskQ1. To run MBITES as a standalone program, it is necessary to create a static \verb1atRiskQ1. 
+
+\subsection{The Distribution of Site-specific Hazards}
+
+\subsection{Search and Dispersion}
+
+\subsubsection{Search Weights}
+
+\section{Configuring the Bouts}
+
+\subsection*{[F] Blood Feeding Search Bout}
+
+\subsection*{[B] Blood Feeding Attempt Bout}
+
+\subsection*{[R] Post-Prandial Resting Bout}
+
+\subsection*{[L] Egg Laying Search Bout}
+
+\subsection*{[O] Egg Laying Attempt Bout and Oviposition}
+
+\subsection*{[S] Sugar Feeding Bout}
+
+By default, sugar feeding is turned off. 
+
+\subsection*{[M] Mating Bout}
+
+By default, mating and maturation is turned off. 
+
+\subsection*{[E] Estivation}
+
+\section{Configuring Options}
+
+\subsection{Timing}
+
+The default 
+\subsubsection{Diurnal Activity Patterns}
+
+\subsection{Survival}
+
+\subsubsection{Flight Energetics}
+
+\paragraph{Energy from Blood}
+
+\subsubsection{Senescence}
+
+\subsubsection{Damage}
+
+\subsection{Oogenesis}
+
+\subsection{Mating and Maturation}
+
+\subsection{Blood Meal Size}
+
+\subsection{The Extrinsic Incubation Period (EIP)}
+
+\section{Vector Control}
+
+\section{Aquatic Ecology}
+
+\section{Diagnostics and Visualization}
+
+\end{document}
