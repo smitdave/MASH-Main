@@ -32,4 +32,4 @@ Checkboxes key: [addedInLandscape/Human, addedInteractionWithMosquito, runsWitho
 
 The accessors/mutators have been coded as part of the main package in: https://github.com/smitdave/MASH-Main/blob/master/MASH-MICRO/R/Site-Methods-VectorControl.R; but have not been documented.
 
-_Note: The repellency effects are yet to be tested by SLWU, so these might not be in place yet._
+_Note: The repellency effects are yet to be tested by SLWU, so these might not be in place. See issues tab for more information on missing behaviors._

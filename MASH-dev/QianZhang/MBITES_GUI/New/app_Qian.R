@@ -22,6 +22,9 @@ if(system("whoami",intern=TRUE) == "chipdelmal"){
 }else if(system("whoami",intern=TRUE) == "smitdave"){
   DIR = "/Users/smitdave/github/MASH-Main/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
+}else if(system("whoami",intern=TRUE) == "dave"){
+  DIR = "/Users/dave/GitHub/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
+  setwd(DIR)
 }else if(system("whoami",intern=TRUE) == "sanchez.hmsc"){
   DIR = "/Users/sanchez.hmsc/Documents/github/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
@@ -74,10 +77,18 @@ mbitesGadget = function(...){
                   h2("Welcome to MBITES!"),
                   hr(),
                   h4("To launch your project, please choose:"),
+                  tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});'))),
                   radioButtons("project", "",
                     c("First time user (Run our demo project)" = "demo",
                       "Start a new project" = "new",
                       "Work on an existing project" = "exist")),
+                  conditionalPanel(condition = "input.project == 'demo'",
+                    actionButton("createDemoFolder", "Run Demo")
+                    ),
+                  conditionalPanel(condition = "input.project == 'new'",
+                    textInput("new_proj_name", "Name your project/folder)", ""),
+                    actionButton("createNewFolder", "Create")
+                    ),
                   uiOutput("prepath.box"),
                   hr(),
                   actionButton("launchgo", "Go!")
@@ -384,12 +395,15 @@ mbitesGadget = function(...){
                   checkboxInput("showM", "M: Mating", FALSE),
                   checkboxInput("showS", "S: Sugar Feeding Attempt", FALSE),
                   checkboxInput("showE", "E: Estivation", FALSE),
-                  checkboxInput("showMale", "Male Mosquitoes", FALSE)
-                  ),
+                  checkboxInput("showMale", "Male Mosquitoes", FALSE),
+                  actionButton('save_inputs_bout', 'Save inputs',width = "100%"),
+                  tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});')))
+                )
+                ,
                 mainPanel(
                   fluidRow(
-                    column(7,helpText("Set parameters for selected bouts:")),
-                    column(5,actionButton('save_inputs_bout', 'Save inputs',width = "50%"))),
+                    column(7,helpText("Set parameters for selected bouts:"))
+                    ),
                   # fluidRow(
                   # column(7,
                   tabsetPanel(
@@ -398,7 +412,6 @@ mbitesGadget = function(...){
                       title = "F",
                       value = "bout_f",
                       uiOutput('panel_f')
-
                       ),
                     tabPanel(
                       title = "B",
@@ -884,6 +897,36 @@ mbitesGadget = function(...){
       if(input$project == "exist"){
         textInput("prepath", "Please provide the previous working directory (the folder contains .json file)", "")
       }
+    })
+
+
+    observeEvent(input$createDemoFolder, {
+      if(!file.exists("demo")){
+        dir.create("demo")
+        js_string <- 'alert("Created Demo Successfully!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string))
+      }else{
+        unlink("demo", recursive = TRUE)
+        dir.create("demo")
+        js_string_2 <-'alert("New demo created! The previous demo has been removed.");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string_2))
+      }
+    })
+
+    observeEvent(input$createNewFolder, {
+      if(!file.exists(input$new_proj_name)){
+        dir.create(input$new_proj_name)
+        js_string_3 <- 'alert("Created New Project Successfully!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string_3))
+      }else{
+        js_string_4 <-'alert("Folder exists. Please rename your project and try it again!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string_4))
+      }
+    })
+
+    observeEvent(input$save_inputs_bout, {
+        js_string_5 <- 'alert("Saved Parameters!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string_5))
     })
 
 
