@@ -4,10 +4,10 @@
 \alias{Human_get_PfSI_PAR}
 \title{PfSI \code{Human} Method: Get PfSI_PAR}
 \usage{
-Human_get_PfSI_PAR(ix = NULL)
+Human_get_PfSI_PAR(ix)
 }
 \description{
-Get either entire list or one named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
+Get named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
 \itemize{
 \item This method is bound to \code{Human$get_PfSI_PAR()}
 }

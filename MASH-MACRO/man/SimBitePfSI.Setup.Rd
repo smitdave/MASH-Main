@@ -15,6 +15,3 @@ Defines a field (list) PfSI_PAR in \code{\link{HumanPop}} and public methods in 
 \description{
 Generate a list of parameters PfSI_PAR in \code{\link{HumanPop}} and public methods in \code{\link{Human}}
 }
-\examples{
-SimBitePfSI.Setup()
-}

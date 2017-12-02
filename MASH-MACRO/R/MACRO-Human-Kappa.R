@@ -113,8 +113,7 @@ updateEIR_HumanPop <- function(){
 #'   * This method is bound to \code{Human$queueInfectiousBites}
 #'
 queueInfectiousBites_PfSI_Human <- function(){
-  mu = private$EIR
-  nBites = rnbinom(n=1,mu=mu,size=0.1) # number of bites today
+  nBites = rnbinom(n=1,mu=private$EIR,size=0.1) # number of bites today
   if(nBites > 0){
     self$add2Q_SimBitePfSI(tEvent = private$TilePointer$get_tNow())
   }

@@ -132,7 +132,7 @@ event_returnHome <- function(tEvent, PAR = NULL){
 returnHome <- function(tEvent, PAR){
 
   self$decrement_bWeightHuman() # decrement the biting weight where I came from
-  private$patchID = private$home_patchID # go back home
+  private$patchID = private$homePatchID # go back home
   self$accumulate_bWeightHuman() # increment the biting weight where I go to
 
   # queue up my next trip

@@ -4,13 +4,13 @@
 \alias{HumanPop_get_PfSI_PAR}
 \title{PfSI \code{HumanPop} Method: Get PfSI_PAR}
 \usage{
-HumanPop_get_PfSI_PAR(ix = NULL)
+HumanPop_get_PfSI_PAR(ix)
 }
 \arguments{
-\item{PfSI_PAR}{new parameter list, see \code{\link{PfSI.Parameters}}}
+\item{ix}{name of parameter to return \code{\link{PfSI.Parameters}}}
 }
 \description{
-Get either entire list or one named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
+Get named element of PfSI_PAR. See \code{\link{PfSI.Parameters}} for definitions.
 \itemize{
 \item This method is bound to \code{HumanPop$get_PfSI_PAR()}
 }

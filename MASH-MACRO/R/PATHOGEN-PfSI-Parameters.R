@@ -40,8 +40,7 @@
 #' @param lmSensPf 0.9; Light Microscopy sensitivity
 #' @param lmSpecPf 0.1; Light Microscopy specificity
 #' @return return a list
-#' @examples
-#' PfSI.Parameters()
+#'
 #' @export
 PfSI.Parameters <- function(
 

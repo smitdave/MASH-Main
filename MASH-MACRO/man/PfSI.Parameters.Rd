@@ -62,6 +62,3 @@ return a list
 \description{
 This is mostly used to modify PfSI parameters for different human populations after creation by using \code{set_PfSI_PAR} method of HumanPop
 }
-\examples{
-PfSI.Parameters()
-}
