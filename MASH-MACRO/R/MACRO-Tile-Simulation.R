@@ -28,8 +28,9 @@ simMacro <- function(tMax){
   self$initCon()
   private$Mosquito$initOutput(con = private$conMosquito)
 
-  # initialize human biting weight
-  # private$HumanPop$initialize_bWeightHuman()
+  # initialize humans
+  private$HumanPop$initialize_bWeightHuman()
+  private$HumanPop$initialize_travel()
 
   cat("beginning simulation\n",sep="")
 
@@ -43,6 +44,12 @@ simMacro <- function(tMax){
 
     private$Mosquito$oneDay_popDynamics()
     private$Mosquito$oneDay_oviposition()
+
+    private$HumanPop$simHumans(tPause=private$tNow)
+
+    private$HumanPop$updateKappa()
+    private$HumanPop$updateEIR()
+    private$HumanPop$queueInfectiousBites()
 
     # output
     private$Mosquito$output(con = private$conMosquito)

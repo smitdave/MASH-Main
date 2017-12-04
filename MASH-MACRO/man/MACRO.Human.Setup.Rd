@@ -4,8 +4,8 @@
 \alias{MACRO.Human.Setup}
 \title{MACRO Human Module Setup}
 \usage{
-MACRO.Human.Setup()
+MACRO.Human.Setup(pathogen = "PfSI")
 }
 \description{
-MACRO Human Module Setup
+Initialize movement and biting modules for MACRO Humans.
 }

@@ -19,6 +19,15 @@
 
 #' Move \code{Human} Event: Initialize Travel
 #'
+#' Initialize travel model when simulation begins by calling \code{\link{initialize_travel_Human}} for all humans.
+#'  * This method is bound to \code{HumanPop$initialize_travel}
+#'
+initialize_travel_HumanPop <- function(){
+  private$pop$apply(tag="initialize_travel",returnVal=FALSE)
+}
+
+#' Move \code{Human} Event: Initialize Travel
+#'
 #' Initialize travel model when simulation begins by queueing up a trip calling \code{\link{add2Q_takeTrip}}
 #'  * This method is bound to \code{Human$initialize_travel}
 #'

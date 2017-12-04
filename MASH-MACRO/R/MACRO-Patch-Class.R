@@ -90,6 +90,23 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
 ###############################################################################
 
 ###############################################################################
+# Travel
+###############################################################################
+
+#' MacroPatch: Get Patch Human Travel Weight
+#'
+#' Return \code{private$get_travelWeight}
+#'
+get_travelWeight_MacroPatch <- function(){
+   return(private$travelWeight)
+}
+
+MacroPatch$set(which = "public",name = "get_travelWeight",
+  value = get_travelWeight_MacroPatch, overwrite = TRUE
+)
+
+
+###############################################################################
 # Infection Dynamics
 ###############################################################################
 

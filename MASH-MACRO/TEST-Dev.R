@@ -1,10 +1,18 @@
 rm(list=ls());gc()
 library(MASHmacro)
 
+PfSI.Setup()
+SimBitePfSI.Setup()
+MACRO.Human.Setup(pathogen = "PfSI")
+
 directory = "/Users/slwu89/Desktop/MACRO"
+
 n = 10
+
+# aquatic ecology parameters
 aquaPar = AquaPop_Emerge.Parameters(nPatch = n,lambda = rep(50,n),seasonality = TRUE)
 
+# patch parameters
 patchPar = replicate(n = n,expr = list(bWeightZoo=1,bWeightZootox=0),simplify = FALSE)
 rho = 0.75
 element = function(i,j){rho^abs(i-j)}
@@ -21,8 +29,10 @@ patchPar = lapply(X = 1:n,FUN = function(i){
   )
 })
 
+# mosquito parameters
 mosquitoPar = list(model="RM", M=rep(50,n),EIP = rep(11,365),p=0.9, f=0.3, Q=0.9, v=20, psi = diag(n))
 
+# human parameters
 patch_humans = rpois(n = n,lambda = 100)
 n_humans = sum(patch_humans)
 patch_id = rep(x = 1:n,patch_humans)
@@ -42,11 +52,15 @@ humanPar = lapply(X = 1:n_humans,function(i){
   )
 })
 
+# PfPR
+pfpr = rep(0.25,n)
 
-
-
+# make a tile
 tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = directory)
 
+tile$get_HumansPointer()$init_PfSI(pfpr)
+
+# run simulations
 tile$simMacro(tMax = 1000)
 tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
 tile$simMacro(tMax = 1000)

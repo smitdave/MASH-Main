@@ -116,29 +116,29 @@ PfSI.Setup <- function(
   # PfSI MICRO Mosquito methods
   ###################################################################
 
-  ###################################################################
-  # Add PfSI Pathogen Object to 'MicroMosquitoFemale' & 'MicroMosquitoPopFemale' Class
-  ###################################################################
-
-  MicroMosquitoFemale$set(which = "public",name = "probing",
-            value = probing_PfSI,
-            overwrite = overwrite
-  )
-
-  MicroMosquitoFemale$set(which = "public",name = "feeding",
-            value = feeding_PfSI,
-            overwrite = overwrite
-  )
-
-  MicroMosquitoFemale$set(which = "public",name = "init_Pathogens",
-            value = init_Pathogens_MicroMosquitoFemale_PfSI,
-            overwrite = overwrite
-  )
-
-  MicroMosquitoPopFemale$set(which = "public",name = "init_Pathogens",
-            value = init_Pathogens_MicroMosquitoPopFemale_PfSI,
-            overwrite = overwrite
-  )
+  # ###################################################################
+  # # Add PfSI Pathogen Object to 'MicroMosquitoFemale' & 'MicroMosquitoPopFemale' Class
+  # ###################################################################
+  #
+  # MicroMosquitoFemale$set(which = "public",name = "probing",
+  #           value = probing_PfSI,
+  #           overwrite = overwrite
+  # )
+  #
+  # MicroMosquitoFemale$set(which = "public",name = "feeding",
+  #           value = feeding_PfSI,
+  #           overwrite = overwrite
+  # )
+  #
+  # MicroMosquitoFemale$set(which = "public",name = "init_Pathogens",
+  #           value = init_Pathogens_MicroMosquitoFemale_PfSI,
+  #           overwrite = overwrite
+  # )
+  #
+  # MicroMosquitoPopFemale$set(which = "public",name = "init_Pathogens",
+  #           value = init_Pathogens_MicroMosquitoPopFemale_PfSI,
+  #           overwrite = overwrite
+  # )
 
   ###################################################################
   # Add PfSI Parameters to 'HumanPop' Class
@@ -207,26 +207,14 @@ PfSI.Setup <- function(
   )
 
   # initialize PfSI infections with patch parasite prevalence PfPR
-  HumanPop$set(which = "public",name = "init_MICRO_PfSI",
-            value = init_MICRO_PfSI,
+  HumanPop$set(which = "public",name = "init_PfSI",
+            value = init_PfSI_HumanPop,
             overwrite = overwrite
   )
 
   # initialize PfSI infections with patch parasite prevalence PfPR
-  HumanPop$set(which = "public",name = "init_MACRO_PfSI",
-            value = init_MACRO_PfSI,
-            overwrite = overwrite
-  )
-
-  # initialize PfSI infections for MACRO
-  MacroTile$set(which = "public",name = "init_PfSI",
-            value = init_MacroTile_PfSI,
-            overwrite = overwrite
-  )
-
-  # history getter
-  HumanPop$set(which = "public",name = "get_PfSI_history",
-            value = HumanPop_get_PfSI_history,
+  Human$set(which = "public",name = "init_PfSI",
+            value = init_PfSI_Human,
             overwrite = overwrite
   )
 
