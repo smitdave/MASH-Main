@@ -18,8 +18,12 @@
 #'
 #' Initialize movement and biting modules for MACRO Humans.
 #'
+#' @param pathogen pathogen model
+#' @param tripFrequency queues trips in \code{\link{initialize_travel_Human}} and \code{\link{returnHome}}
+#' @param tripDuration queues return home events in \code{\link{takeTrip}}
+#'
 #' @export
-MACRO.Human.Setup <- function(pathogen = "PfSI"){
+MACRO.Human.Setup <- function(pathogen = "PfSI", tripFrequency = 1/365, tripDuration = 14){
 
   cat("initializing MACRO Human Kappa & Move Modules\n")
 
@@ -97,12 +101,12 @@ MACRO.Human.Setup <- function(pathogen = "PfSI"){
 
   # trip frequency
   Human$set(which = "private",name = "tripFrequency",
-            value = numeric(1), overwrite = TRUE
+            value = tripFrequency, overwrite = TRUE
   )
 
   # trip duration
   Human$set(which = "private",name = "tripDuration",
-            value = numeric(1), overwrite = TRUE
+            value = tripDuration, overwrite = TRUE
   )
 
   HumanPop$set(which = "public",name = "initialize_travel",

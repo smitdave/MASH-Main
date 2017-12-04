@@ -77,6 +77,9 @@ Mosquito_RM <- R6::R6Class(classname="Mosquito_RM",
                          private$psi           = psi
                          private$P             = p^c(1:private$maxEIP) # survival over EIP
 
+                         # set inheriting
+                         private$a             = private$f * private$Q
+
                        }
 
                      ),
@@ -117,8 +120,12 @@ Mosquito_RM <- R6::R6Class(classname="Mosquito_RM",
 #'
 #'  * This method is  bound to \code{Mosquito_RM$get_M}
 #'
-get_M_Mosquito_RM <- function(){
-  return(private$M)
+get_M_Mosquito_RM <- function(patch = NULL){
+  if(is.null(patch)){
+    return(private$M)
+  } else {
+    return(private$M[patch])
+  }
 }
 
 Mosquito_RM$set(which = "public",name = "get_M",
@@ -131,8 +138,12 @@ Mosquito_RM$set(which = "public",name = "get_M",
 #'
 #'  * This method is  bound to \code{Mosquito_RM$get_Y}
 #'
-get_Y_Mosquito_RM <- function(){
-  return(private$Y)
+get_Y_Mosquito_RM <- function(patch = NULL){
+  if(is.null(patch)){
+    return(private$Y)
+  } else {
+    return(private$Y[patch])
+  }
 }
 
 Mosquito_RM$set(which = "public",name = "get_Y",
@@ -145,8 +156,12 @@ Mosquito_RM$set(which = "public",name = "get_Y",
 #'
 #'  * This method is  bound to \code{Mosquito_RM$get_Y}
 #'
-get_Z_Mosquito_RM <- function(){
-  return(private$Z)
+get_Z_Mosquito_RM <- function(patch = NULL){
+  if(is.null(patch)){
+    return(private$Z)
+  } else {
+    return(private$Z[patch])
+  }
 }
 
 Mosquito_RM$set(which = "public",name = "get_Z",

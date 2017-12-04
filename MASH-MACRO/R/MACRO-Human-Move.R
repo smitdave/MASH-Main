@@ -37,6 +37,7 @@ initialize_travel_Human <- function(){
 
   # queue the trip
   PAR = list(tDest=tDest)
+  # if(!is.numeric(PAR$tDest)){browser()}
   self$add2Q_takeTrip(tEvent=tTrip,PAR=PAR)
 }
 
@@ -55,8 +56,11 @@ initialize_travel_Human <- function(){
 #' @param tEvent time of trip
 #' @param PAR \code{NULL}
 #'
-add2Q_takeTrip <- function(tEvent, PAR = NULL){
+add2Q_takeTrip <- function(tEvent, PAR){
+  # if(!is.numeric(PAR$tDest)){browser()}
+  # print(PAR)
   private$EventQueue$addEvent2Q(event = self$event_takeTrip(tEvent = tEvent, PAR = PAR))
+  # private$EventQueue$addEvent2Q(event = list(tEvent = tEvent, PAR = PAR, tag = "takeTrip"))
 }
 
 #' Move \code{Human} Event: Generate a Trip Event
@@ -69,7 +73,8 @@ add2Q_takeTrip <- function(tEvent, PAR = NULL){
 #' @param tEvent time of trip
 #' @param PAR \code{NULL}
 #'
-event_takeTrip <- function(tEvent, PAR = NULL){
+event_takeTrip <- function(tEvent, PAR){
+  # if(!is.numeric(PAR$tDest)){browser()}
   return(list(tEvent = tEvent, PAR = PAR, tag = "takeTrip"))
 }
 
@@ -84,7 +89,7 @@ event_takeTrip <- function(tEvent, PAR = NULL){
 #' @param PAR must be a list containing character \code{tDest}, the index of the site I am visiting
 #'
 takeTrip <- function(tEvent, PAR){
-
+  # if(!is.numeric(PAR$tDest)){browser()}
   self$decrement_bWeightHuman() # decrement the biting weight where I came from
   private$patchID = PAR$tDest # set my current location
   self$accumulate_bWeightHuman() # increment the biting weight where I go to
@@ -111,7 +116,7 @@ takeTrip <- function(tEvent, PAR){
 #' @param PAR \code{NULL}
 #'
 add2Q_returnHome <- function(tEvent, PAR = NULL){
-  private$EventQueue$addEvent2Q(event = self$event_takeTrip(tEvent = tEvent, PAR = PAR))
+  private$EventQueue$addEvent2Q(event = self$event_returnHome(tEvent = tEvent, PAR = PAR))
 }
 
 #' Move \code{Human} Event: Generate a Return Home Event

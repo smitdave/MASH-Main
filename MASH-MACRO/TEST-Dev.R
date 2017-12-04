@@ -3,7 +3,7 @@ library(MASHmacro)
 
 PfSI.Setup()
 SimBitePfSI.Setup()
-MACRO.Human.Setup(pathogen = "PfSI")
+MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/365,tripDuration = 14)
 
 directory = "/Users/slwu89/Desktop/MACRO"
 
@@ -33,7 +33,7 @@ patchPar = lapply(X = 1:n,FUN = function(i){
 mosquitoPar = list(model="RM", M=rep(50,n),EIP = rep(11,365),p=0.9, f=0.3, Q=0.9, v=20, psi = diag(n))
 
 # human parameters
-patch_humans = rpois(n = n,lambda = 100)
+patch_humans = rpois(n = n,lambda = 20)
 n_humans = sum(patch_humans)
 patch_id = rep(x = 1:n,patch_humans)
 home_id = rep(x = 1:n,patch_humans)
@@ -62,7 +62,7 @@ tile$get_HumansPointer()$init_PfSI(pfpr)
 
 # run simulations
 tile$simMacro(tMax = 1000)
-tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
-tile$simMacro(tMax = 1000)
-tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
+# tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
+# tile$simMacro(tMax = 1000)
+# tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
 
