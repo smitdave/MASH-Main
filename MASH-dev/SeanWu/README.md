@@ -2,6 +2,9 @@
 
 ## Work Queue
 
+### Debugging:
+* PfSI.Setup in MACRO and MICRO need to be de-coupled. MACRO setup should only target objects from MACRO and MICRO setup should only target objects from MICRO.
+
 ### MACRO:
 * Support initial simulations on Bioko Island data through bugfixes.
   * Recommended Bug Fixes, from DTCitron (10/31/17)
