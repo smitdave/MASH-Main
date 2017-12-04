@@ -72,7 +72,7 @@ SimBitePfSI.Setup <- function(overwrite = TRUE){
 #'
 add2Q_SimBitePfSI_Human <- function(tEvent, PAR = NULL){
   PAR = list()
-  PAR$mosquitoPfSI = MASHcpp::mosquitoPfSI(PfID_init = -1L, MosquitoID_init = -1L, infected_init = TRUE)
+  PAR$mosquitoPfSI = MASHcpp::mosquitoPfSI(PfID_init = -1L, MosquitoID_init = "SimBite", tInf_init = tEvent, infected_init = TRUE)
   private$EventQueue$addEvent2Q(event = self$event_SimBitePfSI(tEvent = tEvent, PAR = PAR))
 }
 
