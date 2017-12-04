@@ -1594,8 +1594,56 @@ mbitesGadget = function(...){
       toggle(condition = input$showMale, selector = "#boutbar li a[data-value=bout_male]")
     })
 
+    observeEvent(input$showF, {
+      if(input$showF){
+        updateTabsetPanel(session, "boutbar",selected = "bout_f")
+      }
+    })
+    observeEvent(input$showB, {
+      if(input$showB){
+        updateTabsetPanel(session, "boutbar",selected = "bout_b")
+      }
+    })
+    observeEvent(input$showR, {
+      if(input$showR){
+        updateTabsetPanel(session, "boutbar",selected = "bout_r")
+      }
+    })
+    observeEvent(input$showL, {
+      if(input$showL){
+        updateTabsetPanel(session, "boutbar",selected = "bout_l")
+      }
+    })
+    observeEvent(input$showO, {
+      if(input$showO){
+        updateTabsetPanel(session, "boutbar",selected = "bout_o")
+      }
+    })
+    observeEvent(input$showS, {
+      if(input$showS){
+        updateTabsetPanel(session, "boutbar",selected = "bout_s")
+      }
+    })
+    observeEvent(input$showM, {
+      if(input$showM){
+        updateTabsetPanel(session, "boutbar",selected = "bout_m")
+      }
+    })
+    observeEvent(input$showE, {
+      if(input$showE){
+        updateTabsetPanel(session, "boutbar",selected = "bout_e")
+      }
+    })
+    observeEvent(input$showMale, {
+      if(input$showMale){
+        updateTabsetPanel(session, "boutbar",selected = "bout_male")
+      }
+    })
 
-    ##################Sync inputs for multiple pages##########################################
+
+    ##################Sync inputs for multiple pages#########################################
+
+
     ##########################Blood Meal######################################
     observe({
       	updateCheckboxInput(session, "showB", NULL, value = input$showB_Option)
