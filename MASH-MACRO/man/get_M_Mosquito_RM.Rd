@@ -4,7 +4,7 @@
 \alias{get_M_Mosquito_RM}
 \title{Get Mosquito Density for all Patches}
 \usage{
-get_M_Mosquito_RM()
+get_M_Mosquito_RM(patch = NULL)
 }
 \description{
 Return the vector of mosquito densities for all patches

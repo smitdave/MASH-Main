@@ -90,6 +90,23 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
 ###############################################################################
 
 ###############################################################################
+# Travel
+###############################################################################
+
+#' MacroPatch: Get Patch Human Travel Weight
+#'
+#' Return \code{private$get_travelWeight}
+#'
+get_travelWeight_MacroPatch <- function(){
+   return(private$travelWeight)
+}
+
+MacroPatch$set(which = "public",name = "get_travelWeight",
+  value = get_travelWeight_MacroPatch, overwrite = TRUE
+)
+
+
+###############################################################################
 # Infection Dynamics
 ###############################################################################
 
@@ -185,6 +202,46 @@ accumulate_bWeightZoo_MacroPatch <- function(bWeightZoo){
 
 MacroPatch$set(which = "public",name = "accumulate_bWeightZoo",
   value = accumulate_bWeightZoo_MacroPatch, overwrite = TRUE
+)
+
+#' MacroPatch: Get Patch Zootox Biting Weight
+#'
+#' Return \code{private$bWeightZootox}
+#'
+get_bWeightZootox_MacroPatch <- function(){
+   return(private$bWeightZootox)
+}
+
+MacroPatch$set(which = "public",name = "get_bWeightZootox",
+  value = get_bWeightZootox_MacroPatch, overwrite = TRUE
+)
+
+#' MacroPatch: Set Patch Zootox Biting Weight
+#'
+#' Set \code{private$bWeightZootox}
+#'
+#' @param bWeightZootox numeric
+#'
+set_bWeightZootox_MacroPatch <- function(bWeightZootox){
+   private$bWeightZootox = bWeightZootox
+}
+
+MacroPatch$set(which = "public",name = "set_bWeightZootox",
+  value = set_bWeightZootox_MacroPatch, overwrite = TRUE
+)
+
+#' MacroPatch: Accumulate Patch Zootox Biting Weight
+#'
+#' Accumulate \code{private$bWeightZootox} (equivalent to private$bWeightZootox += bWeightZootox)
+#'
+#' @param bWeightZootox numeric
+#'
+accumulate_bWeightZootox_MacroPatch <- function(bWeightZootox){
+  private$bWeightZootox = private$bWeightZootox + bWeightZootox
+}
+
+MacroPatch$set(which = "public",name = "accumulate_bWeightZootox",
+  value = accumulate_bWeightZootox_MacroPatch, overwrite = TRUE
 )
 
 #' MacroPatch: Get Patch \eqn{\Kappa}
