@@ -15,7 +15,13 @@ Each instance of a \code{Human} lives in a \code{\link{Human}}
 \section{Constructor}{
 
 \itemize{
-\item item 1:
+\item myID: a character ID
+\item houseID: integer ID of my current house
+\item patchID: integer ID of my current patch
+\item homeHouseID: integer ID of my home house
+\item homePatchID: integer ID of my home patch
+\item age: numeric birthday (negative; simulation begins at 0)
+\item bWeight: numeric biting weight
 }
 }
 
@@ -28,8 +34,8 @@ Each instance of a \code{Human} lives in a \code{\link{Human}}
 \item set_houseID: see \code{\link{set_houseID_Human}}
 \item get_patchID: see \code{\link{get_patchID_Human}}
 \item set_patchID: see \code{\link{et_patchID_Human}}
-\item get_bDay: see \code{\link{get_bDay_Human}}
-\item set_bDay: see \code{\link{set_bDay_Human}}
+\item get_age: see \code{\link{get_age_Human}}
+\item set_age: see \code{\link{set_age_Human}}
 \item get_EventQ: see \code{\link{get_EventQ_Human}}
 \item get_Alive: see \code{\link{get_Alive_Human}}
 \item set_Alive: see \code{\link{set_Alive_Human}}

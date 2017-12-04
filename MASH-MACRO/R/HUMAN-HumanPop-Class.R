@@ -26,7 +26,7 @@
 #'  * N: number of humans
 #'  * patchID: integer ID of the patch this \code{HumanPop} lives in
 #'  * houseIDs = NULL: vector of house IDs (only needed in MICRO, in MACRO human location is only resolved to the \code{\link{MacroPatch}} level)
-#'  * bDays: vector of birthdays (given as tStart - age at start)
+#'  * ages: vector of birthdays (given as tStart - age at start)
 #'  * bWeights: vector of biting weights
 #'  * tStart = 0: time to start simulation; constructor will complain if is a value other than 0
 #'
@@ -62,16 +62,28 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                       # Constructor
                       #################################################
 
-                      initialize = function(patchID, HumanPop_PAR){
+                      # initialize = function(patchID, HumanPop_PAR){
+                      initialize = function(HumanPop_PAR){
 
-                        private$pop = MASHcpp::HashMap$new(N = HumanPop_PAR$N+50L)
-                        private$N = HumanPop_PAR$N
+                        private$N = length(HumanPop_PAR)
+                        private$pop = MASHcpp::HashMap$new(N = private$N)
                         private$tStart = 0
+
+                        # private$pop = MASHcpp::HashMap$new(N = HumanPop_PAR$N+50L)
+                        # private$N = HumanPop_PAR$N
+                        # private$tStart = 0
 
                         for(i in 1:private$N){
 
-                          id = paste0(i,"_",patchID)
-                          private$pop$assign(key=id,value=Human$new(myID = id, houseID = HumanPop_PAR$homeIDs[i], patchID = patchID, bDay = HumanPop_PAR$bDay[i], bWeight = HumanPop_PAR$bWeight[i]))
+                          cat("initializing human ",i," of ",private$N,"\n")
+
+                          # id = paste0(i,"_",patchID)
+                          # human = Human$new(myID = id, houseID = HumanPop_PAR$homeIDs[i], patchID = patchID, age = HumanPop_PAR$age[i], bWeight = HumanPop_PAR$bWeight[i])
+                          # private$pop$assign(key=id,value=human)
+
+                          id = paste0(i,"_",HumanPop_PAR[[i]]$patchID)
+                          human = Human$new(myID=id,houseID=HumanPop_PAR[[i]]$houseID,patchID=HumanPop_PAR[[i]]$patchID,homeHouseID=HumanPop_PAR[[i]]$houseID,homePatchID=HumanPop_PAR[[i]]$patchID,age=HumanPop_PAR[[i]]$age,bWeight=HumanPop_PAR[[i]]$bWeight)
+                          private$pop$assign(key=id,value=human)
 
                         }
 

@@ -62,7 +62,7 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$Landscape = Landscape$new(Landscape_PAR)
 
                      # generate human object
-                     private$HumanPop = MASHmacro::HumanPop$new(patchID = 1L,HumanPop_PAR)
+                     private$HumanPop = MASHmacro::HumanPop$new(HumanPop_PAR)
 
                      # generate movement object
                      private$movementFemale = MicroKernel_exactAll(private$Landscape,male=FALSE,sigma=3,eps=0.1,beta=0)

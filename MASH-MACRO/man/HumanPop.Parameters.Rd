@@ -30,6 +30,6 @@ HumanPop.Parameters(nSite = 5)
  * siteHumanIDs: list of human IDs by site
  * homeIDs: vector of site IDs of each human
  * siteAges: list of ages of humans by site
- * bDay: vector of birthdays of each human
+ * age: vector of birthdays of each human
  * bWeight: biting weight on humans
 }

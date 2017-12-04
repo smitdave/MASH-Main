@@ -110,7 +110,7 @@ PfSI.Setup <- function(
 
 ){
 
-  message(paste0("initializing PfSI PATHOGEN module"))
+  cat("initializing PfSI PATHOGEN module\n")
 
   ###################################################################
   # PfSI MICRO Mosquito methods
