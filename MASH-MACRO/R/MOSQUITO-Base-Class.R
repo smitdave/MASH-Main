@@ -93,12 +93,21 @@ Mosquito_Base <- R6::R6Class(classname = "Mosquito_Base",
                      # C++: make this a virtual function
                      # this resets the mosquito population back to initial values for repeated runs
                      cat("reset for Mosquito_Base should never be called\n")
+                   },
+
+                   # getters
+
+                   get_a = function(){
+                     return(private$a)
                    }
 
                   ),
 
                   # private methods & fields
                   private = list(
+
+                    # human feeding rate
+                    a                         = numeric(1),
 
                     # Pointers
                     TilePointer               = NULL # C++: make this a std::weak_ptr

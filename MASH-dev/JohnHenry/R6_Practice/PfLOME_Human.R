@@ -70,8 +70,16 @@ Human <- R6Class("Human",
                      private$age
                    },
                    
+                   set_age = function(newAge){
+                     private$age = newAge
+                   },
+                   
                    get_sex = function(){
                      private$sex
+                   },
+                   
+                   set_sex = function(newSex){
+                     private$sex = newSex
                    },
                    
                    get_locH = function(){
@@ -98,8 +106,8 @@ Human <- R6Class("Human",
                      private$healthState$get_HRP2()
                    },
                    
-                   set_HRP2 = function(newHRP2){
-                     private$healthState$set_HRP2(newHRP2)
+                   get_pLDH = function(){
+                     private$healthState$get_pLDH()
                    },
                    
                    get_Ptot = function(){

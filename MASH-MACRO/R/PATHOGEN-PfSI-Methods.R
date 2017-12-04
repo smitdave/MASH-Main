@@ -86,7 +86,7 @@ init_PfSI_HumanPop <- function(PfPR){
 #' @param PfPR numeric; probability I am infected
 #'
 init_PfSI_Human <- function(PfPR){
-  if(runif(1) < PfPR){
+  if(runif(1) < PfPR[private$patchID]){
     self$infectHumanPfSI(tEvent = 0, PAR = list(vectorID="initInf"))
   } else {
     self$get_Pathogens()$track_history(tEvent = 0, event = "S")

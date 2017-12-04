@@ -4,7 +4,7 @@
 \alias{event_takeTrip}
 \title{Move \code{Human} Event: Generate a Trip Event}
 \usage{
-event_takeTrip(tEvent, PAR = NULL)
+event_takeTrip(tEvent, PAR)
 }
 \arguments{
 \item{tEvent}{time of trip}

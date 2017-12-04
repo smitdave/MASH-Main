@@ -4,8 +4,16 @@
 \alias{MACRO.Human.Setup}
 \title{MACRO Human Module Setup}
 \usage{
-MACRO.Human.Setup()
+MACRO.Human.Setup(pathogen = "PfSI", tripFrequency = 1/365,
+  tripDuration = 14)
+}
+\arguments{
+\item{pathogen}{pathogen model}
+
+\item{tripFrequency}{queues trips in \code{\link{initialize_travel_Human}} and \code{\link{returnHome}}}
+
+\item{tripDuration}{queues return home events in \code{\link{takeTrip}}}
 }
 \description{
-MACRO Human Module Setup
+Initialize movement and biting modules for MACRO Humans.
 }
