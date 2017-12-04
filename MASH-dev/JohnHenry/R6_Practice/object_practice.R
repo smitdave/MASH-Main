@@ -26,7 +26,7 @@ bites = c(100,200,300,400,500)
 moi = 1+rnbinom(length(bites), mu=3, size = .3)
 pfid = 1
 
-for(t in 1:600){
+for(t in 1:800){
   someGuy$updateHuman(t)
   if(t %in% bites){
     k = which(bites==t)
@@ -44,7 +44,7 @@ for(t in 1:600){
 ######################### plotting functions #############################
 
 plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",
-     ylim=c(-3,11),xlim=c(0,600),xlab='days',ylab='log10 iRBC')
+     ylim=c(-3,11),xlim=c(0,800),xlab='days',ylab='log10 iRBC')
 lines(1:length(someGuy$get_history()$Gtot),someGuy$get_history()$Gtot,lty=2)
 lines(1:length(someGuy$get_history()$Fever),someGuy$get_history()$Fever)
 pfped$get_PedLength()

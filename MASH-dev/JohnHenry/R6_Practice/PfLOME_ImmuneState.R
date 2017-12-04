@@ -39,12 +39,24 @@ ImmuneState <- R6Class("ImmuneState",
                            private$BSImmCounters
                          },
                          
+                         set_BSImmCounters = function(newBSImmCounters){
+                           private$BSImmCounters = newBSImmCounters
+                         },
+                         
                          get_nBSImmCounters = function(){
                            private$nBSImmCounters
                          },
                          
+                         set_nBSImmCounters = function(newnBSImmCounters){
+                           private$nBSImmCounters = newnBSImmCounters
+                         },
+                         
                          get_BSImm = function(){
                            private$BSImm
+                         },
+                         
+                         set_BSImm = function(newBSImm){
+                           private$BSImm = newBSImm
                          },
                          
                          get_typeImm = function(t,ptype){
@@ -55,6 +67,10 @@ ImmuneState <- R6Class("ImmuneState",
                            print(private$typeImm)
                            rowSums(weight*private$typeImm)
                          },
+                         
+                         
+                         ################# update methods ##################
+                         
                          
                          update_immuneState = function(t,Ptot){
                            
