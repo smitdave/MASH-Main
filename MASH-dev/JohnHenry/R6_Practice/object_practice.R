@@ -62,4 +62,3 @@ plot(1:length(someGuy$get_history()$RBC),someGuy$get_history()$RBC,type="l",xlab
 plot(1:length(someGuy$get_history()$HRP2),someGuy$get_history()$HRP2,type="l",xlab='days')
 ##pLDH
 plot(1:length(someGuy$get_history()$pLDH),someGuy$get_history()$pLDH,type="l",xlab='days')
-

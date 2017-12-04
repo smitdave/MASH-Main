@@ -100,52 +100,56 @@ HealthState <- R6Class("HealthState",
                          
                          
                          RDT = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          HSRDT = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          PCR = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          LAMP = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          LightMic = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          sigmoidX = function(X, X50=6, Xs=3, atMax=13){
                            pmin((1/(1+exp(-Xs*(X-X50))) - 1/(1+exp(Xs*X50)))/(1/(1+exp(-Xs*(atMax-X50))) - 1/(1+exp(Xs*X50))),1)
+                         },
+                         
+                         Treat = function(Rx){
+                           
                          }
                          
                          
