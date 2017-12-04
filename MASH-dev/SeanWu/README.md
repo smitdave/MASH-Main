@@ -3,7 +3,8 @@
 ## Work Queue
 
 ### Debugging:
-* PfSI.Setup in MACRO and MICRO need to be de-coupled. MACRO setup should only target objects from MACRO and MICRO setup should only target objects from MICRO.
+1. PfSI.Setup in MACRO and MICRO need to be de-coupled. MACRO setup should only target objects from MACRO and MICRO setup should only target objects from MICRO.
+2. HumanPop constructor changed; make sure MICRO can work with the new changes.
 
 ### MACRO:
 * Support initial simulations on Bioko Island data through bugfixes.
