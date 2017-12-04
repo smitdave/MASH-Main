@@ -86,7 +86,7 @@ mbitesGadget = function(...){
                     actionButton("createDemoFolder", "Run Demo")
                     ),
                   conditionalPanel(condition = "input.project == 'new'",
-                    textInput("new_proj_name", "Name your project/folder)", ""),
+                    textInput("new_proj_name", "Name your project/folder", ""),
                     actionButton("createNewFolder", "Create")
                     ),
                   uiOutput("prepath.box"),
@@ -316,16 +316,16 @@ mbitesGadget = function(...){
                 tabPanel("Survival",
                 tabsetPanel(
                     tabPanel("Flight Energetics",
-                      column(6,
+                      column(4,
                     # sliderInput(inputId = "S_u", label ="Per-bout Energy Expenditure",
                    #              value = 1/7, min = 0, max = 1, step = 0.01),
                       sliderInput(inputId = "S_u_inv", label ="Number of Bouts",
                                   value = 7, min = 0, max = 20, step = 1),
                       hr(),
-                      tags$h4("As Function of Energy Reserves:"),
-                      sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probabilityof Survival",
+                      tags$h5("Survival Probablity Function of Energy Reserves:"),
+                      sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probability of Survival",
                                   value = 20, min = 0, max = 100, step = 1),
-                      sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probabilityof Survival",
+                      sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probability of Survival",
                                   value = 10, min = 0, max = 100, step = 1)
                     ),
                       column(6,
@@ -333,7 +333,7 @@ mbitesGadget = function(...){
                         )
                       ),
                     tabPanel("Senescence",
-                      column(6,
+                      column(4,
                       checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = FALSE),
                       conditionalPanel(condition = "!input.SENESCE",
                       sliderInput(inputId = "sns_a", label ="Exp: a",
@@ -346,14 +346,15 @@ mbitesGadget = function(...){
                         )
                       ),
                     tabPanel("Damage",
-                      column(6,
+                      column(4,
                       checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
                       sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
                                   value = 0.5, min = 0, max = 1, step = 0.1),
-                      sliderInput(inputId = "ttsz_a", label ="Shape Param: a for Tattering Damage",
-                                  value = 5, min = 0, max = 100, step = 1),
-                      sliderInput(inputId = "ttsz_b", label ="Shape Param: b for Tattering Damage",
-                                  value = 95, min = 0, max = 100, step = 1),
+                      sliderInput(inputId = "ttsz_mean", label ="Mean of Tattering Damage",
+                                  value = 0.4, min = 0, max = 1, step = 0.01),
+                      sliderInput(inputId = "ttsz_v", label ="Dispersion of Tattering Damage (a + b) in Beta(a,b)",
+                                  value = 5, min = 0, max = 20, step = 0.1),
+                      hr(),
                       sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
                                   value = 15, min = 0, max = 100, step = 1),
                       sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
@@ -436,11 +437,11 @@ mbitesGadget = function(...){
                   	conditionalPanel(condition = "input.showS_Option",
 		              #sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
 		                              #value = 0.02, min = 0, max = 2, step = 0.01),
-		              h5("Mean Time Elapsed: "),
-		                fluidRow(
-		                column(3,selectInput("S_time_h_Option", label = "hours", choices = seq(0,24,1) , selected = 0)),
-		                column(3,selectInput("S_time_m_Option", label = "Minutes", choices = seq(0,55,5), selected = 30))
-		                ),
+		              # h5("Mean Time Elapsed: "),
+		              #   fluidRow(
+		              #   column(3,selectInput("S_time_h_Option", label = "hours", choices = seq(0,24,1) , selected = 0)),
+		              #   column(3,selectInput("S_time_m_Option", label = "Minutes", choices = seq(0,55,5), selected = 30))
+		              #   ),
 		              sliderInput(inputId = "S_succeed_Option", label ="Probability of Success",
 		                              value = 0.99, min = 0.9, max = 1, step = 0.01),
 		              sliderInput(inputId = "S_surv_Option", label ="Baseline Probability of Survival",
@@ -1034,34 +1035,45 @@ mbitesGadget = function(...){
 
     ################# Survival ####################################################
 
-    output$senescence_plot <- renderPlot({
-
-      age <- seq(0, 50, 0.001)
-      senescence_surv <- function(x, ...){
-        (2 + input$sns_b)/(1 + input$sns_b) - exp(x * input$sns_a)/(input$sns_b + x * input$sns_a)
-      }
-      if(!input$SENESCE){
-      ggplot(data.frame(age), aes(x = age)) + stat_function(fun= senescence_surv) + ylim(0,1) +
-        xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
-      }else{
-      ggplot(data.frame(age), aes(age)) + geom_hline(aes(yintercept = 1)) + ylim(0,1) +
-      scale_x_discrete()+
-        xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
-      }
-    })
-
     output$flight_energetics_plot <- renderPlot({
-        curve(exp(input$S_a * x)/(exp(input$S_a * x) + input$S_b), ylab = "Mortality", xlab = "Energy Reserves")
+        curve(exp(input$S_a * x)/(exp(input$S_a * x) + input$S_b), ylab = "Survival Probability", xlab = "Energy Reserves",
+          col = "Blue", lwd = 1.5)
     })
+
+    output$senescence_plot <- renderPlot({
+      #age <- seq(0, 50, 0.001)
+      # senescence_surv <- function(x, ...){
+      #   (2 + input$sns_b)/(1 + input$sns_b) - exp(x * input$sns_a)/(input$sns_b + x * input$sns_a)
+      # }
+      if(!input$SENESCE){
+        curve((2 + input$sns_b)/(1 + input$sns_b) - exp(x * input$sns_a)/(input$sns_b + x * input$sns_a), 
+          ylim = c(0,1), xlim = c(0,50), col = "Blue",
+          xlab = "Chronological Age (days)", ylab = "Probability of Survival, per bout")
+      }else{
+        curve((0 * x + 1), from = 0, to = 50, ylim = c(0,1), col = "Green",
+          xlab = "Chronological Age (days)", ylab = "Probability of Survival, per bout")
+      # ggplot(data.frame(age), aes(x = age)) + stat_function(fun= senescence_surv) + ylim(0,1) +
+      #   xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
+      # }else{
+      # ggplot(data.frame(age), aes(age)) + geom_hline(aes(yintercept = 1)) + ylim(0,1) +
+      # scale_x_discrete()+
+      #   xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
+      }
+    })
+
+
     output$tattering_exp_plot <- renderPlot({
-        curve(exp(input$ttr_a * x)/(exp(input$ttr_a * x) + input$ttr_b), ylab = "Mortality", xlab = "Wing Tattering",
-          main = "Exponentional Distribution")
+        curve((2 + input$ttr_b)/(1 + input$ttr_b) - exp(x * input$ttr_a)/(input$ttr_a + x * input$ttr_a),
+         ylab = "Survival Probability", xlab = "Wing Tattering",
+          main = "Exponentional Distribution", col = "Green", lwd = 1.5, ylim = c(0,1))
     })
 
     output$tattering_beta_plot <- renderPlot({
-        #bm_a <- input$bm_mean * input$bm_v
-        #bm_b <- (1 - input$bm_mean) * input$bm_v
-        curve(pbeta(x, input$ttsz_a, input$ttsz_b),ylab = "Tattering Damage", xlab = "Wing Tattering", main = "Beta Distribution")
+        ttsz_a <- input$ttsz_mean * input$ttsz_v
+        ttsz_b <- (1 - input$ttsz_mean) * input$ttsz_v
+        curve(((x < input$ttsz_p)* 0 + (x >= input$ttsz_p)*dbeta(x, ttsz_a, ttsz_b))/
+          max((x < input$ttsz_p)* 0 + (x >= input$ttsz_p)*dbeta(x, ttsz_a, ttsz_b)),
+          ylab = "Normalized Density", xlab = "Wing Damage", main = "Beta Distribution", ylim = c(0,1), col = "Blue", lwd = 1.5)
     })
 
     ################ Blood Meal ###################################################
@@ -1070,7 +1082,7 @@ mbitesGadget = function(...){
       if(input$showBloodMeal_Option){
         bm_a <- input$bm_mean_Option * input$bm_v_Option
         bm_b <- (1 - input$bm_mean_Option) * input$bm_v_Option
-        curve(pbeta(x, bm_a, bm_b),ylab = "Probability", xlab = "Blood Meal Size")}
+        curve(dbeta(x, bm_a, bm_b)/max(dbeta(x, bm_a, bm_b)),ylab = "Normalized Density", xlab = "Blood Meal Size", col = "Blue", lwd = 1.5)}
     })
 
     output$overfeeding_Option_plot <- renderPlot({
@@ -1080,7 +1092,7 @@ mbitesGadget = function(...){
         a <- input$of_a_Option
         b <- input$of_b_Option
         curve(exp(a * x)/(exp(a * x) + b),
-          ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1))}
+          ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
     })
 
 
@@ -1090,7 +1102,7 @@ mbitesGadget = function(...){
       if(input$showBloodMeal){
         bm_a <- input$bm_mean * input$bm_v
         bm_b <- (1 - input$bm_mean) * input$bm_v
-        curve(pbeta(x, bm_a, bm_b),ylab = "Probability", xlab = "Blood Meal Size")}
+        curve(dbeta(x, bm_a, bm_b)/max(dbeta(x, bm_a, bm_b)),ylab = "Normalized Density", xlab = "Blood Meal Size", col = "Blue", lwd = 1.5)}
     })
 
     output$overfeeding_plot <- renderPlot({
@@ -1100,7 +1112,7 @@ mbitesGadget = function(...){
         a <- input$of_a
         b <- input$of_b
         curve(exp(a * x)/(exp(a * x) + b),
-          ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1))}
+          ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
     })
 
     
@@ -1382,11 +1394,11 @@ mbitesGadget = function(...){
               #sliderInput(inputId = "B_time", label ="Mean Time Elapsed (in days)",
                           #value = 0.04, min = 0, max = 2, step = 0.01),
             wellPanel(
-              h5("Mean Time Elapsed: "),
-              fluidRow(
-                column(6,selectInput("B_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-                column(6,selectInput("B_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-                      ),
+              # h5("Mean Time Elapsed: "),
+              # fluidRow(
+              #   column(6,selectInput("B_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+              #   column(6,selectInput("B_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+              #         ),
               sliderInput(inputId = "B_succeed", label ="Probability of Success",
                           value = 0.95, min = 0.8, max = 1, step = 0.01),                #
               sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",
@@ -1410,6 +1422,7 @@ mbitesGadget = function(...){
                           sliderInput(inputId = "feedZ", label ="Probability to Successfully Blood Feed",
                              value = 0.99, min = 0.9, max = 1, step = 0.01)
                           )),
+              hr(),
               checkboxInput("showBloodMeal", "Blood Meal Size", FALSE),
               conditionalPanel(condition = "input.showBloodMeal",
                 wellPanel(
@@ -1417,18 +1430,20 @@ mbitesGadget = function(...){
                   #         value = 7.5, min = 0, max = 20, step = 0.5),
                   # sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
                   #         value = 2.5, min = 0, max = 20, step = 0.5)
-                  sliderInput(inputId = "bm_mean", label ="Average Bloodmeal Size",
+                  sliderInput(inputId = "bm_mean", label ="Average blood meal Size",
                           value = 0.5, min = 0, max = 1, step = 0.01),
-                  sliderInput(inputId = "bm_v", label ="Sample size for a Bloodmeal Size: (a + b) in Beta(a,b)",
+                  sliderInput(inputId = "bm_v", label ="Sample size for a blood meal Size: (a + b) in Beta(a,b)",
                           value = 15, min = 0, max = 40, step = 0.5)
                   )
                 ),
+              hr(),
               checkboxInput("overfeed", "Overfeed", FALSE),
               conditionalPanel(condition = "input.overfeed",
                 sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
                   value = 8, min = 5, max = 10, step = 0.01),
                 sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
                   value = 5000, min = 0, max = 10000, step = 100)),
+              hr(),
               sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
                 value = 0, min = 0, max = 100, step = 1),
               sliderInput(inputId = "Q", label ="Human Blood Index",
@@ -1446,11 +1461,11 @@ mbitesGadget = function(...){
             #sliderInput(inputId = "R_time", label ="Mean Time Elapsed (in days)",
                 #value = 1, min = 0, max = 3, step = 0.01),
               wellPanel(
-                h5("Mean Time Elapsed: "),
-                fluidRow(
-                column(6,selectInput("R_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-                column(6,selectInput("R_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-                ),
+                # h5("Mean Time Elapsed: "),
+                # fluidRow(
+                # column(6,selectInput("R_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+                # column(6,selectInput("R_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+                # ),
                 sliderInput(inputId = "R_surv", label ="Baseline Probability of Survival",
                 value = 0.99, min = 0.9, max = 1, step = 0.01),
               #textInput("R_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
@@ -1468,11 +1483,11 @@ mbitesGadget = function(...){
               #sliderInput(inputId = "L_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.02, min = 0, max = 2, step = 0.01),
             wellPanel(
-              h5("Mean Time Elapsed: "),
-                fluidRow(
-                column(6,selectInput("L_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-                column(6,selectInput("L_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-                ),
+              # h5("Mean Time Elapsed: "),
+              #   fluidRow(
+              #   column(6,selectInput("L_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+              #   column(6,selectInput("L_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+              #   ),
               sliderInput(inputId = "L_succeed", label ="Probability of Success",
                               value = 0.98, min = 0.8, max = 1, step = 0.01),
               sliderInput(inputId = "L_surv", label ="Baseline Probability of Survival",
@@ -1486,11 +1501,11 @@ mbitesGadget = function(...){
               #sliderInput(inputId = "O_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.04, min = 0, max = 2, step = 0.01),
             wellPanel(
-              h5("Mean Time Elapsed: "),
-                fluidRow(
-                column(6,selectInput("O_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-                column(6,selectInput("O_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-                ),
+              # h5("Mean Time Elapsed: "),
+              #   fluidRow(
+              #   column(6,selectInput("O_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+              #   column(6,selectInput("O_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+              #   ),
               sliderInput(inputId = "O_succeed", label ="Probability of Success",
                               value = 0.99, min = 0.9, max = 1, step = 0.01),
               sliderInput(inputId = "O_surv", label ="Baseline Probability of Survival",
@@ -1504,11 +1519,11 @@ mbitesGadget = function(...){
               #sliderInput(inputId = "M_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.02, min = 0, max = 2, step = 0.01),
             wellPanel(
-              h5("Mean Time Elapsed: "),
-                fluidRow(
-                column(6,selectInput("M_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-                column(6,selectInput("M_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-                ),
+              # h5("Mean Time Elapsed: "),
+              #   fluidRow(
+              #   column(6,selectInput("M_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+              #   column(6,selectInput("M_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+              #   ),
               sliderInput(inputId = "M_succeed", label ="Probability of Success",
                               value = 0.95, min = 0.9, max = 1, step = 0.01),
               sliderInput(inputId = "M_surv", label ="Baseline Probability of Survival",
@@ -1522,11 +1537,11 @@ mbitesGadget = function(...){
               #sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.02, min = 0, max = 2, step = 0.01),
             wellPanel(
-              h5("Mean Time Elapsed: "),
-                fluidRow(
-                column(6,selectInput("S_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-                column(6,selectInput("S_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-                ),
+              # h5("Mean Time Elapsed: "),
+              #   fluidRow(
+              #   column(6,selectInput("S_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
+              #   column(6,selectInput("S_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
+              #   ),
               sliderInput(inputId = "S_succeed", label ="Probability of Success",
                               value = 0.99, min = 0.9, max = 1, step = 0.01),
               sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",
