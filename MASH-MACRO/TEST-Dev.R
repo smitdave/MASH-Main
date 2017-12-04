@@ -14,3 +14,23 @@ tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
 tile$simMacro(tMax = 1000)
 tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
 
+
+patch_humans = rpois(n = n,lambda = 100)
+n_humans = sum(patch_humans)
+patch_id = rep(x = 1:n,patch_humans)
+home_id = rep(x = 1:n,patch_humans)
+human_ages = unlist(lapply(X = patch_humans,FUN = siteAges_HumanPop))
+human_bWeight = bitingWeight_HumanPop(human_ages)
+
+humanPar = lapply(X = 1:n_humans,function(i){
+  list(
+    houseID = home_id[i],
+    patchID = patch_id[i],
+    homeHouseID = home_id[i],
+    homePatchID = patch_id[i],
+    age = human_ages[i],
+    bWeight = human_bWeight[i]
+
+  )
+})
+

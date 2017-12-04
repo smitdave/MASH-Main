@@ -24,7 +24,13 @@
 #' @keywords R6 class
 #'
 #' @section Constructor:
-#'  * item 1:
+#'  * myID: a character ID
+#'  * houseID: integer ID of my current house
+#'  * patchID: integer ID of my current patch
+#'  * homeHouseID: integer ID of my home house
+#'  * homePatchID: integer ID of my home patch
+#'  * age: numeric birthday (negative; simulation begins at 0)
+#'  * bWeight: numeric biting weight
 #'
 #' @section Methods:
 #'  * get_myID: see \code{\link{get_myID_Human}}
@@ -33,8 +39,8 @@
 #'  * set_houseID: see \code{\link{set_houseID_Human}}
 #'  * get_patchID: see \code{\link{get_patchID_Human}}
 #'  * set_patchID: see \code{\link{et_patchID_Human}}
-#'  * get_bDay: see \code{\link{get_bDay_Human}}
-#'  * set_bDay: see \code{\link{set_bDay_Human}}
+#'  * get_age: see \code{\link{get_age_Human}}
+#'  * set_age: see \code{\link{set_age_Human}}
 #'  * get_EventQ: see \code{\link{get_EventQ_Human}}
 #'  * get_Alive: see \code{\link{get_Alive_Human}}
 #'  * set_Alive: see \code{\link{set_Alive_Human}}
@@ -73,12 +79,14 @@ Human <- R6::R6Class(classname="Human",
                        # Constructor
                        #################################################
 
-                       initialize = function(myID, houseID = NULL, patchID = NULL, bDay = NULL, bWeight = NULL){
+                       initialize = function(myID, houseID = NULL, patchID = NULL, homeHouseID = NULL, homePatchID = NULL, age = NULL, bWeight = NULL){
                          private$myID = myID
                          private$Alive = TRUE
                          private$houseID = houseID
                          private$patchID = patchID
-                         private$bDay = bDay
+                         private$homeHouseID = homeHouseID
+                         private$homePatchID = homePatchID
+                         private$age = age
                          private$bWeight = bWeight
                          private$EventQueue = MASHcpp::HumanEventQ()
                        }
@@ -95,7 +103,7 @@ Human <- R6::R6Class(classname="Human",
                        patchID             = integer(1),
                        homePatchID         = integer(1),
                        Alive               = logical(1),
-                       bDay                = numeric(1),
+                       age                 = numeric(1),
                        sex                 = integer(1),
 
                        #Event Queue
@@ -112,10 +120,6 @@ Human <- R6::R6Class(classname="Human",
                        TilePointer         = NULL # reference to Tile
 
                      )
-
-
-
-
 
 ) #end class definition
 
@@ -279,12 +283,12 @@ Human$set(which="public", name="set_homePatchID_Human",
 #'
 #' More details
 #'
-get_bDay_Human <- function(){
- return(private$bDay)
+get_age_Human <- function(){
+ return(private$age)
 }
 
-Human$set(which="public", name="get_bDay",
-	value=get_bDay_Human,
+Human$set(which="public", name="get_age",
+	value=get_age_Human,
 	 overwrite=TRUE)
 
 
@@ -294,12 +298,12 @@ Human$set(which="public", name="get_bDay",
 #'
 #' More details
 #'
-set_bDay_Human <- function(bDay){
- private$bDay = bDay
+set_age_Human <- function(age){
+ private$age = age
 }
 
-Human$set(which="public", name="set_bDay",
-	value=set_bDay_Human,
+Human$set(which="public", name="set_age",
+	value=set_age_Human,
 	overwrite=TRUE)
 
 

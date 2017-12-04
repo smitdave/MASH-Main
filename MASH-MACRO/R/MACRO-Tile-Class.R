@@ -25,6 +25,7 @@
 #'  * AquaPar: named list of parameters for aquatic ecology model (see \code{\link{AquaPop_Emerge.Parameters}} or ... for structure)
 #'  * PatchPar: list of parameters (length of list must be equal to number of patches and have \code{bWeightZoo} and \code{bWeightZootox} specified)
 #'  * MosquitoPar: named list of parameters for mosquito model
+#'  * HumanPop_PAR: list of length equal to number of humans (see \code{\link{Human}} constructor arguments for the required fields for each human)
 #'
 #' @section **Methods**:
 #'  * method: i'm a method!
@@ -48,7 +49,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                    # Constructor
                    #################################################
 
-                   initialize = function(nPatch, AquaPar, PatchPar, MosquitoPar, directory){
+                   initialize = function(nPatch, AquaPar, PatchPar, MosquitoPar, HumanPop_PAR, directory){
 
                      private$nPatch = nPatch
                      private$directory = directory
@@ -88,6 +89,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                      # finish initializing mosquito population
 
                      cat("initializing human population\n")
+                     private$HumanPop = HumanPop$new(HumanPop_PAR)
 
                      cat("set up output directory\n")
 

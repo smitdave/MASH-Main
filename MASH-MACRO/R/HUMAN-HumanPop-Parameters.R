@@ -14,6 +14,11 @@
 ###############################################################################
 
 
+
+
+
+
+
 ###############################################################################
 # Human & HumanPop Attributes
 ###############################################################################
@@ -126,7 +131,7 @@ sitePops_HumanPop <- function(N, siteSize = 10, siteMin = 2, aa = 1.7, bb = 4){
 #'  * siteHumanIDs: list of human IDs by site
 #'  * homeIDs: vector of site IDs of each human
 #'  * siteAges: list of ages of humans by site
-#'  * bDay: vector of birthdays of each human
+#'  * age: vector of birthdays of each human
 #'  * bWeight: biting weight on humans
 #' @md
 #' @export
@@ -142,7 +147,7 @@ HumanPop.Parameters <- function(nSite, siteSize = 10, siteMin = 2){
     siteHumanIDs = demographics$siteHumanID,
     homeIDs = demographics$homeHumanID,
     steAges = demographics$siteAges,
-    bDay = -Reduce(f = c,x = demographics$siteAges),
+    age = Reduce(f = c,x = demographics$siteAges),
     bWeight = Reduce(f = c,demographics$siteBiteWeight)
   )
 }

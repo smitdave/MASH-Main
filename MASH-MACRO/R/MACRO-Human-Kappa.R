@@ -17,6 +17,16 @@
 # bWeightHuman
 ###############################################################################
 
+#' Initialize Patch Biting Weights
+#'
+#' At beginning of a simulation, initialize all patch human biting weights.
+#'
+#'  * This method is bound to \code{HumanPop$initialize_bWeightHuman}
+#'
+initialize_bWeightHuman_HumanPop <- function(){
+  private$pop$apply(tag="accumulate_bWeightHuman",returnVal=FALSE)
+}
+
 #' Accumulate Patch Biting Weight
 #'
 #' Update my contribution to my current patch human biting weight by calling \code{\link{accumulate_bWeightHuman_MacroPatch}}
@@ -76,6 +86,7 @@ updateKappa_HumanPop <- function(){
   private$TilePointer$get_Patches()$apply(tag="normalize_kappa")
 }
 
+
 ###############################################################################
 # EIR
 ###############################################################################
@@ -101,6 +112,29 @@ updateEIR_Human <- function(){
 updateEIR_HumanPop <- function(){
   private$pop$apply(tag="updateEIR")
 }
+
+#' Get \code{Human} EIR
+#'
+#' Return my personal EIR value.
+#'
+#'  * This method is bound to \code{Human$get_EIR}
+#'
+get_EIR_Human <- function(){
+  return(private$EIR)
+}
+
+#' Set \code{Human} EIR
+#'
+#' Set my personal EIR value.
+#'
+#'  * This method is bound to \code{Human$set_EIR}
+#'
+#' @param EIR numeric value
+#'
+set_EIR_Human <- function(EIR){
+  private$EIR = EIR
+}
+
 
 ###############################################################################
 # Infectious Bites
@@ -138,28 +172,4 @@ queueInfectiousBites_PfMOI_Human <- function(){
 queueInfectiousBites_HumanPop <- function(){
   self$updateEIR() # update EIR
   private$pop$apply(tag="queueInfectiousBites")
-}
-
-# Getters & Setters
-
-#' Get \code{Human} EIR
-#'
-#' Return my personal EIR value.
-#'
-#'  * This method is bound to \code{Human$get_EIR}
-#'
-get_EIR_Human <- function(){
-  return(private$EIR)
-}
-
-#' Set \code{Human} EIR
-#'
-#' Set my personal EIR value.
-#'
-#'  * This method is bound to \code{Human$set_EIR}
-#'
-#' @param EIR numeric value
-#'
-set_EIR_Human <- function(EIR){
-  private$EIR = EIR
 }
