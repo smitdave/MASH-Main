@@ -28,7 +28,8 @@ simMacro <- function(tMax){
   self$initCon()
   private$Mosquito$initOutput(con = private$conMosquito)
 
-  # initialize human biting weight here
+  # initialize human biting weight
+  # private$HumanPop$initialize_bWeightHuman()
 
   cat("beginning simulation\n",sep="")
 

@@ -49,7 +49,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                    # Constructor
                    #################################################
 
-                   initialize = function(nPatch, AquaPar, PatchPar, MosquitoPar, HumanPop_PAR, directory){
+                   initialize = function(nPatch, AquaPar, PatchPar, MosquitoPar, HumanPar, directory){
 
                      private$nPatch = nPatch
                      private$directory = directory
@@ -71,7 +71,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                          {stop("invalid aquatic ecology model selected")}
                        )
 
-                       patch = MacroPatch$new(patchID=i, AquaPop=AquaPop, bWeightZoo=PatchPar[[i]]$bWeightZoo, bWeightZootox=PatchPar[[i]]$bWeightZootox)
+                       patch = MacroPatch$new(patchID=i, AquaPop=AquaPop, bWeightZoo=PatchPar[[i]]$bWeightZoo, bWeightZootox=PatchPar[[i]]$bWeightZootox, travelWeight=PatchPar[[i]]$travelWeight)
                        private$Patches$assign(key=as.character(i),value=patch)
                        private$Patches$get(as.character(i))$set_TilePointer(self)
 
@@ -89,7 +89,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                      # finish initializing mosquito population
 
                      cat("initializing human population\n")
-                     private$HumanPop = HumanPop$new(HumanPop_PAR)
+                     private$HumanPop = HumanPop$new(HumanPar)
 
                      cat("set up output directory\n")
 

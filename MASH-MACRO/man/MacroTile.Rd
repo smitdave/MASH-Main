@@ -18,6 +18,7 @@ write me
 \item AquaPar: named list of parameters for aquatic ecology model (see \code{\link{AquaPop_Emerge.Parameters}} or ... for structure)
 \item PatchPar: list of parameters (length of list must be equal to number of patches and have \code{bWeightZoo} and \code{bWeightZootox} specified)
 \item MosquitoPar: named list of parameters for mosquito model
+\item HumanPop_PAR: list of length equal to number of humans (see \code{\link{Human}} constructor arguments for the required fields for each human)
 }
 }
 

@@ -45,9 +45,13 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                    # Constructor
                    #################################################
 
-                   initialize = function(patchID, AquaPop, bWeightZoo, bWeightZootox){
+                   initialize = function(patchID, AquaPop, bWeightZoo, bWeightZootox, travelWeight){
 
                      private$patchID = patchID
+                     private$bWeightZoo = bWeightZoo
+                     private$bWeightZootox = bWeightZootox
+                     private$travelWeight = travelWeight
+
                      private$AquaPop = AquaPop
                      private$AquaPop$set_PatchPointer(self)
 

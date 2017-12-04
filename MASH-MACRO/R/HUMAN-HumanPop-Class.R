@@ -81,7 +81,7 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                           # human = Human$new(myID = id, houseID = HumanPop_PAR$homeIDs[i], patchID = patchID, age = HumanPop_PAR$age[i], bWeight = HumanPop_PAR$bWeight[i])
                           # private$pop$assign(key=id,value=human)
 
-                          id = paste0(i,"_",)
+                          id = paste0(i,"_",HumanPop_PAR[[i]]$patchID)
                           human = Human$new(myID=id,houseID=HumanPop_PAR[[i]]$houseID,patchID=HumanPop_PAR[[i]]$patchID,homeHouseID=HumanPop_PAR[[i]]$houseID,homePatchID=HumanPop_PAR[[i]]$patchID,age=HumanPop_PAR[[i]]$age,bWeight=HumanPop_PAR[[i]]$bWeight)
                           private$pop$assign(key=id,value=human)
 

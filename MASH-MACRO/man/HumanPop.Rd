@@ -18,7 +18,7 @@ Each instance of a \code{\link{Human}} lives in a \code{HumanPop}
 \item N: number of humans
 \item patchID: integer ID of the patch this \code{HumanPop} lives in
 \item houseIDs = NULL: vector of house IDs (only needed in MICRO, in MACRO human location is only resolved to the \code{\link{MacroPatch}} level)
-\item bDays: vector of birthdays (given as tStart - age at start)
+\item ages: vector of birthdays (given as tStart - age at start)
 \item bWeights: vector of biting weights
 \item tStart = 0: time to start simulation; constructor will complain if is a value other than 0
 }
