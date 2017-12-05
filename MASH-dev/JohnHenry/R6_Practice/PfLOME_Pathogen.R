@@ -122,7 +122,6 @@ Pathogen <- R6Class("Pathogen",
                       PfPathogen = NULL,
                       Ptot = NULL,
                       Gtot = NULL,
-                      Stot = NULL,
                       PfMOI = NULL,
                       history = NULL
                     )
