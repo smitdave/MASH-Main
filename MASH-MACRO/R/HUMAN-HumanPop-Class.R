@@ -13,6 +13,7 @@
 #
 ###############################################################################
 
+
 #' HumanPop Class Definition
 #'
 #' Generate a single human population; they may live in a \code{\link{MacroPatch}} or a MicroPatch, the individual humans in the pop may move freely between patches.
@@ -40,13 +41,6 @@
 #'  * N: number of human
 #'  * tStart: time to start simulation
 #'  * pop: a object of class \code{\link[MASHcpp]{HashMap}} that stores instantiations of \code{\link{Human}}, see help for more details on the internal structure of this type.
-#'
-#'
-#'
-#'
-#'
-#'
-#'
 #'
 #' @export
 HumanPop <- R6::R6Class(classname = "HumanPop",

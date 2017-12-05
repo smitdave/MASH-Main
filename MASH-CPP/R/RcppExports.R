@@ -38,6 +38,10 @@ HumanEventQ__get_EventQ <- function(obj_) {
     .Call('_MASHcpp_HumanEventQ__get_EventQ', PACKAGE = 'MASHcpp', obj_)
 }
 
+HumanEventQ__clearQ <- function(obj_) {
+    invisible(.Call('_MASHcpp_HumanEventQ__clearQ', PACKAGE = 'MASHcpp', obj_))
+}
+
 HistoryGeneric__ctor <- function(N) {
     .Call('_MASHcpp_HistoryGeneric__ctor', PACKAGE = 'MASHcpp', N)
 }

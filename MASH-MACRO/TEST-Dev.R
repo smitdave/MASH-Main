@@ -3,7 +3,7 @@ library(MASHmacro)
 
 PfSI.Setup()
 SimBitePfSI.Setup()
-MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/365,tripDuration = 14)
+MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/28,tripDuration = 14)
 
 directory = "/Users/slwu89/Desktop/MACRO"
 
@@ -14,6 +14,7 @@ aquaPar = AquaPop_Emerge.Parameters(nPatch = n,lambda = rep(50,n),seasonality = 
 
 # patch parameters
 patchPar = replicate(n = n,expr = list(bWeightZoo=1,bWeightZootox=0),simplify = FALSE)
+# make movement follow AR(1) covariance structure, then subtract out the diagonal and renormalize
 rho = 0.75
 element = function(i,j){rho^abs(i-j)}
 moveMat = outer(1:n,1:n,FUN=function(i,j) element(i,j))
@@ -61,7 +62,7 @@ tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPa
 tile$get_HumansPointer()$init_PfSI(pfpr)
 
 # run simulations
-tile$simMacro(tMax = 1000)
+tile$simMacro(tMax = 365)
 # tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
 # tile$simMacro(tMax = 1000)
 # tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)

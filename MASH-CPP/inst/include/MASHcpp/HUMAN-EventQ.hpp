@@ -1,4 +1,5 @@
-/////////////////////////////////////////////////////////////////////////////      ______                 __     ____
+/////////////////////////////////////////////////////////////////////////////
+//      ______                 __     ____
 //     / ____/   _____  ____  / /_   / __ \__  _____  __  _____
 //    / __/ | | / / _ \/ __ \/ __/  / / / / / / / _ \/ / / / _ \
 //   / /___ | |/ /  __/ / / / /_   / /_/ / /_/ /  __/ /_/ /  __/
@@ -18,62 +19,37 @@
 
 namespace MASHcpp {
 
-// comparator funcion for sorting events by 'tEvent'
-inline bool compare_tEvent(const Rcpp::List& eventA, const Rcpp::List& eventB) { return double(eventA["tEvent"]) < double(eventB["tEvent"]); }
-
 class HumanEventQ {
 public:
   // constructor
-  HumanEventQ(const int &initQ = 100){
-    EventQ.reserve(initQ);
-    EventQ.push_back(Rcpp::List::create(Rcpp::Named("tEvent")=73000,Rcpp::Named("PAR")=R_NilValue,Rcpp::Named("tag")="death"));
-    queueN = EventQ.size();
-  }
+  HumanEventQ(const int &initQ = 10);
+
+  // destructor
+  ~HumanEventQ();
 
   // return first event as list
-  Rcpp::List firstEvent(){
-    return(EventQ.front());
-  };
+  Rcpp::List firstEvent();
 
   // return time of first event
-  double firstTime(){
-    return(EventQ[0]["tEvent"]);
-  };
+  double firstTime();
 
   // remove first event from queue
-  void rmFirstEventFromQ(){
-    EventQ.erase(EventQ.begin());
-    queueN -= 1;
-  };
+  void rmFirstEventFromQ();
 
   // remove all events with certain tag from queue
-  void rmTagFromQ(const std::string &tag){
-    EventQ.erase(std::remove_if(
-      EventQ.begin(), EventQ.end(),
-      [tag](const Rcpp::List& Event) {
-        return(
-          tag.compare(Rcpp::as<std::string>(Event["tag"]))==0
-        );
-      }), EventQ.end());
-    queueN = EventQ.size();
-  };
+  void rmTagFromQ(const std::string &tag);
 
   // get current number of events in queue
-  int get_queueN(){
-    return(queueN);
-  };
+  int get_queueN();
 
   // get entire event queue
-  Rcpp::List get_EventQ(){
-    return(Rcpp::wrap(EventQ));
-  };
+  Rcpp::List get_EventQ();
 
   // add an event to the queue and re-sort the queue
-  void addEvent2Q(const Rcpp::List &event){
-    EventQ.push_back(event);
-    std::sort(EventQ.begin(), EventQ.end(), compare_tEvent);
-    queueN += 1;
-  };
+  void addEvent2Q(const Rcpp::List &event);
+
+  // clear the queue
+  void clearQ();
 
 private:
   std::vector<Rcpp::List> EventQ; // event queue

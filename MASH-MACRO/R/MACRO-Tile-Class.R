@@ -133,6 +133,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                     # Output Connections
                     directory                 = character(1),
                     conMosquito               = NULL,
+                    conPatches                = NULL,
                     conHuman                  = NULL
 
                   )
@@ -152,6 +153,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 #'
 initCon_Tile <- function(){
   private$conMosquito = file(description=paste0(private$directory,"/Mosquito_Run",private$runID,".csv"),open="wt")
+  private$conPatches = file(description=paste0(private$directory,"/Patch_Run",private$runID,".csv"),open="wt")
   # private$conHuman
 }
 
@@ -167,6 +169,7 @@ MacroTile$set(which = "public",name = "initCon",
 #'
 closeCon_Tile <- function(){
   close(private$conMosquito)
+  close(private$conPatches)
   # private$conHuman
 }
 

@@ -27,6 +27,7 @@ simMacro <- function(tMax){
   # open connections
   self$initCon()
   private$Mosquito$initOutput(con = private$conMosquito)
+  writeLines(text = paste0(c("time","patchID","bWeightHuman","bWeightZoo","bWeightZootox","kappa"),collapse = ","),con = private$conPatches, sep = "\n")
 
   # initialize humans
   private$HumanPop$initialize_bWeightHuman()
@@ -53,6 +54,8 @@ simMacro <- function(tMax){
 
     # output
     private$Mosquito$output(con = private$conMosquito)
+    private$Patches$apply(tag="output",returnVal=FALSE,con = private$conPatches)
+
 
     cat("day: ",private$tNow,"\n",sep="")
   }
