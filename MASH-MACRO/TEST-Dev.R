@@ -1,16 +1,20 @@
 rm(list=ls());gc()
 library(MASHmacro)
 
+# set random seed
+set.seed(43)
+
+# Set up PfSI module for modeling infection - adds methods to HumanPop/Human classes to define eventQ
 PfSI.Setup()
 SimBitePfSI.Setup()
 MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/365,tripDuration = 14)
 
-# Look, I changed something!
-directory = "/Users/slwu89/Desktop/MACRO"
+directory = "/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/MashMACRO_testing"
 
+
+# Number of Patches
 n = 10
-
-# aquatic ecology parameters
+# Aquatic ecology parameters
 aquaPar = AquaPop_Emerge.Parameters(nPatch = n,lambda = rep(50,n),seasonality = TRUE)
 
 # patch parameters
@@ -67,3 +71,6 @@ tile$simMacro(tMax = 1000)
 # tile$simMacro(tMax = 1000)
 # tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
 
+# plot the output
+# pfsihist <- tile$get_HumansPointer()$get_PathogensHistory()
+# plot_PfSI(pfsihist)

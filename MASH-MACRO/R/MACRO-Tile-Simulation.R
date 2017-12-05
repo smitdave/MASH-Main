@@ -22,7 +22,7 @@
 #'
 #'  * This method is bound to \code{MacroTile$simMacro}
 #'
-simMacro <- function(tMax){
+simMacro <- function(tMax, message = TRUE){
 
   # open connections
   self$initCon()
@@ -32,9 +32,11 @@ simMacro <- function(tMax){
   private$HumanPop$initialize_bWeightHuman()
   private$HumanPop$initialize_travel()
 
-  cat("beginning simulation\n",sep="")
+  if (message) {
+    cat("beginning simulation\n",sep="")
+  }
 
-  while(private$tNow < tMax){
+  while(private$tNow < tMax) {
     # increment time
     private$tNow = private$tNow + 1
 
@@ -54,7 +56,9 @@ simMacro <- function(tMax){
     # output
     private$Mosquito$output(con = private$conMosquito)
 
-    cat("day: ",private$tNow,"\n",sep="")
+    if (message) {
+      cat("day: ",private$tNow,"\n",sep="")
+    }
   }
 
   # close connections
