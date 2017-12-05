@@ -57,7 +57,7 @@ simMacro <- function(tMax, message = TRUE){
     private$Mosquito$output(con = private$conMosquito)
 
     if (message) {
-      cat("day: ",private$tNow,"\n",sep="")
+      cat("day:", private$tNow, as.character(Sys.time()), "\n", sep="  ")
     }
   }
 
