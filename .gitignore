@@ -66,7 +66,7 @@ Thumbs.db
 # Junk Directory
 #####################################
 Archive/
-
+MASH-dev/HectorSanchez/VectorControl/Debug/
 
 #####################################
 # Media and other bloat-prone files
@@ -87,7 +87,6 @@ Archive/
 ######################################
 # User-specific files
 ######################################
-
 *.pdf
 
 *.pdf

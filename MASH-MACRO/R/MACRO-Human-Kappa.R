@@ -98,7 +98,7 @@ updateKappa_HumanPop <- function(){
 #'  * This method is bound to \code{Human$updateEIR}
 #'
 updateEIR_Human <- function(){
-  myEIR = private$bWeight * (private$HumansPointer$get_TilePointer()$get_MosquitoPointer()$get_f() * private$HumansPointer$get_TilePointer()$get_MosquitoPointer()$get_Q() * private$HumansPointer$get_TilePointer()$get_MosquitoPointer()$get_Z(private$patchID))
+  myEIR = private$bWeight * (private$TilePointer$get_MosquitoPointer()$get_a() * private$TilePointer$get_MosquitoPointer()$get_Z(private$patchID))
   myEIR = myEIR / (private$TilePointer$get_Patch(private$patchID)$get_bWeightHuman() + private$TilePointer$get_Patch(private$patchID)$get_bWeightZoo() + private$TilePointer$get_Patch(private$patchID)$get_bWeightZootox()) # renormalize
   private$EIR = myEIR
 }

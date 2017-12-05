@@ -90,6 +90,9 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 
                      cat("initializing human population\n")
                      private$HumanPop = HumanPop$new(HumanPar)
+                     private$HumanPop$set_TilePointer(self)
+                     private$HumanPop$get_pop()$apply(tag="set_TilePointer",returnVal=FALSE,TilePointer=self)
+
 
                      cat("set up output directory\n")
 

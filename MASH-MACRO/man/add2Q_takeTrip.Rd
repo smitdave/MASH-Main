@@ -4,7 +4,7 @@
 \alias{add2Q_takeTrip}
 \title{Move \code{Human} Event: Add a Trip to Event Queue}
 \usage{
-add2Q_takeTrip(tEvent, PAR = NULL)
+add2Q_takeTrip(tEvent, PAR)
 }
 \arguments{
 \item{tEvent}{time of trip}
