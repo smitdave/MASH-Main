@@ -26,7 +26,7 @@ simMacro <- function(tMax){
 
   # open connections
   self$initCon()
-  private$Mosquito$initOutput(con = private$conMosquito)
+  private$Mosquito$initialize_output(con = private$conMosquito)
   writeLines(text = paste0(c("time","patchID","bWeightHuman","bWeightZoo","bWeightZootox","kappa"),collapse = ","),con = private$conPatches, sep = "\n")
 
   # initialize humans

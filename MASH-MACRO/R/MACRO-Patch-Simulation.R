@@ -45,14 +45,14 @@ MacroPatch$set(which = "public",name = "oneDay_addCohort",
 # #'
 # #' Initialize patch output
 # #'
-# #'  * This method is bound to \code{MacroTile$initOutput}
+# #'  * This method is bound to \code{MacroTile$initialize_output}
 # #'
-# initOutput_Patch <- function(con){
+# initialize_output_Patch <- function(con){
 #   writeLines(text = paste0(c("time","patchID","bWeightHuman","bWeightZoo","bWeightZootox","kappa"),collapse = ","),con = con, sep = "\n")
 # }
 #
-# MacroTile$set(which = "public",name = "initOutput",
-#           value = initOutput_Patch, overwrite = TRUE
+# MacroTile$set(which = "public",name = "initialize_output",
+#           value = initialize_output_Patch, overwrite = TRUE
 # )
 
 #' Write Patch Output

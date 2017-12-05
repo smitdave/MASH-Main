@@ -14,6 +14,21 @@
 
 
 ###################################################################
+# PfSI Output
+###################################################################
+
+#' PfSI \code{HumanPop} Method: Initialize PfSI Output
+#'
+#' Initialize output for PfSI model.
+#'  * This method is bound to \code{HumanPop$initialize_output_pathogen()}
+#'
+initialize_output_PfSI_HumanPop <- function(con){
+  private$conPathogen = con
+  writeLines(text = paste0(c("humanID","time","event","vectorID"),collapse = ","),con = private$conPathogen, sep = "\n")
+}
+
+
+###################################################################
 # PfSI Parameter Getters & Setters
 ###################################################################
 
