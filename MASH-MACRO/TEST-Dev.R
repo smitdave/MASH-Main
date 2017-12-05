@@ -5,6 +5,7 @@ PfSI.Setup()
 SimBitePfSI.Setup()
 MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/365,tripDuration = 14)
 
+# Look, I changed something!
 directory = "/Users/slwu89/Desktop/MACRO"
 
 n = 10
