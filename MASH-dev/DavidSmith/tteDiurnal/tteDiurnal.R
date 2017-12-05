@@ -7,7 +7,7 @@
 ################################################
 par(mfrow = c(2,2))
 ttt = seq(0,1, length.out=1000)
-ff = function(t, peak=0){1+cos(2*pi*(t-peak))}
+ff = function(t, peak=0, amp=1){(1+amp*cos(2*pi*(t-peak)))}
 
 plot(ttt*24, ff(ttt), type = 'l', ylab = "Activity Level", xlab = "Time of Day", xaxt = "n") 
 lines(ttt*24, ff(ttt,1/4), lty = 2) 
@@ -32,10 +32,10 @@ axis(1, c(0:3)*6, c("12 am", "6 am", "12 pm", "6 pm"))
 #  peak   :: peak activity level 
 ##################################################
 
-rDiurnal = function(N, lambda, now=0, peak=0){
+rDiurnal = function(N, lambda, now=0, peak=0, amp=1){
   t = rexp(N, lambda)
   ti = floor(t)
-  ti + (1+sin(2*pi*(t-ti+now-peak)))/2
+  ti + (1+amp*sin(2*pi*(t-ti+now-peak)))/2
 }
 
 

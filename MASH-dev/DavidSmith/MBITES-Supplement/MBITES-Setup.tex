@@ -1,5 +1,7 @@
 \documentclass{article}
 \usepackage{csquotes}
+\renewcommand{\baselinestretch}{1.2} 
+\newcommand{\eg}{{\em e.g., }}
 
 \usepackage{Sweave}
 \begin{document}
@@ -15,6 +17,9 @@
 
 \end{centering}
 
+\vspace{0.3in}
+
+{\bf NOTE: This document assumes a basic familiarity with MBITES, either from {\em A User's Guide to MBITES}, or the {\em Vector bionomics and vectorial capacity as emergent properties of mosquito behavior and ecology}}
 
 \paragraph{Introduction} 
 
@@ -22,13 +27,15 @@
 {\bf \em What do I do with so many parameters?}
 \end{displayquote}
 
-Individual-based models have been criticized for many reasons. Most of them are valid. The objection most often raised is, wasn't William of Occam right? ``Why throw away parsimony?'' With so many parameters, you should be able to fit anything! (There is even an old saying: {\em Give me six parameters and I'll draw an elephant. Give me seven and I'll make it wag it's tail.})  While this is a valid criticism of fitting individual based models to data, there are other problems that arise the moment the model considers scenarios that are not present in the data. 
+Individual-based models have been criticized for many reasons. Most of these critiques are valid. William of Occam basically got it right, at least when it comes to problems related to statistical inference. Among many possible explanations, the simplest ones tend to be correct. With many parameters, you should be able to fit anything, and therefore know nothing! (There is even an old saying, attributed to various people: {\em Give me four parameters and I'll draw an elephant. Give me five and I'll make it wag it's tail.})  While this is a valid criticism of fitting individual based models to data, other problems arise when considering the future.
 
-If the only thing you would ever wanted to do was predict the future, then your best bet would probably be to take the parsimonious model and run it forward. You probably won't get a better prediction, on average, from any single model. There are, however, other things you want to do, and other ways you migh use models to get a better prediction. For example, you might want to evaluate a policy, and here's where the old paradigm breaks down. Are the conclusions of your model robust to all the sources of heterogeneity the parsimonious model averaged over?
+The past and the future are fundamentally different: there was one past, but there are many possible futures.  If the only thing you would ever wanted to do was predict the future, then your best bet would probably be to take the parsimonious model and run it forward. You probably won't get a better prediction, on average, from any single model. There are, however, other things you want to do, and other ways you migh use models to get a better prediction. For example, you might want to evaluate a policy, and here's where the old paradigm breaks down. Are the conclusions of your model robust to all the sources of heterogeneity the parsimonious model averaged over?
 
-Consider a thought experiment. What if you could wave a wand and invent a model with an arbitrary degree of heterogeneity blindly fixing most of the parameters but leaving as many free parameters for fitting as you would have in an abstract and parametrically simple model. The rules of evidence would suggest the fits of these  models would be directly comparable. What gives any {\em a priori} weight to any particular model? A problem for science is that there are so many models like the former, and they are very hard to specify. The problem of evaluating the robustness of some policy boils down to figuring out some way of waving a wand and fitting the very large set of models to the data in some systematic way, and then turning each model around to predict the future.  The prediction made from the ensemble of all those fitted heterogeneous models should be more robust than the simple one. MBITES is an honest stab at doing {\em that}. 
+Consider a thought experiment. What if you could wave a wand and invent a model with an arbitrary degree of heterogeneity blindly fixing most of the parameters but leaving as many free parameters for fitting as you would have in an abstract and parametrically simple model. The rules of evidence would suggest the fits of these  models would be directly comparable. What gives any {\em a priori} weight to any particular model? There isn't any simple anser to that question, but none of the answers point automatically to the class of abstract and parametrically simple models most often used. A problem for science is that there are so many heterogeneous models, and they are very hard to specify. 
 
-Is there any reason to not ignore heterogeneity? That is, in part, why MBITES exists. The answer is that we don't have a sound basis for saying no. If we're honest about the peformance of predictive models for infectious diseases, we'd have to admit we haven't been very successful. When the problem comes to giving advice, we don't know if we're doing any better. 
+The problem of evaluating the robustness of some policy boils down to figuring out some way of waving a wand and fitting the very large set of heterogeneous models to the data in some systematic way, and then turning each model around to predict the future. The prediction made from the ensemble of all those fitted heterogeneous models should be more robust than the simple one. MBITES is an honest stab at doing {\em that}. 
+
+How far can we get if we just ignore heterogeneity? The cheeky answer is that we can do everything and be assured we will never find a better answer, so long as we never go looking for one. If we're honest about the peformance of predictive models for infectious diseases, we'd have to admit we haven't been very successful. When the problem comes to giving advice, we don't know if we're doing any better.  Obviously, we don't have a sound basis for ignoring heterogeneity, however inconvenient it might be. That is, in part, why MBITES exists. 
 
 Since we can't wave our wands, we need a way of dealing with the daunting problem of heterogeneity, besides the easily accepted answer; ignore it. MBITES has taken a different approach. The flexibility built into MBITES makes it comparatively easy to configure a landscape with any degree of heterogeneity, but it creates a new problem of how to systematically explore heterogeneity.  Our approach is to start from the same point as others -- we begin by anchoring the simulation model to the case that most closely resembles the homogenous approximation, and then we steadily add heterogeneity. There is a logical progression: 
 \begin{itemize}
@@ -38,37 +45,102 @@ Since we can't wave our wands, we need a way of dealing with the daunting proble
 \item If the value isn't the same everywhere, see have far you can get with the simplest way of incorporating noise.
 \item If there's a pattern, base it on a case study.  
 \end{itemize}
-With these principles in mind, we've developed a set of functions and utilities to set up landscapes that roughly follow these rules. 
+To put it another way, we honor William of Occam by preferring simple answers, in part, so we can say whether something we've observed can be explained with a simpler model. Our question, though, is not to explain the past but to know with some confidence that we are making robust policy recommendtions for the future. With these principles in mind, we've developed a set of functions and utilities to set up landscapes that roughly follow these rules. 
+
+\section{The Basics}
+
+Two of the most basic quantities are how long a mosquito waits between flight bouts, and how and when a mosquito dies. 
+
+\section{Time between Bouts}
+
+By default, the waiting time to the next bout varies by the mosquito's behavioral state. By default, all of these waiting times are exponentially distributed. The alternative is gamma distributed waiting times. 
+
+\subsection{Exponential}
+
+In the exponential family
+
+\subsection{Gamma}
+
+\subsection{Parsing}
+
+For the behavioral states F,B,R,L,O, \& S, these are the timing options: 
+%
+\begin{itemize}
+\item [{\bf 0}] \verb1boutX_tte_pdf=exponential1
+
+  $$min + \mbox{rexp}(.,1/(mean-min))$$
+  \begin{itemize}
+  \item \verb1boutX_tte_mean1
+  \item \verb1boutX_tte_min=01
+  \item \verb1boutX_tte_diurnal1
+    \begin{itemize}
+    \item [0] = FALSE 
+    \item [1] = TRUE
+      $$min + \mbox{rdiurnal}(.(mean-min),t, peak, amp$$
+      \begin{itemize} 
+      \item \verb1boutX_tte_peak=01 (midnight)
+      \item \verb1boutX_tte_amp=11 
+      \end{itemize}
+    \end{itemize}
+  \end{itemize}
+\item [1] \verb1boutX_tte_pdf=gamma1
+  $$min + \mbox{rgamma}(.,mean-min, scale)$$
+  \begin{itemize}
+    \item \verb1boutX_tte_mean1
+    \item \verb1boutX_tte_scale1
+    \item \verb1boutX_tte_min=01
+  \end{itemize}
+  
+\end{itemize}
+
+
+\subsection{Survival}
+
 
 \section{Configuring a Landscape} 
 
-Mosquitoes need resources to make more mosquitoes: mates, blood, aquatic habitat, and sometimes sugar. The only landscape where these are always available is in the mathematical entomologist's matrix. Reflecting the irony with which Morpheus welcomed Neo onto his ship, we offer the same greeting: "Welcome to the real world." This is not the real world, of course, but it is not like the one where it is possible to enjoy a fake steak. 
+MBITES doesn't work without a resource landscape. Mosquitoes need resources to make more mosquitoes: mates, blood, aquatic habitat, and sometimes sugar. The only landscape where these are always available is in the mathematical entomologist's matrix. Respecting the irony with which Morpheus welcomed Neo onto his ship, we offer the same greeting: "Welcome to the real world." This is not the real world, of course, but it is not like the one where it is possisible to enjoy a fake steak intoning ``ignorance is bliss." In MBITES, it is necessary to construct some object 
 
-MBITES doesn't work without a landscape. The following describes how to build a landscape in MBITES. 
+The following describes how to build a landscape in MBITES. 
 
 \subsection{Point Sets}
 
 The resources mosquitoes need are not found everywhere.  In MBITES, locations where critial resources can be found are called sites, each site is a location in space, $\left\{ x,y \right\}$. There are four types of sites: mating, blood feeding, aquatic habitat, and sugar.
 
-\subsubsection{A Minimal Point Set}
+\subsubsection{The Minimal Point Set}
 
-A useful construct is the ``minimal point set," where there is one representative point of each type to be considered. 
+A useful construct is the ``minimal point set," where there is one representative point of each type to be considered. By default, all these points are at the same location $(0,0)$. 
 
 \subsubsection{The Demo Point Set}
 
-The demo version builds point sets around centers. There are so many ways to build a landsdcape that we have not gone beyond a simple set of algorithms. 
+The demo version builds point sets around centers. 
 
 \subsubsection{IO}
 
+There are so many ways to build a landsdcape that we have not gone beyond a simple set of algorithms in MBITES. We presume users will want to provide their own point sets, so we provide IO. 
+
+\subsubsection{}
+
+
 \subsection{Site Types and Resting Spot}
+
+MBITES has two built-in site types. The simple site type and a homestead. 
 
 \subsubsection*{[0] Simple Site Type}
 
+The simple site type has two built-in options: land here, or leave. 
+
 \subsubsection*{[1] The Homestead}
+
+A homestead is a site type built to accomodate some modes of vector control. The options are to land on an indoor wall, to land on an outdoor wall, to land outside on vegetation, or to leave without landing.  
 
 \subsection{Blood Meal Hosts}
 
 Each blood feeding site has an object that stores the hosts present, one of the \verb1QUEUE1 objects that stitches MASH together, called the \verb1atRiskQ1. To run MBITES as a standalone program, it is necessary to create a static \verb1atRiskQ1. 
+
+\paragraph{Static Host Populations}
+
+To run MBITES in stand alone mode, it is necessary to have
 
 \subsection{The Distribution of Site-specific Hazards}
 
@@ -100,10 +172,6 @@ By default, mating and maturation is turned off.
 
 \section{Configuring Options}
 
-\subsection{Timing}
-
-\subsubsection{Diurnal Activity Patterns}
-
 \subsection{Survival}
 
 \subsubsection{Flight Energetics}
@@ -114,7 +182,7 @@ By default, mating and maturation is turned off.
 
 \subsubsection{Damage}
 
-\subsection{Oogenesis}
+\subsection{Egg Maturation}
 
 \subsection{Mating and Maturation}
 
