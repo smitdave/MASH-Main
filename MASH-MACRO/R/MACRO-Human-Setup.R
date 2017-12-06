@@ -99,6 +99,11 @@ MACRO.Human.Setup <- function(pathogen = "PfSI", tripFrequency = 1/365, tripDura
 
   # Move
 
+  # output
+  HumanPop$set(which = "public",name = "initialize_output_Move",
+            value = initialize_output_Move_HumanPop, overwrite = TRUE
+  )
+
   # trip frequency
   Human$set(which = "private",name = "tripFrequency",
             value = tripFrequency, overwrite = TRUE

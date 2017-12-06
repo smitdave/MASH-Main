@@ -24,9 +24,11 @@
 #'  * This method is bound to \code{Tile$simMICRO_oneRun}
 #'
 #' @param tMax length of simulation run
+#' @param PfPAR parameters passed to \code{HumanPop$initialize_Pathogens}
 #' @param verbose print information
+#' @param trackPop write mosquito population counts to CSV file
 #'
-simMICRO_oneRun <- function(tMax, verbose = FALSE, trackPop = FALSE){
+simMICRO_oneRun <- function(tMax, PfPAR, verbose = FALSE, trackPop = FALSE){
 
   # set runID
   private$runID = private$runID + 1L
@@ -47,8 +49,16 @@ simMICRO_oneRun <- function(tMax, verbose = FALSE, trackPop = FALSE){
   MosquitoPathogenFile = paste0(self$get_MosquitoDirectory(),"MosquitoPathogens_Run",private$runID,".json")
   self$set_MosquitoPathogenCon(file(description = MosquitoPathogenFile,open = "wt"))
 
-  HumanPathogenFile = paste0(self$get_HumanDirectory(),"HumanPathogens_Run",private$runID,".json")
-  self$set_HumanPathogenCon(file(description = HumanPathogenFile,open = "wt"))
+  # HumanPathogenFile = paste0(self$get_HumanDirectory(),"HumanPathogens_Run",private$runID,".json")
+  # self$set_HumanPathogenCon(file(description = HumanPathogenFile,open = "wt"))
+  
+  HumanPathogenFile = paste0(self$get_HumanDirectory(),"/HumanPathogen_Run",private$runID,".csv")
+  conPathogen = file(description=HumanPathogenFile,open="wt")
+  # conMove = file(description=paste0(self$get_HumanDirectory(),"/HumanMove_Run",private$runID,".csv"),open="wt")
+  private$HumanPop$set_conPathogen(conPathogen)
+  # private$HumanPop$set_conMove(conMove)
+  private$HumanPop$initialize_output_Pathogen()
+  # private$HumanPop$initialize_output_Move()
 
   if(trackPop){
     FemaleCSVFile = paste0(self$get_MosquitoDirectory(),"FemaleMosquitoPop_Run",private$runID,".csv")
@@ -70,13 +80,15 @@ simMICRO_oneRun <- function(tMax, verbose = FALSE, trackPop = FALSE){
   if(!is.null(private$MalePop)){writeLines(text = "[",con = self$get_MaleHistoryCon())}
   writeLines(text = "[",con = self$get_MosquitoPathogenCon())
 
+  private$HumanPop$initialize_Pathogens(PfPAR)
+
   # run simulation
   while(private$tNow < tMax){
     self$simMICRO_oneStep(verbose = verbose,trackPop = trackPop)
   }
 
   # write human JSON output
-  writeLines(text = jsonlite::toJSON(x = private$HumanPop$get_PathogensHistory(),pretty = TRUE),con = self$get_HumanPathogenCon())
+  # writeLines(text = jsonlite::toJSON(x = private$HumanPop$get_PathogensHistory(),pretty = TRUE),con = self$get_HumanPathogenCon())
 
   # finish writing JSON output
   cat(jsonlite::toJSON(x = mbitesGeneric_NULL,pretty = TRUE),"\n",sep="",file = self$get_FemaleHistoryCon()) # female EOF
@@ -93,11 +105,13 @@ simMICRO_oneRun <- function(tMax, verbose = FALSE, trackPop = FALSE){
   self$close_FemaleHistoryCon()
   if(!is.null(private$MalePop)){self$close_MaleHistoryCon()}
   self$close_MosquitoPathogenCon()
-  self$close_HumanPathogenCon()
+  # self$close_HumanPathogenCon()
   if(trackPop){
     self$close_FemaleCSVCon()
     if(!is.null(private$MalePop)){self$close_MaleCSVCon()}
   }
+
+  private$HumanPop$close_conPathogen()
 
 }
 

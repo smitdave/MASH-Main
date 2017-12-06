@@ -322,7 +322,7 @@ mbitesGadget = function(...){
                       sliderInput(inputId = "S_u_inv", label ="Number of Bouts",
                                   value = 7, min = 0, max = 20, step = 1),
                       hr(),
-                      tags$h5("Survival Probablity Function of Energy Reserves:"),
+                      tags$h5("Survival Probability Function of Energy Reserves:"),
                       sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probability of Survival",
                                   value = 20, min = 0, max = 100, step = 1),
                       sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probability of Survival",

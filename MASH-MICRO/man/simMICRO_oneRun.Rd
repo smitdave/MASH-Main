@@ -4,12 +4,16 @@
 \alias{simMICRO_oneRun}
 \title{MICRO \code{\link{MicroTile}}: One Simulation Run}
 \usage{
-simMICRO_oneRun(tMax, verbose = FALSE, trackPop = FALSE)
+simMICRO_oneRun(tMax, PfPAR, verbose = FALSE, trackPop = FALSE)
 }
 \arguments{
 \item{tMax}{length of simulation run}
 
+\item{PfPAR}{parameters passed to \code{HumanPop$initialize_Pathogens}}
+
 \item{verbose}{print information}
+
+\item{trackPop}{write mosquito population counts to CSV file}
 }
 \description{
 write me

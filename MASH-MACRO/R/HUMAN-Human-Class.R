@@ -104,7 +104,6 @@ Human <- R6::R6Class(classname="Human",
                        homePatchID         = integer(1),
                        Alive               = logical(1),
                        age                 = numeric(1),
-                       sex                 = integer(1),
 
                        #Event Queue
                        EventQueue          = NULL, # see HUMANS-EventQ.hpp
@@ -122,6 +121,38 @@ Human <- R6::R6Class(classname="Human",
                      )
 
 ) #end class definition
+
+
+###############################################################################
+# Reset a Human
+###############################################################################
+
+#' \code{Human}: Reset Human Between Runs
+#'
+#' Resets fields to default constructor values and clears out the \code{\link[MASHcpp]{EventQ}}
+#'
+#' @param myID a character ID
+#' @param houseID integer ID of my current house
+#' @param patchID integer ID of my current patch
+#' @param homeHouseID integer ID of my home house
+#' @param homePatchID integer ID of my home patch
+#' @param age numeric birthday (negative; simulation begins at 0)
+#' @param bWeight numeric biting weight
+#'
+reset_Human <- function(houseID = NULL, patchID = NULL, homeHouseID = NULL, homePatchID = NULL, age = NULL, bWeight = NULL){
+  private$Alive = TRUE
+  private$houseID = houseID
+  private$patchID = patchID
+  private$homeHouseID = homeHouseID
+  private$homePatchID = homePatchID
+  private$age = age
+  private$bWeight = bWeight
+  private$EventQueue$clearQ()
+}
+
+Human$set(which="public", name="reset",
+	value=reset_Human, overwrite=TRUE
+)
 
 
 ###############################################################################

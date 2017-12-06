@@ -22,18 +22,37 @@
 #'
 #'  * This method is bound to \code{MacroTile$simMacro}
 #'
-simMacro <- function(tMax, message = TRUE){
+
+simMacro <- function(tMax, PfPAR, message = TRUE){
+
+  cat("initializing simulation, ",private$runID,"\n",sep="")
+
 
   # open connections
   self$initCon()
-  private$Mosquito$initOutput(con = private$conMosquito)
+
+  # mosquito
+  private$Mosquito$initialize_output(con = private$conMosquito)
+
+  # patches
+  writeLines(text = paste0(c("time","patchID","bWeightHuman","bWeightZoo","bWeightZootox","kappa"),collapse = ","),con = private$conPatches, sep = "\n")
+
+  # human output
+  # humans
+  conPathogen = file(description=paste0(private$directory,"/HumanPathogen_Run",private$runID,".csv"),open="wt")
+  conMove = file(description=paste0(private$directory,"/HumanMove_Run",private$runID,".csv"),open="wt")
+  private$HumanPop$set_conPathogen(conPathogen)
+  private$HumanPop$set_conMove(conMove)
+  private$HumanPop$initialize_output_Pathogen()
+  private$HumanPop$initialize_output_Move()
 
   # initialize humans
+  private$HumanPop$initialize_Pathogens(PfPAR)
   private$HumanPop$initialize_bWeightHuman()
   private$HumanPop$initialize_travel()
 
   if (message) {
-    cat("beginning simulation\n",sep="")
+    ccat("beginning simulation ",private$runID,"\n",sep="")
   }
 
   while(private$tNow < tMax) {
@@ -55,6 +74,8 @@ simMacro <- function(tMax, message = TRUE){
 
     # output
     private$Mosquito$output(con = private$conMosquito)
+    private$Patches$apply(tag="output",returnVal=FALSE,con = private$conPatches)
+
 
     if (message) {
       cat("day:", private$tNow, as.character(Sys.time()), "\n", sep="  ")
@@ -63,6 +84,8 @@ simMacro <- function(tMax, message = TRUE){
 
   # close connections
   self$closeCon()
+  private$HumanPop$close_conPathogen()
+  private$HumanPop$close_conMove()
 }
 
 MacroTile$set(which = "public",name = "simMacro",
@@ -80,7 +103,7 @@ MacroTile$set(which = "public",name = "simMacro",
 #'
 #'  * This method is bound to \code{MacroTile$resetMacro}
 #'
-resetMacro <- function(PatchPar, MosquitoPar){
+resetMacro <- function(PatchPar, MosquitoPar, HumanPar){
 
   # reset patches
   for(i in 1:private$nPatch){
@@ -91,6 +114,7 @@ resetMacro <- function(PatchPar, MosquitoPar){
   private$Mosquito$reset(MosquitoPar)
 
   # reset humans
+  private$HumanPop$reset(HumanPar)
 
   # reset tile
   private$tNow = private$tStart

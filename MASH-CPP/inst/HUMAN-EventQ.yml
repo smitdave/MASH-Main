@@ -20,7 +20,7 @@ HumanEventQ:
       @md
       @export
     args:
-      - initQ: int = 100
+      - initQ: int = 10
   methods:
     firstEvent:
       return_type: "Rcpp::List"
@@ -40,3 +40,5 @@ HumanEventQ:
       return_type: void
     get_EventQ:
       return_type: "Rcpp::List"
+    clearQ:
+      return_type: void
