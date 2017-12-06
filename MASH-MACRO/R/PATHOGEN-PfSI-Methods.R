@@ -324,7 +324,8 @@ infectHumanPfSI <- function(tEvent, PAR){
 #' @param tEvent time of event
 #' @param PAR \code{NULL}
 add2Q_endPfSI <- function(tEvent, PAR = NULL){
-  private$EventQueue$addEvent2Q(event = self$event_endPfSI(tEvent = tEvent, PAR = PAR))
+  tEnd = tEvent + self$ttClearPf()
+  private$EventQueue$addEvent2Q(event = self$event_endPfSI(tEvent = tEnd, PAR = PAR))
 }
 
 #' PfSI \code{Human} Event: Generate PfSI Clearance Event
@@ -338,9 +339,8 @@ add2Q_endPfSI <- function(tEvent, PAR = NULL){
 #' @param tEvent time of clearance
 #' @param PAR \code{NULL}
 event_endPfSI <- function(tEvent, PAR = NULL){
-  tEnd = tEvent + self$ttClearPf()
   return(
-    list(tEvent = tEnd, PAR = PAR, tag = "endPfSI")
+    list(tEvent = tEvent, PAR = PAR, tag = "endPfSI")
   )
 }
 
@@ -354,6 +354,7 @@ endPfSI <- function(tEvent, PAR){
   if(private$Pathogens$get_infected()){
     private$EventQueue$rmTagFromQ("feverPfSI")
     private$Pathogens$set_infected(FALSE)
+    # track event
     writeLines(text = paste0(c(private$myID,tEvent,"S","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   }
 }

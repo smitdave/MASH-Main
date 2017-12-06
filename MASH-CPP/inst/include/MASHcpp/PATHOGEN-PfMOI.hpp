@@ -30,7 +30,7 @@ class humanPfMOI {
 public:
 
   // constructor
-  humanPfMOI(const int &_PfID, const double &_tInf = -1, const int &_MOI = 0, const double &_b = 0.55, const double &_c = 0.15, const bool &_chemoprophylaxis = false);
+  humanPfMOI(const double &_b = 0.55, const double &_c = 0.15, const bool &_chemoprophylaxis = false);
 
   // destructor
   ~humanPfMOI();
@@ -38,13 +38,10 @@ public:
 
   // Getters & Setters
   std::vector<int> get_PfID();
-  void push_PfID(const int &PfID_new);
 
   std::vector<double> get_tInf();
-  void push_tInf(const double &tInf_new);
 
   int get_MOI();
-  void set_MOI(const int &MOI_new);
 
   double get_b();
   void set_b(const double &b_new);
@@ -56,8 +53,9 @@ public:
   void set_chemoprophylaxis(const bool &chemoprophylaxis_new);
 
   // Infection Dynamics
-  void add_Infection(const int &PfID_new); // add a new infection
+  void add_Infection(const int &PfID_new, const double &tInf_new); // add a new infection
   void clear_Infection(const int &PfID_ix); // completely clear the infection associated with index ix
+  void clear_Infections(); // clear all infections
   std::vector<int> get_Infection(); // get all infections where PfID != -1
 
 // private members
@@ -83,7 +81,7 @@ class mosquitoPfMOI {
 public:
 
   // constructor
-  mosquitoPfMOI(const int &_PfID, const std::string &_MosquitoID, const double &_tInf = -1, const int &_MOI = 0);
+  mosquitoPfMOI();
 
   // destructor
   ~mosquitoPfMOI();
@@ -111,14 +109,13 @@ public:
 
   void add_Infection(const int &PfID_new, const double &tInf_new, const std::string &humanInf_new); // add a new infection
 
-  Rcpp::List get_Infection(const int &PfID_ix); // return the clonal variant associated with given PfID
+  int get_Infection_PfID(const int &PfID_ix); // return the clonal variant associated with given PfID
 
-  Rcpp::List get_InfectionIx(const int &ix); // get clonal variants just depending on their position in vector
+  int get_Infection_ix(const int &ix); // get clonal variants just depending on their position in vector
 
   // get_InfectionEIP: argument 'incubation' = tNow - EIP; only return infections that started at tNow - EIP in the past
   // because only those can possibly have passed the EIP and produced sporozoites.
-  Rcpp::List get_InfectionEIP(const double &incubation);
-  std::vector<int> which_EIP(const double &incubation);   // same as above but only return the indices
+  std::vector<int> get_PfID_EIP(const double &incubation);
 
 // private members
 private:

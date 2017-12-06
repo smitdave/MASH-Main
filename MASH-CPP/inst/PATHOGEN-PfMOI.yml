@@ -31,57 +31,47 @@ humanPfMOI:
       @param _c human to mosquito transmission efficiency
       @param _chemoprophylaxis chemoprophylaxis protection status
       @section Methods:
-        * get_PfID:
-        * push_PfID:
-        * get_tInf:
-        * push_tInf:
-        * get_MOI:
-        * set_MOI:
-        * get_b:
-        * set_b:
-        * get_c:
-        * set_c:
-        * get_damID:
-        * push_damID:
-        * get_sireID:
-        * push_sireID:
-        * get_chemoprophylaxis:
-        * set_chemoprophylaxis:
+        * get_PfID: get vector of current infections by PfID
+        * get_tInf: get vector of current infections by time of transmisson event
+        * get_MOI: get current multiplicity of infection
+        * get_b: get mosquito to human transmission efficiency
+        * set_b: set mosquito to human transmission efficiency
+        * get_c: get human to mosquito transmission efficiency
+        * set_c: set human to mosquito transmission efficiency
+        * get_chemoprophylaxis: is human currently protected by chemoprophylaxis
+        * set_chemoprophylaxis: set protection by chemoprophylaxis
+        * add_Infection: add a new infection
+        * clear_Infection: completely clear the infection associated with PfID
+        * clear_Infections: clear all current infections
+        * get_Infection: get all current infections
       @section Fields:
-        * a field: talk about me
+        * PfID: std::vector<int>
+        * tInf: std::vector<double>
+        * MOI: int
+        * b: double
+        * c: double
+        * chemoprophylaxis: bool
       @md
       @export
+
+    # constructor arguments
     args:
-      - PfID_init: int
-      - tInf_init: double = -1
-      - MOI_init: int = 0
-      - b_init: double = 0.55
-      - c_init: double = 0.15
-      - chemoprophylaxis_init: bool = FALSE
-      - N: int = 20
+      - _b: double = 0.55
+      - _c: double = 0.15
+      - _chemoprophylaxis: bool = FALSE
+
+  # public methods
   methods:
 
     # getters & setters
     get_PfID:
       return_type: "std::vector<int>"
-    push_PfID:
-      args:
-        - PfID_new: int
-      return_type: void
 
     get_tInf:
       return_type: "std::vector<double>"
-    push_tInf:
-      args:
-        - tInf_new: double
-      return_type: void
 
     get_MOI:
       return_type: int
-    set_MOI:
-      args:
-        - MOI_new: int
-      return_type: void
 
     get_b:
       return_type: double
@@ -97,13 +87,6 @@ humanPfMOI:
         - c_new: double
       return_type: void
 
-    get_vectorInf:
-      return_type: "std::vector<std::string>"
-    push_vectorInf:
-      args:
-        - vectorInf_new: "std::string"
-      return_type: void
-
     get_chemoprophylaxis:
       return_type: bool
     set_chemoprophylaxis:
@@ -115,6 +98,7 @@ humanPfMOI:
     add_Infection:
       args:
         - PfID_new: int
+        - tInf_new: double
       return_type: void
 
     clear_Infection:
@@ -122,17 +106,11 @@ humanPfMOI:
         - PfID_ix: int
       return_type: void
 
+    clear_Infections:
+      return_type: void
+
     get_Infection:
       return_type: "std::vector<int>"
-
-    # PfMOI History
-    track_history:
-      args:
-        - tEvent: double
-        - event: "std::string"
-      return_type: void
-    get_history:
-      return_type: "Rcpp::List"
 
 
 ###############################################################################
@@ -147,11 +125,7 @@ mosquitoPfMOI:
     roxygen: |
       A class for storing parameters and state variables of mosquito-stage PfMOI infections.
       @title PfMOI Mosquito Stage Pathogen Class
-      @param PfID_init PfID derived from the infecting human's gametocyte ID
-      @param tInf_init time of current infection (successful human to mosquito transmission event)
-      @param MOI_init initial multiplicity of infection
-      @param damID_init female gametocyte 'mother'
-      @param sireID_init male gametocyte 'father'
+
       @section Methods:
         * get_PfID:
         * push_PfID:
@@ -167,58 +141,28 @@ mosquitoPfMOI:
         * a field: talk about me
       @md
       @export
-    args:
-      - PfID_init: int
-      - MosquitoID_init: "std::string"
-      - tInf_init: double = -1
-      - MOI_init: int = 0
+    # args:
+    #   - PfID_init: int
+    #   - MosquitoID_init: "std::string"
+    #   - tInf_init: double = -1
+    #   - MOI_init: int = 0
   methods:
 
     # getters & setters
     get_PfID:
       return_type: "std::vector<int>"
-    push_PfID:
-      args:
-        - PfID_new: int
-      return_type: void
-
-    get_MosquitoID:
-      return_type: "std::string"
-    set_MosquitoID:
-      args:
-        - MosquitoID_new: "std::string"
-      return_type: void
 
     get_tInf:
       return_type: "std::vector<double>"
-    push_tInf:
-      args:
-        - tInf_new: double
-      return_type: void
 
     get_MOI:
       return_type: int
-    set_MOI:
-      args:
-        - MOI_new: int
-      return_type: void
-
-    get_humanInf:
-      return_type: "std::vector<std::string>"
-    push_humanInf:
-      args:
-        - humanInf_new: "std::string"
-      return_type: void
-
-    get_history:
-      return_type: "Rcpp::List"
 
     # Infection Dynamics
     add_Infection:
       args:
         - PfID_new: int
         - tInf_new: double
-        - humanInf_new: "std::string"
       return_type: void
 
     get_Infection:
