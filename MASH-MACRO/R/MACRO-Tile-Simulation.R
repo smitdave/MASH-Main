@@ -22,9 +22,11 @@
 #'
 #'  * This method is bound to \code{MacroTile$simMacro}
 #'
-simMacro <- function(tMax, PfPAR){
+
+simMacro <- function(tMax, PfPAR, message = TRUE){
 
   cat("initializing simulation, ",private$runID,"\n",sep="")
+
 
   # open connections
   self$initCon()
@@ -54,7 +56,7 @@ simMacro <- function(tMax, PfPAR){
 
   cat("beginning simulation ",private$runID,"\n",sep="")
 
-  while(private$tNow < tMax){
+  while(private$tNow < tMax) {
     # increment time
     private$tNow = private$tNow + 1
 
