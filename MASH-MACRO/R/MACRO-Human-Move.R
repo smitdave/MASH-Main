@@ -12,10 +12,20 @@
 #
 ###############################################################################
 
+
 ###############################################################################
 # A trip is movement to another patch
 # movement is movement within a patch
 ###############################################################################
+
+#' Move \code{HumanPop} Method: Initialize Movement Output
+#'
+#' Initialize output for movement model.
+#'  * This method is bound to \code{HumanPop$initialize_output_Move()}
+#'
+initialize_output_Move_HumanPop <- function(){
+  writeLines(text = paste0(c("humanID","time","event","location"),collapse = ","),con = private$conMove, sep = "\n")
+}
 
 #' Move \code{Human} Event: Initialize Travel
 #'
@@ -84,6 +94,9 @@ event_takeTrip <- function(tEvent, PAR){
 #' @param PAR must be a list containing character \code{tDest}, the index of the site I am visiting
 #'
 takeTrip <- function(tEvent, PAR){
+  # track event
+  writeLines(text = paste0(c(private$myID,tEvent,"takeTrip",PAR$tDest),collapse = ","),con = private$HumansPointer$get_conMove(), sep = "\n")
+
   self$decrement_bWeightHuman() # decrement the biting weight where I came from
   private$patchID = PAR$tDest # set my current location
   self$accumulate_bWeightHuman() # increment the biting weight where I go to
@@ -138,6 +151,8 @@ event_returnHome <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 #'
 returnHome <- function(tEvent, PAR){
+  # track event
+  writeLines(text = paste0(c(private$myID,tEvent,"returnHome",private$homePatchID),collapse = ","),con = private$HumansPointer$get_conMove(), sep = "\n")
 
   self$decrement_bWeightHuman() # decrement the biting weight where I came from
   private$patchID = private$homePatchID # go back home

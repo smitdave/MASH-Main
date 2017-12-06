@@ -26,7 +26,10 @@ simMacro <- function(tMax){
 
   # open connections
   self$initCon()
+
+  # mosquito
   private$Mosquito$initialize_output(con = private$conMosquito)
+  # patches
   writeLines(text = paste0(c("time","patchID","bWeightHuman","bWeightZoo","bWeightZootox","kappa"),collapse = ","),con = private$conPatches, sep = "\n")
 
   # initialize humans
@@ -62,6 +65,8 @@ simMacro <- function(tMax){
 
   # close connections
   self$closeCon()
+  private$HumanPop$close_conPathogen()
+  private$HumanPop$close_conMove()
 }
 
 MacroTile$set(which = "public",name = "simMacro",

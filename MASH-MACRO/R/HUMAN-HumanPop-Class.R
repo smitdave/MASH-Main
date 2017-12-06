@@ -210,7 +210,7 @@ HumanPop$set(which = "public",name = "set_conPathogen",
 #'  * This method is bound to \code{HumanPop$close_conPathogen}
 #'
 close_conPathogen_HumanPop <- function(){
-  close(private$conMove)
+  close(private$conPathogen)
 }
 
 HumanPop$set(which = "public",name = "close_conPathogen",

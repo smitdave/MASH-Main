@@ -54,7 +54,7 @@ humanPar = lapply(X = 1:n_humans,function(i){
 })
 
 # PfPR
-pfpr = rep(0.25,n)
+pfpr = rep(0.95,n)
 
 # make a tile
 tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = directory)

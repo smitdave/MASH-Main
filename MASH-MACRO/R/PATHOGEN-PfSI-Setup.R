@@ -140,6 +140,11 @@ PfSI.Setup <- function(
   #           overwrite = overwrite
   # )
 
+  # event logging
+  HumanPop$set(which = "public",name = "initialize_output_Pathogen",
+            value = initialize_output_PfSI_HumanPop, overwrite = overwrite
+  )
+
   ###################################################################
   # Add PfSI Parameters to 'HumanPop' Class
   ###################################################################
