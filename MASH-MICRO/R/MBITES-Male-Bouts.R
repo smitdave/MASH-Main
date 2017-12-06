@@ -186,7 +186,12 @@ mbitesMale_boutS <- function(){
     }
     private$stateNew = "R"
   }
-
+  #### ATSB ################################################################################################
+  atsb=private$LandscapePointer$get_SugarSites(private$locNow)$get_attractiveSugarBait()
+  if(is.null(atsb)==FALSE){
+      private$stateNew = atsb$mosquitoKillEncounter(private$stateNew,interventionType="ATSB")
+      private$lspot = atsb$mosquitoRepelEncounter(private$lspot,interventionType="ATSB")
+  }
 }
 
 
