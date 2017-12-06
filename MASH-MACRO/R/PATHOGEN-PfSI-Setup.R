@@ -113,32 +113,8 @@ PfSI.Setup <- function(
   cat("initializing PfSI PATHOGEN module\n")
 
   ###################################################################
-  # PfSI MICRO Mosquito methods
+  # PfSI Output
   ###################################################################
-
-  # ###################################################################
-  # # Add PfSI Pathogen Object to 'MicroMosquitoFemale' & 'MicroMosquitoPopFemale' Class
-  # ###################################################################
-  #
-  # MicroMosquitoFemale$set(which = "public",name = "probing",
-  #           value = probing_PfSI,
-  #           overwrite = overwrite
-  # )
-  #
-  # MicroMosquitoFemale$set(which = "public",name = "feeding",
-  #           value = feeding_PfSI,
-  #           overwrite = overwrite
-  # )
-  #
-  # MicroMosquitoFemale$set(which = "public",name = "init_Pathogens",
-  #           value = init_Pathogens_MicroMosquitoFemale_PfSI,
-  #           overwrite = overwrite
-  # )
-  #
-  # MicroMosquitoPopFemale$set(which = "public",name = "init_Pathogens",
-  #           value = init_Pathogens_MicroMosquitoPopFemale_PfSI,
-  #           overwrite = overwrite
-  # )
 
   # event logging
   HumanPop$set(which = "public",name = "initialize_output_Pathogen",

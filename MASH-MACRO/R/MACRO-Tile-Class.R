@@ -132,9 +132,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                     # Output Connections
                     directory                 = character(1),
                     conMosquito               = NULL,
-                    conPatches                = NULL,
-                    conHuman                  = NULL
-
+                    conPatches                = NULL
                   )
 
 ) #end class definition

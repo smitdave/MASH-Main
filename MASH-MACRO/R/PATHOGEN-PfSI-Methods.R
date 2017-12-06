@@ -103,8 +103,6 @@ initialize_PfSI_Human <- function(PfPR){
   if(runif(1) < PfPR[private$patchID]){
     self$infectHumanPfSI(tEvent = 0, PAR = list(vectorID="initInf"))
   } else {
-    # self$get_Pathogens()$track_history(tEvent = 0, event = "S")
-    # track event
     writeLines(text = paste0(c(private$myID,0.0,"S","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   }
 }
@@ -301,15 +299,10 @@ event_infectHumanPfSI <- function(tEvent, PAR = NULL){
 #'
 infectHumanPfSI <- function(tEvent, PAR){
   if(!private$Pathogens$get_infected() & !private$Pathogens$get_chemoprophylaxis()){
-    # private$Pathogens$track_history(tEvent = tEvent, event = "I") # track history
     private$Pathogens$set_infected(TRUE)
-    # increment PfID
-    private$Pathogens$push_PfID(private$HumansPointer$increment_PfID())
-    # private$Pathogens$push_vectorInf(PAR$vectorID)
-
+    private$Pathogens$push_PfID(private$HumansPointer$increment_PfID()) # increment PfID
     # track event
     writeLines(text = paste0(c(private$myID,tEvent,"I",PAR$vectorID),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
-
     if(runif(1) < self$get_PfSI_PAR("FeverPf")){
       self$add2Q_feverPfSI(tEvent = tEvent)
     }
@@ -360,12 +353,8 @@ event_endPfSI <- function(tEvent, PAR = NULL){
 endPfSI <- function(tEvent, PAR){
   if(private$Pathogens$get_infected()){
     private$EventQueue$rmTagFromQ("feverPfSI")
-    # private$Pathogens$track_history(tEvent = tEvent, event = "S") # track history
-
-    writeLines(text = paste0(c(private$myID,tEvent,"S","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
-
-
     private$Pathogens$set_infected(FALSE)
+    writeLines(text = paste0(c(private$myID,tEvent,"S","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   }
 }
 
@@ -412,7 +401,6 @@ event_feverPfSI <- function(tEvent, PAR = NULL){
 #' @param tEvent time of fever
 #' @param PAR \code{NULL}
 feverPfSI <- function(tEvent, PAR){
-  # private$Pathogens$track_history(tEvent = tEvent, event = "F")
   writeLines(text = paste0(c(private$myID,tEvent,"F","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   if(runif(1) < self$get_PfSI_PAR("TreatPf")){
     self$add2Q_treatPfSI(tEvent = tEvent)
@@ -464,11 +452,9 @@ treatPfSI <- function(tEvent, PAR){
   # treat
   if(private$Pathogens$get_infected()){
     private$Pathogens$set_infected(FALSE)
-    # private$Pathogens$track_history(tEvent = tEvent, event = "S")
     writeLines(text = paste0(c(private$myID,tEvent,"S","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   }
   private$Pathogens$set_chemoprophylaxis(TRUE)
-  # private$Pathogens$track_history(tEvent = tEvent, event = "P")
   writeLines(text = paste0(c(private$myID,tEvent,"P","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   # Initiate a period of protection from chemoprophylaxis
   self$add2Q_endprophylaxisPfSI(tEvent = tEvent)
@@ -518,7 +504,6 @@ event_endprophylaxisPfSI <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 endprophylaxisPfSI <- function(tEvent, PAR){
   # End Prophylaxis
-  # private$Pathogens$track_history(tEvent = tEvent, event = "S")
   writeLines(text = paste0(c(private$myID,tEvent,"S","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   private$Pathogens$set_chemoprophylaxis(FALSE)
 
@@ -568,7 +553,6 @@ event_pevaccinatePfSI <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 pevaccinatePfSI <- function(tEvent, PAR){
   if(runif(1) < self$get_PfSI_PAR("PEProtectPf")){
-    # private$Pathogens$track_history(tEvent = tEvent, event = "PEvaxx")
     writeLines(text = paste0(c(private$myID,tEvent,"PEvaxx","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
     private$Pathogens$set_b(self$get_PfSI_PAR("Pf_b") * (1-self$get_PfSI_PAR("peBlockPf")))
     self$add2Q_pewanePfSI(tEvent = tEvent)
@@ -614,7 +598,6 @@ event_pewanePfSI <- function(tEvent, PAR = NULL){
 #' @param tEvent end PE protection
 #' @param PAR \code{NULL}
 pewanePfSI <- function(tEvent, PAR){
-  # private$Pathogens$track_history(tEvent = tEvent, event = "PEwane")
   writeLines(text = paste0(c(private$myID,tEvent,"PEwane","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   private$Pathogens$set_b(self$get_PfSI_PAR("Pf_b"))
 }
@@ -662,7 +645,6 @@ event_gsvaccinatePfSI <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 gsvaccinatePfSI <- function(tEvent, PAR){
   if(runif(1) < self$get_PfSI_PAR("GSProtectPf")){
-    # private$Pathogens$track_history(tEvent = tEvent, event = "GSvaxx")
     writeLines(text = paste0(c(private$myID,tEvent,"GSvaxx","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
     private$Pathogens$set_c(self$get_PfSI_PAR("Pf_c") * (1-self$get_PfSI_PAR("gsBlockPf")))
     self$add2Q_gswanePfSI(tEvent = tEvent)
@@ -708,7 +690,6 @@ event_gswanePfSI <- function(tEvent, PAR = NULL){
 #' @param tEvent end GS protection
 #' @param PAR \code{NULL}
 gswanePfSI <- function(tEvent, PAR){
-  # private$Pathogens$track_history(tEvent = tEvent, event = "GSwane")
   writeLines(text = paste0(c(private$myID,tEvent,"GSwane","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   private$Pathogens$set_c(self$get_PfSI_PAR("Pf_c"))
 }
