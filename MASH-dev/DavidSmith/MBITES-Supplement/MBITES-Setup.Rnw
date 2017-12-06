@@ -75,10 +75,10 @@ For the behavioral states F,B,R,L,O, \& S, these are the timing options:
     \begin{itemize}
     \item [0] = FALSE 
     \item [1] = TRUE
-      $$min + \mbox{rdiurnal}(.(mean-min), t, peak, amp)$$
+      $$min + \mbox{rdiurnal}(.(mean-min), t, peak)$$
       \begin{itemize} 
       \item \verb1boutX_tte_peak=01 (midnight)
-      \item \verb1boutX_tte_amp=11 
+      %\item \verb1boutX_tte_amp=11 
       \end{itemize}
     \end{itemize}
   \end{itemize}
