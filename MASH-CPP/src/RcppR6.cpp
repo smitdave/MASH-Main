@@ -33,6 +33,10 @@ void HumanEventQ__addEvent2Q(MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> obj_,
 Rcpp::List HumanEventQ__get_EventQ(MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> obj_) {
   return obj_->get_EventQ();
 }
+// [[Rcpp::export]]
+void HumanEventQ__clearQ(MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> obj_) {
+  obj_->clearQ();
+}
 
 // [[Rcpp::export]]
 MASHcpp::HistoryGeneric HistoryGeneric__ctor(int N) {

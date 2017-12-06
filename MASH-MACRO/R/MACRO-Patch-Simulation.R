@@ -37,12 +37,49 @@ MacroPatch$set(which = "public",name = "oneDay_addCohort",
 )
 
 
+###############################################################################
+# Output
+###############################################################################
 
+# #' Initialize Patch Output
+# #'
+# #' Initialize patch output
+# #'
+# #'  * This method is bound to \code{MacroTile$initialize_output}
+# #'
+# initialize_output_Patch <- function(con){
+#   writeLines(text = paste0(c("time","patchID","bWeightHuman","bWeightZoo","bWeightZootox","kappa"),collapse = ","),con = con, sep = "\n")
+# }
+#
+# MacroTile$set(which = "public",name = "initialize_output",
+#           value = initialize_output_Patch, overwrite = TRUE
+# )
 
+#' Write Patch Output
+#'
+#' Write patch output
+#'
+#'  * This method is bound to \code{MacroPatch$output}
+#'
+output_Patch <- function(con){
+  tNow = private$TilePointer$get_tNow()
+  writeLines(text = paste0(c(tNow,private$patchID,private$bWeightHuman,private$bWeightZoo,private$bWeightZootox,private$kappa),collapse = ","), con = con, sep = "\n")
+}
 
+MacroPatch$set(which = "public",name = "output",
+          value = output_Patch, overwrite = TRUE
+)
 
+###############################################################################
+# Reset
+###############################################################################
 
-
+#' Reset Patch
+#'
+#' Reset patch between simulation runs
+#'
+#'  * This method is bound to \code{MacroPatch$reset}
+#'
 reset_Patch <- function(bWeightZoo, bWeightZootox){
 
   # reset aquatic population

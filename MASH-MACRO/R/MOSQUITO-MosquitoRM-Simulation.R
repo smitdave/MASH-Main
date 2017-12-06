@@ -99,14 +99,14 @@ Mosquito_RM$set(which = "public",name = "get_emergingAdults",
 #'
 #' Initialize mosquito population output
 #'
-#'  * This method is bound to \code{Mosquito_RM$initOutput}
+#'  * This method is bound to \code{Mosquito_RM$initialize_output}
 #'
-initOutput_Mosquito_RM <- function(con){
+initialize_output_Mosquito_RM <- function(con){
   writeLines(text = paste0(c("time",paste0("patch",1:private$TilePointer$get_nPatch())),collapse = ","),con = con, sep = "\n")
 }
 
-Mosquito_RM$set(which = "public",name = "initOutput",
-          value = initOutput_Mosquito_RM, overwrite = TRUE
+Mosquito_RM$set(which = "public",name = "initialize_output",
+          value = initialize_output_Mosquito_RM, overwrite = TRUE
 )
 
 #' Write Population Output

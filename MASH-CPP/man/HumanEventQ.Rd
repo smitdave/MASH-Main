@@ -4,7 +4,7 @@
 \alias{HumanEventQ}
 \title{Human Event Queue}
 \usage{
-HumanEventQ(initQ = 100)
+HumanEventQ(initQ = 10)
 }
 \arguments{
 \item{initQ}{reserve memory for \code{initQ} number of events}

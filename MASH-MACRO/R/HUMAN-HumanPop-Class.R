@@ -13,6 +13,7 @@
 #
 ###############################################################################
 
+
 #' HumanPop Class Definition
 #'
 #' Generate a single human population; they may live in a \code{\link{MacroPatch}} or a MicroPatch, the individual humans in the pop may move freely between patches.
@@ -40,13 +41,6 @@
 #'  * N: number of human
 #'  * tStart: time to start simulation
 #'  * pop: a object of class \code{\link[MASHcpp]{HashMap}} that stores instantiations of \code{\link{Human}}, see help for more details on the internal structure of this type.
-#'
-#'
-#'
-#'
-#'
-#'
-#'
 #'
 #' @export
 HumanPop <- R6::R6Class(classname = "HumanPop",
@@ -97,13 +91,17 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                     private = list(
 
                       # fields
-                      N = NULL,
-                      tStart = numeric(1),
-                      pop = NULL,
+                      N                   = NULL,
+                      tStart              = numeric(1),
+                      pop                 = NULL,
+
+                      # output
+                      conPathogen         = NULL,
+                      conMove             = NULL,
 
                       # pointers
-                      TilePointer = NULL,
-                      PatchPointer = NULL
+                      TilePointer         = NULL,
+                      PatchPointer        = NULL
 
                     )
 )
@@ -173,6 +171,92 @@ HumanPop$set(which = "public",name = "get_PathogensHistory",
   overwrite = TRUE
 )
 
+
+###############################################################################
+# HumanPop: Output Connections
+###############################################################################
+
+#' \code{HumanPop} Method: Get Pathogen Output Connection
+#'
+#' Gets the \code{\link[base]{connection}} object that is responsible for pathogen model output
+#'  * This method is bound to \code{HumanPop$get_conPathogen}
+#'
+get_conPathogen_HumanPop <- function(){
+  return(private$conPathogen)
+}
+
+HumanPop$set(which = "public",name = "get_conPathogen",
+  value = get_conPathogen_HumanPop, overwrite = TRUE
+)
+
+#' \code{HumanPop} Method: Set Pathogen Output Connection
+#'
+#' Sets the \code{\link[base]{connection}} object that is responsible for pathogen model output
+#'  * This method is bound to \code{HumanPop$set_conPathogen}
+#'
+#' @param conPathogen an object of class \code{\link[base]{connection}}
+#'
+set_conPathogen_HumanPop <- function(conPathogen){
+  private$conPathogen = conPathogen
+}
+
+HumanPop$set(which = "public",name = "set_conPathogen",
+  value = set_conPathogen_HumanPop, overwrite = TRUE
+)
+
+#' \code{HumanPop} Method: Close Pathogen Output Connection
+#'
+#' Closes the \code{\link[base]{connection}} object that is responsible for pathogen model output
+#'  * This method is bound to \code{HumanPop$close_conPathogen}
+#'
+close_conPathogen_HumanPop <- function(){
+  close(private$conPathogen)
+}
+
+HumanPop$set(which = "public",name = "close_conPathogen",
+  value = close_conPathogen_HumanPop, overwrite = TRUE
+)
+
+#' \code{HumanPop} Method: Get Move Output Connection
+#'
+#' Gets the \code{\link[base]{connection}} object that is responsible for movement output
+#'  * This method is bound to \code{HumanPop$get_conMove}
+#'
+get_conMove_HumanPop <- function(){
+  return(private$conMove)
+}
+
+HumanPop$set(which = "public",name = "get_conMove",
+  value = get_conMove_HumanPop, overwrite = TRUE
+)
+
+#' \code{HumanPop} Method: Set Pathogen Output Connection
+#'
+#' Sets the \code{\link[base]{connection}} object that is responsible for movement output
+#'  * This method is bound to \code{HumanPop$set_conMove}
+#'
+#' @param conMove an object of class \code{\link[base]{connection}}
+#'
+set_conMove_HumanPop <- function(conMove){
+  private$conMove = conMove
+}
+
+HumanPop$set(which = "public",name = "set_conMove",
+  value = set_conMove_HumanPop, overwrite = TRUE
+)
+
+#' \code{HumanPop} Method: Close Pathogen Output Connection
+#'
+#' Closes the \code{\link[base]{connection}} object that is responsible for movement output
+#'  * This method is bound to \code{HumanPop$close_conMove}
+#'
+close_conMove_HumanPop <- function(){
+  close(private$conMove)
+}
+
+HumanPop$set(which = "public",name = "close_conMove",
+  value = close_conMove_HumanPop, overwrite = TRUE
+)
 
 
 ###############################################################################

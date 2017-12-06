@@ -103,6 +103,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// HumanEventQ__clearQ
+void HumanEventQ__clearQ(MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> obj_);
+RcppExport SEXP _MASHcpp_HumanEventQ__clearQ(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> >::type obj_(obj_SEXP);
+    HumanEventQ__clearQ(obj_);
+    return R_NilValue;
+END_RCPP
+}
 // HistoryGeneric__ctor
 MASHcpp::HistoryGeneric HistoryGeneric__ctor(int N);
 RcppExport SEXP _MASHcpp_HistoryGeneric__ctor(SEXP NSEXP) {
@@ -1958,6 +1968,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_HumanEventQ__get_queueN", (DL_FUNC) &_MASHcpp_HumanEventQ__get_queueN, 1},
     {"_MASHcpp_HumanEventQ__addEvent2Q", (DL_FUNC) &_MASHcpp_HumanEventQ__addEvent2Q, 2},
     {"_MASHcpp_HumanEventQ__get_EventQ", (DL_FUNC) &_MASHcpp_HumanEventQ__get_EventQ, 1},
+    {"_MASHcpp_HumanEventQ__clearQ", (DL_FUNC) &_MASHcpp_HumanEventQ__clearQ, 1},
     {"_MASHcpp_HistoryGeneric__ctor", (DL_FUNC) &_MASHcpp_HistoryGeneric__ctor, 1},
     {"_MASHcpp_HistoryGeneric__track_history", (DL_FUNC) &_MASHcpp_HistoryGeneric__track_history, 3},
     {"_MASHcpp_HistoryGeneric__get_history", (DL_FUNC) &_MASHcpp_HistoryGeneric__get_history, 1},

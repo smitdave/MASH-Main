@@ -113,32 +113,13 @@ PfSI.Setup <- function(
   cat("initializing PfSI PATHOGEN module\n")
 
   ###################################################################
-  # PfSI MICRO Mosquito methods
+  # PfSI Output
   ###################################################################
 
-  # ###################################################################
-  # # Add PfSI Pathogen Object to 'MicroMosquitoFemale' & 'MicroMosquitoPopFemale' Class
-  # ###################################################################
-  #
-  # MicroMosquitoFemale$set(which = "public",name = "probing",
-  #           value = probing_PfSI,
-  #           overwrite = overwrite
-  # )
-  #
-  # MicroMosquitoFemale$set(which = "public",name = "feeding",
-  #           value = feeding_PfSI,
-  #           overwrite = overwrite
-  # )
-  #
-  # MicroMosquitoFemale$set(which = "public",name = "init_Pathogens",
-  #           value = init_Pathogens_MicroMosquitoFemale_PfSI,
-  #           overwrite = overwrite
-  # )
-  #
-  # MicroMosquitoPopFemale$set(which = "public",name = "init_Pathogens",
-  #           value = init_Pathogens_MicroMosquitoPopFemale_PfSI,
-  #           overwrite = overwrite
-  # )
+  # event logging
+  HumanPop$set(which = "public",name = "initialize_output_Pathogen",
+            value = initialize_output_PfSI_HumanPop, overwrite = overwrite
+  )
 
   ###################################################################
   # Add PfSI Parameters to 'HumanPop' Class
@@ -207,14 +188,14 @@ PfSI.Setup <- function(
   )
 
   # initialize PfSI infections with patch parasite prevalence PfPR
-  HumanPop$set(which = "public",name = "init_PfSI",
-            value = init_PfSI_HumanPop,
+  HumanPop$set(which = "public",name = "initialize_Pathogens",
+            value = initialize_Pathogens_PfSI_HumanPop,
             overwrite = overwrite
   )
 
   # initialize PfSI infections with patch parasite prevalence PfPR
-  Human$set(which = "public",name = "init_PfSI",
-            value = init_PfSI_Human,
+  Human$set(which = "public",name = "initialize_PfSI",
+            value = initialize_PfSI_Human,
             overwrite = overwrite
   )
 
