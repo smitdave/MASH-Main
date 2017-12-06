@@ -4,7 +4,7 @@
 # an output filename subscripted with "seed", 
 # and create a blank file with that name
 
-print(commandArgs())
+print(commandArgs(trailingOnly = T))
 
 # Read in the seed from the command line
 seed <- as.integer(commandArgs()[4])
