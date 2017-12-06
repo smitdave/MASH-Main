@@ -59,10 +59,10 @@ pfpr = rep(0.95,n)
 # make a tile
 tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = directory)
 
-tile$get_HumansPointer()$init_PfSI(pfpr)
+# tile$get_HumansPointer()$init_PfSI(pfpr)
 
 # run simulations
-tile$simMacro(tMax = 365)
+tile$simMacro(tMax = 365,PfPAR = pfpr)
 # tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
 # tile$simMacro(tMax = 1000)
 # tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)

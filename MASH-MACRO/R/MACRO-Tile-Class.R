@@ -109,17 +109,6 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                        }
                      }
 
-
-                     # human output
-                     # humans
-                     conPathogen = file(description=paste0(private$directory,"/HumanPathogen_Run",private$runID,".csv"),open="wt")
-                     conMove = file(description=paste0(private$directory,"/HumanMove_Run",private$runID,".csv"),open="wt")
-                     private$HumanPop$set_conPathogen(conPathogen)
-                     private$HumanPop$set_conMove(conMove)
-                     private$HumanPop$initialize_output_Pathogen()
-                     private$HumanPop$initialize_output_Move()
-
-
                    } # end constructor
 
                    # finalize = function(){}

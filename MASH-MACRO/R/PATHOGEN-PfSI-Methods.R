@@ -80,26 +80,26 @@ PfSI_increment_PfID <- function(){
 #' PfSI \code{HumanPop} Method: Initialize PfSI Infections
 #'
 #' Initialize PfSI infections with parasite prevalence PfPR in a human population.
-#'  * This method is bound to \code{HumanPop$init_PfSI()}
+#'  * This method is bound to \code{HumanPop$initialize_Pathogens()}
 #'
-#' @param PfPR numeric; prevalence
+#' @param PfPAR numeric vector of parasite prevalence in each patch
 #'
-init_PfSI_HumanPop <- function(PfPR){
+initialize_Pathogens_PfSI_HumanPop <- function(PfPAR){
 
   private$PfID = 1L
   self$set_humanPfSI()
 
-  private$pop$apply(tag = "init_PfSI",returnVal=FALSE,PfPR=PfPR)
+  private$pop$apply(tag = "initialize_PfSI",returnVal=FALSE,PfPR=PfPAR)
 }
 
 #' PfSI \code{Human} Method: Initialize PfSI Infection
 #'
 #' Initialize infection with given probability for a single Human. This must be called after \code{\link{Human_set_humanPfSI}} is used to initialize the pathogen object.
-#'  * This method is bound to \code{Human$init_PfSI()}
+#'  * This method is bound to \code{Human$initialize_PfSI()}
 #'
 #' @param PfPR numeric; probability I am infected
 #'
-init_PfSI_Human <- function(PfPR){
+initialize_PfSI_Human <- function(PfPR){
   if(runif(1) < PfPR[private$patchID]){
     self$infectHumanPfSI(tEvent = 0, PAR = list(vectorID="initInf"))
   } else {

@@ -22,21 +22,34 @@
 #'
 #'  * This method is bound to \code{MacroTile$simMacro}
 #'
-simMacro <- function(tMax){
+simMacro <- function(tMax, PfPAR){
+
+  cat("initializing simulation, ",private$runID,"\n",sep="")
 
   # open connections
   self$initCon()
 
   # mosquito
   private$Mosquito$initialize_output(con = private$conMosquito)
+
   # patches
   writeLines(text = paste0(c("time","patchID","bWeightHuman","bWeightZoo","bWeightZootox","kappa"),collapse = ","),con = private$conPatches, sep = "\n")
 
+  # human output
+  # humans
+  conPathogen = file(description=paste0(private$directory,"/HumanPathogen_Run",private$runID,".csv"),open="wt")
+  conMove = file(description=paste0(private$directory,"/HumanMove_Run",private$runID,".csv"),open="wt")
+  private$HumanPop$set_conPathogen(conPathogen)
+  private$HumanPop$set_conMove(conMove)
+  private$HumanPop$initialize_output_Pathogen()
+  private$HumanPop$initialize_output_Move()
+
   # initialize humans
+  private$HumanPop$initialize_Pathogens(PfPAR)
   private$HumanPop$initialize_bWeightHuman()
   private$HumanPop$initialize_travel()
 
-  cat("beginning simulation\n",sep="")
+  cat("beginning simulation ",private$runID,"\n",sep="")
 
   while(private$tNow < tMax){
     # increment time
