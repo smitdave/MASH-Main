@@ -165,7 +165,12 @@ mbitesMale_boutM <- function(){
     private$LandscapePointer$get_MatingSites(private$locNow)$get_MatingQ()$add_male2Q(private$id,private$mateFitness,private$genotype)
     private$stateNew = "R"
   }
-
+  #### SwarmSpray #############################################################################################
+  swarmSpray=private$LandscapePointer$get_MatingSites(private$locNow)$get_swarmSpray()
+  if(is.null(swarmSpray)==FALSE){
+      private$stateNew = swarmSpray$mosquitoKillEncounter(private$stateNew,interventionType="SwarmSpray")
+      private$lspot = swarmSpray$mosquitoRepelEncounter(private$lspot,interventionType="SwarmSpray")
+  }
 }
 
 
@@ -186,7 +191,12 @@ mbitesMale_boutS <- function(){
     }
     private$stateNew = "R"
   }
-
+  #### ATSB ################################################################################################
+  atsb=private$LandscapePointer$get_SugarSites(private$locNow)$get_attractiveSugarBait()
+  if(is.null(atsb)==FALSE){
+      private$stateNew = atsb$mosquitoKillEncounter(private$stateNew,interventionType="ATSB")
+      private$lspot = atsb$mosquitoRepelEncounter(private$lspot,interventionType="ATSB")
+  }
 }
 
 
