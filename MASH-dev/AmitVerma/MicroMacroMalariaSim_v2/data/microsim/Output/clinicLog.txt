@@ -1,0 +1,1 @@
+day clinicPatchID swamped humanID houseID human_isInf human_foundInf human_assignedRightDrug travelledAbroad Rcd_Added

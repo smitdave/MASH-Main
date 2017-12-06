@@ -51,9 +51,10 @@ simMacro <- function(tMax, PfPAR, message = TRUE){
   private$HumanPop$initialize_bWeightHuman()
   private$HumanPop$initialize_travel()
 
-  if (message) {
-    ccat("beginning simulation ",private$runID,"\n",sep="")
-  }
+  # progress bar
+  progress_bar = utils::txtProgressBar(min=1,max=tMax)
+
+  cat("beginning simulation ",private$runID,"\n",sep="")
 
   while(private$tNow < tMax) {
     # increment time
@@ -76,10 +77,8 @@ simMacro <- function(tMax, PfPAR, message = TRUE){
     private$Mosquito$output(con = private$conMosquito)
     private$Patches$apply(tag="output",returnVal=FALSE,con = private$conPatches)
 
-
-    if (message) {
-      cat("day:", private$tNow, as.character(Sys.time()), "\n", sep="  ")
-    }
+    setTxtProgressBar(progress_bar,private$tNow)
+    # cat("day: ",private$tNow,"\n",sep="")
   }
 
   # close connections

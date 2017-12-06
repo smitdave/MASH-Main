@@ -1,0 +1,203 @@
+
+
+README for MicroMacroMalariaSim v1
+===================================
+
+_____________________________________
+Contents
+_____________________________________
+
+1. Instructions for compilation
+2. Input Files
+3. Instructions for execution
+4. Output
+5. Version history
+______________________________________
+
+1. Overview
+-------------
+MicroMacroMalariaSim is a stochastic individual mosquito and individual human based malaria transmission simulator. MicroMacroMalariaSim has two components: 
+. Individual humans - individual mosquitoes based MicroSim
+. Individual humans based MacroSim
+ 
+
+2. Instructions for Compilation
+--------------------------------
+. Unzip the files in a folder 
+. To compile run the following command from the software root folder
+	> make
+. The above command would make two excutables called MicroSim and MacroSim.
+. To compile individual component use following command:
+	> make <component>
+	e.g.:
+	> make MicroSim
+. Compiling the code produces some intermediate object files stored inside obj folder
+. Intermediate object files can be deleted by following command
+	> make clean
+
+2. Input Files
+---------------
+MicroSim and MacroSim work on their individual input files. Following sections give information about the input files. Sample input files are provided in the folder named data.
+
+2.1 MicroSim
+. The simulator needs the following input files place under the same directory.
+	1. default.in (configuration file): contains the simulation parameters
+	2. default.patches: contains the information about the patches
+	3. default.houses: contains the information about the houses
+	4. default.humans: contains the information about the humans
+	5. default.ponds: contains the information about the ponds
+	6. default.lambda: contains the information about the daily lambdas
+	
+2.2 MacroSim
+. The simulator needs the following input files place under the same directory.
+	1. macro.in (configuration file): contains the simulation parameters
+	2. macro.patches: contains the information about the patches
+	3. macro.humans: contains the information about the humans
+	4. macro.lambda: contains the information about the daily lambdas
+	5. macro.infections (optional): contains information about patch-wise initial population infected
+
+
+3. Instructions for execution
+------------------------------
+The two components of the simulator can be executed individually. 
+
+3.1 MicroSim
+
+	> ./MicroSim -d <path_to_directory_containing_input_data_files> 
+	or
+	> ./MicroSim -d <path_to_directory_containing_input_data_files> -o <path_to_output_directory>
+	
+	directory paths need '/' or '\' character at the end depending on the operating system.
+	
+	. MicroSim needs all the input data files to pe placed in the same folder. 
+	E.g. if the input data files are placed in /home/user1/data then the command should be
+
+	> ./MicroSim -d /home/user1/data/
+	Or
+	> ./MicroSim -d data/
+	if there is a directory named data present in the same folder as MalariaSim
+	
+	To specify the output directory switch -o could be used. E.g.
+	> ./MicroSim -d data/ -o simoutfiles/
+
+3.2 MacroSim
+	> ./MacroSim path_to_configuration_file
+	E.g. if the configuration input file is placed in /home/user1/data then the command should be
+
+	> ./MacroSim /home/user1/macro.in
+	
+	An extra string could be appended to the name of output files using extra argument as follows:
+	> ./MacroSim /home/user1/macro.in <outStringAppend>
+
+4. Output
+----------
+
+4.1 MicroSim
+    MalSimOutput.txt: This file lists the detailed summary of data related to Humans and Mosquitoes and the infection transfer on a given day. Following gives the information about the file header.
+        day: currentDay
+        nHumans: Total number of Humans
+        nInfHumans: Number of infected Humans
+        totalMozzies: Total number of Mosquiotes
+        nInfMozzies: Number of infected Mosquitoes
+        bite_searching_Mozzies: Number of mosquito looking for a bite by the end of the day
+        resting_mozzies: Number of resting mosquitoes at the end of the day
+        pond_searching_mozzies:  Number of mosquito looking for a pond to oviposit by the end of the day
+        ovipositing_mozzies: Number of ovipositing mosquitoes at the end of the day
+        total_bites: Total number of bites occurred 
+        mUhU: Number of bites in which both Mosquito and Human were not infected
+        mIhU: Number of bites with Mosquito infected and Human not infected
+        mIhU_ITrans: Number of mIhU resulting in infection transfer
+        mUhI: Number of bites with Mosquito not infected and Human infected
+        mUhI_ITrans: Number of mUhI resulting in infection transfer
+        mIhI: Number of bites in which both Mosquito and Human were infected
+        mIhI_ITrans: Number of mIhI resulting in infection transfer 
+
+    clinicLog.txt: This file keeps track of the activities related to HealthClinic
+        day: currentDay
+        clinicPatchID: patchID of the HealthClinic
+        swamped: 1 if swamped, 0 otherwise
+        humanID: ID of Human visiting
+        houseID:  ID of Human's House of residence
+        human_isInf: 1 if Human infected, 0 otherwise
+        human_foundInf: 1 if Human found infected by the tests at the clinic, 0 otherwise
+        human_assignedRightDrug: 1 if Human was assigned the right drug, 0 otherwise
+        travelledAbroad: 1 if Human travelled abroad, 0 otherwise
+        Rcd_Added: ID's of the Houses added for RCD (reactive case detection)
+	
+    BitesLog.txt: This file keeps track of all the bites occurred during the simulation
+        day: currentDay
+        MozzyID: Mosquito ID
+        M_IsInfected: 1 if Mosquito was infected, 0 otherwise
+        HumanID: Human ID
+        H_Isinfected: 1 if Human infected, 0 otherwise
+        HouseID: houseID of the House where bite occurred
+        PatchID: patchID of the Patch where bite occurred
+        infectionTrans: direction of infection transfer (0=no transfer, 1=Mosquito to Human, 2=Human to Mosquito)
+	
+    MozzyLog.txt: This file is used to get an idea of how Mosquitoes behaved during the simulation. The outputs are recorded when a Mosquito dies in the simulator.
+        mozzyID: Mosquito ID
+        isInfected: 1 if Mosquito was infected at the time of death, 0 otherwise
+        bday: Mosquito birth day
+        bPatchID: patchID of Patch where the Mosquito was generated at a Pond.
+        dday: Mosquito death day
+        dStage: The stage which Mosquito was in when it died (1=bite searching, 2=resting, 3=pond searching, 4=ovipositing)
+        dType: death type (natural, while resting, while ovipositing)
+        dTimeLocation: location (House or Pond) is where Mosquito was when it died
+        dPatch: patchID of the Patch where Mosquito was the day of Death.
+	
+    Command Prompt Output: This version has an improved command prompt output set which gives detailed information about what is going inside the simulator.
+        Day: currentDay
+        newgen: Number of newly generated Mosquitoes
+        hSearch: Number of bite searching Mosquitoes
+        Rest: Number of resting Mosquitoes
+        Pond: Number of Pond searching Mosquitoes
+        Ovi: Number of ovipositing Mosquitoes
+        time: Time (in seconds) needed for the simulation of currentDay
+        tot: Total number of Mosquitoes
+        inf: Number of Infected Mosquitoes
+        totHum: Total number of Humans
+        infHum: Number of infected Humans
+
+4.2 MacroSim	
+	Command Prompt Output:
+		Day: currentDay
+		nMozzy: Total number of mosquitoes
+		nInfectedMozzy: Number of infected mosquitoes
+		nInfectiousMozzy: Number of infectious mosquitoes
+		nFeedingInfectiousM: Number of infectious mosquitoes in feeding stage
+		nHumans: Total number of humans
+		nInfHumans: Number of infected humans
+		nNewInfections: Number of new infections
+		nNewFevers : Number of new human fevers
+		nNewTreatedHs: Number of new treated humans
+		meanMalariaAge: Mean malaria age of humans.
+
+	SimOutput.Run\#.txt: This file stores the log of command prompt outputs for each run of MacroSim.
+
+	Mosquitoes.Run\#.txt: This file gives the total number of mosquitoes present in the simulation for each output day (rows) and each patch (columns).
+	
+	InfMosquitoes.Run\#.txt: This file gives the number of infectious mosquitoes present in the simulation for each output day (rows) and each patch (columns).
+	
+	InfHumans.Run\#.txt: This file gives the number of infected humans present in the simulation for each output day (rows) and each patch (columns).
+
+	NewInfHumans.Run\#.txt: This file gives the number of humans subjected to new infections in the simulation for each output day (rows) and each patch (columns).
+	
+	NewFevers.Run\#.txt: This file gives the number of humans developing new fevers in the simulation for each output day (rows) and each patch (columns).
+	
+	NewTreatments.Run\#.txt: This file gives the number of humans getting treatment in the simulation for each output day (rows) and each patch (columns).
+
+		
+5. Version history
+-------------------
+Following gives a short version history of MicroMacroMalariaSim. For more detailed version history, please refer to docs/version_history.
+
+    . Fixed MacroModel->UpdateHExposure(Human) bug in calculation of d2.
+
+MicroMacroMalariaSim_v1.1.0alpha1: Release date 04/26/2013
+    Changes:
+    . Integeration of simple Ross Macdonald model
+    . Model could be chosen by setting the value of SIMULATION_MODEL in the macro.in file
+MicroMacroMalariaSim_v1.0.0beta1: Release date 04/01/2013
+MicroMacroMalariaSim_v1.0.0alpha1:
+	Changes:
+	. Integeration of MalariaMicroSim_v1.22 and MalariaMacroSim_v2.0.0alpha13
