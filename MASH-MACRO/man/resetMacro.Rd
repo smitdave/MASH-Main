@@ -4,7 +4,7 @@
 \alias{resetMacro}
 \title{Reset Tile between Runs}
 \usage{
-resetMacro(PatchPar, MosquitoPar)
+resetMacro(PatchPar, MosquitoPar, HumanPar)
 }
 \description{
 write me
