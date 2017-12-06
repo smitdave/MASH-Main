@@ -1,0 +1,51 @@
+==============================================================
+qname        all.q               
+hostname     cn489.ihme.washington.edu
+group        Domain              
+owner        georgoff            
+project      ihme_general        
+department   defaultdepartment   
+jobname      mash-macro-qsub_66  
+jobnumber    13424190            
+taskid       undefined
+account      sge                 
+priority     0                   
+cwd          /share/malaria_modeling/georgoff/MASH-Main/MASH-dev/DanielCitron/Cluster_Usage/qsub_demos/MASH_demo
+submit_host  cn495.ihme.washington.edu
+submit_cmd   qsub -cwd -N mash-macro-qsub_66 -pe multi_slot 1 -l mem_free=2G -hold_jid no_holds -o Test-MACRO-Emerge-outputs/test-macro-out -e Test-MACRO-Emerge-outputs/test-macro-err mash_shell_script.sh Test-MACRO-Emerge-qsub.R 66
+qsub_time    12/04/2017 15:13:43.274
+start_time   12/04/2017 15:13:46.588
+end_time     12/04/2017 15:14:02.208
+granted_pe   multi_slot          
+slots        1                   
+failed       0    
+deleted_by   NONE
+exit_status  0                   
+ru_wallclock 15.620       
+ru_utime     14.488       
+ru_stime     0.374        
+ru_maxrss    96672               
+ru_ixrss     0                   
+ru_ismrss    0                   
+ru_idrss     0                   
+ru_isrss     0                   
+ru_minflt    55665               
+ru_majflt    158                 
+ru_nswap     0                   
+ru_inblock   68586               
+ru_oublock   88                  
+ru_msgsnd    0                   
+ru_msgrcv    0                   
+ru_nsignals  0                   
+ru_nvcsw     1162                
+ru_nivcsw    218805              
+wallclock    16.025       
+cpu          14.862       
+mem          27.727            
+io           0.016             
+iow          0.000             
+maxvmem      2.433G
+maxrss       97.324M
+maxpss       95.661M
+arid         undefined
+jc_name      NONE
