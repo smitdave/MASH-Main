@@ -75,7 +75,8 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
                           # human = Human$new(myID = id, houseID = HumanPop_PAR$homeIDs[i], patchID = patchID, age = HumanPop_PAR$age[i], bWeight = HumanPop_PAR$bWeight[i])
                           # private$pop$assign(key=id,value=human)
 
-                          id = paste0(i,"_",HumanPop_PAR[[i]]$patchID)
+                          # id = paste0(i,"_",HumanPop_PAR[[i]]$patchID)
+                          id = as.character(i)
                           human = Human$new(myID=id,houseID=HumanPop_PAR[[i]]$houseID,patchID=HumanPop_PAR[[i]]$patchID,homeHouseID=HumanPop_PAR[[i]]$houseID,homePatchID=HumanPop_PAR[[i]]$patchID,age=HumanPop_PAR[[i]]$age,bWeight=HumanPop_PAR[[i]]$bWeight)
                           human$set_HumansPointer(self)
                           private$pop$assign(key=id,value=human)
@@ -105,6 +106,28 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
 
                     )
 )
+
+
+###############################################################################
+# Reset a HumanPop
+###############################################################################
+
+#' \code{HumanPop}: Reset HumanPop Between Runs
+#'
+#' Resets all humans by calling \code{\link{reset_Human}} for all humans; see that method for more details
+#'
+#' @param HumanPop_PAR list of length equal to number of humans
+#'
+reset_HumanPop <- function(HumanPop_PAR){
+  for(i in 1:private$N){
+    private$pop$get(as.character(i))$reset(houseID=HumanPop_PAR[[i]]$houseID,patchID=HumanPop_PAR[[i]]$patchID,homeHouseID=HumanPop_PAR[[i]]$houseID,homePatchID=HumanPop_PAR[[i]]$patchID,age=HumanPop_PAR[[i]]$age,bWeight=HumanPop_PAR[[i]]$bWeight)
+  }
+}
+
+HumanPop$set(which = "public",name = "reset",
+  value = reset_HumanPop,overwrite = TRUE
+)
+
 
 ###############################################################################
 # HumanPop: Getters & Setters

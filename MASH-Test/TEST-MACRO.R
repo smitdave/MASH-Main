@@ -63,7 +63,7 @@ tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPa
 
 # run simulations
 tile$simMacro(tMax = 365,PfPAR = pfpr)
-# tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
-# tile$simMacro(tMax = 1000)
-# tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar)
+tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar)
+tile$simMacro(tMax = 365,PfPAR = pfpr)
+tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar)
 

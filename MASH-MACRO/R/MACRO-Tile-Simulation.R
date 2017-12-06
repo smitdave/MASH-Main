@@ -97,7 +97,7 @@ MacroTile$set(which = "public",name = "simMacro",
 #'
 #'  * This method is bound to \code{MacroTile$resetMacro}
 #'
-resetMacro <- function(PatchPar, MosquitoPar){
+resetMacro <- function(PatchPar, MosquitoPar, HumanPar){
 
   # reset patches
   for(i in 1:private$nPatch){
@@ -108,6 +108,7 @@ resetMacro <- function(PatchPar, MosquitoPar){
   private$Mosquito$reset(MosquitoPar)
 
   # reset humans
+  private$HumanPop$reset(HumanPar)
 
   # reset tile
   private$tNow = private$tStart
