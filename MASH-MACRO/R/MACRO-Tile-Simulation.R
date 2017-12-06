@@ -22,11 +22,9 @@
 #'
 #'  * This method is bound to \code{MacroTile$simMacro}
 #'
-
 simMacro <- function(tMax, PfPAR, message = TRUE){
 
   cat("initializing simulation, ",private$runID,"\n",sep="")
-
 
   # open connections
   self$initCon()
