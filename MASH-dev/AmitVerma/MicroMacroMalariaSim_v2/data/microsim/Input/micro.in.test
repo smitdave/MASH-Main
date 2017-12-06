@@ -1,0 +1,222 @@
+################################################################################
+#               Configuration file for MicroSim                                #
+################################################################################
+
+
+##### Simulation time related parameters
+
+# Number of runs of simulation
+NUM_RUNS =  2
+
+# Total number of simulation days
+NUM_DAYS_OF_SIMULATION =  200
+
+# Time period for the output frequency
+NUM_DAYS_PER_OUTPUT =  1
+
+
+##### Simulation input files
+
+# File containing information about the patches
+PATCHES_FILE =  micro.patches.test
+
+# File containing information about the houses
+HOUSES_FILE =  micro.houses.test
+
+# File containing information about the humans
+HUMANS_FILE =  micro.humans.test
+
+# File containing information about the seasonal lambda
+LAMBDA_FILE =  micro.lambda.test
+
+# File containing information about the ponds
+PONDS_FILE =  micro.ponds.test
+
+# File containing information about initial population infected. Considered only when PATCH_WISE_INITIAL_POPULATION_INFECTED = 1. 
+# Non listed patches in this file are considered to have zero percent initial infected population. 
+INITIAL_HUMAN_INFECTION_FILE =  micro.infections.test
+
+
+##### Mosquito behavior
+
+# Mosquito life span
+MOZZY_LIFE_SPAN_DAYS =  10
+
+# Mosquito sporogony
+MOZZY_SPOROGONY_DAYS =  10
+
+## Resting
+# Number of resting days
+MOZZY_NUM_REST_DAYS =  1
+
+# Probability of resting indoors
+MOZZY_PROB_REST_INDOORS =  0.9
+
+# Probability of staying alive during resting
+MOZZY_PROB_STAYING_ALIVE_RESTING =  0.9
+
+## Ovipositing
+# Number of ovipositing days
+MOZZY_NUM_OVIPOSIT_DAYS =  1
+
+# Probability of staying alive during ovipositing
+MOZZY_PROB_STAYING_ALIVE_OVIPOSITING =  0.9
+
+# Mosquito location search algorithm: Simple nearest neighbor based search = 2, Wind direction based search = 1
+MOZZY_SEARCH_ALGO =  2
+
+## Nearest neighbor based search. Considered only when MOZZY_SEARCH_ALGO = 2.
+# Number of nearest houses to look
+MOZZY_NUM_SEARCH_HOUSES =  50
+
+# Number of nearest ponds to look
+MOZZY_NUM_SEARCH_PONDS =  4
+
+
+##### Human infection related parameters
+
+# Set to 1 if proportion of infected population is provided in separate file (INITIAL_HUMAN_INFECTION_FILE)
+PATCH_WISE_INITIAL_POPULATION_INFECTED =  0
+
+# Proportion of human population initially infected. Considered only when PATCH_WISE_INITIAL_POPULATION_INFECTED = 0
+PROPORTION_INITIAL_POPULATION_INFECTED =  0.5
+
+# Exact number of days it takes for human to develop fever after getting infected
+NUM_INCUBATION_DAYS =  10
+
+# Exact number of days it takes for human to become infectious after getting infected
+NUM_LATENCY_DAYS =  14
+
+# Mean number of days for infection if stayed untreated (actual number randomly derived from exponential distribution around this mean)
+MEAN_UNTREATED_INFECTION_DAYS =  200
+
+# Mean number of days for of fever before the human seeks treatment (actual number randomly derived from exponential distribution around this mean)
+#MEAN_FEVER_DAYS_BEFORE_SEEKING_TREATMENT
+
+# Probability of travel abroad. (Set to a negative value to turn off the feature)
+HUMAN_PROB_TRAVEL_ABROAD =  -1
+
+
+##### Clinic and Active case detection (ACD)
+
+# Clinic test sensibility (true-positives)
+CLINIC_TEST_TP =  0.8
+
+# Clinic test sensibility (true-negatives)
+CLINIC_TEST_TN =  0.8
+
+# Clinic drug assignment accuracy
+CLINIC_DRUG_ACCURACY =  1
+
+# Gives the resolution of case detections: Patch wise = 1, In given radius around the house of the case being investigated = 2 
+ACD_RESOLUTION =  2
+
+# Probability of a malaria case triggering investigation
+ACD_PROB_TRIGGER =  0.2
+
+# Radius of ACD (Applicable only with ACD_RESOLUTION = 2)
+ACD_RADIUS =  500
+
+# Intervention triggered due to investigation: MSAT (Mass-screen and treat) = 1, MDA (mass drug administration) =2
+ACD_INTERVENTION =  1
+
+# Capacity of the clinics to perform ACD (No. of houses visited everyday)
+ACD_CAPACITY =  50
+
+
+##### Drug effects related parameters
+
+# Gives the number of days the drug stops incidence of new infections
+NUM_DAYS_OF_PROPHYLAXIS =  30
+
+# Gives the number of days the drug takes to clear the existing infection
+NUM_DAYS_TO_CLEAR_INFECTION =  12
+
+
+##### Vaccinations
+
+# Probability of success for pre-erythrocytic vaccine
+# ask number of days before getting into effect
+#PROB_SUCCESS_PREERYTHROCYTIC = 0.9
+
+# Probability of success for transblocking vaccine
+#PROB_SUCCESS_TRANSBLOCKING = 0.9
+
+##### ITN effects related parameters
+
+# Number of days ITN stays effective
+#ITN_EFFICIENCY_DURATION
+
+# Fraction of mosquitoes dying due to ITN (when it is new)
+#ITN_MAX_MORTALITY
+
+# Fraction of mosquitoes dying due to ITN (when it is past its duration)
+#ITN_MIN_MORTALITY
+
+# Fraction of mosquitoes stopped from feeding due to ITN (when it is new)
+#ITN_MAX_REPELLING
+
+# Fraction of mosquitoes stopped from feeding due to ITN (when it is past its duration)
+#ITN_MIN_REPELLING
+
+
+##### IRS effects related parameters
+
+# Number of days IRS stays effective
+#IRS_EFFICIENCY_DURATION
+
+# Fraction of mosquitoes dying due to IRS (when it is new)
+#IRS_MAX_MORTALITY
+
+# Fraction of mosquitoes dying due to IRS (when it is past its duration)
+#IRS_MIN_MORTALITY
+
+
+##### Interventions
+## Intervention format
+## INTERVENTION_NAME DAY NUM_PATCHES <PATCHID, COVERAGE>
+##
+## NUM_PATCHES: Number of patches to conduct the intervention
+## PATCHES: homepatches--------------
+## Type of interventions possible
+## MASS_DRUG_ADMINISTRATION
+## MASS_VACCINATION_PE
+## MASS_VACCINATION_TB
+## MASS_DISTRIBUTE_NETS
+## MASS_SPRAYING
+## 
+## E.g. MASS_SPRAYING 108 3 2 0.9 10 0.6 47 0.72
+## 
+##
+
+
+# These parameters define the defaults 
+# check nSearch* shouldn't be more than the nHouses and nPonds ///////fix inside code
+
+
+
+# House
+itnRepellingEffect = 0.3
+irsRepellingEffect = 0.5
+irsDecayRate = 0.001
+itnDecayRate = 0.005
+
+# Intervene
+nMassVaccinations = 2
+daysMassVaccination = 100, 2000
+vaccinationCoverage = 0.9
+peUptake = 0.9
+tbUptake = 0.9
+
+nMassDrugAdministration = 2
+daysMassDrugAdministration = 150, 230
+mdaCoverage = 0.9
+
+nSprayHouses = 3
+daysSprayHouses = 230, 400, 6000
+irsCoverage = 0.9
+
+nDistributeNets = 2
+daysDistributeNets = 132, 255
+itnCoverage = 0.9
+
