@@ -22,19 +22,39 @@
 #'
 #'  * This method is bound to \code{MacroTile$simMacro}
 #'
-simMacro <- function(tMax){
+simMacro <- function(tMax, PfPAR, message = TRUE){
+
+  cat("initializing simulation, ",private$runID,"\n",sep="")
 
   # open connections
   self$initCon()
-  private$Mosquito$initOutput(con = private$conMosquito)
+
+  # mosquito
+  private$Mosquito$initialize_output(con = private$conMosquito)
+
+  # patches
+  writeLines(text = paste0(c("time","patchID","bWeightHuman","bWeightZoo","bWeightZootox","kappa"),collapse = ","),con = private$conPatches, sep = "\n")
+
+  # human output
+  # humans
+  conPathogen = file(description=paste0(private$directory,"/HumanPathogen_Run",private$runID,".csv"),open="wt")
+  conMove = file(description=paste0(private$directory,"/HumanMove_Run",private$runID,".csv"),open="wt")
+  private$HumanPop$set_conPathogen(conPathogen)
+  private$HumanPop$set_conMove(conMove)
+  private$HumanPop$initialize_output_Pathogen()
+  private$HumanPop$initialize_output_Move()
 
   # initialize humans
+  private$HumanPop$initialize_Pathogens(PfPAR)
   private$HumanPop$initialize_bWeightHuman()
   private$HumanPop$initialize_travel()
 
-  cat("beginning simulation\n",sep="")
+  # progress bar
+  progress_bar = utils::txtProgressBar(min=1,max=tMax)
 
-  while(private$tNow < tMax){
+  cat("beginning simulation ",private$runID,"\n",sep="")
+
+  while(private$tNow < tMax) {
     # increment time
     private$tNow = private$tNow + 1
 
@@ -53,12 +73,16 @@ simMacro <- function(tMax){
 
     # output
     private$Mosquito$output(con = private$conMosquito)
+    private$Patches$apply(tag="output",returnVal=FALSE,con = private$conPatches)
 
-    cat("day: ",private$tNow,"\n",sep="")
+    setTxtProgressBar(progress_bar,private$tNow)
+    # cat("day: ",private$tNow,"\n",sep="")
   }
 
   # close connections
   self$closeCon()
+  private$HumanPop$close_conPathogen()
+  private$HumanPop$close_conMove()
 }
 
 MacroTile$set(which = "public",name = "simMacro",
@@ -76,7 +100,7 @@ MacroTile$set(which = "public",name = "simMacro",
 #'
 #'  * This method is bound to \code{MacroTile$resetMacro}
 #'
-resetMacro <- function(PatchPar, MosquitoPar){
+resetMacro <- function(PatchPar, MosquitoPar, HumanPar){
 
   # reset patches
   for(i in 1:private$nPatch){
@@ -87,6 +111,7 @@ resetMacro <- function(PatchPar, MosquitoPar){
   private$Mosquito$reset(MosquitoPar)
 
   # reset humans
+  private$HumanPop$reset(HumanPar)
 
   # reset tile
   private$tNow = private$tStart

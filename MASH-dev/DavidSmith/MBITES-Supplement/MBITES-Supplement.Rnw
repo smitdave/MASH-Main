@@ -71,7 +71,7 @@ MASH is a framework for building models that is modular and flexible. This gives
 \item An individual model is an individual member of a SPECIES defined by its random number seed. 
 \end{itemize}
 %
-Species-level similarity is the default meaning of {\em \bf model} in MASH. Without some explicit way of mapping the state space, it is difficult to compare two models belonging to a different order. This nomenclature system (borrowed from Linnaeus) makes it possible to talk about models defined by some other level of similarity (\eg model families).
+Species-level similarity is the default meaning of {\em \bf model} in MASH. Without some explicit way of mapping the state space, it is difficult to compare two models belonging to a different order. This hierarchical nomenclature system (borrowed from Linnaeus) makes it possible to talk about models defined by some other level of similarity (\eg model families).
 
 \section{Landscape}
 
@@ -96,7 +96,13 @@ Each site is determined by a location in space ($x,y$), and it has a {\em site t
 
 There are also other properties of each site. Each site has a pair of numbers that determine its location $(x,y)$. Each type of function ($*$) has a search weight associated with it for each species: $\omega_{i, *}$. 
 
-The main point of a landscape is to provide a template upon which different components of the model can interact. Humans and mosquitoes interact mainly through blood feeding, but for this to occur, there must be a way for humans and mosquitoes to meet up on the landscape.  The structures that allow for components to interact are called queues. 
+The landscape provides the spatial template upon which objects from different components of the model can interact. Humans and mosquitoes interact mainly through blood feeding, but for this to occur, there must be a way for humans and mosquitoes to meet up on the landscape.  The structures that allow for components to interact are called queues.
+
+\paragraph{atRiskQ} The \verb1atRiskQ1 holds information about all the blood hosts who are present at each blood feeding site. A paired function, called \verb1chooseHost()1 returns the identity of the host a mosquito will approach during the blood feeding attempt. 
+
+\paragraph{eggQ} Each aquatic habitat has an \verb1eggQ1 that olds all the eggs laid at each aquatic habitat. This queue facilitates modularity by making it possible for any adult female module to interact with any ecology module describing immature aquatic forms. 
+
+\paragraph{imagoQ} The imago is the mature adult insect. The \verb1imagoQ1 holds females emerging from aquatic habitats after pupation. This queue facilitates modularity by making it possible for any adult female module to interact with any ecology module describing immature aquatic forms.  
 
 
 

@@ -109,7 +109,6 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                        }
                      }
 
-
                    } # end constructor
 
                    # finalize = function(){}
@@ -121,7 +120,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 
                     # Simulation-level parameters
                     tStart                    = 0,
-                    tNow                      = integer(1),
+                    tNow                      = 0,
                     nPatch                    = integer(1),
                     runID                     = integer(1),
 
@@ -133,8 +132,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                     # Output Connections
                     directory                 = character(1),
                     conMosquito               = NULL,
-                    conHuman                  = NULL
-
+                    conPatches                = NULL
                   )
 
 ) #end class definition
@@ -152,6 +150,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 #'
 initCon_Tile <- function(){
   private$conMosquito = file(description=paste0(private$directory,"/Mosquito_Run",private$runID,".csv"),open="wt")
+  private$conPatches = file(description=paste0(private$directory,"/Patch_Run",private$runID,".csv"),open="wt")
   # private$conHuman
 }
 
@@ -167,6 +166,7 @@ MacroTile$set(which = "public",name = "initCon",
 #'
 closeCon_Tile <- function(){
   close(private$conMosquito)
+  close(private$conPatches)
   # private$conHuman
 }
 

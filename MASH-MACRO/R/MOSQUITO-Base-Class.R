@@ -77,10 +77,10 @@ Mosquito_Base <- R6::R6Class(classname = "Mosquito_Base",
                      cat("get_emergingAdults for Mosquito_Base should never be called\n")
                    },
 
-                   initOutput = function(con){
+                   initialize_output = function(con){
                      # C++: make this a virtual function
                      # initialize appropriate headers and output for model
-                     cat("initOutput for Mosquito_Base should never be called\n")
+                     cat("initialize_output for Mosquito_Base should never be called\n")
                    },
 
                    output = function(con){

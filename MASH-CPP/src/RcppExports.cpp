@@ -6,16 +6,6 @@
 
 using namespace Rcpp;
 
-// rcpp_hello
-List rcpp_hello();
-RcppExport SEXP _MASHcpp_rcpp_hello() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello());
-    return rcpp_result_gen;
-END_RCPP
-}
 // HumanEventQ__ctor
 MASHcpp::HumanEventQ HumanEventQ__ctor(int initQ);
 RcppExport SEXP _MASHcpp_HumanEventQ__ctor(SEXP initQSEXP) {
@@ -101,6 +91,16 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> >::type obj_(obj_SEXP);
     rcpp_result_gen = Rcpp::wrap(HumanEventQ__get_EventQ(obj_));
     return rcpp_result_gen;
+END_RCPP
+}
+// HumanEventQ__clearQ
+void HumanEventQ__clearQ(MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> obj_);
+RcppExport SEXP _MASHcpp_HumanEventQ__clearQ(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::HumanEventQ> >::type obj_(obj_SEXP);
+    HumanEventQ__clearQ(obj_);
+    return R_NilValue;
 END_RCPP
 }
 // HistoryGeneric__ctor
@@ -1947,9 +1947,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// rcpp_hello
+List rcpp_hello();
+RcppExport SEXP _MASHcpp_rcpp_hello() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(rcpp_hello());
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_MASHcpp_rcpp_hello", (DL_FUNC) &_MASHcpp_rcpp_hello, 0},
     {"_MASHcpp_HumanEventQ__ctor", (DL_FUNC) &_MASHcpp_HumanEventQ__ctor, 1},
     {"_MASHcpp_HumanEventQ__firstEvent", (DL_FUNC) &_MASHcpp_HumanEventQ__firstEvent, 1},
     {"_MASHcpp_HumanEventQ__firstTime", (DL_FUNC) &_MASHcpp_HumanEventQ__firstTime, 1},
@@ -1958,6 +1967,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_HumanEventQ__get_queueN", (DL_FUNC) &_MASHcpp_HumanEventQ__get_queueN, 1},
     {"_MASHcpp_HumanEventQ__addEvent2Q", (DL_FUNC) &_MASHcpp_HumanEventQ__addEvent2Q, 2},
     {"_MASHcpp_HumanEventQ__get_EventQ", (DL_FUNC) &_MASHcpp_HumanEventQ__get_EventQ, 1},
+    {"_MASHcpp_HumanEventQ__clearQ", (DL_FUNC) &_MASHcpp_HumanEventQ__clearQ, 1},
     {"_MASHcpp_HistoryGeneric__ctor", (DL_FUNC) &_MASHcpp_HistoryGeneric__ctor, 1},
     {"_MASHcpp_HistoryGeneric__track_history", (DL_FUNC) &_MASHcpp_HistoryGeneric__track_history, 3},
     {"_MASHcpp_HistoryGeneric__get_history", (DL_FUNC) &_MASHcpp_HistoryGeneric__get_history, 1},
@@ -2119,6 +2129,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_MosquitoMaleHistory__historyInit", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__historyInit, 2},
     {"_MASHcpp_MosquitoMaleHistory__historyTrack", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__historyTrack, 3},
     {"_MASHcpp_MosquitoMaleHistory__exportHistory", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__exportHistory, 1},
+    {"_MASHcpp_rcpp_hello", (DL_FUNC) &_MASHcpp_rcpp_hello, 0},
     {NULL, NULL, 0}
 };
 

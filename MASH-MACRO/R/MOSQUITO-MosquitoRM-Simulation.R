@@ -99,14 +99,14 @@ Mosquito_RM$set(which = "public",name = "get_emergingAdults",
 #'
 #' Initialize mosquito population output
 #'
-#'  * This method is bound to \code{Mosquito_RM$initOutput}
+#'  * This method is bound to \code{Mosquito_RM$initialize_output}
 #'
-initOutput_Mosquito_RM <- function(con){
-  writeLines(text = paste0(c("time",paste0("patch",1:private$TilePointer$get_nPatch())),collapse = ","),con = con, sep = "\n")
+initialize_output_Mosquito_RM <- function(con){
+  writeLines(text = paste0(c("time","state",paste0("patch",1:private$TilePointer$get_nPatch())),collapse = ","),con = con, sep = "\n")
 }
 
-Mosquito_RM$set(which = "public",name = "initOutput",
-          value = initOutput_Mosquito_RM, overwrite = TRUE
+Mosquito_RM$set(which = "public",name = "initialize_output",
+          value = initialize_output_Mosquito_RM, overwrite = TRUE
 )
 
 #' Write Population Output
@@ -117,9 +117,9 @@ Mosquito_RM$set(which = "public",name = "initOutput",
 #'
 output_Mosquito_RM <- function(con){
   tNow = private$TilePointer$get_tNow()
-  writeLines(text = paste0(c(tNow,private$M),collapse = ","), con = con, sep = "\n")
-  writeLines(text = paste0(c(tNow,private$Y),collapse = ","), con = con, sep = "\n")
-  writeLines(text = paste0(c(tNow,private$Z),collapse = ","), con = con, sep = "\n")
+  writeLines(text = paste0(c(tNow,"M",private$M),collapse = ","), con = con, sep = "\n")
+  writeLines(text = paste0(c(tNow,"Y",private$Y),collapse = ","), con = con, sep = "\n")
+  writeLines(text = paste0(c(tNow,"Z",private$Z),collapse = ","), con = con, sep = "\n")
 }
 
 Mosquito_RM$set(which = "public",name = "output",
