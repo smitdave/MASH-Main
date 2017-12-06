@@ -120,7 +120,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
 
                     # Simulation-level parameters
                     tStart                    = 0,
-                    tNow                      = integer(1),
+                    tNow                      = 0,
                     nPatch                    = integer(1),
                     runID                     = integer(1),
 

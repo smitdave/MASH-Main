@@ -49,6 +49,9 @@ simMacro <- function(tMax, PfPAR){
   private$HumanPop$initialize_bWeightHuman()
   private$HumanPop$initialize_travel()
 
+  # progress bar
+  progress_bar = utils::txtProgressBar(min=1,max=tMax)
+
   cat("beginning simulation ",private$runID,"\n",sep="")
 
   while(private$tNow < tMax){
@@ -72,8 +75,8 @@ simMacro <- function(tMax, PfPAR){
     private$Mosquito$output(con = private$conMosquito)
     private$Patches$apply(tag="output",returnVal=FALSE,con = private$conPatches)
 
-
-    cat("day: ",private$tNow,"\n",sep="")
+    setTxtProgressBar(progress_bar,private$tNow)
+    # cat("day: ",private$tNow,"\n",sep="")
   }
 
   # close connections
