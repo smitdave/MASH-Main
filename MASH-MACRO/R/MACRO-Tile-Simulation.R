@@ -22,9 +22,11 @@
 #'
 #'  * This method is bound to \code{MacroTile$simMacro}
 #'
-simMacro <- function(tMax, PfPAR){
+
+simMacro <- function(tMax, PfPAR, message = TRUE){
 
   cat("initializing simulation, ",private$runID,"\n",sep="")
+
 
   # open connections
   self$initCon()
@@ -49,9 +51,11 @@ simMacro <- function(tMax, PfPAR){
   private$HumanPop$initialize_bWeightHuman()
   private$HumanPop$initialize_travel()
 
-  cat("beginning simulation ",private$runID,"\n",sep="")
+  if (message) {
+    ccat("beginning simulation ",private$runID,"\n",sep="")
+  }
 
-  while(private$tNow < tMax){
+  while(private$tNow < tMax) {
     # increment time
     private$tNow = private$tNow + 1
 
@@ -73,7 +77,9 @@ simMacro <- function(tMax, PfPAR){
     private$Patches$apply(tag="output",returnVal=FALSE,con = private$conPatches)
 
 
-    cat("day: ",private$tNow,"\n",sep="")
+    if (message) {
+      cat("day:", private$tNow, as.character(Sys.time()), "\n", sep="  ")
+    }
   }
 
   # close connections
