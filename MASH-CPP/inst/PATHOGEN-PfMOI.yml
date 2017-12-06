@@ -1,4 +1,22 @@
-# Human-stage PfMOI Object
+###############################################################################
+#       ____  ______  _______  ____
+#      / __ \/ __/  |/  / __ \/  _/
+#     / /_/ / /_/ /|_/ / / / // /
+#    / ____/ __/ /  / / /_/ // /
+#   /_/   /_/ /_/  /_/\____/___/
+#
+#   MASH
+#   PfMOI RcppR6 Export
+#   MASH Team
+#   December 2017
+#
+###############################################################################
+
+
+###############################################################################
+# Human-stage PfMOI Pathogen
+###############################################################################
+
 humanPfMOI:
   name_cpp: MASHcpp::humanPfMOI
   forward_declare: true
@@ -6,12 +24,12 @@ humanPfMOI:
     roxygen: |
       A class for storing parameters and state variables of human-stage PfMOI infections.
       @title PfMOI Human Stage Pathogen Class
-      @param PfID_init PfID derived from the tile level PfPedigree
-      @param tInf_init initial time of current infection (successful mosquito to human transmission event)
-      @param MOI_init initial multiplicity of infection
-      @param damID_init initial female gametocyte 'mother'
-      @param sireID_init initial male gametocyte 'father'
-      @param chemoprophylaxis_init chemoprophylaxis protection status
+      @param _PfID PfID for this clonal infection
+      @param _tInf time of successful mosquito to human transmission event for this clonal infection
+      @param _MOI initial multiplicity of infection
+      @param _b mosquito to human transmission efficiency
+      @param _c human to mosquito transmission efficiency
+      @param _chemoprophylaxis chemoprophylaxis protection status
       @section Methods:
         * get_PfID:
         * push_PfID:
@@ -115,6 +133,11 @@ humanPfMOI:
       return_type: void
     get_history:
       return_type: "Rcpp::List"
+
+
+###############################################################################
+# Mosquito-stage PfMOI Pathogen
+###############################################################################
 
 # Mosquito-stage PfMOI Object
 mosquitoPfMOI:

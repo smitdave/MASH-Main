@@ -5,7 +5,7 @@
 #    / ____/ __/___/ // /
 #   /_/   /_/  /____/___/
 #
-#   MASH-MACRO
+#   MASH
 #   PfSI Methods
 #   MASH Team
 #   November 2017
