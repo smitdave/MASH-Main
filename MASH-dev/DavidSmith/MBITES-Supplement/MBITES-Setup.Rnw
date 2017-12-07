@@ -46,21 +46,11 @@ Since we can't wave our wands, we need a way of dealing with the daunting proble
 \end{itemize}
 To put it another way, we honor William of Occam by preferring simple answers, in part, so we can say whether something we've observed can be explained with a simpler model. Our question, though, is not to explain the past but to know with some confidence that we are making robust policy recommendtions for the future. With these principles in mind, we've developed a set of functions and utilities to set up landscapes that roughly follow these rules. 
 
-\section{The Basics}
-
-Two of the most basic quantities are how long a mosquito waits between flight bouts, and how and when a mosquito dies. 
-
 \section{Time between Bouts}
 
 By default, the waiting time to the next bout varies by the mosquito's behavioral state. By default, all of these waiting times are exponentially distributed. The alternative is gamma distributed waiting times. 
 
-\subsection{Exponential}
-
-In the exponential family
-
-\subsection{Gamma}
-
-\subsection{Parsing}
+\paragraph{Parsing}
 
 For the behavioral states F,B,R,L,O, \& S, these are the timing options: 
 %
@@ -71,16 +61,16 @@ For the behavioral states F,B,R,L,O, \& S, these are the timing options:
   \begin{itemize}
   \item \verb1boutX_tte_mean1
   \item \verb1boutX_tte_min=01
-  \item \verb1boutX_tte_diurnal1
-    \begin{itemize}
-    \item [0] = FALSE 
-    \item [1] = TRUE
-      $$min + \mbox{rdiurnal}(.(mean-min), t, peak)$$
-      \begin{itemize} 
-      \item \verb1boutX_tte_peak=01 (midnight)
-      %\item \verb1boutX_tte_amp=11 
-      \end{itemize}
-    \end{itemize}
+%  \item \verb1boutX_tte_diurnal1
+%    \begin{itemize}
+%    \item [0] = FALSE 
+%    \item [1] = TRUE
+%      $$min + \mbox{rdiurnal}(.(mean-min), t, peak)$$
+%      \begin{itemize} 
+%      \item \verb1boutX_tte_peak=01 (midnight)
+%      \item \verb1boutX_tte_amp=11 
+%      \end{itemize}
+%    \end{itemize}
   \end{itemize}
 \item [1] \verb1boutX_tte_pdf=gamma1
   $$min + \mbox{rgamma}(.,mean-min, scale)$$
@@ -92,9 +82,17 @@ For the behavioral states F,B,R,L,O, \& S, these are the timing options:
   
 \end{itemize}
 
+\section{Survival}
 
-\subsection{Survival}
+How and where do mosquitoes die? The answer is that no one really knows, so we have made it possible for mosquitoes to die in every which way. Mosquitoes can either die as a result of flight stress or they can be killed while they're landing. The probability of dying as a result of flight stress can be related to a mosquito's chronological age, to flight energetics, or to any damage a mosquito has sustained over its life. Configuring the survival options requires some care, so we recommend running diagnostics after setting parameter values. This is done automatically in the MBITES-GUI. 
 
+There are some basic differences in surviving flight stress compared with surviving flight or landing hazards.  Those hazards can be 
+
+\paragraph{Parsing}
+
+\begin{itemize}
+
+\end{itemize}
 
 \section{Configuring a Landscape} 
 
