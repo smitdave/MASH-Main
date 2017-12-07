@@ -15,7 +15,7 @@ pfped = PfPedigree$new()
 someGuy = Human$new(1)
 pf = Pf$new(1,1,1,TRUE) ##mic, mac, pfid, seed
 pfped$add2Pedigree(pf)
-someGuy$infectHuman(0,pf$get_pfid())
+someGuy$infectHuman(0,pf$get_pfid()) ##time, pfid
 someGuy$get_Ptot()
 someGuy$get_Gtot()
 
