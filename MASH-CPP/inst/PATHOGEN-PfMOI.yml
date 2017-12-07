@@ -141,11 +141,7 @@ mosquitoPfMOI:
         * a field: talk about me
       @md
       @export
-    # args:
-    #   - PfID_init: int
-    #   - MosquitoID_init: "std::string"
-    #   - tInf_init: double = -1
-    #   - MOI_init: int = 0
+
   methods:
 
     # getters & setters
