@@ -19,29 +19,32 @@ rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
 
-DEBUG.MASHMICRO(MASHCPP = TRUE)
-# MASHcpp::DEBUG.MASHCPP()
-MASHmacro::DEBUG.MASHMACRO()
+###????? Why there is macro here. the first function doesn't have that arguement. so
+########there is an error
+#DEBUG.MASHMICRO(MASHCPP = TRUE)
+MASHcpp::DEBUG.MASHCPP()
+#MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
 if(system("whoami",intern=TRUE)=="slwu89"){
   DIR="/Users/slwu89/Desktop/MASHOUT/"
 }else if(system("whoami",intern=TRUE)=="chipdelmal"){
   DIR = "/Users/chipdelmal/Desktop/MASHOUT/"
-}
+}else if(system("whoami",intern=TRUE)=="qianzh"){
+  DIR = "/Users/qianzh/Desktop/MASHOUT/"} # add my dir here
 
 # setup
-Humans.MICRO.Setup()
-PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
-AQUA.Emerge.Setup()
+Humans.MICRO.Setup() #Initiallize human methods for micro
+PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20) #Initialize PfSI Pathogen Module
+AQUA.Emerge.Setup() #Initialize Emerge Aquatic Ecology Module
 
 # MBITES setup
-MBITES.Generic.Setup()
-MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential")
+MBITES.Generic.Setup() #Initialize Generic Methods
+MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential") #Initialize M-BITES BRO (Blood Feeding, Resting, Oviposition) lifecycle model.
 # MBITES.BRO.Cohort.Setup()
 
 # SEARCH setup
-SEARCH.Kernel.Setup(MBITES = "BRO")
+SEARCH.Kernel.Setup(MBITES = "BRO") #Initialize MICRO Search Kernels module of mosquito search behavior
 
 # landscape parameters
 nAqua = 20
@@ -54,7 +57,7 @@ human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin =
 
 # M-BITES parameters
 nMosy = 50
-mbites_par = MBITES.BRO.Parameters(PfEIP=1)
+mbites_par = MBITES.BRO.Parameters(PfEIP=11)
 mosquito_par = list(
   N_female = nMosy,
   ix_female = rep(1,nMosy),
@@ -124,7 +127,7 @@ human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin =
 
 # M-BITES parameters
 nMosy = 50
-mbites_par_female = MBITES.BRO.Parameters(PfEIP=1,SUGAR = TRUE,MATE = TRUE)
+mbites_par_female = MBITES.BRO.Parameters(PfEIP=11,SUGAR = TRUE,MATE = TRUE)
 mbites_par_male = MBITES.Male.Parameters(maleHistory = TRUE)
 mosquito_par = list(
   N_female = nMosy,
@@ -199,7 +202,7 @@ human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin =
 
 # M-BITES parameters
 nMosy = 50
-mbites_par_female = MBITES.Complex.Parameters(PfEIP = 1 )
+mbites_par_female = MBITES.Complex.Parameters(PfEIP = 11 )
 mbites_par_male = MBITES.Male.Parameters(maleHistory = TRUE)
 mosquito_par = list(
   N_female = nMosy,
@@ -268,7 +271,7 @@ human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin =
 
 # M-BITES parameters
 nMosy = 50
-mbites_par = MBITES.BRO.Parameters(PfEIP=1)
+mbites_par = MBITES.BRO.Parameters(PfEIP=11)
 mosquito_par = list(
   N_female = nMosy,
   ix_female = rep(1,nMosy),
