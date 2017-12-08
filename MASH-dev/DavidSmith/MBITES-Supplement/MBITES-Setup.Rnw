@@ -149,9 +149,18 @@ default for blood meal size.
 
 \subsection*{[R] Post-Prandial Resting Bout}
 
-Default egg maturation option. 
-
-Default refeeding option. 
+\begin{itemize}
+\item \verb1boutR_surviveFlight1
+\item \verb1eggBatch_function=NULL1
+  \begin{itemize}
+  \item \verb1eggBatchSize1
+  \item \verb1refeed_function=NULL1
+    \begin{itemize}
+    \item \verb1probRefeed1
+    \end{itemize}
+  \end{itemize}
+  \item \verb1eggBatch_function!=NULL1 (Section 5, below)
+\end{itemize}
 
 \subsection*{[L] Egg Laying Search Bout}
 
@@ -235,7 +244,7 @@ The variable \verb1energy1 tracks a mosquito's energy reserves on a scale of $(0
 \item \verb1flightEnergetics=TRUE1
   \begin{itemize}
   \item \verb1flightEnergetics_EU1 :: Energy use per flight, a number between $0$ and $1$. The inverse of this number is approximately the number of flights a mosquito can take before it runs out of energy (see above). 
-  \item \verb8flightEnergetics_bloodTopUp_EU=08 :: Settting this to zero means a mosquito tops up to full after every blood meal. Setting it to some other number $x$ (in energy units) bigger than zero means it is able to take $x$ flights as a result of blood feeding. 
+  \item \verb8flightEnergetics_bloodTopUp_EU=08 :: Setting it to $x>0$ means a mosquito is able to take $x$ flights as a result of a full blood meal. 
   \item \verb1flightEnergetics_survival=NULL1 :: The mosquito dies only if its energy state falls below.
   \item \verb1flightEnergetics_survival="zzSigmoid"1 :: Survival declines to zero as the energy state approaches zero. 
     \begin{itemize}
@@ -254,11 +263,11 @@ Sugar feeding builds on flight energetics.
 \item \verb1sugarFeeding = FALSE1
 \item \verb1sugarFeeding = TRUE1
   \begin{itemize}
+  \item \verb8flightEnergetics_sugarTopUp_EU=08 :: Setting it to $x>0$ means a mosquito is able to take $x$ flights as a result of a full blood meal.
   \item \verb1sugarFeeding_boutS=FALSE1
-  \item \verb1sugarFeeding_boutS=TRUE1 (see below)
+  \item \verb1sugarFeeding_boutS=TRUE1 (see {\em Sugar Feeding Bout}, below)
   \item \verb1sugarFeeding_opportunistic=FALSE1
-  \item \verb1sugarFeeding_opportunistic=TRUE1 (see below)
-  \item \verb8flightEnergetics_sugarTopUp_EU=08 :: Settting this to zero means a mosquito tops up to full after every sugar meal. Setting it to some other number $x$ (in energy units) bigger than zero means it is able to take $x$ flights as a result of sugar feeding. 
+  \item \verb1sugarFeeding_opportunistic=TRUE1 (see {\em Opportunistic  Sugar Feeding}, below)
   \end{itemize}
 \end{itemize}
 
@@ -291,13 +300,39 @@ Sugar feeding builds on flight energetics.
   \end{itemize}
 \end{itemize}
 
-\section{Blood Meal and Egg Batch Dynamics}
+\section{Blood Meal and Egg Batch}
 
+\begin{itemize}
+\item \verb1eggBatch_function="proportional"1
+  \begin{itemize}
+  \item \verb1bloodMealSize_function="beta"1
+    \begin{itemize}
+    \item \verb1bloodMealSize_mean1
+    \item \verb1bloodMealSize_ss1
+    \item \verb1maxEggBatch1
+  \end{itemize}
+  \item \verb3refeed_function="1-zzSigmoid"3
+    \begin{itemize}
+    \item \verb1refeed_pzero1
+    \item \verb1refeed_p501
+    \item \verb1refeed_slope1
+    \end{itemize}
+  \end{itemize}
+  \item \verb1eggBatch_function = "Aedes"1
+    \begin{itemize}
+    \item \verb1bloodMealSize_function="beta"1
+    \begin{itemize}
+    \item \verb1bloodMealSize_mean1
+    \item \verb1bloodMealSize_ss1
+    \item \verb1maxEggBatch1
+    \end{itemize}
+     \item \verb3refeed_function="fullBatch"3
+      \begin{itemize}
+      \item \verb1blood4FullBatch=x1 :: The number of full bloodmeals (or equivalent, usually $x >1$), required for a full batch of eggs. 
+      \end{itemize}
+  \end{itemize}
+\end{itemize}
 
-
-\subsection{Size of Blood Meal and Egg Batch}
-
-\subsection{Egg Maturation}
 
 \section{Maturation, Mating, and Males}
 
