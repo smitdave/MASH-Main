@@ -114,8 +114,14 @@ The probability of dying as a result of flight stress can be modified so that it
 \subsection*{[F] Blood Feeding Search Bout}
 
 \begin{itemize}
-\item \verb1boutF_surviveFlight=0.991
-\item \verb1boutF_success=0.991
+\item \verb1boutF_surviveFlight_function=NULL1
+  \begin{itemize}
+  \verb1boutF_surviveFlight=.991
+  \end{itemize}
+\item \verb1boutF_surviveFlight_function="linearByDistance"1
+  \begin{itemize}
+  \item \verb1boutF_surviveFlight=1$.99- \psi\cdot \mbox{distance}$
+  \end{itemize}
 \end{itemize}
 
 
@@ -438,5 +444,7 @@ To do: \verb1opportunisticMating="Aedes"1, following Tom's description of males 
 
 
 \section{Diagnostics and Visualization}
+
+
 
 \end{document}

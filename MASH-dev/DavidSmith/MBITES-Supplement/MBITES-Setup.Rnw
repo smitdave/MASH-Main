@@ -119,9 +119,8 @@ The probability of dying as a result of flight stress can be modified so that it
   \end{itemize}
 \item \verb1boutF_surviveFlight_function="linearByDistance"1
   \begin{itemize}
-  \verb1boutF_surviveFlight=.99-k*d1
+  \item \verb1boutF_surviveFlight=1$.99- \psi\cdot \mbox{distance}$
   \end{itemize}
-\item \verb1boutF_success=0.991
 \end{itemize}
 
 
