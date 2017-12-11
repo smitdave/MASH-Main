@@ -187,32 +187,20 @@ Rcpp::List mosquitoPfSI__get_history(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPf
 }
 
 // [[Rcpp::export]]
-MASHcpp::humanPfMOI humanPfMOI__ctor(int PfID_init, double tInf_init, int MOI_init, double b_init, double c_init, bool chemoprophylaxis_init, int N) {
-  return MASHcpp::humanPfMOI(PfID_init, tInf_init, MOI_init, b_init, c_init, chemoprophylaxis_init, N);
+MASHcpp::humanPfMOI humanPfMOI__ctor(double b_init, double c_init, bool chemoprophylaxis_init) {
+  return MASHcpp::humanPfMOI(b_init, c_init, chemoprophylaxis_init);
 }
 // [[Rcpp::export]]
 std::vector<int> humanPfMOI__get_PfID(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_) {
   return obj_->get_PfID();
 }
 // [[Rcpp::export]]
-void humanPfMOI__push_PfID(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, int PfID_new) {
-  obj_->push_PfID(PfID_new);
-}
-// [[Rcpp::export]]
 std::vector<double> humanPfMOI__get_tInf(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_) {
   return obj_->get_tInf();
 }
 // [[Rcpp::export]]
-void humanPfMOI__push_tInf(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, double tInf_new) {
-  obj_->push_tInf(tInf_new);
-}
-// [[Rcpp::export]]
 int humanPfMOI__get_MOI(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_) {
   return obj_->get_MOI();
-}
-// [[Rcpp::export]]
-void humanPfMOI__set_MOI(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, int MOI_new) {
-  obj_->set_MOI(MOI_new);
 }
 // [[Rcpp::export]]
 double humanPfMOI__get_b(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_) {
@@ -231,14 +219,6 @@ void humanPfMOI__set_c(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, double
   obj_->set_c(c_new);
 }
 // [[Rcpp::export]]
-std::vector<std::string> humanPfMOI__get_vectorInf(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_) {
-  return obj_->get_vectorInf();
-}
-// [[Rcpp::export]]
-void humanPfMOI__push_vectorInf(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, std::string vectorInf_new) {
-  obj_->push_vectorInf(vectorInf_new);
-}
-// [[Rcpp::export]]
 bool humanPfMOI__get_chemoprophylaxis(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_) {
   return obj_->get_chemoprophylaxis();
 }
@@ -247,93 +227,41 @@ void humanPfMOI__set_chemoprophylaxis(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMO
   obj_->set_chemoprophylaxis(chemoprophylaxis_new);
 }
 // [[Rcpp::export]]
-void humanPfMOI__add_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, int PfID_new) {
-  obj_->add_Infection(PfID_new);
+void humanPfMOI__add_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, int PfID_new, double tInf_new) {
+  obj_->add_Infection(PfID_new, tInf_new);
 }
 // [[Rcpp::export]]
 void humanPfMOI__clear_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, int PfID_ix) {
   obj_->clear_Infection(PfID_ix);
 }
 // [[Rcpp::export]]
+void humanPfMOI__clear_Infections(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_) {
+  obj_->clear_Infections();
+}
+// [[Rcpp::export]]
 std::vector<int> humanPfMOI__get_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_) {
   return obj_->get_Infection();
 }
-// [[Rcpp::export]]
-void humanPfMOI__track_history(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, double tEvent, std::string event) {
-  obj_->track_history(tEvent, event);
-}
-// [[Rcpp::export]]
-Rcpp::List humanPfMOI__get_history(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_) {
-  return obj_->get_history();
-}
 
 // [[Rcpp::export]]
-MASHcpp::mosquitoPfMOI mosquitoPfMOI__ctor(int PfID_init, std::string MosquitoID_init, double tInf_init, int MOI_init) {
-  return MASHcpp::mosquitoPfMOI(PfID_init, MosquitoID_init, tInf_init, MOI_init);
+MASHcpp::mosquitoPfMOI mosquitoPfMOI__ctor() {
+  return MASHcpp::mosquitoPfMOI();
 }
 // [[Rcpp::export]]
 std::vector<int> mosquitoPfMOI__get_PfID(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_) {
   return obj_->get_PfID();
 }
 // [[Rcpp::export]]
-void mosquitoPfMOI__push_PfID(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int PfID_new) {
-  obj_->push_PfID(PfID_new);
-}
-// [[Rcpp::export]]
-std::string mosquitoPfMOI__get_MosquitoID(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_) {
-  return obj_->get_MosquitoID();
-}
-// [[Rcpp::export]]
-void mosquitoPfMOI__set_MosquitoID(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, std::string MosquitoID_new) {
-  obj_->set_MosquitoID(MosquitoID_new);
-}
-// [[Rcpp::export]]
-std::vector<double> mosquitoPfMOI__get_tInf(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_) {
-  return obj_->get_tInf();
-}
-// [[Rcpp::export]]
-void mosquitoPfMOI__push_tInf(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, double tInf_new) {
-  obj_->push_tInf(tInf_new);
-}
-// [[Rcpp::export]]
 int mosquitoPfMOI__get_MOI(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_) {
   return obj_->get_MOI();
 }
 // [[Rcpp::export]]
-void mosquitoPfMOI__set_MOI(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int MOI_new) {
-  obj_->set_MOI(MOI_new);
+void mosquitoPfMOI__add_infection(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int PfID_new, double tInfected_new, double tInfectious_new) {
+  obj_->add_infection(PfID_new, tInfected_new, tInfectious_new);
 }
 // [[Rcpp::export]]
-std::vector<std::string> mosquitoPfMOI__get_humanInf(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_) {
-  return obj_->get_humanInf();
-}
-// [[Rcpp::export]]
-void mosquitoPfMOI__push_humanInf(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, std::string humanInf_new) {
-  obj_->push_humanInf(humanInf_new);
-}
-// [[Rcpp::export]]
-Rcpp::List mosquitoPfMOI__get_history(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_) {
-  return obj_->get_history();
-}
-// [[Rcpp::export]]
-void mosquitoPfMOI__add_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int PfID_new, double tInf_new, std::string humanInf_new) {
-  obj_->add_Infection(PfID_new, tInf_new, humanInf_new);
-}
-// [[Rcpp::export]]
-Rcpp::List mosquitoPfMOI__get_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int PfID_ix) {
-  return obj_->get_Infection(PfID_ix);
-}
-// [[Rcpp::export]]
-Rcpp::List mosquitoPfMOI__get_InfectionIx(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int ix) {
-  return obj_->get_InfectionIx(ix);
-}
-// [[Rcpp::export]]
-Rcpp::List mosquitoPfMOI__get_InfectionEIP(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, double incubation) {
-  return obj_->get_InfectionEIP(incubation);
-}
-// [[Rcpp::export]]
-std::vector<int> mosquitoPfMOI__which_EIP(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, double incubation) {
-  return obj_->which_EIP(incubation);
+std::vector<int> mosquitoPfMOI__get_infections(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, double tNow) {
+  return obj_->get_infections(tNow);
 }
 
 // [[Rcpp::export]]

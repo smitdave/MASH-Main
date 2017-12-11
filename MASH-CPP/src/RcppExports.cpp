@@ -6,6 +6,16 @@
 
 using namespace Rcpp;
 
+// rcpp_hello
+List rcpp_hello();
+RcppExport SEXP _MASHcpp_rcpp_hello() {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    rcpp_result_gen = Rcpp::wrap(rcpp_hello());
+    return rcpp_result_gen;
+END_RCPP
+}
 // HumanEventQ__ctor
 MASHcpp::HumanEventQ HumanEventQ__ctor(int initQ);
 RcppExport SEXP _MASHcpp_HumanEventQ__ctor(SEXP initQSEXP) {
@@ -512,19 +522,15 @@ BEGIN_RCPP
 END_RCPP
 }
 // humanPfMOI__ctor
-MASHcpp::humanPfMOI humanPfMOI__ctor(int PfID_init, double tInf_init, int MOI_init, double b_init, double c_init, bool chemoprophylaxis_init, int N);
-RcppExport SEXP _MASHcpp_humanPfMOI__ctor(SEXP PfID_initSEXP, SEXP tInf_initSEXP, SEXP MOI_initSEXP, SEXP b_initSEXP, SEXP c_initSEXP, SEXP chemoprophylaxis_initSEXP, SEXP NSEXP) {
+MASHcpp::humanPfMOI humanPfMOI__ctor(double b_init, double c_init, bool chemoprophylaxis_init);
+RcppExport SEXP _MASHcpp_humanPfMOI__ctor(SEXP b_initSEXP, SEXP c_initSEXP, SEXP chemoprophylaxis_initSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type PfID_init(PfID_initSEXP);
-    Rcpp::traits::input_parameter< double >::type tInf_init(tInf_initSEXP);
-    Rcpp::traits::input_parameter< int >::type MOI_init(MOI_initSEXP);
     Rcpp::traits::input_parameter< double >::type b_init(b_initSEXP);
     Rcpp::traits::input_parameter< double >::type c_init(c_initSEXP);
     Rcpp::traits::input_parameter< bool >::type chemoprophylaxis_init(chemoprophylaxis_initSEXP);
-    Rcpp::traits::input_parameter< int >::type N(NSEXP);
-    rcpp_result_gen = Rcpp::wrap(humanPfMOI__ctor(PfID_init, tInf_init, MOI_init, b_init, c_init, chemoprophylaxis_init, N));
+    rcpp_result_gen = Rcpp::wrap(humanPfMOI__ctor(b_init, c_init, chemoprophylaxis_init));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -539,17 +545,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// humanPfMOI__push_PfID
-void humanPfMOI__push_PfID(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, int PfID_new);
-RcppExport SEXP _MASHcpp_humanPfMOI__push_PfID(SEXP obj_SEXP, SEXP PfID_newSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< int >::type PfID_new(PfID_newSEXP);
-    humanPfMOI__push_PfID(obj_, PfID_new);
-    return R_NilValue;
-END_RCPP
-}
 // humanPfMOI__get_tInf
 std::vector<double> humanPfMOI__get_tInf(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_);
 RcppExport SEXP _MASHcpp_humanPfMOI__get_tInf(SEXP obj_SEXP) {
@@ -561,17 +556,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// humanPfMOI__push_tInf
-void humanPfMOI__push_tInf(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, double tInf_new);
-RcppExport SEXP _MASHcpp_humanPfMOI__push_tInf(SEXP obj_SEXP, SEXP tInf_newSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< double >::type tInf_new(tInf_newSEXP);
-    humanPfMOI__push_tInf(obj_, tInf_new);
-    return R_NilValue;
-END_RCPP
-}
 // humanPfMOI__get_MOI
 int humanPfMOI__get_MOI(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_);
 RcppExport SEXP _MASHcpp_humanPfMOI__get_MOI(SEXP obj_SEXP) {
@@ -581,17 +565,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
     rcpp_result_gen = Rcpp::wrap(humanPfMOI__get_MOI(obj_));
     return rcpp_result_gen;
-END_RCPP
-}
-// humanPfMOI__set_MOI
-void humanPfMOI__set_MOI(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, int MOI_new);
-RcppExport SEXP _MASHcpp_humanPfMOI__set_MOI(SEXP obj_SEXP, SEXP MOI_newSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< int >::type MOI_new(MOI_newSEXP);
-    humanPfMOI__set_MOI(obj_, MOI_new);
-    return R_NilValue;
 END_RCPP
 }
 // humanPfMOI__get_b
@@ -638,28 +611,6 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// humanPfMOI__get_vectorInf
-std::vector<std::string> humanPfMOI__get_vectorInf(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_);
-RcppExport SEXP _MASHcpp_humanPfMOI__get_vectorInf(SEXP obj_SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
-    rcpp_result_gen = Rcpp::wrap(humanPfMOI__get_vectorInf(obj_));
-    return rcpp_result_gen;
-END_RCPP
-}
-// humanPfMOI__push_vectorInf
-void humanPfMOI__push_vectorInf(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, std::string vectorInf_new);
-RcppExport SEXP _MASHcpp_humanPfMOI__push_vectorInf(SEXP obj_SEXP, SEXP vectorInf_newSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< std::string >::type vectorInf_new(vectorInf_newSEXP);
-    humanPfMOI__push_vectorInf(obj_, vectorInf_new);
-    return R_NilValue;
-END_RCPP
-}
 // humanPfMOI__get_chemoprophylaxis
 bool humanPfMOI__get_chemoprophylaxis(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_);
 RcppExport SEXP _MASHcpp_humanPfMOI__get_chemoprophylaxis(SEXP obj_SEXP) {
@@ -683,13 +634,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // humanPfMOI__add_Infection
-void humanPfMOI__add_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, int PfID_new);
-RcppExport SEXP _MASHcpp_humanPfMOI__add_Infection(SEXP obj_SEXP, SEXP PfID_newSEXP) {
+void humanPfMOI__add_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, int PfID_new, double tInf_new);
+RcppExport SEXP _MASHcpp_humanPfMOI__add_Infection(SEXP obj_SEXP, SEXP PfID_newSEXP, SEXP tInf_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
     Rcpp::traits::input_parameter< int >::type PfID_new(PfID_newSEXP);
-    humanPfMOI__add_Infection(obj_, PfID_new);
+    Rcpp::traits::input_parameter< double >::type tInf_new(tInf_newSEXP);
+    humanPfMOI__add_Infection(obj_, PfID_new, tInf_new);
     return R_NilValue;
 END_RCPP
 }
@@ -704,6 +656,16 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// humanPfMOI__clear_Infections
+void humanPfMOI__clear_Infections(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_);
+RcppExport SEXP _MASHcpp_humanPfMOI__clear_Infections(SEXP obj_SEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
+    humanPfMOI__clear_Infections(obj_);
+    return R_NilValue;
+END_RCPP
+}
 // humanPfMOI__get_Infection
 std::vector<int> humanPfMOI__get_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_);
 RcppExport SEXP _MASHcpp_humanPfMOI__get_Infection(SEXP obj_SEXP) {
@@ -715,40 +677,13 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// humanPfMOI__track_history
-void humanPfMOI__track_history(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_, double tEvent, std::string event);
-RcppExport SEXP _MASHcpp_humanPfMOI__track_history(SEXP obj_SEXP, SEXP tEventSEXP, SEXP eventSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< double >::type tEvent(tEventSEXP);
-    Rcpp::traits::input_parameter< std::string >::type event(eventSEXP);
-    humanPfMOI__track_history(obj_, tEvent, event);
-    return R_NilValue;
-END_RCPP
-}
-// humanPfMOI__get_history
-Rcpp::List humanPfMOI__get_history(MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> obj_);
-RcppExport SEXP _MASHcpp_humanPfMOI__get_history(SEXP obj_SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::humanPfMOI> >::type obj_(obj_SEXP);
-    rcpp_result_gen = Rcpp::wrap(humanPfMOI__get_history(obj_));
-    return rcpp_result_gen;
-END_RCPP
-}
 // mosquitoPfMOI__ctor
-MASHcpp::mosquitoPfMOI mosquitoPfMOI__ctor(int PfID_init, std::string MosquitoID_init, double tInf_init, int MOI_init);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__ctor(SEXP PfID_initSEXP, SEXP MosquitoID_initSEXP, SEXP tInf_initSEXP, SEXP MOI_initSEXP) {
+MASHcpp::mosquitoPfMOI mosquitoPfMOI__ctor();
+RcppExport SEXP _MASHcpp_mosquitoPfMOI__ctor() {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type PfID_init(PfID_initSEXP);
-    Rcpp::traits::input_parameter< std::string >::type MosquitoID_init(MosquitoID_initSEXP);
-    Rcpp::traits::input_parameter< double >::type tInf_init(tInf_initSEXP);
-    Rcpp::traits::input_parameter< int >::type MOI_init(MOI_initSEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__ctor(PfID_init, MosquitoID_init, tInf_init, MOI_init));
+    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__ctor());
     return rcpp_result_gen;
 END_RCPP
 }
@@ -763,61 +698,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// mosquitoPfMOI__push_PfID
-void mosquitoPfMOI__push_PfID(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int PfID_new);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__push_PfID(SEXP obj_SEXP, SEXP PfID_newSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< int >::type PfID_new(PfID_newSEXP);
-    mosquitoPfMOI__push_PfID(obj_, PfID_new);
-    return R_NilValue;
-END_RCPP
-}
-// mosquitoPfMOI__get_MosquitoID
-std::string mosquitoPfMOI__get_MosquitoID(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__get_MosquitoID(SEXP obj_SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__get_MosquitoID(obj_));
-    return rcpp_result_gen;
-END_RCPP
-}
-// mosquitoPfMOI__set_MosquitoID
-void mosquitoPfMOI__set_MosquitoID(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, std::string MosquitoID_new);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__set_MosquitoID(SEXP obj_SEXP, SEXP MosquitoID_newSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< std::string >::type MosquitoID_new(MosquitoID_newSEXP);
-    mosquitoPfMOI__set_MosquitoID(obj_, MosquitoID_new);
-    return R_NilValue;
-END_RCPP
-}
-// mosquitoPfMOI__get_tInf
-std::vector<double> mosquitoPfMOI__get_tInf(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__get_tInf(SEXP obj_SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__get_tInf(obj_));
-    return rcpp_result_gen;
-END_RCPP
-}
-// mosquitoPfMOI__push_tInf
-void mosquitoPfMOI__push_tInf(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, double tInf_new);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__push_tInf(SEXP obj_SEXP, SEXP tInf_newSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< double >::type tInf_new(tInf_newSEXP);
-    mosquitoPfMOI__push_tInf(obj_, tInf_new);
-    return R_NilValue;
-END_RCPP
-}
 // mosquitoPfMOI__get_MOI
 int mosquitoPfMOI__get_MOI(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_);
 RcppExport SEXP _MASHcpp_mosquitoPfMOI__get_MOI(SEXP obj_SEXP) {
@@ -829,108 +709,28 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// mosquitoPfMOI__set_MOI
-void mosquitoPfMOI__set_MOI(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int MOI_new);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__set_MOI(SEXP obj_SEXP, SEXP MOI_newSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< int >::type MOI_new(MOI_newSEXP);
-    mosquitoPfMOI__set_MOI(obj_, MOI_new);
-    return R_NilValue;
-END_RCPP
-}
-// mosquitoPfMOI__get_humanInf
-std::vector<std::string> mosquitoPfMOI__get_humanInf(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__get_humanInf(SEXP obj_SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__get_humanInf(obj_));
-    return rcpp_result_gen;
-END_RCPP
-}
-// mosquitoPfMOI__push_humanInf
-void mosquitoPfMOI__push_humanInf(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, std::string humanInf_new);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__push_humanInf(SEXP obj_SEXP, SEXP humanInf_newSEXP) {
-BEGIN_RCPP
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< std::string >::type humanInf_new(humanInf_newSEXP);
-    mosquitoPfMOI__push_humanInf(obj_, humanInf_new);
-    return R_NilValue;
-END_RCPP
-}
-// mosquitoPfMOI__get_history
-Rcpp::List mosquitoPfMOI__get_history(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__get_history(SEXP obj_SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__get_history(obj_));
-    return rcpp_result_gen;
-END_RCPP
-}
-// mosquitoPfMOI__add_Infection
-void mosquitoPfMOI__add_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int PfID_new, double tInf_new, std::string humanInf_new);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__add_Infection(SEXP obj_SEXP, SEXP PfID_newSEXP, SEXP tInf_newSEXP, SEXP humanInf_newSEXP) {
+// mosquitoPfMOI__add_infection
+void mosquitoPfMOI__add_infection(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int PfID_new, double tInfected_new, double tInfectious_new);
+RcppExport SEXP _MASHcpp_mosquitoPfMOI__add_infection(SEXP obj_SEXP, SEXP PfID_newSEXP, SEXP tInfected_newSEXP, SEXP tInfectious_newSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
     Rcpp::traits::input_parameter< int >::type PfID_new(PfID_newSEXP);
-    Rcpp::traits::input_parameter< double >::type tInf_new(tInf_newSEXP);
-    Rcpp::traits::input_parameter< std::string >::type humanInf_new(humanInf_newSEXP);
-    mosquitoPfMOI__add_Infection(obj_, PfID_new, tInf_new, humanInf_new);
+    Rcpp::traits::input_parameter< double >::type tInfected_new(tInfected_newSEXP);
+    Rcpp::traits::input_parameter< double >::type tInfectious_new(tInfectious_newSEXP);
+    mosquitoPfMOI__add_infection(obj_, PfID_new, tInfected_new, tInfectious_new);
     return R_NilValue;
 END_RCPP
 }
-// mosquitoPfMOI__get_Infection
-Rcpp::List mosquitoPfMOI__get_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int PfID_ix);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__get_Infection(SEXP obj_SEXP, SEXP PfID_ixSEXP) {
+// mosquitoPfMOI__get_infections
+std::vector<int> mosquitoPfMOI__get_infections(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, double tNow);
+RcppExport SEXP _MASHcpp_mosquitoPfMOI__get_infections(SEXP obj_SEXP, SEXP tNowSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< int >::type PfID_ix(PfID_ixSEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__get_Infection(obj_, PfID_ix));
-    return rcpp_result_gen;
-END_RCPP
-}
-// mosquitoPfMOI__get_InfectionIx
-Rcpp::List mosquitoPfMOI__get_InfectionIx(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, int ix);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__get_InfectionIx(SEXP obj_SEXP, SEXP ixSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< int >::type ix(ixSEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__get_InfectionIx(obj_, ix));
-    return rcpp_result_gen;
-END_RCPP
-}
-// mosquitoPfMOI__get_InfectionEIP
-Rcpp::List mosquitoPfMOI__get_InfectionEIP(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, double incubation);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__get_InfectionEIP(SEXP obj_SEXP, SEXP incubationSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< double >::type incubation(incubationSEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__get_InfectionEIP(obj_, incubation));
-    return rcpp_result_gen;
-END_RCPP
-}
-// mosquitoPfMOI__which_EIP
-std::vector<int> mosquitoPfMOI__which_EIP(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_, double incubation);
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__which_EIP(SEXP obj_SEXP, SEXP incubationSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> >::type obj_(obj_SEXP);
-    Rcpp::traits::input_parameter< double >::type incubation(incubationSEXP);
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__which_EIP(obj_, incubation));
+    Rcpp::traits::input_parameter< double >::type tNow(tNowSEXP);
+    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__get_infections(obj_, tNow));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1947,18 +1747,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// rcpp_hello
-List rcpp_hello();
-RcppExport SEXP _MASHcpp_rcpp_hello() {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello());
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_MASHcpp_rcpp_hello", (DL_FUNC) &_MASHcpp_rcpp_hello, 0},
     {"_MASHcpp_HumanEventQ__ctor", (DL_FUNC) &_MASHcpp_HumanEventQ__ctor, 1},
     {"_MASHcpp_HumanEventQ__firstEvent", (DL_FUNC) &_MASHcpp_HumanEventQ__firstEvent, 1},
     {"_MASHcpp_HumanEventQ__firstTime", (DL_FUNC) &_MASHcpp_HumanEventQ__firstTime, 1},
@@ -2004,43 +1795,25 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_mosquitoPfSI__get_infected", (DL_FUNC) &_MASHcpp_mosquitoPfSI__get_infected, 1},
     {"_MASHcpp_mosquitoPfSI__set_infected", (DL_FUNC) &_MASHcpp_mosquitoPfSI__set_infected, 2},
     {"_MASHcpp_mosquitoPfSI__get_history", (DL_FUNC) &_MASHcpp_mosquitoPfSI__get_history, 1},
-    {"_MASHcpp_humanPfMOI__ctor", (DL_FUNC) &_MASHcpp_humanPfMOI__ctor, 7},
+    {"_MASHcpp_humanPfMOI__ctor", (DL_FUNC) &_MASHcpp_humanPfMOI__ctor, 3},
     {"_MASHcpp_humanPfMOI__get_PfID", (DL_FUNC) &_MASHcpp_humanPfMOI__get_PfID, 1},
-    {"_MASHcpp_humanPfMOI__push_PfID", (DL_FUNC) &_MASHcpp_humanPfMOI__push_PfID, 2},
     {"_MASHcpp_humanPfMOI__get_tInf", (DL_FUNC) &_MASHcpp_humanPfMOI__get_tInf, 1},
-    {"_MASHcpp_humanPfMOI__push_tInf", (DL_FUNC) &_MASHcpp_humanPfMOI__push_tInf, 2},
     {"_MASHcpp_humanPfMOI__get_MOI", (DL_FUNC) &_MASHcpp_humanPfMOI__get_MOI, 1},
-    {"_MASHcpp_humanPfMOI__set_MOI", (DL_FUNC) &_MASHcpp_humanPfMOI__set_MOI, 2},
     {"_MASHcpp_humanPfMOI__get_b", (DL_FUNC) &_MASHcpp_humanPfMOI__get_b, 1},
     {"_MASHcpp_humanPfMOI__set_b", (DL_FUNC) &_MASHcpp_humanPfMOI__set_b, 2},
     {"_MASHcpp_humanPfMOI__get_c", (DL_FUNC) &_MASHcpp_humanPfMOI__get_c, 1},
     {"_MASHcpp_humanPfMOI__set_c", (DL_FUNC) &_MASHcpp_humanPfMOI__set_c, 2},
-    {"_MASHcpp_humanPfMOI__get_vectorInf", (DL_FUNC) &_MASHcpp_humanPfMOI__get_vectorInf, 1},
-    {"_MASHcpp_humanPfMOI__push_vectorInf", (DL_FUNC) &_MASHcpp_humanPfMOI__push_vectorInf, 2},
     {"_MASHcpp_humanPfMOI__get_chemoprophylaxis", (DL_FUNC) &_MASHcpp_humanPfMOI__get_chemoprophylaxis, 1},
     {"_MASHcpp_humanPfMOI__set_chemoprophylaxis", (DL_FUNC) &_MASHcpp_humanPfMOI__set_chemoprophylaxis, 2},
-    {"_MASHcpp_humanPfMOI__add_Infection", (DL_FUNC) &_MASHcpp_humanPfMOI__add_Infection, 2},
+    {"_MASHcpp_humanPfMOI__add_Infection", (DL_FUNC) &_MASHcpp_humanPfMOI__add_Infection, 3},
     {"_MASHcpp_humanPfMOI__clear_Infection", (DL_FUNC) &_MASHcpp_humanPfMOI__clear_Infection, 2},
+    {"_MASHcpp_humanPfMOI__clear_Infections", (DL_FUNC) &_MASHcpp_humanPfMOI__clear_Infections, 1},
     {"_MASHcpp_humanPfMOI__get_Infection", (DL_FUNC) &_MASHcpp_humanPfMOI__get_Infection, 1},
-    {"_MASHcpp_humanPfMOI__track_history", (DL_FUNC) &_MASHcpp_humanPfMOI__track_history, 3},
-    {"_MASHcpp_humanPfMOI__get_history", (DL_FUNC) &_MASHcpp_humanPfMOI__get_history, 1},
-    {"_MASHcpp_mosquitoPfMOI__ctor", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__ctor, 4},
+    {"_MASHcpp_mosquitoPfMOI__ctor", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__ctor, 0},
     {"_MASHcpp_mosquitoPfMOI__get_PfID", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_PfID, 1},
-    {"_MASHcpp_mosquitoPfMOI__push_PfID", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__push_PfID, 2},
-    {"_MASHcpp_mosquitoPfMOI__get_MosquitoID", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_MosquitoID, 1},
-    {"_MASHcpp_mosquitoPfMOI__set_MosquitoID", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__set_MosquitoID, 2},
-    {"_MASHcpp_mosquitoPfMOI__get_tInf", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_tInf, 1},
-    {"_MASHcpp_mosquitoPfMOI__push_tInf", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__push_tInf, 2},
     {"_MASHcpp_mosquitoPfMOI__get_MOI", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_MOI, 1},
-    {"_MASHcpp_mosquitoPfMOI__set_MOI", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__set_MOI, 2},
-    {"_MASHcpp_mosquitoPfMOI__get_humanInf", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_humanInf, 1},
-    {"_MASHcpp_mosquitoPfMOI__push_humanInf", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__push_humanInf, 2},
-    {"_MASHcpp_mosquitoPfMOI__get_history", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_history, 1},
-    {"_MASHcpp_mosquitoPfMOI__add_Infection", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__add_Infection, 4},
-    {"_MASHcpp_mosquitoPfMOI__get_Infection", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_Infection, 2},
-    {"_MASHcpp_mosquitoPfMOI__get_InfectionIx", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_InfectionIx, 2},
-    {"_MASHcpp_mosquitoPfMOI__get_InfectionEIP", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_InfectionEIP, 2},
-    {"_MASHcpp_mosquitoPfMOI__which_EIP", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__which_EIP, 2},
+    {"_MASHcpp_mosquitoPfMOI__add_infection", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__add_infection, 4},
+    {"_MASHcpp_mosquitoPfMOI__get_infections", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_infections, 2},
     {"_MASHcpp_RiskQ__ctor", (DL_FUNC) &_MASHcpp_RiskQ__ctor, 0},
     {"_MASHcpp_RiskQ__get_N", (DL_FUNC) &_MASHcpp_RiskQ__get_N, 1},
     {"_MASHcpp_RiskQ__set_N", (DL_FUNC) &_MASHcpp_RiskQ__set_N, 2},
@@ -2129,7 +1902,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_MosquitoMaleHistory__historyInit", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__historyInit, 2},
     {"_MASHcpp_MosquitoMaleHistory__historyTrack", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__historyTrack, 3},
     {"_MASHcpp_MosquitoMaleHistory__exportHistory", (DL_FUNC) &_MASHcpp_MosquitoMaleHistory__exportHistory, 1},
-    {"_MASHcpp_rcpp_hello", (DL_FUNC) &_MASHcpp_rcpp_hello, 0},
     {NULL, NULL, 0}
 };
 

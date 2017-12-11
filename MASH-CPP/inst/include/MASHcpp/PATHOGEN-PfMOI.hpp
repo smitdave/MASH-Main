@@ -30,7 +30,7 @@ class humanPfMOI {
 public:
 
   // constructor
-  humanPfMOI(const double &_b = 0.55, const double &_c = 0.15, const bool &_chemoprophylaxis = false);
+  humanPfMOI(const double &b_init = 0.55, const double &c_init = 0.15, const bool &chemoprophylaxis_init = false);
 
   // destructor
   ~humanPfMOI();
@@ -91,41 +91,21 @@ public:
   ///////////////////////////////////
 
   std::vector<int> get_PfID();
-  void push_PfID(const int &PfID_new);
-
-  std::string get_MosquitoID();
-  void set_MosquitoID(const std::string &MosquitoID_new);
-
-  std::vector<double> get_tInf();
-  void push_tInf(const double &tInf_new);
 
   int get_MOI();
-  void set_MOI(const int &MOI_new);
-
-  std::vector<std::string> get_humanInf();
-  void push_humanInf(const std::string &humanInf_new);
 
   // Infection Dynamics
-
-  void add_Infection(const int &PfID_new, const double &tInf_new, const std::string &humanInf_new); // add a new infection
-
-  int get_Infection_PfID(const int &PfID_ix); // return the clonal variant associated with given PfID
-
-  int get_Infection_ix(const int &ix); // get clonal variants just depending on their position in vector
-
-  // get_InfectionEIP: argument 'incubation' = tNow - EIP; only return infections that started at tNow - EIP in the past
-  // because only those can possibly have passed the EIP and produced sporozoites.
-  std::vector<int> get_PfID_EIP(const double &incubation);
+  void add_infection(const int &PfID_new, const double &tInfected_new, const double &tInfectious_new); // add a new infection
+  std::vector<int> get_infections(const double &tNow);
 
 // private members
 private:
 
   // PfMOI Parameters & State Variables
   std::vector<int>              PfID;
-  std::string                   MosquitoID;
-  std::vector<double>           tInf;
+  std::vector<double>           tInfected;
+  std::vector<double>           tInfectious;
   int                           MOI;
-  std::vector<std::string>      humanInf;
 
 };
 

@@ -4,21 +4,20 @@
 \alias{humanPfMOI}
 \title{PfMOI Human Stage Pathogen Class}
 \usage{
-humanPfMOI(PfID_init, tInf_init = -1, MOI_init = 0, b_init = 0.55,
-  c_init = 0.15, chemoprophylaxis_init = FALSE, N = 20)
+humanPfMOI(b_init = 0.55, c_init = 0.15, chemoprophylaxis_init = FALSE)
 }
 \arguments{
-\item{PfID_init}{PfID derived from the tile level PfPedigree}
+\item{_PfID}{PfID for this clonal infection}
 
-\item{tInf_init}{initial time of current infection (successful mosquito to human transmission event)}
+\item{_tInf}{time of successful mosquito to human transmission event for this clonal infection}
 
-\item{MOI_init}{initial multiplicity of infection}
+\item{_MOI}{initial multiplicity of infection}
 
-\item{chemoprophylaxis_init}{chemoprophylaxis protection status}
+\item{_b}{mosquito to human transmission efficiency}
 
-\item{damID_init}{initial female gametocyte 'mother'}
+\item{_c}{human to mosquito transmission efficiency}
 
-\item{sireID_init}{initial male gametocyte 'father'}
+\item{_chemoprophylaxis}{chemoprophylaxis protection status}
 }
 \description{
 A class for storing parameters and state variables of human-stage PfMOI infections.
@@ -26,29 +25,31 @@ A class for storing parameters and state variables of human-stage PfMOI infectio
 \section{Methods}{
 
 \itemize{
-\item get_PfID:
-\item push_PfID:
-\item get_tInf:
-\item push_tInf:
-\item get_MOI:
-\item set_MOI:
-\item get_b:
-\item set_b:
-\item get_c:
-\item set_c:
-\item get_damID:
-\item push_damID:
-\item get_sireID:
-\item push_sireID:
-\item get_chemoprophylaxis:
-\item set_chemoprophylaxis:
+\item get_PfID: get vector of current infections by PfID
+\item get_tInf: get vector of current infections by time of transmisson event
+\item get_MOI: get current multiplicity of infection
+\item get_b: get mosquito to human transmission efficiency
+\item set_b: set mosquito to human transmission efficiency
+\item get_c: get human to mosquito transmission efficiency
+\item set_c: set human to mosquito transmission efficiency
+\item get_chemoprophylaxis: is human currently protected by chemoprophylaxis
+\item set_chemoprophylaxis: set protection by chemoprophylaxis
+\item add_Infection: add a new infection
+\item clear_Infection: completely clear the infection associated with PfID
+\item clear_Infections: clear all current infections
+\item get_Infection: get all current infections
 }
 }
 
 \section{Fields}{
 
 \itemize{
-\item a field: talk about me
+\item PfID: std::vector<int>
+\item tInf: std::vector<double>
+\item MOI: int
+\item b: double
+\item c: double
+\item chemoprophylaxis: bool
 }
 }
 

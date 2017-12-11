@@ -31,8 +31,7 @@
 #'  * get_emergingAdults: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 #'  * output: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 #'  * reset: this method must be overwritten by all inheriting classes (pure virtual function in C++)
-#'  * get_HumansPointer: see \code{\link{get_HumansPointer_Mosquito_Base}}
-#'  * set_HumansPointer: see \code{\link{set_HumansPointer_Mosquito_Base}}
+#'  * get_a: return the human feeding rate (required to calculate EIR by \code{\link{updateEIR_Human}})
 #'  * get_TilePointer: see \code{\link{get_TilePointer_Mosquito_Base}}
 #'  * set_TilePointer: see \code{\link{set_TilePointer_Mosquito_Base}}
 #'
@@ -99,6 +98,10 @@ Mosquito_Base <- R6::R6Class(classname = "Mosquito_Base",
 
                    get_a = function(){
                      return(private$a)
+                   },
+
+                   get_EIP = function(){
+                     cat("get_EIP for Mosquito_Base should never be called\n")
                    }
 
                   ),
@@ -115,36 +118,6 @@ Mosquito_Base <- R6::R6Class(classname = "Mosquito_Base",
                   )
 
 ) #end class definition
-
-
-# #' Get Humans Pointer
-# #'
-# #' Return a pointer to this \code{\link{HumanPop}} in this tile.
-# #'
-# #'  * This method is bound to \code{Mosquito_Base$get_HumansPointer}
-# #'
-# get_HumansPointer_Mosquito_Base <- function(){
-#   return(private$HumansPointer)
-# }
-#
-# Mosquito_Base$set(which = "public",name = "get_HumansPointer",
-#   value = get_HumansPointer_Mosquito_Base, overwrite = TRUE
-# )
-#
-# #' Set Humans Pointer
-# #'
-# #' Set a pointer to this \code{\link{HumanPop}} in this tile.
-# #'
-# #'  * This method is bound to \code{Mosquito_Base$get_HumansPointer}
-# #'
-# set_HumansPointer_Mosquito_Base <- function(HumansPointer){
-#   if(class(HumansPointer)[1]!="HumanPop"){stop("set_HumansPointer_Mosquito_Base must be set with a 'HumanPop' object reference")}
-#   private$HumansPointer = HumansPointer
-# }
-#
-# Mosquito_Base$set(which = "public",name = "set_HumansPointer",
-#   value = set_HumansPointer_Mosquito_Base, overwrite = TRUE
-# )
 
 #' Get Tile Pointer
 #'

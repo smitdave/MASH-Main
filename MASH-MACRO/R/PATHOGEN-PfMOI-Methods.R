@@ -98,5 +98,146 @@ initialize_Pathogens_PfMOI_HumanPop <- function(PfPAR){
         private$pop$get(as.character(i))$infectHumanPfMOI(tEvent = 0, PAR = list(vectorID="initInf"))
       }
     }
-  }
+  } # end for
+}
+
+
+###################################################################
+# Add PfMOI Pathogen Object to 'Human' & 'HumanPop' Class
+###################################################################
+
+#' PfMOI \code{Human} Method: Set Human-stage PfMOI Object
+#'
+#' Set the \code{\link[MASHcpp]{humanPfMOI}} object in a human.
+#' This method is bound to \code{Human$set_humanPfMOI()}
+#'
+set_humanPfMOI_Human <- function(b=0.55,c=0.15,chemoprophylaxis=FALSE){
+  private$Pathogens = MASHcpp::humanPfMOI(b=b,c=c,chemoprophylaxis=chemoprophylaxis)
+}
+
+#' PfMOI \code{HumanPop} Method: Set Human-stage PfMOI Object
+#'
+#' Set the \code{\link[MASHcpp]{humanPfMOI}} object in a human poulation.
+#' This method is bound to \code{HumanPop$set_humanPfMOI()}
+#'
+#' @param b infected mosquito to human transmission efficiency
+#' @param c infected human to mosquito transmission efficiency
+set_humanPfMOI_HumanPop <- function(){
+  private$pop$apply(tag="set_humanPfMOI",returnVal=FALSE,b=private$PfMOI_PAR$b,=c=private$PfMOI_PAR$c)
+}
+
+
+#################################################################
+# PfMOI Event Timing
+#################################################################
+
+#' PfMOI \code{Human} Method: Duration of Infection
+#'
+#' How many days does a single PfMOI infection last? See \code{\link{PfMOI.Parameters}} parameter \code{DurationPf} for baseline clearance rate.
+#' This function  calculates clearance rate under the assumption of independent clearance (M/M/1 queueing process for infection).
+#' This method is called from \code{\link{}}
+#' This method is bound to \code{Human$ttClearPf()}
+#'
+PfMOI_ttClearPf_Independent <- function(){
+  return(rexp(n=1, rate=1/self$get_PfMOI_PAR("DurationPf")))
+}
+
+#' PfMOI \code{Human} Method: Duration of Infection with Pathogen Interaction
+#'
+#' How many days does a single PfMOI infection last? See \code{\link{PfMOI.Parameters}} parameter \code{DurationPf} for baseline clearance rate.
+#' This function calculates clearance rate as a function of individual MOI modeling pathogen competition for host resources (faster clearance than expected under independent clearance)
+#' or pathogen facilitation (slower clearance than expected under independent clearance).
+#' This method is called from \code{\link{}}
+#' This method is bound to \code{Human$ttClearPf()}
+#'
+#'  * See \url{https://doi.org/10.1186/1475-2875-8-87} for details of queueing model with pathogen interaction.
+PfMOI_ttClearPf_Interaction <- function(){
+  clearanceRate = (1/self$get_PfMOI_PAR("DurationPf")) ^ (private$Pathogens$get_MOI() * self$get_PfMOI_PAR("InteractionPf"))
+  return(rexp(n=1, rate=clearanceRate))
+}
+
+#' PfMOI \code{Human} Method: Duration of Latency
+#'
+#' How many days after the infectious bite does a PfMOI infection start? See \code{\link{PfMOI.Parameters}} parameter \code{LatentPf} constant latent period.
+#' This method is called from \code{\link{}}
+#' This method is bound to \code{Human$ttInfectPf()}
+#'
+PfMOI_ttInfectionPf <- function(){
+  return(self$get_PfMOI_PAR("LatentPf"))
+}
+
+#' PfMOI \code{Human} Method: Timing of Fever Incident
+#'
+#' What is the timing of fever relative to the start of a PfMOI infection? See \code{\link{PfMOI.Parameters}} parameter \code{mnFeverPf} mean (on natural scale) and parameter \code{vrFeverPf} standard deviation (on natural scale) of log-normally distributed time to fever.
+#' This method is called from \code{\link{}}
+#' This method is bound to \code{Human$ttFeverPf()}
+#'
+PfMOI_ttFeverPf <- function(){
+  rlnorm(1,log(self$get_PfMOI_PAR("mnFeverPf")),self$get_PfMOI_PAR("vrFeverPf"))
+}
+
+#' PfMOI \code{Human} Method: Timing of Treatment
+#'
+#' What is the timing of treatment relative to the start of a fever incident? See \code{\link{PfMOI.Parameters}} parameter \code{mnTreatPf} for mean waiting time of exponentially distributed waiting period.
+#' This method is called from \code{\link{}}
+#' This method is bound to \code{Human$ttTreatPf()}
+#'
+PfMOI_ttTreatPf <- function(){
+  rexp(1, 1/self$get_PfMOI_PAR("mnTreatPf"))
+}
+
+#' PfMOI \code{Human} Method: Duration of Protection from Chemoprophylaxis
+#'
+#' After administration of Chemoprophylaxis what is time to susceptibility? See \code{\link{PfMOI.Parameters}} parameter \code{mnChemoprophylaxisPf} constant timing period.
+#' This method is called from \code{\link{event_endprophylaxisPfMOI}}
+#' This method is bound to \code{Human$ttSusceptiblePf()}
+#'
+PfMOI_ttSusceptiblePf <- function(){
+  return(self$get_PfMOI_PAR("mnChemoprophylaxisPf"))
+}
+
+#' PfMOI \code{Human} Method: Duration of protection by PE Vaccination
+#'
+#' After administration of PE Vaccination what is duration of protection (reduced infected mosquito to human transmission efficiency)? See \code{\link{PfMOI.Parameters}} parameter \code{mnPEPf} and \code{vrPEPf} for normally distributed duration of protection.
+#' This method is called from \code{\link{event_pewanePfMOI}}
+#' This method is bound to \code{Human$ttPEWanePf()}
+#'
+PfMOI_ttPEWanePf <- function(){
+  return(rnorm(n = 1, mean = self$get_PfMOI_PAR("mnPEPf"), sd = self$get_PfMOI_PAR("vrPEPf")))
+}
+
+#' PfMOI \code{Human} Method: Duration of protection by GS Vaccination
+#'
+#' Duration of protection by GS Vaccination? See \code{\link{PfMOI.Parameters}} parameter \code{mnGSPf} and \code{vrGSPf} for normally distributed duration of protection.
+#' This method is called from \code{\link{event_gswanePfMOI}}
+#' This method is bound to \code{Human$ttGSWanePf()}
+#'
+PfMOI_ttGSWanePf <- function(){
+  return(rnorm(n = 1, mean = self$get_PfMOI_PAR("mnGSPf"), sd = self$get_PfMOI_PAR("vrGSPf")))
+}
+
+
+###################################################################
+# Add PfMOI Events to 'Human' Class
+# 'XX' family of functions for human event queues
+###################################################################
+
+###################################################################
+# PfMOI: Mosquito to Human infectious bite
+# Add methods to 'Human' Class
+###################################################################
+
+#' PfMOI \code{Human} Method: Host Probing
+#'
+#' This method is called by a mosquito when she probes a human host, but may also be called by \code{\link{SimBitePfMOI}} as a filler.
+#' If the biting mosquito is infectious, the method calls \code{\link{infectiousBite_PfMOI}}, otherwise does nothing.
+#'  * This method is bound to \code{Human$probeHost_PfMOI()}
+#'
+#' @param tBite time of bite
+#' @param mosquitoPfSI \code{\link[MASHcpp]{mosquitoPfMOI}} object passed from mosquito to human
+#'
+probeHost_PfMOI <- function(tBite, mosquitoPfMOI){
+
+  infections = mosquitoPfMOI$get_PfID_EIP(tBite)
+
 }

@@ -4,18 +4,7 @@
 \alias{mosquitoPfMOI}
 \title{PfMOI Mosquito Stage Pathogen Class}
 \usage{
-mosquitoPfMOI(PfID_init, MosquitoID_init, tInf_init = -1, MOI_init = 0)
-}
-\arguments{
-\item{PfID_init}{PfID derived from the infecting human's gametocyte ID}
-
-\item{tInf_init}{time of current infection (successful human to mosquito transmission event)}
-
-\item{MOI_init}{initial multiplicity of infection}
-
-\item{damID_init}{female gametocyte 'mother'}
-
-\item{sireID_init}{male gametocyte 'father'}
+mosquitoPfMOI()
 }
 \description{
 A class for storing parameters and state variables of mosquito-stage PfMOI infections.

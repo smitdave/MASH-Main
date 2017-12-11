@@ -24,10 +24,11 @@ namespace MASHcpp {
  */ ///////////////////////////////////////////////////////////////////////////////
 
 // constructor
-humanPfMOI::humanPfMOI(const double &_b, const double &_c, const bool &_chemoprophylaxis) : b(_b), c(_c), chemoprophylaxis(_chemoprophylaxis) {
-    #ifdef DEBUG_MGDRIVE
-    std::cout << "humanPfMOI being born at memory location: " << this << std::endl;;
-    #endif
+humanPfMOI::humanPfMOI(const double &b_init, const double &c_init, const bool &chemoprophylaxis_init) : b(b_init), c(c_init), chemoprophylaxis(chemoprophylaxis_init) {
+  MOI = 0;
+  #ifdef DEBUG_MGDRIVE
+  std::cout << "humanPfMOI being born at memory location: " << this << std::endl;;
+  #endif
 };
 
 // destructor
@@ -128,6 +129,7 @@ std::vector<int> humanPfMOI::get_Infection(){
 
 // constructor
 mosquitoPfMOI::mosquitoPfMOI(){
+  MOI = 0;
   #ifdef DEBUG_MGDRIVE
   std::cout << "mosquitoPfMOI being born at memory location: " << this << std::endl;;
   #endif
@@ -146,55 +148,63 @@ std::vector<int> mosquitoPfMOI::get_PfID(){
   return(PfID);
 };
 
-std::vector<double> mosquitoPfMOI::get_tInf(){
-  return(tInf);
-};
-
 int mosquitoPfMOI::get_MOI(){
   return(MOI);
 };
 
 // Infection Dynamics
 
-void mosquitoPfMOI::add_Infection(const int &PfID_new, const double &tInf_new, const std::string &humanInf_new){
+void mosquitoPfMOI::add_infection(const int &PfID_new, const double &tInfected_new, const double &tInfectious_new){
   PfID.push_back(PfID_new);
-  tInf.push_back(tInf_new);
-  humanInf.push_back(humanInf_new);
+  tInfected.push_back(tInfected_new);
+  tInfectious.push_back(tInfectious_new);
   MOI += 1;
 };
 
-int mosquitoPfMOI::get_Infection_PfID()(const int &PfID_ix){
-  auto it = std::find(PfID.begin(), PfID.end(), PfID_ix);
-  size_t ix = std::distance(PfID.begin(), it);
-  return(PfID[ix]);
-};
-
-int mosquitoPfMOI::get_Infection_ix()(const int &ix){
-  return PfID[ix];
-};
-
-// get_InfectionEIP: argument 'incubation' = tNow - EIP; only return infections that started at tNow - EIP in the past
-// because only those can possibly have passed the EIP and produced sporozoites.
-std::vector<int> mosquitoPfMOI::get_PfID_EIP(const double &incubation){
-
-  // find infections where tInf < tNow - EIP (incubation)
-  std::vector<int> incubationIx;
-  auto it = std::find_if(tInf.begin(), tInf.end(), [incubation](const double &infectionTime){
-    return(infectionTime < incubation && infectionTime != -1);
-  });
-  while(it != tInf.end()){
-    incubationIx.emplace_back(std::distance(tInf.begin(), it));
-    it = std::find_if(std::next(it), std::end(tInf), [incubation](const double &infectionTime){
-      return(infectionTime < incubation && infectionTime != -1);
-    });
+std::vector<int> mosquitoPfMOI::get_infections(const double &tNow){
+  std::vector<int> infections;
+  for(size_t i=0; i<tInfectious.size(); i++){
+    if(tInfectious.at(i) <= tNow){
+      infections.push_back(PfID[i]);
+    }
   }
-
-  // export these infections that have passed the EIP
-  std::vector<int> PfID_out;
-  std::transform(incubationIx.begin(), incubationIx.end(), std::back_inserter(PfID_out), [this](size_t ix){
-    return(PfID[ix]);
-  });
-
-
-  return(PfID_out);
+  return(infections);
 };
+
+// int mosquitoPfMOI::get_Infection_PfID(const int &PfID_ix){
+//   auto it = std::find(PfID.begin(), PfID.end(), PfID_ix);
+//   size_t ix = std::distance(PfID.begin(), it);
+//   return(PfID[ix]);
+// };
+//
+// int mosquitoPfMOI::get_Infection_ix(const int &ix){
+//   return PfID[ix];
+// };
+//
+// // get_InfectionEIP: argument 'incubation' = tNow - EIP; only return infections that started at tNow - EIP in the past
+// // because only those can possibly have passed the EIP and produced sporozoites.
+// std::vector<int> mosquitoPfMOI::get_PfID_EIP(const double &incubation){
+//
+//   // find infections where tInf < tNow - EIP (incubation)
+//   std::vector<int> incubationIx;
+//   auto it = std::find_if(tInf.begin(), tInf.end(), [incubation](const double &infectionTime){
+//     return(infectionTime < incubation && infectionTime != -1);
+//   });
+//   while(it != tInf.end()){
+//     incubationIx.emplace_back(std::distance(tInf.begin(), it));
+//     it = std::find_if(std::next(it), std::end(tInf), [incubation](const double &infectionTime){
+//       return(infectionTime < incubation && infectionTime != -1);
+//     });
+//   }
+//
+//   // export these infections that have passed the EIP
+//   std::vector<int> PfID_out;
+//   std::transform(incubationIx.begin(), incubationIx.end(), std::back_inserter(PfID_out), [this](size_t ix){
+//     return(PfID[ix]);
+//   });
+//
+//
+//   return(PfID_out);
+// };
+
+}

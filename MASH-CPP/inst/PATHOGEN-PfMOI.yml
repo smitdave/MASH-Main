@@ -56,9 +56,9 @@ humanPfMOI:
 
     # constructor arguments
     args:
-      - _b: double = 0.55
-      - _c: double = 0.15
-      - _chemoprophylaxis: bool = FALSE
+      - b_init: double = 0.55
+      - c_init: double = 0.15
+      - chemoprophylaxis_init: bool = FALSE
 
   # public methods
   methods:
@@ -148,35 +148,18 @@ mosquitoPfMOI:
     get_PfID:
       return_type: "std::vector<int>"
 
-    get_tInf:
-      return_type: "std::vector<double>"
-
     get_MOI:
       return_type: int
 
     # Infection Dynamics
-    add_Infection:
+    add_infection:
       args:
         - PfID_new: int
-        - tInf_new: double
+        - tInfected_new: double
+        - tInfectious_new: double
       return_type: void
 
-    get_Infection:
+    get_infections:
       args:
-        - PfID_ix: int
-      return_type: "Rcpp::List"
-
-    get_InfectionIx:
-      args:
-        - ix: int
-      return_type: "Rcpp::List"
-
-    get_InfectionEIP:
-      args:
-        - incubation: double
-      return_type: "Rcpp::List"
-
-    which_EIP:
-      args:
-        - incubation: double
+        - tNow: double
       return_type: "std::vector<int>"

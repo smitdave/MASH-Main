@@ -135,7 +135,7 @@ HumanPop_set_humanPfSI <- function(){
 
 
 ###################################################################
-# Add PfSI Timing Functions to 'Human' Class
+# PfSI Event Timing
 ###################################################################
 
 #' PfSI \code{Human} Method: Duration of Infection
@@ -453,7 +453,6 @@ treatPfSI <- function(tEvent, PAR){
   # treat
   if(private$Pathogens$get_infected()){
     private$Pathogens$set_infected(FALSE)
-    writeLines(text = paste0(c(private$myID,tEvent,"S","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   }
   private$Pathogens$set_chemoprophylaxis(TRUE)
   writeLines(text = paste0(c(private$myID,tEvent,"P","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
