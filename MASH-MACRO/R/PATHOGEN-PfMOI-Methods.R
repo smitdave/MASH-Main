@@ -123,7 +123,7 @@ set_humanPfMOI_Human <- function(b=0.55,c=0.15,chemoprophylaxis=FALSE){
 #' @param b infected mosquito to human transmission efficiency
 #' @param c infected human to mosquito transmission efficiency
 set_humanPfMOI_HumanPop <- function(){
-  private$pop$apply(tag="set_humanPfMOI",returnVal=FALSE,b=private$PfMOI_PAR$b,=c=private$PfMOI_PAR$c)
+  private$pop$apply(tag="set_humanPfMOI",returnVal=FALSE,b=private$PfMOI_PAR$b,c=private$PfMOI_PAR$c)
 }
 
 
@@ -239,10 +239,11 @@ PfMOI_ttGSWanePf <- function(){
 probeHost_PfMOI <- function(tBite, mosquitoPfMOI){
 
   infections = mosquitoPfMOI$get_infections(tBite)
+  mosyID = mosquitoPfMOI$get_MosquitoID()
   N = self$get_PfMOI_PAR("MosyMaxI")
 
   for(i in 1:N){
-    self$infectionsBite_PfMOI(tBite, PAR = list(PfID = infections[i]))
+    self$infectionsBite_PfMOI(tBite, PAR = list(PfID = infections[i], vectorID = mosyID))
   }
 }
 
@@ -253,7 +254,7 @@ probeHost_PfMOI <- function(tBite, mosquitoPfMOI){
 #' This method is bound to \code{Human$infectiousBite_PfMOI()}
 #'
 #' @param tBite time of bite
-#' @param PAR single clonal variant returned from \code{mosquitoPfMOI$get_clone()}
+#' @param PAR must be a list containing character \code{PfID} and \code{vectorID}
 infectiousBite_PfMOI <- function(tBite, PAR){
   if(runif(1) < private$Pathogens$get_b()){
     tInfStart = tBite + self$ttInfectionPf()
@@ -262,61 +263,61 @@ infectiousBite_PfMOI <- function(tBite, PAR){
 }
 
 
-###################################################################
-# Start a PfMOI Infection
-###################################################################
-
-#' PfMOI \code{Human} Event: Add PfMOI Infection Event to Event Queue
-#'
-#' Add a PfMOI infection to the event queue.
-#' This method is called from \code{\link{infectiousBite_PfMOI}}
-#' This method adds event \code{\link{event_infectHumanPfMOI}} to the event queue.
-#'  * This method is bound to \code{Human$add2Q_infectHumanPfMOI()}
-#'
-#' @param tEvent time of infection
-#' @param PAR single clonal variant returned from \code{mosquitoPfMOI$get_InfectionIx()}
-add2Q_infectHumanPfMOI <- function(tEvent, PAR = NULL){
-  private$EventQueue$addEvent2Q(event = self$event_infectHumanPfMOI(tEvent = tEvent, PAR = PAR))
-}
-
-#' PfMOI \code{Human} Event: Generate PfMOI Infection Event
-#'
-#' Generate PfMOI infection event to place in event queue.
-#' This method is called from \code{\link{add2Q_infectHumanPfMOI}}
-#' This method is bound to \code{Human$event_infectHumanPfMOI()}
-#'  * tag: \code{\link{infectHumanPfMOI}}
-#' @md
-#' @param tEvent time of infection
-#' @param PAR single clonal variant returned from \code{mosquitoPfMOI$get_clone()}
-event_infectHumanPfMOI <- function(tEvent, PAR){
-  list(tEvent = tEvent, PAR = PAR, tag = "infectHumanPfMOI")
-}
-
-#' PfMOI \code{Human} Event: PfMOI Infection Event
-#'
-#' Simulate a PfMOI infection. If the human is not under chemoprophylaxis, begin queuing events for this clonal variant's infection process.
-#' This method is bound to \code{Human$infectHumanPfMOI()}
-#'  * A Bernoulli event is drawn to determine if this infection produces fever; if so \code{\link{add2Q_feverPfMOI}} is called.
-#'  * The end of this PfMOI infection is queued by \code{\link{add2Q_endPfMOI}}
-#'
-#' @param tEvent time of infection
-#' @param PAR must be a list containing character \code{PfID}
-infectHumanPfMOI <- function(tEvent, PAR){
-
-  if(!private$Pathogens$get_chemoprophylaxis()){
-
-    # generate a new global PfID here from HumanPop
-    PfID = self$get_HumansPointer()$increment_PfID()
-
-    # add new infection to my infection queue
-    private$Pathogens$add_Infection(PfID, PAR$damID, PAR$sireID)
-
-    if(runif(1) < self$get_PfMOI_PAR("FeverPf")){
-      self$add2Q_feverPfMOI(tEvent = tEvent)
-    }
-
-    self$add2Q_endPfMOI(tEvent = tEvent, PAR = list(PfID = PfID))
-    private$Pathogens$track_history(tEvent = tEvent, event = "I")
-  }
-
-}
+# ###################################################################
+# # Start a PfMOI Infection
+# ###################################################################
+#
+# #' PfMOI \code{Human} Event: Add PfMOI Infection Event to Event Queue
+# #'
+# #' Add a PfMOI infection to the event queue.
+# #' This method is called from \code{\link{infectiousBite_PfMOI}}
+# #' This method adds event \code{\link{event_infectHumanPfMOI}} to the event queue.
+# #'  * This method is bound to \code{Human$add2Q_infectHumanPfMOI()}
+# #'
+# #' @param tEvent time of infection
+# #' @param PAR single clonal variant returned from \code{mosquitoPfMOI$get_InfectionIx()}
+# add2Q_infectHumanPfMOI <- function(tEvent, PAR = NULL){
+#   private$EventQueue$addEvent2Q(event = self$event_infectHumanPfMOI(tEvent = tEvent, PAR = PAR))
+# }
+#
+# #' PfMOI \code{Human} Event: Generate PfMOI Infection Event
+# #'
+# #' Generate PfMOI infection event to place in event queue.
+# #' This method is called from \code{\link{add2Q_infectHumanPfMOI}}
+# #' This method is bound to \code{Human$event_infectHumanPfMOI()}
+# #'  * tag: \code{\link{infectHumanPfMOI}}
+# #' @md
+# #' @param tEvent time of infection
+# #' @param PAR single clonal variant returned from \code{mosquitoPfMOI$get_clone()}
+# event_infectHumanPfMOI <- function(tEvent, PAR){
+#   list(tEvent = tEvent, PAR = PAR, tag = "infectHumanPfMOI")
+# }
+#
+# #' PfMOI \code{Human} Event: PfMOI Infection Event
+# #'
+# #' Simulate a PfMOI infection. If the human is not under chemoprophylaxis, begin queuing events for this clonal variant's infection process.
+# #' This method is bound to \code{Human$infectHumanPfMOI()}
+# #'  * A Bernoulli event is drawn to determine if this infection produces fever; if so \code{\link{add2Q_feverPfMOI}} is called.
+# #'  * The end of this PfMOI infection is queued by \code{\link{add2Q_endPfMOI}}
+# #'
+# #' @param tEvent time of infection
+# #' @param PAR must be a list containing character \code{PfID} and \code{vectorID}
+# infectHumanPfMOI <- function(tEvent, PAR){
+#
+#   if(!private$Pathogens$get_chemoprophylaxis()){
+#
+#     # generate a new global PfID here from HumanPop
+#     PfID = self$get_HumansPointer()$increment_PfID()
+#
+#     # add new infection to my infection queue
+#     private$Pathogens$add_Infection(PfID, PAR$damID, PAR$sireID)
+#
+#     if(runif(1) < self$get_PfMOI_PAR("FeverPf")){
+#       self$add2Q_feverPfMOI(tEvent = tEvent)
+#     }
+#
+#     self$add2Q_endPfMOI(tEvent = tEvent, PAR = list(PfID = PfID))
+#     private$Pathogens$track_history(tEvent = tEvent, event = "I")
+#   }
+#
+# }
