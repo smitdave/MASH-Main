@@ -1,0 +1,51 @@
+==============================================================
+qname        all.q               
+hostname     cn494.ihme.washington.edu
+group        Domain              
+owner        georgoff            
+project      ihme_general        
+department   defaultdepartment   
+jobname      Macro-Test          
+jobnumber    13489249            
+taskid       undefined
+account      sge                 
+priority     0                   
+cwd          /homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Benchmarking
+submit_host  cn498.ihme.washington.edu
+submit_cmd   qsub -cwd -N Macro-Test -pe multi_slot 1 -l mem_free=2G -hold_jid no_holds mash_shell_script.sh TEST-MACRO.R
+qsub_time    12/11/2017 10:06:22.809
+start_time   12/11/2017 10:06:25.721
+end_time     12/11/2017 10:07:23.872
+granted_pe   multi_slot          
+slots        1                   
+failed       0    
+deleted_by   NONE
+exit_status  0                   
+ru_wallclock 58.151       
+ru_utime     56.252       
+ru_stime     0.367        
+ru_maxrss    83824               
+ru_ixrss     0                   
+ru_ismrss    0                   
+ru_idrss     0                   
+ru_isrss     0                   
+ru_minflt    64477               
+ru_majflt    156                 
+ru_nswap     0                   
+ru_inblock   77498               
+ru_oublock   40                  
+ru_msgsnd    0                   
+ru_msgrcv    0                   
+ru_nsignals  0                   
+ru_nvcsw     1271                
+ru_nivcsw    256595              
+wallclock    58.779       
+cpu          56.619       
+mem          94.083            
+io           0.015             
+iow          0.000             
+maxvmem      1.841G
+maxrss       84.973M
+maxpss       83.710M
+arid         undefined
+jc_name      NONE
