@@ -157,7 +157,7 @@ default for blood meal size.
   \item \verb1eggBatchSize1
   \item \verb1refeed_function=NULL1
     \begin{itemize}
-    \item \verb1probRefeed1
+    \item \verb1pr_Refeed1
     \end{itemize}
   \end{itemize}
   \item \verb1eggBatch_function!=NULL1 (Section 5, below)
@@ -304,6 +304,14 @@ Sugar feeding builds on flight energetics.
 \section{Blood Meal and Egg Batch}
 
 \begin{itemize}
+\item \verb1eggBatch_function=NULL1
+  \begin{itemize}
+  \item \verb1eggBatchSize1
+  \item \verb1refeed_function=NULL1
+    \begin{itemize}
+    \item \verb1pr_Refeed1
+    \end{itemize}
+  \end{itemize}
 \item \verb1eggBatch_function="proportional"1
   \begin{itemize}
   \item \verb1bloodMealSize_function="beta"1
@@ -335,15 +343,96 @@ Sugar feeding builds on flight energetics.
 \end{itemize}
 
 
-\section{Maturation, Mating, and Males}
+
+
+\section{Maturation} 
+
+\begin{itemize}
+\item \verb1bornMature=TRUE1 
+  \begin{itemize}
+  \item \verb1Mating=FALSE1   
+  \end{itemize}
+\item \verb1bornMature=FALSE1 
+  \begin{itemize}
+  \item \verb1maturationEU=01 : Set to some other value to require energy.
+  \item \verb1Mating=TRUE1 (see Options below)
+  \end{itemize}
+\end{itemize}
+
+\subsection{Mating and Males}
+\begin{itemize}
+\item \verb1Mating = FALSE1
+\item \verb1Mating = TRUE1
+  \begin{itemize}
+  \item \verb1maleMosquito="kernel"1
+      \begin{itemize}
+      \item \verb1maleDeathRate1 
+      \item \verb1matingKernel1
+      \end{itemize}
+  \item \verb1maleMosquito="ibm"1
+     \begin{itemize}
+     \item \verb1maleFlightEnergetics1 : mirrors \verb1flightEnergetics1 for females 
+     \item \verb1maleSugarFeeding=FALSE1
+     \item \verb1maleSugarFeeding=TRUE1 :: mirrors \verb1sugarFeeding1 for females
+     \item \verb1swarming=TRUE1 
+%     \item opportunistic
+%        \begin{itemize}
+%        \item males
+%        \item females
+%        \end{itemize}
+     \end{itemize}
+  \end{itemize}
+\end{itemize}
 
 \subsection*{[M] Mating Bout}
 
-By default, mating and maturation is turned off. 
+\begin{itemize}
+\item \verb1swarming=FALSE1
+\item \verb1swarming=TRUE1
+  \begin{itemize}
+     \item \verb1boutM_tte_function="matingTrigger"1 
+        \begin{itemize}
+         \item \verb1timeToSwarm1 
+         \end{itemize}
+     \item \verb1boutM=TRUE1 :: see below
+       \begin{itemize}
+       \item \verb1boutM_survive1
+       \item \verb1boutM_success1
+       \end{itemize}
+     \item \verb1maleBoutM=TRUE1
+        \begin{itemize}
+          \item \verb1maleBoutM_survive1
+          \item \verb1maleBoutM_success1
+        \end{itemize}
+  \end{itemize}
+\item \verb1opportunisticMating=FALSE1
+\end{itemize}
 
-\subsection*{Male Mosquitoes}
+To do: \verb1opportunisticMating="Aedes"1, following Tom's description of males approaching females at blood feeding sites as they try to feed. 
+
+
+\section{Types and Inheritance}
+
+\begin{itemize}
+\item \verb1resistantTypes=NULL1
+\item \verb1gmClassXTypes=NULL1
+\end{itemize}
 
 \section{Estivation}
+
+\begin{itemize}
+\item \verb1estivation=FALSE1
+\item \verb1estivation=TRUE1
+  \begin{itemize}
+  \item \verb1boutE_survive1
+  \item \verb1boutE_nextState = "F"1
+  \item \verb1Estivate_tte="seasonal"1
+    \begin{itemize}
+    \item initEstivation function 
+    \item endEstivation function
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
 
 \section{Vector Control}
 
