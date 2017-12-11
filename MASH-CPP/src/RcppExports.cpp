@@ -678,12 +678,13 @@ BEGIN_RCPP
 END_RCPP
 }
 // mosquitoPfMOI__ctor
-MASHcpp::mosquitoPfMOI mosquitoPfMOI__ctor();
-RcppExport SEXP _MASHcpp_mosquitoPfMOI__ctor() {
+MASHcpp::mosquitoPfMOI mosquitoPfMOI__ctor(std::string MosquitoID_init);
+RcppExport SEXP _MASHcpp_mosquitoPfMOI__ctor(SEXP MosquitoID_initSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__ctor());
+    Rcpp::traits::input_parameter< std::string >::type MosquitoID_init(MosquitoID_initSEXP);
+    rcpp_result_gen = Rcpp::wrap(mosquitoPfMOI__ctor(MosquitoID_init));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -1809,7 +1810,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_MASHcpp_humanPfMOI__clear_Infection", (DL_FUNC) &_MASHcpp_humanPfMOI__clear_Infection, 2},
     {"_MASHcpp_humanPfMOI__clear_Infections", (DL_FUNC) &_MASHcpp_humanPfMOI__clear_Infections, 1},
     {"_MASHcpp_humanPfMOI__get_Infection", (DL_FUNC) &_MASHcpp_humanPfMOI__get_Infection, 1},
-    {"_MASHcpp_mosquitoPfMOI__ctor", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__ctor, 0},
+    {"_MASHcpp_mosquitoPfMOI__ctor", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__ctor, 1},
     {"_MASHcpp_mosquitoPfMOI__get_PfID", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_PfID, 1},
     {"_MASHcpp_mosquitoPfMOI__get_MOI", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__get_MOI, 1},
     {"_MASHcpp_mosquitoPfMOI__add_infection", (DL_FUNC) &_MASHcpp_mosquitoPfMOI__add_infection, 4},

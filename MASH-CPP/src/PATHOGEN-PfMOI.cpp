@@ -128,7 +128,7 @@ std::vector<int> humanPfMOI::get_Infection(){
  */ ///////////////////////////////////////////////////////////////////////////////
 
 // constructor
-mosquitoPfMOI::mosquitoPfMOI(){
+mosquitoPfMOI::mosquitoPfMOI(const std::string &MosquitoID_init) : MosquitoID(MosquitoID_init) {
   MOI = 0;
   #ifdef DEBUG_MGDRIVE
   std::cout << "mosquitoPfMOI being born at memory location: " << this << std::endl;;
@@ -146,6 +146,10 @@ mosquitoPfMOI::~mosquitoPfMOI(){
 
 std::vector<int> mosquitoPfMOI::get_PfID(){
   return(PfID);
+};
+
+std::string mosquitoPfMOI::get_MosquitoID(){
+  return(MosquitoID);
 };
 
 int mosquitoPfMOI::get_MOI(){

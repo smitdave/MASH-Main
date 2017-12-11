@@ -16,6 +16,7 @@
 #define _MASHCPP_PFMOI_HPP_
 
 #include <Rcpp.h>
+#include <string>
 
 #include "MASHcpp/DEBUG.hpp"
 
@@ -81,7 +82,7 @@ class mosquitoPfMOI {
 public:
 
   // constructor
-  mosquitoPfMOI();
+  mosquitoPfMOI(const std::string &MosquitoID_init);
 
   // destructor
   ~mosquitoPfMOI();
@@ -91,6 +92,8 @@ public:
   ///////////////////////////////////
 
   std::vector<int> get_PfID();
+
+  std::string get_MosquitoID();
 
   int get_MOI();
 
@@ -106,6 +109,7 @@ private:
   std::vector<double>           tInfected;
   std::vector<double>           tInfectious;
   int                           MOI;
+  std::string                   MosquitoID;
 
 };
 

@@ -142,6 +142,10 @@ mosquitoPfMOI:
       @md
       @export
 
+    # constructor arguments
+    args:
+      - MosquitoID_init: "std::string"
+
   methods:
 
     # getters & setters

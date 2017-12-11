@@ -244,8 +244,8 @@ std::vector<int> humanPfMOI__get_Infection(MASHcpp::RcppR6::RcppR6<MASHcpp::huma
 }
 
 // [[Rcpp::export]]
-MASHcpp::mosquitoPfMOI mosquitoPfMOI__ctor() {
-  return MASHcpp::mosquitoPfMOI();
+MASHcpp::mosquitoPfMOI mosquitoPfMOI__ctor(std::string MosquitoID_init) {
+  return MASHcpp::mosquitoPfMOI(MosquitoID_init);
 }
 // [[Rcpp::export]]
 std::vector<int> mosquitoPfMOI__get_PfID(MASHcpp::RcppR6::RcppR6<MASHcpp::mosquitoPfMOI> obj_) {

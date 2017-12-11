@@ -4,7 +4,7 @@
 \alias{mosquitoPfMOI}
 \title{PfMOI Mosquito Stage Pathogen Class}
 \usage{
-mosquitoPfMOI()
+mosquitoPfMOI(MosquitoID_init)
 }
 \description{
 A class for storing parameters and state variables of mosquito-stage PfMOI infections.

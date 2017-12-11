@@ -242,8 +242,8 @@ humanPfMOI__get_Infection <- function(obj_) {
     .Call('_MASHcpp_humanPfMOI__get_Infection', PACKAGE = 'MASHcpp', obj_)
 }
 
-mosquitoPfMOI__ctor <- function() {
-    .Call('_MASHcpp_mosquitoPfMOI__ctor', PACKAGE = 'MASHcpp')
+mosquitoPfMOI__ctor <- function(MosquitoID_init) {
+    .Call('_MASHcpp_mosquitoPfMOI__ctor', PACKAGE = 'MASHcpp', MosquitoID_init)
 }
 
 mosquitoPfMOI__get_PfID <- function(obj_) {
