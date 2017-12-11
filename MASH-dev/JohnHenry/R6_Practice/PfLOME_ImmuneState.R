@@ -129,20 +129,6 @@ ImmuneState <- R6Class("ImmuneState",
                            ifelse(P>Pthresh, X+1, 0)
                          })},
                          
-                         antibodyRegister  = function(pfid, t, ixH){
-                           HUMANS[[ixH]]$Pf$types <<- rbind(HUMANS[[ixH]]$Pf$types, c(pfid, t))
-                         },
-                         
-                         dynamicCounter = function(P, PAR){
-                           X = 0
-                           Xt = X
-                           for(t in 1:length(P)){
-                             X = dynamicXdt(X, P[t], PAR)
-                             Xt = c(Xt, X)
-                           }
-                           Xt
-                         },
-                         
                          gImPAR = function(wx=1/80, wn=1/180, P50=6, Ps=1, atMax=11, b=2, sigma=1){
                            list(wx=wx,wn=wn,P50=P50,Ps=Ps,atMax=atMax,b=b,sigma=sigma)
                          },

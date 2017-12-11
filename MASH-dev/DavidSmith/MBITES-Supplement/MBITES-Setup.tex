@@ -19,8 +19,13 @@
 
 \vspace{0.3in}
 
-{\bf NOTE: This document assumes a basic familiarity with MBITES, either from {\em A User's Guide to MBITES}, or the {\em Vector bionomics and vectorial capacity as emergent properties of mosquito behavior and ecology}}
+{\bf NOTE:} This document is designed to teach people how to configure the behavioral bouts and options for MBITES. Whereas other documents explaining MBITES describe the code and implementation, this document involves more vector biology. It assumes a basic familiarity with MBITES, either from {\em A User's Guide to MBITES}, or the manuscript being developed into a peer-reviewed journal article {\em Vector bionomics and vectorial capacity as emergent properties of mosquito behavior and ecology}
 
+\clearpage 
+
+\begin{displayquote}
+{\bf \em If you want to avoid a philosophical discussion of individual-based models, please skip ahead to section 1.}
+\end{displayquote}
 \paragraph{Introduction} 
 
 \begin{displayquote}
@@ -47,21 +52,24 @@ Since we can't wave our wands, we need a way of dealing with the daunting proble
 \end{itemize}
 To put it another way, we honor William of Occam by preferring simple answers, in part, so we can say whether something we've observed can be explained with a simpler model. Our question, though, is not to explain the past but to know with some confidence that we are making robust policy recommendtions for the future. With these principles in mind, we've developed a set of functions and utilities to set up landscapes that roughly follow these rules. 
 
-\section{The Basics}
+\clearpage 
 
-Two of the most basic quantities are how long a mosquito waits between flight bouts, and how and when a mosquito dies. 
+\section{Core Behavioral Bouts}
 
-\section{Time between Bouts}
+MBITES is concerned with the basic problem of understanding the mosquito feeding and egg laying cycle: survival, the frequency of blood feeding, the proportion of meals taken on a human, and egg laying. To do this, MBITES considers each flight bout, and a basic question is how long does a mosquito rest between flight bouts. These are set by default for each one of the core behavioral bouts, which are:
+\begin{itemize}
+\item [{\bf F} ::] The blood meal search bout
+\item [{\bf B} ::] The blood meal attempt bout
+\item [{\bf R} ::] The post-prandial resting bout
+\item [{\bf L} ::] The egg laying search bout
+\item [{\bf O} ::] The egg laying attempt bout
+\end{itemize}
+
+\subsection{The Waiting Time between Bouts}
 
 By default, the waiting time to the next bout varies by the mosquito's behavioral state. By default, all of these waiting times are exponentially distributed. The alternative is gamma distributed waiting times. 
 
-\subsection{Exponential}
-
-In the exponential family
-
-\subsection{Gamma}
-
-\subsection{Parsing}
+\paragraph{Parsing}
 
 For the behavioral states F,B,R,L,O, \& S, these are the timing options: 
 %
@@ -72,16 +80,16 @@ For the behavioral states F,B,R,L,O, \& S, these are the timing options:
   \begin{itemize}
   \item \verb1boutX_tte_mean1
   \item \verb1boutX_tte_min=01
-  \item \verb1boutX_tte_diurnal1
-    \begin{itemize}
-    \item [0] = FALSE 
-    \item [1] = TRUE
-      $$min + \mbox{rdiurnal}(.(mean-min), t, peak)$$
-      \begin{itemize} 
-      \item \verb1boutX_tte_peak=01 (midnight)
-      %\item \verb1boutX_tte_amp=11 
-      \end{itemize}
-    \end{itemize}
+%  \item \verb1boutX_tte_diurnal1
+%    \begin{itemize}
+%    \item [0] = FALSE 
+%    \item [1] = TRUE
+%      $$min + \mbox{rdiurnal}(.(mean-min), t, peak)$$
+%      \begin{itemize} 
+%      \item \verb1boutX_tte_peak=01 (midnight)
+%      \item \verb1boutX_tte_amp=11 
+%      \end{itemize}
+%    \end{itemize}
   \end{itemize}
 \item [1] \verb1boutX_tte_pdf=gamma1
   $$min + \mbox{rgamma}(.,mean-min, scale)$$
@@ -93,107 +101,350 @@ For the behavioral states F,B,R,L,O, \& S, these are the timing options:
   
 \end{itemize}
 
-
 \subsection{Survival}
 
-
-\section{Configuring a Landscape} 
-
-MBITES doesn't work without a resource landscape. Mosquitoes need resources to make more mosquitoes: mates, blood, aquatic habitat, and sometimes sugar. The only landscape where these are always available is in the mathematical entomologist's matrix. Respecting the irony with which Morpheus welcomed Neo onto his ship, we offer the same greeting: "Welcome to the real world." This is not the real world, of course, but it is not like the one where it is possisible to enjoy a fake steak intoning ``ignorance is bliss." In MBITES, it is necessary to construct some object 
-
-The following describes how to build a landscape in MBITES. 
-
-\subsection{Point Sets}
-
-The resources mosquitoes need are not found everywhere.  In MBITES, locations where critial resources can be found are called sites, each site is a location in space, $\left\{ x,y \right\}$. There are four types of sites: mating, blood feeding, aquatic habitat, and sugar.
-
-\subsubsection{The Minimal Point Set}
-
-A useful construct is the ``minimal point set," where there is one representative point of each type to be considered. By default, all these points are at the same location $(0,0)$. 
-
-\subsubsection{The Demo Point Set}
-
-The demo version builds point sets around centers. 
-
-\subsubsection{IO}
-
-There are so many ways to build a landsdcape that we have not gone beyond a simple set of algorithms in MBITES. We presume users will want to provide their own point sets, so we provide IO. 
-
-\subsubsection{}
+How and where do mosquitoes die? The answer is that no one really knows, so we have made it possible for mosquitoes to die in every which way. MBITES has several options, but this creates a problem. Unlike other models, MBITES requires a person to make specific assumptions about how, where, and when mosquitoes die. In MBITES, mosquitoes can either die as a result of flight stress or from site-specific hazards associated with flight or landing. By default, site-specific hazards are all turned off, having no effect. The basic probability of dying is a bout-specific probability of surviving the stress of each flight, which is configured differently for each bout:
+\begin{itemize}
+\item \verb1boutX_surviveFlight1
+\end{itemize}
+The probability of dying as a result of flight stress can be modified so that it is related to a mosquito's chronological age, to flight energetics, or to any damage a mosquito has sustained over its life. Configuring the survival options requires some care, so we recommend running diagnostics after setting parameter values. This is done automatically in the MBITES-GUI. There are some basic differences in surviving flight stress compared with the site-specific hazards associated with surviving flight or landing.
 
 
-\subsection{Site Types and Resting Spot}
-
-MBITES has two built-in site types. The simple site type and a homestead. 
-
-\subsubsection*{[0] Simple Site Type}
-
-The simple site type has two built-in options: land here, or leave. 
-
-\subsubsection*{[1] The Homestead}
-
-A homestead is a site type built to accomodate some modes of vector control. The options are to land on an indoor wall, to land on an outdoor wall, to land outside on vegetation, or to leave without landing.  
-
-\subsection{Blood Meal Hosts}
-
-Each blood feeding site has an object that stores the hosts present, one of the \verb1QUEUE1 objects that stitches MASH together, called the \verb1atRiskQ1. To run MBITES as a standalone program, it is necessary to create a static \verb1atRiskQ1. 
-
-\paragraph{Static Host Populations}
-
-To run MBITES in stand alone mode, it is necessary to have
-
-\subsection{The Distribution of Site-specific Hazards}
-
-\subsection{Search and Dispersion}
-
-\subsubsection{Search Weights}
-
-\section{Configuring the Bouts}
 
 \subsection*{[F] Blood Feeding Search Bout}
 
+\begin{itemize}
+\item \verb1boutF_surviveFlight_function=NULL1
+  \begin{itemize}
+  \verb1boutF_surviveFlight=.991
+  \end{itemize}
+\item \verb1boutF_surviveFlight_function="linearByDistance"1
+  \begin{itemize}
+  \item \verb1boutF_surviveFlight=1$.99- \psi\cdot \mbox{distance}$
+  \end{itemize}
+\end{itemize}
+
+
 \subsection*{[B] Blood Feeding Attempt Bout}
+
+default for blood meal size. 
+
+\begin{itemize}
+\item \verb1boutB_surviveFlight=0.991
+\item \verb1chooseHost()1
+\item \verb1bloodMealSize_function=NULL1
+\end{itemize}
+
+\paragraph{Human Blood Meal}
+
+
+\begin{itemize}
+\item \verb1boutB_surviveHumanApproach1
+\item \verb1boutB_successHumanApproach1
+\item \verb1boutB_surviveHumanProbing1
+\item \verb1boutB_successHumanProbing1
+\item \verb1boutB_surviveHumanBloodFeed1
+\item \verb1boutB_successHumanBloodFeed1
+\end{itemize}
+
+\paragraph{Non-Human Blood Meal}
+
+\begin{itemize}
+\item \verb1boutB_surviveOther1
+\item \verb1boutB_successOther1
+\end{itemize}
 
 \subsection*{[R] Post-Prandial Resting Bout}
 
+\begin{itemize}
+\item \verb1boutR_surviveFlight1
+\item \verb1eggBatch_function=NULL1
+  \begin{itemize}
+  \item \verb1eggBatchSize1
+  \item \verb1refeed_function=NULL1
+    \begin{itemize}
+    \item \verb1pr_Refeed1
+    \end{itemize}
+  \end{itemize}
+  \item \verb1eggBatch_function!=NULL1 (Section 5, below)
+\end{itemize}
+
 \subsection*{[L] Egg Laying Search Bout}
+
+\begin{itemize}
+\item \verb1boutL_surviveFlight1
+\item \verb1boutL_success1
+\end{itemize}
 
 \subsection*{[O] Egg Laying Attempt Bout and Oviposition}
 
+\begin{itemize}
+\item \verb1boutO_surviveFlight1
+\item \verb1boutO_success1
+\item \verb1boutO_skip=NULL1
+\item \verb1boutO_skip="even"1
+  \begin{itemize}
+  \item \verb1skip_N1 
+  \end{itemize}
+\end{itemize}
+
+\section{Pathogens}
+
+\begin{itemize}
+\item \verb1EIP_option = "constant"1
+  \begin{itemize}
+  \item \verb8EIP = 128
+  \end{itemize}
+\item \verb1EIP_option = "lookup"1
+  \begin{itemize}
+  \item \verb8EIP_file = <filename>8
+  \end{itemize}
+  
+\end{itemize}
+
+\section{Survival :: Configuring Options}
+
+\subsection{Senescence}
+
+\begin{itemize}
+\item [0] \verb1senesce_function=NULL1
+\item [1] \verb1senesce_function="gompertz"1
+  \begin{itemize}
+  \item \verb8senesce_gompertz_p18
+  \item \verb8senesce_gompertz_p28
+  \end{itemize}
+\end{itemize}
+
+\subsection{Damage}
+
+The variable \verb1damage1 tracks all kinds of damage, including physical damage and contact with pesticides. Damage is cumulative,  and it is tracked on a scale of $[0,1)$. 
+
+\begin{itemize}
+\item [0] \verb1damage_function=NULL1
+\item [1] \verb1surviveDamage_function="zzSigmoid"1
+  \begin{itemize}
+  \item \verb8damage_zzSigmoid_zero8
+  \item \verb8damage_zzSigmoid_p508
+  \item \verb8damage_zzSigmoid_slope8
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Tattering}
+
+Tattering describes physical damage resulting from flight. 
+\begin{itemize}
+\item [0] \verb1tatter_function=NULL1
+\item [1] \verb1tatter_function="zibeta"1
+  \begin{itemize}
+  \item \verb8tatter_zibeta_p08
+  \item \verb8tatter_zibeta_mean8
+  \item \verb8tatter_zibeta_ss8
+  \end{itemize}
+\end{itemize}
+
+\subsection{Flight Energetics}
+
+The variable \verb1energy1 tracks a mosquito's energy reserves on a scale of $(0,1]$. A mosquito is dead if it ever has $0$ energy units. Basic energy use is configured by describing what proportion of energy is used during a flight. For convenience, this is the inverse of the total number of flights a mosquito could take if it started with a full load and never refueled, $EU$.  For example, after topping up to full and taking $n$ flights, a mosquito's energy would have the value $1-n/EU$. 
+
+\begin{itemize}
+\item \verb1flightEnergetics=FALSE1
+\item \verb1flightEnergetics=TRUE1
+  \begin{itemize}
+  \item \verb1flightEnergetics_EU1 :: Energy use per flight, a number between $0$ and $1$. The inverse of this number is approximately the number of flights a mosquito can take before it runs out of energy (see above). 
+  \item \verb8flightEnergetics_bloodTopUp_EU=08 :: Setting it to $x>0$ means a mosquito is able to take $x$ flights as a result of a full blood meal. 
+  \item \verb1flightEnergetics_survival=NULL1 :: The mosquito dies only if its energy state falls below.
+  \item \verb1flightEnergetics_survival="zzSigmoid"1 :: Survival declines to zero as the energy state approaches zero. 
+    \begin{itemize}
+    \item \verb8damage_zzSigmoid_zero8
+    \item \verb8damage_zzSigmoid_p508
+    \item \verb8damage_zzSigmoid_slope8
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\section{Sugar Feeding}
+
+Sugar feeding builds on flight energetics. 
+
+\begin{itemize}
+\item \verb1sugarFeeding = FALSE1
+\item \verb1sugarFeeding = TRUE1
+  \begin{itemize}
+  \item \verb8flightEnergetics_sugarTopUp_EU=08 :: Setting it to $x>0$ means a mosquito is able to take $x$ flights as a result of a full blood meal.
+  \item \verb1sugarFeeding_boutS=FALSE1
+  \item \verb1sugarFeeding_boutS=TRUE1 (see {\em Sugar Feeding Bout}, below)
+  \item \verb1sugarFeeding_opportunistic=FALSE1
+  \item \verb1sugarFeeding_opportunistic=TRUE1 (see {\em Opportunistic  Sugar Feeding}, below)
+  \end{itemize}
+\end{itemize}
+
 \subsection*{[S] Sugar Feeding Bout}
 
-By default, sugar feeding is turned off. 
+\begin{itemize}
+\item \verb1sugarFeedingBout=TRUE1
+  \begin{itemize}
+  \item \verb1boutS_survive1
+  \item \verb1initSugarFeedingBout_function = "zzSigmoid"1
+    \begin{itemize}
+    \item \verb1initSugarFeedingBout_pzero1
+    \item \verb1initSugarFeedingBout_p501
+    \item \verb1initSugarFeedingBout_slope1
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection*{Opportunistic Sugar Feeding}
+
+\begin{itemize}
+\item \verb1sugarFeeding_opportunistic=TRUE1
+  \begin{itemize}
+  \item \verb1grabSugar_function="zzSigmoid"1
+    \begin{itemize}
+    \item \verb1grabSugar_pzero1
+    \item \verb1grabSugar_p501
+    \item \verb1grabSugar_slope1
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\section{Blood Meal and Egg Batch}
+
+\begin{itemize}
+\item \verb1eggBatch_function=NULL1
+  \begin{itemize}
+  \item \verb1eggBatchSize1
+  \item \verb1refeed_function=NULL1
+    \begin{itemize}
+    \item \verb1pr_Refeed1
+    \end{itemize}
+  \end{itemize}
+\item \verb1eggBatch_function="proportional"1
+  \begin{itemize}
+  \item \verb1bloodMealSize_function="beta"1
+    \begin{itemize}
+    \item \verb1bloodMealSize_mean1
+    \item \verb1bloodMealSize_ss1
+    \item \verb1maxEggBatch1
+  \end{itemize}
+  \item \verb3refeed_function="1-zzSigmoid"3
+    \begin{itemize}
+    \item \verb1refeed_pzero1
+    \item \verb1refeed_p501
+    \item \verb1refeed_slope1
+    \end{itemize}
+  \end{itemize}
+  \item \verb1eggBatch_function = "Aedes"1
+    \begin{itemize}
+    \item \verb1bloodMealSize_function="beta"1
+    \begin{itemize}
+    \item \verb1bloodMealSize_mean1
+    \item \verb1bloodMealSize_ss1
+    \item \verb1maxEggBatch1
+    \end{itemize}
+     \item \verb3refeed_function="fullBatch"3
+      \begin{itemize}
+      \item \verb1blood4FullBatch=x1 :: The number of full bloodmeals (or equivalent, usually $x >1$), required for a full batch of eggs. 
+      \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+
+
+
+\section{Maturation} 
+
+\begin{itemize}
+\item \verb1bornMature=TRUE1 
+  \begin{itemize}
+  \item \verb1Mating=FALSE1   
+  \end{itemize}
+\item \verb1bornMature=FALSE1 
+  \begin{itemize}
+  \item \verb1maturationEU=01 : Set to some other value to require energy.
+  \item \verb1Mating=TRUE1 (see Options below)
+  \end{itemize}
+\end{itemize}
+
+\subsection{Mating and Males}
+\begin{itemize}
+\item \verb1Mating = FALSE1
+\item \verb1Mating = TRUE1
+  \begin{itemize}
+  \item \verb1maleMosquito="kernel"1
+      \begin{itemize}
+      \item \verb1maleDeathRate1 
+      \item \verb1matingKernel1
+      \end{itemize}
+  \item \verb1maleMosquito="ibm"1
+     \begin{itemize}
+     \item \verb1maleFlightEnergetics1 : mirrors \verb1flightEnergetics1 for females 
+     \item \verb1maleSugarFeeding=FALSE1
+     \item \verb1maleSugarFeeding=TRUE1 :: mirrors \verb1sugarFeeding1 for females
+     \item \verb1swarming=TRUE1 
+%     \item opportunistic
+%        \begin{itemize}
+%        \item males
+%        \item females
+%        \end{itemize}
+     \end{itemize}
+  \end{itemize}
+\end{itemize}
 
 \subsection*{[M] Mating Bout}
 
-By default, mating and maturation is turned off. 
+\begin{itemize}
+\item \verb1swarming=FALSE1
+\item \verb1swarming=TRUE1
+  \begin{itemize}
+     \item \verb1boutM_tte_function="matingTrigger"1 
+        \begin{itemize}
+         \item \verb1timeToSwarm1 
+         \end{itemize}
+     \item \verb1boutM=TRUE1 :: see below
+       \begin{itemize}
+       \item \verb1boutM_survive1
+       \item \verb1boutM_success1
+       \end{itemize}
+     \item \verb1maleBoutM=TRUE1
+        \begin{itemize}
+          \item \verb1maleBoutM_survive1
+          \item \verb1maleBoutM_success1
+        \end{itemize}
+  \end{itemize}
+\item \verb1opportunisticMating=FALSE1
+\end{itemize}
 
-\subsection*{[E] Estivation}
+To do: \verb1opportunisticMating="Aedes"1, following Tom's description of males approaching females at blood feeding sites as they try to feed. 
 
-\section{Configuring Options}
 
-\subsection{Survival}
+\section{Types and Inheritance}
 
-\subsubsection{Flight Energetics}
+\begin{itemize}
+\item \verb1resistantTypes=NULL1
+\item \verb1gmClassXTypes=NULL1
+\end{itemize}
 
-\paragraph{Energy from Blood}
+\section{Estivation}
 
-\subsubsection{Senescence}
-
-\subsubsection{Damage}
-
-\subsection{Egg Maturation}
-
-\subsection{Mating and Maturation}
-
-\subsection{Blood Meal Size}
-
-\subsection{The Extrinsic Incubation Period (EIP)}
+\begin{itemize}
+\item \verb1estivation=FALSE1
+\item \verb1estivation=TRUE1
+  \begin{itemize}
+  \item \verb1boutE_survive1
+  \item \verb1boutE_nextState = "F"1
+  \item \verb1Estivate_tte="seasonal"1
+    \begin{itemize}
+    \item initEstivation function 
+    \item endEstivation function
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
 
 \section{Vector Control}
 
-\section{Aquatic Ecology}
 
 \section{Diagnostics and Visualization}
+
+
 
 \end{document}

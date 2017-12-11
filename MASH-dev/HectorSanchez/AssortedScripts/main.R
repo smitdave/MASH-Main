@@ -103,7 +103,7 @@ for(i in 1:matingSitesNumber){
   MicroTile$get_Landscape()$get_MatingSites(i)$set_swarmSpray(swarmSprayTest)
 }
 ###### Run #############################################################################
-MicroTile$simMICRO_oneRun(tMax = 20,verbose = TRUE,trackPop = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 750,verbose = TRUE,trackPop = TRUE)
 
 ########################################################################################
 ###### TESTS ###########################################################################

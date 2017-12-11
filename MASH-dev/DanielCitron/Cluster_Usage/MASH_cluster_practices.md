@@ -111,7 +111,7 @@ the last line will be a url that looks a little like this:
 an RStudio session open on dev will prohibit opening an RStudio session on prod,
 and vice-versa.
 6. NOTE: All of this is dependent upon the docker container working correctly,
-so if that goes wrong we'll need to get help Grant Nguyen.
+so if that goes wrong we'll need to get help from the IHME tech team who set up the container.
 7. Read more about the cluster's docker container build of R on IHME's hub
 [here](https://hub.ihme.washington.edu/display/DKB/Launch+RStudio+IDE+and+Containerized+R+on+the+Cluster+using+Singularity)
 

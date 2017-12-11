@@ -1,0 +1,80 @@
+\documentclass{article}
+\usepackage{csquotes}
+\renewcommand{\baselinestretch}{1.2} 
+\newcommand{\eg}{{\em e.g., }}
+
+\usepackage{Sweave}
+\begin{document}
+\input{MICRO_Landscape-Setup-concordance}
+
+\begin{centering}
+\huge{Setting up MBITES}\\
+\vspace{0.3in}
+\Large{Mosquito Bout-based and Individual-based \\ Transmission Ecology Simulator}\\
+\vspace{0.3in}
+\large{MBITES Development Team: \\ Sean Wu, Hector Sanchez, Qian Zhang, John Henry, Daniel Citron, Amit Verma, Arnaud Le Menach, David L Smith\\}
+
+\end{centering}
+
+\vspace{0.3in}
+
+\section{Configuring a Landscape} 
+
+MBITES doesn't work without a resource landscape. Mosquitoes need resources to make more mosquitoes: mates, blood, aquatic habitat, and sometimes sugar. The only landscape where these are always available is in the mathematical entomologist's matrix. Respecting the irony with which Morpheus welcomed Neo onto his ship, we offer the same greeting: "Welcome to the real world." This is not the real world, of course, but it is not like the one where it is possisible to enjoy a fake steak intoning ``ignorance is bliss." In MBITES, it is necessary to construct some object 
+
+The following describes how to build a landscape in MBITES. 
+
+\subsection{Point Sets}
+
+The resources mosquitoes need are not found everywhere.  In MBITES, locations where critial resources can be found are called sites, each site is a location in space, $\left\{ x,y \right\}$. There are four types of sites: mating, blood feeding, aquatic habitat, and sugar.
+
+\paragraph{The Minimal Point Set}
+
+A useful construct is the ``minimal point set," where there is one representative point of each type to be considered. By default, all these points are at the same location $(0,0)$. 
+
+\paragraph{The Demo Point Set}
+
+The demo version builds point sets around centers. 
+
+\paragraph{IO Utilities for Arbitrary Landscapes}
+
+There are so many ways to build a landsdcape that we have not gone beyond a simple set of algorithms in MBITES. We presume users will want to provide their own point sets, so we provide IO. 
+
+
+\subsection{Site Types and Resting Spot}
+
+MBITES has two built-in site types. The simple site type and a homestead. 
+
+\subsubsection*{[0] Simple Site Type}
+
+The simple site type has two built-in options: land here, or leave. 
+
+\subsubsection*{[1] The Homestead}
+
+A homestead is a site type built to accomodate some modes of vector control. The options are to land on an indoor wall, to land on an outdoor wall, to land outside on vegetation, or to leave without landing.  
+
+\subsection{The Blood Meal Host Environment}
+
+Each blood feeding site has an object that stores the hosts present, one of the \verb1QUEUE1 objects that stitches MASH together, called the \verb1atRiskQ1. To run MBITES as a standalone program, it is necessary to create a static \verb1atRiskQ1. 
+
+\paragraph{Static Host Populations}
+
+To run MBITES in stand alone mode, it is necessary to configure the host population environment.  The basic parameter $Q$ is used to tune the weights of alternative hosts at each site such that it sets {\em on average}, the proportion of blood meals taken on a human.
+
+\subsection{Site-specific Hazards}
+
+\paragraph{Parsing}
+
+\begin{itemize}
+\item \verb1landingHazard_mean=01
+\item \verb1landingHazard_pdf=NULL1
+\item \verb1flightHazard_mean=01
+\item \verb1flightHazard_pdf=NULL1
+\end{itemize}
+
+\subsection{Search and Dispersion}
+
+\subsubsection{Search Weights}
+
+
+\end{document}
