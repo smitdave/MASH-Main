@@ -351,6 +351,24 @@ Pf <- R6Class("Pf",
                   ifelse(t<peakD, gr, -dr)
                 })},
                 
+                getPD = function(t, Rx){
+                  N = length(Rx$StartTreatment)
+                  PD = t*0
+                  for(i in 1:N){
+                    PD = PD + PDi(t,i,Rx)
+                  }
+                  return(PD)
+                },
+                
+                PDi = function(t, i, Rx){with(Rx,{
+                  age = t-StartTreatment[i]+1
+                  PD = 0*age
+                  ii = as.numeric(Rx$Drug[i])
+                  ix = which(age>=1 &  age<=RxRegister[[ii]]$Duration)
+                  if(length(ix)>0) PD[ix] = RxRegister[[ii]]$PfPD[age[ix]]
+                  return(PD)
+                })},
+                
                 dPdt_tent = function(t, P, PAR, PD=0, IM=0){with(PAR,{
                   age = ifelse(t>=t0, t-t0+1, 0)
                   P = ifelse(age>=1 & age<=tEnd,

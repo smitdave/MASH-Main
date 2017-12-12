@@ -3,6 +3,7 @@ source("PfLOME_Human.R")
 ##human sources ImmuneState and HealthState classes
 source("PfLOME_PfPedigree.R")
 source("PfLOME_Pathogen.R")
+source("Rx.R")
 ##source ("eventTimeSeries.R") ##source this if you want to pull from mbites
 
 ############## artificial pedigree - will exist on tile ################
@@ -62,3 +63,4 @@ plot(1:length(someGuy$get_history()$RBC),someGuy$get_history()$RBC,type="l",xlab
 plot(1:length(someGuy$get_history()$HRP2),someGuy$get_history()$HRP2,type="l",xlab='days')
 ##pLDH
 plot(1:length(someGuy$get_history()$pLDH),someGuy$get_history()$pLDH,type="l",xlab='days')
+
