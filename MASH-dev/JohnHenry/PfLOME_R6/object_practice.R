@@ -41,9 +41,9 @@ for(t in 1:600){
       someGuy$infectHuman(t,pf$get_pfid())
     }
   }
-#  if(t %in% treat){
-#    someGuy$Treat(t,1)
-#  }
+  if(t %in% treat){
+    someGuy$Treat(t,1)
+  }
 }
 
 ######################### plotting functions #############################
@@ -52,7 +52,6 @@ plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",
      ylim=c(-3,11),xlim=c(0,600),xlab='days',ylab='log10 iRBC')
 lines(1:length(someGuy$get_history()$Gtot),someGuy$get_history()$Gtot,lty=2)
 lines(1:length(someGuy$get_history()$Fever),someGuy$get_history()$Fever)
-pfped$get_PedLength()
 lines(1:length(someGuy$get_history()$GenImm),2*someGuy$get_history()$GenImm-3,type="l")
 abline(h=c(-1,-3),lty=2)
 

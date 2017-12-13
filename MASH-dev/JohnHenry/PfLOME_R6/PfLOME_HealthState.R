@@ -100,7 +100,7 @@ HealthState <- R6Class("HealthState",
                          },
                          
                          update_PD = function(t){
-                           private$PD = getPD(t,private$RxStart,private$Drug)
+                           private$PD = self$getPD(t,private$RxStart,private$Drug)
                          },
                          
                          update_history = function(){
@@ -168,17 +168,19 @@ HealthState <- R6Class("HealthState",
                          
                          Treat = function(t,Drug){
                            private$RxStart = c(private$RxStart,t)
-                           private$Drug = c(private$Drug,RxRegister[[Drug]])
+                           private$Drug = c(private$Drug,1)
                          },
                          
                          getPD = function(t, RxStart, Drug){
                            N = length(private$RxStart)
                            PD = 0
-                           for(i in 1:N){
-                             PDnew = self$PDi(t,RxStart[i],Drug[i])
-                             if(PDnew>0){
-                               PD = log10(10^PD+10^PDnew)
-                             }
+                           if(N > 0){
+                            for(i in 1:N){
+                              PDnew = self$PDi(t,private$RxStart[i],private$Drug[i])
+                              if(PDnew>0){
+                                PD = log10(10^PD+10^PDnew)
+                              }
+                            }
                            }
                            return(PD)
                          },
@@ -186,9 +188,8 @@ HealthState <- R6Class("HealthState",
                          PDi = function(t, RxStart, Drug){
                            age = t-RxStart+1
                            PD = 0
-                           ii = as.numeric(Drug)
-                           if(age>=1 &  age<=RxRegister[[ii]]$Duration){
-                             PD = RxRegister[[ii]]$PfPD[age]
+                           if(age>=1 &  age<=RxRegister[[Drug]]$Duration){
+                             PD = RxRegister[[Drug]]$PfPD[age]
                            }
                            return(PD)
                          }
