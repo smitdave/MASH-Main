@@ -21,7 +21,7 @@
 #'
 oneDay_popDynamics_Mosquito_RM <- function(){
 
-  EIP = private$EIP[private$TilePointer$get_tNow()%%365]
+  EIP = private$EIP[private$TilePointer$get_tNow()%%365 + 1]
 
   # daily dynamics
   private$M = private$p * private$M
