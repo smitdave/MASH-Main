@@ -1,8 +1,8 @@
 library("R6")
+source("PfLOME_Pathogen.R")
 source("PfLOME_Human.R")
 ##human sources ImmuneState and HealthState classes
 source("PfLOME_PfPedigree.R")
-source("PfLOME_Pathogen.R")
 ##source ("eventTimeSeries.R") ##source this if you want to pull from mbites
 
 ############## artificial pedigree - will exist on tile ################
@@ -26,6 +26,8 @@ bites = c(100,200,300,400,500)
 moi = 1+rnbinom(length(bites), mu=3, size = .3)
 pfid = 1
 
+treat = c(150,350)
+
 for(t in 1:600){
   someGuy$updateHuman(t)
   if(t %in% bites){
@@ -39,6 +41,9 @@ for(t in 1:600){
       someGuy$infectHuman(t,pf$get_pfid())
     }
   }
+#  if(t %in% treat){
+#    someGuy$Treat(t,1)
+#  }
 }
 
 ######################### plotting functions #############################

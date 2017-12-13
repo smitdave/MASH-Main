@@ -75,7 +75,7 @@ HealthState <- R6Class("HealthState",
                          update_HRP2 = function(Ptot){
                            a = .0019
                            b = log(2)/3.67
-                           private$HRP2 = ifelse(is.nan(Ptot),log10(10^private$HRP2-b*10^private$HRP2),log10(10^private$HRP2+a*10^Ptot-b*10^private$HRP2))
+                           private$HRP2 = ifelse(is.na(Ptot),log10(10^private$HRP2-b*10^private$HRP2),log10(10^private$HRP2+a*10^Ptot-b*10^private$HRP2))
                          },
                          
                          update_pLDH = function(Ptot){
