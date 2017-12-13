@@ -26,8 +26,6 @@ bites = c(100,200,300,400,500)
 moi = 1+rnbinom(length(bites), mu=3, size = .3)
 pfid = 1
 
-treat = c(150,350)
-
 for(t in 1:600){
   someGuy$updateHuman(t)
   if(t %in% bites){
@@ -41,8 +39,11 @@ for(t in 1:600){
       someGuy$infectHuman(t,pf$get_pfid())
     }
   }
-  if(t %in% treat){
-    someGuy$Treat(t,1)
+  if(someGuy$get_Fever()>0){
+    p = rbinom(1,1,.05)
+    if(p == 1){
+      someGuy$Treat(t,1)
+    }
   }
 }
 

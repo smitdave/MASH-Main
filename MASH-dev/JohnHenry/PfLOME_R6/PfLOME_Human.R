@@ -135,6 +135,10 @@ Human <- R6Class("Human",
                      private$healthState$get_PD()
                    },
                    
+                   get_Fever = function(){
+                     private$healthState$get_Fever()
+                   },
+                   
                    get_history = function(){
                      c(private$pathogen$get_history(), 
                        private$healthState$get_history(),
