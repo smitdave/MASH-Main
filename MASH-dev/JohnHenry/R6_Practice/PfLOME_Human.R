@@ -41,8 +41,13 @@ Human <- R6Class("Human",
                    infectMosquito = function(t, pfid, ixm){
                      
                    },
+                   
                    moveHuman = function(newlocH){
                      self$set_locH(newlocH)
+                   },
+                   
+                   Treat = function(t,Drug){
+                     private$healthState$Treat(t,Drug)
                    },
                    
                    ########## Update Function #########
@@ -51,7 +56,7 @@ Human <- R6Class("Human",
                    updateHuman = function(t){
                      private$immuneState$update_immuneState(t,self$get_Ptot())
                      private$healthState$update_healthState(self$get_Ptot(),self$get_history()$RBC)
-                     private$pathogen$update_pathogen(t)
+                     private$pathogen$update_pathogen(t,self$get_PD())
                    },
                    
                    
@@ -116,6 +121,18 @@ Human <- R6Class("Human",
                    
                    get_Gtot = function(){
                      private$pathogen$get_Gtot()
+                   },
+                   
+                   get_Drug = function(){
+                     private$healthState$get_Drug()
+                   },
+                   
+                   get_RxStart = function(){
+                     private$healthState$get_RxStart()
+                   },
+                   
+                   get_PD = function(){
+                     private$healthState$get_PD()
                    },
                    
                    get_history = function(){

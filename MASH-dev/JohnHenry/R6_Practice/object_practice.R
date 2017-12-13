@@ -27,6 +27,8 @@ bites = c(100,200,300,400,500)
 moi = 1+rnbinom(length(bites), mu=3, size = .3)
 pfid = 1
 
+treat = c(150,250)
+
 for(t in 1:800){
   someGuy$updateHuman(t)
   if(t %in% bites){
@@ -39,6 +41,9 @@ for(t in 1:800){
       pfped$add2Pedigree(pf)
       someGuy$infectHuman(t,pf$get_pfid())
     }
+  }
+  if(t %in% treat){ 
+    someGuy$Treat(t,1)
   }
 }
 

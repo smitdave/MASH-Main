@@ -8,6 +8,7 @@ HealthState <- R6Class("HealthState",
                            private$HRP2 = 0
                            private$RBC = 2.49
                            private$pLDH = 0
+                           private$PD = 0
                            private$history = list()
                          },
                          
@@ -42,11 +43,14 @@ HealthState <- R6Class("HealthState",
                          get_history = function(){
                            private$history
                          },
-                         get_Rx = function(){
-                           private$Rx
+                         get_RxStart = function(){
+                           private$RxStart
                          },
-                         get_PD = function(t,Rx){
-                           getPD(t,Rx)
+                         get_Drug = function(){
+                           private$Drug
+                         }
+                         get_PD = function(){
+                           private$PD
                          }
                          
                          
@@ -163,15 +167,15 @@ HealthState <- R6Class("HealthState",
                          ####################### Rx methods #######################
                          
                          Treat = function(t,Drug){
-                           private$RxStart = t
-                           private$Rx = RxRegister[[Drug]]
+                           private$RxStart = c(private$RxStart,t)
+                           private$Drug = c(private$Drug,RxRegister[[Drug]])
                          },
                          
                          getPD = function(t, RxStart, Drug){
                            N = length(private$RxStart)
                            PD = 0
                            for(i in 1:N){
-                             PDnew = PDi(t,RxStart[i],Drug[i])
+                             PDnew = self$PDi(t,RxStart[i],Drug[i])
                              if(PDnew>0){
                                PD = log10(10^PD+10^PDnew)
                              }
