@@ -13,9 +13,9 @@ Human <- R6Class("Human",
                      private$age = age
                      private$sex = sex
                      private$locH = locH
+                     private$pathogen = Pathogen$new()
                      private$immuneState = ImmuneState$new()
                      private$healthState = HealthState$new()
-                     private$pathogen = Pathogen$new()
                      private$history = list()
                    },
                    
@@ -33,23 +33,30 @@ Human <- R6Class("Human",
                      pfped$set_th(pfid,t)
                    },
                    ## write method to remove particular infection
-                   clearPathogen = function(pfid){
+                   clearPathogen = function(t, pfid){
                      private$pathogen$PfPathogen[[pfid]] = NULL
                      private$pathogen$set_PfMOI(private$pathogen$get_PfMOI()-1)
                      pfped$set_thEnd(pfid,t)
                    },
-                   infectMosquito = function(){
+                   infectMosquito = function(t, pfid, ixm){
                      
                    },
                    
+                   moveHuman = function(newlocH){
+                     self$set_locH(newlocH)
+                   },
+                   
+                   Treat = function(t,Drug){
+                     private$healthState$Treat(t,Drug)
+                   },
                    
                    ########## Update Function #########
                    
                    
                    updateHuman = function(t){
                      private$immuneState$update_immuneState(t,self$get_Ptot())
-                     private$healthState$update_healthState(self$get_Ptot(),self$get_history()$RBC)
-                     private$pathogen$update_pathogen(t)
+                     private$healthState$update_healthState(t,self$get_Ptot(),self$get_history()$RBC)
+                     private$pathogen$update_pathogen(t,self$get_PD())
                    },
                    
                    
@@ -68,8 +75,16 @@ Human <- R6Class("Human",
                      private$age
                    },
                    
+                   set_age = function(newAge){
+                     private$age = newAge
+                   },
+                   
                    get_sex = function(){
                      private$sex
+                   },
+                   
+                   set_sex = function(newSex){
+                     private$sex = newSex
                    },
                    
                    get_locH = function(){
@@ -96,8 +111,8 @@ Human <- R6Class("Human",
                      private$healthState$get_HRP2()
                    },
                    
-                   set_HRP2 = function(newHRP2){
-                     private$healthState$set_HRP2(newHRP2)
+                   get_pLDH = function(){
+                     private$healthState$get_pLDH()
                    },
                    
                    get_Ptot = function(){
@@ -106,6 +121,22 @@ Human <- R6Class("Human",
                    
                    get_Gtot = function(){
                      private$pathogen$get_Gtot()
+                   },
+                   
+                   get_Drug = function(){
+                     private$healthState$get_Drug()
+                   },
+                   
+                   get_RxStart = function(){
+                     private$healthState$get_RxStart()
+                   },
+                   
+                   get_PD = function(){
+                     private$healthState$get_PD()
+                   },
+                   
+                   get_Fever = function(){
+                     private$healthState$get_Fever()
                    },
                    
                    get_history = function(){

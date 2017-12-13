@@ -8,6 +8,7 @@ HealthState <- R6Class("HealthState",
                            private$HRP2 = 0
                            private$RBC = 2.49
                            private$pLDH = 0
+                           private$PD = 0
                            private$history = list()
                          },
                          
@@ -42,16 +43,26 @@ HealthState <- R6Class("HealthState",
                          get_history = function(){
                            private$history
                          },
+                         get_RxStart = function(){
+                           private$RxStart
+                         },
+                         get_Drug = function(){
+                           private$Drug
+                         },
+                         get_PD = function(){
+                           private$PD
+                         },
                          
                          
                          ############ Update Methods ##############
                          
                          
-                         update_healthState = function(Ptot,RBCHist){
+                         update_healthState = function(t,Ptot,RBCHist){
                            self$update_Fever(Ptot)
                            self$update_HRP2(Ptot)
                            self$update_pLDH(Ptot)
                            self$update_RBC(Ptot,RBCHist)
+                           self$update_PD(t)
                            self$update_history()
                          },
                          
@@ -64,7 +75,7 @@ HealthState <- R6Class("HealthState",
                          update_HRP2 = function(Ptot){
                            a = .0019
                            b = log(2)/3.67
-                           private$HRP2 = ifelse(is.nan(Ptot),log10(10^private$HRP2-b*10^private$HRP2),log10(10^private$HRP2+a*10^Ptot-b*10^private$HRP2))
+                           private$HRP2 = ifelse(is.na(Ptot),log10(10^private$HRP2-b*10^private$HRP2),log10(10^private$HRP2+a*10^Ptot-b*10^private$HRP2))
                          },
                          
                          update_pLDH = function(Ptot){
@@ -84,8 +95,12 @@ HealthState <- R6Class("HealthState",
                            rhat = ifelse(t<7,2.5,RBCHist[t-6])
                            r = private$RBC
                            private$RBC = ifelse(is.nan(Ptot),
-                                                        r - a*r + b*exp(-c*rhat),
-                                                        r - a*r + b*exp(-c*rhat) - d*10^Ptot/(e+10^Ptot)*r)
+                                                r - a*r + b*exp(-c*rhat),
+                                                r - a*r + b*exp(-c*rhat) - d*10^Ptot/(e+10^Ptot)*r)
+                         },
+                         
+                         update_PD = function(t){
+                           private$PD = self$getPD(t,private$RxStart,private$Drug)
                          },
                          
                          update_history = function(){
@@ -100,56 +115,84 @@ HealthState <- R6Class("HealthState",
                          
                          
                          RDT = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          HSRDT = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          PCR = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          LAMP = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          LightMic = function(){
-                           detect = 1
+                           detect = 10
                            E1 = .1
                            E2 = .1
-                           x = private$HRP2
+                           x = 10^private$HRP2
                            p = E1+(1-E1-E2)*self$sigmoidX(x,detect,3,13)
                            return(rbinom(1,1,p))
                          },
                          
                          sigmoidX = function(X, X50=6, Xs=3, atMax=13){
                            pmin((1/(1+exp(-Xs*(X-X50))) - 1/(1+exp(Xs*X50)))/(1/(1+exp(-Xs*(atMax-X50))) - 1/(1+exp(Xs*X50))),1)
-                         }
+                         },
                          
                          
                          ####################### Rx methods #######################
+                         
+                         Treat = function(t,Drug){
+                           private$RxStart = c(private$RxStart,t)
+                           private$Drug = c(private$Drug,1)
+                         },
+                         
+                         getPD = function(t, RxStart, Drug){
+                           N = length(private$RxStart)
+                           PD = 0
+                           if(N > 0){
+                            for(i in 1:N){
+                              PDnew = self$PDi(t,private$RxStart[i],private$Drug[i])
+                              if(PDnew>0){
+                                PD = log10(10^PD+10^PDnew)
+                              }
+                            }
+                           }
+                           return(PD)
+                         },
+                         
+                         PDi = function(t, RxStart, Drug){
+                           age = t-RxStart+1
+                           PD = 0
+                           if(age>=1 &  age<=RxRegister[[Drug]]$Duration){
+                             PD = RxRegister[[Drug]]$PfPD[age]
+                           }
+                           return(PD)
+                         }
                          
                          
                        ),
@@ -161,7 +204,9 @@ HealthState <- R6Class("HealthState",
                          HRP2 = NULL,
                          pLDH = NULL,
                          RBC = NULL,
-                         Rx = NULL,
+                         RxStart = NULL,
+                         Drug = NULL,
+                         PD = NULL,
                          history = NULL
                        )
                        

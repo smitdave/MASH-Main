@@ -35,10 +35,10 @@ Pathogen <- R6Class("Pathogen",
                       
                       ## update pathogens
                       
-                      update_pathogen = function(t){
+                      update_pathogen = function(t,PD){
                         for(i in 1:length(private$PfPathogen)){
                           Pttemp = private$PfPathogen[[i]]$get_Pt()
-                          private$PfPathogen[[i]]$update_Pf(t)
+                          private$PfPathogen[[i]]$update_Pf(t,PD)
                           if(is.na(private$PfPathogen[[i]]$get_Pt()) & !is.na(Pttemp)){
                             self$set_PfMOI(private$PfMOI-1)
                           }
@@ -47,7 +47,7 @@ Pathogen <- R6Class("Pathogen",
                         self$update_Gtot()
                         self$update_history()
                       },
-
+                      
                       
                       ######### update methods ##########
                       
@@ -122,7 +122,6 @@ Pathogen <- R6Class("Pathogen",
                       PfPathogen = NULL,
                       Ptot = NULL,
                       Gtot = NULL,
-                      Stot = NULL,
                       PfMOI = NULL,
                       history = NULL
                     )
@@ -268,14 +267,14 @@ Pf <- R6Class("Pf",
                 ########## update methods ##########
                 
                 
-                update_Pf = function(t){
-                  self$update_Pt(t)
+                update_Pf = function(t,PD){
+                  self$update_Pt(t,PD)
                   self$update_Ptt()
                   self$update_Gt(t)
                 },
                 
-                update_Pt = function(t){
-                  self$set_Pt(self$dPdt_tent(t,private$Pt,private$PAR))
+                update_Pt = function(t,PD){
+                  self$set_Pt(self$dPdt_tent(t,private$Pt,private$PAR,PD))
                   if(is.na(private$Pt)){
                     private$PAR$tEnd = t - private$PAR$t0
                     self$set_activeP(0)
@@ -296,17 +295,21 @@ Pf <- R6Class("Pf",
                   }
                 },
                 
+                update_PD = function(PD){
+                  private$PD = set_PD(PD)
+                },
+                
                 GamCyGen = function(t, P, PAR){
                   P-2
                 },
                 
                 
                 ############### Tent Methods #################
-
+                
                 
                 Pf.MaxPD = function(N=1, mn=10.5, vr=0.5){
                   rnorm(N,mn,vr)
-                  },
+                },
                 
                 Pf.PeakD = function(min=18){
                   #FIX STUB
