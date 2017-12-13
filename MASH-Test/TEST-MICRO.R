@@ -21,9 +21,9 @@ library(MASHmicro)
 
 ###????? Why there is macro here. the first function doesn't have that arguement. so
 ########there is an error
-#DEBUG.MASHMICRO(MASHCPP = TRUE)
+DEBUG.MASHMICRO()
 MASHcpp::DEBUG.MASHCPP()
-#MASHmacro::DEBUG.MASHMACRO()
+MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
 if(system("whoami",intern=TRUE)=="slwu89"){
@@ -99,7 +99,7 @@ MASHcpp::DEBUG.MASHCPP()
 MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
-DIR = "/Users/slwu89/Desktop/MASHOUT/"
+DIR = "/Users/qianzh/Desktop/BROMS_MASH"
 
 # setup
 Humans.MICRO.Setup()
@@ -174,7 +174,7 @@ MASHcpp::DEBUG.MASHCPP()
 MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
-DIR = "/Users/slwu89/Desktop/MASHOUT/"
+DIR = "/Users/qianzh/Desktop/MASHOUT/"
 
 # setup
 Humans.MICRO.Setup()
