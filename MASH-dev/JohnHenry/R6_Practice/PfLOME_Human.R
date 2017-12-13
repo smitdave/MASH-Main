@@ -1,6 +1,3 @@
-source("PfLOME_HealthState.R")
-source("PfLOME_ImmuneState.R")
-
 Human <- R6Class("Human",
                  
                  ## Public Fields, Methods, and Initialization

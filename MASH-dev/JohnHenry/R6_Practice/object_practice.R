@@ -1,4 +1,6 @@
 library("R6")
+source("PfLOME_HealthState.R")
+source("PfLOME_ImmuneState.R")
 source("PfLOME_Human.R")
 ##human sources ImmuneState and HealthState classes
 source("PfLOME_PfPedigree.R")
