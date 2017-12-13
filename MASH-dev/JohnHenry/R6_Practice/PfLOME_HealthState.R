@@ -48,10 +48,10 @@ HealthState <- R6Class("HealthState",
                          },
                          get_Drug = function(){
                            private$Drug
-                         }
+                         },
                          get_PD = function(){
                            private$PD
-                         }
+                         },
                          
                          
                          ############ Update Methods ##############
