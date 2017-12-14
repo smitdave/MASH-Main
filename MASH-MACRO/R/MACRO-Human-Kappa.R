@@ -147,7 +147,8 @@ set_EIR_Human <- function(EIR){
 #'   * This method is bound to \code{Human$queueInfectiousBites}
 #'
 queueInfectiousBites_PfSI_Human <- function(){
-  nBites = rnbinom(n=1,mu=private$EIR,size=0.1) # number of bites today
+  # nBites = rnbinom(n=1,mu=private$EIR,size=0.1) # number of bites today
+  nBites = rpois(n=1,lambda=private$EIR)
   if(nBites > 0){
     self$add2Q_SimBitePfSI(tEvent = private$TilePointer$get_tNow())
   }
@@ -170,6 +171,5 @@ queueInfectiousBites_PfMOI_Human <- function(){
 #'   * This method is bound to \code{HumanPop$queueInfectiousBites}
 #'
 queueInfectiousBites_HumanPop <- function(){
-  self$updateEIR() # update EIR
   private$pop$apply(tag="queueInfectiousBites")
 }

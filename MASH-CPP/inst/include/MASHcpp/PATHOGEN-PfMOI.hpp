@@ -1,151 +1,66 @@
+///////////////////////////////////////////////////////////////////////////////
+//      ____  ______  _______  ____
+//     / __ \/ __/  |/  / __ \/  _/
+//    / /_/ / /_/ /|_/ / / / // /
+//   / ____/ __/ /  / / /_/ // /
+//  /_/   /_/ /_/  /_/\____/___/
+//
+//  MASH
+//  PfMOI Pathogen Definition
+//  MASH Team
+//  December 2017
+//
+///////////////////////////////////////////////////////////////////////////////
+
 #ifndef _MASHCPP_PFMOI_HPP_
 #define _MASHCPP_PFMOI_HPP_
 
 #include <Rcpp.h>
+#include <string>
+
+#include "MASHcpp/DEBUG.hpp"
 
 namespace MASHcpp {
 
-// Human-stage PfMOI Object
+/*  ///////////////////////////////////////////////////////////////////////////////
+ *  Human-stage PfMOI Pathogen
+ */ ///////////////////////////////////////////////////////////////////////////////
+
 class humanPfMOI {
 // public members
 public:
 
-  ///////////////////////////////////
-  // Human Stage PfMOI Constructor
-  ///////////////////////////////////
+  // constructor
+  humanPfMOI(const double &b_init = 0.55, const double &c_init = 0.15, const bool &chemoprophylaxis_init = false);
 
-  humanPfMOI(const int &PfID_init, const double &tInf_init = -1, const int &MOI_init = 0,
-    const double &b_init = 0.55, const double &c_init = 0.15,
-    const bool &chemoprophylaxis_init = false, const double &N = 20
-  );
+  // destructor
+  ~humanPfMOI();
 
-  ///////////////////////////////////
+
   // Getters & Setters
-  ///////////////////////////////////
+  std::vector<int> get_PfID();
 
-  std::vector<int> get_PfID(){
-    return(PfID);
-  };
-  void push_PfID(const int &PfID_new){
-    PfID.push_back(PfID_new);
-  };
+  std::vector<double> get_tInf();
 
-  std::vector<double> get_tInf(){
-    return(tInf);
-  };
-  void push_tInf(const double &tInf_new){
-    tInf.push_back(tInf_new);
-  };
+  int get_MOI();
 
-  int get_MOI(){
-    return(MOI);
-  };
-  void set_MOI(const int &MOI_new){
-    MOI = MOI_new;
-  };
+  double get_b();
+  void set_b(const double &b_new);
 
-  double get_b(){
-    return(b);
-  };
-  void set_b(const double &b_new){
-    b = b_new;
-  };
+  double get_c();
+  void set_c(const double &c_new);
 
-  double get_c(){
-    return(c);
-  };
-  void set_c(const double &c_new){
-    c = c_new;
-  };
+  bool get_chemoprophylaxis();
+  void set_chemoprophylaxis(const bool &chemoprophylaxis_new);
 
-  std::vector<std::string> get_vectorInf(){
-    return(vectorInf);
-  };
-  void push_vectorInf(const std::string &vectorInf_new){
-    vectorInf.push_back(vectorInf_new);
-  };
-
-  bool get_chemoprophylaxis(){
-    return(chemoprophylaxis);
-  };
-  void set_chemoprophylaxis(const bool &chemoprophylaxis_new){
-    chemoprophylaxis = chemoprophylaxis_new;
-  };
-
-  ///////////////////////////////////
   // Infection Dynamics
-  ///////////////////////////////////
-
-  // add a new infection
-  void add_Infection(const int &PfID_new){
-    PfID.push_back(PfID_new);
-    MOI += 1;
-    // eventually can push back this stuff to some history vectors.
-  };
-
-  // completely clear the infection associated with index ix
-  void clear_Infection(const int &PfID_ix){
-    // find infection associated with this PfID
-    auto it = std::find(PfID.begin(), PfID.end(), PfID_ix);
-    size_t ix = std::distance(PfID.begin(), it);
-    PfID.erase(PfID.begin()+ix);
-    MOI -= 1;
-  };
-
-  // get all infections where PfID != -1
-  std::vector<int> get_Infection(){
-
-    std::vector<int> infIx;
-    auto it = std::find_if(PfID.begin(), PfID.end(), [](const int &PfID_iter){
-        return(PfID_iter != -1);
-    });
-    while(it != PfID.end()){
-        infIx.emplace_back(std::distance(PfID.begin(), it));
-        it = std::find_if(std::next(it), std::end(PfID), [](const int &PfID_iter){
-            return(PfID_iter != -1);
-        });
-    }
-
-    // export these infections that have passed the EIP
-    std::vector<int> PfID_out;
-    std::transform(infIx.begin(), infIx.end(), std::back_inserter(PfID_out), [this](size_t ix){
-      return(PfID[ix]);
-    });
-
-    return(PfID_out);
-  };
-
-  ///////////////////////////////////
-  // PfMOI History
-  ///////////////////////////////////
-
-  // history tracking
-  void track_history(const double &tEvent, const std::string &event){
-    events.push_back(event);
-    eventT.push_back(tEvent);
-    MOI_history.push_back(MOI);
-  };
-
-  // return history
-  Rcpp::List get_history(){
-    return(
-      Rcpp::List::create(
-        Rcpp::Named("events") = events,
-        Rcpp::Named("eventT") = eventT,
-        Rcpp::Named("MOI") = MOI_history,
-        Rcpp::Named("vectorInf") = vectorInf
-      )
-    );
-  };
+  void add_Infection(const int &PfID_new, const double &tInf_new); // add a new infection
+  void clear_Infection(const int &PfID_ix); // completely clear the infection associated with index ix
+  void clear_Infections(); // clear all infections
+  std::vector<int> get_Infection(); // get all infections where PfID != -1
 
 // private members
 private:
-
-  // PfMOI History
-  std::vector<std::string> events;
-  std::vector<double>      eventT;
-  std::vector<int>         MOI_history;
-  std::vector<std::string> vectorInf;
 
   // PfMOI Parameters & State Variables
   std::vector<int> PfID; // pathogen ID
@@ -157,221 +72,46 @@ private:
 
 };
 
-// inline definition of constructor to accept default argument values
-inline humanPfMOI::humanPfMOI(
-  const int &PfID_init,
-  const double &tInf_init,
-  const int &MOI_init,
-  const double &b_init,
-  const double &c_init,
-  const bool &chemoprophylaxis_init,
-  const double &N
-){
 
-    // set parameters and state variables
-    PfID.push_back(PfID_init);
-    tInf.push_back(tInf_init);
-    MOI = MOI_init;
-    b = b_init;
-    c = c_init;
-    chemoprophylaxis = chemoprophylaxis_init;
+/*  ///////////////////////////////////////////////////////////////////////////////
+ *  Mosquito-stage PfMOI Pathogen
+ */ ///////////////////////////////////////////////////////////////////////////////
 
-    // reserve memory for history
-    events.reserve(N);
-    events.push_back("init");
-    eventT.reserve(N);
-    eventT.push_back(-1);
-    MOI_history.reserve(N);
-    vectorInf.reserve(N);
-    vectorInf.push_back("init");
-
-  }
-
-
-// Mosquito-stage PfMOI Object
 class mosquitoPfMOI {
 // public members
 public:
 
-  ///////////////////////////////////
-  // Mosquito Stage PfMOI Constructor
-  ///////////////////////////////////
+  // constructor
+  mosquitoPfMOI(const std::string &MosquitoID_init);
 
-  mosquitoPfMOI(
-    const int &PfID_init,
-    const std::string &MosquitoID_init,
-    const double &tInf_init = -1,
-    const int &MOI_init = 0
-  );
+  // destructor
+  ~mosquitoPfMOI();
 
   ///////////////////////////////////
   // Getters & Setters
   ///////////////////////////////////
 
-  std::vector<int> get_PfID(){
-    return(PfID);
-  };
-  void push_PfID(const int &PfID_new){
-    PfID.push_back(PfID_new);
-  };
+  std::vector<int> get_PfID();
 
-  std::string get_MosquitoID(){
-    return(MosquitoID);
-  };
-  void set_MosquitoID(const std::string &MosquitoID_new){
-    MosquitoID = MosquitoID_new;
-  };
+  std::string get_MosquitoID();
 
-  std::vector<double> get_tInf(){
-    return(tInf);
-  };
-  void push_tInf(const double &tInf_new){
-    tInf.push_back(tInf_new);
-  };
+  int get_MOI();
 
-  int get_MOI(){
-    return(MOI);
-  };
-  void set_MOI(const int &MOI_new){
-    MOI = MOI_new;
-  }
-
-  std::vector<std::string> get_humanInf(){
-    return(humanInf);
-  };
-  void push_humanInf(const std::string &humanInf_new){
-    humanInf.push_back(humanInf_new);
-  };
-
-  Rcpp::List get_history(){
-    return(
-      Rcpp::List::create(
-        Rcpp::Named("PfID") = PfID,
-        Rcpp::Named("MosquitoID") = MosquitoID,
-        Rcpp::Named("tInf") = tInf,
-        Rcpp::Named("MOI") = MOI,
-        Rcpp::Named("humanInf") = humanInf
-      )
-    );
-  };
-
-  ///////////////////////////////////
   // Infection Dynamics
-  ///////////////////////////////////
-
-  // add a new infection
-  void add_Infection(const int &PfID_new, const double &tInf_new, const std::string &humanInf_new){
-    PfID.push_back(PfID_new);
-    tInf.push_back(tInf_new);
-    humanInf.push_back(humanInf_new);
-    MOI += 1;
-  };
-
-  // return the clonal variant associated with given PfID
-  Rcpp::List get_Infection(const int &PfID_ix){
-    auto it = std::find(PfID.begin(), PfID.end(), PfID_ix);
-    size_t ix = std::distance(PfID.begin(), it);
-    return(
-      Rcpp::List::create(
-        Rcpp::Named("PfID") = PfID[ix],
-        Rcpp::Named("humanInf") = humanInf[ix]
-      )
-    );
-  };
-
-  // get clonal variants just depending on their position in vector
-  Rcpp::List get_InfectionIx(const int &ix){
-    return(
-      Rcpp::List::create(
-        Rcpp::Named("PfID") = PfID[ix],
-        Rcpp::Named("humanInf") = humanInf[ix]
-      )
-    );
-  };
-
-  // get_InfectionEIP: argument 'incubation' = tNow - EIP; only return infections that started at tNow - EIP in the past
-  // because only those can possibly have passed the EIP and produced sporozoites.
-  Rcpp::List get_InfectionEIP(const double &incubation){
-
-    // find infections where tInf < tNow - EIP (incubation)
-    std::vector<int> incubationIx;
-    auto it = std::find_if(tInf.begin(), tInf.end(), [incubation](const double &infectionTime){
-        return(infectionTime < incubation && infectionTime != -1);
-    });
-    while(it != tInf.end()){
-        incubationIx.emplace_back(std::distance(tInf.begin(), it));
-        it = std::find_if(std::next(it), std::end(tInf), [incubation](const double &infectionTime){
-            return(infectionTime < incubation && infectionTime != -1);
-        });
-    }
-
-    // export these infections that have passed the EIP
-    std::vector<int> PfID_out;
-    std::vector<std::string> humanInf_out;
-    std::transform(incubationIx.begin(), incubationIx.end(), std::back_inserter(PfID_out), [this](size_t ix){
-      return(PfID[ix]);
-    });
-    std::transform(incubationIx.begin(), incubationIx.end(), std::back_inserter(humanInf_out), [this](size_t ix){
-      return(humanInf[ix]);
-    });
-
-    return(
-      Rcpp::List::create(
-        Rcpp::Named("PfID") = PfID_out,
-        Rcpp::Named("humanInf") = humanInf_out
-      )
-    );
-  };
-
-  // same as above but only return the indices
-  std::vector<int> which_EIP(const double &incubation) {
-
-    // find infections where tInf < tNow - EIP (incubation)
-    std::vector<int> incubationIx;
-    auto it = std::find_if(tInf.begin(), tInf.end(), [incubation](const double &infectionTime){
-        return(infectionTime < incubation && infectionTime != -1);
-    });
-    while(it != tInf.end()){
-        incubationIx.emplace_back(std::distance(tInf.begin(), it));
-        it = std::find_if(std::next(it), std::end(tInf), [incubation](const double &infectionTime){
-            return(infectionTime < incubation && infectionTime != -1);
-        });
-    }
-
-    return(incubationIx);
-  };
+  void add_infection(const int &PfID_new, const double &tInfected_new, const double &tInfectious_new); // add a new infection
+  std::vector<int> get_infections(const double &tNow);
 
 // private members
 private:
 
   // PfMOI Parameters & State Variables
   std::vector<int>              PfID;
-  std::string                   MosquitoID;
-  std::vector<double>           tInf;
+  std::vector<double>           tInfected;
+  std::vector<double>           tInfectious;
   int                           MOI;
-  std::vector<std::string>      humanInf;
+  std::string                   MosquitoID;
 
 };
-
-// inline definition of constructor to accept default argument values
-inline mosquitoPfMOI::mosquitoPfMOI(
-  const int &PfID_init,
-  const std::string &MosquitoID_init,
-  const double &tInf_init,
-  const int &MOI_init
-){
-
-    // set parameters and state variables
-    PfID.clear();
-    tInf.clear();
-
-    MosquitoID = MosquitoID_init;
-    PfID.push_back(PfID_init);
-    tInf.push_back(tInf_init);
-    MOI = MOI_init;
-
-  }
-
 
 }
 

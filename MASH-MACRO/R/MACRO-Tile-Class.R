@@ -102,10 +102,11 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                      } else {
                        dirFiles = system(command = paste0("ls ",directory),intern = TRUE)
                        if(length(dirFiles)>0){
-                         for(i in 1:length(dirFiles)){
-                           cat("removing file: ",directory,"/",dirFiles[i],"\n",sep="")
-                           file.remove(paste0(directory,"/",dirFiles[i]))
-                         }
+                         cat("warning: ",length(dirFiles)," may be overwritten, please back-up to a new directory before running MACRO\n files in directory: ",dirFiles,"\n",sep="")
+                         # for(i in 1:length(dirFiles)){
+                         #   cat("removing file: ",directory,"/",dirFiles[i],"\n",sep="")
+                         #   file.remove(paste0(directory,"/",dirFiles[i]))
+                         # }
                        }
                      }
 

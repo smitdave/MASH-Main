@@ -27,8 +27,7 @@ to mirror a C++ polymorphic implementation.
 \item get_emergingAdults: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 \item output: this method must be overwritten by all inheriting classes (pure virtual function in C++)
 \item reset: this method must be overwritten by all inheriting classes (pure virtual function in C++)
-\item get_HumansPointer: see \code{\link{get_HumansPointer_Mosquito_Base}}
-\item set_HumansPointer: see \code{\link{set_HumansPointer_Mosquito_Base}}
+\item get_a: return the human feeding rate (required to calculate EIR by \code{\link{updateEIR_Human}})
 \item get_TilePointer: see \code{\link{get_TilePointer_Mosquito_Base}}
 \item set_TilePointer: see \code{\link{set_TilePointer_Mosquito_Base}}
 }
