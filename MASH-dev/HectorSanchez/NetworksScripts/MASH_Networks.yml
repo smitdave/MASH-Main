@@ -1,0 +1,35 @@
+name: MASH_Networks
+channels:
+- anaconda
+- conda-forge
+- defaults
+dependencies:
+- decorator=4.0.11=py34_0
+- networkx=1.11=py34_0
+- gmp=6.1.2=0
+- icu=58.2=0
+- igraph=0.7.1=4
+- libiconv=1.15=0
+- libxml2=2.9.5=2
+- mock=2.0.0=py34_0
+- pbr=1.10.0=py34_0
+- protobuf=3.1.0=py34_0
+- python-igraph=0.7.1.post6=py34_1
+- six=1.10.0=py34_1
+- tensorflow=0.12.1=py34_1
+- ca-certificates=2017.08.26=ha1e5d58_0
+- intel-openmp=2018.0.0=h8158457_8
+- mkl=2017.0.4=h1fae6ae_0
+- numpy=1.13.0=py34_0
+- openssl=1.0.2n=hdbc3d79_0
+- pip=9.0.1=py34_1
+- python=3.4.5=0
+- readline=6.2=2
+- setuptools=27.2.0=py34_0
+- sqlite=3.13.0=0
+- tk=8.5.18=0
+- wheel=0.29.0=py34_0
+- xz=5.2.3=h0278029_2
+- zlib=1.2.11=hf3cbc9b_2
+prefix: /Users/chipdelmal/miniconda3/envs/MASH_Networks
+

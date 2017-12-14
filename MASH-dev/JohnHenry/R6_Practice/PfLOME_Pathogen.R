@@ -273,8 +273,8 @@ Pf <- R6Class("Pf",
                   self$update_Gt(t)
                 },
                 
-                update_Pt = function(t){
-                  self$set_Pt(self$dPdt_tent(t,private$Pt,private$PAR))
+                update_Pt = function(t,PD){
+                  self$set_Pt(self$dPdt_tent(t,private$Pt,private$PAR,PD))
                   if(is.na(private$Pt)){
                     private$PAR$tEnd = t - private$PAR$t0
                     self$set_activeP(0)
@@ -293,6 +293,10 @@ Pf <- R6Class("Pf",
                   if(!is.na(private$Gt)){
                     private$Gt = self$log10sum(c(private$Gt - private$gdk, self$GamCyGen(t,private$Ptt[10],private$PAR)))
                   }
+                },
+                
+                update_PD = function(PD){
+                  private$PD = set_PD(PD)
                 },
                 
                 GamCyGen = function(t, P, PAR){
