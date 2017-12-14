@@ -21,7 +21,7 @@ someGuy$get_Gtot()
 
 ################ update infection for 300 days ########################
 
-bites = c(100,200,300,400,500)
+bites = c(1:6)*100
 #bites = unique(sort(make.bites(70, 10, 1, 5, wt=wt, trend = .05)))
 moi = 1+rnbinom(length(bites), mu=3, size = .3)
 pfid = 1
@@ -54,6 +54,7 @@ plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",
 lines(1:length(someGuy$get_history()$Gtot),someGuy$get_history()$Gtot,lty=2)
 lines(1:length(someGuy$get_history()$Fever),someGuy$get_history()$Fever)
 lines(1:length(someGuy$get_history()$GenImm),2*someGuy$get_history()$GenImm-3,type="l")
+lines(1:length(someGuy$get_history()$PD),someGuy$get_history()$PD,col='purple')
 abline(h=c(-1,-3),lty=2)
 
 plot(1:length(someGuy$get_history()$GenImm),someGuy$get_history()$GenImm,type="l",xlab='days',ylab='% of max strength of immunity')

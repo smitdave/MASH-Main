@@ -70,6 +70,9 @@ HealthState <- R6Class("HealthState",
                            if(!is.na(Ptot)){
                              private$Fever = ifelse(Ptot >= private$feverThresh, TRUE, FALSE)
                            }
+                           if(is.na(Ptot)){
+                             private$Fever = FALSE
+                           }
                          },
                          
                          update_HRP2 = function(Ptot){
@@ -108,6 +111,7 @@ HealthState <- R6Class("HealthState",
                            private$history$HRP2 = c(private$history$HRP2,private$HRP2)
                            private$history$pLDH = c(private$history$pLDH,private$pLDH)
                            private$history$RBC = c(private$history$RBC,private$RBC)
+                           private$history$PD = c(private$history$PD,private$PD)
                          },
                          
                          

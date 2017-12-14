@@ -372,6 +372,7 @@ mbitesGadget = function(...){
               		column(8,
               			checkboxInput("showB_Option", "Setting Blood Meal Parameters", FALSE),
               			conditionalPanel(condition = "input.showB_Option",
+                      helpText("The following parameters also can be set under 'Bouts' Panel"),
               				checkboxInput("showBloodMeal_Option", "Blood Meal Size", FALSE),
                       		conditionalPanel(condition = "input.showBloodMeal_Option",
                           	# sliderInput(inputId = "bm_a_Option", label ="Shape Param a for Bloodmeal Size",
@@ -442,13 +443,14 @@ mbitesGadget = function(...){
 		              #   column(3,selectInput("S_time_h_Option", label = "hours", choices = seq(0,24,1) , selected = 0)),
 		              #   column(3,selectInput("S_time_m_Option", label = "Minutes", choices = seq(0,55,5), selected = 30))
 		              #   ),
-		              sliderInput(inputId = "S_succeed_Option", label ="Probability of Success",
-		                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-		              sliderInput(inputId = "S_surv_Option", label ="Baseline Probability of Survival",
-		                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-		              #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
-		              sliderInput(inputId = "preGsugar_Option", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-		                              value = 0, min = 0, max = 100, step = 1))
+                      helpText("The following parameters also can be set under 'Bouts' Panel"),
+    		              sliderInput(inputId = "S_succeed_Option", label ="Probability of Success",
+    		                              value = 0.99, min = 0.9, max = 1, step = 0.01),
+    		              sliderInput(inputId = "S_surv_Option", label ="Baseline Probability of Survival",
+    		                              value = 0.99, min = 0.9, max = 1, step = 0.01),
+    		              #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+    		              sliderInput(inputId = "preGsugar_Option", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+    		                              value = 0, min = 0, max = 100, step = 1))
                   		)),
 
                 #########################################################################
