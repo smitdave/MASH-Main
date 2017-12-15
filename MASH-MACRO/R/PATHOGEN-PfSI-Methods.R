@@ -282,9 +282,7 @@ add2Q_infectHumanPfSI <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 #'
 event_infectHumanPfSI <- function(tEvent, PAR = NULL){
-  return(
-    list(tEvent = tEvent, PAR = PAR, tag = "infectHumanPfSI")
-  )
+  list(tEvent = tEvent, PAR = PAR, tag = "infectHumanPfSI")
 }
 
 #' PfSI \code{Human} Event: PfSI Infection Event
@@ -303,6 +301,7 @@ infectHumanPfSI <- function(tEvent, PAR){
     private$Pathogens$push_PfID(private$HumansPointer$increment_PfID()) # increment PfID
     # track event
     writeLines(text = paste0(c(private$myID,tEvent,"I",PAR$vectorID),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
+    # queue fever
     if(runif(1) < self$get_PfSI_PAR("FeverPf")){
       self$add2Q_feverPfSI(tEvent = tEvent)
     }
@@ -339,9 +338,7 @@ add2Q_endPfSI <- function(tEvent, PAR = NULL){
 #' @param tEvent time of clearance
 #' @param PAR \code{NULL}
 event_endPfSI <- function(tEvent, PAR = NULL){
-  return(
-    list(tEvent = tEvent, PAR = PAR, tag = "endPfSI")
-  )
+  list(tEvent = tEvent, PAR = PAR, tag = "endPfSI")
 }
 
 #' PfSI \code{Human} Event: PfSI Clearance Event
@@ -369,11 +366,13 @@ endPfSI <- function(tEvent, PAR){
 #' This method is called from \code{\link{infectHumanPfSI}}
 #' This method adds event \code{\link{event_feverPfSI}} to the event queue.
 #'  * This method is bound to \code{Human$add2Q_feverPfSI()}
+#'  * tEvent: fever time is calculated as tFever = tEvent + \code{\link{PfSI_ttFeverPf}}
 #'
 #' @param tEvent time of event
 #' @param PAR \code{NULL}
 add2Q_feverPfSI <- function(tEvent, PAR = NULL){
-  private$EventQueue$addEvent2Q(event = self$event_feverPfSI(tEvent = tEvent, PAR = PAR))
+  tFever = tEvent + self$ttFeverPf()
+  private$EventQueue$addEvent2Q(event = self$event_feverPfSI(tEvent = tFever, PAR = PAR))
 }
 
 #' PfSI \code{Human} Event: Generate PfSI Fever Event
@@ -382,15 +381,11 @@ add2Q_feverPfSI <- function(tEvent, PAR = NULL){
 #' This method is called from \code{\link{add2Q_feverPfSI}}
 #' This method is bound to \code{Human$event_feverPfSI()}
 #'  * tag: \code{\link{feverPfSI}}
-#'  * tEvent: fever time is calculated as tFever = tEvent + \code{\link{PfSI_ttFeverPf}}
 #'
 #' @param tEvent time of clearance
 #' @param PAR \code{NULL}
 event_feverPfSI <- function(tEvent, PAR = NULL){
-  tFever = tEvent + self$ttFeverPf()
-  return(
-    list(tEvent = tFever, PAR = PAR, tag = "feverPfSI")
-  )
+  list(tEvent = tEvent, PAR = PAR, tag = "feverPfSI")
 }
 
 #' PfSI \code{Human} Event: PfSI Fever Event

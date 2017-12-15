@@ -19,9 +19,9 @@ rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
 
-DEBUG.MASHMICRO(MASHCPP = TRUE)
+# DEBUG.MASHMICRO(MASHCPP = TRUE)
 # MASHcpp::DEBUG.MASHCPP()
-MASHmacro::DEBUG.MASHMACRO()
+# MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
 if(system("whoami",intern=TRUE)=="slwu89"){
@@ -68,7 +68,6 @@ human_par = lapply(X = 1:n_humans,function(i){
     homePatchID = patch_id[i],
     age = human_ages[i],
     bWeight = human_bWeight[i]
-    
   )
 })
 
@@ -196,7 +195,7 @@ DIR = "/Users/slwu89/Desktop/MASHOUT/"
 
 # setup
 Humans.MICRO.Setup()
-PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
+PfSI.MICRO.Setup()
 AQUA.Emerge.Setup()
 
 # MBITES setup
@@ -216,7 +215,26 @@ emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
 landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,nMate = nMate,nSugar = nSugar,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
 
 # human parameters
-human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
+# human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
+
+# human parameters
+patch_humans = rpois(n = nFeed,lambda = 20)
+n_humans = sum(patch_humans)
+patch_id = rep(x = 1:nFeed,patch_humans)
+home_id = rep(x = 1:nFeed,patch_humans)
+human_ages = unlist(lapply(X = patch_humans,FUN = MASHmacro:::siteAges_HumanPop))
+human_bWeight = MASHmacro:::bitingWeight_HumanPop(human_ages)
+human_par = lapply(X = 1:n_humans,function(i){
+  list(
+    houseID = home_id[i],
+    patchID = patch_id[i],
+    homeHouseID = home_id[i],
+    homePatchID = patch_id[i],
+    age = human_ages[i],
+    bWeight = human_bWeight[i]
+    
+  )
+})
 
 # M-BITES parameters
 nMosy = 50

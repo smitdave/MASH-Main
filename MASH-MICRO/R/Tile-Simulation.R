@@ -51,7 +51,7 @@ simMICRO_oneRun <- function(tMax, PfPAR, verbose = FALSE, trackPop = FALSE){
 
   # HumanPathogenFile = paste0(self$get_HumanDirectory(),"HumanPathogens_Run",private$runID,".json")
   # self$set_HumanPathogenCon(file(description = HumanPathogenFile,open = "wt"))
-  
+
   HumanPathogenFile = paste0(self$get_HumanDirectory(),"/HumanPathogen_Run",private$runID,".csv")
   conPathogen = file(description=HumanPathogenFile,open="wt")
   # conMove = file(description=paste0(self$get_HumanDirectory(),"/HumanMove_Run",private$runID,".csv"),open="wt")
@@ -82,10 +82,16 @@ simMICRO_oneRun <- function(tMax, PfPAR, verbose = FALSE, trackPop = FALSE){
 
   private$HumanPop$initialize_Pathogens(PfPAR)
 
+  # progress bar
+  progress_bar = txtProgressBar(min=1,max=tMax,style=3)
+
   # run simulation
   while(private$tNow < tMax){
-    self$simMICRO_oneStep(verbose = verbose,trackPop = trackPop)
+    self$simMICRO_oneStep(trackPop = trackPop)
+    setTxtProgressBar(progress_bar,private$tNow)
   }
+  cat("\n")
+  close(progress_bar)
 
   # write human JSON output
   # writeLines(text = jsonlite::toJSON(x = private$HumanPop$get_PathogensHistory(),pretty = TRUE),con = self$get_HumanPathogenCon())
@@ -131,16 +137,11 @@ Tile$set(which = "public",name = "simMICRO_oneRun",
 #' Run MICRO simulation for one time step, the length of which defines the temporal window for indifference to contingent events.
 #'
 #' @param timeStep the time step of the model
-#' @param verbose current iteration (disable for running in batch mode)
 #' @param clearInterval interval to clear population and track mosquito history (see \code{\link{clear_pop}})
 #' @param popTrack log daily counts of mosquitoes in life stages or not (written to MicroTile$directory)
 #' @param historyTrack output mosquito histories to JSON via \code{\link{MosquitoPopFemale_clear_pop}} every clearInterval days or not (written to MicroTile$directory)
 #' @md
-simMICRO_oneStep <- function(verbose = FALSE, trackPop = FALSE){
-
-  if(verbose){
-    print(paste0("time step: ",private$tNow))
-  }
+simMICRO_oneStep <- function(trackPop = FALSE){
 
   # human activity space simulation
   private$HumanPop$sim_ActivitySpace()
@@ -212,12 +213,12 @@ reset_FemalePop_Tile <- function(MosquitoPop_PAR){
   private$FemalePop$get_pop()$rmAll()
   gc()
 
-  private$FemalePop = MosquitoPopFemale$new(N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
-                                               ix_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
-                                               genotype_init = MosquitoPop_PAR$genotype_female,  # genotypes of females
-                                               MBITES_PAR = MosquitoPop_PAR$MBITES_PAR  # M-BITES parameters
-                                             )
-
+  private$FemalePop = MosquitoPopFemale$new(
+    N = MosquitoPop_PAR$N_female,  # number of female mosquitoes at initialization
+    locNow_init = MosquitoPop_PAR$ix_female,  # landscape indices of female mosquitoes
+    genotype_init = MosquitoPop_PAR$genotype_female,  # genotypes of females
+    MBITES_PAR = MosquitoPop_PAR$MBITES_PAR_FEMALE  # M-BITES parameters
+ )
 
   # Female Mosquito Population Pointers
   private$FemalePop$set_TilePointer(self)
