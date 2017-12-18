@@ -1,0 +1,130 @@
+\documentclass{article}
+\usepackage{csquotes}
+\renewcommand{\baselinestretch}{1.2} 
+\newcommand{\eg}{{\em e.g., }} 
+\newcommand{\ie}{{\em i.e., }} 
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+
+\begin{centering}
+\Huge{MBITES}\\
+\large{Mosquito Bout-based and Individual-based \\ Transmission Ecology Simulator}\\
+\vspace{0.2in}
+\huge{The Micro-Epidemiological Landscape}\\
+\vspace{0.2in}
+\large{\underline {MBITES Development Team:} \\ Sean Wu, Hector Sanchez, Qian Zhang, John Henry, Daniel Citron, Amit Verma, Arnaud Le Menach, David L Smith\\}
+
+\end{centering}
+
+\vspace{0.3in}
+
+This document is about how to configure adult mosquito behavior (\ie) behavioral bouts and options for MBITES. Whereas other documents explaining MBITES describe the code and implementation, this document takes a deeper dive into vector biology. It is one of three introductory documents for MBITES: 
+\begin{itemize}
+\item MBITES: A User's Guide 
+\item MBITES: Mosquito Behavior and Options
+\item MBITES: The Micro-Epidemiological Landscape
+\end{itemize}
+Other documents describing MBITES include a manuscript for peer review and R documentation \footnote{Wu S, S{\' a}nchez-Castellanos H, Henry J, Zhang Q, Citron D, Verma A, Reiner RC Jr., Smith DL. Vector bionomics and vectorial capacity as emergent properties of mosquito behavior and ecology. For submission to {\em PLoS Computational Biology}.}. 
+
+The code for MBITES is being developed for a public release, and will soon be published in a permanent archive.
+
+\clearpage 
+
+\section{Configuring a Landscape} 
+
+MBITES doesn't work without a resource landscape. Mosquitoes need resources to make more mosquitoes: mates, blood, aquatic habitat, and sometimes sugar. The only landscape where these are always available is in the mathematical entomologist's matrix. Respecting the irony with which Morpheus welcomed Neo onto his ship, we offer the same greeting: "Welcome to the real world." This is not the real world, of course, but it is not like the one where it is possisible to enjoy a fake steak intoning ``ignorance is bliss." In MBITES, it is necessary to construct some object 
+
+The following describes how to build a landscape in MBITES. 
+
+\subsection{Point Sets}
+
+The resources mosquitoes need are not found everywhere.  In MBITES, locations where critial resources can be found are called sites, each site is a location in space, $\left\{ x,y \right\}$. There are four types of sites: mating, blood feeding, aquatic habitat, and sugar. 
+
+\paragraph{The Minimal Point Set}
+
+A useful construct is the ``minimal point set," where there is one representative point of each type to be considered. By default, all points in the minimal point set are at the same location $(0,0)$. 
+
+\paragraph{The Demo Point Set}
+
+The demo version builds point sets around centers. 
+
+\paragraph{IO Utilities for Arbitrary Landscapes}
+
+There are so many ways to build a landsdcape that we have not gone beyond a simple set of algorithms in MBITES. We presume users will want to provide their own point sets, so we provide IO. 
+
+\subsection{Site Types and Resting Spot}
+
+MBITES has two built-in site types. The simple site type and a homestead. 
+
+\subsubsection*{[0] Simple Site Type}
+
+The simple site type has two built-in options to stay or leave, if a mosquito is arriving or already here. The probability a mosquito does not stay after arriving from a search is already determined by the search parameter for a success. Landing behavior is set by a single parameter:
+\begin{equation}
+\begin{array}{r|c|c|}
+& \mbox{stay} & \mbox{leave} \\ \hline  
+\mbox{arriving} & 1 & 0 \\ \hline 
+\mbox{here} & p & 1-p \\ \hline 
+\end{array}
+\end{equation}
+
+\subsubsection*{[1] The Homestead}
+
+A homestead is a site type built to accomodate some modes of vector control. The options are to land on an indoor wall, to land on an outdoor wall, to land outside on vegetation, or to leave without landing.  
+
+\begin{equation}
+\begin{array}{r|c|c|c|c|c|}
+& \mbox{stay} & \mbox{vegetation} & \mbox{outside wall} & \mbox{inside wall} & \mbox{leave}  \\ \hline  
+\mbox{arriving} & a_{11} & a_{12} & a_{13} & a_{14} & 0\\ \hline 
+\mbox{vegetation} & a_{21} &  a_{22} & a_{23} & a_{24} & a_{25} \\ \hline 
+\mbox{outside wall} & a_{31} &  a_{32} & a_{33} & a_{34} & a_{35} \\ \hline 
+\mbox{inside wall} & a_{41} &  a_{42} & a_{43} & a_{44} & a_{45} \\ \hline 
+\mbox{leave} & a_{51} &  a_{52} & a_{53} & a_{54} & a_{55} \\ \hline 
+\end{array}
+\end{equation}
+
+By default, the same matrix is used for all behavioral bouts, but it is also possible to configure different matrices for each behavioral bout: 
+\begin{itemize}
+\item \verb1homesteadRestingMatrix=01 sets a single matrix for all bouts
+\item \verb1homesteadRestingMatrix=11 sets different matrices for each bout, each one needing to be configured. 
+\end{itemize}
+
+\subsection{The Blood Meal Host Environment}
+
+Each blood feeding site has an object that stores the hosts present, one of the \verb1QUEUE1 objects that stitches MASH together, called the \verb1atRiskQ1. To run MBITES as a standalone program, it is necessary to create a static \verb1atRiskQ1. 
+
+\paragraph{Static Host Populations}
+
+To run MBITES in stand alone mode, it is necessary to configure the host population environment.  The basic parameter $Q$ is used to tune the weights of alternative hosts at each site such that it sets {\em on average}, the proportion of blood meals taken on a human.
+
+\subsection{Site-specific Hazards}
+
+\paragraph{Parsing}
+
+\begin{itemize}
+\item \verb1landingHazard_mean=01
+\item \verb1landingHazard_pdf=NULL1
+\item \verb1flightHazard_mean=01
+\item \verb1flightHazard_pdf=NULL1
+\end{itemize}
+
+\subsection{Search and Dispersion}
+
+\subsubsection{Search Weights}
+
+\section{Landscape IO Utilities}
+
+To set up a landscape by file:  
+\begin{itemize}
+\item [x] :: east-west coordinate
+\item [y] :: north-south coordinate
+\item [S] :: the site type
+\item [h] :: the local resting hazard (\ie probability of dying while resting here)
+\item [f] :: the blood feeding search weight (0, if not in $\left\{f\right\}$)
+\item [l] :: the number of aquatic habitats (0, if not in $\left\{l\right\}$)
+\item [s] :: the number of sugar sources (0, if not in $\left\{s\right\}$)
+\item [m] :: the mating search weight (0, if not in $\left\{m\right\}$)
+\item [z] :: the search weight for selecting non-human hosts. 
+\end{itemize}
+
+\end{document}

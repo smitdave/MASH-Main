@@ -2,33 +2,41 @@
 \usepackage{csquotes}
 \renewcommand{\baselinestretch}{1.2} 
 \newcommand{\eg}{{\em e.g., }}
+\newcommand{\ie}{{\em i.e., }}
 
+\usepackage{Sweave}
 \begin{document}
-\SweaveOpts{concordance=TRUE}
+\input{MBITES-BehavioralOptions-concordance}
 
 \begin{centering}
-\huge{Setting up MBITES}\\
+\Huge{MBITES}\\
+\large{Mosquito Bout-based and Individual-based \\ Transmission Ecology Simulator}\\
+\vspace{0.2in}
+\huge{Mosquito Behavior \& Options}\\
 \vspace{0.3in}
-\Large{Mosquito Bout-based and Individual-based \\ Transmission Ecology Simulator}\\
-
-\vspace{0.3in}
-\large{MBITES Development Team: \\ Sean Wu, Hector Sanchez, Qian Zhang, John Henry, Daniel Citron, Amit Verma, Arnaud Le Menach, David L Smith\\}
+\large{\underline {MBITES Development Team:} \\ Sean Wu, Hector Sanchez, Qian Zhang, John Henry, Daniel Citron, Amit Verma, Arnaud Le Menach, David L Smith\\}
 
 \end{centering}
 
 \vspace{0.3in}
 
-{\bf NOTE:} This document is designed to teach people how to configure the behavioral bouts and options for MBITES. Whereas other documents explaining MBITES describe the code and implementation, this document involves more vector biology. It assumes a basic familiarity with MBITES, either from {\em A User's Guide to MBITES}, or the manuscript being developed into a peer-reviewed journal article {\em Vector bionomics and vectorial capacity as emergent properties of mosquito behavior and ecology}
+
+This document is about how to configure adult mosquito behavior (\ie) behavioral bouts and options for MBITES. Whereas other documents explaining MBITES describe the code and implementation, this document takes a deeper dive into vector biology. It is one of three introductory documents for MBITES: 
+\begin{itemize}
+\item MBITES: A User's Guide 
+\item MBITES: Mosquito Behavior and Options
+\item MBITES: The Micro-Epidemiological Landscape
+\end{itemize}
+Other documents describing MBITES include a manuscript for peer review and R documentation \footnote{Wu S, S{\' a}nchez-Castellanos H, Henry J, Zhang Q, Citron D, Verma A, Reiner RC Jr., Smith DL. Vector bionomics and vectorial capacity as emergent properties of mosquito behavior and ecology. For submission to {\em PLoS Computational Biology}.}. 
+
+The code for MBITES is being developed for a public release, and will soon be published in a permanent archive.
 
 \clearpage 
 
-\begin{displayquote}
-{\bf \em If you want to avoid a philosophical discussion of individual-based models, please skip ahead to section 1.}
-\end{displayquote}
-\paragraph{Introduction} 
+\paragraph{What do I do with so many parameters?} 
 
 \begin{displayquote}
-{\bf \em What do I do with so many parameters?}
+{\em If you want to avoid a philosophical discussion of individual-based models, please skip ahead to} Section 1.
 \end{displayquote}
 
 Individual-based models have been criticized for many reasons. Most of these critiques are valid. William of Occam basically got it right, at least when it comes to problems related to statistical inference. Among many possible explanations, the simplest ones tend to be correct. With many parameters, you should be able to fit anything, and therefore know nothing! (There is even an old saying, attributed to various people: {\em Give me four parameters and I'll draw an elephant. Give me five and I'll make it wag it's tail.})  While this is a valid criticism of fitting individual based models to data, other problems arise when considering the future.
@@ -55,7 +63,7 @@ To put it another way, we honor William of Occam by preferring simple answers, i
 
 \section{Core Behavioral Bouts}
 
-MBITES is concerned with the basic problem of understanding the mosquito feeding and egg laying cycle: survival, the frequency of blood feeding, the proportion of meals taken on a human, and egg laying. To do this, MBITES considers each flight bout, and a basic question is how long does a mosquito rest between flight bouts. These are set by default for each one of the core behavioral bouts, which are:
+MBITES simulates adult mosquito behavior and population dynamics, with the explicit purpose of investigating transmission of mosquito-borne pathogens. The core adult mosquito behaviors are feeding and egg laying cycle: survival, the frequency of blood feeding, the proportion of meals taken on a human, and egg laying. To understand these behaviors, MBITES structures modeled behavior as a sequence of flight bouts: launch, fly, land, rest, and repeat. The core behavioral bouts are: 
 \begin{itemize}
 \item [{\bf F} ::] The blood meal search bout
 \item [{\bf B} ::] The blood meal attempt bout
@@ -63,6 +71,36 @@ MBITES is concerned with the basic problem of understanding the mosquito feeding
 \item [{\bf L} ::] The egg laying search bout
 \item [{\bf O} ::] The egg laying attempt bout
 \end{itemize}
+Two common properties of each bout are the probability of surviving and the time interval between two bouts.  These must be configured separately for each flight bout. 
+
+\subsection{Survival}
+
+How and where do mosquitoes die? The answer is that no one really knows, so MBITES makes it possible for mosquitoes to die every which way. The wide variety of options for death in MBITES creates a conundrum that can be ignored in models that look at mortality purely phenomenologically. In MBITES, it is necessary to make specific assumptions that determine how, where, and when mosquitoes die. 
+
+The default setting for mortality in MBITES is for all mosquito mortality to occur as a result of flight stress. The basic probability of dying is a bout-specific probability of surviving the stress of each flight, which is configured differently for each bout. 
+%
+\begin{itemize}
+%
+\item \verb1boutX_surviveFlight1
+%
+\end{itemize}
+%
+Surviving flight stress can be modified in several ways that add mortality: senescence increases mosquito death rates as they age; with flight energetics, mosquitoes die as they run out of energy; mosquitoes can accumulate damage; and excess mortality can occur as a result of the blood meal. Descriptions of how to configure these options are found below.
+
+MBITES can also be configured to have mosquitoes die from site-specific hazards associated with flight or landing. By default, all mortality from hazards are associated with landing. To set the shift some mortality away from flight stress and towards landing hazards, or from landing hazards to flight hazards, the following parameters are set:  
+%
+\begin{itemize}
+%
+\item \verb1mortalityFromHazards=01 The parameter value is a proportion, so it is in the interval $[0,1]$. If it is set to a number other than zero, then it determines the geometric split for survival among flight stress and hazards (\ie if $s_0$ and $s_1$ were survival from two different mechanisms, then $s_0 = s^q$ and $s_1= s^{1-q}$ such that $s = s_0 s_1$. This is what we mean when we say that $q$ determines geometrically the weight on $s_0$). That value then sets the {\em arithmetic} average for the total local hazards. 
+\item \verb1propHazardsFlight=01 By default, local hazards are all landing hazards.  Changing this parameter to some number in the interval $[0,1]$ shifts that proportion of the hazards to flight hazards, not landing hazards. 
+%
+\end{itemize}
+%
+These landing hazards can be distributed heterogeneously, and configured as part of the landscape. Two sliders in the MBITES-GUI make it possible toset parameters to affect how much mortality occurs as a result of flight stress compared with hazards. 
+
+The values given are set under a specific set of assumptions about the landscape configuration. Feedbacks between mortality and the frequency with which certain sites are visited can change the proportion of mortality occurring at each site. For this reason, we would like to emphasize that configuring MBITES to do something requires careful thought. We recommend running diagnostics after setting parameter values or changing some aspect of the landscape.  Even then, a simulation model can behave differently than expected (\eg because of population dynamic feedbacks). To put it another way, the MBITES-GUI is designed to help calibrate the model, but there will always be a need for analysis. 
+
+\clearpage 
 
 \subsection{The Waiting Time between Bouts}
 
@@ -100,15 +138,8 @@ For the behavioral states F,B,R,L,O, \& S, these are the timing options:
   
 \end{itemize}
 
-\subsection{Survival}
 
-How and where do mosquitoes die? The answer is that no one really knows, so we have made it possible for mosquitoes to die in every which way. MBITES has several options, but this creates a problem. Unlike other models, MBITES requires a person to make specific assumptions about how, where, and when mosquitoes die. In MBITES, mosquitoes can either die as a result of flight stress or from site-specific hazards associated with flight or landing. By default, site-specific hazards are all turned off, having no effect. The basic probability of dying is a bout-specific probability of surviving the stress of each flight, which is configured differently for each bout:
-\begin{itemize}
-\item \verb1boutX_surviveFlight1
-\end{itemize}
-The probability of dying as a result of flight stress can be modified so that it is related to a mosquito's chronological age, to flight energetics, or to any damage a mosquito has sustained over its life. Configuring the survival options requires some care, so we recommend running diagnostics after setting parameter values. This is done automatically in the MBITES-GUI. There are some basic differences in surviving flight stress compared with the site-specific hazards associated with surviving flight or landing.
-
-
+\clearpage 
 
 \subsection*{[F] Blood Feeding Search Bout}
 
