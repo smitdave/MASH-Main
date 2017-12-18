@@ -31,9 +31,13 @@ if(system("whoami",intern=TRUE)=="slwu89"){
   sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
 }else if(system("whoami",intern=TRUE)=="chipdelmal"){
   DIR="/Users/chipdelmal/Desktop/MASHOUT/"
-  sourceEntireFolder("/Users/sanchez.hmsc/Documents/Github/MASH-Main/MASH-MICRO/R/")
+  source("/Users/chipdelmal/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/AssortedScripts/sourceEntireFolder.R")
+  sourceEntireFolder("/Users/chipdelmal/Documents/Github/MASH-Main/MASH-MICRO/R/")
+  sourceEntireFolder("/Users/chipdelmal/Documents/Github/MASH-Main/MASH-dev/HectorSanchez/VectorControl/")
 }
 
+#library(MASHmicro)
+#library(MASHmacro)
 # setup
 Humans.MICRO.Setup()
 PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
