@@ -254,11 +254,12 @@ reset_HumanPop_Tile <- function(HumanPop_PAR){
 
   # clear old HumanPop
   # private$HumanPop$get_pop()$rmAll()
-  private$HumanPop = NULL
-  gc()
+  # private$HumanPop = NULL
+  # gc()
 
   # generate human object
-  private$HumanPop = MASHmacro::HumanPop$new(patchID = 1L,HumanPop_PAR)
+  # private$HumanPop = MASHmacro::HumanPop$new(patchID = 1L,HumanPop_PAR)
+  private$HumanPop$reset(HumanPop_PAR)
 
   # Human & HumanPop Pointers
   private$HumanPop$set_TilePointer(self)

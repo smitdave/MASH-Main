@@ -32,7 +32,6 @@ if(system("whoami",intern=TRUE)=="slwu89"){
 
 # setup
 Humans.MICRO.Setup()
-# PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
 PfSI.MICRO.Setup()
 AQUA.Emerge.Setup()
 
@@ -98,10 +97,11 @@ MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE
 
 MicroTile$reset_FemalePop(MosquitoPop_PAR = mosquito_par)
 MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
-MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+# MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
 MicroTile$get_HumanPop()$init_ActivitySpace()
-MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
+detach("package:MASHmicro", unload=TRUE)
 
 ###############################################################################
 # M-BITES: BROMS Female + MBITES-Male Run with Emerge

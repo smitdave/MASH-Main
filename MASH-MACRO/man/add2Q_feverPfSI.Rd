@@ -17,5 +17,6 @@ This method is called from \code{\link{infectHumanPfSI}}
 This method adds event \code{\link{event_feverPfSI}} to the event queue.
 \itemize{
 \item This method is bound to \code{Human$add2Q_feverPfSI()}
+\item tEvent: fever time is calculated as tFever = tEvent + \code{\link{PfSI_ttFeverPf}}
 }
 }

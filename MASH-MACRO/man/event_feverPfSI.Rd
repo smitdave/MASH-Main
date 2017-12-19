@@ -17,6 +17,5 @@ This method is called from \code{\link{add2Q_feverPfSI}}
 This method is bound to \code{Human$event_feverPfSI()}
 \itemize{
 \item tag: \code{\link{feverPfSI}}
-\item tEvent: fever time is calculated as tFever = tEvent + \code{\link{PfSI_ttFeverPf}}
 }
 }
