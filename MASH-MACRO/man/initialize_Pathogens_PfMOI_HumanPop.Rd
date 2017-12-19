@@ -11,6 +11,7 @@ initialize_Pathogens_PfMOI_HumanPop(PfPAR)
 }
 \description{
 Initialize PfMOI infections with given MOI for each human.
+Output has the following column structure: humanID, time, event, MOI, vectorID
 \itemize{
 \item This method is bound to \code{HumanPop$initialize_Pathogens()}
 }

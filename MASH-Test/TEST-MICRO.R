@@ -19,9 +19,9 @@ rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
 
-DEBUG.MASHMICRO(MASHCPP = TRUE)
+# DEBUG.MASHMICRO(MASHCPP = TRUE)
 # MASHcpp::DEBUG.MASHCPP()
-MASHmacro::DEBUG.MASHMACRO()
+# MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
 if(system("whoami",intern=TRUE)=="slwu89"){
@@ -32,14 +32,12 @@ if(system("whoami",intern=TRUE)=="slwu89"){
 
 # setup
 Humans.MICRO.Setup()
-# PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
 PfSI.MICRO.Setup()
 AQUA.Emerge.Setup()
 
 # MBITES setup
 MBITES.Generic.Setup()
 MBITES.BRO.Setup(aquaModule = "emerge",timing = "exponential")
-# MBITES.BRO.Cohort.Setup()
 
 # SEARCH setup
 SEARCH.Kernel.Setup(MBITES = "BRO")
@@ -49,9 +47,6 @@ nAqua = 20
 nFeed = 20
 emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
 landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
-
-# human parameters
-# human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
 
 # human parameters
 patch_humans = rpois(n = nFeed,lambda = 20)
@@ -68,7 +63,6 @@ human_par = lapply(X = 1:n_humans,function(i){
     homePatchID = patch_id[i],
     age = human_ages[i],
     bWeight = human_bWeight[i]
-    
   )
 })
 
@@ -86,23 +80,18 @@ MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,Mosq
 
 # MicroLandscapePlot_utility(Landscape = MicroTile$get_Landscape())
 
-# MicroTile$get_FemalePop()$simCohort(N = 1e3)
-
 MicroTile$get_HumanPop()$init_ActivitySpace()
-
 # MicroTile$get_ActivitySpace()
 
 # PfPR
 pfpr = rep(0.5,nFeed)
 
 MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
-
-MicroTile$reset_FemalePop(MosquitoPop_PAR = mosquito_par)
-MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
-MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+MicroTile$resetMicro(MosquitoPar = mosquito_par,HumanPar = human_par,EL4P = FALSE,mating = FALSE)
 MicroTile$get_HumanPop()$init_ActivitySpace()
-MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
+detach("package:MASHmicro", unload=TRUE)
 
 ###############################################################################
 # M-BITES: BROMS Female + MBITES-Male Run with Emerge
@@ -112,16 +101,20 @@ rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
 
-DEBUG.MASHMICRO()
-MASHcpp::DEBUG.MASHCPP()
-MASHmacro::DEBUG.MASHMACRO()
+# DEBUG.MASHMICRO()
+# MASHcpp::DEBUG.MASHCPP()
+# MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
-DIR = "/Users/slwu89/Desktop/MASHOUT/"
+if(system("whoami",intern=TRUE)=="slwu89"){
+  DIR="/Users/slwu89/Desktop/MICRO/"
+}else if(system("whoami",intern=TRUE)=="chipdelmal"){
+  DIR = "/Users/chipdelmal/Desktop/MASHOUT/"
+}
 
 # setup
 Humans.MICRO.Setup()
-PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
+PfSI.MICRO.Setup()
 AQUA.Emerge.Setup()
 
 # MBITES setup
@@ -141,7 +134,22 @@ emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
 landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,nMate = nMate,nSugar = nSugar,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
 
 # human parameters
-human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
+patch_humans = rpois(n = nFeed,lambda = 20)
+n_humans = sum(patch_humans)
+patch_id = rep(x = 1:nFeed,patch_humans)
+home_id = rep(x = 1:nFeed,patch_humans)
+human_ages = unlist(lapply(X = patch_humans,FUN = MASHmacro:::siteAges_HumanPop))
+human_bWeight = MASHmacro:::bitingWeight_HumanPop(human_ages)
+human_par = lapply(X = 1:n_humans,function(i){
+  list(
+    houseID = home_id[i],
+    patchID = patch_id[i],
+    homeHouseID = home_id[i],
+    homePatchID = patch_id[i],
+    age = human_ages[i],
+    bWeight = human_bWeight[i]
+  )
+})
 
 # M-BITES parameters
 nMosy = 50
@@ -165,18 +173,18 @@ MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,Mosq
 # MicroTile$get_FemalePop()$simCohort(N = 1e3)
 
 MicroTile$get_HumanPop()$init_ActivitySpace()
-
 # MicroTile$get_ActivitySpace()
 
-MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+# PfPR
+pfpr = rep(0.5,nFeed)
 
-MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE,trackPop = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
-MicroTile$reset_FemalePop(MosquitoPop_PAR = mosquito_par)
-MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
-MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+MicroTile$resetMicro(MosquitoPar = mosquito_par,HumanPar = human_par,EL4P = FALSE,mating = TRUE)
 MicroTile$get_HumanPop()$init_ActivitySpace()
-MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
+
+detach("package:MASHmicro", unload=TRUE)
 
 
 ###############################################################################
@@ -187,16 +195,16 @@ rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
 
-DEBUG.MASHMICRO()
-MASHcpp::DEBUG.MASHCPP()
-MASHmacro::DEBUG.MASHMACRO()
+# DEBUG.MASHMICRO()
+# MASHcpp::DEBUG.MASHCPP()
+# MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
 DIR = "/Users/slwu89/Desktop/MASHOUT/"
 
 # setup
 Humans.MICRO.Setup()
-PfSI.MICRO.Setup(Pf_c = 1,Pf_b = 1,LatentPf = 1,DurationPf = 20)
+PfSI.MICRO.Setup()
 AQUA.Emerge.Setup()
 
 # MBITES setup
@@ -216,7 +224,23 @@ emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
 landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,nMate = nMate,nSugar = nSugar,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
 
 # human parameters
-human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
+patch_humans = rpois(n = nFeed,lambda = 20)
+n_humans = sum(patch_humans)
+patch_id = rep(x = 1:nFeed,patch_humans)
+home_id = rep(x = 1:nFeed,patch_humans)
+human_ages = unlist(lapply(X = patch_humans,FUN = MASHmacro:::siteAges_HumanPop))
+human_bWeight = MASHmacro:::bitingWeight_HumanPop(human_ages)
+human_par = lapply(X = 1:n_humans,function(i){
+  list(
+    houseID = home_id[i],
+    patchID = patch_id[i],
+    homeHouseID = home_id[i],
+    homePatchID = patch_id[i],
+    age = human_ages[i],
+    bWeight = human_bWeight[i]
+    
+  )
+})
 
 # M-BITES parameters
 nMosy = 50
@@ -234,17 +258,18 @@ mosquito_par = list(
 )
 
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
-
 MicroTile$get_HumanPop()$init_ActivitySpace()
 
-MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+# PfPR
+pfpr = rep(0.5,nFeed)
 
-MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE,trackPop = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
+MicroTile$resetMicro(MosquitoPar = mosquito_par,HumanPar = human_par,EL4P = FALSE,mating = TRUE)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
-
-
-
+detach("package:MASHmicro", unload=TRUE)
 
 
 ###############################################################################

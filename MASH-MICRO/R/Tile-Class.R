@@ -56,7 +56,7 @@ Tile <- R6::R6Class(classname = "Tile",
                      #################################################
 
                      # set simulation time
-                     private$tNow = 1
+                     private$tNow = private$tStart = 1
 
                      # generate landscape object
                      private$Landscape = Landscape$new(Landscape_PAR)
@@ -178,7 +178,8 @@ Tile <- R6::R6Class(classname = "Tile",
                  private = list(
 
                    # Tile level fields
-                   tNow = numeric(1),
+                   tNow = integer(1),
+                   tStart = integer(1),
                    Landscape_PAR = list(),
                    HumanPop_PAR = list(),
                    movementFemale = list(),

@@ -24,8 +24,7 @@ namespace MASHcpp {
  */ ///////////////////////////////////////////////////////////////////////////////
 
 // constructor
-humanPfMOI::humanPfMOI(const double &b_init, const double &c_init, const bool &chemoprophylaxis_init) : b(b_init), c(c_init), chemoprophylaxis(chemoprophylaxis_init) {
-  MOI = 0;
+humanPfMOI::humanPfMOI(const double &b_init, const double &c_init, const bool &chemoprophylaxis_init) : b(b_init), c(c_init), chemoprophylaxis(chemoprophylaxis_init), MOI(0) {
   #ifdef DEBUG_MGDRIVE
   std::cout << "humanPfMOI being born at memory location: " << this << std::endl;;
   #endif

@@ -49,7 +49,6 @@ humanPar = lapply(X = 1:n_humans,function(i){
     homePatchID = patch_id[i],
     age = human_ages[i],
     bWeight = human_bWeight[i]
-
   )
 })
 

@@ -81,7 +81,8 @@ void HumanEventQ::addEvent2Q(const Rcpp::List &event){
 // clear the queue
 void HumanEventQ::clearQ(){
   EventQ.clear();
-  queueN = 0;
+  EventQ.push_back(Rcpp::List::create(Rcpp::Named("tEvent")=73000,Rcpp::Named("PAR")=R_NilValue,Rcpp::Named("tag")="death"));
+  queueN = 1;
 };
 
 }

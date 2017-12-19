@@ -81,24 +81,21 @@ class mosquitoPfMOI {
 // public members
 public:
 
-  // constructor
+  /* constructor */
   mosquitoPfMOI(const std::string &MosquitoID_init);
 
-  // destructor
+  /* destructor */
   ~mosquitoPfMOI();
 
-  ///////////////////////////////////
-  // Getters & Setters
-  ///////////////////////////////////
+  /* accessors */
+  std::vector<int>            get_PfID();
+  std::string                 get_MosquitoID();
+  int                         get_MOI();
 
-  std::vector<int> get_PfID();
-
-  std::string get_MosquitoID();
-
-  int get_MOI();
-
-  // Infection Dynamics
+  /* add a new infection: tInfected_new: tBite, tInfectious_new: tBite + EIP */
   void add_infection(const int &PfID_new, const double &tInfected_new, const double &tInfectious_new); // add a new infection
+
+  /* get infections if their tInfectious <= tNow */
   std::vector<int> get_infections(const double &tNow);
 
 // private members

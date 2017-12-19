@@ -50,7 +50,7 @@ simMacro <- function(tMax, PfPAR, message = TRUE){
   private$HumanPop$initialize_travel()
 
   # progress bar
-  progress_bar = utils::txtProgressBar(min=1,max=tMax)
+  progress_bar = txtProgressBar(min=1,max=tMax,style=3)
 
   cat("beginning simulation ",private$runID,"\n",sep="")
 
@@ -76,8 +76,8 @@ simMacro <- function(tMax, PfPAR, message = TRUE){
     private$Patches$apply(tag="output",returnVal=FALSE,con = private$conPatches)
 
     setTxtProgressBar(progress_bar,private$tNow)
-    # cat("day: ",private$tNow,"\n",sep="")
   }
+  cat("\n")
 
   # close connections
   self$closeCon()
