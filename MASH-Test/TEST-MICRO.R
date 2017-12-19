@@ -88,10 +88,6 @@ pfpr = rep(0.5,nFeed)
 
 MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 MicroTile$resetMicro(MosquitoPar = mosquito_par,HumanPar = human_par,EL4P = FALSE,mating = FALSE)
-
-
-# MicroTile$reset_FemalePop(MosquitoPop_PAR = mosquito_par)
-# MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
 MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
@@ -184,9 +180,7 @@ pfpr = rep(0.5,nFeed)
 
 MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
-MicroTile$reset_FemalePop(MosquitoPop_PAR = mosquito_par)
-MicroTile$reset_HumanPop(HumanPop_PAR = human_par)
-MicroTile$reset_MalePop(MosquitoPop_PAR = mosquito_par)
+MicroTile$resetMicro(MosquitoPar = mosquito_par,HumanPar = human_par,EL4P = FALSE,mating = TRUE)
 MicroTile$get_HumanPop()$init_ActivitySpace()
 MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
@@ -201,9 +195,9 @@ rm(list=ls());gc()
 library(MASHmicro)
 # set.seed(42L)
 
-DEBUG.MASHMICRO()
-MASHcpp::DEBUG.MASHCPP()
-MASHmacro::DEBUG.MASHMACRO()
+# DEBUG.MASHMICRO()
+# MASHcpp::DEBUG.MASHCPP()
+# MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
 DIR = "/Users/slwu89/Desktop/MASHOUT/"
@@ -228,9 +222,6 @@ nSugar = 12
 nMate = 10
 emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
 landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,nMate = nMate,nSugar = nSugar,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
-
-# human parameters
-# human_par = MASHmacro::HumanPop.Parameters(nSite = nFeed,siteSize = 10,siteMin = 2)
 
 # human parameters
 patch_humans = rpois(n = nFeed,lambda = 20)
@@ -267,17 +258,18 @@ mosquito_par = list(
 )
 
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
-
 MicroTile$get_HumanPop()$init_ActivitySpace()
 
-MicroTile$get_HumanPop()$init_PfSI(PfPR = 0.95)
+# PfPR
+pfpr = rep(0.5,nFeed)
 
-MicroTile$simMICRO_oneRun(tMax = 365,verbose = TRUE,trackPop = TRUE)
+MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
+MicroTile$resetMicro(MosquitoPar = mosquito_par,HumanPar = human_par,EL4P = FALSE,mating = TRUE)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+MicroTile$simMICRO_oneRun(tMax = 365,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
 
-
-
-
+detach("package:MASHmicro", unload=TRUE)
 
 
 ###############################################################################
