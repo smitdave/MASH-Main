@@ -413,3 +413,33 @@ clear_MatingQ_Landscape <- function(){
 Landscape$set(which = "public",name = "clear_MatingQ",
   value = clear_MatingQ_Landscape, overwrite = TRUE
 )
+
+#' Clear Egg Queue for Landscape
+#'
+#' Clear the \code{\link[MASHcpp]{EggQ}} for all aquatic sites by calling \code{\link{clear_EggQ_AquaticSite}}
+#'  * This method is bound to \code{Landscape$clear_EggQ}
+#'
+clear_EggQ_Landscape <- function(){
+  for(i in 1:private$AquaSitesN){
+    private$AquaSites[[i]]$clear_EggQ()
+  }
+}
+
+Landscape$set(which = "public",name = "clear_EggQ",
+  value = clear_EggQ_Landscape, overwrite = TRUE
+)
+
+#' Clear Imago Queue for Landscape
+#'
+#' Clear the \code{\link[MASHcpp]{ImagoQ}} for all aquatic sites by calling \code{\link{clear_ImagoQ_AquaticSite}}
+#'  * This method is bound to \code{Landscape$clear_ImagoQ}
+#'
+clear_ImagoQ_Landscape <- function(){
+  for(i in 1:private$AquaSitesN){
+    private$AquaSites[[i]]$clear_ImagoQ()
+  }
+}
+
+Landscape$set(which = "public",name = "clear_ImagoQ",
+  value = clear_ImagoQ_Landscape, overwrite = TRUE
+)
