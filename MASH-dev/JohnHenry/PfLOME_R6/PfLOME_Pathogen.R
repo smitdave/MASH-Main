@@ -150,7 +150,7 @@ Pf <- R6Class("Pf",
                 
                 getGtype = function(mic,mac,mu,seed=FALSE){
                   ifelse(seed==TRUE,{
-                    gtype=runif(pfped$get_nptypes())
+                    gtype = runif(pfped$get_nptypes())
                   },
                   {
                     micType = pfped$get_gtype(mic)
