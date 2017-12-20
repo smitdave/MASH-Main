@@ -499,7 +499,7 @@ event_endprophylaxisPfSI <- function(tEvent, PAR = NULL){
 #' @param PAR \code{NULL}
 endprophylaxisPfSI <- function(tEvent, PAR){
   # End Prophylaxis
-  writeLines(text = paste0(c(private$myID,tEvent,"S","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
+  writeLines(text = paste0(c(private$myID,tEvent,"P2S","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   private$Pathogens$set_chemoprophylaxis(FALSE)
 
 }
