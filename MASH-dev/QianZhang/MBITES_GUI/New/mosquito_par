@@ -1,0 +1,357 @@
+$N_female
+[1] 50
+
+$N_male
+[1] 50
+
+$ix_female
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+[37] 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+$ix_male
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+[37] 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+$genotype_female
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+[37] 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+$genotype_male
+ [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+[37] 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+
+$MBITES_PAR_FEMALE
+$MBITES_PAR_FEMALE$F_time
+[1] 1
+
+$MBITES_PAR_FEMALE$B_time
+[1] 0.75
+
+$MBITES_PAR_FEMALE$R_time
+[1] 1.5
+
+$MBITES_PAR_FEMALE$L_time
+[1] 0.75
+
+$MBITES_PAR_FEMALE$O_time
+[1] 1
+
+$MBITES_PAR_FEMALE$M_time
+[1] 1.5
+
+$MBITES_PAR_FEMALE$S_time
+[1] 0.5
+
+$MBITES_PAR_FEMALE$gammaShape
+[1] 8
+
+$MBITES_PAR_FEMALE$F_succeed
+[1] 0.99
+
+$MBITES_PAR_FEMALE$B_succeed
+[1] 0.99
+
+$MBITES_PAR_FEMALE$L_succeed
+[1] 0.99
+
+$MBITES_PAR_FEMALE$O_succeed
+[1] 0.99
+
+$MBITES_PAR_FEMALE$M_succeed
+[1] 0.95
+
+$MBITES_PAR_FEMALE$S_succeed
+[1] 0.95
+
+$MBITES_PAR_FEMALE$F_surv
+[1] 0.95
+
+$MBITES_PAR_FEMALE$B_surv
+[1] 0.98
+
+$MBITES_PAR_FEMALE$R_surv
+[1] 0.98
+
+$MBITES_PAR_FEMALE$L_surv
+[1] 0.8
+
+$MBITES_PAR_FEMALE$O_surv
+[1] 0.98
+
+$MBITES_PAR_FEMALE$M_surv
+[1] 0.98
+
+$MBITES_PAR_FEMALE$S_surv
+[1] 0.98
+
+$MBITES_PAR_FEMALE$F_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_FEMALE$B_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_FEMALE$R_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_FEMALE$L_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_FEMALE$O_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_FEMALE$M_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_FEMALE$S_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_FEMALE$InAndOut
+  i w v r l
+i 4 2 2 1 6
+w 2 1 1 1 4
+v 1 1 1 1 2
+r 0 0 0 0 1
+l 1 1 2 1 0
+
+$MBITES_PAR_FEMALE$surviveH
+[1] 1
+
+$MBITES_PAR_FEMALE$probeH
+[1] 1
+
+$MBITES_PAR_FEMALE$surviveprobeH
+[1] 1
+
+$MBITES_PAR_FEMALE$feedH
+[1] 1
+
+$MBITES_PAR_FEMALE$surviveZ
+[1] 1
+
+$MBITES_PAR_FEMALE$feedZ
+[1] 1
+
+$MBITES_PAR_FEMALE$bm.a
+[1] 7.5
+
+$MBITES_PAR_FEMALE$bm.b
+[1] 2.5
+
+$MBITES_PAR_FEMALE$REFEED
+[1] FALSE
+
+$MBITES_PAR_FEMALE$rf.a
+[1] 60
+
+$MBITES_PAR_FEMALE$rf.b
+[1] 5000
+
+$MBITES_PAR_FEMALE$OVERFEED
+[1] FALSE
+
+$MBITES_PAR_FEMALE$of.a
+[1] 5
+
+$MBITES_PAR_FEMALE$of.b
+[1] 5000
+
+$MBITES_PAR_FEMALE$SENESCE
+[1] FALSE
+
+$MBITES_PAR_FEMALE$sns.a
+[1] 0.085
+
+$MBITES_PAR_FEMALE$sns.b
+[1] 100
+
+$MBITES_PAR_FEMALE$TATTER
+[1] FALSE
+
+$MBITES_PAR_FEMALE$ttsz.p
+[1] 0.5
+
+$MBITES_PAR_FEMALE$ttsz.a
+[1] 5
+
+$MBITES_PAR_FEMALE$ttsz.b
+[1] 95
+
+$MBITES_PAR_FEMALE$ttr.a
+[1] 15
+
+$MBITES_PAR_FEMALE$ttr.b
+[1] 500
+
+$MBITES_PAR_FEMALE$S.u
+[1] 0.1428571
+
+$MBITES_PAR_FEMALE$S.a
+[1] 20
+
+$MBITES_PAR_FEMALE$S.b
+[1] 10
+
+$MBITES_PAR_FEMALE$S.sa
+[1] 15
+
+$MBITES_PAR_FEMALE$S.sb
+[1] 5
+
+$MBITES_PAR_FEMALE$bs.m
+[1] 30
+
+$MBITES_PAR_FEMALE$bs.v
+[1] 5
+
+$MBITES_PAR_FEMALE$maxBatch
+[1] 30
+
+$MBITES_PAR_FEMALE$emt.m
+[1] 3
+
+$MBITES_PAR_FEMALE$emt.v
+[1] 1
+
+$MBITES_PAR_FEMALE$eggT
+[1] 0
+
+$MBITES_PAR_FEMALE$eggP
+[1] 0
+
+$MBITES_PAR_FEMALE$energyPreG
+[1] 0
+
+$MBITES_PAR_FEMALE$preGsugar
+[1] 0
+
+$MBITES_PAR_FEMALE$preGblood
+[1] 0
+
+$MBITES_PAR_FEMALE$PfEIP
+[1] 1
+
+$MBITES_PAR_FEMALE$Q
+[1] 0.9
+
+$MBITES_PAR_FEMALE$stateSpace
+[1] "F" "B" "R" "L" "O" "M" "S"
+
+$MBITES_PAR_FEMALE$initState
+[1] "M"
+
+$MBITES_PAR_FEMALE$lspot
+[1] "i" "w" "v" "r" "l"
+
+$MBITES_PAR_FEMALE$Fstate
+F B R L O M S 
+0 0 0 0 0 0 0 
+
+
+$MBITES_PAR_MALE
+$MBITES_PAR_MALE$maleHistory
+[1] TRUE
+
+$MBITES_PAR_MALE$mateFitness
+[1] 1
+
+$MBITES_PAR_MALE$M_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_MALE$S_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_MALE$R_wts
+[1] 1 1 1 1 1
+
+$MBITES_PAR_MALE$InAndOut
+  i w v r l
+i 4 2 2 1 6
+w 2 1 1 1 4
+v 1 1 1 1 2
+r 0 0 0 0 1
+l 1 1 2 1 0
+
+$MBITES_PAR_MALE$M_surv
+[1] 0.85
+
+$MBITES_PAR_MALE$S_surv
+[1] 0.8
+
+$MBITES_PAR_MALE$R_surv
+[1] 0.95
+
+$MBITES_PAR_MALE$M_succeed
+[1] 0.95
+
+$MBITES_PAR_MALE$S_succeed
+[1] 0.95
+
+$MBITES_PAR_MALE$R_succeed
+[1] 0.99
+
+$MBITES_PAR_MALE$gammaShape
+[1] 8
+
+$MBITES_PAR_MALE$M_time
+[1] 0.5
+
+$MBITES_PAR_MALE$S_time
+[1] 0.65
+
+$MBITES_PAR_MALE$R_time
+[1] 0.75
+
+$MBITES_PAR_MALE$TATTER
+[1] FALSE
+
+$MBITES_PAR_MALE$ttsz.p
+[1] 0.5
+
+$MBITES_PAR_MALE$ttsz.a
+[1] 5
+
+$MBITES_PAR_MALE$ttsz.b
+[1] 95
+
+$MBITES_PAR_MALE$ttr.a
+[1] 15
+
+$MBITES_PAR_MALE$ttr.b
+[1] 500
+
+$MBITES_PAR_MALE$SENESCE
+[1] FALSE
+
+$MBITES_PAR_MALE$sns.a
+[1] 0.1
+
+$MBITES_PAR_MALE$sns.b
+[1] 100
+
+$MBITES_PAR_MALE$S.u
+[1] 0.2
+
+$MBITES_PAR_MALE$S.a
+[1] 20
+
+$MBITES_PAR_MALE$S.b
+[1] 10
+
+$MBITES_PAR_MALE$S.sa
+[1] 15
+
+$MBITES_PAR_MALE$S.sb
+[1] 5
+
+$MBITES_PAR_MALE$initState
+[1] "M"
+
+$MBITES_PAR_MALE$lspot
+[1] "i" "w" "v" "r" "l"
+
+$MBITES_PAR_MALE$stateSpace
+[1] "M" "R" "S"
+
+$MBITES_PAR_MALE$Mstate
+M R S 
+0 0 0 
