@@ -31,6 +31,9 @@ if(system("whoami",intern=TRUE) == "chipdelmal"){
 }else if(system("whoami",intern=TRUE) == "slwu89"){
   DIR = "/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/QianZhang/MBITES_GUI/NEW"
   setwd(DIR)
+}else if(system("whoami",intern=TRUE) == "qianzhang"){
+  DIR = "/Users/qianzhang/Github/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/NEW"
+  setwd(DIR)
 }else{
   setwd("your directory")
 }
@@ -102,6 +105,16 @@ mbitesGadget = function(...){
                 'Bouts' panel and click the button when both panels are done"),
               navlistPanel(widths = c(2,10),
               	#########################################################################
+                tabPanel("Mosquito Features",
+                  numericInput("N_female", "Number of Female Mosquitoes at Initialization", value = 50, min = 0, max = NA, step = 1),
+                  numericInput("N_male", "Number of Male Mosquitoes at Initialization", value = 50, min = 0, max = NA, step = 1)
+                  # helpText("ix_female"),
+                  # helpText("ix_male"),
+                  # helpText("genotype_female"),
+                  # helpText("genotype_male")
+                  ),
+
+                #########################################################################
                 tabPanel("Waiting Time",
                     tabsetPanel(
                       tabPanel("F",
@@ -1358,7 +1371,7 @@ mbitesGadget = function(...){
     })
 
     observeEvent(input$save_inputs_bout, {
-        js_string_5 <- 'alert("Saved Parameters!");'
+        js_string_5 <- 'alert("Parameters Saved!");'
         session$sendCustomMessage(type='jsCode', list(value = js_string_5))
     })
 
@@ -1763,22 +1776,28 @@ mbitesGadget = function(...){
 
     observeEvent(input$save_inputs_bout, {
       # Define inputs to save
-      f_param_name <- c('F_time_m', 'F_time_h', 'F_succeed', 'F_surv')
-      b_param_name <- c('B_time_m', 'B_time_h','B_succeed', 'B_surv',
+      param_name <- c('N_female', 'N_male', 'gammaShape', 'SENESCE', 'sns_a', 'sns_b', 'TATTER', 'ttsz_p', 'ttr_a',
+                      'ttr_b', 'S_u', 'S_a', 'S_b', 'S_sa', 'S_sb', 'bs_m', 'bs_v', 'maxBatch',
+                      'emt_m', 'emt_v','eggT', 'eggP', 'energyPreG', 'PfEIP'
+                      )
+      f_param_name <- c('F_succeed', 'F_surv', 'F_wts')
+      b_param_name <- c('B_succeed', 'B_surv', 'B_wts',
         'surviveH', 'probeH', 'surviveprobeH', 'feedH',
-        'surviveZ', 'feedZ', 'bm_a', 'bm_b', 'overfeed', 'of_a', 'of_b', 'preGblood',
+        'surviveZ', 'feedZ', 'bm_a', 'bm_b', 'OVERFEED', 'of_a', 'of_b', 'preGblood',
         'Q')
-      r_param_name <- c('R_time_m', 'R_time_h','R_surv', 'REFEED', 'rf_a', 'rf_b')
-      l_param_name <- c('L_time_m', 'L_time_h','L_succeed','L_surv')
-      o_param_name <- c('O_time_m', 'O_time_h','O_succeed', 'O_surv')
-      m_param_name <- c('M_time_m', 'M_time_h','M_succeed', 'M_surv')
-      s_param_name <- c('S_time_m', 'S_time_h','S_succeed', 'S_surv', 'preGsugar')
+      r_param_name <- c('R_surv', 'REFEED', 'rf_a', 'rf_b', 'R_wts')
+      l_param_name <- c('L_succeed','L_surv', 'L_wts')
+      o_param_name <- c('O_succeed', 'O_surv', 'O_wts')
+      m_param_name <- c('M_succeed', 'M_surv', 'M_wts')
+      s_param_name <- c('S_succeed', 'S_surv', 'preGsugar', 'S_wts')
       # Declare inputs
       inputs_bout <- NULL
       inputs_name <- NULL
-      # Append all inputs before saving to folder
-      if(input$showF){
+      stateSpace <- ""
 
+      #Append all inputs before saving to folder
+      if(input$showF){
+        stateSpace <- paste(stateSpace, "F", seq = "")
         for(input.i in f_param_name){
           if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1786,6 +1805,11 @@ mbitesGadget = function(...){
       }}}
 
       if(input$showB){
+        stateSpace <- paste(stateSpace, "B", seq = "")
+        inputs_name <- append(inputs_name, 'bm_a')
+        inputs_bout <- append(inputs_bout, input$bm_mean * input$bm_v)
+        inputs_name <- append(inputs_name, 'bm_b')
+        inputs_bout <- append(inputs_bout, (1 - input$bm_mean) * input$bm_v)
         for(input.i in b_param_name){
           if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1793,6 +1817,7 @@ mbitesGadget = function(...){
       }}}
 
       if(input$showR){
+        stateSpace <- paste(stateSpace, "R", seq = "")
         for(input.i in r_param_name){
           if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1800,6 +1825,7 @@ mbitesGadget = function(...){
       }}}
 
       if(input$showL){
+        stateSpace <- paste(stateSpace, "L", seq = "")
         for(input.i in l_param_name){
           if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1807,6 +1833,7 @@ mbitesGadget = function(...){
       }}}
 
       if(input$showO){
+        stateSpace <- paste(stateSpace, "O", seq = "")
         for(input.i in o_param_name){
           if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1814,6 +1841,7 @@ mbitesGadget = function(...){
       }}}
 
       if(input$showM){
+        stateSpace <- paste(stateSpace, "M", seq = "")
         for(input.i in m_param_name){
           if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1821,17 +1849,43 @@ mbitesGadget = function(...){
       }}}
 
       if(input$showS){
+        stateSpace <- paste(stateSpace, "S", seq = "")
+        inputs_name <- append(inputs_name, 'S_u')
+        inputs_bout <- append(inputs_bout, 1/input$S_u_inv)
         for(input.i in m_param_name){
           if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
       }}}
+      
+      for(input.i in param_name){
+          if(length(input[[input.i]]) != 0){
+          inputs_name <- append(inputs_name,input.i)
+          inputs_bout <- append(inputs_bout, input[[input.i]])
+      }}
+
+      inputs_name <- append(inputs_name, 'ttsz_a')
+      inputs_bout <- append(inputs_bout, input$ttsz_mean * input$ttsz_v)
+      inputs_name <- append(inputs_name, 'ttsz_b')
+      inputs_bout <- append(inputs_bout, (1 - input$ttsz_mean) * input$ttsz_v)
+
+      
+      # stateSpace <- NULL
+      # # if(input$showF){
+      # #   stateSpace <- append(stateSpace, "F")
+      # #   inputs_name <- append(inputs_name, 'F_time')
+      # #   inputs_bout <- append(inputs_bout, (as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60))
+      # #   }
+      inputs_name <- append(inputs_name, 'stateSpace')
+      inputs_bout <- append(inputs_bout, stateSpace)
+      # print(inputs_name)
+      # print(inputs_bout)
 
       # Inputs data.frame
       inputs_data_frame <- data.frame(inputId = inputs_name, value = inputs_bout)
       # Save Inputs
       jsonOut=prettify(toJSON(inputs_data_frame))
-      write(jsonOut,paste0(DIR,"/bouts.json"))
+      write(jsonOut,paste0(DIR,"/Mosquito_par.json"))
     })
   }
   #########################################################################################
