@@ -4,7 +4,7 @@
 \alias{simMacro}
 \title{Run a MACRO Simulation}
 \usage{
-simMacro(tMax, PfPAR, message = TRUE)
+simMacro(tMax, PfPAR)
 }
 \description{
 write me
