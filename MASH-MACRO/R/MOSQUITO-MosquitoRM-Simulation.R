@@ -103,6 +103,10 @@ Mosquito_RM$set(which = "public",name = "get_emergingAdults",
 #'
 initialize_output_Mosquito_RM <- function(con){
   writeLines(text = paste0(c("time","state",paste0("patch",1:private$TilePointer$get_nPatch())),collapse = ","),con = con, sep = "\n")
+  tNow = private$TilePointer$get_tNow()
+  writeLines(text = paste0(c(tNow,"M",private$M),collapse = ","), con = con, sep = "\n")
+  writeLines(text = paste0(c(tNow,"Y",private$Y),collapse = ","), con = con, sep = "\n")
+  writeLines(text = paste0(c(tNow,"Z",private$Z),collapse = ","), con = con, sep = "\n")
 }
 
 Mosquito_RM$set(which = "public",name = "initialize_output",
