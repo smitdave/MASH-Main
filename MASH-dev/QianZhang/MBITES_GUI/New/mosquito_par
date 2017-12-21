@@ -12,11 +12,11 @@ $N_male
  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 [37] 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 
-$genotype_female
+????$genotype_female
  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 [37] 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 
-$genotype_male
+????$genotype_male
  [1] 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 [37] 1 1 1 1 1 1 1 1 1 1 1 1 1 1
 
@@ -105,7 +105,7 @@ $MBITES_PAR_FEMALE$M_wts
 $MBITES_PAR_FEMALE$S_wts
 [1] 1 1 1 1 1
 
-$MBITES_PAR_FEMALE$InAndOut
+????$MBITES_PAR_FEMALE$InAndOut
   i w v r l
 i 4 2 2 1 6
 w 2 1 1 1 4
@@ -131,10 +131,10 @@ $MBITES_PAR_FEMALE$surviveZ
 $MBITES_PAR_FEMALE$feedZ
 [1] 1
 
-$MBITES_PAR_FEMALE$bm.a
+change$MBITES_PAR_FEMALE$bm.a
 [1] 7.5
 
-$MBITES_PAR_FEMALE$bm.b
+change$MBITES_PAR_FEMALE$bm.b
 [1] 2.5
 
 $MBITES_PAR_FEMALE$REFEED
@@ -170,10 +170,10 @@ $MBITES_PAR_FEMALE$TATTER
 $MBITES_PAR_FEMALE$ttsz.p
 [1] 0.5
 
-$MBITES_PAR_FEMALE$ttsz.a
+change$MBITES_PAR_FEMALE$ttsz.a
 [1] 5
 
-$MBITES_PAR_FEMALE$ttsz.b
+change$MBITES_PAR_FEMALE$ttsz.b
 [1] 95
 
 $MBITES_PAR_FEMALE$ttr.a
@@ -182,7 +182,7 @@ $MBITES_PAR_FEMALE$ttr.a
 $MBITES_PAR_FEMALE$ttr.b
 [1] 500
 
-$MBITES_PAR_FEMALE$S.u
+change$MBITES_PAR_FEMALE$S.u
 [1] 0.1428571
 
 $MBITES_PAR_FEMALE$S.a
