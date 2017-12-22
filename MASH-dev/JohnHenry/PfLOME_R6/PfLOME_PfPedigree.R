@@ -5,6 +5,7 @@ PfPedigree <- R6Class("PfPedigree",
                           private$nAntigenLoci = 9
                           private$nptypes = c(3,5,4,3,6,3,2,7,9)
                           private$PedLength = 0
+                          private$pfid = 1
                         },
                         
                         add2Pedigree = function(pf){
@@ -13,7 +14,7 @@ PfPedigree <- R6Class("PfPedigree",
                           private$ptype[[pfid]] = pf$get_ptype()
                           private$mic[[pfid]] = pf$get_mic()
                           private$mac[[pfid]] = pf$get_mac()
-                          private$PedLength = private$PedLength +1
+                          private$PedLength = private$PedLength+1
                         },
                           
                         get_PedLength = function(){
@@ -62,12 +63,21 @@ PfPedigree <- R6Class("PfPedigree",
                         
                         get_nptypes = function(){
                           private$nptypes
+                        },
+                        
+                        get_pfid = function(){
+                          private$pfid
+                        },
+                        
+                        increment_pfid = function(){
+                          private$pfid = private$pfid+1
                         }
                       ),
                       
                       private = list(
                         
                         PedLength = integer(0),
+                        pfid = integer(0),
                         gtype = list(),
                         ptype = list(),
                         mic = list(),

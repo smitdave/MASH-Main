@@ -1,0 +1,179 @@
+[
+    {
+        "inputId": "bm_a",
+        "value": "7.5"
+    },
+    {
+        "inputId": "bm_b",
+        "value": "7.5"
+    },
+    {
+        "inputId": "B_succeed",
+        "value": "0.95"
+    },
+    {
+        "inputId": "B_surv",
+        "value": "0.99"
+    },
+    {
+        "inputId": "B_wts",
+        "value": "1,1,1,1,1"
+    },
+    {
+        "inputId": "surviveH",
+        "value": "0.99"
+    },
+    {
+        "inputId": "probeH",
+        "value": "0.99"
+    },
+    {
+        "inputId": "surviveprobeH",
+        "value": "0.99"
+    },
+    {
+        "inputId": "feedH",
+        "value": "0.99"
+    },
+    {
+        "inputId": "surviveZ",
+        "value": "0.99"
+    },
+    {
+        "inputId": "feedZ",
+        "value": "0.99"
+    },
+    {
+        "inputId": "of_a",
+        "value": "8"
+    },
+    {
+        "inputId": "of_b",
+        "value": "5000"
+    },
+    {
+        "inputId": "preGblood",
+        "value": "0"
+    },
+    {
+        "inputId": "Q",
+        "value": "0.9"
+    },
+    {
+        "inputId": "M_succeed",
+        "value": "0.95"
+    },
+    {
+        "inputId": "M_surv",
+        "value": "0.99"
+    },
+    {
+        "inputId": "M_wts",
+        "value": "1,1,1,1,1"
+    },
+    {
+        "inputId": "N_female",
+        "value": "50"
+    },
+    {
+        "inputId": "N_male",
+        "value": "50"
+    },
+    {
+        "inputId": "gammaShape",
+        "value": "1"
+    },
+    {
+        "inputId": "SENESCE",
+        "value": "FALSE"
+    },
+    {
+        "inputId": "sns_a",
+        "value": "0.085"
+    },
+    {
+        "inputId": "sns_b",
+        "value": "100"
+    },
+    {
+        "inputId": "TATTER",
+        "value": "FALSE"
+    },
+    {
+        "inputId": "ttsz_p",
+        "value": "0.5"
+    },
+    {
+        "inputId": "ttr_a",
+        "value": "15"
+    },
+    {
+        "inputId": "ttr_b",
+        "value": "500"
+    },
+    {
+        "inputId": "S_a",
+        "value": "20"
+    },
+    {
+        "inputId": "S_b",
+        "value": "10"
+    },
+    {
+        "inputId": "S_sa",
+        "value": "20"
+    },
+    {
+        "inputId": "S_sb",
+        "value": "10"
+    },
+    {
+        "inputId": "bs_m",
+        "value": "30"
+    },
+    {
+        "inputId": "bs_v",
+        "value": "30"
+    },
+    {
+        "inputId": "maxBatch",
+        "value": "30"
+    },
+    {
+        "inputId": "emt_m",
+        "value": "3"
+    },
+    {
+        "inputId": "emt_v",
+        "value": "1"
+    },
+    {
+        "inputId": "eggT",
+        "value": "0"
+    },
+    {
+        "inputId": "eggP",
+        "value": "0"
+    },
+    {
+        "inputId": "energyPreG",
+        "value": "0"
+    },
+    {
+        "inputId": "PfEIP",
+        "value": "12"
+    },
+    {
+        "inputId": "ttsz_a",
+        "value": "2"
+    },
+    {
+        "inputId": "ttsz_b",
+        "value": "3"
+    },
+    {
+        "inputId": "stateSpace",
+        "value": " B  M "
+    }
+]
+

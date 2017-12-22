@@ -4,11 +4,9 @@
 \alias{simMICRO_oneStep}
 \title{MICRO \code{\link{MicroTile}}: Run Simulation one Time Step}
 \usage{
-simMICRO_oneStep(verbose = FALSE, trackPop = FALSE)
+simMICRO_oneStep(trackPop = FALSE)
 }
 \arguments{
-\item{verbose}{current iteration (disable for running in batch mode)}
-
 \item{timeStep}{the time step of the model}
 
 \item{clearInterval}{interval to clear population and track mosquito history (see \code{\link{clear_pop}})}

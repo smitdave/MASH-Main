@@ -3,6 +3,7 @@ source("PfLOME_Pathogen.R")
 source("PfLOME_Human.R")
 ##human sources ImmuneState and HealthState classes
 source("PfLOME_PfPedigree.R")
+source("Rx.R")
 ##source ("eventTimeSeries.R") ##source this if you want to pull from mbites
 
 ############## artificial pedigree - will exist on tile ################
@@ -21,26 +22,33 @@ someGuy$get_Gtot()
 
 ################ update infection for 300 days ########################
 
-bites = c(1:6)*100
+bites = 0
+tt = 0
+while(tt<600){
+  bite = rgeom(1,10/365)
+  bites = c(bites,bite)
+  tt = cumsum(bites)[length(bites)]
+}
+bites = unique(cumsum(bites))
 #bites = unique(sort(make.bites(70, 10, 1, 5, wt=wt, trend = .05)))
 moi = 1+rnbinom(length(bites), mu=3, size = .3)
-pfid = 1
 
 for(t in 1:600){
   someGuy$updateHuman(t)
   if(t %in% bites){
     k = which(bites==t)
     for(i in 1:moi[k]){
-      pfid <<- pfid+1
+      pfped$increment_pfid()
+      pfid = pfped$get_pfid()
       mic = sample(1:(pfid-1),1)
       mac = sample(1:(pfid-1),1)
-      pf = Pf$new(1,1,pfid)
+      pf = Pf$new(mic,mac,pfid)
       pfped$add2Pedigree(pf)
       someGuy$infectHuman(t,pf$get_pfid())
     }
   }
   if(someGuy$get_Fever()>0){
-    p = rbinom(1,1,.05)
+    p = rbinom(1,1,.03)
     if(p == 1){
       someGuy$Treat(t,1)
     }
@@ -68,4 +76,3 @@ plot(1:length(someGuy$get_history()$RBC),someGuy$get_history()$RBC,type="l",xlab
 plot(1:length(someGuy$get_history()$HRP2),someGuy$get_history()$HRP2,type="l",xlab='days')
 ##pLDH
 plot(1:length(someGuy$get_history()$pLDH),someGuy$get_history()$pLDH,type="l",xlab='days')
-

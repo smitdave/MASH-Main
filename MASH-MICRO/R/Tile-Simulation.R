@@ -186,7 +186,7 @@ Tile$set(which = "public",name = "simMICRO_oneStep",
 
 
 ###############################################################################
-# Set MosquitoPopFemale: Used to reset Tile between runs
+# Reset MosquitoPopFemale: Used to reset Tile between runs
 ###############################################################################
 
 #' MICRO \code{\link{MicroTile}}: Re-initialize \code{\link{MosquitoPopFemale}}
@@ -210,7 +210,7 @@ Tile$set(which = "public",name = "simMICRO_oneStep",
 reset_FemalePop_Tile <- function(MosquitoPop_PAR){
 
   # clean population
-  private$FemalePop$get_pop()$rmAll()
+  private$FemalePop = NULL
   gc()
 
   private$FemalePop = MosquitoPopFemale$new(
@@ -241,6 +241,62 @@ Tile$set(which = "public",name = "reset_FemalePop",
 )
 
 ###############################################################################
+# Reset MosquitoPopMale: Used to reset Tile between runs
+###############################################################################
+
+#' MICRO \code{\link{MicroTile}}: Re-initialize \code{\link{MosquitoPopMale}}
+#'
+#' Erase the old \code{private$FemalePop} object in the tile and re-allocate.
+#' This function is needed for running MBITES-Cohort models, themselves needed to parameterize EL4P Aquatic Ecology Module.
+#'
+#' @section How to use with fitting EL4P:
+#'
+#'  1. generate a list of parameters and set methods with \code{\link{MicroMosquitoPop.Setup}} with argument \code{cohort=TRUE}
+#'  2. initialize a `MicroTile` as normal
+#'  3. run the cohort simulation and output data
+#'  4. use \code{\link{EL4P.Mesh.Fit}} or \code{\link{EL4P.Landscape.Fit}} to fit EL4P; see those functions for details
+#'  5. make a new list of parameters and overwrite cohort methods with \code{\link{MicroMosquitoPop.Setup}} with argument \code{cohort=FALSE}
+#'  6. use this method to re-allocate the females using the parameters and methods from step 4.
+#'
+#'  * This method is bound to \code{MicroTile$set_FemalePop}
+#'
+#' @param MosquitoPop_PAR output of parameter generation function for the chosen M-BITES module
+#'
+reset_MalePop_Tile <- function(MosquitoPop_PAR){
+
+  # clean population
+  private$MalePop = NULL
+  gc()
+
+  private$MalePop = MosquitoPopMale$new(
+    N = MosquitoPop_PAR$N_male,
+    locNow_init = MosquitoPop_PAR$ix_male,
+    genotype_init = MosquitoPop_PAR$genotype_male,
+    MBITES_PAR = MosquitoPop_PAR$MBITES_PAR_MALE
+ )
+
+  # Female Mosquito Population Pointers
+  private$MalePop$set_TilePointer(self)
+  private$MalePop$set_LandscapePointer(private$Landscape)
+  private$MalePop$set_HumansPointer(private$HumanPop)
+  private$MalePop$set_FemalePopPointer(private$FemalePop)
+
+  private$MalePop$get_pop()$apply(tag="set_FemalePopPointer",returnVal=FALSE,FemalePopPointer=private$FemalePop)
+  private$MalePop$get_pop()$apply(tag="set_MalePopPointer",returnVal=FALSE,MalePopPointer=private$MalePop)
+
+  private$MalePop$get_pop()$apply(tag="set_TilePointer",returnVal=FALSE,TilePointer=self)
+  private$MalePop$get_pop()$apply(tag="set_LandscapePointer",returnVal=FALSE,LandscapePointer=private$Landscape)
+  private$MalePop$get_pop()$apply(tag="set_HumansPointer",returnVal=FALSE,HumansPointer=private$HumanPop)
+
+}
+
+Tile$set(which = "public",name = "reset_MalePop",
+          value = reset_MalePop_Tile,
+          overwrite = TRUE
+)
+
+
+###############################################################################
 # Set HumanPop: Used to reset Tile between runs
 ###############################################################################
 
@@ -254,11 +310,12 @@ reset_HumanPop_Tile <- function(HumanPop_PAR){
 
   # clear old HumanPop
   # private$HumanPop$get_pop()$rmAll()
-  private$HumanPop = NULL
-  gc()
+  # private$HumanPop = NULL
+  # gc()
 
   # generate human object
-  private$HumanPop = MASHmacro::HumanPop$new(patchID = 1L,HumanPop_PAR)
+  # private$HumanPop = MASHmacro::HumanPop$new(patchID = 1L,HumanPop_PAR)
+  private$HumanPop$reset(HumanPop_PAR)
 
   # Human & HumanPop Pointers
   private$HumanPop$set_TilePointer(self)
@@ -275,4 +332,51 @@ reset_HumanPop_Tile <- function(HumanPop_PAR){
 Tile$set(which = "public",name = "reset_HumanPop",
           value = reset_HumanPop_Tile,
           overwrite = TRUE
+)
+
+
+###############################################################################
+# Reset Tile
+###############################################################################
+
+#' Reset Tile Between Runs
+#'
+#' write me
+#'
+#'    * This method is bound to \code{Tile$resetMicro}
+#'
+resetMicro <- function(MosquitoPar, HumanPar, EL4P = FALSE, mating = FALSE){
+
+  # reset mosquitoes
+  self$reset_FemalePop(MosquitoPar)
+  if(!is.null(private$MalePop)){
+    self$reset_MalePop(MosquitoPar)
+  }
+
+  # reset humans
+  self$reset_HumanPop(HumanPar)
+
+  # reset landscape
+  private$Landscape$clear_ImagoQ()
+  if(EL4P){
+    private$Landscape$clear_EggQ()
+    cat("need to write clear_EL4P\n")
+  }
+  if(mating){
+    private$Landscape$clear_MatingQ()
+  }
+
+  # reset landscape pointers
+  private$Landscape$set_TilePointer(self)
+  private$Landscape$set_HumansPointer(private$HumanPop)
+  private$Landscape$set_FemalePopPointer(private$FemalePop)
+  private$Landscape$set_MalePopPointer(private$MalePop)
+
+  # reset tile
+  private$tNow = private$tStart
+  # runID updates in the simMICRO_oneRun function (move later)
+}
+
+Tile$set(which = "public",name = "resetMicro",
+          value = resetMicro, overwrite = TRUE
 )

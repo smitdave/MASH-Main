@@ -288,6 +288,32 @@ FeedingSite$set(which = "public",name = "set_LandscapePointer",
 # Aquatic Habitat Site
 ###############################################################################
 
+#' Clear EggQ
+#'
+#' Clear the egg queue at this site, an object of class \code{\link[MASHcpp]{EggQ}}
+#'  * This method is bound to \code{AquaticSite$clear_EggQ}
+#'
+clear_EggQ_AquaticSite <- function(){
+  private$EggQ$clear_EggQ()
+}
+
+AquaticSite$set(which = "public",name = "clear_EggQ",
+  value = clear_EggQ_AquaticSite, overwrite = TRUE
+)
+
+#' Clear ImagoQ
+#'
+#' Clear the imago queue at this site, an object of class \code{\link[MASHcpp]{ImagoQ}}
+#'  * This method is bound to \code{AquaticSite$clear_ImagoQ}
+#'
+clear_ImagoQ_AquaticSite <- function(){
+  private$ImagoQ$clear_ImagoQ()
+}
+
+AquaticSite$set(which = "public",name = "clear_ImagoQ",
+  value = clear_ImagoQ_AquaticSite, overwrite = TRUE
+)
+
 #' Get ix
 #'
 #' Return site index \code{ix}

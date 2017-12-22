@@ -18,7 +18,7 @@ Mosquito <- R6Class("Mosquito",
                          },
                          
                          gr_tent = function(t, PAR){with(PAR,{
-                           ifelse(t<peakD, gr, -dr)
+                           ifelse(t<peakD, gr, 0)
                          })},
                          
                          dPdt_tent = function(t, P, PAR, PD=0, IM=0){with(PAR,{
@@ -37,10 +37,15 @@ Mosquito <- R6Class("Mosquito",
                          
                          
                        ),
+                    
+                    ################ Infection Methods ###################
                        
                        
                        private = list(
-                         SPZ = NULL
+                         SPZ = NULL,
+                         pfidList = NULL,
+                         nOok = NULL,
+                         MOI = NULL
                        )
 )
                        
