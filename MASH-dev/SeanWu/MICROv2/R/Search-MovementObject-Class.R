@@ -5,8 +5,8 @@
 # #    ___/ /  __/ /_/ / /  / /__/ / / /
 # #   /____/\___/\__,_/_/   \___/_/ /_/
 # #
-# #   MICRO
-# #   SEARCH: Movement Object (MvOb) Class
+# #   SEARCH
+# #   Movement Object Abstract Base Class
 # #   MASH Team
 # #   January 2018
 # #
