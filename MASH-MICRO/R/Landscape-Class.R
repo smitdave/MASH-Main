@@ -70,7 +70,11 @@ Landscape <- R6::R6Class(classname = "Landscape",
                              hazV = FeedingSite_PAR$hazV[ix],
                              hazW = FeedingSite_PAR$hazW[ix],
                              hazI = FeedingSite_PAR$hazI[ix],
-                             sugar = FeedingSite_PAR$sugar[ix])
+                             sugar = FeedingSite_PAR$sugar[ix],
+                             periDomestic = FeedingSite_PAR$periDomestic[ix],
+                             lambda = FeedingSite_PAR$lambda[[ix]],
+                             module = AquaticSite_PAR$module
+                           )
 
                          }
 
@@ -141,6 +145,9 @@ Landscape <- R6::R6Class(classname = "Landscape",
 
                        for(ix in 1:private$FeedingSitesN){
                          private$FeedingSites[[ix]]$set_LandscapePointer(self)
+                         if(!is.null(private$FeedingSites[[ix]]$get_periDomestic())){
+                           private$FeedingSites[[ix]]$get_periDomestic()$set_LandscapePointer(self)
+                         }
                        }
 
                        for(ix in 1:private$AquaSitesN){

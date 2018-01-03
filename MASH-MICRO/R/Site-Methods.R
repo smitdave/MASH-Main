@@ -17,6 +17,18 @@
 # Blood Feeding Site
 ###############################################################################
 
+#' Get peri-domestic breeding sites
+#'
+#' Return peri-domestic site attached to this \code{\link{FeedingSite}}, if it exists.
+#'  * This method is bound to \code{FeedingSite$get_periDomestic}
+get_periDomestic_FeedingSite <- function(){
+  return(private$periDomestic)
+}
+
+FeedingSite$set(which = "public",name = "get_periDomestic",
+  value = get_periDomestic_FeedingSite, overwrite = TRUE
+)
+
 #' Get ix
 #'
 #' Return site index \code{ix}

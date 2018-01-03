@@ -59,7 +59,6 @@ MicroKernel_SampleMvOb_MosquitoPopFemale <- function(locNow, state, pSetNow){
 #' @return integer
 #'
 MicroKernel_SampleMvOb_MosquitoPopMale <- function(locNow, state, pSetNow){
-
   MvOb = private$TilePointer$get_movementMale(locNow,state,pSetNow)
   sampleIx_utility(x = MvOb$near$id, size = 1, prob = MvOb$near$pr)
 
@@ -253,11 +252,13 @@ get_MicroKernel_movement_BRO <- function(locNow,state,pSetNow){
 get_MicroKernel_movement_Male <- function(locNow,state,pSetNow){
   switch(state,
     M = {
+        if(pSetNow=="f"){return(private$movementMale$F2M[[locNow]])}
         if(pSetNow=="l"){return(private$movementMale$L2M[[locNow]])}
         if(pSetNow=="m"){return(private$movementMale$M2M[[locNow]])}
         if(pSetNow=="s"){return(private$movementMale$S2M[[locNow]])}
       },
     S = {
+        if(pSetNow=="f"){return(private$movementMale$F2S[[locNow]])}
         if(pSetNow=="l"){return(private$movementMale$L2S[[locNow]])}
         if(pSetNow=="m"){return(private$movementMale$M2S[[locNow]])}
         if(pSetNow=="s"){return(private$movementMale$S2S[[locNow]])}

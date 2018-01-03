@@ -48,7 +48,7 @@ FeedingSite <- R6::R6Class(classname = "FeedingSite",
                    # Initialize
                    #################################################
 
-                   initialize = function(ix, siteXY, searchWt, enterP, hazV = 0, hazW = 0, hazI = 0, sugar = NULL, siteType = 1L){
+                   initialize = function(ix, siteXY, searchWt, enterP, hazV = 0, hazW = 0, hazI = 0, sugar = NULL, siteType = 1L, periDomestic = FALSE, lambda = NULL, module = NULL){
 
                      private$ix = ix
                      private$siteXY = siteXY
@@ -60,6 +60,10 @@ FeedingSite <- R6::R6Class(classname = "FeedingSite",
                      private$enterP = enterP
                      private$siteType = siteType
                      private$RiskQ = MASHcpp::RiskQ()
+
+                     if(periDomestic){
+                       private$periDomestic = periDomestic_AquaticSite$new(module,lambda)
+                     }
 
                    }
 
@@ -80,6 +84,9 @@ FeedingSite <- R6::R6Class(classname = "FeedingSite",
                    hazI = numeric(1),      # inside wall hazards
                    enterP = numeric(1),    # house entry probability
                    RiskQ = NULL,           # host risk queue
+
+                   # Peri-domestic breeding site
+                   periDomestic = NULL,
 
                    # Pointers
                    LandscapePointer = NULL,
