@@ -36,7 +36,7 @@
 #'
 #' @return writes methods to \code{\link{MosquitoFemale}} and \code{\link{MosquitoMale}} classes.
 #' @export
-MBITES.Complex.Setup <- function(
+MBITES.Setup <- function(
   overwrite = TRUE,
   SUGAR = TRUE,
   MATE = TRUE,
@@ -49,7 +49,7 @@ MBITES.Complex.Setup <- function(
 ){
 
   # alert user
-  cat("initializing M-BITES complex module\n",sep="")
+  cat("initializing M-BITES\n",sep="")
 
   ##############################################################
   # MBITES-Energetics.R
