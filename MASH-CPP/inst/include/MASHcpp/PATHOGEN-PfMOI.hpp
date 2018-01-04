@@ -17,6 +17,8 @@
 
 #include <Rcpp.h>
 #include <string>
+#include <vector>
+#include <algorithm>
 
 #include "MASHcpp/DEBUG.hpp"
 
