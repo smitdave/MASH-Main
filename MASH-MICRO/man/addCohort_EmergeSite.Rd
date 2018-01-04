@@ -4,7 +4,7 @@
 \alias{addCohort_EmergeSite}
 \title{MICRO \code{\link{Landscape}} Method: Get Emerging Adults from ImagoQ and Zero out ImagoQ}
 \usage{
-addCohort_EmergeSite(tNow)
+addCohort_EmergeSite(tNow, locNow, pSetNow = "l")
 }
 \description{
 Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MosquitoPopFemale}}.

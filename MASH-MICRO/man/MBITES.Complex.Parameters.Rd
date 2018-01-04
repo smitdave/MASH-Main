@@ -4,25 +4,25 @@
 \alias{MBITES.Complex.Parameters}
 \title{Generate Parameters for M-BITES Complex Module}
 \usage{
-MBITES.Complex.Parameters(F_time = 1, B_time = 0.75, R_time = 1.5,
-  L_time = 0.75, O_time = 1, M_time = 1.5, S_time = 0.5,
-  gammaShape = 8, F_succeed = 0.99, B_succeed = 0.99, L_succeed = 0.99,
-  O_succeed = 0.99, M_succeed = 0.95, S_succeed = 0.95, F_surv = 0.95,
-  B_surv = 0.98, R_surv = 0.98, L_surv = 0.8, O_surv = 0.98,
-  M_surv = 0.98, S_surv = 0.98, F_wts = rep(1, 5), B_wts = rep(1, 5),
-  R_wts = rep(1, 5), L_wts = rep(1, 5), O_wts = rep(1, 5),
-  M_wts = rep(1, 5), S_wts = rep(1, 5), InAndOut = matrix(data = c(4, 2,
-  2, 1, 6, 2, 1, 1, 1, 4, 1, 1, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 2, 1, 0), nrow =
-  5, ncol = 5, byrow = TRUE, dimnames = list(c("i", "w", "v", "r", "l"), c("i",
-  "w", "v", "r", "l"))), surviveH = 1, probeH = 1, surviveprobeH = 1,
-  feedH = 1, surviveZ = 1, feedZ = 1, bm.a = 7.5, bm.b = 2.5,
-  REFEED = FALSE, rf.a = 60, rf.b = 5000, OVERFEED = FALSE, of.a = 5,
-  of.b = 5000, SENESCE = FALSE, sns.a = 0.085, sns.b = 100,
-  TATTER = FALSE, ttsz.p = 0.5, ttsz.a = 5, ttsz.b = 95, ttr.a = 15,
-  ttr.b = 500, S.u = 1/7, S.a = 20, S.b = 10, S.sa = 15, S.sb = 5,
-  bs.m = 30, bs.v = 5, maxBatch = 30, emt.m = 3, emt.v = 1,
-  eggT = 0, eggP = 0, energyPreG = 0, preGsugar = 0, preGblood = 0,
-  PfEIP = 12, Q = 0.9)
+MBITES.Complex.Parameters(SUGAR = TRUE, MATE = TRUE, F_time = 1,
+  B_time = 0.75, R_time = 1.5, L_time = 0.75, O_time = 1,
+  M_time = 1.5, S_time = 0.5, gammaShape = 8, F_succeed = 0.99,
+  B_succeed = 0.99, L_succeed = 0.99, O_succeed = 0.99,
+  M_succeed = 0.95, S_succeed = 0.95, F_surv = 0.95, B_surv = 0.98,
+  R_surv = 0.98, L_surv = 0.8, O_surv = 0.98, M_surv = 0.98,
+  S_surv = 0.98, F_wts = rep(1, 5), B_wts = rep(1, 5), R_wts = rep(1,
+  5), L_wts = rep(1, 5), O_wts = rep(1, 5), M_wts = rep(1, 5),
+  S_wts = rep(1, 5), InAndOut = matrix(data = c(4, 2, 2, 1, 6, 2, 1, 1, 1,
+  4, 1, 1, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 2, 1, 0), nrow = 5, ncol = 5, byrow =
+  TRUE, dimnames = list(c("i", "w", "v", "r", "l"), c("i", "w", "v", "r",
+  "l"))), surviveH = 1, probeH = 1, surviveprobeH = 1, feedH = 1,
+  surviveZ = 1, feedZ = 1, bm.a = 7.5, bm.b = 2.5, REFEED = FALSE,
+  rf.a = 60, rf.b = 5000, OVERFEED = FALSE, of.a = 5, of.b = 5000,
+  SENESCE = FALSE, sns.a = 0.085, sns.b = 100, TATTER = FALSE,
+  ttsz.p = 0.5, ttsz.a = 5, ttsz.b = 95, ttr.a = 15, ttr.b = 500,
+  S.u = 1/7, S.a = 20, S.b = 10, S.sa = 15, S.sb = 5, bs.m = 30,
+  bs.v = 5, maxBatch = 30, emt.m = 3, emt.v = 1, eggT = 0, eggP = 0,
+  energyPreG = 0, preGsugar = 0, preGblood = 0, PfEIP = 12, Q = 0.9)
 }
 \arguments{
 \item{F_time}{mean time elapsed (in days) during blood feeding search bout}

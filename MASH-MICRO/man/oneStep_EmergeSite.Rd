@@ -11,5 +11,7 @@ oneStep_EmergeSite(tNow)
 }
 \description{
 Calculate emerging adults for a single aquatic habitat and add them to that site's ImagoQ.
-This method is bound to \code{AquaticSite$oneStep_EmergeSite()}.
+\itemize{
+\item This method is bound to \code{AquaticSite$oneStep_EmergeSite} and \code{periDomestic_AquaticSite$oneStep_EmergeSite}
+}
 }

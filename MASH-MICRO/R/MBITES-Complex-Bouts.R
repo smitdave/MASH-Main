@@ -270,13 +270,37 @@ mbites_boutR <- function(){
       if(runif(1) < self$pReFeed()){
         private$stateNew = "F"
       } else {
-        private$stateNew = "L"
+        # check if peri-domestic
+        # private$stateNew = "L"
+        self$OvipositSearchCheck()
       }
     } else {
-      private$stateNew = "L"
+      # check if peri-domestic
+      # private$stateNew = "L"
+      self$OvipositSearchCheck()
     }
   }
 
+}
+
+#' M-BITES: Check for Oviposit Search Bout \code{MosquitoFemale}
+#'
+#' During a resting bout \code{\link{mbites_boutR}}, the mosquito checks if she is in a
+#'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
+mbites_OvipositSearchCheck <- function(){
+  if(private$pSetNow=="f"){
+    # check for peri-domestic breeding sites
+    if(!is.null(private$LandscapePointer$get_FeedingSites(private$locNow)$get_periDomestic())){
+      # has peri-domestic breeding site
+      private$stateNew = "O"
+      private$periDomestic = TRUE
+    } else {
+      # does not have peri-domestic breeding site
+      private$stateNew = "L"
+    }
+  } else {
+    private$stateNew = "L"
+  }
 }
 
 
@@ -342,7 +366,12 @@ mbites_layEggs_Emerge <- function(){
 #'
 mbites_layEggs_EL4P <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("O_succeed")){
-    private$LandscapePointer$get_AquaSites(private$locNow)$get_EggQ()$add_EggQ(N_new=private$batch,tOviposit_new=private$tNow,genotype_new=1L)
+    if(private$periDomestic){
+      private$LandscapePointer$get_FeedingSites(private$locNow)$get_periDomestic()$get_EggQ()$add_EggQ(N_new=private$batch,tOviposit_new=private$tNow,genotype_new=1L)
+      private$periDomestic = FALSE
+    } else {
+      private$LandscapePointer$get_AquaSites(private$locNow)$get_EggQ()$add_EggQ(N_new=private$batch,tOviposit_new=private$tNow,genotype_new=1L)
+    }
     private$batch = 0
     private$stateNew = "F"
   }
@@ -380,7 +409,7 @@ mbites_boutS <- function(){
         }
 
       } else {
-        private$stateNew = "R"
+        private$stateNew = "S"
       }
 
       #### ATSB ################################################################################################
@@ -481,7 +510,9 @@ mbites_oneBout <- function(){
   self$timing() # update tNext
 
   # energetics
-  self$sugarEnergetics()  # MBITES-Generic-Energetics.R
+  if(private$FemalePopPointer$get_MBITES_PAR("SUGAR")){
+    self$sugarEnergetics()  # MBITES-Generic-Energetics.R
+  }
 
   # survival
   self$surviveResting()     # MBITES-Generic-Survival.R

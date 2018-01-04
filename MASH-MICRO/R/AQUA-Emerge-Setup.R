@@ -37,42 +37,46 @@ AQUA.Emerge.Setup <- function(overwrite = TRUE){
 
   # lambda to ImagoQ
   AquaticSite$set(which = "public",name = "oneStep_EmergeSite",
-            value = oneStep_EmergeSite,
-            overwrite = overwrite
+            value = oneStep_EmergeSite, overwrite = overwrite
+  )
+
+  periDomestic_AquaticSite$set(which = "public",name = "oneStep_EmergeSite",
+            value = oneStep_EmergeSite, overwrite = overwrite
   )
 
   # lambda to ImagoQ
   Landscape$set(which = "public",name = "oneStep_AquaticEcology",
-            value = oneStep_Emerge,
-            overwrite = overwrite
+            value = oneStep_Emerge, overwrite = overwrite
   )
 
   # ImagoQ to MosquitoPopFemale
   AquaticSite$set(which = "public",name = "addCohort_MicroEmergeSite",
-            value = addCohort_EmergeSite,
-            overwrite = overwrite
+            value = addCohort_EmergeSite, overwrite = overwrite
+  )
+
+  periDomestic_AquaticSite$set(which = "public",name = "addCohort_MicroEmergeSite",
+            value = addCohort_EmergeSite, overwrite = overwrite
   )
 
   # ImagoQ to MosquitoPopFemale
   Landscape$set(which = "public",name = "addCohort_AquaticEcology",
-            value = addCohort_Emerge,
-            overwrite = overwrite
+            value = addCohort_Emerge, overwrite = overwrite
   )
 
 
 
-  #################################################################
-  # Lambda
-  #################################################################
-
-  AquaticSite$set(which = "public",name = "get_lambda",
-            value = get_lambda_Emerge,
-            overwrite = overwrite
-  )
-
-  AquaticSite$set(which = "public",name = "set_lambda",
-            value = set_lambda_Emerge,
-            overwrite = overwrite
-  )
+  # #################################################################
+  # # Lambda
+  # #################################################################
+  #
+  # AquaticSite$set(which = "public",name = "get_lambda",
+  #           value = get_lambda_Emerge,
+  #           overwrite = overwrite
+  # )
+  #
+  # AquaticSite$set(which = "public",name = "set_lambda",
+  #           value = set_lambda_Emerge,
+  #           overwrite = overwrite
+  # )
 
 }
