@@ -95,6 +95,10 @@
 #' @export
 MBITES.Complex.Parameters <- function(
 
+  # bout selection
+  SUGAR                   = TRUE,
+  MATE                    = TRUE,
+
   # dwell time parameters
   F_time                  = 1,
   B_time                  = 0.75,
@@ -204,6 +208,10 @@ MBITES.Complex.Parameters <- function(
 
   out = list(
 
+    # bout options
+    SUGAR                   = SUGAR,
+    MATE                    = MATE,
+
     # dwell time parameters
     F_time                  = F_time,
     B_time                  = B_time,
@@ -306,12 +314,23 @@ MBITES.Complex.Parameters <- function(
     Q                       = Q,
 
     # State Space
-    stateSpace = c("F","B","R","L","O","M","S"),
-    initState = "M",
+    stateSpace = c("F","B","R","L","O"),
+    initState = "F",
     lspot = c("i","w","v","r","l"),
-    Fstate = c(F=0,B=0,R=0,L=0,O=0,M=0,S=0)
+    Fstate = c(F=0,B=0,R=0,L=0,O=0)
 
   )
+
+  if(MATE){
+    out$initState = "M"
+    out$stateSpace = c(out$stateSpace,"M")
+    out$Fstate = c(out$Fstate,M=0)
+  }
+
+  if(SUGAR){
+    out$stateSpace = c(out$stateSpace,"S")
+    out$Fstate = c(out$Fstate,S=0)
+  }
 
   return(out)
 }

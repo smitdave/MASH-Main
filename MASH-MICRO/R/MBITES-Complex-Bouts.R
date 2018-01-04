@@ -409,7 +409,7 @@ mbites_boutS <- function(){
         }
 
       } else {
-        private$stateNew = "R"
+        private$stateNew = "S"
       }
 
       #### ATSB ################################################################################################
@@ -510,7 +510,9 @@ mbites_oneBout <- function(){
   self$timing() # update tNext
 
   # energetics
-  self$sugarEnergetics()  # MBITES-Generic-Energetics.R
+  if(private$FemalePopPointer$get_MBITES_PAR("SUGAR")){
+    self$sugarEnergetics()  # MBITES-Generic-Energetics.R
+  }
 
   # survival
   self$surviveResting()     # MBITES-Generic-Survival.R

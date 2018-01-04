@@ -1,3 +1,0 @@
-# -*-makefile-*-
-PKG_CFLAGS += -I./deSolveModel.c
-PKG_CPPFLAGS += -I../inst/include/

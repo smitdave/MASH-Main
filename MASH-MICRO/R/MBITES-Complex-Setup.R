@@ -32,6 +32,8 @@
 #' @export
 MBITES.Complex.Setup <- function(
   overwrite = TRUE,
+  SUGAR = TRUE,
+  MATE = TRUE,
   aquaModule = "emerge",
   timing = "exponential"
 ){
@@ -144,13 +146,17 @@ MBITES.Complex.Setup <- function(
   )
 
 
-  MosquitoFemale$set(which = "public",name = "boutS",
-            value = mbites_boutS, overwrite = overwrite
-  )
+  if(SUGAR){
+    MosquitoFemale$set(which = "public",name = "boutS",
+              value = mbites_boutS, overwrite = overwrite
+    )
+  }
 
-  MosquitoFemale$set(which = "public",name = "boutM",
-            value = mbites_boutM, overwrite = overwrite
-  )
+  if(MATE){
+    MosquitoFemale$set(which = "public",name = "boutM",
+              value = mbites_boutM, overwrite = overwrite
+    )
+  }
 
   MosquitoFemale$set(which = "public",name = "oneBout",
             value = mbites_oneBout, overwrite = overwrite
