@@ -106,43 +106,6 @@ MicroKernel_moveMe_FULL <- function(){
 
 }
 
-#' MICRO Search Kernels: \code{\link{MosquitoFemale}} Movement Function for Full M-BITES Lifecycle Model
-#'
-#' Move one mosquito based on site and next behavioral state.
-#'  * This method is bound to \code{MosquitoFemale$moveMe()}
-#'
-MicroKernel_moveMe_BRO <- function(){
-
-    switch(private$state,
-      B = {
-        private$locOld = private$locNow
-        private$pSetOld = private$pSetNow
-        private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
-        private$pSetNow = "f"
-      },
-      O = {
-        private$locOld = private$locNow
-        private$pSetOld = private$pSetNow
-        private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
-        private$pSetNow = "l"
-      },
-      M = {
-        private$locOld = private$locNow
-        private$pSetOld = private$pSetNow
-        private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
-        private$pSetNow = "m"
-      },
-      S = {
-        private$locOld = private$locNow
-        private$pSetOld = private$pSetNow
-        private$locNow = private$FemalePopPointer$SampleMove(locNow=private$locNow,state=private$state,pSetNow=private$pSetNow)
-        private$pSetNow = "s"
-      },
-      {return(NULL)}
-    )
-
-}
-
 #' MICRO Search Kernels: \code{\link{MosquitoMale}} Movement Function for Full M-BITES Lifecycle Model
 #'
 #' Move one mosquito based on site and next behavioral state. This method is bound to \code{MosquitoMale$moveMe()}
@@ -204,42 +167,6 @@ get_MicroKernel_movement_FULL<- function(locNow,state,pSetNow){
         if(pSetNow=="m"){return(private$movementFemale$M2M[[locNow]])}
         if(pSetNow=="l"){return(private$movementFemale$L2M[[locNow]])}
       },
-    {return(NULL)}
-  )
-}
-
-#' MICRO Search Kernels: \code{\link{MicroTile}} Access MvAll Object for Female M-BITES BRO Lifecycle Model
-#'
-#' Replace generic \code{MicroTile$get_movement()} method for MicroKernel module, return a MvOb from \code{movementFemale} field of a microsimulation tile.
-#'  *  This method bound to \code{MicroTile$get_movement}
-#'
-get_MicroKernel_movement_BRO <- function(locNow,state,pSetNow){
-
-  switch(state,
-    B = {
-        if(pSetNow=="f"){return(private$movementFemale$F2F[[locNow]])}
-        if(pSetNow=="m"){return(private$movementFemale$M2F[[locNow]])}
-        if(pSetNow=="s"){return(private$movementFemale$S2F[[locNow]])}
-        if(pSetNow=="l"){return(private$movementFemale$L2F[[locNow]])}
-      },
-    O = {
-        if(pSetNow=="f"){return(private$movementFemale$F2L[[locNow]])}
-        if(pSetNow=="m"){return(private$movementFemale$M2L[[locNow]])}
-        if(pSetNow=="s"){return(private$movementFemale$S2L[[locNow]])}
-        if(pSetNow=="l"){return(private$movementFemale$L2L[[locNow]])}
-      },
-    M = {
-        if(pSetNow=="f"){return(private$movementFemale$F2M[[locNow]])}
-        if(pSetNow=="m"){return(private$movementFemale$M2M[[locNow]])}
-        if(pSetNow=="s"){return(private$movementFemale$S2M[[locNow]])}
-        if(pSetNow=="l"){return(private$movementFemale$L2M[[locNow]])}
-      },
-    S = {
-        if(pSetNow=="f"){return(private$movementFemale$F2M[[locNow]])}
-        if(pSetNow=="m"){return(private$movementFemale$M2M[[locNow]])}
-        if(pSetNow=="s"){return(private$movementFemale$S2M[[locNow]])}
-        if(pSetNow=="l"){return(private$movementFemale$L2M[[locNow]])}
-    },
     {return(NULL)}
   )
 }
