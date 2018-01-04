@@ -30,11 +30,10 @@ PfSI.MICRO.Setup()
 AQUA.Emerge.Setup()
 
 # MBITES setup
-MBITES.Generic.Setup()
 MBITES.Complex.Setup(SUGAR = FALSE, MATE = FALSE, aquaModule = "emerge",timing = "exponential")
 
 # SEARCH setup
-SEARCH.Kernel.Setup(MBITES = "FULL")
+MBITES.Search.Setup(module = "kernel")
 
 # landscape parameters
 nAqua = 20
@@ -61,7 +60,7 @@ landscape_par$FeedingSite_PAR$lambda = lambda
 landscape_par$FeedingSite_PAR$module = module
 
 # human parameters
-patch_humans = rpois(n = nFeed,lambda = 20)
+patch_humans = rep(1,nFeed)
 n_humans = sum(patch_humans)
 patch_id = rep(x = 1:nFeed,patch_humans)
 home_id = rep(x = 1:nFeed,patch_humans)
