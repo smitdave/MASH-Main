@@ -7,7 +7,7 @@
 mbitesMale_get_restHaz()
 }
 \description{
-Get resting hazards for \code{\link{mbitesGeneric_surviveResting}}.
+Get resting hazards for \code{\link{mbites_surviveResting}}.
 \itemize{
 \item This method is bound to \code{MosquitoMale$get_restHaz()}.
 }
