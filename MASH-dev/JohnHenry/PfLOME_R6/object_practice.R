@@ -24,7 +24,7 @@ someGuy$get_Gtot()
 
 bites = 0
 tt = 0
-while(tt<600){
+while(tt<365*5){
   bite = rgeom(1,10/365)
   bites = c(bites,bite)
   tt = cumsum(bites)[length(bites)]
@@ -33,7 +33,7 @@ bites = unique(cumsum(bites))
 #bites = unique(sort(make.bites(70, 10, 1, 5, wt=wt, trend = .05)))
 moi = 1+rnbinom(length(bites), mu=3, size = .3)
 
-for(t in 1:600){
+for(t in 1:(365*5)){
   someGuy$updateHuman(t)
   if(t %in% bites){
     k = which(bites==t)
@@ -58,17 +58,23 @@ for(t in 1:600){
 ######################### plotting functions #############################
 
 plot(1:length(someGuy$get_history()$Ptot),someGuy$get_history()$Ptot,type="l",
-     ylim=c(-3,11),xlim=c(0,600),xlab='days',ylab='log10 iRBC')
+     ylim=c(-5,11),xlim=c(0,365*5),xlab='days',ylab='log10 iRBC')
 lines(1:length(someGuy$get_history()$Gtot),someGuy$get_history()$Gtot,lty=2)
 lines(1:length(someGuy$get_history()$Fever),someGuy$get_history()$Fever)
 lines(1:length(someGuy$get_history()$GenImm),2*someGuy$get_history()$GenImm-3,type="l")
 lines(1:length(someGuy$get_history()$PD),someGuy$get_history()$PD,col='purple')
 abline(h=c(-1,-3),lty=2)
+lines(1:length(someGuy$get_history()$PfMOI),someGuy$get_history()$PfMOI/max(someGuy$get_history()$PfMOI)*2-5)
+abline(h=-5,lty=2)
+text(.1,-3.5, paste("MOI, max=", max(someGuy$get_history()$PfMOI)), col = "blue", pos = 4)
 
 plot(1:length(someGuy$get_history()$GenImm),someGuy$get_history()$GenImm,type="l",xlab='days',ylab='% of max strength of immunity')
 for(i in 1:someGuy$get_immuneState()$get_nBSImmCounters()){
   lines(1:length(someGuy$get_history()$BSImm[[1]]),someGuy$get_history()$BSImm[[i]],lty=2)
 }
+
+plot(1:length(someGuy$get_history()$PfMOI),someGuy$get_history()$PfMOI,type="l",
+     xlab='days',ylab='MOI')
 
 ##RBC
 plot(1:length(someGuy$get_history()$RBC),someGuy$get_history()$RBC,type="l",xlab ='days')
