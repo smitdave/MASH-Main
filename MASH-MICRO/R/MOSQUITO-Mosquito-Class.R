@@ -52,7 +52,7 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             ##############################################################
 
                             # pointers are also passed down from enclosing MosquitoPopFemale object
-                            initialize = function(id, time, locNow, genotype, state, eggT = 0, eggP = 0, energyPreG = 0){
+                            initialize = function(id, time, locNow, genotype, state, pSetNow = "l", eggT = 0, eggP = 0, energyPreG = 0){
 
                               # initialize general fields
 
@@ -64,11 +64,12 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                               private$genotype  = genotype
 
                               # State and Location
-                              private$state      = state       # {F,B,R,L,O,S,M,E,D}
-                              private$stateNew   = state       # {F,B,R,L,O,S,M,E,D}
-                              private$pSetNow    = "l"       # class of site {f,l,s,m}
-                              private$locNow     = locNow       # index of site
-                              private$mature     = FALSE       # mature
+                              private$state        = state       # {F,B,R,L,O,S,M,E,D}
+                              private$stateNew     = state       # {F,B,R,L,O,S,M,E,D}
+                              private$pSetNow      = pSetNow       # class of site {f,l,s,m}
+                              private$locNow       = locNow       # index of site
+                              private$mature       = FALSE       # mature
+                              private$periDomestic = FALSE       # used in peri-domestic breeding (see mbites_OvipositSearchCheck)
 
                               # Other State Variables
                               private$lspot     = "l"        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
@@ -109,13 +110,14 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             genotype  = integer(1),        # genotype of mosquito
 
                             # State and Location
-                            state      = character(1),       # {F,B,R,L,O,S,M,E,D}
-                            stateNew   = character(1),       # {F,B,R,L,O,S,M,E,D}
-                            pSetNow    = character(1),       # class of site {f,l,s,m}
-                            pSetOld    = character(1),
-                            locNow     = integer(1),       # index of site
-                            locOld     = integer(1),
-                            mature     = logical(1),       # mature
+                            state        = character(1),       # {F,B,R,L,O,S,M,E,D}
+                            stateNew     = character(1),       # {F,B,R,L,O,S,M,E,D}
+                            pSetNow      = character(1),       # class of site {f,l,s,m}
+                            pSetOld      = character(1),
+                            locNow       = integer(1),       # index of site
+                            locOld       = integer(1),
+                            mature       = logical(1),       # mature
+                            periDomestic = logical(1),
 
                             # Other State Variables
                             lspot     = character(1),        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
@@ -189,7 +191,7 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                           ##############################################################
 
                           # pointers are also passed down from enclosing MosquitoPopFemale object
-                          initialize = function(id, time, locNow, genotype, state, mateFitness = 1){
+                          initialize = function(id, time, locNow, genotype, state, pSetNow = "l", mateFitness = 1){
 
                             # initialize general fields
 
@@ -203,7 +205,7 @@ MosquitoMale <- R6::R6Class(classname = "MosquitoMale",
                             # State and Location
                             private$state      = state       # {F,B,R,L,O,S,M,E,D}
                             private$stateNew   = state       # {F,B,R,L,O,S,M,E,D}
-                            private$pSetNow    = "l"       # class of site {f,l,s,m}
+                            private$pSetNow    = pSetNow       # class of site {f,l,s,m}
                             private$locNow     = locNow       # index of site
                             private$mature     = FALSE       # mature
 

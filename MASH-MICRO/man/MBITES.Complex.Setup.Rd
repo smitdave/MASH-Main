@@ -4,8 +4,8 @@
 \alias{MBITES.Complex.Setup}
 \title{M-BITES: Initialize Additional Methods & Fields in \code{\link{MosquitoPopFemale}} and \code{\link{MosquitoFemale}}}
 \usage{
-MBITES.Complex.Setup(overwrite = TRUE, aquaModule = "emerge",
-  timing = "exponential")
+MBITES.Complex.Setup(overwrite = TRUE, SUGAR = TRUE, MATE = TRUE,
+  aquaModule = "emerge", timing = "exponential")
 }
 \arguments{
 \item{batchSize}{character switch in \code{"bms","norm"} for egg batch sizes dependent on bloodmeal size or normally distributed}

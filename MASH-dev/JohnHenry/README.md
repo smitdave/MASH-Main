@@ -1,2 +1,2 @@
-# This is the development directory for Dave
+# This is the development directory for John
 

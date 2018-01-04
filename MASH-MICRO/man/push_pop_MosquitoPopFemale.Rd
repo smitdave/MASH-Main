@@ -4,7 +4,7 @@
 \alias{push_pop_MosquitoPopFemale}
 \title{Push pop}
 \usage{
-push_pop_MosquitoPopFemale(N, tEmerge, genotype, locNow)
+push_pop_MosquitoPopFemale(N, tEmerge, genotype, locNow, pSetNow = "l")
 }
 \arguments{
 \item{N}{integer; number of emerging mosquitoes}

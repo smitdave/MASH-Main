@@ -10,6 +10,6 @@ addCohort_Emerge()
 Grab emerging adult batches where tEmerge <= tNow and add to the \code{\link{MosquitoPopFemale}}.
 This function fills a generic for \code{\link{simMICRO_oneStep}}.
 \itemize{
-\item This method is bound to \code{Landscape$addCohort()}
+\item This method is bound to \code{Landscape$addCohort_AquaticEcology()}
 }
 }
