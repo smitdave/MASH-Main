@@ -32,7 +32,7 @@ mbitesMale_surviveResting <- function(){
 
 #' MBITES-Male: Get Resting Hazards for \code{\link{MosquitoMale}}
 #'
-#' Get resting hazards for \code{\link{mbitesGeneric_surviveResting}}.
+#' Get resting hazards for \code{\link{mbites_surviveResting}}.
 #'  * This method is bound to \code{MosquitoMale$get_restHaz()}.
 #'
 mbitesMale_get_restHaz <- function(){
@@ -109,7 +109,7 @@ mbitesMale_pTatter <- function(){
 
 #' MBITES-Male: Get Baseline Survival Probability for \code{\link{MosquitoMale}}
 #'
-#' Get baseline flight survival probability for \code{\link{mbitesGeneric_surviveFlight}}.
+#' Get baseline flight survival probability for \code{\link{mbites_surviveFlight}}.
 #'  * This method is bound to \code{MosquitoMale$get_surviveFlightProb()}.
 #'
 mbitesMale_get_surviveFlightProb <- function(){
