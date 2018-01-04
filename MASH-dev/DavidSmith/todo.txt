@@ -1,0 +1,45 @@
+
+______________________________________________
+
+Before MBITES Publication :: for Version 1.0 
+______________________________________________
+
+1. Housekeeping
++ Rename SEARCH to MBITES-Search
++ Formally deprecate MBITES-BRO
+  (Complex and Generic stem removed) 
+
+2. Temperature and EIP 
+
+______________________________________________
+
+Next version :: for Version 1.1  
+______________________________________________
+
+1. Change landscape to SITE structure
+
+site:
+x,y
+type
+f
+l
+s
+m
+
+2. Codify "flexibility" in code design. 
+e.g. timing() options and functions all appear in one file
+
+3. Multiple Mosquito Species 
+   * species functions and parameters belong to mosquito
+   * populations, but individuals have a species designation
+   * that tells them which species functions & parameters they
+   * use.
+
+______________________________________________
+
+C++ Conversion 
+
++ All simulation moved to C++. 
++ R does setup and processing, initializes C++ using Rcpp. 
+
+ 
