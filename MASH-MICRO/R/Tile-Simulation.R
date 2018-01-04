@@ -30,8 +30,6 @@
 #'
 simMICRO_oneRun <- function(tMax, PfPAR, verbose = FALSE, trackPop = FALSE){
 
-  # set runID
-  private$runID = private$runID + 1L
   cat("running MICRO simulation runID: ",private$runID,"\n",sep="")
 
   # reset tNow
@@ -346,6 +344,9 @@ Tile$set(which = "public",name = "reset_HumanPop",
 #'    * This method is bound to \code{Tile$resetMicro}
 #'
 resetMicro <- function(MosquitoPar, HumanPar, EL4P = FALSE, mating = FALSE){
+
+  # increment runID
+  private$runID = private$runID + 1L
 
   # reset mosquitoes
   self$reset_FemalePop(MosquitoPar)

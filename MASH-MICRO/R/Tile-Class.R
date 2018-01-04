@@ -150,23 +150,24 @@ Tile <- R6::R6Class(classname = "Tile",
                        dir.create(paste0(directory,"MOSQUITO/"))
                      }
                      private$MosquitoDirectory = paste0(directory,"MOSQUITO/")
-
                      mosyFiles = list.files(path = private$MosquitoDirectory)
-                     if(length(mosyFiles)>0){
-                       cat("removing files: ",mosyFiles,"\n",sep="")
-                       file.remove(paste0(private$MosquitoDirectory,mosyFiles))
-                     }
+                     # if(length(mosyFiles)>0){
+                     #   cat("removing files: ",mosyFiles,"\n",sep="")
+                     #   file.remove(paste0(private$MosquitoDirectory,mosyFiles))
+                     # }
 
                      if(!dir.exists(paste0(directory,"HUMAN/"))){
                        dir.create(paste0(directory,"HUMAN/"))
                      }
                      private$HumanDirectory = paste0(directory,"HUMAN/")
-
                      humanFiles = list.files(path = private$HumanDirectory)
-                     if(length(humanFiles)>0){
-                       cat("removing files: ",humanFiles,"\n",sep="")
-                       file.remove(paste0(private$HumanDirectory,humanFiles))
-                     }
+                     # if(length(humanFiles)>0){
+                     #   cat("removing files: ",humanFiles,"\n",sep="")
+                     #   file.remove(paste0(private$HumanDirectory,humanFiles))
+                     # }
+                     MmaxID = max(as.integer(gsub("[^0-9]", "", mosyFiles)))
+                     HmaxID = max(as.integer(gsub("[^0-9]", "", humanFiles)))
+                     private$runID = max(MmaxID,HmaxID)
 
                      cat("output will be written to: ",directory,"\n human output will be in: ",directory,"HUMAN/\n mosquito output will be in: ",directory,"MOSQUITO/\n",sep="")
 
