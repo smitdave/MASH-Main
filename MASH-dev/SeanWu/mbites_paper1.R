@@ -32,7 +32,7 @@ for(i in 1:N){
   xy_lscape[[i]]$f = read.table(file = paste0(files_dir,f_files[i]),header = TRUE,sep = ",",stringsAsFactors = FALSE)
   xy_lscape[[i]]$l = read.table(file = paste0(files_dir,l_files[i]),header = TRUE,sep = ",",stringsAsFactors = FALSE)
 }
-xy_lscape = xy_lscape[1:2]
+
 
 ###############################################################################
 # run simulations (100 repetitions on each pointset for averaging)
@@ -53,7 +53,7 @@ out = foreach(it = iter(xy_lscape), i = icount(), .export = c("master_dir"), .in
   # simulation parameters
   nMosy = 10
   tMax = 20
-  jmax = 5
+  jmax = 2
   site_lambda = 5
   
   # make a tile
