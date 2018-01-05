@@ -28,7 +28,11 @@
 #' @param verbose print information
 #' @param trackPop write mosquito population counts to CSV file
 #'
-simMICRO_oneRun <- function(tMax, PfPAR, verbose = FALSE, trackPop = FALSE){
+simMICRO_oneRun <- function(tMax, PfPAR, verbose = FALSE, trackPop = FALSE, runID = NULL){
+
+  if(!is.null(runID)){
+    private$runID = runID
+  }
 
   cat("running MICRO simulation runID: ",private$runID,"\n",sep="")
 
@@ -81,15 +85,19 @@ simMICRO_oneRun <- function(tMax, PfPAR, verbose = FALSE, trackPop = FALSE){
   private$HumanPop$initialize_Pathogens(PfPAR)
 
   # progress bar
-  progress_bar = txtProgressBar(min=1,max=tMax,style=3)
+  if(verbose){
+    progress_bar = txtProgressBar(min=1,max=tMax,style=3)
+  }
 
   # run simulation
   while(private$tNow < tMax){
     self$simMICRO_oneStep(trackPop = trackPop)
-    setTxtProgressBar(progress_bar,private$tNow)
+    if(verbose){setTxtProgressBar(progress_bar,private$tNow)}
   }
   cat("\n")
-  close(progress_bar)
+  if(verbose){
+    close(progress_bar)
+  }
 
   # write human JSON output
   # writeLines(text = jsonlite::toJSON(x = private$HumanPop$get_PathogensHistory(),pretty = TRUE),con = self$get_HumanPathogenCon())
@@ -339,14 +347,16 @@ Tile$set(which = "public",name = "reset_HumanPop",
 
 #' Reset Tile Between Runs
 #'
-#' write me
+#' @param incrementID if \code{TRUE} increment the runID by one (do not use if manually setting the runID to keep track of parameters, for example, during Monte Carlo simulation or parameter sweeps)
 #'
 #'    * This method is bound to \code{Tile$resetMicro}
 #'
-resetMicro <- function(MosquitoPar, HumanPar, EL4P = FALSE, mating = FALSE){
+resetMicro <- function(MosquitoPar, HumanPar, EL4P = FALSE, mating = FALSE, incrementID = TRUE){
 
   # increment runID
-  private$runID = private$runID + 1L
+  if(incrementID){
+    private$runID = private$runID + 1L
+  }
 
   # reset mosquitoes
   self$reset_FemalePop(MosquitoPar)
