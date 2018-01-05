@@ -301,11 +301,11 @@ infectHumanPfSI <- function(tEvent, PAR){
     private$Pathogens$push_PfID(private$HumansPointer$increment_PfID()) # increment PfID
     # track event
     writeLines(text = paste0(c(private$myID,tEvent,"I",PAR$vectorID),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
+    self$add2Q_endPfSI(tEvent = tEvent)
     # queue fever
     if(runif(1) < self$get_PfSI_PAR("FeverPf")){
       self$add2Q_feverPfSI(tEvent = tEvent)
     }
-    self$add2Q_endPfSI(tEvent = tEvent)
   }
 }
 
