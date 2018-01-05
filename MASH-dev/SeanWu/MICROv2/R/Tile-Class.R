@@ -6,7 +6,7 @@
 #   /_/ /_/_/\___/
 #
 #   MICRO
-#   SEARCH: Movement Object (MvOb) Class
+#   Tile Class
 #   MASH Team
 #   January 2018
 #
