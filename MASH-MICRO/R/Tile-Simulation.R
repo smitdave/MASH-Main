@@ -97,10 +97,10 @@ simMICRO_oneRun <- function(tMax, PfPAR, verbose = FALSE, trackPop = FALSE){
   # writeLines(text = jsonlite::toJSON(x = private$HumanPop$get_PathogensHistory(),pretty = TRUE),con = self$get_HumanPathogenCon())
 
   # finish writing JSON output
-  cat(jsonlite::toJSON(x = mbitesGeneric_NULL,pretty = TRUE),"\n",sep="",file = self$get_FemaleHistoryCon()) # female EOF
+  cat(jsonlite::toJSON(x = mbites_NULL,pretty = TRUE),"\n",sep="",file = self$get_FemaleHistoryCon()) # female EOF
   writeLines(text = "]",con = self$get_FemaleHistoryCon())
   if(!is.null(private$MalePop)){
-    cat(jsonlite::toJSON(x = mbitesGeneric_NULL,pretty = TRUE),"\n",sep="",file = self$get_MaleHistoryCon()) # male EOF
+    cat(jsonlite::toJSON(x = mbites_NULL,pretty = TRUE),"\n",sep="",file = self$get_MaleHistoryCon()) # male EOF
     writeLines(text = "]",con = self$get_MaleHistoryCon())
   }
   cat(jsonlite::toJSON(x = PfSI_NULL,pretty = TRUE),"\n",sep="",file = self$get_MosquitoPathogenCon()) # male EOF

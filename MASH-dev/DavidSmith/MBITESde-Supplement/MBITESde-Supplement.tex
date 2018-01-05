@@ -60,7 +60,86 @@ variables to lump the the $n^{th}$ states together: $x = \sum_i
 x_i$, with a rescaled rate variable, $\gamma_x(a,t) =
 \xi(a,t) (1-P_{xx})$   
 
-<Insert John's cool proof>.  
+\begin{bf}
+Proof 1
+\end{bf}
+
+To justify this summation, consider the infinite set of equations
+$$\frac{d x_1}{dt} = -\lambda x_1$$
+$$\frac{d x_i}{dt} = (1-p) \lambda x_{i-1} - \lambda x_i$$
+with initial conditions $x_1(0) = 1$, $x_i(0) = 0$. That is, initially
+all of the mosquitoes are in their first attempt for an exponentially
+distributed length of time. A proportion $p$ are successful or leave frustrated,
+and $1-p$ attempt again. This system can be solved iteratively; $x_1$ has the solution
+$$x_1(t) = e^{-\lambda t}$$ 
+which, when plugged into the equation for $x_2$, gives
+$$\frac{d x_2}{dt} = (1-p) \lambda e^{-\lambda t} - \lambda x_2$$ 
+which can be solved using an integrating factor. This yields
+$$x_2(t) = (1-p) \lambda t e^{-\lambda t}$$
+This appears to be a weighted gamma distribution, which motivates the
+assumption for an inductive-step solution of
+$$x_i(t) = \frac{((1-p) \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t}$$
+Assuming this, we look at the $x_{i+1}$ equation:
+$$\frac{d x_{i+1}}{dt} = (1-p)\lambda x_i - \lambda x_{i+1}$$
+Plugging in the assumed solution, we get
+$$\frac{d x_{i+1}}{dt} = (1-p)\lambda \frac{((1-p) \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t} - \lambda x_{i+1}$$
+$$= \frac{((1-p) \lambda)^i}{i!}t^{i-1} e^{-\lambda t} - \lambda x_{i+1}$$
+Which is again amenable to an integrating factor combined with i-1 integration by parts,
+yielding
+$$x_{i+1} = \frac{((1-p) \lambda t)^{i}}{i!} e^{-\lambda t}$$
+which completes the induction.
+Because we are interested in the total amount of time spent and not the time
+spent in any one compartment, we add the solutions together:
+$$\sum_{i = 1}^{\infty} x_i(t) = \sum_{i = 1}^{\infty}\frac{((1-p) \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t}$$
+$$ = e^{-\lambda t} \sum_{i=0}^{\infty}\frac{((1-p) \lambda t)^i}{i!}$$
+$$ = e^{-\lambda t} e^{(1-p)\lambda t}$$
+$$ = e^{-p \lambda t}$$
+
+Normalizing this gives us the total expected waiting time in this state for the
+mosquito is exponential with intensity $p \lambda$.
+
+As a note, this convergence is uniform as it is the Taylor series representation
+of the exponential function - this justifies summing the infinite equations and
+the differential operator which gives us
+
+$$\frac{d}{dt} \sum_{i=1}^{\infty} x_i = \sum_{i=1}^{\infty}\frac{d x_i}{dt}$$
+$$ = \sum_{i=1}^{\infty}-\lambda p x_i$$
+
+setting $X = \sum_{i=1}^{\infty}x_i$, we get a very simple single differential equation
+
+$$\frac{dX}{dt} = - p \lambda X$$
+
+with the initial condition $X(0) = 1$. This has the same solution we found through induction.
+
+\begin{bf}
+Proof 2
+\end{bf}
+
+Say we want to find the total waiting time T a mosquito spends in a given state.
+Using the law of total probability, we can condition this on the number of attempts N
+a mosquito will make:
+$$P(T=t) = \sum_{n=1}^{\infty} P(T=t| N=n) P(N=n)$$
+The number of attempts is geometrically distributed, as it will succeed or give up
+with probability p and therefore try again with probability (1-p) - it will try until
+it succeeds or gives up. Therefore
+$$P(N=n) = p(1-p)^{n-1}$$
+The waiting time between each attempt is iid with an exponentially distributed waiting
+time with intensity $\lambda$, so given it takes n trials the distribution follows
+a gamma distribution:
+$$T=t|N=n = \sum_{i=1}^{n}Exp_i(\lambda)$$
+$$ \sim \Gamma (n,\lambda)$$
+
+Therefore we have
+
+$$P(T=t) = \sum_{i=1}^{\infty}P(T=t|N=n)P(N=n)$$
+$$ = \sum_{i=1}^{\infty}p(1-p)^{n-1}\frac{\lambda^n}{\Gamma (n)}t^{n-1} e^{-\lambda t}$$
+$$ = p \lambda e^{-\lambda t} \sum_{i=0}^{\infty} \frac{[(1-p)\lambda t]^n}{n!}$$
+$$ = \lambda p e^{-\lambda t} e^{(1-p)\lambda t}$$
+$$ = p \lambda e^{-p \lambda t} $$
+
+which is exactly the normalized solution to the previous system of ordinary differential
+equations - the waiting time for the mosquito to leave the state is exponentially 
+distributed with intensity $p \lambda$
 
 This means we can rewrite the infinite system of equations as a
 set of 5 differential equations: 

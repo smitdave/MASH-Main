@@ -24,7 +24,7 @@ namespace MASHcpp {
  */ ///////////////////////////////////////////////////////////////////////////////
 
 // constructor
-humanPfMOI::humanPfMOI(const double &b_init, const double &c_init, const bool &chemoprophylaxis_init) : b(b_init), c(c_init), chemoprophylaxis(chemoprophylaxis_init), MOI(0) {
+humanPfMOI::humanPfMOI(const double &b_init, const double &c_init, const bool &chemoprophylaxis_init) : MOI(0), b(b_init), c(c_init), chemoprophylaxis(chemoprophylaxis_init) {
   #ifdef DEBUG_MGDRIVE
   std::cout << "humanPfMOI being born at memory location: " << this << std::endl;;
   #endif
@@ -101,22 +101,29 @@ void humanPfMOI::clear_Infections(){
 // get all infections where PfID != -1
 std::vector<int> humanPfMOI::get_Infection(){
 
-  std::vector<int> infIx;
-  auto it = std::find_if(PfID.begin(), PfID.end(), [](const int &PfID_iter){
-    return(PfID_iter != -1);
-  });
-  while(it != PfID.end()){
-    infIx.emplace_back(std::distance(PfID.begin(), it));
-    it = std::find_if(std::next(it), std::end(PfID), [](const int &PfID_iter){
-      return(PfID_iter != -1);
-    });
-  }
+  // std::vector<int> infIx;
+  // auto it = std::find_if(PfID.begin(), PfID.end(), [](const int &PfID_iter){
+  //   return(PfID_iter != -1);
+  // });
+  // while(it != PfID.end()){
+  //   infIx.emplace_back(std::distance(PfID.begin(), it));
+  //   it = std::find_if(std::next(it), std::end(PfID), [](const int &PfID_iter){
+  //     return(PfID_iter != -1);
+  //   });
+  // }
+  //
+  // // export these infections that have passed the EIP
+  // std::vector<int> PfID_out;
+  // std::transform(infIx.begin(), infIx.end(), std::back_inserter(PfID_out), [this](size_t ix){
+  //   return(PfID[ix]);
+  // });
 
-  // export these infections that have passed the EIP
   std::vector<int> PfID_out;
-  std::transform(infIx.begin(), infIx.end(), std::back_inserter(PfID_out), [this](size_t ix){
-    return(PfID[ix]);
-  });
+  std::copy_if(PfID.begin(),PfID.end(),std::back_inserter(PfID_out),
+                [](const int& pfid){
+                  return pfid!=-1;
+                }
+             );
 
   return(PfID_out);
 };
