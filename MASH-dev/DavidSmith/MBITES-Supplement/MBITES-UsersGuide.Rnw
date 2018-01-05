@@ -3,6 +3,11 @@
 \usepackage{csquotes}
 \renewcommand{\baselinestretch}{1.2} 
 \newcommand{\eg}{{\em e.g., }}
+\newcommand{\ie}{{\em i.e., }}
+\newcommand{\fp}{$\left\{f\right\}$}
+\newcommand{\lp}{$\left\{l\right\}$}
+\newcommand{\sp}{$\left\{s\right\}$}
+\newcommand{\mp}{$\left\{m\right\}$}
 
 
 \begin{document}
@@ -41,7 +46,21 @@ The code for MBITES is being developed for a public release, and will soon be pu
 {\em \bf Mosquito Bout-based \& Individual-based \\Transmission Ecology Simulator}
 \end{displayquote}
 
-MBITES is a software package for simulating adult mosquito ecology and behavior oriented towards analysis of problems related to mosquito-borne pathogen transmission and vector control. MBITES is comprised of several parts: a {\bf landscape} describing resources used by adult mosquitoes; the algorithms describing adult behavior as a sequence of flight {\bf bouts}; a set of configurable {\bf options} for simulating other aspects of mosquito life-history and behavior; {\bf vector control}; and the aquatic ecology. The following five sections describe these parts of MBITES. Each section begins with a brief summary or heuristic followed by implementation notes, relevant details, and a guide to the R code. 
+MBITES is a software package for simulating adult mosquito ecology and behavior. The purpose is to advance the science and analysis for problems related to mosquito-borne pathogen transmission and vector control. Conceptually, MBITES has several parts:
+\begin{itemize} 
+\item a {\bf landscape} describing resources used by adult mosquitoes; 
+\item the algorithms describing adult behavior as a sequence of {\bf flight bouts}; 
+\item a set of configurable {\bf options} for simulating other aspects of mosquito life-history and behavior; 
+\item the {\bf aquatic ecology}; and 
+\item {\bf vector control}. 
+\end{itemize} 
+The following five sections describe these parts of MBITES. Each section begins with a brief summary or heuristic followed by implementation notes, relevant details, and a guide to the code.
+
+\vspace{0.1in}
+
+\verb2NOTE: Version 1.0 is being developed as R code. Future 2 \\
+\verb2versions will retain the R interface, but the current 2 \\
+\verb2plan is to migrate the simulation code to C++2
 
 \paragraph{What is MASH?}
 
@@ -92,26 +111,51 @@ Species-level similarity is the default meaning of {\em \bf model} in MASH. With
 
 \section{Landscape}
 
-MBITES uses a landscape structure called \verb1MICRO1.  We think of a \verb1MICRO1 landscape as being comprised of different point sets on which mosquito activities occur: 
+% \subsection{Structure} 
+% \begin{itemize}
+% \item Point Sets
+%   \begin{itemize}
+%   \item $\left\{f\right\}$
+%   \item $\left\{l\right\}$
+%   \item $\left\{s\right\}$
+%   \item $\left\{m\right\}$
+%   \end{itemize}
+% \item Queues
+%   \begin{itemize}
+%   \item \verb1atRiskQ1
+%   \item \verb1eggQ1 
+%   \item \verb1imagoQ1 
+%   \end{itemize}
+% \end{itemize}
+
+%\subsection{Introduction}
+
+MBITES organizes activities around alandscape structure called \verb1MICRO1.  We think of a \verb1MICRO1 landscape as being comprised of different point sets called {\em sites}, and a set of \verb1QUEUES1 -- objects that are used to coordinate the exchange of information on a landscape. 
+
+\subsection{Sites}
+
+A site is a location on the landscape were events occur. There are four types of point sets with the resources required for adult mosquito behaviors:
 %
 \begin{itemize}
-\item[f] :: haunts or blood feeding sites where feeding occurs
-\item[l] :: habitats, short for aquatic habitats where egg laying occurs
-\item[s] :: sugar, or sites where sugar feeding occurs
-\item[m] :: mating sites
+\item[]\ff :: haunts or blood feeding sites where feeding occurs
+\item[]\ll :: habitats, short for aquatic habitats where egg laying occurs
+\item[]\ss :: sugar, or sites where sugar feeding occurs
+\item[]\mm :: mating sites
 \end{itemize}
 %
-In MBITES, blood feeding is an event that occurs only at a blood feeding site, which typically include all the houses and other dwellings where people live. Another set of points describes where humans go to seek care:
+To be clear, the convention is to limit the number of sites where blood feeding occurs.  In MBITES, blood feeding can only occur at a blood feeding site, which depends on the transmission system.  For some vectors, this will include all the dwellings where people live. 
+
+Another set of points describes where humans go to seek care:
 %
 \begin{itemize}
 \item[c] :: clinics or community health workers
 \end{itemize}
 %
-While this is the way we think about landscapes, there is in fact one master point set where {\em any} events happen, and each unique point is called a {\em site}. A set of boolean switch describes the kinds of events (\eg blood feeding, egg laying, sugar feeding, mating, or care seeking) occurring there.  
+%While this is the way we think about landscapes, there is in fact one master point set where {\em any} events happen, and each unique point is called a {\em site}. A set of boolean switch describes the kinds of events (\eg blood feeding, egg laying, sugar feeding, mating, or care seeking) occurring there.  
 
-Each site is determined by a location in space ($x,y$), and it has a {\em site type}, which determines how mosquitoes rest (\eg around a homestead; \verb1restingSpot()1 is described in Options : Resting Hazards). 
+Each site is determined by a location in space ($x,y$), and it has a {\em site type}, which calls a function \verb1restingSpot1 that determines the microsite where a mosquito rests.  Each site has a search weight associated with it. % for each species: $\omega_{i, *}$. 
 
-There are also other properties of each site. Each site has a pair of numbers that determine its location $(x,y)$. Each type of function ($*$) has a search weight associated with it for each species: $\omega_{i, *}$. 
+\subsection{Queues}
 
 The landscape provides the spatial template upon which objects from different components of the model can interact. Humans and mosquitoes interact mainly through blood feeding, but for this to occur, there must be a way for humans and mosquitoes to meet up on the landscape.  The structures that allow for components to interact are called queues.
 
@@ -121,6 +165,150 @@ The landscape provides the spatial template upon which objects from different co
 
 \paragraph{imagoQ} The imago is the mature adult insect. The \verb1imagoQ1 holds females emerging from aquatic habitats after pupation. This queue facilitates modularity by making it possible for any adult female module to interact with any ecology module describing immature aquatic forms.  
 
+\subsection{Features of a Landscape}
+
+It is not possible to run MBITES on no landscape. Every landscape must define a set of attributes for each point. 
+
+\subsubsection{Site Types and Resting Spot}
+
+Each sites has a {\em site type} that determines the landing microsites, which are used primarily for vector control. MBITES has two built-in site types. The simple site type and a homestead. 
+
+\paragraph{[0] Simple Site Type}
+
+The simple site type has two built-in options to stay or leave, if a mosquito is arriving or already here. The probability a mosquito does not stay after arriving from a search is already determined by the search parameter for a success. Landing behavior is set by a single parameter:
+\begin{equation}
+\begin{array}{r|c|c|}
+& \mbox{stay} & \mbox{leave} \\ \hline  
+\mbox{arriving} & 1 & 0 \\ \hline 
+\mbox{here} & p & 1-p \\ \hline 
+\end{array}
+\end{equation}
+
+\paragraph{[1] The Homestead}
+
+A homestead is a site type built to accomodate some modes of vector control. The options are to land on an indoor wall, to land on an outdoor wall, to land outside on vegetation, or to leave without landing.  
+
+\begin{equation}
+\begin{array}{r|c|c|c|c|c|}
+& \mbox{stay} & \mbox{vegetation} & \mbox{outside wall} & \mbox{inside wall} & \mbox{leave}  \\ \hline  
+\mbox{arriving} & a_{11} & a_{12} & a_{13} & a_{14} & 0\\ \hline 
+\mbox{vegetation} & a_{21} &  a_{22} & a_{23} & a_{24} & a_{25} \\ \hline 
+\mbox{outside wall} & a_{31} &  a_{32} & a_{33} & a_{34} & a_{35} \\ \hline 
+\mbox{inside wall} & a_{41} &  a_{42} & a_{43} & a_{44} & a_{45} \\ \hline 
+\mbox{leave} & a_{51} &  a_{52} & a_{53} & a_{54} & a_{55} \\ \hline 
+\end{array}
+\end{equation}
+
+\subsubsection{The Blood Meal Host Environment}
+
+Each blood feeding site has an object that stores the hosts present, one of the \verb1QUEUE1 objects that stitches MASH together, called the \verb1atRiskQ1. To run MBITES as a standalone program, it is necessary to create a static \verb1atRiskQ1. 
+
+\paragraph{Static Host Populations}
+
+To run MBITES in stand alone mode, it is necessary to configure the host population environment.  The basic parameter $Q$ is used to tune the weights of alternative hosts at each site such that it sets {\em on average}, the proportion of blood meals taken on a human.
+
+\subsubsection{Site-specific Hazards}
+
+
+
+\subsubsection{Search and Dispersion}
+
+\paragraph{Kernels \& Search Weights}
+
+\paragraph{Lookup Tables}
+
+
+
+\subsection{Setting Up a Landscape}
+
+\subsubsection{The Minimal Landscape}
+
+A useful construct is the ``minimal point set," where there is one representative point of each type to be considered. By default, all points in the minimal point set are at the same location $(0,0)$. 
+
+\subsubsection{Parametric Landscapes}
+
+\paragraph{Locations}
+
+The demo version builds point sets around centers. 
+
+\paragraph{Alternative Blood Hosts}
+
+
+\paragraph{Site Type}
+By default, the same matrix is used for all behavioral bouts, but it is also possible to configure different matrices for each behavioral bout: 
+\begin{itemize}
+\item \verb1homesteadRestingMatrix=01 sets a single matrix for all bouts
+\item \verb1homesteadRestingMatrix=11 sets different matrices for each bout, each one needing to be configured. 
+\end{itemize}
+
+\paragraph{Site-Specific Hazards}
+
+\begin{itemize}
+\item \verb1landingHazard_mean=01
+\item \verb1landingHazard_pdf=NULL1
+\item \verb1flightHazard_mean=01
+\item \verb1flightHazard_pdf=NULL1
+\end{itemize}
+
+\subsubsection{IO Utilities for Arbitrary Landscapes}
+
+ There are so many ways to build a landsdcape that we have not gone beyond a simple set of algorithms in MBITES. We presume users will want to provide their own point sets, so we provide IO. MBITES expects a table of this format for each resource type: 
+
+\paragraph{Feeding Sites}
+
+\begin{itemize}
+\item [x] :: east-west coordinate
+\item [y] :: north-south coordinate
+\item [S] :: the site type
+\item [w] :: the search weight
+\item [h] :: the site-specific hazard
+\item [z] :: the search weight for selecting non-human hosts. 
+\end{itemize} 
+
+\paragraph{Aquatic Habitats}
+
+\begin{itemize}
+\item [x] :: east-west coordinate
+\item [y] :: north-south coordinate
+\item [S] :: the site type
+\item [w] :: the search weight
+\item [h] :: the site-specific hazard
+\item [K] :: the carrying capacity of the sit 
+\end{itemize} 
+
+\paragraph{Sugar Sources}
+
+\begin{itemize}
+\item [x] :: east-west coordinate
+\item [y] :: north-south coordinate
+\item [S] :: the site type
+\item [w] :: the search weight
+\item [h] :: the site-specific hazard
+\end{itemize} 
+
+\paragraph{Mating Sites}
+
+\begin{itemize}
+\item [x] :: east-west coordinate
+\item [y] :: north-south coordinate
+\item [S] :: the site type
+\item [w] :: the search weight
+\item [h] :: the site-specific hazard
+\end{itemize} 
+
+
+ 
+% \begin{itemize}
+% \item [x] :: east-west coordinate
+% \item [y] :: north-south coordinate
+% \item [S] :: the site type
+% \item [h] :: the local resting hazard (\ie probability of dying while resting here)
+% \item [f] :: the blood feeding search weight (0, if not in $\left\{f\right\}$)
+% \item [l] :: the number of aquatic habitats (0, if not in $\left\{l\right\}$)
+% \item [s] :: the number of sugar sources (0, if not in $\left\{s\right\}$)
+% \item [m] :: the mating search weight (0, if not in $\left\{m\right\}$)
+% \item [z] :: the search weight for selecting non-human hosts. 
+% \end{itemize}
 
 \clearpage 
 
@@ -135,6 +323,7 @@ A mosquito bout tracks a mosquito from its launch to initiate one bout up to the
 \item[O] :: An attempt to lay eggs
 \item[M] :: Mating, which could include a search flight 
 \item[S] :: Sugar feeding, which could include a search flight 
+\item[E] :: Estivation, in which a mosquito becomes inactive 
 \end{itemize}
 %
 After the bout, a mosquito lands at a particular kind of place, determined by the function \verb1restingSpot()1. The mosquito's energetic state is then updated, with \verb1sugarEnergetics()1.
