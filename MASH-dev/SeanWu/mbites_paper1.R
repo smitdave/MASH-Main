@@ -12,6 +12,11 @@
 #
 ###############################################################################
 
+
+###############################################################################
+# load pointsets
+###############################################################################
+
 rm(list=ls());gc()
 set.seed(42L)
 
@@ -21,10 +26,106 @@ f_files = files_inDir[grep(pattern = "peridom.f",x = files_inDir)]
 l_files = files_inDir[grep(pattern = "peridom.l",x = files_inDir)]
 
 xy_lscape = vector(mode = "list",length = length(f_files))
+N = length(xy_lscape)
 
-for(i in 1:length(xy_lscape)){
+for(i in 1:N){
   xy_lscape[[i]]$f = read.table(file = paste0(files_dir,f_files[i]),header = TRUE,sep = ",",stringsAsFactors = FALSE)
   xy_lscape[[i]]$l = read.table(file = paste0(files_dir,l_files[i]),header = TRUE,sep = ",",stringsAsFactors = FALSE)
 }
 
 
+###############################################################################
+# load pointsets
+###############################################################################
+
+
+
+
+
+
+
+
+
+library(MASHmicro)
+# set.seed(42L)
+
+# make a tile
+DIR = "/Users/slwu89/Desktop/MICRO/"
+
+# setup
+Humans.MICRO.Setup()
+PfSI.MICRO.Setup()
+AQUA.Emerge.Setup()
+
+# MBITES setup
+MBITES.Setup(SUGAR = FALSE, MATE = FALSE, aquaModule = "emerge",timing = "exponential")
+
+# SEARCH setup
+MBITES.Search.Setup(module = "kernel")
+
+# landscape parameters
+nAqua = 20
+nPeriDom = 0
+nFeed = 15
+nSugar = 12
+nMate = 10
+emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
+landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,nMate = nMate,nSugar = nSugar,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
+
+# set up the peri-domestic bit
+periDomestic = rep(FALSE,nFeed)
+lambda = replicate(n = nFeed,expr = NULL,simplify = FALSE)
+module = rep(NA,nFeed)
+
+if(nPeriDom>0){
+  periDomestic[1:nPeriDom] = TRUE
+  lambda[1:nPeriDom] = simpleLambda_Emerge(N = nPeriDom,lambda = 5)
+  module[1:nPeriDom] = "emerge"
+}
+
+landscape_par$FeedingSite_PAR$periDomestic = periDomestic
+landscape_par$FeedingSite_PAR$lambda = lambda
+landscape_par$FeedingSite_PAR$module = module
+
+# human parameters
+patch_humans = rep(1,nFeed)
+n_humans = sum(patch_humans)
+patch_id = rep(x = 1:nFeed,patch_humans)
+home_id = rep(x = 1:nFeed,patch_humans)
+human_ages = unlist(lapply(X = patch_humans,FUN = MASHmacro:::siteAges_HumanPop))
+human_bWeight = MASHmacro:::bitingWeight_HumanPop(human_ages)
+human_par = lapply(X = 1:n_humans,function(i){
+  list(
+    houseID = home_id[i],
+    patchID = patch_id[i],
+    homeHouseID = home_id[i],
+    homePatchID = patch_id[i],
+    age = human_ages[i],
+    bWeight = human_bWeight[i]
+    
+  )
+})
+
+# M-BITES parameters
+nMosy = 50
+mbites_par_female = MBITES.Complex.Parameters(PfEIP = 1,SUGAR = FALSE,MATE = FALSE)
+mosquito_par = list(
+  N_female = nMosy,
+  ix_female = rep(1,nMosy),
+  genotype_female = rep(1,nMosy),
+  MBITES_PAR_FEMALE = mbites_par_female
+)
+
+MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+
+# PfPR
+pfpr = rep(0.5,nFeed)
+
+MicroTile$simMICRO_oneRun(tMax = 50,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
+
+MicroTile$resetMicro(MosquitoPar = mosquito_par,HumanPar = human_par,EL4P = FALSE,mating = TRUE)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+MicroTile$simMICRO_oneRun(tMax = 50,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
+
+detach("package:MASHmicro", unload=TRUE)

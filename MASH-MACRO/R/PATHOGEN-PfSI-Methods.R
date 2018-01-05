@@ -301,11 +301,11 @@ infectHumanPfSI <- function(tEvent, PAR){
     private$Pathogens$push_PfID(private$HumansPointer$increment_PfID()) # increment PfID
     # track event
     writeLines(text = paste0(c(private$myID,tEvent,"I",PAR$vectorID),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
+    self$add2Q_endPfSI(tEvent = tEvent)
     # queue fever
     if(runif(1) < self$get_PfSI_PAR("FeverPf")){
       self$add2Q_feverPfSI(tEvent = tEvent)
     }
-    self$add2Q_endPfSI(tEvent = tEvent)
   }
 }
 
@@ -449,6 +449,7 @@ treatPfSI <- function(tEvent, PAR){
   if(private$Pathogens$get_infected()){
     private$Pathogens$set_infected(FALSE)
   }
+  private$EventQueue$rmTagFromQ("endPfSI")
   private$Pathogens$set_chemoprophylaxis(TRUE)
   writeLines(text = paste0(c(private$myID,tEvent,"P","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   # Initiate a period of protection from chemoprophylaxis
