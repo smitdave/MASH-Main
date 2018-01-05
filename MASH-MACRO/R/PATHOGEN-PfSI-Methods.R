@@ -449,6 +449,7 @@ treatPfSI <- function(tEvent, PAR){
   if(private$Pathogens$get_infected()){
     private$Pathogens$set_infected(FALSE)
   }
+  private$EventQueue$rmTagFromQ("endPfSI")
   private$Pathogens$set_chemoprophylaxis(TRUE)
   writeLines(text = paste0(c(private$myID,tEvent,"P","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   # Initiate a period of protection from chemoprophylaxis
