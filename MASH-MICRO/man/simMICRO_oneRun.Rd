@@ -4,7 +4,8 @@
 \alias{simMICRO_oneRun}
 \title{MICRO \code{\link{MicroTile}}: One Simulation Run}
 \usage{
-simMICRO_oneRun(tMax, PfPAR, verbose = FALSE, trackPop = FALSE)
+simMICRO_oneRun(tMax, PfPAR, verbose = FALSE, trackPop = FALSE,
+  runID = NULL)
 }
 \arguments{
 \item{tMax}{length of simulation run}
