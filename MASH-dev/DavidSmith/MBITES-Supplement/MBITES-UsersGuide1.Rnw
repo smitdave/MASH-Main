@@ -1,0 +1,1235 @@
+\documentclass{article}
+\usepackage{mathtools}
+\usepackage{csquotes}
+\renewcommand{\baselinestretch}{1.2} 
+\newcommand{\eg}{{\em e.g., }}
+\newcommand{\ie}{{\em i.e., }}
+\newcommand{\fp}{$\left\{f\right\}$}
+\newcommand{\lp}{$\left\{l\right\}$}
+\newcommand{\ssp}{$\left\{s\right\}$}
+\newcommand{\mm}{$\left\{m\right\}$}
+
+
+\begin{document}
+
+\begin{centering}
+\Huge{MBITES}\\
+\large{Mosquito Bout-based and Individual-based \\ Transmission Ecology Simulator}\\
+\vspace{0.2in}
+\huge{A User's Guide} \\
+\vspace{0.2in}
+\large{\underline {MBITES Development Team:} \\ Sean Wu, Hector Sanchez, Qian Zhang, John Henry, Daniel Citron, Amit Verma, Arnaud Le Menach, David L Smith\\}
+
+\end{centering}
+
+%\newcommand{\mbites}{{\cal MBITES}}
+
+\SweaveOpts{concordance=TRUE}
+
+\vspace{1in}
+
+This document is a users guide to MBITES (Mosquito Bout-based and Individual-based Transmission Ecology Simulator). It is designed to give an oveview of the software for developers and users. Other documents describing MBITES include a manuscript for peer review and R documentation \footnote{Wu S, S{\' a}nchez-Castellanos H, Henry J, Zhang Q, Citron D, Verma A, Reiner RC Jr., Smith DL. Vector bionomics and vectorial capacity as emergent properties of mosquito behavior and ecology. For submission to {\em PLoS Computational Biology}.}. The code for MBITES is being developed for a public release, and will soon be published in a permanent archive. A GUI is available for configuring MBITES. It is distributed as part of the standard MBITES package. 
+
+\clearpage 
+\tableofcontents 
+\clearpage 
+
+\section{Introduction}
+
+\subsection{What is MBITES?}
+
+\begin{displayquote}
+{\em \bf Mosquito Bout-based \& Individual-based \\Transmission Ecology Simulator}
+\end{displayquote}
+
+MBITES is a software package for simulating adult mosquito ecology and behavior. The purpose is to advance the science and analysis for problems related to mosquito-borne pathogen transmission and vector control. Conceptually, MBITES has several parts:
+\begin{itemize} 
+\item a {\bf landscape} describing resources used by adult mosquitoes; 
+\item the algorithms describing adult behavior as a sequence of {\bf flight bouts}; 
+\item a set of configurable {\bf options} for simulating other aspects of mosquito life-history and behavior; 
+\item the {\bf aquatic ecology}; and 
+\item {\bf vector control}. 
+\end{itemize} 
+The following five sections describe these parts of MBITES. Each section begins with a brief summary or heuristic followed by implementation notes, relevant details, and a guide to the code.
+
+\vspace{0.1in}
+
+\verb2NOTE: Version 1.0 is being developed as R code. Future 2 \\
+\verb2versions will retain the R interface, but the current 2 \\
+\verb2plan is to migrate the simulation code to C++2
+
+\subsection{What is MASH?}
+
+\begin{displayquote}
+{\em {\bf Modular Analysis and Simulation for Health}}
+\end{displayquote}
+
+
+\begin{displayquote}
+{\em {\bf NOTE:} The following section gives some background on the basic concepts and design principles of MASH. We recommend reading it at some point, but feel free to skip it if you want to get on with learning MBITES.}
+\end{displayquote}
+
+MASH is a framework for simulating human health events and related phenomena (\eg pathogen transmission by mosquito populations). MBITES is a flexible module that runs the adult mosquito component of MASH. The terms ``component'' and ``module'' and ``flexible'' all have a specific meaning in MASH. The following section explains the terminology used in MBITES and MASH and the rationale for developing it.
+
+MASH is a simulation modeling framework, not a simulation model. To put it another way, the problem MASH was trying to solve was how to build a plug-and-play simulator for human health, not how to simulate human health. The core design problem for MASH was how to build an API (application program interface) defining how various components of a model interact. The philosophy of MASH was that every component should have at least two modules: one would be highly realistic and simulate the relevant phenomena in exquisite detail. Another would be dead simple. 
+
+The first disease to be implemented within MASH was malaria. The collection of all mechanistic models of human malaria have the same basic structural parts: a model of human malaria infection and immunity; a model of mosquito populations, including infection and development of malaria parasites; and some model of immature mosquito  populations in their aquatic habitats. In MASH, each one of these parts is called a \verb1COMPONENT1. Four distinct biological processes determine how these three components interact: malaria parasites can be passed from mosquitoes to infect humans when mosquitoes probe in anticipation of taking a blood meal; parasites infecting humans can be passed in the blood meal, infecting mosquitoes; adult mosquitoes lay eggs in aquatic habitats; and the eggs hatch, develop through four larval instars, then pupate and emerge as imago (the mature form) from the aquatic habitats to begin their lives as volant adults. A structure allowing MASH components to interact is called a \verb1QUEUE1. In its most general form, transmission describes the events when pathogens are transmitted, either from mosquitoes to humans or {\em vice versa}, but it also the dispersion of pathogens, the distances traveled by the pathogens between infection events. The \verb1LANDSCAPE1 is the part of the model that determines how dispersion is defined. 
+
+To be truly plug-and-play, it must be possible to run a component in standalone mode, by passing the inputs from other components trivially as parameters. This is what we have done here. 
+
+MBITES is the exquisitely detailed module for simulating the blood feeding behavior of adult mosquito populations. This document also describes how MBITES is coupled to the component describing the aquatic ecology. We describe how MBITES can be used to simulate pathogen transmission among populations of humans and mosquitoes; here we describe how that would happen without actually simulating transmission. This document describes how to run MBITES in standalone mode. 
+
+The structure of MASH is summarized in the following way:
+\begin{itemize}
+\item MASH Structure
+  \begin{itemize}
+  \item A population of \verb1HUMANS1 and their health states and health events is the core of MASH. 
+  \item A \verb1COMPONENT1 is a basic functional part of any human health model. 
+  \item A \verb1LANDSCAPE1 defines the spatial scaffold for interactions. 
+  \item A \verb1QUEUE1 is a component level structure allowing two distinct components to interact. 
+  \end{itemize} 
+\item A \verb1Module1 is a specific set of algorithms that instantiates a component. A module could be flexible in the sense that the same process could be represented by one of many different functional forms. 
+\item A \verb1Synthetic Population1 is the fully configured set of initial conditions.  
+\end{itemize}
+%
+MASH is a framework for building models that is modular and flexible. This gives rise to a complementary vocaublary to describe the models that arise. We consider MBITES to be a CLASS of models: 
+\begin{itemize}
+\item Two models belong to the same ORDER if they belong to the same CLASS and share the same state space. 
+\item Two models belong to the same FAMILY if they belong to the same ORDER and use the same functional forms.
+\item Two models belong to the same GENUS if they belong to the same FAMILY and share the same parameters.
+\item Two models belong to the same SPECIES if they belong to the same GENUS and share the same synthetic population.
+\item An individual model is an individual member of a SPECIES defined by its random number seed. 
+\end{itemize}
+%
+Species-level similarity is the default meaning of {\em \bf model} in MASH. Without some explicit way of mapping the state space, it is difficult to compare two models belonging to a different order. This hierarchical nomenclature system (borrowed from Linnaeus) makes it possible to talk about models defined by some other level of similarity (\eg model families).
+
+\clearpage 
+
+\subsection{What do I do with so many parameters?} 
+
+\begin{displayquote}
+{\em If you want to avoid a philosophical discussion of individual-based models, please skip ahead to} Section 1.
+\end{displayquote}
+
+Individual-based models have been criticized for many reasons. Most of these critiques are valid. William of Occam basically got it right, at least when it comes to problems related to statistical inference. Among many possible explanations, the simplest ones tend to be correct. With many parameters, you should be able to fit anything, and therefore know nothing! (There is even an old saying, attributed to various people: {\em Give me four parameters and I'll draw an elephant. Give me five and I'll make it wag it's tail.})  While this is a valid criticism of fitting individual based models to data, other problems arise when considering the future.
+
+The past and the future are fundamentally different: there was one past, but there are many possible futures.  If the only thing you would ever wanted to do was predict the future, then your best bet would probably be to take the parsimonious model and run it forward. You probably won't get a better prediction, on average, from any single model. There are, however, other things you want to do, and other ways you migh use models to get a better prediction. For example, you might want to evaluate a policy, and here's where the old paradigm breaks down. Are the conclusions of your model robust to all the sources of heterogeneity the parsimonious model averaged over?
+
+Consider a thought experiment. What if you could wave a wand and invent a model with an arbitrary degree of heterogeneity blindly fixing most of the parameters but leaving as many free parameters for fitting as you would have in an abstract and parametrically simple model. The rules of evidence would suggest the fits of these  models would be directly comparable. What gives any {\em a priori} weight to any particular model? There isn't any simple anser to that question, but none of the answers point automatically to the class of abstract and parametrically simple models most often used. A problem for science is that there are so many heterogeneous models, and they are very hard to specify. 
+
+The problem of evaluating the robustness of some policy boils down to figuring out some way of waving a wand and fitting the very large set of heterogeneous models to the data in some systematic way, and then turning each model around to predict the future. The prediction made from the ensemble of all those fitted heterogeneous models should be more robust than the simple one. MBITES is an honest stab at doing {\em that}. 
+
+How far can we get if we just ignore heterogeneity? The cheeky answer is that we can do everything and be assured we will never find a better answer, so long as we never go looking for one. If we're honest about the peformance of predictive models for infectious diseases, we'd have to admit we haven't been very successful. When the problem comes to giving advice, we don't know if we're doing any better.  Obviously, we don't have a sound basis for ignoring heterogeneity, however inconvenient it might be. That is, in part, why MBITES exists. 
+
+Since we can't wave our wands, we need a way of dealing with the daunting problem of heterogeneity, besides the easily accepted answer; ignore it. MBITES has taken a different approach. The flexibility built into MBITES makes it comparatively easy to configure a landscape with any degree of heterogeneity, but it creates a new problem of how to systematically explore heterogeneity.  Our approach is to start from the same point as others -- we begin by anchoring the simulation model to the case that most closely resembles the homogenous approximation, and then we steadily add heterogeneity. There is a logical progression: 
+\begin{itemize}
+\item If it's not necessary, turn it off. 
+\item If it's on, set everything to a constant value. 
+\item If a constant value won't do, try a line. 
+\item If the value isn't the same everywhere, see have far you can get with the simplest way of incorporating noise.
+\item If there's a pattern, base it on a case study.  
+\end{itemize}
+To put it another way, we honor William of Occam by preferring simple answers, in part, so we can say whether something we've observed can be explained with a simpler model. Our question, though, is not to explain the past but to know with some confidence that we are making robust policy recommendtions for the future. With these principles in mind, we've developed a set of functions and utilities to set up landscapes that roughly follow these rules. 
+
+\clearpage 
+
+\section{The Adult Female Mosquito: An Overview}
+
+\subsection{The {\em in Silico} Mosquito}
+
+In MBITES, an adult female mosquito is a collection of quantitative or categorial variables tracking a mosquito's state: 
+%
+\begin{itemize}
+\item Behavioral state
+\item Level of sexual maturity
+\item Location
+\item Energy reserve levels
+\item Chronological age
+\item Reproductive age (?)
+\item Physical condition, or the amount of damage sustained
+\item Infectious status and infectiousness 
+\item Genotype and phenotype (for insecticide resistance and genetic modification)
+\item Parents (for simulating inheritance)
+\end{itemize}
+
+\subsection{Behavioral States and Flight Bouts}
+
+A mosquito bout tracks a mosquito from its launch to initiate one bout up to the point when it launches itself to initiate the next bout. Conceptually, the structure of a bout is:  {\bf Launch} - {\bf Try} - {\bf Land} - {\bf Rest}. There are 8 types of behavioral bouts corresponding to each one of 8 behavioral states. 
+\begin{itemize}
+\item[F] :: Blood feeding search  to find a place where blood feeding can occur
+\item[B] :: Blood feeding attempt to approach a host for a blood meal and to blood feed
+\item[R] :: The post-prandial resting bout
+\item[L] :: Egg laying habitat search to find a place where egg laying can occur
+\item[O] :: Attempt to oviposit 
+\item[S] :: Sugar feeding, which could include a search flight 
+\item[M] :: Mating, which could include a search flight 
+\item[E] :: Estivation, in which a mosquito becomes inactive 
+\end{itemize}
+%
+The {\bf Try} part of the bout -- what happens between launching and landing is elaborated upon in each bout. The try is assumed to be of comparatively short duration and (if successful) to lead to a state transition. After each bout, a mosquito lands at a particular kind of place, determined by the function \verb1restingSpot1. The mosquito's energetic state is then updated, with \verb1sugarEnergetics1. Even if a mosquito encountered the specific hazards associated with the bout, other mortality can occur as a result of flight stress or from one of the many hazards during landing. At the end, the probability of surviving is computed by the functions: \verb1surviveResting1 and \verb1surviveFlight1. Finally, every mosquito event is logged through \verb1historyTrack1. 
+
+The code describing each bout type is found in the function \verb1boutX1 where \verb1X1 is the bout letter. The core bouts are {\bf F, B, R, L,} and {\bf O}; the optional states {\bf S,M,} and {\bf E} can be turned on and utilized if necessary. 
+
+\subsection{The Life of a Mosquito}
+
+Two common properties of each bout are the probability of surviving and the time interval between two bouts. These must be configured separately for each flight bout. 
+
+\subsection{Implementation Notes}
+
+All bouts are implemented within a generic bout framework, in the function \verb1mbites_oneBout()1.
+
+In computing the outcome of a flight bout, variables track the  event times (\verb1tNow1, and \verb1tNext1) -- the moment when it started the bout; the mosquito's location among the point sets (\verb1locNow1, and \verb1locNext1); and the mosquito's present and future state (\verb1state1, and \verb1stateNew1). Before starting a new flight bout, \verb1tNext1 has been checked to be sure other dependent elements of the simulation have been correctly set. 
+Upon entering the bout, the mosquitoes time, state, and location are updated:
+\begin{itemize}
+\item \verb1tNow = tNext1
+\item \verb1tNext = timing()1
+\item \verb1locNow = locNext1
+\item \verb1locNext = moveMe()1
+\item \verb1state = stateNew1
+\end{itemize}
+The \verb1state1 ($=$\verb1X1) determines which kind of bout occurs; \verb1boutX1 is run, setting \verb1stateNew1. 
+
+To avoid errors caused by updating \verb1state1 at the wrong time, all calculations within a bout use the {\em present} time, location, and state: \verb1tNow1, \verb1state1, and \verb1locNow1. 
+
+To avoid resurrecting a dead mosquito or resuscitating an estivating mosquito, any code that could change a mosquito's behavioral state is run only if the function \verb1isActive()1 returns \verb1TRUE1. 
+
+
+\paragraph{R-Code}
+<<>>=
+mbites_oneBout <- function(){
+
+  # update time and state
+  private$tNow = private$tNext # update time
+  private$state = private$stateNew # update current state
+  self$timing() # update tNext
+
+  # movement
+  self$moveMe()
+
+  # bout
+  switch(private$state,
+    F = {self$boutF()},
+    B = {self$boutB()},
+    R = {self$boutR()},
+    L = {self$boutL()},
+    O = {self$boutO()},
+    M = {self$boutM()},
+    S = {self$boutS()},
+    {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
+  )
+
+  # landing spot
+  self$restingSpot()
+
+  # energetics
+  self$sugarEnergetics()  # MBITES-Generic-Energetics.R
+
+  # survival
+  self$surviveResting()     # MBITES-Generic-Survival.R
+  self$surviveFlight()      # MBITES-Generic-Survival.R
+
+  # log history
+  private$history$historyTrack(privateEnv = private, alive = self$isAlive())
+}
+@
+
+\clearpage 
+
+\section{Landscape}
+
+% \subsection{Structure} 
+% \begin{itemize}
+% \item Point Sets
+%   \begin{itemize}
+%   \item $\left\{f\right\}$
+%   \item $\left\{l\right\}$
+%   \item $\left\{s\right\}$
+%   \item $\left\{m\right\}$
+%   \end{itemize}
+% \item Queues
+%   \begin{itemize}
+%   \item \verb1atRiskQ1
+%   \item \verb1eggQ1 
+%   \item \verb1imagoQ1 
+%   \end{itemize}
+% \end{itemize}
+
+%\subsection{Introduction}
+
+\subsection{Overview}
+
+MBITES organizes activities around a micro-ecological landscape structure, called \verb1MICRO1.  We think of a \verb1MICRO1 landscape as being comprised of different point sets called {\em sites}, and a set of \verb1QUEUES1 -- objects that are used to coordinate the exchange of information between different model components. 
+
+\subsubsection{Sites}
+
+A site is a location on the landscape were events occur. Conceptually, each site represents a small area, such as the area surrounding a household.
+
+\paragraph{Mosquitoes} 
+There are four types of point sets with the resources required for adult mosquito behaviors:
+%
+\begin{itemize}
+\item[\fp] :: haunts or blood feeding sites where feeding occurs
+\item[\lp] :: habitats, short for aquatic habitats where egg laying occurs
+\item[\ssp] :: sugar, or sites where sugar feeding occurs
+\item[\mm] :: mating sites
+\end{itemize}
+%
+To be clear, the convention is to limit the number of sites where blood feeding occurs.  In MBITES, blood feeding can only occur at a blood feeding site, which depends on the transmission system.  For some vectors, this will include all the dwellings where people live. 
+
+%\paragraph{Points of Care} 
+%Another set of points describes where humans go to seek care:
+%
+%\begin{itemize}
+%\item[c] :: clinics or community health workers
+%\end{itemize}
+%
+%While this is the way we think about landscapes, there is in fact one master point set where {\em any} events happen, and each unique point is called a {\em site}. A set of boolean switch describes the kinds of events (\eg blood feeding, egg laying, sugar feeding, mating, or care seeking) occurring there.  
+
+Each site is determined by a location in space ($x,y$), a search weight ($\omega$), and a {\em site type}. When a mosquito lands, a function \verb1restingSpot1 is called that determines the microsite where a mosquito rests.
+
+\subsubsection{Queues}
+
+The landscape provides the spatial template upon which objects from different components of the model can interact. Humans and mosquitoes interact mainly through blood feeding, but for this to occur, there must be a way for humans and mosquitoes to meet up on the landscape.  The structures that allow for components to interact are called queues. Similarly, adult female mosquitoes lay eggs in aquatic habitats, and after hatching, developing through four laval instars, and pupating, mature adults emerge. The populations of immature mosquitoes are a different component, so egg laying and recruitment facilitate through queues makes modularity possible. Finally, another queue allows male and female mosquitoes to find each other at swarming sites.  
+
+\paragraph{atRiskQ} The \verb1atRiskQ1 holds information about all the blood hosts who are present at each blood feeding site. A paired function, called \verb1chooseHost()1 returns the identity of the host a mosquito will approach during the blood feeding attempt. 
+
+\paragraph{eggQ} Each aquatic habitat has an \verb1eggQ1 that olds all the eggs laid at each aquatic habitat. This queue facilitates modularity by making it possible for any adult female module to interact with any ecology module describing immature aquatic forms. 
+
+\paragraph{imagoQ} The imago is the volant mature adult insect. The \verb1imagoQ1 holds females emerging from aquatic habitats after pupation. This queue facilitates modularity by making it possible for any adult female module to interact with any ecology module describing immature aquatic forms.  
+\paragraph{matingQ} Adult male mosquitoes form swarms. The \verb1matingQ1 holds the identity of all the males in a swarm -- the female chooses a male to mate with. 
+
+\subsection{Landscape Features}
+
+It is not possible to run MBITES on no landscape. Every landscape must define a set of attributes for each point. These attributes are described in some detail in the following sections. 
+
+\subsubsection{Site Types}
+
+Each sites has a {\em site type} that determines the landing microsites, which are used primarily for vector control. MBITES has two built-in site types. The simple site type and a homestead. 
+
+\subsubsection{Resting Spot}
+
+A simple type is given an index 
+
+\paragraph{R Code}
+
+<<>>=
+mbites_restingSpot <- function(){
+  if(self$isActive()){
+    if(self$searchFail()){
+      private$lspot = "l"
+    } else {
+      oldSpot = private$lspot
+      private$lspot = self$newSpot() # choose new lspot
+      if(oldSpot != "i" & private$lspot == "i"){
+        self$enterHouse() # enterHouse
+      }
+    }
+  }
+}
+@
+
+\paragraph{[0] Simple Site Type}
+
+The simple site type has two built-in options to stay or leave, if a mosquito is arriving or already here. The probability a mosquito does not stay after arriving from a search is already determined by the search parameter for a success. Landing behavior is set by a single parameter:
+\begin{equation}
+\begin{array}{r|c|c|}
+& \mbox{stay} & \mbox{leave} \\ \hline  
+\mbox{arriving} & 1 & 0 \\ \hline 
+\mbox{here} & p & 1-p \\ \hline 
+\end{array}
+\end{equation}
+
+\paragraph{[1] The Homestead}
+
+A homestead is a site type built to accomodate some modes of vector control. The options are to land on an indoor wall, to land on an outdoor wall, to land outside on vegetation, or to leave without landing.  
+
+\begin{equation}
+\begin{array}{r|c|c|c|c|c|}
+& \mbox{stay} & \mbox{vegetation} & \mbox{outside wall} & \mbox{inside wall} & \mbox{leave}  \\ \hline  
+\mbox{arriving} & a_{11} & a_{12} & a_{13} & a_{14} & 0\\ \hline 
+\mbox{vegetation} & a_{21} &  a_{22} & a_{23} & a_{24} & a_{25} \\ \hline 
+\mbox{outside wall} & a_{31} &  a_{32} & a_{33} & a_{34} & a_{35} \\ \hline 
+\mbox{inside wall} & a_{41} &  a_{42} & a_{43} & a_{44} & a_{45} \\ \hline 
+\mbox{leave} & a_{51} &  a_{52} & a_{53} & a_{54} & a_{55} \\ \hline 
+\end{array}
+\end{equation}
+
+\subsubsection{The Blood Meal Host Environment}
+
+Each blood feeding site has an object that stores the hosts present, one of the \verb1QUEUE1 objects that stitches MASH together, called the \verb1atRiskQ1. To run MBITES as a standalone program, it is necessary to create a static \verb1atRiskQ1. In either case, the non-human hosts and mosquito traps at a site all attract mosquitoes to some degree. The \verb1atRiskQ1 holds the information about all potential bloodmeal hosts. 
+
+\paragraph{Static Host Populations}
+
+To run MBITES in stand alone mode, it is necessary to configure the host population environment.  The basic parameter $Q$ is used to tune the weights of alternative hosts at each site such that it sets {\em on average}, the proportion of blood meals taken on a human.
+
+\subsubsection{Site-specific Hazards}
+
+Each site has a number that is the probability of surviving the local hazards. By default, this is set to $1$, but there is some site-specific mortality that occurs (\eg from predation) if the probability of surviving is set to anything less than 1.  These site-specific hazards operate in addition to any mortality occuring as a result of vector-control, which is configured separately. 
+
+
+\subsection{The Landscape :: Built-in Setup Options}
+
+MBITES provides some built-in utitities for setting landscape options, as described in the sections below. It is also possible to simulate some behaviors on a minimal landscape, or to set up landscapes and import them into MBITES (see MICRO I/O )
+
+\subsubsection{Point Sets xy-Coordinates}
+
+\subsubsection{Site-Type and Resting Spot}
+
+By default, the same matrix is used for all behavioral bouts, but it is also possible to configure different matrices for each behavioral bout: 
+\begin{itemize}
+\item \verb1homesteadRestingMatrix=01 sets a single matrix for all bouts
+\item \verb1homesteadRestingMatrix=11 sets different matrices for each bout, each one needing to be configured. 
+\end{itemize}
+
+\subsubsection{Site-Specific Hazards}
+
+\begin{itemize}
+\item \verb1landingHazard_mean=01
+\item \verb1landingHazard_pdf=NULL1
+\item \verb1flightHazard_mean=01
+\item \verb1flightHazard_pdf=NULL1
+\end{itemize}
+
+\subsubsection{Search and Dispersion}
+
+\subsubsection{Alternative Blood Hosts}
+
+\subsection{The Minimal Landscape}
+
+A useful construct is the ``minimal point set," where there is one representative point of each type to be considered. By default, all points in the minimal point set are at the same location $(0,0)$. 
+
+QUESTION: Can we implement this sensibly and get reasonable results? Or do we need to have two points of each type? 
+
+
+\subsection{Making Landscapes for MICRO}
+
+There are so many ways to build a landsdcape that we have not gone beyond a simple set of algorithms in MBITES. We presume users will want to provide their own point sets, so we provide IO. MBITES expects a table of this format for each resource type: 
+
+\begin{itemize}
+\item [x] :: east-west coordinate
+\item [y] :: north-south coordinate
+\item [S] :: the site type
+\item [w] :: the search weight
+\item [h] :: the site-specific hazard
+\item [z] :: the search weight for selecting non-human hosts. 
+\end{itemize} 
+
+\paragraph{I/O for Aquatic Habitats}
+
+\begin{itemize}
+\item [x] :: east-west coordinate
+\item [y] :: north-south coordinate
+\item [S] :: the site type
+\item [w] :: the search weight
+\item [h] :: the site-specific hazard
+\item [H] :: the habitat type
+\item [...] :: parameters for the habitat 
+\end{itemize} 
+
+\paragraph{I/O for Sugar Sources}
+
+\begin{itemize}
+\item [x] :: east-west coordinate
+\item [y] :: north-south coordinate
+\item [S] :: the site type
+\item [w] :: the search weight
+\item [h] :: the site-specific hazard
+\end{itemize} 
+
+\paragraph{I/O for Mating Sites}
+
+\begin{itemize}
+\item [x] :: east-west coordinate
+\item [y] :: north-south coordinate
+\item [S] :: the site type
+\item [w] :: the search weight
+\item [h] :: the site-specific hazard
+\end{itemize} 
+
+
+ 
+% \begin{itemize}
+% \item [x] :: east-west coordinate
+% \item [y] :: north-south coordinate
+% \item [S] :: the site type
+% \item [h] :: the local resting hazard (\ie probability of dying while resting here)
+% \item [f] :: the blood feeding search weight (0, if not in $\left\{f\right\}$)
+% \item [l] :: the number of aquatic habitats (0, if not in $\left\{l\right\}$)
+% \item [s] :: the number of sugar sources (0, if not in $\left\{s\right\}$)
+% \item [m] :: the mating search weight (0, if not in $\left\{m\right\}$)
+% \item [z] :: the search weight for selecting non-human hosts. 
+% \end{itemize}
+
+\clearpage 
+
+\section{Blood Feeding}
+
+\subsection{Blood Feeding Search Bout [F]}
+
+If a female mosquito is not in the neighborhood of a blood meal host, she must search for one. She might also initiate a new search bout, even if the site she occupies is suitable for blood feeding. In some cases, such as peri-domestic breeding, where it is not necessary to move to find a bloodmeal host, she might initiate a blood feeding attempt bout without a blood meal search bout. 
+
+A flight search bout for blood feeding could begin anywhere, but
+it always ends at a {\em feeding site} or {\em haunt}:
+%
+\begin{equation}
+%
+\left\{  l \right\}
+\cup
+\left\{  f \right\}  \cup \ldots
+\overset{{\cal K}_F}{\rightarrow}
+\left\{  f \right\}
+%
+\end{equation}
+%
+The outcome of a search bout is either mosquito death, a new
+(possibly the same) location and behavioral state, or a
+frustrated search attempt without a change of behavioral state.
+
+The function ${\cal K}_F$ is implemented by \verb1rMove()1, described in the options below. 
+
+\paragraph{Configuration}
+
+\begin{itemize}
+\item \verb1boutF_surviveFlight_function=NULL1
+  \begin{itemize}
+  \item \verb1boutF_surviveFlight=.991
+  \end{itemize}
+\item \verb1boutF_surviveFlight_function="linearByDistance"1
+  \begin{itemize}
+  \item \verb1boutF_surviveFlight=1$.99- \psi\cdot \mbox{distance}$
+  \end{itemize}
+\end{itemize}
+
+\paragraph{Implementation}
+
+\begin{itemize}
+%
+\item The function \verb1rMove()1 is called to determine the mosquito's next location. 
+%
+\item A parameter, \verb1bfsb.s1, determines whether a mosquito
+has a ``success'' on its approach to the haunt. If the flight was
+a ''success,'' then its behavioral state is set to {\bf B}.
+Otherwise, it remains in state {\bf F}.
+%
+\item The function  \verb1restingSpot()1 is then called. A
+mosquito can fail to find a suitable resting place and thus
+decided to leave (denoted \verb1bfrs.f1) in which case its
+behavioral state is set to {\bf F}.
+%
+\item The function  \verb1sugarEnergetics()1 is then called. A
+mosquito can fail to find a suitable resting place and thus
+decided to leave (denoted \verb1bfrs.f1) in which case its
+behavioral state is set to {\bf F}.
+%
+\item The functions \verb1surviveFlight()1 is then called, which
+computes the probability of surviving the flight, \verb1bfsb.fs1.
+If a mosquito dies, its state is set to {\bf D}.
+%
+\item The functions \verb1surviveResting()1 is then called, which
+computes the probability of surviving from landing through
+launch, \verb1bfsb.rs1. If a mosquito dies, its state is set to
+{\bf D}.
+%
+\end{itemize}
+
+\paragraph{Transition Probabilities}
+
+The mosquito's ending state is:
+
+\begin{itemize}
+\item[{\bf D}] with probabilty $P_{FD} = 1 - $\verb1bfsb.fs1 $\times$
+\verb1bfsb.rs1
+\item[{\bf F}] with probability $P_{FF} = (1-P_{FD}) ($\verb1bfrs.f1 $+
+(1-$\verb1bfrs.f1$)(1-$\verb1bfsb.s1$))$.
+\item[{\bf B}] with probability $P_{FB} = 1-P_{FF}$.
+\end{itemize}
+
+\paragraph{R-Code}
+
+
+<<>>=
+mbites_boutF <- function(){
+  if(private$lspot != "l" & runif(1) < 
+     private$FemalePopPointer$get_MBITES_PAR("F_succeed")){
+    private$stateNew = "B"
+  } else {
+    private$stateNew = "F"
+  }
+}
+@
+
+\subsection{Blood Feeding Attempt Bout [B]}
+
+A blood feeding bout begins when a mosquito chooses a host to
+approach. Information about the human hosts present in each haunt
+are stored in a queue, called {\em atRisk}. Other potential blood
+meal hosts (\eg cattle) can also be present. Each host has a
+weight, which is used in a multinomial probability distribution
+function to select one of the hosts to approach.
+
+After selecting a host, different functions determine the outcome
+of an attempt, depending on whether the host is human or another
+vertebrate animal. As a mosquito approaches a human attempting to
+blood feed, there are several steps: an approach, probing, and
+the blood meal. The mosquito could be frustrated or killed at
+each one of these steps (\eg from swatting). A mosquito blood
+feeding on a human becomes infected with a pathogen with some
+probability. Pathogens mature by a (possibly temperature
+dependent) rule determining EIP at some point in the future, if
+the mosquito is still alive.
+
+The process for feeding on a non-human vertebrate animals is
+simpler; parameters determine the probability of death or success
+(and their complement, failure followed by a new attempt).
+
+After successfully blood feeding, a mosquito's behavioral state
+changes to the post-prandial resting bout. If a mosquito survives
+the attempt but does not succeed in taking a blood meal, then it
+can either repeat a blood feeding attempt or leave the area to
+search for a new site.
+
+If a mosquito has successfully blood fed, a random variate is
+drawn to determine the size of the blood meal, and there is
+another function that determines whether the mosquito survives
+the stress associated with blood feeding, depending on the size
+of the blood meal.
+
+\paragraph{[B] Configuration}
+
+default for blood meal size. 
+
+\begin{itemize}
+\item \verb1boutB_surviveFlight=0.991
+\item \verb1chooseHost()1
+\item \verb1bloodMealSize_function=NULL1
+\end{itemize}
+
+\paragraph{Human Blood Meal}
+
+
+\begin{itemize}
+\item \verb1boutB_surviveHumanApproach1
+\item \verb1boutB_successHumanApproach1
+\item \verb1boutB_surviveHumanProbing1
+\item \verb1boutB_successHumanProbing1
+\item \verb1boutB_surviveHumanBloodFeed1
+\item \verb1boutB_successHumanBloodFeed1
+\end{itemize}
+
+\paragraph{Non-Human Blood Meal}
+
+\begin{itemize}
+\item \verb1boutB_surviveOther1
+\item \verb1boutB_successOther1
+\end{itemize}
+
+\section{The Blood Meal and the Egg Maturation}
+
+\subsection{Blood Meal Size}
+
+\begin{itemize}
+\item \verb1eggBatch_function=NULL1
+  \begin{itemize}
+  \item \verb1eggBatchSize1
+  \item \verb1refeed_function=NULL1
+    \begin{itemize}
+    \item \verb1pr_Refeed1
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{Egg Batch Size and Maturation}
+
+\begin{itemize}
+\item \verb1eggBatch_function="proportional"1
+  \begin{itemize}
+  \item \verb1bloodMealSize_function="beta"1
+    \begin{itemize}
+    \item \verb1bloodMealSize_mean1
+    \item \verb1bloodMealSize_ss1
+    \item \verb1maxEggBatch1
+  \end{itemize}
+  \item \verb3refeed_function="1-zzSigmoid"3
+    \begin{itemize}
+    \item \verb1refeed_pzero1
+    \item \verb1refeed_p501
+    \item \verb1refeed_slope1
+    \end{itemize}
+  \end{itemize}
+  \item \verb1eggBatch_function = "Aedes"1
+    \begin{itemize}
+    \item \verb1bloodMealSize_function="beta"1
+    \begin{itemize}
+    \item \verb1bloodMealSize_mean1
+    \item \verb1bloodMealSize_ss1
+    \item \verb1maxEggBatch1
+    \end{itemize}
+     \item \verb3refeed_function="fullBatch"3
+      \begin{itemize}
+      \item \verb1blood4FullBatch=x1 :: The number of full bloodmeals (or equivalent, usually $x >1$), required for a full batch of eggs. 
+      \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{Post Prandial Resting Bout [R]}
+
+The outcome of a post prandial resting bout is either death,
+another attempt to blood feed, or an egg laying search bout.
+
+Transition to egg laying behaviors depends on a rule determining
+how eggs mature, depending on the time required for egg
+maturation {\em vs.} the time required for a feeding bout. If egg
+maturation occurs every feeding bout, then blood is provisioned
+into eggs; the larger the blood meal, the larger the egg batch. A
+mosquito could choose to feed again, depending on the size of the
+blood meal / egg batch. Another option is that the eggs require
+time or blood resources to mature. If eggs are maturing, a
+mosquito repeats a blood feeding attempt until the eggs are
+mature.
+
+If a mosquito survives, but the eggs are not mature or if she
+decides to top-up, she will attempt another blood meal. Even if
+eggs are mature, the mosquito may attempt to blood feed again,
+depending on the size of the last bloodmeal. Otherwise, a
+surviving mosquito makes an attempt to lays eggs.
+
+\paragraph{Configuration Options}
+
+\begin{itemize}
+\item \verb1boutR_surviveFlight1
+\item \verb1eggBatch_function=NULL1
+  \begin{itemize}
+  \item \verb1eggBatchSize1
+  \item \verb1refeed_function=NULL1
+    \begin{itemize}
+    \item \verb1pr_Refeed1
+    \end{itemize}
+  \end{itemize}
+  \item \verb1eggBatch_function!=NULL1 (Section 5, below)
+\end{itemize}
+
+\section{Egg Laying}
+
+\subsection{Egg Laying Search Bout [L]}
+
+A female mosquito must search for an egg laying habitat, though
+(as in the case of peri-domestic breeding) one might be readily
+available. In such cases, the ``search'' results only in a change
+of state. A flight search bout for blood feeding could begin
+anywhere, but it always ends at a haunt:
+%
+\begin{equation}
+%
+\left\{ l\right\}  \cup \left\{ f\right\}
+\overset{L}{\rightarrow} \left\{ l\right\}
+%
+\end{equation}
+%
+The outcome of a search bout is either mosquito death, success
+and a change of location and behavioral state, or a frustrated
+search attempt with a change of location but without changing
+behavioral state. In some cases, such as peri-domestic breeding,
+where a mosquito finds herself already in an egg laying site, the
+mosquito might bypass an egg laying search flight.
+
+\paragraph{Configuration}
+
+\begin{itemize}
+\item \verb1boutL_surviveFlight1
+\item \verb1boutL_success1
+\end{itemize}
+
+\subsection{Egg Laying Attempt Bout [O]}
+
+An egg laying bout involves a series of egg laying attempts where
+a mosquito dies, successfully lays some fraction of the eggs and
+initiates a new egg laying search bout, or is frustrated. If
+frustrated, she will either either make another attempt to lay
+eggs or initiate a new attempt somewhere else.
+
+\begin{itemize}
+\item \verb1boutO_surviveFlight1
+\item \verb1boutO_success1
+\item \verb1boutO_skip=NULL1
+\item \verb1boutO_skip="even"1
+  \begin{itemize}
+  \item \verb1skip_N1 
+  \end{itemize}
+\end{itemize}
+
+
+
+\section{Energetics and Sugar Feeding}
+
+\subsection{Flight Energetics}
+
+A variable track's the level of each mosquito's energy reserves,
+and each bout depletes a mosquito's energy reserves by some
+amount. These energy reserves could be restored by blood feeding,
+depending on the species (a parameter is set to determine how
+much energy a female mosquito is able to derive from blood).
+Otherwise, a mosquito must restore its energy reserves by sugar
+feeding. Sugar sources are distributed across the landscape, at
+the points in $\left\{ s\right\} $, including possibly at
+swarming sites, haunts, and habitats. Sugar feeding could occur
+in two ways, through a sugar feeding bout or opportunistically.
+
+The variable \verb1energy1 tracks a mosquito's energy reserves on a scale of $(0,1]$. A mosquito is dead if it ever has $0$ energy units. Basic energy use is configured by describing what proportion of energy is used during a flight. For convenience, this is the inverse of the total number of flights a mosquito could take if it started with a full load and never refueled, $EU$.  For example, after topping up to full and taking $n$ flights, a mosquito's energy would have the value $1-n/EU$. 
+
+\begin{itemize}
+\item \verb1flightEnergetics=FALSE1
+\item \verb1flightEnergetics=TRUE1
+  \begin{itemize}
+  \item \verb1flightEnergetics_EU1 :: Energy use per flight, a number between $0$ and $1$. The inverse of this number is approximately the number of flights a mosquito can take before it runs out of energy (see above). 
+  \item \verb8flightEnergetics_bloodTopUp_EU=08 :: Setting it to $x>0$ means a mosquito is able to take $x$ flights as a result of a full blood meal. 
+  \item \verb1flightEnergetics_survival=NULL1 :: The mosquito dies only if its energy state falls below.
+  \item \verb1flightEnergetics_survival="zzSigmoid"1 :: Survival declines to zero as the energy state approaches zero. 
+    \begin{itemize}
+    \item \verb8damage_zzSigmoid_zero8
+    \item \verb8damage_zzSigmoid_p508
+    \item \verb8damage_zzSigmoid_slope8
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{Sugar Feeding}
+
+Sugar feeding builds on flight energetics. 
+
+\begin{itemize}
+\item \verb1sugarFeeding = FALSE1
+\item \verb1sugarFeeding = TRUE1
+  \begin{itemize}
+  \item \verb8flightEnergetics_sugarTopUp_EU=08 :: Setting it to $x>0$ means a mosquito is able to take $x$ flights as a result of a full blood meal.
+  \item \verb1sugarFeeding_boutS=FALSE1
+  \item \verb1sugarFeeding_boutS=TRUE1 (see {\em Sugar Feeding Bout}, below)
+  \item \verb1sugarFeeding_opportunistic=FALSE1
+  \item \verb1sugarFeeding_opportunistic=TRUE1 (see {\em Opportunistic  Sugar Feeding}, below)
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{[S] Sugar Feeding Bout}
+
+A female mosquito's energy reserves are checked at the end of
+every other kind of bout, and a function determines whether a
+mosquito switches from some other state into an active sugar
+feeding behavioral state, thereby initiating a sugar feeding
+bout. A mosquito sugar feeding bout could begin at any haunt or
+at another habitat, but it always ends in a sugar feeding site:
+%
+\begin{equation}
+%
+\left\{ f\right\} \cup \left\{ l\right\}  \cup \left\{ m\right\}
+\cup \left\{ s\right\}  \overset{L}{\rightarrow} \left\{
+s\right\}
+%
+\end{equation}
+%
+The outcome of a sugar bout is either death, a sugar meal, or
+another attempt. If a sugar feeding bout succeeds, the sugar
+reserves are topped up.
+
+\begin{itemize}
+\item \verb1sugarFeedingBout=TRUE1
+  \begin{itemize}
+  \item \verb1boutS_survive1
+  \item \verb1initSugarFeedingBout_function = "zzSigmoid"1
+    \begin{itemize}
+    \item \verb1initSugarFeedingBout_pzero1
+    \item \verb1initSugarFeedingBout_p501
+    \item \verb1initSugarFeedingBout_slope1
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+
+\subsubsection{Opportunistic Sugar Feeding}
+
+During any other kind of bout, opportunistic sugar feeding can be
+triggered in a female if sugar is present. The functions
+triggering obligate and opportunistic feeding are, by default,
+shifted so that a female mosquito is more likely to feed
+opportunistically than to actively sugar feed. The sugar reserves
+of a mosquito are checked. The sugar at the source has a ``search
+weight,'' and functions determine whether a mosquito chooses to
+feed based on energy reserve levels and the weight. Another
+function determines how much the reserves are topped up. If a
+mosquito does sugar feed opportunistically, the mosquito could
+die during the attempt. If it survives opportunistic feeding, its
+behavioral state remains the same.
+
+Male mosquitoes are obligate sugar feeders when they are not
+mating. Sugar feeding will occur repeatedly until the time window
+when mating occurs, when its state shifts back to mating.
+
+\paragraph{Configuration}
+
+
+
+
+\begin{itemize}
+\item \verb1sugarFeeding_opportunistic=TRUE1
+  \begin{itemize}
+  \item \verb1grabSugar_function="zzSigmoid"1
+    \begin{itemize}
+    \item \verb1grabSugar_pzero1
+    \item \verb1grabSugar_p501
+    \item \verb1grabSugar_slope1
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\clearpage 
+
+\section{Survival}
+
+How and where do mosquitoes die? The answer is that no one really knows, so MBITES makes it possible for mosquitoes to die every which way. The wide variety of options for death in MBITES creates a conundrum that can be ignored in models that look at mortality purely phenomenologically. In MBITES, it is necessary to make specific assumptions that determine how, where, and when mosquitoes die. 
+
+The default setting for mortality in MBITES is for all mosquito mortality to occur as a result of flight stress. The basic probability of dying is a bout-specific probability of surviving the stress of each flight, which is configured differently for each bout. 
+%
+\begin{itemize}
+%
+\item \verb1boutX_surviveFlight1
+%
+\end{itemize}
+%
+Surviving flight stress can be modified in several ways that add mortality: senescence increases mosquito death rates as they age; with flight energetics, mosquitoes die as they run out of energy; mosquitoes can accumulate damage; and excess mortality can occur as a result of the blood meal. Descriptions of how to configure these options are found below.
+
+MBITES can also be configured to have mosquitoes die from site-specific hazards associated with flight or landing. By default, all mortality from hazards are associated with landing. To set the shift some mortality away from flight stress and towards landing hazards, or from landing hazards to flight hazards, the following parameters are set:  
+%
+\begin{itemize}
+%
+\item \verb1mortalityFromHazards=01 The parameter value is a proportion, so it is in the interval $[0,1]$. If it is set to a number other than zero, then it determines the geometric split for survival among flight stress and hazards (\ie if $s_0$ and $s_1$ were survival from two different mechanisms, then $s_0 = s^q$ and $s_1= s^{1-q}$ such that $s = s_0 s_1$. This is what we mean when we say that $q$ determines geometrically the weight on $s_0$). That value then sets the {\em arithmetic} average for the total local hazards. 
+\item \verb1propHazardsFlight=01 By default, local hazards are all landing hazards.  Changing this parameter to some number in the interval $[0,1]$ shifts that proportion of the hazards to flight hazards, not landing hazards. 
+%
+\end{itemize}
+%
+These landing hazards can be distributed heterogeneously. The distribution is configured as part of the landscape. Two sliders in the MBITES-GUI make it possible toset parameters to affect how much mortality occurs as a result of flight stress compared with hazards. 
+
+The values given are set under a specific set of assumptions about the landscape configuration. Feedbacks between mortality and the frequency with which certain sites are visited can change the proportion of mortality occurring at each site. For this reason, we would like to emphasize that configuring MBITES to do something requires careful thought. We recommend running diagnostics after setting parameter values or changing some aspect of the landscape.  Even then, a simulation model can behave differently than expected (\eg because of population dynamic feedbacks). To put it another way, the MBITES-GUI is designed to help calibrate the model, but there will always be a need for analysis. 
+
+\subsection{Surviving the Flight}
+
+When \verb1surviveFlight()1 is called, a random number is drawn
+to determine whether the mosquito survived the stress associated
+with flight. The function is called from {\bf
+MBITES-GenericSurvival.R} and at the moment, it looks like this: 
+%
+<<>>=
+mbitesGeneric_surviveFlight <- function(){
+  if(self$isActive()){
+    p = self$get_surviveFlightProb()
+    if(private$FemalePopPointer$get_MBITES_PAR("TATTER")){
+      private$damage = private$damage + self$WingTattering()
+      p = p * self$pTatter()
+    }
+    if(private$FemalePopPointer$get_MBITES_PAR("SENESCE")){
+      p = p * self$pSenesce()
+    }
+    if(runif(1) < 1-p){
+      private$stateNew = "D"
+    }
+  }
+}
+@
+
+The function \verb1get_surviveFlightProb()1 returns the
+probability of surviving.  {\bf I can't find this function}   
+ 
+\subsection{Senescence}
+
+\begin{itemize}
+\item [0] \verb1senesce_function=NULL1
+\item [1] \verb1senesce_function="gompertz"1
+  \begin{itemize}
+  \item \verb8senesce_gompertz_p18
+  \item \verb8senesce_gompertz_p28
+  \end{itemize}
+\end{itemize}
+
+Senescence is defined in this model as a reduction in the
+probability of surviving that is associated with a  mosquito's
+chronological age, $a$. In MBITES, senescence has been
+implemented as an increased probability of mortality, per bite,
+that increases with the chronological age of the mosquito when it
+takes a flight bout. The function describing
+the probability of surviving is 
+%
+$$\frac{2+sns.b}{1+sns.b} -
+\frac{e^{a*sns.a}}{sns.b + e^{a*sns.a}}.  
+$$ 
+%
+<<fig=TRUE, echo = FALSE>>=
+aa = seq(0,50, by=0.1) 
+senesce = function(a, sns.a=1/20, sns.b=40){
+ (2+sns.b)/(1+sns.b) - exp(a*sns.a)/(sns.b + exp(a*sns.a)) 
+} 
+plot(aa, 1-senesce(aa), type = "l", xlab = "Chronological Age",
+ylab = "Increased Probability of Dying, per bout") 
+@ 
+
+{\bf NOTE: overall survival vs. age is difficult to compute without simulation. 
+It would be good for the GUI to show surival of ~1,000 mosquitoes with and without senescence, 
+and to compute (and show) the average age. Something like this:}  
+
+<<fig=TRUE, echo = FALSE>>=
+
+deathday = rexp(1000, 1/12)
+deathday1 = rexp(1000, 1/12)^0.8
+
+surv = function(a, deathday){
+  ix = sum(deathday>a)/length(deathday)
+}
+
+
+dd = 1:50
+ss = unlist(sapply(dd, surv, deathday=deathday))
+ss1 = unlist(sapply(dd, surv, deathday=deathday1))
+
+par(mfrow=c(2,1))
+plot(dd, ss, type = "l", xlab = "Chronological Age (Days)", ylab = "Proportion of Cohort Surviving")
+lines(dd, ss1, col = "purple", ylim = c(0,1))
+segments(mean(deathday),1,mean(deathday),0)
+segments(mean(deathday1),1,mean(deathday1),0, col = "purple")
+plot(dd[-1], -diff(ss)/ss[-30], type = "l", xlab = "Chronological Age (Days)", ylab = "Mortality Rate", ylim = c(0,1))
+lines(dd[-1], -diff(ss1)/ss1[-30], col = "purple")
+segments(mean(deathday),1,mean(deathday),0)
+segments(mean(deathday1),1,mean(deathday1),0, col = "purple")
+@ 
+
+\subsection{Physical Damage}
+
+The variable \verb1damage1 tracks all kinds of damage, including physical damage and contact with pesticides. Damage is cumulative,  and it is tracked on a scale of $[0,1)$. 
+
+\begin{itemize}
+\item [0] \verb1damage_function=NULL1
+\item [1] \verb1surviveDamage_function="zzSigmoid"1
+  \begin{itemize}
+  \item \verb8damage_zzSigmoid_zero8
+  \item \verb8damage_zzSigmoid_p508
+  \item \verb8damage_zzSigmoid_slope8
+  \end{itemize}
+\end{itemize}
+
+\subsubsection{Wing Tattering}
+
+Tattering describes physical damage resulting from flight. 
+\begin{itemize}
+\item [0] \verb1tatter_function=NULL1
+\item [1] \verb1tatter_function="zibeta"1
+  \begin{itemize}
+  \item \verb8tatter_zibeta_p08
+  \item \verb8tatter_zibeta_mean8
+  \item \verb8tatter_zibeta_ss8
+  \end{itemize}
+\end{itemize}
+
+\section{The Waiting Times}
+
+By default, the waiting time to the next bout varies by the mosquito's behavioral state. By default, all of these waiting times are exponentially distributed. The alternative is gamma distributed waiting times. 
+
+\paragraph{Parsing}
+
+For the behavioral states F,B,R,L,O, \& S, these are the timing options: 
+%
+\begin{itemize}
+\item [{\bf 0}] \verb1boutX_tte_pdf=exponential1
+
+  $$min + \mbox{rexp}(.,1/(mean-min))$$
+  \begin{itemize}
+  \item \verb1boutX_tte_mean1
+  \item \verb1boutX_tte_min=01
+%  \item \verb1boutX_tte_diurnal1
+%    \begin{itemize}
+%    \item [0] = FALSE 
+%    \item [1] = TRUE
+%      $$min + \mbox{rdiurnal}(.(mean-min), t, peak)$$
+%      \begin{itemize} 
+%      \item \verb1boutX_tte_peak=01 (midnight)
+%      \item \verb1boutX_tte_amp=11 
+%      \end{itemize}
+%    \end{itemize}
+  \end{itemize}
+\item [1] \verb1boutX_tte_pdf=gamma1
+  $$min + \mbox{rgamma}(.,mean-min, scale)$$
+  \begin{itemize}
+    \item \verb1boutX_tte_mean1
+    \item \verb1boutX_tte_scale1
+    \item \verb1boutX_tte_min=01
+  \end{itemize}
+  
+\end{itemize}
+
+
+
+
+\clearpage 
+\section{Search and Dispersion}
+
+Each time a mosquito makes a behavioral state transition, it may change location. When a mosquito moves, the function \verb1rMove1 is called to determine its next location. This must be set up for each point in every point set where a mosquito may start a search to every point where a mosquito might end a search. This can be computationally intensive, so \verb1rMove1 sets up lookup tables. 
+
+A flight search bout for blood feeding could begin anywhere. A probability mass function is called to determine which member of a destination point set it ends up at $D$ depending on its point of origin, $o$:
+%
+\begin{equation}
+%
+\left\{  o \right\}
+\overset{{\cal K}_o}{\rightarrow}
+\left\{  D \right\}
+%
+\end{equation}
+%
+The origin point may actually be in the destination point set, depending on the behavioral state.
+
+\clearpage 
+
+\section{Mating Bouts and Maturation}
+
+Mating requires simulating male mosquito populations. MBITES can
+simulate both female and male individuals. After an adult female
+has emerged from her pupal case and hardened, she is considered
+to be {\em pre-gonotrophic}. The conditions for maturation
+include a mating requirement and (possibly) an energetic
+requirement, meaning that she could not lay eggs until she had
+mated and satisfied an early life energy intake requirement. The
+model has not pre-determined what these pre-gonotrophic energetic
+requirements are, but provides a flexible set of functions and
+parameters to stipulate, depending on the species and either
+evidence or expert opinion. Mating and maturation can also be
+turned off, such that a female is mature and mated upon
+emergence.
+
+Male mosquitoes emerge from aquatic habitats and by default
+attempt to sugar feed (see below). At a specific time of each
+day, the male behavioral state switches to {\bf M}, and it moves
+to a mating point, $\left\{ m \right\}$, to be present for any
+female arriving at that point to mate.
+Male search thus always begins at a mating or sugar feeding site,
+$\left\{ s \right\} $ to arrive at a mating site $\left\{ m
+\right\}$:
+%
+\begin{equation}
+%
+\left\{ s\right\} \cup \left\{ m\right\}  \overset{{\cal
+K}_M}{\rightarrow} \left\{ m\right\}
+%
+\end{equation}
+%
+If the male mosquito survives the flight, it enters a swarm. The
+{\em swarming queue} tracks all the male mosquitoes present at
+each point in $\left\{ m\right\} $ on each day. After the swarm
+disperses, surviving males behavioral states switch back to {\bf
+S} to sugar feed (see below).
+
+A pre-gonotrophic female does not lay eggs, though she can blood
+feed. Female mating bouts in this model occur only when she is in
+a pre-gonotrophic state, which (like males) can be triggered
+during a specific time window each day, when her state switches
+to {\bf M}. The female search kernel could thus begins at any
+mating, blood feeding, or sugar feeding site but always ends at a
+mating site $\left\{ m\right\} $:
+%
+\begin{equation}
+%
+\left\{ f\right\} \cup \left\{ s\right\} \cup \left\{ m\right\}
+\overset{{\cal K}_M}{\rightarrow} \left\{ m\right\}
+%
+\end{equation}
+%
+A female chooses from among the males in the queue at that
+location. The probability of success is a function of the number
+of males present in the swarm. When a female mosquito mates, the
+identity of the male mosquitoes she mated with are chosen from
+those present at the swarming site and stored. The outcome of a
+mating bout is either death, success, or failure. After a mating
+bout, a female's behavioral state switches to search for a blood
+meal, {\bf F}.
+
+An alternative to swarming behavior is opportunistic mating
+during some other activity (\eg blood feeding). If males are
+present where females blood feed, a random variate is drawn to
+see if the blood feeding attempt bout is interrupted and mating
+occurs. In such cases, ordinary hazards apply, and if the female
+survives, her behavioral state does not change. (NOTE: we need to
+add this possibility, just as we do for sugar feeding.)
+
+\begin{itemize}
+\item \verb1Mating = FALSE1
+\item \verb1Mating = TRUE1
+  \begin{itemize}
+  \item \verb1maleMosquito="kernel"1
+      \begin{itemize}
+      \item \verb1maleDeathRate1 
+      \item \verb1matingKernel1
+      \end{itemize}
+  \item \verb1maleMosquito="ibm"1
+     \begin{itemize}
+     \item \verb1maleFlightEnergetics1 : mirrors \verb1flightEnergetics1 for females 
+     \item \verb1maleSugarFeeding=FALSE1
+     \item \verb1maleSugarFeeding=TRUE1 :: mirrors \verb1sugarFeeding1 for females
+     \item \verb1swarming=TRUE1 
+%     \item opportunistic
+%        \begin{itemize}
+%        \item males
+%        \item females
+%        \end{itemize}
+     \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+\subsection{[M] Mating Bout}
+
+\begin{itemize}
+\item \verb1swarming=FALSE1
+\item \verb1swarming=TRUE1
+  \begin{itemize}
+     \item \verb1boutM_tte_function="matingTrigger"1 
+        \begin{itemize}
+         \item \verb1timeToSwarm1 
+         \end{itemize}
+     \item \verb1boutM=TRUE1 :: see below
+       \begin{itemize}
+       \item \verb1boutM_survive1
+       \item \verb1boutM_success1
+       \end{itemize}
+     \item \verb1maleBoutM=TRUE1
+        \begin{itemize}
+          \item \verb1maleBoutM_survive1
+          \item \verb1maleBoutM_success1
+        \end{itemize}
+  \end{itemize}
+\item \verb1opportunisticMating=FALSE1
+\end{itemize}
+
+To do: \verb1opportunisticMating="Aedes"1, following Tom's description of males approaching females at blood feeding sites as they try to feed. 
+
+\begin{itemize}
+\item \verb1bornMature=TRUE1 
+  \begin{itemize}
+  \item \verb1Mating=FALSE1   
+  \end{itemize}
+\item \verb1bornMature=FALSE1 
+  \begin{itemize}
+  \item \verb1maturationEU=01 : Set to some other value to require energy.
+  \item \verb1Mating=TRUE1 (see Options below)
+  \end{itemize}
+\end{itemize}
+
+\clearpage 
+\subsection{Male Mosquito Populations}
+
+\clearpage 
+\section{Estivation [E]}
+
+Estivation is a state of inactivity. In this model, estivation is
+induced seasonally, whenever certain conditions are met (\eg no
+rain). If a mosquito survives estivation, it initiates a blood
+feeding search bout at some point in the future.
+
+\clearpage 
+
+\section{Aquatic Ecology}
+
+
+
+
+\end{document}
