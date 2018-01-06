@@ -141,10 +141,15 @@ mbites_restingSpot <- function(){
 #'  * This method is bound to \code{MosquitoFemale$searchFail()}.
 #'
 mbites_searchFail <- function(){
-  if(private$state == "L" & private$stateNew == "L"){
-    return(TRUE)
-  } else if(private$state == "F" & private$stateNew == "F"){
-    return(TRUE)
+  # if mosy is not on first iteration
+  if(private$tNow > private$bDay){
+    if(private$state == "L" & private$stateNew == "L"){
+      return(TRUE)
+    } else if(private$state == "F" & private$stateNew == "F"){
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
   } else {
     return(FALSE)
   }
