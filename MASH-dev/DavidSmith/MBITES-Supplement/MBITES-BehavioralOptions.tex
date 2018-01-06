@@ -33,33 +33,6 @@ The code for MBITES is being developed for a public release, and will soon be pu
 
 \clearpage 
 
-\paragraph{What do I do with so many parameters?} 
-
-\begin{displayquote}
-{\em If you want to avoid a philosophical discussion of individual-based models, please skip ahead to} Section 1.
-\end{displayquote}
-
-Individual-based models have been criticized for many reasons. Most of these critiques are valid. William of Occam basically got it right, at least when it comes to problems related to statistical inference. Among many possible explanations, the simplest ones tend to be correct. With many parameters, you should be able to fit anything, and therefore know nothing! (There is even an old saying, attributed to various people: {\em Give me four parameters and I'll draw an elephant. Give me five and I'll make it wag it's tail.})  While this is a valid criticism of fitting individual based models to data, other problems arise when considering the future.
-
-The past and the future are fundamentally different: there was one past, but there are many possible futures.  If the only thing you would ever wanted to do was predict the future, then your best bet would probably be to take the parsimonious model and run it forward. You probably won't get a better prediction, on average, from any single model. There are, however, other things you want to do, and other ways you migh use models to get a better prediction. For example, you might want to evaluate a policy, and here's where the old paradigm breaks down. Are the conclusions of your model robust to all the sources of heterogeneity the parsimonious model averaged over?
-
-Consider a thought experiment. What if you could wave a wand and invent a model with an arbitrary degree of heterogeneity blindly fixing most of the parameters but leaving as many free parameters for fitting as you would have in an abstract and parametrically simple model. The rules of evidence would suggest the fits of these  models would be directly comparable. What gives any {\em a priori} weight to any particular model? There isn't any simple anser to that question, but none of the answers point automatically to the class of abstract and parametrically simple models most often used. A problem for science is that there are so many heterogeneous models, and they are very hard to specify. 
-
-The problem of evaluating the robustness of some policy boils down to figuring out some way of waving a wand and fitting the very large set of heterogeneous models to the data in some systematic way, and then turning each model around to predict the future. The prediction made from the ensemble of all those fitted heterogeneous models should be more robust than the simple one. MBITES is an honest stab at doing {\em that}. 
-
-How far can we get if we just ignore heterogeneity? The cheeky answer is that we can do everything and be assured we will never find a better answer, so long as we never go looking for one. If we're honest about the peformance of predictive models for infectious diseases, we'd have to admit we haven't been very successful. When the problem comes to giving advice, we don't know if we're doing any better.  Obviously, we don't have a sound basis for ignoring heterogeneity, however inconvenient it might be. That is, in part, why MBITES exists. 
-
-Since we can't wave our wands, we need a way of dealing with the daunting problem of heterogeneity, besides the easily accepted answer; ignore it. MBITES has taken a different approach. The flexibility built into MBITES makes it comparatively easy to configure a landscape with any degree of heterogeneity, but it creates a new problem of how to systematically explore heterogeneity.  Our approach is to start from the same point as others -- we begin by anchoring the simulation model to the case that most closely resembles the homogenous approximation, and then we steadily add heterogeneity. There is a logical progression: 
-\begin{itemize}
-\item If it's not necessary, turn it off. 
-\item If it's on, set everything to a constant value. 
-\item If a constant value won't do, try a line. 
-\item If the value isn't the same everywhere, see have far you can get with the simplest way of incorporating noise.
-\item If there's a pattern, base it on a case study.  
-\end{itemize}
-To put it another way, we honor William of Occam by preferring simple answers, in part, so we can say whether something we've observed can be explained with a simpler model. Our question, though, is not to explain the past but to know with some confidence that we are making robust policy recommendtions for the future. With these principles in mind, we've developed a set of functions and utilities to set up landscapes that roughly follow these rules. 
-
-\clearpage 
 
 \section{Core Behavioral Bouts}
 
@@ -71,133 +44,7 @@ MBITES simulates adult mosquito behavior and population dynamics, with the expli
 \item [{\bf L} ::] The egg laying search bout
 \item [{\bf O} ::] The egg laying attempt bout
 \end{itemize}
-Two common properties of each bout are the probability of surviving and the time interval between two bouts.  These must be configured separately for each flight bout. 
 
-\subsection{Survival}
-
-How and where do mosquitoes die? The answer is that no one really knows, so MBITES makes it possible for mosquitoes to die every which way. The wide variety of options for death in MBITES creates a conundrum that can be ignored in models that look at mortality purely phenomenologically. In MBITES, it is necessary to make specific assumptions that determine how, where, and when mosquitoes die. 
-
-The default setting for mortality in MBITES is for all mosquito mortality to occur as a result of flight stress. The basic probability of dying is a bout-specific probability of surviving the stress of each flight, which is configured differently for each bout. 
-%
-\begin{itemize}
-%
-\item \verb1boutX_surviveFlight1
-%
-\end{itemize}
-%
-Surviving flight stress can be modified in several ways that add mortality: senescence increases mosquito death rates as they age; with flight energetics, mosquitoes die as they run out of energy; mosquitoes can accumulate damage; and excess mortality can occur as a result of the blood meal. Descriptions of how to configure these options are found below.
-
-MBITES can also be configured to have mosquitoes die from site-specific hazards associated with flight or landing. By default, all mortality from hazards are associated with landing. To set the shift some mortality away from flight stress and towards landing hazards, or from landing hazards to flight hazards, the following parameters are set:  
-%
-\begin{itemize}
-%
-\item \verb1mortalityFromHazards=01 The parameter value is a proportion, so it is in the interval $[0,1]$. If it is set to a number other than zero, then it determines the geometric split for survival among flight stress and hazards (\ie if $s_0$ and $s_1$ were survival from two different mechanisms, then $s_0 = s^q$ and $s_1= s^{1-q}$ such that $s = s_0 s_1$. This is what we mean when we say that $q$ determines geometrically the weight on $s_0$). That value then sets the {\em arithmetic} average for the total local hazards. 
-\item \verb1propHazardsFlight=01 By default, local hazards are all landing hazards.  Changing this parameter to some number in the interval $[0,1]$ shifts that proportion of the hazards to flight hazards, not landing hazards. 
-%
-\end{itemize}
-%
-These landing hazards can be distributed heterogeneously. The distribution is configured as part of the landscape. Two sliders in the MBITES-GUI make it possible toset parameters to affect how much mortality occurs as a result of flight stress compared with hazards. 
-
-The values given are set under a specific set of assumptions about the landscape configuration. Feedbacks between mortality and the frequency with which certain sites are visited can change the proportion of mortality occurring at each site. For this reason, we would like to emphasize that configuring MBITES to do something requires careful thought. We recommend running diagnostics after setting parameter values or changing some aspect of the landscape.  Even then, a simulation model can behave differently than expected (\eg because of population dynamic feedbacks). To put it another way, the MBITES-GUI is designed to help calibrate the model, but there will always be a need for analysis. 
-
-\clearpage 
-
-\subsection{The Waiting Time between Bouts}
-
-By default, the waiting time to the next bout varies by the mosquito's behavioral state. By default, all of these waiting times are exponentially distributed. The alternative is gamma distributed waiting times. 
-
-\paragraph{Parsing}
-
-For the behavioral states F,B,R,L,O, \& S, these are the timing options: 
-%
-\begin{itemize}
-\item [{\bf 0}] \verb1boutX_tte_pdf=exponential1
-
-  $$min + \mbox{rexp}(.,1/(mean-min))$$
-  \begin{itemize}
-  \item \verb1boutX_tte_mean1
-  \item \verb1boutX_tte_min=01
-%  \item \verb1boutX_tte_diurnal1
-%    \begin{itemize}
-%    \item [0] = FALSE 
-%    \item [1] = TRUE
-%      $$min + \mbox{rdiurnal}(.(mean-min), t, peak)$$
-%      \begin{itemize} 
-%      \item \verb1boutX_tte_peak=01 (midnight)
-%      \item \verb1boutX_tte_amp=11 
-%      \end{itemize}
-%    \end{itemize}
-  \end{itemize}
-\item [1] \verb1boutX_tte_pdf=gamma1
-  $$min + \mbox{rgamma}(.,mean-min, scale)$$
-  \begin{itemize}
-    \item \verb1boutX_tte_mean1
-    \item \verb1boutX_tte_scale1
-    \item \verb1boutX_tte_min=01
-  \end{itemize}
-  
-\end{itemize}
-
-
-\clearpage 
-
-\subsection*{[F] Blood Feeding Search Bout}
-
-\begin{itemize}
-\item \verb1boutF_surviveFlight_function=NULL1
-  \begin{itemize}
-  \verb1boutF_surviveFlight=.991
-  \end{itemize}
-\item \verb1boutF_surviveFlight_function="linearByDistance"1
-  \begin{itemize}
-  \item \verb1boutF_surviveFlight=1$.99- \psi\cdot \mbox{distance}$
-  \end{itemize}
-\end{itemize}
-
-
-\subsection*{[B] Blood Feeding Attempt Bout}
-
-default for blood meal size. 
-
-\begin{itemize}
-\item \verb1boutB_surviveFlight=0.991
-\item \verb1chooseHost()1
-\item \verb1bloodMealSize_function=NULL1
-\end{itemize}
-
-\paragraph{Human Blood Meal}
-
-
-\begin{itemize}
-\item \verb1boutB_surviveHumanApproach1
-\item \verb1boutB_successHumanApproach1
-\item \verb1boutB_surviveHumanProbing1
-\item \verb1boutB_successHumanProbing1
-\item \verb1boutB_surviveHumanBloodFeed1
-\item \verb1boutB_successHumanBloodFeed1
-\end{itemize}
-
-\paragraph{Non-Human Blood Meal}
-
-\begin{itemize}
-\item \verb1boutB_surviveOther1
-\item \verb1boutB_successOther1
-\end{itemize}
-
-\subsection*{[R] Post-Prandial Resting Bout}
-
-\begin{itemize}
-\item \verb1boutR_surviveFlight1
-\item \verb1eggBatch_function=NULL1
-  \begin{itemize}
-  \item \verb1eggBatchSize1
-  \item \verb1refeed_function=NULL1
-    \begin{itemize}
-    \item \verb1pr_Refeed1
-    \end{itemize}
-  \end{itemize}
-  \item \verb1eggBatch_function!=NULL1 (Section 5, below)
-\end{itemize}
 
 \subsection*{[L] Egg Laying Search Bout}
 
@@ -445,6 +292,7 @@ Sugar feeding builds on flight energetics.
 \end{itemize}
 
 To do: \verb1opportunisticMating="Aedes"1, following Tom's description of males approaching females at blood feeding sites as they try to feed. 
+
 
 
 \section{Types and Inheritance}
