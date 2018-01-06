@@ -6,11 +6,16 @@ PfSI.Setup()
 SimBitePfSI.Setup()
 MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/28,tripDuration = 14)
 
-directory = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/MACRO_test"
+arguments = commandArgs(trailingOnly = T)
+n_humans = as.integer(arguments[1]) # NUMBER OF HUMANS
+n = as.integer(arguments[2]) # NUMBER OF PATCHES
+tMax = as.integer(arguments[3]) # NUMBER OF DAYS TO SIMULATE
+data_directory = arguments[4] # Directory to host all output folders for individual runs
+output_folder = arguments[5] # Specific output folder for this run
+
+directory = paste0(data_directory, output_folder)
 
 # n = 10
-arguments <- commandArgs(trailingOnly = T)
-n = arguments[1]
 
 # aquatic ecology parameters
 aquaPar = AquaPop_Emerge.Parameters(nPatch = n,lambda = rep(50,n),seasonality = TRUE)
@@ -37,8 +42,10 @@ patchPar = lapply(X = 1:n,FUN = function(i){
 mosquitoPar = list(model="RM", M=rep(50,n),EIP = rep(11,365),p=0.9, f=0.3, Q=0.9, v=20, psi = diag(n))
 
 # human parameters
-patch_humans = rpois(n = n,lambda = 20)
-n_humans = sum(patch_humans)
+# patch_humans = rpois(n = n,lambda = 20)
+# TOTAL NUMBER OF HUMANS was determined at start of code
+patch_humans = rep(n_humans/n, times = n)
+# n_humans = sum(patch_humans)
 patch_id = rep(x = 1:n,patch_humans)
 home_id = rep(x = 1:n,patch_humans)
 human_ages = unlist(lapply(X = patch_humans,FUN = siteAges_HumanPop))
@@ -65,8 +72,6 @@ tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPa
 # tile$get_HumansPointer()$init_PfSI(pfpr)
 
 # run simulations
-tile$simMacro(tMax = 365,PfPAR = pfpr)
-tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar)
-tile$simMacro(tMax = 365,PfPAR = pfpr)
+tile$simMacro(tMax = tMax,PfPAR = pfpr)
 tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar)
 

@@ -6,7 +6,7 @@ PfSI.Setup()
 SimBitePfSI.Setup()
 MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/28,tripDuration = 14)
 
-directory = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/MACRO_test"
+directory = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/MACRO_test/PROFILING"
 
 n = 10
 
@@ -35,7 +35,7 @@ patchPar = lapply(X = 1:n,FUN = function(i){
 mosquitoPar = list(model="RM", M=rep(50,n),EIP = rep(11,365),p=0.9, f=0.3, Q=0.9, v=20, psi = diag(n))
 
 # human parameters
-patch_humans = rpois(n = n,lambda = 20)
+patch_humans = rpois(n = n,lambda = 50)
 n_humans = sum(patch_humans)
 patch_id = rep(x = 1:n,patch_humans)
 home_id = rep(x = 1:n,patch_humans)
@@ -63,7 +63,7 @@ tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPa
 # tile$get_HumansPointer()$init_PfSI(pfpr)
 
 # run simulations
-tile$simMacro(tMax = 365,PfPAR = pfpr)
+tile$simMacro(tMax = 100,PfPAR = pfpr)
 tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar)
 tile$simMacro(tMax = 365,PfPAR = pfpr)
 tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar)
