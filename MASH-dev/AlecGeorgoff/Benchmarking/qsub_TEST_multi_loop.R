@@ -1,5 +1,5 @@
 #####
-# qsub_TEST_multi_mod
+# qsub_TEST_multi_loop
 #
 # Author: Alec Georgoff
 #
@@ -20,18 +20,18 @@ rm(list = ls())
 #       n_humans <- c(100,1000,10000,100000)
 #       n_patches <- c(10,100,1000,10000)
 #       tMax <- c(365,365,365,365)
-n_humans <- c(300000)
+n_humans <- c(100000,200000,300000)
 n_patches <- c(10)
 tMax <- c(365)
 
 ## Output directories will be named "nh_XXX_np_XXX_tMax_XXX"
 
 ### Define constant parameters ###
-slots <- 2
-data_directory <- "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/MACRO_test/" # Location for output folders to be created
+slots <- 8
+data_directory <- "/share/scratch/users/georgoff/benchmarking_results/" # Location for output folders to be created
 shell <- "mash_shell_script.sh" # Shell script for MASH runs
 script <- "TEST-MACRO-BENCHMARK.R" # Script to run in each qsub
-optional_identifier <- "_thread_test" # Put an identifier if running a job with the same parameters as a previously completed job (i.e. "_run2")
+optional_identifier <- "_weekend_run_2" # Put an identifier if running a job with the same parameters as a previously completed job (i.e. "_run2")
 # WARNING: If optional_identifier is NOT included, results from previous runs that have identical parameters will be overwritten!!!
 
 ### Create flags for which parameter to vary over ###
