@@ -8,9 +8,9 @@
 \newcommand{\ie}{{\em i.e., }}
 
 
-\section{Supplementary Methods: MBITES-de}
+\section{Supplementary Methods: MBDETES}
 
-Let the behavioral state variable name from MBITES denote the expected number of mosquitoes of a given chronological age ($a$), that are in each behavioral state. Similarly, let the waiting times to events be modeled as a rate that is dependent on the behavioral state ($x$), age, and time ($t$): $\xi_x(a,t)$. The proportion of mosquitoes that transition from state $x$ to state $y$ at the end of a bout is denoted $P_{xy}$. Death rates can be age dependent (\ie due to senescence), which affects the proportions transitioning to other states, so we write $P_{xy}(a)$. To deal with the event-driven nature of these bouts and the possibility some bouts may be repeated many times before transitioning to another state, we index mosquitoes by the $i^{th}$ attempt to repeat the same event as a way of computing waiting times properly; for example, a mosquito repeating a blood feeding attempt bout transitions from $B_n(a)$ to $B_{n+1}(a)$. Finally, we let $\Lambda(t)$ represent the rate of emergence of adult female mosquitoes. The following system of coupled PDEs is homologous to MBITES: 
+Let the behavioral state variable name from MBITES denote the expected number of mosquitoes of a given chronological age ($a$), that are in each behavioral state; \eg the proportion in the post-prandial resting state (R) of age $a$ at time $t$ is $R(a,t)$. Similarly, let the waiting times to events be modeled as a rate that is dependent on the behavioral state ($x$), age, and time ($t$): $\xi_x(a,t)$. The proportion of mosquitoes that transition from state $x$ to state $y$ at the end of a bout is denoted $P_{xy}$. Death rates can be age dependent (\ie due to senescence), which affects the proportions transitioning to other states, so we write $P_{xy}(a)$. To deal with the event-driven nature of these bouts and the possibility some bouts may be repeated many times before transitioning to another state, we index mosquitoes by the $i^{th}$ attempt to repeat the same event as a way of computing waiting times properly; for example, a mosquito repeating a blood feeding attempt bout transitions from $B_n(a)$ to $B_{n+1}(a)$. Finally, we let $\Lambda(t)$ represent the rate of emergence of adult female mosquitoes. The following system of coupled PDEs is homologous to MBITES: 
 
 \begin{equation}\begin{array}{rl}
 F_1(0,t)=& \Lambda(t) \\ &\\
@@ -66,48 +66,48 @@ Proof 1
 
 To justify this summation, consider the infinite set of equations
 $$\frac{d x_1}{dt} = -\lambda x_1$$
-$$\frac{d x_i}{dt} = (1-p) \lambda x_{i-1} - \lambda x_i$$
+$$\frac{d x_i}{dt} = p \lambda x_{i-1} - \lambda x_i$$
 with initial conditions $x_1(0) = 1$, $x_i(0) = 0$. That is, initially
 all of the mosquitoes are in their first attempt for an exponentially
 distributed length of time. A proportion $p$ are successful or leave frustrated,
 and $1-p$ attempt again. This system can be solved iteratively; $x_1$ has the solution
 $$x_1(t) = e^{-\lambda t}$$ 
 which, when plugged into the equation for $x_2$, gives
-$$\frac{d x_2}{dt} = (1-p) \lambda e^{-\lambda t} - \lambda x_2$$ 
+$$\frac{d x_2}{dt} = p \lambda e^{-\lambda t} - \lambda x_2$$ 
 which can be solved using an integrating factor. This yields
-$$x_2(t) = (1-p) \lambda t e^{-\lambda t}$$
+$$x_2(t) = p \lambda t e^{-\lambda t}$$
 This appears to be a weighted gamma distribution, which motivates the
 assumption for an inductive-step solution of
-$$x_i(t) = \frac{((1-p) \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t}$$
+$$x_i(t) = \frac{(p \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t}$$
 Assuming this, we look at the $x_{i+1}$ equation:
-$$\frac{d x_{i+1}}{dt} = (1-p)\lambda x_i - \lambda x_{i+1}$$
+$$\frac{d x_{i+1}}{dt} = p\lambda x_i - \lambda x_{i+1}$$
 Plugging in the assumed solution, we get
-$$\frac{d x_{i+1}}{dt} = (1-p)\lambda \frac{((1-p) \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t} - \lambda x_{i+1}$$
-$$= \frac{((1-p) \lambda)^i}{i!}t^{i-1} e^{-\lambda t} - \lambda x_{i+1}$$
+$$\frac{d x_{i+1}}{dt} = p\lambda \frac{(p \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t} - \lambda x_{i+1}$$
+$$= \frac{(p \lambda)^i}{i!}t^{i-1} e^{-\lambda t} - \lambda x_{i+1}$$
 Which is again amenable to an integrating factor combined with i-1 integration by parts,
 yielding
-$$x_{i+1} = \frac{((1-p) \lambda t)^{i}}{i!} e^{-\lambda t}$$
+$$x_{i+1} = \frac{(p \lambda t)^{i}}{i!} e^{-\lambda t}$$
 which completes the induction.
 Because we are interested in the total amount of time spent and not the time
 spent in any one compartment, we add the solutions together:
-$$\sum_{i = 1}^{\infty} x_i(t) = \sum_{i = 1}^{\infty}\frac{((1-p) \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t}$$
-$$ = e^{-\lambda t} \sum_{i=0}^{\infty}\frac{((1-p) \lambda t)^i}{i!}$$
-$$ = e^{-\lambda t} e^{(1-p)\lambda t}$$
-$$ = e^{-p \lambda t}$$
+$$\sum_{i = 1}^{\infty} x_i(t) = \sum_{i = 1}^{\infty}\frac{(p \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t}$$
+$$ = e^{-\lambda t} \sum_{i=0}^{\infty}\frac{(p \lambda t)^i}{i!}$$
+$$ = e^{-\lambda t} e^{p\lambda t}$$
+$$ = e^{-(1-p) \lambda t}$$
 
 Normalizing this gives us the total expected waiting time in this state for the
-mosquito is exponential with intensity $p \lambda$.
+mosquito is exponential with intensity $(1-p) \lambda$.
 
 As a note, this convergence is uniform as it is the Taylor series representation
 of the exponential function - this justifies summing the infinite equations and
 the differential operator which gives us
 
 $$\frac{d}{dt} \sum_{i=1}^{\infty} x_i = \sum_{i=1}^{\infty}\frac{d x_i}{dt}$$
-$$ = \sum_{i=1}^{\infty}-\lambda p x_i$$
+$$ = \sum_{i=1}^{\infty}-\lambda (1-p) x_i$$
 
 setting $X = \sum_{i=1}^{\infty}x_i$, we get a very simple single differential equation
 
-$$\frac{dX}{dt} = - p \lambda X$$
+$$\frac{dX}{dt} = - (1-p) \lambda X$$
 
 with the initial condition $X(0) = 1$. This has the same solution we found through induction.
 
@@ -120,47 +120,46 @@ Using the law of total probability, we can condition this on the number of attem
 a mosquito will make:
 $$P(T=t) = \sum_{n=1}^{\infty} P(T=t| N=n) P(N=n)$$
 The number of attempts is geometrically distributed, as it will succeed or give up
-with probability p and therefore try again with probability (1-p) - it will try until
+with probability (1-p) and therefore try again with probability p - it will try until
 it succeeds or gives up. Therefore
-$$P(N=n) = p(1-p)^{n-1}$$
+$$P(N=n) = (1-p)p^{n-1}$$
 The waiting time between each attempt is iid with an exponentially distributed waiting
 time with intensity $\lambda$, so given it takes n trials the distribution follows
 a gamma distribution:
-$$T=t|N=n = \sum_{i=1}^{n}Exp_i(\lambda)$$
+$$T|N = \sum_{i=1}^{n}Exp_i(\lambda)$$
 $$ \sim \Gamma (n,\lambda)$$
 
 Therefore we have
 
 $$P(T=t) = \sum_{i=1}^{\infty}P(T=t|N=n)P(N=n)$$
-$$ = \sum_{i=1}^{\infty}p(1-p)^{n-1}\frac{\lambda^n}{\Gamma (n)}t^{n-1} e^{-\lambda t}$$
-$$ = p \lambda e^{-\lambda t} \sum_{i=0}^{\infty} \frac{[(1-p)\lambda t]^n}{n!}$$
-$$ = \lambda p e^{-\lambda t} e^{(1-p)\lambda t}$$
-$$ = p \lambda e^{-p \lambda t} $$
+$$ = \sum_{i=1}^{\infty}(1-p)p^{n-1}\frac{\lambda^n}{\Gamma (n)}t^{n-1} e^{-\lambda t}$$
+$$ = (1-p) \lambda e^{-\lambda t} \sum_{i=0}^{\infty} \frac{(p\lambda t)^n}{n!}$$
+$$ = \lambda (1-p) e^{-\lambda t} e^{p\lambda t}$$
+$$ = (1-p) \lambda e^{-(1-p) \lambda t} $$
 
 which is exactly the normalized solution to the previous system of ordinary differential
 equations - the waiting time for the mosquito to leave the state is exponentially 
-distributed with intensity $p \lambda$
+distributed with intensity $(1-p) \lambda$. Importantly, this proof does not depend on
+$(1-p)$ or $\lambda$ being constant - they can be age- or time-dependent.
 
 This means we can rewrite the infinite system of equations as a
 set of 5 differential equations: 
 %
 \begin{equation}\begin{array}{rl}
-F_o(0,t) =& \Lambda(t) \\ 
+F(0,t) =& \Lambda(t) \\ 
 %
 &\\
 \frac{\partial F(a,t)}{\partial t} + \frac{\partial F(a,t)}{\partial a} =& 
 \gamma_O(a,t) P_{OF}(a) O(a,t) 
 + \gamma_B(a,t) P_{BF}(a) B(a,t) \\&
  + \gamma_R(a,t) P_{RF}(a) R(a,t)
-+ \gamma_F(a,t) P_{FF}(a) F_e(a,t) \\ &
-- \gamma_F(a,t) F(a,t) \\ 
+- \gamma_F(a,t) (1-P_{FF}(a)) F(a,t) \\
 %
 %
 &\\
-\frac{\partial B(a,t)}{\partial t} + \frac{\partial B_o(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O(a,t) + \gamma_F(a,t) P_{FB}(a) F(a,t) \\ & 
+\frac{\partial B(a,t)}{\partial t} + \frac{\partial B(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O(a,t) + \gamma_F(a,t) P_{FB}(a) F(a,t) \\ & 
 + \gamma_R(a,t) P_{RB}(a) R(a,t) 
-+ \gamma_B(a,t) P_{BB}(a) B_e(a,t)\\ & 
-- \gamma_B(a,t) B(a,t) \\ 
+- \gamma_B(a,t) (1-P_{BB}(a)) B(a,t)\\
 %
 &\\
 \frac{\partial R(a,t)}{\partial t} + \frac{\partial R(a,t)}{\partial a} =&  \gamma_B(a,t) P_{BR}(a) B(a,t) - \gamma_R(a,t) R(a,t)\\ 
@@ -168,16 +167,14 @@ F_o(0,t) =& \Lambda(t) \\
 &\\
 \frac{\partial L(a,t)}{\partial t} + \frac{\partial L(a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R(a,t) + 
 \gamma_O(a,t) P_{OL}(a) O(a,t) \\&
-+ \gamma_L(a,t)  P_{LL}(a) L_e(a,t)
-- \gamma_L(a,t)   L(a,t)
+- \gamma_L(a,t) (1-P_{LL}(a)) L(a,t)
 \\ 
 %
 &\\
 \frac{\partial O(a,t)}{\partial t} + \frac{\partial O(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) L(a,t) 
 + \gamma_R(a,t) P_{RO}(a) R(a,t)  
 \\&
-+ \gamma_O(a,t) P_{OO}(a) O_e(a,t)
-- \gamma_O(a,t)  O_o(a,t)
+- \gamma_O(a,t)(1-P_{OO}(a)) O(a,t)
 
 %
 \end{array}\end{equation}
@@ -188,47 +185,33 @@ F_o(0,t) =& \Lambda(t) \\
 Finally, we want a version of these equations to model changes in a cohort of individuals with respect to age (assuming all the mosquitoes emerge from aquatic habitats at the same time of day): 
 %
 \begin{equation}\begin{array}{rcl}
-F_o(0) &=& 1 \\ 
+F(0) &=& 1 \\ 
 %
-{\dot F}_o&=& 
+{\dot F}&=& 
 \gamma_O(a) P_{OF}(a) O(a) 
 + \gamma_B(a) P_{BF}(a) B(a) 
  + \gamma_R(a,t) P_{RF}(a) R(a)
 \\ &&
-+ \gamma_F(a) P_{FF}(a) F_e(a) 
-- \gamma_F(a) F_o(a) \\ 
-%
-{\dot F}_e &=&  \gamma_F(a) P_{FF}(a) F_o (a) - \gamma_F(a) F_e(a) \\ 
+- \gamma_F(a) (1 - P_{FF}(a)) F(a) 
+ \\ 
 %
 %
-{\dot B}_o &=&  \gamma_O(a) P_{OB}(a) O(a) + \gamma_F(a) P_{FB}(a) F(a) 
+{\dot B} &=&  \gamma_O(a) P_{OB}(a) O(a) + \gamma_F(a) P_{FB}(a) F(a) 
 + \gamma_R(a) P_{RB}(a) R(a) \\ && 
-+ \gamma_B(a) P_{BB}(a) B_e(a)
-- \gamma_B(a) B_o(a)\\
-%
-{\dot B}_e &=& \gamma_B(a) P_{BB}(a) B_o(a) -
-\gamma_B(a) B_e(a) 
+- \gamma_B(a) (1-P_{BB}(a)) B(a)
 \\
 %
-{\dot R} &=&  \gamma_B(a) P_{BR}(a) \sum_i B_i(a) - \gamma_R(a) R(a)\\ 
+{\dot R} &=&  \gamma_B(a) P_{BR}(a) B(a) - \gamma_R(a) R(a)\\ 
 %
-{\dot L}_o&=& \gamma_R(a) P_{RL}(a) R(a) + 
+{\dot L}&=& \gamma_R(a) P_{RL}(a) R(a) + 
 \gamma_O(a) P_{OL}(a) O(a) \\&&
-+ \gamma_L(a)  P_{LL}(a) L_e(a)
-- \gamma_L(a) L_o(a)
+- \gamma_L(a) (1 - P_{LL}(a)) L_e(a)
 \\ 
 %
-{\dot L}_e &=& \gamma_L(a) P_{LL}(a) L_o (a) - \gamma_L(a) L_e(a)
-\\ 
-%
-{\dot O}_o &=& \gamma_L(a) P_{LO}(a) L(a) 
+{\dot O} &=& \gamma_L(a) P_{LO}(a) L(a) 
 + \gamma_R(a) P_{RO}(a) R(a)  
 \\&& 
-+ \gamma_O(a) P_{OO}(a) O_e(a)
-- \gamma_O(a) O_o(a)
-\\ 
-%
-{\dot O}_e &=& \gamma_O(a) P_{OO}(a) O_o (a) - \gamma_O(a) O_e(a)
+- \gamma_O(a) (1 - P_{OO}(a)) O(a)
 \\ 
 %
 \end{array}\end{equation}
@@ -263,56 +246,34 @@ R_Z(a,t)}{\partial a} =&  \rho(t) Q \kappa \left( \hat t \right) \gamma_B(a,t) P
 The remaining equations remain as follows: 
 %
 \begin{equation}\begin{array}{rl}
-F_{o,x}(0,t) =& \Lambda(t) \\
+F_{x}(0,t) =& \Lambda(t) \\
 %
-\frac{\partial F_{o,x}(a,t)}{\partial t} + \frac{\partial
-F_{o,x}(a,t)}{\partial a} =&
+\frac{\partial F_{x}(a,t)}{\partial t} + \frac{\partial
+F_{x}(a,t)}{\partial a} =&
 \gamma_O(a,t) P_{OF}(a) O_x(a,t)
 + \gamma_B(a,t) P_{BF}(a) B_x(a,t)\\ &
  + \gamma_R(a,t) P_{RF}(a) R_x(a,t)
-+ \gamma_F(a,t) P_{FF}(a) F_{e,x}(a,t)\\ &
-- \gamma_F(a,t) F_{o,X}(a,t) \\
-%
-\frac{\partial F_{e,x}(a,t)}{\partial t} + \frac{\partial
-F_{e,x}(a,t)}{\partial a} =&  \gamma_F(a,t) P_{FF}(a) F_{o,X} (a,t) -
-\gamma_F(a,t) F_{e,x}(a,t) \\
+- \gamma_F(a,t) (1-P_{FF}(a)) F_{x}(a,t)\\
 %
 %
 \frac{\partial B_{o,x}(a,t)}{\partial t} + \frac{\partial
-B_{o,x}(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O_x(a,t) +
+B_{x}(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O_x(a,t) +
 \gamma_F(a,t) P_{FB}(a) F(a,t)\\ &
 + \gamma_R(a,t) P_{RB}(a) R_x(a,t) 
-+ \gamma_B(a,t) P_{BB}(a) B_{e,x}(a,t)\\ &
-- \gamma_B(a,t) B_{o,x}(a,t) \\
+- \gamma_B(a,t) (1 - P_{BB}(a)) B_{x}(a,t)\\
 %
-\frac{\partial B_{e,x}(a,t)}{\partial t} + \frac{\partial
-B_{e,x}(a,t)}{\partial a} =& \gamma_B(a,t) P_{BB}(a) B_{o,x}(a,t) -
-\gamma_B(a,t) B_{e,x}(a,t)
-\\
 
-\frac{\partial L_{o,x} (a,t)}{\partial t} + \frac{\partial
-L_{o,x} (a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R_x(a,t) +
+\frac{\partial L_{x} (a,t)}{\partial t} + \frac{\partial
+L_{x} (a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R_x(a,t) +
 \gamma_O(a,t) P_{OL}(a) O_x(a,t) \\&
-+ \gamma_L(a,t)  P_{LL}(a) L_{e,x}(a,t)
-- \gamma_L(a,t) L_{o,x} (a,t)
-\\
-%
-\frac{\partial L_{e,x}(a,t)}{\partial t} + \frac{\partial
-L_{e,x}(a,t)}{\partial a} =& \gamma_L(a,t) P_{LL}(a) L_{o,x}  (a,t) -
-\gamma_L(a,t) L_{e,x}(a,t)
+- \gamma_L(a,t) (1 - P_{LL}(a)) L_{x}(a,t)
 \\
 %
 \frac{\partial O_{o,x}(a,t)}{\partial t} + \frac{\partial
-O_{o,x}(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) L(a,t)
+O_{x}(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) L(a,t)
 + \gamma_R(a,t) P_{RO}(a) R_x(a,t)
 \\&
-+ \gamma_O(a,t) P_{OO}(a) O_{e,x}(a,t)
-- \gamma_O(a,t) O_{o,x}(a,t)
-\\
-%
-\frac{\partial O_{e,x}(a,t)}{\partial t} + \frac{\partial
-O_{e,x}(a,t)}{\partial a} =& \gamma_O(a,t) P_{OO}(a) O_{o,x} (a,t) -
-\gamma_O(a,t) O_{e,x}(a,t)
+- \gamma_O(a,t) (1 - P_{OO}(a)) O_{x}(a,t)
 \\
 %
 \end{array}\end{equation}
