@@ -150,9 +150,9 @@ To put it another way, we honor William of Occam by preferring simple answers, i
 
 \section{The Adult Female Mosquito: An Overview}
 
-MBITES is a framework not a model. It was developed with a large set of options so it would be possible to build spatially explicit and highly realistic individual-based simulation models. To simulate mosquitoes, you have to configure a model so that it looks like the specific mosquito species in its ecological context.  This requires learning something about mosquitoes as well as something about models. 
+MBITES is a framework for building models; it is not just a model. It was developed with many different options so it would be possible to build spatially explicit and highly realistic individual-based simulation models. Over time, the number of options is expected to expand. To simulate mosquitoes, it is necessary to configure a model so that it looks like the specific mosquito species in its ecological context.  This requires learning something about mosquitoes as well as something about models. 
 
-MBITES was designed to have a close correspondence between what mosquitoes do in the model and published descriptions of mosquito behavior. The female behavioral bouts are based on a basic description of adult female behavior. A newly emerged female mosquito imago is pre-gonotrophic; she must mate before she can produce eggs. Maturation could also require one or two blood or sugar meals. Sperm is stored in an organ called a spermatheca, so depending on the species, mating could occur repeatedly throughout life or it could happen only once. 
+MBITES was designed to have a close correspondence between what mosquitoes do in the model and published descriptions. The female behavioral bouts are based on a basic description of adult female behavior. A newly emerged female mosquito imago is pre-gonotrophic; she must mate before she can produce eggs. Maturation could also require one or two blood or sugar meals. Sperm is stored in an organ called a spermatheca, so depending on the species, mating could occur repeatedly throughout life or it could happen only once. 
 
 After maturation, an adult female begins a cycle of blood feeding and egg laying. After a search to find a potential blood meal host, she approaches a host in an attempt to blood feed. After the bloodmeal, the mosquito typically rests to shed some of the water weight. Blood is provisioned into eggs that require some time to mature. Once mature, she initiates a search to find aquatic habitat and then lays eggs. Sugar feeding can provide energy for flight, metabolism, and other activities.
 
@@ -162,10 +162,10 @@ The progression through these states is partly determined by variables describin
 
 \subsection{The {\em in Silico} Mosquito}
 
-The task for MBITES was how to represent a mosquito in a model that accurately mimics what mosquitoes do in real life. In the model, each mosquito is represented as a set of variables representing its state, including quantitative or categorial variables that track where a mosquito is, its physiological status, behavioral intent, and etc. The list of variables is the following: 
+The task for MBITES was how to represent a mosquito in a simulation model that accurately mimics what mosquitoes do in real life. In the model, each mosquito is represented as a set of variables representing its state, including quantitative or categorial variables that track where a mosquito is, its physiological status, behavioral intent, and etc. The list of variables is the following: 
 %
 \begin{itemize}
-\item Unique ID. An identifier used for various functions, including inheritance.
+\item Unique identifier. For bookkeeping, pedigrees and inheritance.
 \item Behavioral state. What is a mosquito trying to do?
 \item Location. Where is the mosquito? 
 \item Resting microsite. Where is the mosquito resting (\eg inside or outside)?
@@ -181,40 +181,37 @@ The task for MBITES was how to represent a mosquito in a model that accurately m
 
 \subsection{Behavioral States and Flight Bouts}
 
-A crude description of a mosquito's activities would be that a mosquito's life is a sequence of flight bouts, a set of intentive flights to accomplish something. The behavioral state is the key to understanding MBITES.  The mosquito's intent determines what a mosquito does, and the intent changes as a mosquito accomplishes one thing and then moves to the next. MBITES mimics these flight bouts, tracking a  mosquito from its launch to initiate one bout up to the point when it launches itself to initiate the next bout. Conceptually, the structure of a bout is:  {\bf Launch} - {\bf Try} - {\bf Land} - {\bf Rest}. There are 8 types of behavioral bouts corresponding to each one of 8 behavioral states. 
+A crude description of a mosquito's activities would be that a mosquito's life is a sequence of flight bouts, and that each bout is an intentive flights to accomplish something. The behavioral states and state transitions are the key to understanding MBITES. A mosquito's intent determines what a mosquito does, and the intent changes as a mosquito accomplishes one thing and then moves to the next. MBITES mimics these intentive flight bouts, tracking a  mosquito from its launch to initiate one bout up to the point when it launches itself to initiate the next bout. Conceptually, the structure of a bout (generically denoted [{\bf X}]) is:  {\bf Launch} - {\bf Try} - {\bf Land} - {\bf Rest}. MBITES has  eight types of behavioral bouts: 
 \begin{itemize}
 \item[\Fbout] :: Blood feeding search  to find a place where blood feeding can occur
 \item[\Bbout] :: Blood feeding attempt to approach a host for a blood meal and to blood feed
 \item[\Rbout] :: The post-prandial resting bout
 \item[\Lbout] :: Egg laying habitat search to find a place where egg laying can occur
-\item[\Obout] :: Attempt to oviposit 
+\item[\Obout] :: Attempt to lay eggs / oviposit 
 \item[\Sbout] :: Sugar feeding, which could include a search flight 
 \item[\Mbout] :: Mating, which could include a search flight 
 \item[\Ebout] :: Estivation, in which a mosquito becomes inactive 
 \end{itemize}
 %
-The final state of a mosquito is \Dead, for ``dead." The {\bf Try} part of each bout is different -- what happens between launching and landing is elaborated upon in each bout. The try is assumed to be of comparatively short duration and (if successful) to lead to a state transition. 
+The final state of a mosquito is \Dead, for ``dead." The {\bf Try} part (\ie the intentive flight) of each bout type  is different -- what happens between launching and landing is elaborated upon in each bout. The intentive flight is assumed to be of comparatively short duration and (if successful) to lead to a state transition. 
 
-The code describing each bout type is found in the function \verb1boutX1 where \verb1X1 is the bout letter. The core bouts are \Fbout, \Bbout, \Rbout, \Lbout, and \Obout; the optional states \Sbout, \Mbout, and \Ebout\; can be turned on and utilized, if it suits the problem at hand. 
+Some bouts are required, and others are optional. The core bouts are \Fbout, \Bbout, \Rbout, \Lbout, and \Obout\; must all be in place to run MBITES at all, but the optional states \Sbout, \Mbout, and \Ebout\; can be turned on and utilized, if it suits the problem at hand.  
 
-Each bout executes a set of algorithms to simulate what happened. The common tasks for each bout are: 
+Each bout executes a set of algorithms to simulate what happened. In addition to simulating changes to a mosquito's behavioral, physical and physiological states, the common tasks for each bout are: 
 \begin{itemize}
 \item During a flight bout, a mosquito might change location. If a mosquito is searching for resources, the function \verb1rMove1 is called to determine where a mosquito ended up (see Search and Dispersion, below). 
 \item Determine the microsite where a mosquito landed. After each bout, a mosquito lands at a particular microsite in each place on the landscape, determined by the site type and called by the function \verb1restingSpot1.
 \item Determine energy usage. The mosquito's energetic state is then updated, with \verb1sugarEnergetics1. (described in the Section {\em Energetics and Sugar Feeding}, below)
 \item Determine whether a mosquito survived the flight and landing. Even if a mosquito encountered the specific hazards associated with the bout, other mortality can occur as a result of flight stress with the function \verb1surviveFlight1. There is also the possibility of predation or other site specific hazards while resting, called with the function \verb1surviveResting1. (described in the Section {\em Survival}, below)
 \item Compute the duration of the resting period, the time interval between two bouts. The waiting time is determined by a generic function \verb1timing1. (described in the Section  {\em Resting Times}, below)
-\item Simulate changes to the physical and physiological state.
-\item Determine a mosquito's next behavioral state. 
 \end{itemize}
 These events can be different for each flight bout, depending on where a mosquito rests and what happened during the previous bout. The details of these activities matter for some kinds of malaria control.  There are, of course, other hazards that can be encountered that collectively make up vector control. 
 
-
-Every mosquito event can be logged so it is possible to study mosquitoes using  \verb1historyTrack1. 
+Every mosquito event can be logged so it is possible to study mosquitoes using  \verb1historyTrack1, which outputps a mosquito's state at the end of each bout. 
 
 \subsection{Implementation Notes}
 
-All bouts are implemented within a generic bout framework, in the function \verb1mbites_oneBout()1.
+All bouts are implemented within a generic bout framework, in the function \verb1mbites_oneBout()1.The code describing each bout type is found in the function \verb1boutX1 where \verb1X1 is the bout letter. 
 
 In computing the outcome of a flight bout, variables track the  event times (\verb1tNow1, and \verb1tNext1) -- the moment when it started the bout; the mosquito's location among the point sets (\verb1locNow1, and \verb1locNext1); and the mosquito's present and future state (\verb1state1, and \verb1stateNew1). Before starting a new flight bout, \verb1tNext1 has been checked to be sure other dependent elements of the simulation have been correctly set. 
 Upon entering the bout, the mosquitoes time, state, and location are updated:
@@ -275,7 +272,9 @@ To avoid resurrecting a dead mosquito or resuscitating an estivating mosquito, a
 
 \section{Resting Times}
 
-By default, the waiting time to the next bout varies by the mosquito's behavioral state. By default, all of these waiting times are exponentially distributed. The alternative is gamma distributed waiting times. 
+After landing, how long does it take a mosquito to launch again? This is the question addressed by the set of functions called \verb1timing1. Here, the waiting time to the next bout varies by the mosquito's behavioral state.
+
+By default, all of these waiting times are exponentially distributed. The alternative is gamma distributed waiting times. 
 
 \paragraph{Parsing}
 
@@ -402,7 +401,7 @@ and to compute (and show) the average age. Something like this:}
 
 \subsection{Physical and Physiological Damage}
 
-The variable \verb1damage1 tracks all kinds of damage, including physical damage and contact with pesticides. Damage is cumulative,  and it is tracked on a scale of $[0,1)$. 
+The variable \verb1damage1 tracks all kinds of damage, including physical damage and contact with pesticides. Damage is cumulative,  and it is tracked on a scale of $[0,1)$. Two function families are required. One to simulate the amount of damage caused, and another to simulate the effects of damage on survival. Survival is assumed to be a mononic decreasing function of the amount of damage: 
 
 \begin{itemize}
 \item [0] \verb1damage_function=NULL1
@@ -416,7 +415,8 @@ The variable \verb1damage1 tracks all kinds of damage, including physical damage
 
 \subsubsection{Wing Tattering}
 
-Tattering describes physical damage resulting from flight. 
+Tattering describes physical damage resulting from flight. The amount of damage caused by each flight is simulated with a zero-inflated  $\beta$ PDF: 
+%
 \begin{itemize}
 \item [0] \verb1tatter_function=NULL1
 \item [1] \verb1tatter_function="zibeta"1
@@ -427,6 +427,9 @@ Tattering describes physical damage resulting from flight.
   \end{itemize}
 \end{itemize}
 
+\subsubsection{Physiological Damage}
+
+Physiological damage 
 
 \clearpage 
 
@@ -1272,9 +1275,10 @@ feeding search bout at some point in the future.
 
 \section{Phenotypes, Inheritance and Evolution}
 
+\clearpage 
 \section{Aquatic Ecology}
 
-
+\clearpage 
 \section{The MBITES GUI}
 
 \end{document}
