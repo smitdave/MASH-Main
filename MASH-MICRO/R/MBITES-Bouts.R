@@ -293,15 +293,23 @@ mbites_boutL <- function(){
 #' write me!
 #'
 mbites_boutO <- function(){
-  #### Ovitrap #############################################################################################
-  ovitrap=private$LandscapePointer$get_AquaSites(private$locNow)$get_ovitrap()
-  if(is.null(ovitrap)==FALSE){
-    #print("OVI Present")
-    private$stateNew = ovitrap$mosquitoKillEncounter(private$stateNew,interventionType="OVI")
-    private$lspot = ovitrap$mosquitoRepelEncounter(private$lspot,interventionType="OVI")
-  }else{
+  # peri-domestic site
+  if(private$periDomestic){
     if(self$isAlive()){
       self$layEggs()
+    }
+  } else {
+  # standard site
+    #### Ovitrap #############################################################################################
+    ovitrap=private$LandscapePointer$get_AquaSites(private$locNow)$get_ovitrap()
+    if(!is.null(ovitrap)){
+      #print("OVI Present")
+      private$stateNew = ovitrap$mosquitoKillEncounter(private$stateNew,interventionType="OVI")
+      private$lspot = ovitrap$mosquitoRepelEncounter(private$lspot,interventionType="OVI")
+    }else{
+      if(self$isAlive()){
+        self$layEggs()
+      }
     }
   }
 }

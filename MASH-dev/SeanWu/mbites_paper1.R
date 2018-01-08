@@ -48,13 +48,13 @@ master_dir = "/Users/slwu89/Desktop/MBITES/"
 dir.create(master_dir)
 
 # giant foreach loop
-out = foreach(it = iter(xy_lscape), i = icount(), .export = c("master_dir"), .inorder = FALSE, .packages = c("MASHcpp","MASHmacro","MASHmicro"), .verbose = F) %dopar% {
+out = foreach(it = iter(xy_lscape), i = icount(), .export = c("master_dir"), .inorder = FALSE, .packages = c("MASHcpp","MASHmacro","MASHmicro"), .verbose = TRUE) %dopar% {
   
   # simulation parameters
-  nMosy = 10
-  tMax = 20
-  jmax = 2
-  site_lambda = 5
+  nMosy = 250
+  tMax = 365
+  jmax = 1
+  site_lambda = 2
   
   # make a tile
   DIR = paste0(master_dir,"lscape",i,"/")
