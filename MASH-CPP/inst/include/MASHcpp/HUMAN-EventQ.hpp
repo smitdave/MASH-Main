@@ -53,7 +53,7 @@ public:
 
 private:
   std::vector<Rcpp::List> EventQ; // event queue
-  int queueN = 0; // number of events in queue
+  int queueN; // number of events in queue
 };
 
 }
