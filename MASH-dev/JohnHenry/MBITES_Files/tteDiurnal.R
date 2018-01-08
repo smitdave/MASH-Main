@@ -44,5 +44,4 @@ tteDiurnal = function(N,lam){
 v = tteDiurnal(1000,1)
 
 count = hist(v,freq=F,breaks=50)$count
-plot(cumsum(count)/sum(count),type="l")
-
+plot(seq(0,7,7/(length(count)-1)),cumsum(count)/sum(count),type="l")
