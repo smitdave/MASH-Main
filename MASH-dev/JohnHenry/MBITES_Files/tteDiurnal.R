@@ -1,3 +1,5 @@
+par(mfrow=c(2,2))
+
 ff = function(t, peak=0,amp=1){
   amp*(1+cos(2*pi*(t-peak)))
 }
@@ -13,12 +15,8 @@ hh = function(t,lam){
   1-exp(-lam*(t+sin(2*pi*t)/(2*pi)))
 }
 
-t = 1:1000/100
-plot(t,hh(t,.1),type="l")
-
-t = 1:2000/100
-
-plot(t,hh(t,.1),type="l")
+t = 1:700/100
+plot(t,hh(t,1),type="l")
 
 newton = function(f,J,x0,tol) {
   #standard newton's method, compute f and Jacobian as functions
@@ -44,6 +42,7 @@ tteDiurnal = function(N,lam){
 }
 
 v = tteDiurnal(1000,1)
-hist(v,freq=F,breaks=50)
 
-plot(v,type="l")
+count = hist(v,freq=F,breaks=50)$count
+plot(cumsum(count)/sum(count),type="l")
+
