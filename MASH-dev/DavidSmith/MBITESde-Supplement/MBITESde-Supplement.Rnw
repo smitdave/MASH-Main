@@ -64,8 +64,10 @@ Proof 1
 \end{bf}
 
 To justify this summation, consider the infinite set of equations
-$$\frac{d x_1}{dt} = -\lambda x_1$$
-$$\frac{d x_i}{dt} = p \lambda x_{i-1} - \lambda x_i$$
+\begin{equation}\begin{array}{rl}
+\frac{d x_1}{dt} =& -\lambda x_1 \\&\\
+\frac{d x_i}{dt} =& (1-p) \lambda x_{i-1} - \lambda x_i
+\end{array}\end{equation}
 with initial conditions $x_1(0) = 1$, $x_i(0) = 0$. That is, initially
 all of the mosquitoes are in their first attempt for an exponentially
 distributed length of time. A proportion $p$ are successful or leave frustrated,
@@ -82,7 +84,7 @@ Assuming this, we look at the $x_{i+1}$ equation:
 $$\frac{d x_{i+1}}{dt} = p\lambda x_i - \lambda x_{i+1}$$
 Plugging in the assumed solution, we get
 $$\frac{d x_{i+1}}{dt} = p\lambda \frac{(p \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t} - \lambda x_{i+1}$$
-$$= \frac{(p \lambda)^i}{i!}t^{i-1} e^{-\lambda t} - \lambda x_{i+1}$$
+$$\indent \hspace*{.1cm}  = \frac{(p \lambda)^i}{i!}t^{i-1} e^{-\lambda t} - \lambda x_{i+1}$$
 Which is again amenable to an integrating factor combined with i-1 integration by parts,
 yielding
 $$x_{i+1} = \frac{(p \lambda t)^{i}}{i!} e^{-\lambda t}$$
@@ -90,7 +92,7 @@ which completes the induction.
 Because we are interested in the total amount of time spent and not the time
 spent in any one compartment, we add the solutions together:
 $$\sum_{i = 1}^{\infty} x_i(t) = \sum_{i = 1}^{\infty}\frac{(p \lambda t)^{i-1}}{(i-1)!} e^{-\lambda t}$$
-$$ = e^{-\lambda t} \sum_{i=0}^{\infty}\frac{(p \lambda t)^i}{i!}$$
+$$ \indent \indent = e^{-\lambda t} \sum_{i=0}^{\infty}\frac{(p \lambda t)^i}{i!}$$
 $$ = e^{-\lambda t} e^{p\lambda t}$$
 $$ = e^{-(1-p) \lambda t}$$
 
@@ -102,7 +104,7 @@ of the exponential function - this justifies summing the infinite equations and
 the differential operator which gives us
 
 $$\frac{d}{dt} \sum_{i=1}^{\infty} x_i = \sum_{i=1}^{\infty}\frac{d x_i}{dt}$$
-$$ = \sum_{i=1}^{\infty}-\lambda (1-p) x_i$$
+$$\hspace*{3cm} = \sum_{i=1}^{\infty}-\lambda (1-p) x_i$$
 
 setting $X = \sum_{i=1}^{\infty}x_i$, we get a very simple single differential equation
 
@@ -125,21 +127,19 @@ $$P(N=n) = (1-p)p^{n-1}$$
 The waiting time between each attempt is iid with an exponentially distributed waiting
 time with intensity $\lambda$, so given it takes n trials the distribution follows
 a gamma distribution:
-$$T|N = \sum_{i=1}^{n}Exp_i(\lambda)$$
-$$ \sim \Gamma (n,\lambda)$$
+$$T|N = \sum_{i=1}^{n}Exp_i(\lambda) \sim Gamma (n,\lambda)$$
 
 Therefore we have
 
 $$P(T=t) = \sum_{i=1}^{\infty}P(T=t|N=n)P(N=n)$$
-$$ = \sum_{i=1}^{\infty}(1-p)p^{n-1}\frac{\lambda^n}{\Gamma (n)}t^{n-1} e^{-\lambda t}$$
-$$ = (1-p) \lambda e^{-\lambda t} \sum_{i=0}^{\infty} \frac{(p\lambda t)^n}{n!}$$
-$$ = \lambda (1-p) e^{-\lambda t} e^{p\lambda t}$$
-$$ = (1-p) \lambda e^{-(1-p) \lambda t} $$
+$$ \hspace*{2cm} = \sum_{i=1}^{\infty}(1-p)p^{n-1}\frac{\lambda^n}{\Gamma (n)}t^{n-1} e^{-\lambda t}$$
+$$ \indent \hspace*{.5cm} = (1-p) \lambda e^{-\lambda t} \sum_{i=0}^{\infty} \frac{(p\lambda t)^n}{n!}$$
+$$ \hspace*{.1cm} = \lambda (1-p) e^{-\lambda t} e^{p\lambda t}$$
+$$\hspace*{.2cm} = (1-p) \lambda e^{-(1-p) \lambda t} $$
 
 which is exactly the normalized solution to the previous system of ordinary differential
 equations - the waiting time for the mosquito to leave the state is exponentially 
-distributed with intensity $(1-p) \lambda$. Importantly, this proof does not depend on
-$(1-p)$ or $\lambda$ being constant - they can be age- or time-dependent.
+distributed with intensity $(1-p) \lambda$. Importantly, the second proof does not depend on $(1-p)$ or $\lambda$ being constant - they can be age- or time-dependent.
 
 This means we can rewrite the infinite system of equations as a
 set of 5 differential equations: 
@@ -204,7 +204,7 @@ F(0) &=& 1 \\
 %
 {\dot L}&=& \gamma_R(a) P_{RL}(a) R(a) + 
 \gamma_O(a) P_{OL}(a) O(a) \\&&
-- \gamma_L(a) (1 - P_{LL}(a)) L_e(a)
+- \gamma_L(a) (1 - P_{LL}(a)) L(a)
 \\ 
 %
 {\dot O} &=& \gamma_L(a) P_{LO}(a) L(a) 
@@ -257,7 +257,7 @@ F_{x}(a,t)}{\partial a} =&
 %
 \frac{\partial B_{o,x}(a,t)}{\partial t} + \frac{\partial
 B_{x}(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O_x(a,t) +
-\gamma_F(a,t) P_{FB}(a) F(a,t)\\ &
+\gamma_F(a,t) P_{FB}(a) F_x(a,t)\\ &
 + \gamma_R(a,t) P_{RB}(a) R_x(a,t) 
 - \gamma_B(a,t) (1 - P_{BB}(a)) B_{x}(a,t)\\
 %
@@ -269,7 +269,7 @@ L_{x} (a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R_x(a,t) +
 \\
 %
 \frac{\partial O_{o,x}(a,t)}{\partial t} + \frac{\partial
-O_{x}(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) L(a,t)
+O_{x}(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) L_x(a,t)
 + \gamma_R(a,t) P_{RO}(a) R_x(a,t)
 \\&
 - \gamma_O(a,t) (1 - P_{OO}(a)) O_{x}(a,t)
