@@ -1,0 +1,49 @@
+ff = function(t, peak=0,amp=1){
+  amp*(1+cos(2*pi*(t-peak)))
+}
+
+plot(ttt*24, ff(ttt), type = 'l', ylab = "Activity Level", xlab = "Time of Day", xaxt = "n") 
+axis(1, c(0:4)*6, c("12 am", "6 am", "12 pm", "6 pm", "12 am"))
+
+gg = function(t,lam){
+  lam*(1+cos(2*pi*t))*exp(-lam*(t+sin(2*pi*t)/(2*pi)))
+}
+
+hh = function(t,lam){
+  1-exp(-lam*(t+sin(2*pi*t)/(2*pi)))
+}
+
+t = 1:1000/100
+plot(t,hh(t,.1),type="l")
+
+t = 1:2000/100
+
+plot(t,hh(t,.1),type="l")
+
+newton = function(f,J,x0,tol) {
+  #standard newton's method, compute f and Jacobian as functions
+  while (norm(f(x0),'2') > tol) {
+    x0 = x0 - qr.solve(J(x0),f(x0))
+  }
+  return(x0)
+}
+
+tteDiurnal = function(N,lam){
+  v = rep(0,N)
+  for(i in 1:N){
+    temp = rexp(1,lam)
+    f = function(t,s=temp){
+      1.1*t+sin(2*pi*t)/(2*pi)-s
+    }
+    fp = function(t){
+      1.1+cos(2*pi*t)
+    }
+    v[i] = newton(f,fp,u[i],10^-2)
+  }
+  return(v)
+}
+
+v = tteDiurnal(1000,1)
+hist(v,freq=F,breaks=50)
+
+plot(v,type="l")
