@@ -16,7 +16,7 @@ hh = function(t,lam){
 }
 
 t = 1:700/100
-plot(t,hh(t,1),type="l")
+plot(t,hh(t,1),type="l",ylab = "tteCDF")
 
 newton = function(f,J,x0,tol) {
   #standard newton's method, compute f and Jacobian as functions
@@ -28,9 +28,9 @@ newton = function(f,J,x0,tol) {
 
 tteDiurnal = function(N,lam){
   v = rep(0,N)
+  u = rexp(N,lam)
   for(i in 1:N){
-    temp = rexp(1,lam)
-    f = function(t,s=temp){
+    f = function(t,s=u[i]){
       1.1*t+sin(2*pi*t)/(2*pi)-s
     }
     fp = function(t){
@@ -41,7 +41,7 @@ tteDiurnal = function(N,lam){
   return(v)
 }
 
-v = tteDiurnal(1000,1)
+v = tteDiurnal(10000,1)
 
-count = hist(v,freq=F,breaks=50)$count
-plot(seq(0,7,7/(length(count)-1)),cumsum(count)/sum(count),type="l")
+count = c(0,hist(v,freq=F,breaks=100)$count)
+plot(seq(0,7,7/(length(count)-1)),cumsum(count)/sum(count),type="l",ylab="empirical tteCDF",ylim=c(0,1))
