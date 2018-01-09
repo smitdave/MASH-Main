@@ -1,4 +1,4 @@
-#include <RcppGSL.h>
+#include <Rcpp.h>
 
 #include "human.hpp"
 #include "humanPop.hpp"

@@ -26,7 +26,7 @@
 #include <functional>   // std::invoke
 #include <vector>       // for event queue
 
-#include <RcppGSL.h>
+#include <Rcpp.h>
 
 #include "DEBUG.hpp"
 

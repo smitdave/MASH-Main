@@ -20,7 +20,7 @@
 #include <stdio.h>
 #include <iostream>
 
-#include <RcppGSL.h>
+#include <Rcpp.h>
 
 #include "DEBUG.hpp"
 

@@ -19,7 +19,7 @@
 
 #include <unordered_map>
 
-#include <RcppGSL.h>
+#include <Rcpp.h>
 
 #include "DEBUG.hpp"
 
