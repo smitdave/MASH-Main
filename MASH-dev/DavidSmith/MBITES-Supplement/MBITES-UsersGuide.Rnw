@@ -310,7 +310,7 @@ For the behavioral states F,B,R,L,O, \& S, these are the timing options:
 
 \section{Survival}
 
-How and where do mosquitoes die? The answer is that no one really knows, so MBITES makes it possible for mosquitoes to die every which way. The wide variety of options for death in MBITES creates a conundrum that can be ignored in models that look at mortality purely phenomenologically. In MBITES, it is necessary to make specific assumptions that determine how, where, and when mosquitoes die. 
+How and where do mosquitoes die? Since no one really knows, MBITES makes it possible for mosquitoes to die every which way. The wide variety of options for death in MBITES creates a conundrum that can be ignored in models that look at mortality purely phenomenologically. In MBITES, it is necessary to make specific assumptions that determine how, where, and when mosquitoes die. 
 
 The default setting for mortality in MBITES is for all mosquito mortality to occur as a result of flight stress. The basic probability of dying is a bout-specific probability of surviving the stress of each flight, which is configured differently for each bout. 
 %
