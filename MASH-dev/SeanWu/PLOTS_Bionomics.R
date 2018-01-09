@@ -47,6 +47,21 @@ bionomics_HumanBM <- function(data){
   return(HumanBM)
 }
 
+bionomics_vc <- function(data, eip=10){
+  vc = vapply(X = data,FUN = function(x,eip){
+    states = unlist(x$stateH)
+    times = unlist(x$timeH)
+    f = which(states=="F")
+    if(length(f)<2){
+      return(NaN)
+    } else {
+      return(sum(diff(times[which(states=="F")]) > eip))
+    }
+  },FUN.VALUE = numeric(1),eip = eip,USE.NAMES = FALSE)
+  vc = Filter(Negate(is.nan),vc)
+  return(vc)
+}
+
 # HMSC plotly histogram
 histogramPlotLyGenericBionomics=function(data,title,color){
   p=plot_ly(x=data,name=title,marker=list(color=color),type="histogram") %>%
