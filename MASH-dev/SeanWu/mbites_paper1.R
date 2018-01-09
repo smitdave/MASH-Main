@@ -181,11 +181,16 @@ for(l in landscapes){
   # HumanBMinterval = histogramPlotLyGenericBionomics(data = bionomics_HumanBMinterval(mHist),title = "Human Bloodmeal Interval",color = rgb(1,.5,0,.5))
   # HumanBM = histogramPlotLyGenericBionomics(data = bionomics_HumanBM(mHist),title = "Human Bloodmeals",color = rgb(1,0,0,.5))
   
+  axisSize = 12
+  titleSize = 14.5
+  
   lifespans = bionomics_lifespan(mHist)
   lifespans_plot = ggplot(data = data.frame(lifespan=lifespans)) +
     geom_histogram(aes(lifespan),fill=rgb(0,.5,.5,.5)) +
     theme_bw() + 
-    theme(panel.grid.minor = element_blank()) +
+    theme(panel.grid.minor = element_blank(),
+          axis.title=element_text(size=axisSize),
+          plot.title = element_text(size=titleSize)) +
     guides(fill = FALSE) + 
     labs(x="Days",y="Frequency",title="Mosquito Lifespans")
   
@@ -193,28 +198,42 @@ for(l in landscapes){
   BMintervals_plot = ggplot(data = data.frame(BMinterval=BMintervals)) +
     geom_histogram(aes(BMinterval), fill = rgb(0,.5,0,.5)) +
     theme_bw() + 
-    theme(panel.grid.minor = element_blank()) +
+    theme(panel.grid.minor = element_blank(),
+          axis.title=element_text(size=axisSize),
+          plot.title = element_text(size=titleSize)) +
     guides(fill = FALSE) + 
     labs(x="Days",y="Frequency",title="Bloodmeal Interval")
   
-  HumanBMintervals = bionomics_HumanBMinterval(mHist)
-  HumanBMintervals_plot = ggplot(data = data.frame(HumanBMinterval=HumanBMintervals)) +
-    geom_histogram(aes(HumanBMinterval), fill = rgb(1,.5,0,.5)) +
+  # HumanBMintervals = bionomics_HumanBMinterval(mHist)
+  # HumanBMintervals_plot = ggplot(data = data.frame(HumanBMinterval=HumanBMintervals)) +
+  #   geom_histogram(aes(HumanBMinterval), fill = rgb(1,.5,0,.5)) +
+  #   theme_bw() + 
+  #   theme(panel.grid.minor = element_blank()) +
+  #   guides(fill = FALSE) + 
+  #   labs(x="Days",y="Frequency",title="Human Bloodmeal Interval")
+  vectorialCapacity = bionomics_vc(mHist,eip = 8)
+  vectorialCapacity_plot = ggplot(data = data.frame(vectorialCapacity=vectorialCapacity)) +
+    geom_histogram(aes(vectorialCapacity), fill = rgb(0,.5,0,.5),stat = "count") +
+    scale_x_continuous(breaks=0:(max(vectorialCapacity)+2)) + 
     theme_bw() + 
-    theme(panel.grid.minor = element_blank()) +
+    theme(panel.grid.minor = element_blank(),
+          axis.title=element_text(size=axisSize),
+          plot.title = element_text(size=titleSize)) +
     guides(fill = FALSE) + 
-    labs(x="Days",y="Frequency",title="Human Bloodmeal Interval")
+    labs(x="Vectorial Capacity",y="Frequency",title="Individual Vectorial Capacity")
   
   HumanBMs = bionomics_HumanBM(mHist)
   HumanBMs_plot = ggplot(data = data.frame(HumanBM=HumanBMs)) +
     geom_histogram(aes(HumanBM), fill = rgb(1,0,0,0.5),stat = "count") +
     scale_x_continuous(breaks=0:(max(HumanBMs)+2)) + 
     theme_bw() + 
-    theme(panel.grid.minor = element_blank()) +
+    theme(panel.grid.minor = element_blank(),
+          axis.title=element_text(size=axisSize),
+          plot.title = element_text(size=titleSize)) +
     guides(fill = FALSE) + 
     labs(x="Count",y="Frequency",title="Human Bloodmeals")
   
-  grid.arrange(lifespans_plot,BMintervals_plot,HumanBMintervals_plot,HumanBMs_plot,nrow=2)
+  grid.arrange(BMintervals_plot,HumanBMs_plot,lifespans_plot,vectorialCapacity_plot,nrow=2)
   
   
   
