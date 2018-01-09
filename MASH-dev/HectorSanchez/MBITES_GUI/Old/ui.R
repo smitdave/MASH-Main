@@ -2,6 +2,9 @@
 # MBITES-BRO GUI
 # HMSC/Sean Wu
 # NOTE: Set your directory to this source file's location!!!!!
+# install.packages(c("shiny","shinythemes","shinyjs","shinydashboard","plotly","markdown","igraph","webshot","XML","circlize","markovchain"))
+# devtools::install_github(repo = "smitdave/MASH",ref = "MASH-S3")
+# devtools::install_github("mattflor/chorddiag")
 ################################################################################################################
 library(shiny)
 library(shinythemes)
