@@ -48,7 +48,7 @@ master_dir = "/Users/slwu89/Desktop/MBITES/"
 dir.create(master_dir)
 
 # giant foreach loop
-out = foreach(it = iter(xy_lscape), i = icount(), .export = c("master_dir"), .inorder = FALSE, .packages = c("MASHcpp","MASHmacro","MASHmicro"), .verbose = TRUE) %dopar% {
+out = foreach(it = iter(xy_lscape), i = icount(), .export = c("master_dir"), .inorder = FALSE, .packages = c("MASHcpp","MASHmacro","MASHmicro"), .verbose = TRUE, .errorhandling = "pass") %dopar% {
   
   # simulation parameters
   nMosy = 250
@@ -72,6 +72,9 @@ out = foreach(it = iter(xy_lscape), i = icount(), .export = c("master_dir"), .in
   
   # landscape parameters
   periDom_index = unname(apply(X = it$f[,1:2] == it$l[,1:2],MARGIN = 1,FUN = all))
+  if(all(periDom_index)){
+    periDom_index[length(periDom_index)] = FALSE
+  }
   
   nFeed = nrow(it$f)
   nAqua = sum(!periDom_index)

@@ -21,7 +21,7 @@
 #include <iostream>
 #include <string>
 
-#include <RcppGSL.h>
+#include <Rcpp.h>
 
 #include "DEBUG.hpp"
 
