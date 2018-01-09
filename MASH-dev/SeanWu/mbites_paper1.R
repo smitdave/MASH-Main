@@ -146,3 +146,78 @@ out = foreach(it = iter(xy_lscape), i = icount(), .export = c("master_dir"), .in
 }
 
 doParallel::stopImplicitCluster()
+
+
+###############################################################################
+# Graphics
+###############################################################################
+
+source("/Users/slwu89/Desktop/git/MASH-Main-slwu89/MASH-dev/SeanWu/PLOTS_Bionomics.R")
+library(stringr)
+library(chorddiag)
+library(jsonlite)
+library(ggplot2)
+library(gridExtra)
+landscapes = system(command = paste0("ls ",master_dir),intern = TRUE)
+landscapes = landscapes[order(as.numeric(str_match(string = landscapes,pattern = "[0-9]+$")))]
+
+for(l in landscapes){
+  
+  # files from each simulation
+  files_l = system(command = paste0("ls ",master_dir,l,"/MOSQUITO/"),intern = TRUE)
+  hist_l = files_l[grep(pattern = "History",x = files_l)] # individual json histories
+  pop_l = files_l[grep(pattern = "Pop",x = files_l)] # population csv
+  
+  # output
+  mHist = fromJSON(txt = paste0(master_dir,l,"/MOSQUITO/",hist_l),flatten = FALSE,simplifyVector=FALSE)
+  mPop = read.table(file = paste0(master_dir,l,"/MOSQUITO/",pop_l),header = TRUE,sep = ",")
+  
+  nullIx = which(vapply(X = mHist,FUN = function(x){x$ID[[1]]},FUN.VALUE = character(1)) == "NULL")
+  mHist = mHist[-nullIx]
+  
+  # histograms
+  # lifespans = histogramPlotLyGenericBionomics(data = bionomics_lifespan(mHist),title = "Mosquito Lifespans",color = rgb(0,.5,.5,.5))
+  # BMinterval = histogramPlotLyGenericBionomics(data = bionomics_BMinterval(mHist),title = "Bloodmeal Interval",color = rgb(0,.5,0,.5))
+  # HumanBMinterval = histogramPlotLyGenericBionomics(data = bionomics_HumanBMinterval(mHist),title = "Human Bloodmeal Interval",color = rgb(1,.5,0,.5))
+  # HumanBM = histogramPlotLyGenericBionomics(data = bionomics_HumanBM(mHist),title = "Human Bloodmeals",color = rgb(1,0,0,.5))
+  
+  lifespans = bionomics_lifespan(mHist)
+  lifespans_plot = ggplot(data = data.frame(lifespan=lifespans)) +
+    geom_histogram(aes(lifespan),fill=rgb(0,.5,.5,.5)) +
+    theme_bw() + 
+    theme(panel.grid.minor = element_blank()) +
+    guides(fill = FALSE) + 
+    labs(x="Days",y="Frequency",title="Mosquito Lifespans")
+  
+  BMintervals = bionomics_BMinterval(mHist)
+  BMintervals_plot = ggplot(data = data.frame(BMinterval=BMintervals)) +
+    geom_histogram(aes(BMinterval), fill = rgb(0,.5,0,.5)) +
+    theme_bw() + 
+    theme(panel.grid.minor = element_blank()) +
+    guides(fill = FALSE) + 
+    labs(x="Days",y="Frequency",title="Bloodmeal Interval")
+  
+  HumanBMintervals = bionomics_HumanBMinterval(mHist)
+  HumanBMintervals_plot = ggplot(data = data.frame(HumanBMinterval=HumanBMintervals)) +
+    geom_histogram(aes(HumanBMinterval), fill = rgb(1,.5,0,.5)) +
+    theme_bw() + 
+    theme(panel.grid.minor = element_blank()) +
+    guides(fill = FALSE) + 
+    labs(x="Days",y="Frequency",title="Human Bloodmeal Interval")
+  
+  HumanBMs = bionomics_HumanBM(mHist)
+  HumanBMs_plot = ggplot(data = data.frame(HumanBM=HumanBMs)) +
+    geom_histogram(aes(HumanBM), fill = rgb(1,0,0,0.5),stat = "count") +
+    scale_x_continuous(breaks=0:(max(HumanBMs)+2)) + 
+    theme_bw() + 
+    theme(panel.grid.minor = element_blank()) +
+    guides(fill = FALSE) + 
+    labs(x="Count",y="Frequency",title="Human Bloodmeals")
+  
+  grid.arrange(lifespans_plot,BMintervals_plot,HumanBMintervals_plot,HumanBMs_plot,nrow=2)
+  
+  
+  
+}
+
+
