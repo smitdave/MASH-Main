@@ -49,3 +49,8 @@ void human::fireEvent(){
     EventQ.front().eventF();
     EventQ.erase(EventQ.begin());
 };
+
+/* events */
+void human::event_death(){
+  alive = false;
+};
