@@ -22,7 +22,7 @@
 #'
 #'  * This method is bound to \code{MacroTile$simMacro}
 #'
-simMacro <- function(tMax, PfPAR){
+simMacro <- function(tMax, PfPAR, PEVAXPAR = NULL){
 
   cat("initializing simulation, ",private$runID,"\n",sep="")
 
@@ -46,6 +46,7 @@ simMacro <- function(tMax, PfPAR){
 
   # initialize humans
   private$HumanPop$initialize_Pathogens(PfPAR)
+  private$HumanPop$initialize_peVaxx(PEVAXPAR)
   private$HumanPop$initialize_bWeightHuman()
   private$HumanPop$initialize_travel()
 

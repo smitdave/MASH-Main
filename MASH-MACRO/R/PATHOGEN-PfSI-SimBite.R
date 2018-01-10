@@ -48,11 +48,6 @@ SimBitePfSI.Setup <- function(overwrite = TRUE){
                value = queueBites_SimBitePfSI_Human, overwrite = overwrite
   )
 
-  # queueVaccination
-  Human$set(which = "public",name = "queueVaccination_SimBitePfSI",
-               value = queueVaccination_SimBitePfSI_Human, overwrite = overwrite
-  )
-
 }
 
 
@@ -124,21 +119,5 @@ queueBites_SimBitePfSI_Human <- function(tMax, bitingRate = 1/20){
   tBite = runif(n=nBite,min=0,max=tMax)
   for(t in tBite){
     self$add2Q_SimBitePfSI(tEvent = t)
-  }
-}
-
-#' PfSI SimBite \code{Human} Event: Queue Vaccination
-#'
-#' Queue vaccination and optionally treatment events by calling \code{\link{add2Q_pevaccinatePfSI}} and \code{\link{add2Q_treatPfSI}}
-#'
-#'  * This method is bound to \code{Human$queueVaccination_SimBitePfSI}
-#'
-#' @param tVaccine time of vaccination
-#' @param tTreat time of treatment (may be \code{NULL})
-#'
-queueVaccination_SimBitePfSI_Human <- function(tVaccine, tTreat = NULL){
-  self$add2Q_pevaccinatePfSI(tEvent = tVaccine)
-  if(!is.null(tTreat)){
-    self$add2Q_treatPfSI(tEvent = tTreat)
   }
 }
