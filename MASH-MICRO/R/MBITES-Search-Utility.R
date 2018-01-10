@@ -70,8 +70,10 @@ MicroKernel_FitBeta <- function(mean,cv){
 #' @export
 MicroKernelPlot_utility <- function(S,D, N = 50, dMesh = 0.01, dMax=NULL, sigma = 3, eps = 0.1, beta = 0){
 
-  M1 = MicroKernel_PowerKernel(S,D) #Markov transition matrix
-  M2 = MicroKernel_DistanceMat(S,D) #distance matrix
+  s2d = MicroKernel_PowerKernel(S,D) #Markov transition matrix
+  M1 = s2d[[1]]
+  M2 = s2d[[2]]
+  # M2 = MicroKernel_DistanceMat(S,D) #distance matrix
   M1norm = M1/sum(M1) #normalized transition matrix
 
   if(is.null(dMax)){

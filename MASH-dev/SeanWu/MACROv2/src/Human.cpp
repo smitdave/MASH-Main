@@ -18,7 +18,7 @@
 
 /* constructor */
 human::human(const int& _id, const double& _age, tile* _tileP) : id(_id), alive(true), age(_age), tileP(_tileP) {
-
+  EventQ.reserve(100);
 };
 
 /* destructor */
@@ -29,7 +29,9 @@ human::human(human&&) = default;
 human& human::operator=(human&&) = default;
 
 /* event queue */
-inline bool compare_tEvent(const event& eventA, const event& eventB) { return eventA.tEvent < eventB.tEvent; }
+
+/* replace with function object */
+inline bool compare_tEvent(const event& eventA, const event& eventB) { return eventA.tEvent < eventB.tEvent; };
 
 void human::addEvent2Q(const event &e){
     EventQ.push_back(e);
