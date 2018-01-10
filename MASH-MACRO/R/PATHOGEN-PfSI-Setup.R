@@ -396,6 +396,24 @@ PfSI.Setup <- function(
   # HUMAN PE vaccination functions
   ###################################################################
 
+  # Set up vaccinations for HumanPop
+  HumanPop$set(which = "public", name = "initialize_peVaxx",
+               value = initialize_peVaxx_HumanPop,
+               overwrite = overwrite
+  )
+
+  # Set up vaccinations for each Human
+  Human$set(which = "public", name = "initialize_peVaxx",
+            value = initialize_peVaxx_Human,
+            overwrite = overwrite
+  )
+
+  # queueVaccination
+  Human$set(which = "public",name = "queuePEVaccination_PfSI",
+            value = queuePEVaccination_PfSI_Human,
+            overwrite = overwrite
+  )
+
   # vaccination
   Human$set(which = "public",name = "add2Q_pevaccinatePfSI",
             value = add2Q_pevaccinatePfSI,
