@@ -14,7 +14,6 @@
 
 #include "Mosquito.hpp"
 
-
 class mosquito_an : public mosquito {
 public:
 
