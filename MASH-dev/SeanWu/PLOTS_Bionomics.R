@@ -49,19 +49,16 @@ bionomics_HumanBM <- function(data){
 
 bionomics_vc <- function(data, eip=10){
   vc = vapply(X = data,FUN = function(x,eip){
-    # states = unlist(x$stateH)
-    # times = unlist(x$timeH)
-    # f = which(states=="F")
-    # if(length(f)<2){
-    #   return(NaN)
-    # } else {
-    #   return(sum(diff(times[which(states=="F")]) > eip))
-    # }
     feedT = unlist(x$feedAllT)
     if(length(feedT)<2){
       return(NaN)
     } else {
-      sum(diff(feedT)>eip)
+      if((diff(feedT)>eip)[1]){
+        # sum all pairs of bites that are more than EIP days apart
+        sum(apply(X = combn(feedT,2),MARGIN = 2,FUN = function(x){
+          diff(x)>eip
+        }))
+      }
     }
   },FUN.VALUE = numeric(1),eip = eip,USE.NAMES = FALSE)
   vc = Filter(Negate(is.nan),vc)
@@ -97,13 +94,6 @@ transitionsInMosquitoPopulation <- function(popHistory, stateSpace = c("D","M","
   transitions = Reduce(f = "+",x = transMatrices)
   transitions[stateSpace,stateSpace]
 }
-
-# chorddiagramPopulationStates=function(popHistory, stateSpace = c("D","M","F","B","R","L","O","S","E")){
-#   colors=c("#555555","#95E455","pink","red","purple","cyan","blue","yellow","grey")
-#   transitionsInStates=transitionsInMosquitoPopulation(popHistory)
-#   chorddiag(transitionsInStates,width="1000px",height="1000px",groupColors=colors,chordedgeColor=NULL,groupnameFontsize=20,groupPadding=5,groupnamePadding=45,type="directional")
-# }
-
 
 circlizeStatesTransitionMatrix <- function(history, stateSpace = c("D","M","F","B","R","L","O","S","E")){
   transitions=transitionsInMosquitoPopulation(history,stateSpace=stateSpace)

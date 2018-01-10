@@ -1,0 +1,4 @@
+-I./inst/include/
+-I/Library/Frameworks/R.framework/Headers/
+-I/Library/Frameworks/R.framework/Versions/3.4/Resources/library/Rcpp/include
+-std=c++14

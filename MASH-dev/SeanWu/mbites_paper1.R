@@ -86,6 +86,11 @@ out = foreach(it = iter(xy_lscape), i = icount(), .export = c("master_dir"), .in
   landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,nMate = nMate,nSugar = nSugar,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
   landscape_par$AquaticSite_PAR$lambda = replicate(n = nAqua,expr = {rep(site_lambda,365)},simplify = FALSE)
   
+  landscape_par$FeedingSite_PAR$siteXY$x = it$f$x
+  landscape_par$FeedingSite_PAR$siteXY$y = it$f$y
+  landscape_par$AquaticSite_PAR$siteXY$x = it$l$x[!periDom_index]
+  landscape_par$AquaticSite_PAR$siteXY$y = it$l$y[!periDom_index]
+  
   # set up the peri-domestic bit
   periDomestic = rep(FALSE,nFeed)
   lambda = replicate(n = nFeed,expr = NULL,simplify = FALSE)

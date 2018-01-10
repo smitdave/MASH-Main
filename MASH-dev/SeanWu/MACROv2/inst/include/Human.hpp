@@ -22,6 +22,7 @@
 #include <vector>
 #include <functional> /* std::function */
 
+#include "MACRO-DEBUG.hpp"
 
 /*
  * ################################################################################
@@ -83,6 +84,9 @@ public:
   bool&                       get_alive(){return alive;};
   double&                     get_age(){return age;};
   tile*                       get_tileP(){return tileP;};
+
+  /* events */
+  void                        event_death();
 
   /* virtual member functions */
   virtual void                simHuman() = 0;
