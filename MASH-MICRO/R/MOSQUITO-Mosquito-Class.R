@@ -70,6 +70,7 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                               private$locNow       = locNow       # index of site
                               private$mature       = FALSE       # mature
                               private$periDomestic = FALSE       # used in peri-domestic breeding (see mbites_OvipositSearchCheck)
+                              private$boutFail     = FALSE
 
                               # Other State Variables
                               private$lspot     = "l"        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
@@ -118,6 +119,7 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             locOld       = integer(1),
                             mature       = logical(1),       # mature
                             periDomestic = logical(1),
+                            boutFail     = logical(1),       # did i fail my current bout? (used to select resting spots)
 
                             # Other State Variables
                             lspot     = character(1),        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
