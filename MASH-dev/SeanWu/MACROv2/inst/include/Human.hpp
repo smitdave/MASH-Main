@@ -19,7 +19,18 @@
 
 #include <iostream>
 #include <string>
+#include <vector>
 #include <functional> /* std::function */
+
+
+/*
+ * ################################################################################
+ *    Declarations
+ * ################################################################################
+*/
+
+class tile; /* tiles */
+
 
 /*
  * ################################################################################
@@ -50,13 +61,39 @@ typedef struct event {
 
 class human {
 public:
+  /* constructor & destructor */
+  human();
   virtual ~human() = 0;
 
+  /* move operators */
   human(human&&);
+  human& operator=(human&&);
+
+  /* copy operators */
+  human(human&) = delete;
+  human& operator=(human&) = delete;
+
+  /* event queue */
+  void                        addEvent2Q(const event& e);
+  void                        rmTagFromQ(const std::string& tag);
+  void                        fireEvent();
+
+  /* accessors */
+  int&                        get_id(){return id;};
+  tile*                       get_tileP(){return tileP;};
+
+  /* virtual member functions */
+  virtual void                simHuman() = 0;
 protected:
 
-};
+  /* general fields */
+  int                         id;
 
-human::~human(){};
+  /* event queue */
+  std::vector<event>          EventQ;
+
+  /* tile: raw pointer fine because tile outlives humans */
+  tile*                       tileP;
+};
 
 #endif
