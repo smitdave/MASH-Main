@@ -14,12 +14,12 @@
 
 
 ###############################################################################
-# Site Abstract Base Class
+# Site Class
 ###############################################################################
 
-#' Site Abstract Base Class
+#' Site Class
 #'
-#' Abstract base class for sites.
+#' A site is a location where resources can be found.
 #'
 #'
 #'
@@ -38,7 +38,7 @@
 #'  * field: im a field!
 #'
 #' @export
-Site_ABC <- R6::R6Class(classname = "Site_ABC",
+Site <- R6::R6Class(classname = "Site",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
@@ -59,6 +59,20 @@ Site_ABC <- R6::R6Class(classname = "Site_ABC",
 
                  # private members
                  private = list(
+
+                   # basic information about a site
+                   siteXY                       = numeric(2),
+                   siteID                       = integer(1),
+                   siteType                     = integer(1),
+
+                   # movement object
+                   MoveObject                   = NULL, # std::unique_ptr<MoveObject>
+
+                   # references to resources found at this site
+                   FeedingSites                 = list(), # std::vector<std::unique_ptr<FeedingSite>>
+                   AquaticHabitats              = list(),
+                   MatingSites                  = list(),
+                   SugarSites                   = list()
 
                  )
 )

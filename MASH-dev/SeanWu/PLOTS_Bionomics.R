@@ -50,7 +50,7 @@ bionomics_HumanBM <- function(data){
 bionomics_vc <- function(data, eip=10){
   vc = vapply(X = data,FUN = function(x,eip){
     feedT = unlist(x$feedAllT)
-    if(length(feedT)<2){
+    if(length(feedT)<2 | is.null(feedT)){
       return(NaN)
     } else {
       if((diff(feedT)>eip)[1]){
@@ -58,6 +58,8 @@ bionomics_vc <- function(data, eip=10){
         sum(apply(X = combn(feedT,2),MARGIN = 2,FUN = function(x){
           diff(x)>eip
         }))
+      } else {
+        return(NaN)
       }
     }
   },FUN.VALUE = numeric(1),eip = eip,USE.NAMES = FALSE)
