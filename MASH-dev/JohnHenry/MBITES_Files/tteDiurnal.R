@@ -54,7 +54,7 @@ plot(seq(0,7,7/(length(count)-1)),cumsum(count)/sum(count),type="l",ylab="empiri
 
 
 ##################### Second Method - Rejection Method #####################
-#####################   Less Accurate, More Efficient  ##################### 
+#####################         More Efficient           ##################### 
 
 par(mfrow=c(1,1))
 
