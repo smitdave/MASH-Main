@@ -134,6 +134,27 @@ mbites_restingSpot <- function(){
   }
 }
 
+# #' M-BITES: Check State Transition for Resting Spot \code{MosquitoFemale}
+# #'
+# #' Return \code{TRUE} if mosquito stays in "L" or "F" state.
+# #'
+# #'  * This method is bound to \code{MosquitoFemale$searchFail()}.
+# #'
+# mbites_searchFail <- function(){
+#   # if mosy is not on first iteration
+#   if(private$tNow > private$bDay){
+#     if(private$state == "L" & private$stateNew == "L"){
+#       return(TRUE)
+#     } else if(private$state == "F" & private$stateNew == "F"){
+#       return(TRUE)
+#     } else {
+#       return(FALSE)
+#     }
+#   } else {
+#     return(FALSE)
+#   }
+# }
+
 #' M-BITES: Check State Transition for Resting Spot \code{MosquitoFemale}
 #'
 #' Return \code{TRUE} if mosquito stays in "L" or "F" state.
@@ -141,11 +162,10 @@ mbites_restingSpot <- function(){
 #'  * This method is bound to \code{MosquitoFemale$searchFail()}.
 #'
 mbites_searchFail <- function(){
-  # if mosy is not on first iteration
-  if(private$tNow > private$bDay){
-    if(private$state == "L" & private$stateNew == "L"){
-      return(TRUE)
-    } else if(private$state == "F" & private$stateNew == "F"){
+  age = private$tNow - private$bDay
+  if(age > 0){
+    # mosquitoes only leave an area if they failed their bout
+    if(private$boutFail){
       return(TRUE)
     } else {
       return(FALSE)
@@ -173,10 +193,12 @@ mbites_searchFail <- function(){
 mbites_boutF <- function(){
 
   # mosquito transitions to attempting a blood feeding attempt if she isn't leaving the area and succeeds
-  if(private$lspot != "l" & runif(1) < private$FemalePopPointer$get_MBITES_PAR("F_succeed")){
+  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("F_succeed")){
     private$stateNew = "B"
+    private$boutFail = FALSE
   } else {
     private$stateNew = "F"
+    private$boutFail = TRUE
   }
 
 }
@@ -196,8 +218,10 @@ mbites_boutB <- function(){
     # check success
     if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("B_succeed")){
       self$chooseHost() # MBITES-Generic-ChooseHost.R
+      private$boutFail = FALSE
     } else {
       private$hostID = 0L
+      private$boutFail = TRUE
     }
 
     if(private$hostID > 0){
@@ -274,10 +298,12 @@ mbites_OvipositSearchCheck <- function(){
 mbites_boutL <- function(){
 
   if(self$isAlive()){
-    if(private$lspot != "l" & runif(1) < private$FemalePopPointer$get_MBITES_PAR("L_succeed")){
+    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("L_succeed")){
       private$stateNew = "O"
+      private$boutFail = FALSE
     } else {
       private$stateNew = "L"
+      private$boutFail = TRUE
     }
   }
 
@@ -323,6 +349,9 @@ mbites_layEggs_Emerge <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("O_succeed")){
     private$batch = 0
     private$stateNew = "F"
+    private$boutFail = FALSE
+  } else {
+    private$boutFail = TRUE
   }
 }
 
@@ -341,6 +370,9 @@ mbites_layEggs_EL4P <- function(){
     }
     private$batch = 0
     private$stateNew = "F"
+    private$boutFail = FALSE
+  } else {
+    private$boutFail = TRUE
   }
 }
 
@@ -375,8 +407,10 @@ mbites_boutS <- function(){
           private$stateNew = "F"
         }
 
+        private$boutFail = FALSE
       } else {
         private$stateNew = "S"
+        private$boutFail = TRUE
       }
 
       #### ATSB ################################################################################################
@@ -405,6 +439,9 @@ mbites_boutM <- function(){
     if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("M_succeed")){
       self$chooseMate()
       private$stateNew = "F"
+      private$boutFail = FALSE
+    } else {
+      private$boutFail = TRUE
     }
     #### SwarmSpray #############################################################################################
     swarmSpray=private$LandscapePointer$get_MatingSites(private$locNow)$get_swarmSpray()
