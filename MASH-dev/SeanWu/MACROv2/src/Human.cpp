@@ -16,6 +16,11 @@
 
 #include "Human.hpp"
 
+/* constructor */
+human::human(const int& _id, const double& _age, tile* _tileP) : id(_id), alive(true), age(_age), tileP(_tileP) {
+
+};
+
 /* destructor */
 human::~human(){};
 

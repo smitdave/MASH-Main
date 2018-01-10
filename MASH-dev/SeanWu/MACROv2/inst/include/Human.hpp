@@ -29,7 +29,7 @@
  * ################################################################################
 */
 
-class tile; /* tiles */
+class tile; /* tile declaration */
 
 
 /*
@@ -62,7 +62,7 @@ typedef struct event {
 class human {
 public:
   /* constructor & destructor */
-  human();
+  human(const int& _id, const double& _age, tile* _tileP);
   virtual ~human() = 0;
 
   /* move operators */
@@ -80,14 +80,19 @@ public:
 
   /* accessors */
   int&                        get_id(){return id;};
+  bool&                       get_alive(){return alive;};
+  double&                     get_age(){return age;};
   tile*                       get_tileP(){return tileP;};
 
   /* virtual member functions */
   virtual void                simHuman() = 0;
+
 protected:
 
   /* general fields */
   int                         id;
+  bool                        alive;
+  double                      age;
 
   /* event queue */
   std::vector<event>          EventQ;
