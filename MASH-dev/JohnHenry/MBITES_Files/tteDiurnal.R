@@ -4,6 +4,8 @@ ff = function(t, peak=0,amp=1){
   amp*(1+cos(2*pi*(t-peak)))
 }
 
+ttt = seq(0,1,1/24)
+
 plot(ttt*24, ff(ttt), type = 'l', ylab = "Activity Level", xlab = "Time of Day", xaxt = "n") 
 axis(1, c(0:4)*6, c("12 am", "6 am", "12 pm", "6 pm", "12 am"))
 
@@ -45,3 +47,38 @@ v = tteDiurnal(10000,1)
 
 count = c(0,hist(v,freq=F,breaks=100)$count)
 plot(seq(0,7,7/(length(count)-1)),cumsum(count)/sum(count),type="l",ylab="empirical tteCDF",ylim=c(0,1))
+
+
+##################### second method - rejection method #####################
+#####################         more efficient           ##################### 
+
+par(mfrow=c(1,1))
+
+gg = function(t,lam){
+  lam*(1+cos(2*pi*t))*exp(-lam*(t+sin(2*pi*t)/(2*pi)))
+}
+
+GG = function(t,lam){
+  lam*exp(-lam*t)
+}
+
+plot(t,gg(t,1),type="l")
+lines(t,2.3*GG(t,1))
+
+tteDiurnal = function(N,lam){
+  v = rep(0,N)
+  for(i in 1:N){
+    c = 2.3
+    vtemp = 0
+    tt = 2
+    u = 1
+    while(tt*u > 1){
+      v[i] = rexp(1,2*lam)
+      tt = c*GG(v[i],lam)/gg(v[i],lam)
+      u = runif(1)
+    }
+  }
+  return(v)
+}
+
+hist(tteDiurnal(100000,1),freq=F,breaks=100)
