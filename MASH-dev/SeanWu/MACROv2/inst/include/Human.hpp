@@ -22,6 +22,7 @@
 #include <vector>
 #include <functional> /* std::function */
 
+#include "MACRO-DEBUG.hpp"
 
 /*
  * ################################################################################

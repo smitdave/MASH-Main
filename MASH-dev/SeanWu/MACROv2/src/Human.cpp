@@ -19,10 +19,17 @@
 /* constructor */
 human::human(const int& _id, const double& _age, tile* _tileP) : id(_id), alive(true), age(_age), tileP(_tileP) {
   EventQ.reserve(100);
+  #ifdef DEBUG_MACRO
+  std::cout << "human " << id << " being born at " << this << std::endl;
+  #endif
 };
 
 /* destructor */
-human::~human(){};
+human::~human(){
+  #ifdef DEBUG_MACRO
+  std::cout << "human " << id << " being killed at " << this << std::endl;
+  #endif
+};
 
 /* move operators */
 human::human(human&&) = default;

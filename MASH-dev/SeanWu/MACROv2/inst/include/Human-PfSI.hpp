@@ -18,6 +18,18 @@
 
 #include "Human.hpp"
 
+#include "MACRO-DEBUG.hpp"
 
+class human_pfsi : public human {
+
+public:
+  human_pfsi(const int& _id, const double& _age, tile* _tileP);
+  ~human_pfsi();
+
+  void                  simHuman();
+
+private:
+
+};
 
 #endif

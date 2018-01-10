@@ -5,19 +5,18 @@
 
 using namespace Rcpp;
 
-// rcpp_hello_world
-List rcpp_hello_world();
-RcppExport SEXP _MACROv2_rcpp_hello_world() {
+// test_human
+void test_human();
+RcppExport SEXP _MACROv2_test_human() {
 BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    rcpp_result_gen = Rcpp::wrap(rcpp_hello_world());
-    return rcpp_result_gen;
+    test_human();
+    return R_NilValue;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_MACROv2_rcpp_hello_world", (DL_FUNC) &_MACROv2_rcpp_hello_world, 0},
+    {"_MACROv2_test_human", (DL_FUNC) &_MACROv2_test_human, 0},
     {NULL, NULL, 0}
 };
 
