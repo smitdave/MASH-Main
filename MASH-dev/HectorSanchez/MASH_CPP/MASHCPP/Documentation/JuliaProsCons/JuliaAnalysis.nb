@@ -1,0 +1,201 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[      8351,        193]
+NotebookOptionsPosition[      7907,        173]
+NotebookOutlinePosition[      8260,        189]
+CellTagsIndexPosition[      8217,        186]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"pros", "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+    "\"\<Developed for scientific computing\>\"", ",", "\[IndentingNewLine]", 
+     "\"\<Scientific libraries are called from C\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Can define variable types\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Polymorphism\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Map & For\>\"", ",", "\[IndentingNewLine]", 
+     "\"\<Arrays can be stored as contiguous locations in memory\>\"", ",", 
+     "\[IndentingNewLine]", 
+     "\"\<Can remove safety checks for speed (such as index out of \
+bounds)\>\"", ",", "\[IndentingNewLine]", 
+     "\"\<Can define immutable types\>\"", ",", "\[IndentingNewLine]", 
+     "\"\<Parallelization (SIMD,Parallel Map,Parallel For)\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Can call R, C, Fortran, Python\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Garbage Collection!!!!!\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Fast Arrays\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Dynamic types\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Much easier to learn than C\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Profiler seems easy to use\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Sean has contact info of a Core dev\>\"", 
+     ",", "\[IndentingNewLine]", 
+     "\"\<Implements some functional programming tricks\>\"", ",", 
+     "\[IndentingNewLine]", 
+     "\"\<More flexibility on removing safety features than Python... so more \
+speedups can be obtained\>\"", ",", "\[IndentingNewLine]", 
+     "\"\<Speedups without code complexity\>\""}], "\[IndentingNewLine]", 
+    "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"cons", "=", 
+   RowBox[{"{", "\[IndentingNewLine]", 
+    RowBox[{
+    "\"\<Relatively new (2012)\>\"", ",", "\[IndentingNewLine]", 
+     "\"\<Not OOP\>\"", ",", "\[IndentingNewLine]", 
+     "\"\<Must be used correctly for speedups (type-stability)\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Gotta translate code from R and CPP\>\"", 
+     ",", "\[IndentingNewLine]", "\"\<No real inheritance\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Not as widespread as Python or R\>\"", ",", 
+     "\[IndentingNewLine]", "\"\<Atom is the only IDE\>\"", ",", 
+     "\[IndentingNewLine]", 
+     "\"\<Arrays have to be handled with some care to get speedups\>\"", ",", 
+     "\[IndentingNewLine]", 
+     "\"\<More care has to be taken than when programming in Python\>\"", ",",
+      "\[IndentingNewLine]", "\"\<Atom's the only IDE\>\""}], 
+    "\[IndentingNewLine]", "}"}]}], ";"}]}], "Input",
+ CellChangeTimes->{{3.69486860080333*^9, 3.6948687126346617`*^9}, 
+   3.694868800301771*^9, 3.694869281928905*^9, {3.694869459754575*^9, 
+   3.69486948310109*^9}, {3.6949499894763308`*^9, 3.694950033820403*^9}, {
+   3.694950070949853*^9, 3.694950130212247*^9}, {3.694950184551413*^9, 
+   3.694950285708933*^9}, {3.695124456055087*^9, 3.6951244646593847`*^9}, {
+   3.6951245604338408`*^9, 3.695124577431086*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"SetDirectory", "[", 
+  RowBox[{"NotebookDirectory", "[", "]"}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"max", "=", 
+   RowBox[{"Max", "[", 
+    RowBox[{"Length", "/@", 
+     RowBox[{"{", 
+      RowBox[{"pros", ",", "cons"}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"padded", "=", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"PadRight", "[", 
+      RowBox[{"#", ",", "max", ",", "\"\<\>\""}], "]"}], "&"}], "/@", 
+    RowBox[{"{", 
+     RowBox[{"pros", ",", "cons"}], "}"}]}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Grid", "[", 
+  RowBox[{
+   RowBox[{"Prepend", "[", 
+    RowBox[{
+     RowBox[{"padded", "//", "Transpose"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"\"\<Pros\>\"", ",", "\"\<Cons\>\""}], "}"}]}], "]"}], ",", 
+   RowBox[{"Background", "\[Rule]", 
+    RowBox[{"{", 
+     RowBox[{"None", ",", 
+      RowBox[{"{", "LightBlue", "}"}]}], "}"}]}], ",", 
+   RowBox[{"Frame", "\[Rule]", "All"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{"Export", "[", 
+  RowBox[{"\"\<Breakdown.png\>\"", ",", "%"}], "]"}]}], "Input",
+ CellChangeTimes->{{3.6948688130896997`*^9, 3.6948689290662746`*^9}, {
+  3.694869207164545*^9, 3.694869321749242*^9}}],
+
+Cell[BoxData["\<\"/Users/chipdelmal/Documents/School/Research/MASHCPP/MASHCPP/\
+Documentation/JuliaProsCons\"\>"], "Output",
+ CellChangeTimes->{
+  3.694868845603097*^9, {3.694868905705715*^9, 3.694868916037787*^9}, {
+   3.6948692308220177`*^9, 3.694869269241653*^9}, {3.6948692998328743`*^9, 
+   3.694869322595748*^9}, 3.6948694346233273`*^9, 3.694869487322687*^9, 
+   3.6949500361109467`*^9, 3.694950150524993*^9, 3.6949502876386433`*^9, 
+   3.695124606534418*^9}],
+
+Cell[BoxData[
+ TagBox[GridBox[{
+    {"\<\"Pros\"\>", "\<\"Cons\"\>"},
+    {"\<\"Developed for scientific computing\"\>", "\<\"Relatively new (2012)\
+\"\>"},
+    {"\<\"Scientific libraries are called from C\"\>", "\<\"Not OOP\"\>"},
+    {"\<\"Can define variable types\"\>", "\<\"Must be used correctly for \
+speedups (type-stability)\"\>"},
+    {"\<\"Polymorphism\"\>", "\<\"Gotta translate code from R and CPP\"\>"},
+    {"\<\"Map & For\"\>", "\<\"No real inheritance\"\>"},
+    {"\<\"Arrays can be stored as contiguous locations in memory\"\>", \
+"\<\"Not as widespread as Python or R\"\>"},
+    {"\<\"Can remove safety checks for speed (such as index out of \
+bounds)\"\>", "\<\"Atom is the only IDE\"\>"},
+    {"\<\"Can define immutable types\"\>", "\<\"Arrays have to be handled \
+with some care to get speedups\"\>"},
+    {"\<\"Parallelization (SIMD,Parallel Map,Parallel For)\"\>", "\<\"More \
+care has to be taken than when programming in Python\"\>"},
+    {"\<\"Can call R, C, Fortran, Python\"\>", "\<\"Atom's the only \
+IDE\"\>"},
+    {"\<\"Garbage Collection!!!!!\"\>", "\<\"\"\>"},
+    {"\<\"Fast Arrays\"\>", "\<\"\"\>"},
+    {"\<\"Dynamic types\"\>", "\<\"\"\>"},
+    {"\<\"Much easier to learn than C\"\>", "\<\"\"\>"},
+    {"\<\"Profiler seems easy to use\"\>", "\<\"\"\>"},
+    {"\<\"Sean has contact info of a Core dev\"\>", "\<\"\"\>"},
+    {"\<\"Implements some functional programming tricks\"\>", "\<\"\"\>"},
+    {"\<\"More flexibility on removing safety features than Python... so more \
+speedups can be obtained\"\>", "\<\"\"\>"},
+    {"\<\"Speedups without code complexity\"\>", "\<\"\"\>"}
+   },
+   AutoDelete->False,
+   GridBoxBackground->{"Columns" -> {{None}}, "Rows" -> {
+       RGBColor[0.87, 0.94, 1]}},
+   GridBoxFrame->{"Columns" -> {{True}}, "Rows" -> {{True}}},
+   GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+  "Grid"]], "Output",
+ CellChangeTimes->{
+  3.694868845603097*^9, {3.694868905705715*^9, 3.694868916037787*^9}, {
+   3.6948692308220177`*^9, 3.694869269241653*^9}, {3.6948692998328743`*^9, 
+   3.694869322595748*^9}, 3.6948694346233273`*^9, 3.694869487322687*^9, 
+   3.6949500361109467`*^9, 3.694950150524993*^9, 3.6949502876386433`*^9, 
+   3.695124606555017*^9}],
+
+Cell[BoxData["\<\"Breakdown.png\"\>"], "Output",
+ CellChangeTimes->{
+  3.694868845603097*^9, {3.694868905705715*^9, 3.694868916037787*^9}, {
+   3.6948692308220177`*^9, 3.694869269241653*^9}, {3.6948692998328743`*^9, 
+   3.694869322595748*^9}, 3.6948694346233273`*^9, 3.694869487322687*^9, 
+   3.6949500361109467`*^9, 3.694950150524993*^9, 3.6949502876386433`*^9, 
+   3.695124607151535*^9}]
+}, Open  ]]
+},
+WindowSize->{1260, 782},
+WindowMargins->{{Automatic, 0}, {Automatic, 0}},
+FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 28, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 2997, 52, 705, "Input"],
+Cell[CellGroupData[{
+Cell[3580, 76, 1211, 33, 117, "Input"],
+Cell[4794, 111, 465, 7, 32, "Output"],
+Cell[5262, 120, 2237, 42, 425, "Output"],
+Cell[7502, 164, 389, 6, 32, "Output"]
+}, Open  ]]
+}
+]
+*)
+

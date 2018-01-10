@@ -1,0 +1,4 @@
+    Ovitrap             ovitrap            :: Ovitrap object in site
+    Larviciding         larviciding        :: Larviciding object in site
+    SourceReduction     sourceReduction    :: Source reduction object in site
+    BiologicalControl   biologicalControl  :: Biological Control object in site

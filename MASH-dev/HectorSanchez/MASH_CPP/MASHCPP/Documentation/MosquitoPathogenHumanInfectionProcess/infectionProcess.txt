@@ -1,0 +1,15 @@
+General Infection Process:
+
+1) Patient zero points to an initial pathogen (which has an "alive" flag turned on)
+2) Human and pathogen develop normally
+3) Upon bite, a mosquito might get infected with the pathogen, if it does:
+	a) A new copy of the pathogen is created in a vacant space (in a pathogen in the vector with a flag that identifies it as dead
+	b) The mosquito points to the new, independent, pathogen's copy
+4) Human/Pathogen and Mosquito/Pathogen are now independent
+5) Upon Human/Mosquito death/recovery:
+	a) The pathogen is marked as dead
+	b) The pointer is removed from the human/mosquito
+
+
+General notes:
+-The pointer towards pathogens must be a pointer array as individuals might be infected by different pathogens or serotypes of the same pathogen at the same time.

@@ -1,0 +1,4 @@
+    float quantity             :: Cattle quantity in a given spot
+    float attractiveness       :: Cattle attractiveness as a funciton of quantity
+    Ivermectin ivermectin      :: Ivermectin presence in cattle
+    Zoospray zoospray          :: Zoospray presence in cattle

@@ -1,0 +1,434 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 11.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       158,          7]
+NotebookDataLength[     14930,        426]
+NotebookOptionsPosition[     14262,        398]
+NotebookOutlinePosition[     14652,        415]
+CellTagsIndexPosition[     14609,        412]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{"Load", " ", "and", " ", "Prepare", " ", 
+    RowBox[{
+     RowBox[{
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{"Data", "--"}], "--"}], "--"}], "--"}], "--"}], 
+                "--"}], "--"}], "--"}], "--"}], "--"}], "--"}], "--"}], 
+         "--"}], "--"}], "--"}], "--"}], "--"}]}], "*)"}], 
+  "\[IndentingNewLine]", 
+  RowBox[{
+   RowBox[{
+    RowBox[{"SetDirectory", "[", 
+     RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ";"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"fileNames", "=", 
+     RowBox[{"FileNames", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{"\"\<*.hpp\>\"", ",", "\"\<*.cpp\>\""}], "}"}], ",", 
+       RowBox[{"ParentDirectory", "[", 
+        RowBox[{"NotebookDirectory", "[", "]"}], "]"}], ",", "Infinity"}], 
+      "]"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"splitFileNames", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Last", "[", 
+        RowBox[{"StringSplit", "[", 
+         RowBox[{"#", ",", "\"\</\>\""}], "]"}], "]"}], "&"}], "/@", 
+      "fileNames"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"rawData", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"Import", "[", 
+        RowBox[{"#", ",", "\"\<Text\>\""}], "]"}], "&"}], "/@", 
+      "fileNames"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"splitData", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"StringSplit", "[", 
+        RowBox[{"#", ",", "\"\<\\n\>\""}], "]"}], "&"}], "/@", "rawData"}]}], 
+    ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", 
+    RowBox[{
+     RowBox[{"Variables", " ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{
+               RowBox[{
+                RowBox[{
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{
+                    RowBox[{
+                    RowBox[{"Descriptions", "--"}], "--"}], "--"}], "--"}], 
+                  "--"}], "--"}], "--"}], "--"}], "--"}], "--"}], "--"}], 
+           "--"}], "--"}], "--"}], "--"}], "--"}]}], "-"}], "*)"}], 
+   "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"identifiedVariables", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"StringCases", "[", 
+        RowBox[{"#", ",", 
+         RowBox[{
+          RowBox[{"a__", "~~", "\"\<//@@\>\"", "~~", "x__"}], "\[Rule]", 
+          RowBox[{"{", 
+           RowBox[{"a", ",", "x"}], "}"}]}]}], "]"}], "&"}], "/@", 
+      "splitData"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"tuplesRaw", "=", 
+     RowBox[{"Transpose", "[", 
+      RowBox[{"{", 
+       RowBox[{"splitFileNames", ",", "identifiedVariables"}], "}"}], "]"}]}],
+     ";"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"tuples", "=", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"{", "\[IndentingNewLine]", 
+        RowBox[{
+         RowBox[{"#", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"StringDelete", "[", 
+            RowBox[{
+             RowBox[{"StringJoin", "[", 
+              RowBox[{
+               RowBox[{"#", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], ",", "\"\<::\>\"", " ", ",", 
+               RowBox[{"#", "[", 
+                RowBox[{"[", "2", "]"}], "]"}]}], "]"}], ",", "\"\<;\>\""}], 
+            "]"}], "&"}], "/@", 
+          RowBox[{"Flatten", "[", 
+           RowBox[{
+            RowBox[{"Cases", "[", 
+             RowBox[{
+              RowBox[{"#", "[", 
+               RowBox[{"[", "2", "]"}], "]"}], ",", 
+              RowBox[{"a_", "/;", 
+               RowBox[{
+                RowBox[{"Length", "[", "a", "]"}], ">", "0"}]}]}], "]"}], ",",
+             "1"}], "]"}]}]}], "\[IndentingNewLine]", "}"}], "&"}], "/@", 
+      "tuplesRaw"}]}], ";"}], "\[IndentingNewLine]", 
+   RowBox[{"(*", "*)"}], "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"variablesGrids", "=", 
+     RowBox[{"Table", "[", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"variablesGrid", "=", 
+         RowBox[{"Grid", "[", 
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{"{", "#", "}"}], "&"}], "/@", 
+            RowBox[{"tuples", "[", 
+             RowBox[{"[", 
+              RowBox[{"i", ",", "2"}], "]"}], "]"}]}], ",", 
+           RowBox[{"Alignment", "\[Rule]", "Left"}], ",", 
+           RowBox[{"Frame", "\[Rule]", "All"}], ",", 
+           RowBox[{"FrameStyle", "\[Rule]", 
+            RowBox[{"Directive", "[", 
+             RowBox[{"Gray", ",", 
+              RowBox[{"Opacity", "[", ".5", "]"}]}], "]"}]}]}], "]"}]}], ";", 
+        "\[IndentingNewLine]", 
+        RowBox[{"Grid", "[", 
+         RowBox[{
+          RowBox[{"{", 
+           RowBox[{"{", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"Style", "[", 
+              RowBox[{
+               RowBox[{"Rotate", "[", 
+                RowBox[{
+                 RowBox[{"tuples", "[", 
+                  RowBox[{"[", 
+                   RowBox[{"i", ",", "1"}], "]"}], "]"}], ",", 
+                 RowBox[{"90", "Degree"}]}], "]"}], ",", "Black", ",", 
+               "Bold"}], "]"}], ",", "\[IndentingNewLine]", "variablesGrid"}],
+             "\[IndentingNewLine]", "}"}], "}"}], ",", 
+          RowBox[{"Background", "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{
+             RowBox[{"{", "LightBlue", "}"}], ",", "None"}], "}"}]}], ",", 
+          RowBox[{"Frame", "\[Rule]", "True"}]}], "]"}]}], 
+       "\[IndentingNewLine]", ",", 
+       RowBox[{"{", 
+        RowBox[{"i", ",", "1", ",", 
+         RowBox[{"tuples", "//", "Length"}]}], "}"}]}], "]"}]}], 
+    ";"}]}]}]], "Input",
+ CellChangeTimes->{{3.688503353027442*^9, 3.688503510186623*^9}, {
+   3.688503553726102*^9, 3.688504076447253*^9}, {3.68850417329172*^9, 
+   3.68850417704134*^9}, {3.6885042357773743`*^9, 3.6885042561838818`*^9}, {
+   3.6885042897646627`*^9, 3.688504509746234*^9}, {3.688504580330456*^9, 
+   3.68850523535929*^9}, {3.688505271086618*^9, 3.688505426763381*^9}, {
+   3.688505469885454*^9, 3.6885054701747837`*^9}, {3.688506806743969*^9, 
+   3.688506820346188*^9}, {3.693223018279523*^9, 3.693223031195603*^9}, 
+   3.693223067904352*^9}],
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"Export", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"NotebookDirectory", "[", "]"}], "<>", 
+       "\"\</ClassesDescriptions/\>\"", "<>", 
+       RowBox[{"#", "[", 
+        RowBox[{"[", "1", "]"}], "]"}], "<>", "\"\<.txt\>\""}], ",", 
+      RowBox[{"#", "[", 
+       RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "&"}], "/@", 
+   RowBox[{"Transpose", "[", 
+    RowBox[{"{", 
+     RowBox[{"splitFileNames", ",", 
+      RowBox[{"tuples", "[", 
+       RowBox[{"[", 
+        RowBox[{"All", ",", "2"}], "]"}], "]"}]}], "}"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"(*", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"Export", "[", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"NotebookDirectory", "[", "]"}], "<>", 
+        "\"\</ClassesDescriptions/\>\"", "<>", 
+        RowBox[{"#", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], "<>", "\"\<.png\>\""}], ",", 
+       RowBox[{"#", "[", 
+        RowBox[{"[", "2", "]"}], "]"}]}], "]"}], "&"}], "/@", 
+    RowBox[{"Transpose", "[", 
+     RowBox[{"{", 
+      RowBox[{"splitFileNames", ",", "variablesGrids"}], "}"}], "]"}]}], 
+   "*)"}]}]}], "Input",
+ CellChangeTimes->{{3.693223639806172*^9, 3.6932236588224583`*^9}, {
+   3.693223701703075*^9, 3.693223709052845*^9}, {3.6932237535049686`*^9, 
+   3.693223755539288*^9}, {3.693223792103077*^9, 3.693223796589281*^9}, 
+   3.693226537959589*^9}],
+
+Cell[CellGroupData[{
+
+Cell["Not Working", "Section",
+ CellChangeTimes->{{3.693228437039424*^9, 3.693228441212657*^9}}],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"ReturnFunctionStrings", "[", 
+   RowBox[{"splitData_", ",", "index_"}], "]"}], ":=", 
+  RowBox[{"Module", "[", 
+   RowBox[{
+    RowBox[{"{", 
+     RowBox[{
+     "identifiedVariables", ",", "indexes", ",", "indexesFiltered", ",", 
+      "functionHeader", ",", "functionDescription", ",", "stringPairs"}], 
+     "}"}], ",", "\[IndentingNewLine]", 
+    RowBox[{
+     RowBox[{"Clear", "[", 
+      RowBox[{"a", ",", "x"}], "]"}], ";", "\[IndentingNewLine]", 
+     RowBox[{"identifiedVariables", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"StringPosition", "[", 
+         RowBox[{"#", ",", 
+          RowBox[{
+           RowBox[{"a__", "~~", "\"\<//@ \>\"", "~~", "x__"}], "\[Rule]", 
+           RowBox[{"{", 
+            RowBox[{"a", ",", "x"}], "}"}]}]}], "]"}], "&"}], "/@", 
+       RowBox[{"{", 
+        RowBox[{"splitData", "[", 
+         RowBox[{"[", "index", "]"}], "]"}], "}"}]}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"indexes", "=", 
+      RowBox[{"Position", "[", 
+       RowBox[{
+        RowBox[{"identifiedVariables", "[", 
+         RowBox[{"[", "1", "]"}], "]"}], ",", 
+        RowBox[{"a_", "/;", 
+         RowBox[{
+          RowBox[{"Length", "[", "a", "]"}], ">", "0"}]}]}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{"indexesFiltered", "=", 
+      RowBox[{"Flatten", "[", 
+       RowBox[{"Cases", "[", 
+        RowBox[{"indexes", ",", 
+         RowBox[{"a_", "/;", 
+          RowBox[{
+           RowBox[{"Length", "[", "a", "]"}], "\[Equal]", "1"}]}]}], "]"}], 
+       "]"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"functionHeader", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"splitData", "[", 
+         RowBox[{"[", 
+          RowBox[{"1", ",", 
+           RowBox[{"#", "-", "1"}]}], "]"}], "]"}], "&"}], "/@", 
+       "indexesFiltered"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"functionDescription", "=", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"splitData", "[", 
+         RowBox[{"[", 
+          RowBox[{"1", ",", "#"}], "]"}], "]"}], "&"}], "/@", 
+       "indexesFiltered"}]}], ";", "\[IndentingNewLine]", 
+     RowBox[{"stringPairs", "=", 
+      RowBox[{"Transpose", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+           RowBox[{"StringTake", "[", 
+            RowBox[{"#", ",", 
+             RowBox[{"{", 
+              RowBox[{"1", ",", 
+               RowBox[{"-", "2"}]}], "}"}]}], "]"}], "&"}], "/@", 
+          "functionHeader"}], ",", 
+         RowBox[{
+          RowBox[{
+           RowBox[{"StringTrim", "[", 
+            RowBox[{"StringDelete", "[", 
+             RowBox[{"#", ",", "\"\<//@\>\""}], "]"}], "]"}], "&"}], "/@", 
+          "functionDescription"}]}], "}"}], "]"}]}], ";", 
+     "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"#", "[", 
+          RowBox[{"[", "1", "]"}], "]"}], "<>", "\"\<  ::  \>\"", "<>", 
+         RowBox[{"#", "[", 
+          RowBox[{"[", "2", "]"}], "]"}]}], ")"}], "&"}], "/@", 
+      "stringPairs"}]}]}], "\[IndentingNewLine]", "]"}]}]], "Input",
+ CellChangeTimes->{{3.693227627070386*^9, 3.693227737388706*^9}, {
+  3.693227768465579*^9, 3.693227803621708*^9}, {3.693227938184499*^9, 
+  3.693227968554225*^9}, {3.693228011410469*^9, 3.693228084850651*^9}, {
+  3.6932281161718187`*^9, 3.693228147254961*^9}, {3.693228182930431*^9, 
+  3.693228183103204*^9}, {3.69322823416436*^9, 3.693228281980692*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{
+   RowBox[{"ReturnFunctionStrings", "[", 
+    RowBox[{"splitData", ",", "#"}], "]"}], "&"}], "/@", 
+  RowBox[{"Range", "[", "6", "]"}]}]], "Input",
+ CellChangeTimes->{{3.693228086945673*^9, 3.6932281198375998`*^9}, {
+  3.693228150775132*^9, 3.6932281544206448`*^9}, {3.693228285417811*^9, 
+  3.693228289455201*^9}, {3.6932283505606327`*^9, 3.693228410394692*^9}}],
+
+Cell[BoxData[
+ RowBox[{"{", 
+  RowBox[{
+   RowBox[{"{", 
+    RowBox[{"\<\"float sigmoidA(float variable, float shapeA, float shapeB)  \
+::  Generates a flexible sigmoid shape (pOverFeed)\"\>", 
+     ",", "\<\"float sigmoidB(float variable, float shapeA, float shapeB)  :: \
+ Generates a more flexible sigmoid shape (pReFeed)\"\>", 
+     ",", "\<\"double calculateEuclideanDistance(coordinate positionA, \
+coordinate positionB)  ::  Calculates the euclidean distance between two \
+three-dimensional coordinates\"\>"}], "}"}], ",", 
+   RowBox[{"{", "}"}], ",", 
+   RowBox[{"{", "}"}], ",", 
+   RowBox[{"{", "}"}], ",", 
+   RowBox[{"{", 
+    RowBox[{"\<\"    float num = exp(shapeA * variable)  ::  float den = \
+shapeB + exp(shapeA * variable);\"\>", 
+     ",", "\<\"    //@ Generates a more flexible sigmoid shape (pReFeed  ::  \
+float partA = (2+shapeB)/(1+shapeB);\"\>", 
+     ",", "\<\"    //@ Calculates the euclidean distance between two \
+three-dimensional coordinate  ::  double partialX = \
+pow(positionA.x-positionB.x,2);\"\>"}], "}"}], ",", 
+   RowBox[{"{", "}"}]}], "}"}]], "Output",
+ CellChangeTimes->{{3.693228155048758*^9, 3.6932281849279327`*^9}, 
+   3.6932282356081142`*^9, {3.693228287016986*^9, 3.69322829006956*^9}, {
+   3.693228364327478*^9, 3.693228411011788*^9}}]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ RowBox[{"fileNames", "[", 
+  RowBox[{"[", "6", "]"}], "]"}]], "Input",
+ CellChangeTimes->{{3.693228468778686*^9, 3.693228471796241*^9}}],
+
+Cell[BoxData["\<\"/Users/chipdelmal/Documents/School/Research/MASHCPP/MASHCPP/\
+AuxiliaryFunctions/StatisticalFunctions.hpp\"\>"], "Output",
+ CellChangeTimes->{3.69322847216934*^9}]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{1451, 1035},
+WindowMargins->{{1631, Automatic}, {-25, Automatic}},
+Magnification:>0.75 Inherited,
+FrontEndVersion->"11.0 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 28, \
+2016)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[558, 20, 6584, 183, 346, "Input"],
+Cell[7145, 205, 1419, 40, 42, "Input"],
+Cell[CellGroupData[{
+Cell[8589, 249, 96, 1, 48, "Section"],
+Cell[8688, 252, 3464, 91, 170, "Input"],
+Cell[CellGroupData[{
+Cell[12177, 347, 398, 8, 25, "Input"],
+Cell[12578, 357, 1284, 25, 74, "Output"]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[13899, 387, 151, 3, 25, "Input"],
+Cell[14053, 392, 181, 2, 25, "Output"]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+

@@ -1,0 +1,5 @@
+    int             id             :: Identifier of the site object
+    coordinate      position       :: X,Y,Z coordinate of the object in the landscape
+    MovementKernel  movementKernel :: Contains the distances to all other sites in the landscape
+    AreaRepellant   areaRepellant  :: Contains area repellant object
+    AreaSpray       areaSpray      :: Contains area spray object

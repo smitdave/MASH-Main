@@ -1,0 +1,8 @@
+    unsigned int    id             :: Mosquito identifier
+    char            state          :: Current life cycle stage
+    float           age            :: Age of the mosquito 
+    float           damage         :: Damage to mosquito's wings
+    int             timeBorn       :: Time in which mosquito was born
+    float           energy         :: Mosquito energy level (0 to 1)
+    float           anthropophilia :: Mosquito level of attraction towards humans
+    GM              gm             :: GM object (vector control)
