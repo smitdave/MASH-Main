@@ -1,0 +1,3 @@
+    EaveTube                eaveTube               :: Eave tube object in site
+    IndoorResidualSpray     indoorResidualSpray    :: Indoor Residual Spray object in site
+    BaitedTrap              baitedTrap             :: Baited trap object in site
