@@ -56,6 +56,7 @@ mbitesGadget = function(...){
       tags$head(tags$script("
         window.onload = function() {
             $('#nav a:contains(\"Options\")').parent().addClass('hide');
+            $('#nav a:contains(\"Simulation\")').parent().addClass('hide');
             $('#nav a:contains(\"Bouts\")').parent().addClass('hide');
             $('#nav a:contains(\"Landscape\")').parent().addClass('hide');
             $('#nav a:contains(\"Ecology\")').parent().addClass('hide');
@@ -69,7 +70,7 @@ mbitesGadget = function(...){
       titlePanel(h1("MBITES Gadget")),
       navbarPage("Welcome ", id = "nav",
           #################################################################################
-          tabPanel("Get Started",
+          tabPanel("Get Started", value = 'start',
               navlistPanel(widths = c(2,4),
                 tabPanel("Overview",
                   includeMarkdown("instructions.md"),
@@ -89,30 +90,52 @@ mbitesGadget = function(...){
                     actionButton("createDemoFolder", "Run Demo")
                     ),
                   conditionalPanel(condition = "input.project == 'new'",
-                    textInput("new_proj_name", "Name your project/folder", ""),
+                    textInput("new_proj_name", "Name your project/folder", "new_project"),
                     actionButton("createNewFolder", "Create")
                     ),
-                  uiOutput("prepath.box"),
-                  hr(),
-                  actionButton("launchgo", "Go!")
+                  conditionalPanel(condition = "input.project == 'exist'",
+                    		fileInput('file_project', 'Choose .csv File',
+                       			accept=c('text/csv',
+                                'text/comma-separated-values,text/plain',
+                                '.csv')),
+                    		wellPanel(checkboxInput('header_project', 'Header', TRUE),
+                 			radioButtons('sep_project', 'Separator',
+                              c(Comma=',',
+                                Semicolon=';',
+                                Tab='\t'),
+                              ',')),
+                    		hr(),
+        					actionButton("launchgo", "Go!")
+                    		)
+                  
                 )
               )
            ),
+
           #################################################################################
+          tabPanel(title = "Landscape", value = 'landscape',
+          	uiOutput("panel_lanscape")
+          	),
+          #################################################################################
+		tabPanel(title = "Simulation", value = "simulation",
+			uiOutput("sim_panel")
+			),
+
+		  #################################################################################
           tabPanel(title = "Options", value = "options",
             fluidPage(
               helpText("Please set parameters here. To save the selected parameters, go to 
                 'Bouts' panel and click the button when both panels are done"),
               navlistPanel(widths = c(2,10),
-              	#########################################################################
-                tabPanel("Mosquito Features",
-                  numericInput("N_female", "Number of Female Mosquitoes at Initialization", value = 50, min = 0, max = NA, step = 1),
-                  numericInput("N_male", "Number of Male Mosquitoes at Initialization", value = 50, min = 0, max = NA, step = 1)
-                  # helpText("ix_female"),
-                  # helpText("ix_male"),
-                  # helpText("genotype_female"),
-                  # helpText("genotype_male")
-                  ),
+              	# #########################################################################
+               #  tabPanel("Mosquito Features",
+               #    numericInput("N_female", "Number of Female Mosquitoes at Initialization", value = 50, min = 0, max = NA, step = 1),
+               #    numericInput("N_male", "Number of Male Mosquitoes at Initialization", value = 50, min = 0, max = NA, step = 1)
+               #    # helpText("ix_female"),
+               #    # helpText("ix_male"),
+               #    # helpText("genotype_female"),
+               #    # helpText("genotype_male")
+               #    ),
 
                 #########################################################################
                 tabPanel("Waiting Time",
@@ -629,124 +652,7 @@ mbitesGadget = function(...){
             ))
             ),
 
-          #################################################################################
-          tabPanel(title = "Landscape", value = 'landscape',
-          	useShinyjs(),
-            sidebarLayout(position = "right",
-              sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
-                helpText("Please set the parameters"),
-                checkboxInput("showPoints", "Points", FALSE),
-                conditionalPanel(condition = "input.showPoints",
-                  wellPanel(
-                    checkboxInput("landscape_point_f", "f", FALSE),
-                    conditionalPanel(condition = "input.landscape_point_f",
-                    	wellPanel(
-                    	radioButtons(inputId = "landscape_f_input", "Provide the locations and weights:",
-                    		choices = c("Clusters" = "cluster",
-                    					"Import x, y, w" = "imp_xyw",
-                    					"Import x, y" = "imp_xy"
-                    					),
-                    		selected = "cluster"),
-                    	conditionalPanel(condition = "input.landscape_f_input != 'cluster'",
-                    		fileInput('filef', 'Choose CSV File',
-                       			accept=c('text/csv',
-                                'text/comma-separated-values,text/plain',
-                                '.csv')),
-                    		wellPanel(checkboxInput('headerf', 'Header', TRUE),
-                 			radioButtons('sepf', 'Separator',
-                              c(Comma=',',
-                                Semicolon=';',
-                                Tab='\t'),
-                              ','))
-                    		),
-                    	uiOutput("landscape_f_file")
-                    	)),
-                    checkboxInput("landscape_point_m", "m", FALSE),
-                    conditionalPanel(condition = "input.landscape_point_m",
-                    	wellPanel(
-                    	radioButtons(inputId = "landscape_m_input", "Provide the locations and weights:",
-                    		choices = c("Clusters" = "cluster",
-                    					"Import x, y, w" = "imp_xyw",
-                    					"Import x, y" = "imp_xy"
-                    					),
-                    		selected = "cluster"),
-                    	conditionalPanel(condition = "input.landscape_m_input != 'cluster'",
-                    		fileInput('filem', 'Choose CSV File',
-                       			accept=c('text/csv',
-                                'text/comma-separated-values,text/plain',
-                                '.csv')),
-                    		wellPanel(checkboxInput('headerm', 'Header', TRUE),
-                 			radioButtons('sepm', 'Separator',
-                              c(Comma=',',
-                                Semicolon=';',
-                                Tab='\t'),
-                              ','))
-                    		),
-                    	uiOutput("landscape_m_file")
-                    	)),
-                    checkboxInput("landscape_point_s", "s", FALSE),
-                    conditionalPanel(condition = "input.landscape_point_s",
-                    	wellPanel(
-                    	radioButtons(inputId = "landscape_s_input", "Provide the locations and weights:",
-                    		choices = c("Clusters" = "cluster",
-                    					"Import x, y, w" = "imp_xyw",
-                    					"Import x, y" = "imp_xy"
-                    					),
-                    		selected = "cluster"),
-                    	conditionalPanel(condition = "input.landscape_s_input != 'cluster'",
-                    		fileInput('files', 'Choose CSV File',
-                       			accept=c('text/csv',
-                                'text/comma-separated-values,text/plain',
-                                '.csv')),
-                    		wellPanel(checkboxInput('headers', 'Header', TRUE),
-                 			radioButtons('seps', 'Separator',
-                              c(Comma=',',
-                                Semicolon=';',
-                                Tab='\t'),
-                              ','))
-                    		),
-                    	uiOutput("landscape_s_file")
-                    	))
-                    )
-                  ),
-                checkboxInput("showKernels", "Kernels(Female)", FALSE),
-                conditionalPanel(condition = "input.showKernels",
-                  wellPanel(
-                    helpText("f"),
-                    helpText("l"),
-                    helpText("m"),
-                    helpText("s")
-                    )
-                  ),
-                checkboxInput("show_land_male", "Males", FALSE),
-                conditionalPanel(condition = "input.show_land_male",
-                  wellPanel(
-                    helpText("M"),
-                    helpText("s")
-                    )
-                  )
-                ),
-              mainPanel(
-                tabsetPanel(
-                	id = "landscape_output",
-                	tabPanel(
-                		title = "Point: f",
-                		value = "landscape_out_f",
-                		plotOutput("panel_landscape_out_f")
-                		),
-                	tabPanel(
-                		title = "Point: m",
-                		value = "landscape_out_m",
-                		plotOutput("panel_landscape_out_m")
-                		),
-                	tabPanel(
-                		title = "Point: s",
-                		value = "landscape_out_s",
-                		plotOutput("panel_landscape_out_s")
-                		)
-                	)
-                )
-          )),
+          
           #################################################################################
           tabPanel(title = "Ecology", value = "ecology",
             sidebarLayout(position = "right",
@@ -1315,36 +1221,84 @@ mbitesGadget = function(...){
       toggle(condition = input$landscape_point_s, selector = "#landscape_output li a[data-value=landscape_out_s]")
     })
 
-
+#####################Simualtion output ########################################################
+    output$sim_panel <- renderUI({
+    	if(input$project == 'demo'){
+    		sidebarLayout(position = "right",
+                sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                	h4("Interested in more parameters in Bouts, Options and Ecology?"),
+					actionButton("JumpToMore", label = "Check it now!")
+					),
+				mainPanel(
+					numericInput("N_female_demo", "Number of Female Mosquitoes", value = 50, min = 0, max = NA, step = 1),
+            		numericInput("N_male_demo", "Number of Male Mosquitoes", value = 50, min = 0, max = NA, step = 1)
+					)
+            )
+    		}else{
+    		sidebarLayout(position = "right",
+                sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                	h4("not for demo")
+					),
+				mainPanel(
+					numericInput("N_female", "Number of Female Mosquitoes", value = 50, min = 0, max = NA, step = 1),
+            		numericInput("N_male", "Number of Male Mosquitoes", value = 50, min = 0, max = NA, step = 1)
+					))
+    	}
+    })
+    
 ######################################################################################################################
+    
+
     observe({
-        if (input$launchgo > 0) {
-            session$sendCustomMessage('activeNavs', 'Options')
+        if (input$project == 'demo' && input$createDemoFolder > 0) {
+            updateTabsetPanel(session, "nav", selected = "landscape")
         }
     })
 
+
+
     observe({
-        if (input$launchgo > 0) {
+        if (input$project == 'exist' && input$launchgo > 0) {
             session$sendCustomMessage('activeNavs', 'Bouts')
+            session$sendCustomMessage('activeNavs', 'Landscape')
+            session$sendCustomMessage('activeNavs', 'Options')
+            session$sendCustomMessage('activeNavs', 'Simulation')
+            session$sendCustomMessage('activeNavs', 'Bouts')
+            session$sendCustomMessage('activeNavs', 'Ecology')
+        }
+    })
+    observe({
+        if (input$project == 'exist' && input$launchgo > 0) {
+            updateTabsetPanel(session, "nav", selected = "landscape")
         }
     })
 
     observe({
-        if (input$launchgo > 0) {
+        if (input$project == 'demo' && input$createDemoFolder > 0) {
             session$sendCustomMessage('activeNavs', 'Landscape')
         }
     })
     observe({
-        if (input$launchgo > 0) {
+        if (input$project == 'new' && input$createNewFolder > 0) {
+            session$sendCustomMessage('activeNavs', 'Landscape')
+            session$sendCustomMessage('activeNavs', 'Options')
+            session$sendCustomMessage('activeNavs', 'Simulation')
+            session$sendCustomMessage('activeNavs', 'Bouts')
             session$sendCustomMessage('activeNavs', 'Ecology')
         }
     })
-    output$prepath.box <- renderUI({
-      if(input$project == "exist"){
-        textInput("prepath", "Please provide the previous working directory (the folder contains .json file)", "")
-      }
+
+    observeEvent(input$JumpToSim,{
+    	session$sendCustomMessage('activeNavs', 'Simulation')
+    	updateTabsetPanel(session, "nav", selected = "simulation")
     })
 
+    observeEvent(input$JumpToMore,{
+    	session$sendCustomMessage('activeNavs', 'Options')
+    	session$sendCustomMessage('activeNavs', 'Bouts')
+    	session$sendCustomMessage('activeNavs', 'Ecology')
+    	updateTabsetPanel(session, "nav", selected = "options")
+    })
 
     observeEvent(input$createDemoFolder, {
       if(!file.exists("demo")){
@@ -1364,6 +1318,8 @@ mbitesGadget = function(...){
         dir.create(input$new_proj_name)
         js_string_3 <- 'alert("Created New Project Successfully!");'
         session$sendCustomMessage(type='jsCode', list(value = js_string_3))
+        updateTabsetPanel(session, "nav", selected = "landscape")
+        toggle(selector = "#nav li a[data-value=start]")
       }else{
         js_string_4 <-'alert("Folder exists. Please rename your project and try it again!");'
         session$sendCustomMessage(type='jsCode', list(value = js_string_4))
@@ -1373,6 +1329,11 @@ mbitesGadget = function(...){
     observeEvent(input$save_inputs_bout, {
         js_string_5 <- 'alert("Parameters Saved!");'
         session$sendCustomMessage(type='jsCode', list(value = js_string_5))
+    })
+
+    observeEvent(input$save_demo_land, {
+        js_string_6 <- 'alert("Selected Demo Sites have been saved in the folder: demo!");'
+        session$sendCustomMessage(type='jsCode', list(value = js_string_6))
     })
 
 
@@ -1582,6 +1543,183 @@ mbitesGadget = function(...){
                 wellPanel("test")
               ))
     })
+
+    output$panel_lanscape <- renderUI({
+    	if(input$project == 'demo'){
+    		fluidPage(
+    			sidebarLayout(position = "right", 
+    				sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+    					h4("Please add sites"),
+    					checkboxInput("demo_f", "Haunts: Blood Feeding Sites", TRUE),
+    					checkboxInput("demo_l", "Habitats: Egg Laying Sites", TRUE),
+    					checkboxInput("demo_s", "Sugar Feeding Sites", TRUE),
+    					checkboxInput("demo_m", "Mating Sites", TRUE),
+    					hr(),
+    					actionButton("save_demo_land", "Save Selected Demo Sites"),
+    					hr(),
+    					actionButton("JumpToSim", "Next Step: Simulation Initialization")
+    					),
+    			mainPanel(
+    				plotOutput("demo_landscape")
+    				)
+    			))
+    	}else{
+    	  fluidPage(
+    		useShinyjs(),
+            sidebarLayout(position = "right",
+              sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                helpText("Please set the parameters"),
+                checkboxInput("showPoints", "Points", FALSE),
+                conditionalPanel(condition = "input.showPoints",
+                  wellPanel(
+                    checkboxInput("landscape_point_f", "f", FALSE),
+                    conditionalPanel(condition = "input.landscape_point_f",
+                    	wellPanel(
+                    	radioButtons(inputId = "landscape_f_input", "Provide the locations and weights:",
+                    		choices = c("Clusters" = "cluster",
+                    					"Import x, y, w" = "imp_xyw",
+                    					"Import x, y" = "imp_xy"
+                    					),
+                    		selected = "cluster"),
+                    	conditionalPanel(condition = "input.landscape_f_input != 'cluster'",
+                    		fileInput('filef', 'Choose CSV File',
+                       			accept=c('text/csv',
+                                'text/comma-separated-values,text/plain',
+                                '.csv')),
+                    		wellPanel(checkboxInput('headerf', 'Header', TRUE),
+                 			radioButtons('sepf', 'Separator',
+                              c(Comma=',',
+                                Semicolon=';',
+                                Tab='\t'),
+                              ','))
+                    		),
+                    	uiOutput("landscape_f_file")
+                    	)),
+                    checkboxInput("landscape_point_m", "m", FALSE),
+                    conditionalPanel(condition = "input.landscape_point_m",
+                    	wellPanel(
+                    	radioButtons(inputId = "landscape_m_input", "Provide the locations and weights:",
+                    		choices = c("Clusters" = "cluster",
+                    					"Import x, y, w" = "imp_xyw",
+                    					"Import x, y" = "imp_xy"
+                    					),
+                    		selected = "cluster"),
+                    	conditionalPanel(condition = "input.landscape_m_input != 'cluster'",
+                    		fileInput('filem', 'Choose CSV File',
+                       			accept=c('text/csv',
+                                'text/comma-separated-values,text/plain',
+                                '.csv')),
+                    		wellPanel(checkboxInput('headerm', 'Header', TRUE),
+                 			radioButtons('sepm', 'Separator',
+                              c(Comma=',',
+                                Semicolon=';',
+                                Tab='\t'),
+                              ','))
+                    		),
+                    	uiOutput("landscape_m_file")
+                    	)),
+                    checkboxInput("landscape_point_s", "s", FALSE),
+                    conditionalPanel(condition = "input.landscape_point_s",
+                    	wellPanel(
+                    	radioButtons(inputId = "landscape_s_input", "Provide the locations and weights:",
+                    		choices = c("Clusters" = "cluster",
+                    					"Import x, y, w" = "imp_xyw",
+                    					"Import x, y" = "imp_xy"
+                    					),
+                    		selected = "cluster"),
+                    	conditionalPanel(condition = "input.landscape_s_input != 'cluster'",
+                    		fileInput('files', 'Choose CSV File',
+                       			accept=c('text/csv',
+                                'text/comma-separated-values,text/plain',
+                                '.csv')),
+                    		wellPanel(checkboxInput('headers', 'Header', TRUE),
+                 			radioButtons('seps', 'Separator',
+                              c(Comma=',',
+                                Semicolon=';',
+                                Tab='\t'),
+                              ','))
+                    		),
+                    	uiOutput("landscape_s_file")
+                    	))
+                    )
+                  ),
+                checkboxInput("showKernels", "Kernels(Female)", FALSE),
+                conditionalPanel(condition = "input.showKernels",
+                  wellPanel(
+                    helpText("f"),
+                    helpText("l"),
+                    helpText("m"),
+                    helpText("s")
+                    )
+                  ),
+                checkboxInput("show_land_male", "Males", FALSE),
+                conditionalPanel(condition = "input.show_land_male",
+                  wellPanel(
+                    helpText("M"),
+                    helpText("s")
+                    )
+                  )
+                ),
+              mainPanel(
+                tabsetPanel(
+                	id = "landscape_output",
+                	tabPanel(
+                		title = "Point: f",
+                		value = "landscape_out_f",
+                		plotOutput("panel_landscape_out_f")
+                		),
+                	tabPanel(
+                		title = "Point: m",
+                		value = "landscape_out_m",
+                		plotOutput("panel_landscape_out_m")
+                		),
+                	tabPanel(
+                		title = "Point: s",
+                		value = "landscape_out_s",
+                		plotOutput("panel_landscape_out_s")
+                		)
+                	)
+                )
+          ))
+    }
+})
+
+	output$demo_landscape <- renderPlot({
+			f_xy = read.csv('demo_data/peridom.f116.xyw', header=T)/2
+			plot(f_xy[,1], f_xy[,2], type = "n", pch = 3, col = "red", xlab = "East-West", ylab = "North-South")
+			l_xy = read.csv('demo_data/peridom.l117.xyw', header=T)/2
+
+			set.seed(21)
+			m_x = runif(10, -10, 10)/2
+			m_y = runif(10, -10, 10)/2
+			m_xy = cbind(x=m_x, y=m_y)
+
+			xx = unique(c(f_xy[,1], l_xy[,1]))
+			yy = unique(c(f_xy[,2], l_xy[,2])) 
+
+			lx = length(xx)
+			ix = sample(1:lx, 80)
+			s_x = c(xx[ix], runif(40, -10, 10)/2)
+			s_y = c(yy[ix], runif(40, -10, 10)/2)
+			s_xy = cbind(x=s_x, y=s_y)
+
+			f_xy[,3] = rgamma(250, 1, 1)
+			l_xy[,3] = rgamma(250,1,1)
+			m_xy = cbind(m_xy, w=rgamma(10,1,1))
+			s_xy = cbind(s_xy, w=rgamma(120,1,1))
+
+			if(input$demo_m){
+				points(m_xy, pch=15, col = "orange", cex = m_xy[,3])}
+			if(input$demo_f){
+				points(f_xy, pch = 21, bg = "red", cex = f_xy[,3])}
+			if(input$demo_l){
+				points(l_xy, pch = 4, col = "blue", cex = l_xy[,3])}
+			if(input$demo_s){
+				points(s_xy, pch=6, col=grey(0.5), cex=s_xy[,3])}
+
+		})
+	
+
     observe({
       toggle(condition = input$showF, selector = "#boutbar li a[data-value=bout_f]")
     })
@@ -1772,6 +1910,32 @@ mbitesGadget = function(...){
 
     observeEvent(input$done, {
       stopApp(brushedPoints(data, input$brush))
+    })
+
+    observeEvent(input$createDemoFolder, {
+    toggle(selector = "#nav li a[data-value=start]")
+  })
+  #   observeEvent(input$createNewFolder, {
+  #   toggle(selector = "#nav li a[data-value=start]")
+  # })
+    observeEvent(input$launchgo, {
+    toggle(selector = "#nav li a[data-value=start]")
+  })
+
+    observeEvent(input$save_demo_land, {
+    	do.call(file.remove, list(list.files("demo/", full.names = TRUE)))
+    	if(input$demo_f){
+    		write.csv(input$f_xy, "demo/demo_f.csv")
+    	}
+    	if(input$demo_s){
+    		write.csv(input$s_xy, "demo/demo_s.csv")
+    	}
+    	if(input$demo_l){
+    		write.csv(input$l_xy, "demo/demo_l.csv")
+    	}
+    	if(input$demo_m){
+    		write.csv(input$m_xy, "demo/demo_m.csv")
+    	}
     })
 
     observeEvent(input$save_inputs_bout, {
