@@ -450,6 +450,7 @@ treatPfSI <- function(tEvent, PAR){
     private$Pathogens$set_infected(FALSE)
   }
   private$EventQueue$rmTagFromQ("endPfSI")
+  private$EventQueue$rmTagFromQ("endprophylaxisPfSI")
   private$Pathogens$set_chemoprophylaxis(TRUE)
   writeLines(text = paste0(c(private$myID,tEvent,"P","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
   # Initiate a period of protection from chemoprophylaxis
@@ -510,6 +511,56 @@ endprophylaxisPfSI <- function(tEvent, PAR){
 # HUMAN PE vaccination functions
 ###################################################################
 
+#' PfSI \code{HumanPop} Method: Initialize and Queue Vaccination Events
+#'
+#' Initialize vaccinations for each human as defined in peVaxPar, where peVaxPar is a list indexed on each human's ID that describes the times when each human receives a PE vaccination.
+#'
+#'  * This method is bound to \code{HumanPop$initialize_peVaxx}
+#'
+initialize_peVaxx_HumanPop <- function(peVaxPar){
+  #cat("reached initialize for HumanPop")
+  private$pop$apply(tag = "initialize_peVaxx", returnVal = FALSE, vaxPar=peVaxPar)
+}
+
+
+#' PfSI \code{Human} Method: Initialize and Queue Vaccination Events for each Human
+#'
+#' Initialize vaccinations for each human as defined in peVaxPar.
+#'
+#'  * This method is bound to \code{Human$initialize_peVaxx}
+#'
+
+initialize_peVaxx_Human <- function(vaxPar){
+  #cat("reached initialization for Human")
+  hix = which(private$myID == names(vaxPar)) # human index
+  if (length(hix) > 0){
+    nevents = length(vaxPar[[hix]]$tVax)
+    if (nevents > 0){
+      for (i in 1:nevents){ # loop over all vaccination events for this human
+        tVaccine = vaxPar[[hix]]$tVax[i]
+        tTreat = vaxPar[[hix]]$tTreat[i]
+        self$queuePEVaccination_PfSI(tVaccine, tTreat = tTreat)
+      }
+    }
+  }
+}
+
+#' PfSI SimBite \code{Human} Event: Queue Vaccination
+#'
+#' Queue vaccination and optionally treatment events by calling \code{\link{add2Q_pevaccinatePfSI}} and \code{\link{add2Q_treatPfSI}}
+#'
+#'  * This method is bound to \code{Human$queuePEVaccination_PfSI}
+#'
+#' @param tVaccine time of vaccination
+#' @param tTreat time of treatment (may be \code{NULL})
+#'
+queuePEVaccination_PfSI_Human <- function(tVaccine, tTreat = NA){
+  self$add2Q_pevaccinatePfSI(tEvent = tVaccine)
+  if(!is.na(tTreat)){
+    self$add2Q_treatPfSI(tEvent = tTreat)
+  }
+}
+
 #' PfSI \code{Human} Event: Add PfSI PE Vaccination Event to Event Queue
 #'
 #' Add PfSI PE vaccination event to the event queue.
@@ -551,6 +602,7 @@ pevaccinatePfSI <- function(tEvent, PAR){
   if(runif(1) < self$get_PfSI_PAR("PEProtectPf")){
     writeLines(text = paste0(c(private$myID,tEvent,"PEvaxx","NULL"),collapse = ","),con = private$HumansPointer$get_conPathogen(), sep = "\n")
     private$Pathogens$set_b(self$get_PfSI_PAR("Pf_b") * (1-self$get_PfSI_PAR("peBlockPf")))
+    private$EventQueue$rmTagFromQ("pewanePfSI")
     self$add2Q_pewanePfSI(tEvent = tEvent)
   }
 }

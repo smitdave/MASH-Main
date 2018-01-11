@@ -150,31 +150,31 @@ F(0,t) =& \Lambda(t) \\
 %
 &\\
 \frac{\partial F(a,t)}{\partial t} + \frac{\partial F(a,t)}{\partial a} =& 
-\gamma_O(a,t) P_{OF}(a) O(a,t) 
-+ \gamma_B(a,t) P_{BF}(a) B(a,t) \\&
- + \gamma_R(a,t) P_{RF}(a) R(a,t)
-- \gamma_F(a,t) (1-P_{FF}(a)) F(a,t) \\
+\xi_O(a,t) P_{OF}(a) O(a,t) 
++ \xi_B(a,t) P_{BF}(a) B(a,t) \\&
+ + \xi_R(a,t) P_{RF}(a) R(a,t)
+- \gamma_F(a,t) F(a,t) \\
 %
 %
 &\\
-\frac{\partial B(a,t)}{\partial t} + \frac{\partial B(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O(a,t) + \gamma_F(a,t) P_{FB}(a) F(a,t) \\ & 
-+ \gamma_R(a,t) P_{RB}(a) R(a,t) 
-- \gamma_B(a,t) (1-P_{BB}(a)) B(a,t)\\
+\frac{\partial B(a,t)}{\partial t} + \frac{\partial B(a,t)}{\partial a} =&  \xi_O(a,t) P_{OB}(a) O(a,t) + \xi_F(a,t) P_{FB}(a) F(a,t) \\ & 
++ \xi_R(a,t) P_{RB}(a) R(a,t) 
+- \gamma_B(a,t) B(a,t)\\
 %
 &\\
-\frac{\partial R(a,t)}{\partial t} + \frac{\partial R(a,t)}{\partial a} =&  \gamma_B(a,t) P_{BR}(a) B(a,t) - \gamma_R(a,t) R(a,t)\\ 
+\frac{\partial R(a,t)}{\partial t} + \frac{\partial R(a,t)}{\partial a} =&  \xi_B(a,t) P_{BR}(a) B(a,t) - \xi_R(a,t) R(a,t)\\ 
 %
 &\\
-\frac{\partial L(a,t)}{\partial t} + \frac{\partial L(a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R(a,t) + 
-\gamma_O(a,t) P_{OL}(a) O(a,t) \\&
-- \gamma_L(a,t) (1-P_{LL}(a)) L(a,t)
+\frac{\partial L(a,t)}{\partial t} + \frac{\partial L(a,t)}{\partial a} =& \xi_R(a,t) P_{RL}(a) R(a,t) + 
+\xi_O(a,t) P_{OL}(a) O(a,t) \\&
+- \gamma_L(a,t) L(a,t)
 \\ 
 %
 &\\
-\frac{\partial O(a,t)}{\partial t} + \frac{\partial O(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) L(a,t) 
-+ \gamma_R(a,t) P_{RO}(a) R(a,t)  
+\frac{\partial O(a,t)}{\partial t} + \frac{\partial O(a,t)}{\partial a} =& \xi_L(a,t) P_{LO}(a) L(a,t) 
++ \xi_R(a,t) P_{RO}(a) R(a,t)  
 \\&
-- \gamma_O(a,t)(1-P_{OO}(a)) O(a,t)
+- \gamma_O(a,t) O(a,t)
 
 %
 \end{array}\end{equation}
@@ -188,30 +188,30 @@ Finally, we want a version of these equations to model changes in a cohort of in
 F(0) &=& 1 \\ 
 %
 {\dot F}&=& 
-\gamma_O(a) P_{OF}(a) O(a) 
-+ \gamma_B(a) P_{BF}(a) B(a) 
- + \gamma_R(a,t) P_{RF}(a) R(a)
+\xi_O(a) P_{OF}(a) O(a) 
++ \xi_B(a) P_{BF}(a) B(a) 
+ + \xi_R(a) P_{RF}(a) R(a)
 \\ &&
-- \gamma_F(a) (1 - P_{FF}(a)) F(a) 
+- \gamma_F(a) F(a) 
  \\ 
 %
 %
-{\dot B} &=&  \gamma_O(a) P_{OB}(a) O(a) + \gamma_F(a) P_{FB}(a) F(a) 
-+ \gamma_R(a) P_{RB}(a) R(a) \\ && 
-- \gamma_B(a) (1-P_{BB}(a)) B(a)
+{\dot B} &=&  \xi_O(a) P_{OB}(a) O(a) + \xi_F(a) P_{FB}(a) F(a) 
++ \xi_R(a) P_{RB}(a) R(a) \\ && 
+- \gamma_B(a) B(a)
 \\
 %
-{\dot R} &=&  \gamma_B(a) P_{BR}(a) B(a) - \gamma_R(a) R(a)\\ 
+{\dot R} &=&  \xi_B(a) P_{BR}(a) B(a) - \xi_R(a) R(a)\\ 
 %
-{\dot L}&=& \gamma_R(a) P_{RL}(a) R(a) + 
-\gamma_O(a) P_{OL}(a) O(a) \\&&
-- \gamma_L(a) (1 - P_{LL}(a)) L(a)
+{\dot L}&=& \xi_R(a) P_{RL}(a) R(a) + 
+\xi_O(a) P_{OL}(a) O(a) \\&&
+- \gamma_L(a) L(a)
 \\ 
 %
-{\dot O} &=& \gamma_L(a) P_{LO}(a) L(a) 
-+ \gamma_R(a) P_{RO}(a) R(a)  
+{\dot O} &=& \xi_L(a) P_{LO}(a) L(a) 
++ \xi_R(a) P_{RO}(a) R(a)  
 \\&& 
-- \gamma_O(a) (1 - P_{OO}(a)) O(a)
+- \gamma_O(a) O(a)
 \\ 
 %
 \end{array}\end{equation}
@@ -223,22 +223,22 @@ To simulate infection dynamics in MBITES-de, we subdivide each variable $X$ into
 \begin{equation}\begin{array}{rl}
 %
 \frac{\partial R_U(a,t)}{\partial t} + \frac{\partial
-R_U(a,t)}{\partial a} =& \left(1-Q \kappa(t) \right) \gamma_B(a,t) P_{BR}(a) B_U(a,t)
-- \gamma_R(a,t) R_U(a,t)\\
+R_U(a,t)}{\partial a} =& \left(1-Q \kappa(t) \right) \xi_B(a,t) P_{BR}(a) B_U(a,t)
+- \xi_R(a,t) R_U(a,t)\\
 
 \frac{\partial R_Y(a,t)}{\partial t} + \frac{\partial
-R_Y(a,t)}{\partial a} =&  Q \kappa(t) \gamma_B(a,t) P_{BR}(a) B_U(a,t)\\&
-+ \gamma_B(a,t) P_{BR}(a) B_Y(a,t) 
-- \gamma_R(a,t) R_Y(a,t)\\
+R_Y(a,t)}{\partial a} =&  Q \kappa(t) \xi_B(a,t) P_{BR}(a) B_U(a,t)\\&
++ \xi_B(a,t) P_{BR}(a) B_Y(a,t) 
+- \xi_R(a,t) R_Y(a,t)\\
 \end{array}\end{equation}
 %
 We let $\tau(t)$ denote the (possibly time-dependent) extrinsic incubation period. Because $\tau(t)$ is time dependent, we let $\hat t$ denote that point in the past when the mosquito became infected in order to become infectious at time $t$: \ie $t = \hat t + \tau(\hat t)$. Let $\rho(t)$ the proportion of mosquitoes surviving through the extrinsic incubation period (\ie from $\hat t$ to $t = \hat t +\tau (\hat t)$). An equation describing the proportion of infectious mosquitoes is:
 %
 \begin{equation}\begin{array}{rl}
 \frac{\partial R_Z(a,t)}{\partial t} + \frac{\partial
-R_Z(a,t)}{\partial a} =&  \rho(t) Q \kappa \left( \hat t \right) \gamma_B(a,t) P_{BR}(a) B_U(a,t) \\&
-+ \gamma_B(a,t) P_{BR}(a) B_Z(a,t)
-- \gamma_R(a,t) R_Z(a,t)\\
+R_Z(a,t)}{\partial a} =&  \rho(t) Q \kappa \left( \hat t \right) \xi_B(a,t) P_{BR}(a) B_U(a,t) \\&
++ \xi_B(a,t) P_{BR}(a) B_Z(a,t)
+- \xi_R(a,t) R_Z(a,t)\\
 %
 \end{array}\end{equation}
 
@@ -250,30 +250,30 @@ F_{x}(0,t) =& \Lambda(t) \\
 %
 \frac{\partial F_{x}(a,t)}{\partial t} + \frac{\partial
 F_{x}(a,t)}{\partial a} =&
-\gamma_O(a,t) P_{OF}(a) O_x(a,t)
-+ \gamma_B(a,t) P_{BF}(a) B_x(a,t)\\ &
- + \gamma_R(a,t) P_{RF}(a) R_x(a,t)
-- \gamma_F(a,t) (1-P_{FF}(a)) F_{x}(a,t)\\
+\xi_O(a,t) P_{OF}(a) O_x(a,t)
++ \xi_B(a,t) P_{BF}(a) B_x(a,t)\\ &
+ + \xi_R(a,t) P_{RF}(a) R_x(a,t)
+- \gamma_F(a,t) F_{x}(a,t)\\
 %
 %
 \frac{\partial B_{o,x}(a,t)}{\partial t} + \frac{\partial
-B_{x}(a,t)}{\partial a} =&  \gamma_O(a,t) P_{OB}(a) O_x(a,t) +
-\gamma_F(a,t) P_{FB}(a) F_x(a,t)\\ &
-+ \gamma_R(a,t) P_{RB}(a) R_x(a,t) 
-- \gamma_B(a,t) (1 - P_{BB}(a)) B_{x}(a,t)\\
+B_{x}(a,t)}{\partial a} =&  \xi_O(a,t) P_{OB}(a) O_x(a,t) +
+\xi_F(a,t) P_{FB}(a) F_x(a,t)\\ &
++ \xi_R(a,t) P_{RB}(a) R_x(a,t) 
+- \gamma_B(a,t) B_{x}(a,t)\\
 %
 
 \frac{\partial L_{x} (a,t)}{\partial t} + \frac{\partial
-L_{x} (a,t)}{\partial a} =& \gamma_R(a,t) P_{RL}(a) R_x(a,t) +
-\gamma_O(a,t) P_{OL}(a) O_x(a,t) \\&
-- \gamma_L(a,t) (1 - P_{LL}(a)) L_{x}(a,t)
+L_{x} (a,t)}{\partial a} =& \xi_R(a,t) P_{RL}(a) R_x(a,t) +
+\xi_O(a,t) P_{OL}(a) O_x(a,t) \\&
+- \gamma_L(a,t) L_{x}(a,t)
 \\
 %
 \frac{\partial O_{o,x}(a,t)}{\partial t} + \frac{\partial
-O_{x}(a,t)}{\partial a} =& \gamma_L(a,t) P_{LO}(a) L_x(a,t)
-+ \gamma_R(a,t) P_{RO}(a) R_x(a,t)
+O_{x}(a,t)}{\partial a} =& \xi_L(a,t) P_{LO}(a) L_x(a,t)
++ \xi_R(a,t) P_{RO}(a) R_x(a,t)
 \\&
-- \gamma_O(a,t) (1 - P_{OO}(a)) O_{x}(a,t)
+- \gamma_O(a,t) O_{x}(a,t)
 \\
 %
 \end{array}\end{equation}

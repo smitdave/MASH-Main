@@ -60,6 +60,7 @@ mbitesGadget = function(...){
             $('#nav a:contains(\"Bouts\")').parent().addClass('hide');
             $('#nav a:contains(\"Landscape\")').parent().addClass('hide');
             $('#nav a:contains(\"Ecology\")').parent().addClass('hide');
+            $('#nav a:contains(\"Pathogen\")').parent().addClass('hide');
         };
 
         Shiny.addCustomMessageHandler('activeNavs', function(nav_label) {
@@ -114,7 +115,7 @@ mbitesGadget = function(...){
 
           #################################################################################
           tabPanel(title = "Landscape", value = 'landscape',
-          	uiOutput("panel_lanscape")
+          	uiOutput("panel_landscape")
           	),
           #################################################################################
 		tabPanel(title = "Simulation", value = "simulation",
@@ -651,6 +652,17 @@ mbitesGadget = function(...){
                 # )
             ))
             ),
+          #################################################################################
+          tabPanel(title = "Pathogen", value = "pathogen",
+            sidebarLayout(position = "right",
+              sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                helpText('Test')
+                ),
+              mainPanel(
+                helpText("test output")
+                )
+              )
+          ),
 
           
           #################################################################################
@@ -1049,28 +1061,37 @@ mbitesGadget = function(...){
   	output$contentsF <- renderTable({
   	      dataF()
   	  })
-  	dataM <- reactive({
-  	    req(input$filem)
-  	    inFileM <- input$filem
-  	    dfM <- read.csv(inFileM$datapath, header = input$headerm, sep = input$sepm)
-  	    return(dfM)
+  	dataL <- reactive({
+	    req(input$filel)
+	    inFileL <- input$filel
+	    dfL <- read.csv(inFileL$datapath, header = input$headerl, sep = input$sepl)
+	    return(dfL)
+	  })
+  	output$contentsL <- renderTable({
+  	      dataL()
   	  })
-  	output$contentsM <- renderTable({
-  	      dataM()
-  	  })
-  	dataS <- reactive({
-  	    req(input$files)
-  	    inFileS <- input$files
-  	    dfS <- read.csv(inFileS$datapath, header = input$headers, sep = input$seps)
-  	    return(dfS)
-  	  })
-  	output$contentsS <- renderTable({
-  	      dataS()
-  	  })
+  	# dataM <- reactive({
+  	#     req(input$filem)
+  	#     inFileM <- input$filem
+  	#     dfM <- read.csv(inFileM$datapath, header = input$headerm, sep = input$sepm)
+  	#     return(dfM)
+  	#   })
+  	# output$contentsM <- renderTable({
+  	#       dataM()
+  	#   })
+  	# dataS <- reactive({
+  	#     req(input$files)
+  	#     inFileS <- input$files
+  	#     dfS <- read.csv(inFileS$datapath, header = input$headers, sep = input$seps)
+  	#     return(dfS)
+  	#   })
+  	# output$contentsS <- renderTable({
+  	#       dataS()
+  	#   })
 
-    output$panel_landscape_out_f <- renderPlot({
-    	 if(input$landscape_point_f & input$landscape_f_input == "cluster"){
-    		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+  	output$panel_landscape_out_site <- renderPlot({
+  		if(input$showPoints){
+  			getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
 			  set.seed(seed)
 			  xCenters = runif(nCenters, -rng, rng)
 			  yCenters = runif(nCenters, -rng, rng)
@@ -1088,138 +1109,217 @@ mbitesGadget = function(...){
 			  x = x[-1]
 			  y = y[-1]
 
-			  plot(x,y, pch = 15, col = "red")
+			  #plot(x,y, pch = 15, col = "red")
 			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
 			}
 
-			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
-			xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
-			N_l = length(xy_l[,1])
-			w_l = rgamma(length(xy_f[,1]), 1,1)
-
-			xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
-
-			xy_f = rbind(xy_f, xy_f1)
-			N_f = length(xy_f[,1])
-			w_f = rgamma(length(xy_f[,1]), 1,1)
-
-			plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
-
-			points(xy_l, pch =15, col = "blue")
-
-    	 }else{
-    	 	xF <- dataF()[, 1:2]
-	    	plot(xF, col="red")
-    	 }
-
-    })
-
-
-    output$panel_landscape_out_m <- renderPlot({
-    	 if(input$landscape_point_m & input$landscape_m_input == "cluster"){
-    		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
-			  set.seed(seed)
-			  xCenters = runif(nCenters, -rng, rng)
-			  yCenters = runif(nCenters, -rng, rng)
-
-			  x = 0
-			  y=0
-
-			  n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
-			  spread = rgamma(nCenters,1,1)*spr
-
-			  for(i in 1:nCenters){
-			    x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
-			    y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
-			  }
-			  x = x[-1]
-			  y = y[-1]
-
-			  plot(x,y, pch = 15, col = "red")
-			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			if(input$landscape_f_input == 'cluster'){
+				xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+				w_f = rgamma(length(xy_f[,1]), 1,1)
+				xy_f = cbind(xy_f, w = rgamma(length(xy_f[,1]), 1, 1))
+			}else if(input$landscape_f_input == 'imp_xyw'){
+				xy_f = dataF()[,1:3]
+			}else{
+				xy_f = dataF()[,1:2]
+				xy_f = cbind(xy_f, w = rgamma(length(xy_f[,1]), 1, 1))
 			}
-
-			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
-			xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
-			N_l = length(xy_l[,1])
-			w_l = rgamma(length(xy_f[,1]), 1,1)
-
-			xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
-
-			xy_f = rbind(xy_f, xy_f1)
 			N_f = length(xy_f[,1])
-			w_f = rgamma(length(xy_f[,1]), 1,1)
 
-			plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
-
-			points(xy_l, pch =15, col = "blue")
-
-
-
-    	 }else{
-    	 	xM <- dataM()[, 1:2]
-	    	plot(xM, col="blue")
-    	 }
-
-    })
-
-    output$panel_landscape_out_s <- renderPlot({
-    	 if(input$landscape_point_s & input$landscape_s_input == "cluster"){
-    		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
-			  set.seed(seed)
-			  xCenters = runif(nCenters, -rng, rng)
-			  yCenters = runif(nCenters, -rng, rng)
-
-			  x = 0
-			  y=0
-
-			  n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
-			  spread = rgamma(nCenters,1,1)*spr
-
-			  for(i in 1:nCenters){
-			    x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
-			    y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
-			  }
-			  x = x[-1]
-			  y = y[-1]
-
-			  plot(x,y, pch = 15, col = "red")
-			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			if(input$landscape_l_input == 'cluster'){
+				xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+				xy_l = cbind(xy_l, w = rgamma(length(xy_l[,1]), 1, 1))
+				}else if(input$landscape_l_input == 'imp_xyw'){
+					xy_l = dataL()[,1:3]
+				}else{
+					xy_l = dataL()[,1:2]
+					xy_l= cbind(xy_l, w = rgamma(length(xy_l[,1]), 1, 1))
 			}
-
-			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
-			xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
 			N_l = length(xy_l[,1])
-			w_l = rgamma(length(xy_f[,1]), 1,1)
+			m_x = runif(10, -10, 10)/2
+			m_y = runif(10, -10, 10)/2
+			m_xy = cbind(x=m_x, y=m_y)
+			xx = unique(c(xy_f[,1], xy_l[,1]))
+			yy = unique(c(xy_f[,2], xy_l[,2])) 
+			lx = length(xx)
+			ix = sample(1:lx, 80)
+			s_x = c(xx[ix], runif(40, -10, 10)/2)
+			s_y = c(yy[ix], runif(40, -10, 10)/2)
+			s_xy = cbind(x=s_x, y=s_y)
 
-			xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+			xy_f= cbind(xy_f, w = rgamma(N_f, 1, 1))
+			xy_l= cbind(xy_l, w = rgamma(N_l, 1, 1))
+			m_xy = cbind(m_xy, w=rgamma(10,1,1))
+			s_xy = cbind(s_xy, w=rgamma(120,1,1))
 
-			xy_f = rbind(xy_f, xy_f1)
-			N_f = length(xy_f[,1])
-			w_f = rgamma(length(xy_f[,1]), 1,1)
+			plot(xy_f[,1], xy_f[,2], type = "n", pch = 3, col = "red", xlab = "East-West", ylab = "North-South")
 
-			plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+			
+			if(input$landscape_point_m){
+				points(m_xy, pch=15, col = "orange", cex = m_xy[,3])}
+			if(input$landscape_point_f){
+				points(xy_f, pch = 21, bg = "red", cex = xy_f[,3])}
+			if(input$landscape_point_l){
+				points(xy_l, pch = 4, col = "blue", cex = xy_l[,3])}
+			if(input$landscape_point_s){
+				points(s_xy, pch=6, col=grey(0.5), cex=s_xy[,3])}
+			}
+		})
 
-			points(xy_l, pch =15, col = "blue")
+   #  output$panel_landscape_out_f <- renderPlot({
+   #  	 if(input$landscape_point_f & input$landscape_f_input == "cluster"){
+   #  		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+			#   set.seed(seed)
+			#   xCenters = runif(nCenters, -rng, rng)
+			#   yCenters = runif(nCenters, -rng, rng)
+
+			#   x = 0
+			#   y=0
+
+			#   n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
+			#   spread = rgamma(nCenters,1,1)*spr
+
+			#   for(i in 1:nCenters){
+			#     x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
+			#     y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
+			#   }
+			#   x = x[-1]
+			#   y = y[-1]
+
+			#   plot(x,y, pch = 15, col = "red")
+			#   cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			# }
+
+			# xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+			# xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+			# N_l = length(xy_l[,1])
+			# w_l = rgamma(length(xy_f[,1]), 1,1)
+
+			# xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+
+			# xy_f = rbind(xy_f, xy_f1)
+			# N_f = length(xy_f[,1])
+			# w_f = rgamma(length(xy_f[,1]), 1,1)
+
+			# plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+
+			# points(xy_l, pch =15, col = "blue")
+
+   #  	 }else{
+   #  	 	xF <- dataF()[, 1:2]
+	  #   	plot(xF, col="red")
+   #  	 }
+
+   #  })
+
+
+   #  output$panel_landscape_out_m <- renderPlot({
+   #  	 if(input$landscape_point_m & input$landscape_m_input == "cluster"){
+   #  		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+			#   set.seed(seed)
+			#   xCenters = runif(nCenters, -rng, rng)
+			#   yCenters = runif(nCenters, -rng, rng)
+
+			#   x = 0
+			#   y=0
+
+			#   n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
+			#   spread = rgamma(nCenters,1,1)*spr
+
+			#   for(i in 1:nCenters){
+			#     x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
+			#     y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
+			#   }
+			#   x = x[-1]
+			#   y = y[-1]
+
+			#   plot(x,y, pch = 15, col = "red")
+			#   cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			# }
+
+			# xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+			# xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+			# N_l = length(xy_l[,1])
+			# w_l = rgamma(length(xy_f[,1]), 1,1)
+
+			# xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+
+			# xy_f = rbind(xy_f, xy_f1)
+			# N_f = length(xy_f[,1])
+			# w_f = rgamma(length(xy_f[,1]), 1,1)
+
+			# plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+
+			# points(xy_l, pch =15, col = "blue")
 
 
 
-    	 }else{
-    	 	xS <- dataS()[, 1:2]
-	    	plot(xS, col="green")
-    	 }
+   #  	 }else{
+   #  	 	xM <- dataM()[, 1:2]
+	  #   	plot(xM, col="blue")
+   #  	 }
 
-    })
+   #  })
+
+   #  output$panel_landscape_out_s <- renderPlot({
+   #  	 if(input$landscape_point_s & input$landscape_s_input == "cluster"){
+   #  		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+			#   set.seed(seed)
+			#   xCenters = runif(nCenters, -rng, rng)
+			#   yCenters = runif(nCenters, -rng, rng)
+
+			#   x = 0
+			#   y=0
+
+			#   n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
+			#   spread = rgamma(nCenters,1,1)*spr
+
+			#   for(i in 1:nCenters){
+			#     x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
+			#     y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
+			#   }
+			#   x = x[-1]
+			#   y = y[-1]
+
+			#   plot(x,y, pch = 15, col = "red")
+			#   cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			# }
+
+			# xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+			# xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+			# N_l = length(xy_l[,1])
+			# w_l = rgamma(length(xy_f[,1]), 1,1)
+
+			# xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+
+			# xy_f = rbind(xy_f, xy_f1)
+			# N_f = length(xy_f[,1])
+			# w_f = rgamma(length(xy_f[,1]), 1,1)
+
+			# plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+
+			# points(xy_l, pch =15, col = "blue")
+
+
+
+   #  	 }else{
+   #  	 	xS <- dataS()[, 1:2]
+	  #   	plot(xS, col="green")
+   #  	 }
+
+   #  })
 
     observe({
-      toggle(condition = input$landscape_point_f, selector = "#landscape_output li a[data-value=landscape_out_f]")
+      toggle(condition = input$showPoints, selector = "#landscape_output li a[data-value=landscape_site]")
     })
-    observe({
-      toggle(condition = input$landscape_point_m, selector = "#landscape_output li a[data-value=landscape_out_m]")
-    })
-    observe({
-      toggle(condition = input$landscape_point_s, selector = "#landscape_output li a[data-value=landscape_out_s]")
-    })
+   #  observe({
+   #    toggle(condition = input$landscape_point_f, selector = "#landscape_output li a[data-value=landscape_out_f]")
+   #  })
+   #  observe({
+   #    toggle(condition = input$landscape_point_m, selector = "#landscape_output li a[data-value=landscape_out_m]")
+   #  })
+   #  observe({
+   #    toggle(condition = input$landscape_point_s, selector = "#landscape_output li a[data-value=landscape_out_s]")
+   #  })
 
 #####################Simualtion output ########################################################
     output$sim_panel <- renderUI({
@@ -1265,6 +1365,7 @@ mbitesGadget = function(...){
             session$sendCustomMessage('activeNavs', 'Simulation')
             session$sendCustomMessage('activeNavs', 'Bouts')
             session$sendCustomMessage('activeNavs', 'Ecology')
+            session$sendCustomMessage('activeNavs', 'Pathogen')
         }
     })
     observe({
@@ -1285,6 +1386,7 @@ mbitesGadget = function(...){
             session$sendCustomMessage('activeNavs', 'Simulation')
             session$sendCustomMessage('activeNavs', 'Bouts')
             session$sendCustomMessage('activeNavs', 'Ecology')
+            session$sendCustomMessage('activeNavs', 'Pathogen')
         }
     })
 
@@ -1297,6 +1399,7 @@ mbitesGadget = function(...){
     	session$sendCustomMessage('activeNavs', 'Options')
     	session$sendCustomMessage('activeNavs', 'Bouts')
     	session$sendCustomMessage('activeNavs', 'Ecology')
+    	session$sendCustomMessage('activeNavs', 'Pathogen')
     	updateTabsetPanel(session, "nav", selected = "options")
     })
 
@@ -1544,7 +1647,7 @@ mbitesGadget = function(...){
               ))
     })
 
-    output$panel_lanscape <- renderUI({
+    output$panel_landscape <- renderUI({
     	if(input$project == 'demo'){
     		fluidPage(
     			sidebarLayout(position = "right", 
@@ -1569,13 +1672,14 @@ mbitesGadget = function(...){
             sidebarLayout(position = "right",
               sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
                 helpText("Please set the parameters"),
-                checkboxInput("showPoints", "Points", FALSE),
+                checkboxInput("showPoints", "Sites", FALSE),
                 conditionalPanel(condition = "input.showPoints",
                   wellPanel(
-                    checkboxInput("landscape_point_f", "f", FALSE),
+                  	helpText("space(x,y), a search weight (w)"),
+                    checkboxInput("landscape_point_f", "{f}: Haunts, blood feeding sites", TRUE),
                     conditionalPanel(condition = "input.landscape_point_f",
                     	wellPanel(
-                    	radioButtons(inputId = "landscape_f_input", "Provide the locations and weights:",
+                    	radioButtons(inputId = "landscape_f_input", "Provide the locations w/o weights:",
                     		choices = c("Clusters" = "cluster",
                     					"Import x, y, w" = "imp_xyw",
                     					"Import x, y" = "imp_xy"
@@ -1592,57 +1696,37 @@ mbitesGadget = function(...){
                                 Semicolon=';',
                                 Tab='\t'),
                               ','))
-                    		),
-                    	uiOutput("landscape_f_file")
+                    		)
+                 			#,
+                    	#uiOutput("landscape_f_file")
                     	)),
-                    checkboxInput("landscape_point_m", "m", FALSE),
-                    conditionalPanel(condition = "input.landscape_point_m",
+                    checkboxInput("landscape_point_l", "{l}: Habitats, egg laying sites", TRUE),
+                    conditionalPanel(condition = "input.landscape_point_l",
                     	wellPanel(
-                    	radioButtons(inputId = "landscape_m_input", "Provide the locations and weights:",
+                    	radioButtons(inputId = "landscape_l_input", "Provide the locations w/o weights:",
                     		choices = c("Clusters" = "cluster",
                     					"Import x, y, w" = "imp_xyw",
                     					"Import x, y" = "imp_xy"
                     					),
                     		selected = "cluster"),
-                    	conditionalPanel(condition = "input.landscape_m_input != 'cluster'",
-                    		fileInput('filem', 'Choose CSV File',
+                    	conditionalPanel(condition = "input.landscape_l_input != 'cluster'",
+                    		fileInput('filel', 'Choose CSV File',
                        			accept=c('text/csv',
                                 'text/comma-separated-values,text/plain',
                                 '.csv')),
-                    		wellPanel(checkboxInput('headerm', 'Header', TRUE),
-                 			radioButtons('sepm', 'Separator',
+                    		wellPanel(checkboxInput('headerl', 'Header', TRUE),
+                 			radioButtons('sepl', 'Separator',
                               c(Comma=',',
                                 Semicolon=';',
                                 Tab='\t'),
                               ','))
-                    		),
-                    	uiOutput("landscape_m_file")
+                    		)
+                    	#uiOutput("landscape_l_file")
                     	)),
-                    checkboxInput("landscape_point_s", "s", FALSE),
-                    conditionalPanel(condition = "input.landscape_point_s",
-                    	wellPanel(
-                    	radioButtons(inputId = "landscape_s_input", "Provide the locations and weights:",
-                    		choices = c("Clusters" = "cluster",
-                    					"Import x, y, w" = "imp_xyw",
-                    					"Import x, y" = "imp_xy"
-                    					),
-                    		selected = "cluster"),
-                    	conditionalPanel(condition = "input.landscape_s_input != 'cluster'",
-                    		fileInput('files', 'Choose CSV File',
-                       			accept=c('text/csv',
-                                'text/comma-separated-values,text/plain',
-                                '.csv')),
-                    		wellPanel(checkboxInput('headers', 'Header', TRUE),
-                 			radioButtons('seps', 'Separator',
-                              c(Comma=',',
-                                Semicolon=';',
-                                Tab='\t'),
-                              ','))
-                    		),
-                    	uiOutput("landscape_s_file")
-                    	))
-                    )
-                  ),
+                    checkboxInput("landscape_point_s", "{s}: Sugar Feeding Sites", TRUE),
+                  
+                    checkboxInput("landscape_point_m", "{m}: Mating Sites", TRUE)),
+                    
                 checkboxInput("showKernels", "Kernels(Female)", FALSE),
                 conditionalPanel(condition = "input.showKernels",
                   wellPanel(
@@ -1659,24 +1743,24 @@ mbitesGadget = function(...){
                     helpText("s")
                     )
                   )
-                ),
+                )),
               mainPanel(
                 tabsetPanel(
                 	id = "landscape_output",
                 	tabPanel(
-                		title = "Point: f",
-                		value = "landscape_out_f",
-                		plotOutput("panel_landscape_out_f")
-                		),
-                	tabPanel(
-                		title = "Point: m",
-                		value = "landscape_out_m",
-                		plotOutput("panel_landscape_out_m")
-                		),
-                	tabPanel(
-                		title = "Point: s",
-                		value = "landscape_out_s",
-                		plotOutput("panel_landscape_out_s")
+                		title = "Sites",
+                		value = "landscape_site",
+                		plotOutput("panel_landscape_out_site")
+                	# 	),
+                	# tabPanel(
+                	# 	title = "Point: m",
+                	# 	value = "landscape_out_m",
+                	# 	plotOutput("panel_landscape_out_m")
+                	# 	),
+                	# tabPanel(
+                	# 	title = "Point: s",
+                	# 	value = "landscape_out_s",
+                	# 	plotOutput("panel_landscape_out_s")
                 		)
                 	)
                 )
