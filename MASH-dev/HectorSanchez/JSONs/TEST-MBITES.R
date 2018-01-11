@@ -18,7 +18,19 @@
 
 rm(list=ls());gc()
 library(MASHmicro)
+library(jsonlite)
 # set.seed(42L)
+
+###############################################################################
+export_MASH_parameters=function(file,parameters_structure){
+  serial=jsonlite::serializeJSON(parameters_structure,pretty=FALSE)
+  write(serial,file)
+}
+import_MASH_parameters=function(file){
+  connection=file(file)
+  jsonlite::unserializeJSON(connection)
+}
+###############################################################################
 
 # DEBUG.MASHMICRO()
 # MASHcpp::DEBUG.MASHCPP()
@@ -79,13 +91,21 @@ human_par = lapply(X = 1:n_humans,function(i){
 
   )
 })
-write(toJSON(human_par),paste0(DIR,"human_par.json"))
-human_par=fromJSON(file=paste0(DIR,"human_par.json"))
+# Human par I/O ----------------------------------------------------------------
+# serial=jsonlite::serializeJSON(human_par,pretty=TRUE)
+# write(serial,paste0(DIR,"human_par.json"))
+# con=file(paste0(DIR,"human_par.json"))
+# human_par=jsonlite::unserializeJSON(con)
+export_MASH_parameters(paste0(DIR,"human_par.json"),human_par)
+human_par=import_MASH_parameters(paste0(DIR,"human_par.json"))
+# ------------------------------------------------------------------------------
 
 # M-BITES parameters
 nMosy = 50
 mbites_par_female = MBITES.Complex.Parameters(PfEIP = 1 )
 mbites_par_male = MBITES.Male.Parameters(maleHistory = TRUE)
+# Mosquito par I/O
+serialF=serializeJSON(mbites_par_female,pretty=FALSE)
 mosquito_par = list(
   N_female = nMosy,
   N_male = nMosy,
