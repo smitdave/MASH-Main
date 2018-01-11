@@ -6,7 +6,7 @@
 #   /____/_/\__/\___/
 #
 #   MICRO
-#   Site Class
+#   Site Class Declaration
 #   MASH Team
 #   January 2018
 #
@@ -47,10 +47,7 @@ Site <- R6::R6Class(classname = "Site",
                  # public members
                  public = list(
 
-                   #################################################
-                   # Initialize
-                   #################################################
-
+                   # Constructor
                    initialize = function(){
 
                    }
@@ -65,14 +62,20 @@ Site <- R6::R6Class(classname = "Site",
                    siteID                       = integer(1),
                    siteType                     = integer(1),
 
-                   # movement object
-                   MoveObject                   = NULL, # std::unique_ptr<MoveObject>
-
                    # references to resources found at this site
-                   FeedingSites                 = list(), # std::vector<std::unique_ptr<FeedingSite>>
-                   AquaticHabitats              = list(),
-                   MatingSites                  = list(),
-                   SugarSites                   = list()
+                   site_f                       = list(), # std::vector<std::unique_ptr<FeedingSite>>
+                   site_l                       = list(),
+                   site_m                       = list(),
+                   site_s                       = list(),
+
+                   # weights of resouces found at this site
+                   site_f_w                     = numeric(1), # std::vector<double>
+                   site_l_w                     = numeric(1),
+                   site_m_w                     = numeric(1),
+                   site_s_w                     = numeric(1),
+
+                   # tile pointer
+                   tileP                        = NULL # tile* tileP;
 
                  )
 )
