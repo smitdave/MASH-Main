@@ -60,6 +60,7 @@ mbitesGadget = function(...){
             $('#nav a:contains(\"Bouts\")').parent().addClass('hide');
             $('#nav a:contains(\"Landscape\")').parent().addClass('hide');
             $('#nav a:contains(\"Ecology\")').parent().addClass('hide');
+            $('#nav a:contains(\"Pathogen\")').parent().addClass('hide');
         };
 
         Shiny.addCustomMessageHandler('activeNavs', function(nav_label) {
@@ -651,6 +652,17 @@ mbitesGadget = function(...){
                 # )
             ))
             ),
+          #################################################################################
+          tabPanel(title = "Pathogen", value = "pathogen",
+            sidebarLayout(position = "right",
+              sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                helpText('Test')
+                ),
+              mainPanel(
+                helpText("test output")
+                )
+              )
+          ),
 
           
           #################################################################################
@@ -1353,6 +1365,7 @@ mbitesGadget = function(...){
             session$sendCustomMessage('activeNavs', 'Simulation')
             session$sendCustomMessage('activeNavs', 'Bouts')
             session$sendCustomMessage('activeNavs', 'Ecology')
+            session$sendCustomMessage('activeNavs', 'Pathogen')
         }
     })
     observe({
@@ -1373,6 +1386,7 @@ mbitesGadget = function(...){
             session$sendCustomMessage('activeNavs', 'Simulation')
             session$sendCustomMessage('activeNavs', 'Bouts')
             session$sendCustomMessage('activeNavs', 'Ecology')
+            session$sendCustomMessage('activeNavs', 'Pathogen')
         }
     })
 
@@ -1385,6 +1399,7 @@ mbitesGadget = function(...){
     	session$sendCustomMessage('activeNavs', 'Options')
     	session$sendCustomMessage('activeNavs', 'Bouts')
     	session$sendCustomMessage('activeNavs', 'Ecology')
+    	session$sendCustomMessage('activeNavs', 'Pathogen')
     	updateTabsetPanel(session, "nav", selected = "options")
     })
 
