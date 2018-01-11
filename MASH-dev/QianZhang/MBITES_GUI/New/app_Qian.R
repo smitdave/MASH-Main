@@ -425,18 +425,14 @@ mbitesGadget = function(...){
               		column(8,
               			checkboxInput("showB_Option", "Setting Blood Meal Parameters", FALSE),
               			conditionalPanel(condition = "input.showB_Option",
-                      helpText("The following parameters also can be set under 'Bouts' Panel"),
+                      #helpText("The following parameters also can be set under 'Bouts' Panel"),
               				checkboxInput("showBloodMeal_Option", "Blood Meal Size", FALSE),
                       		conditionalPanel(condition = "input.showBloodMeal_Option",
-                          	# sliderInput(inputId = "bm_a_Option", label ="Shape Param a for Bloodmeal Size",
-                           #        value = 7.5, min = 0, max = 20, step = 0.5),
-                          	# sliderInput(inputId = "bm_b_Option", label ="Shape Param b for Bloodmeal Size",
-                           #        value = 2.5, min = 0, max = 20, step = 0.5),
                             fluidRow(
                             column(6,
-                              sliderInput(inputId = "bm_mean_Option", label ="Average Bloodmeal Size",
+                              sliderInput(inputId = "bm_mean", label ="Average Bloodmeal Size",
                                     value = 0.5, min = 0, max = 1, step = 0.01),
-                              sliderInput(inputId = "bm_v_Option", label ="Parameter v for a Bloodmeal Size: (a + b) in Beta(a,b)",
+                              sliderInput(inputId = "bm_v", label ="Parameter v for a Bloodmeal Size: (a + b) in Beta(a,b)",
                                     value = 15, min = 0, max = 40, step = 0.5)
                         	   ),
                             column(6,
@@ -448,18 +444,18 @@ mbitesGadget = function(...){
 	                      	conditionalPanel(condition = "input.overfeed_Option",
                             fluidRow(
                               column(6,
-    	                        sliderInput(inputId = "of_a_Option", "Exp Param a for overfeeding as function of bmSize",
+    	                        sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
     	                          value = 8, min = 5, max = 10, step = 0.01),
-    	                        sliderInput(inputId = "of_b_Option", "Exp Param b for overfeeding as function of bmSize",
+    	                        sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
     	                          value = 5000, min = 0, max = 10000, step = 100)),
                               column(6,
                                 plotOutput("overfeeding_Option_plot")
-                                )),
-	                      	hr(),
-	                      	sliderInput(inputId = "preGblood_Option", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-	                        value = 0, min = 0, max = 100, step = 1),
-	                      	sliderInput(inputId = "Q_Option", label ="Human Blood Index",
-	                        value = 0.9, min = 0, max = 1, step = 0.1)
+                                ))
+	                      	# hr(),
+	                      	# sliderInput(inputId = "preGblood_Option", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+	                       #  value = 0, min = 0, max = 100, step = 1),
+	                      	# sliderInput(inputId = "Q_Option", label ="Human Blood Index",
+	                       #  value = 0.9, min = 0, max = 1, step = 0.1)
                   	)))),
 
               	#########################################################################
@@ -496,7 +492,7 @@ mbitesGadget = function(...){
 		              #   column(3,selectInput("S_time_h_Option", label = "hours", choices = seq(0,24,1) , selected = 0)),
 		              #   column(3,selectInput("S_time_m_Option", label = "Minutes", choices = seq(0,55,5), selected = 30))
 		              #   ),
-                      helpText("The following parameters also can be set under 'Bouts' Panel"),
+                      #helpText("The following parameters also can be set under 'Bouts' Panel"),
     		              sliderInput(inputId = "S_succeed_Option", label ="Probability of Success",
     		                              value = 0.99, min = 0.9, max = 1, step = 0.01),
     		              sliderInput(inputId = "S_surv_Option", label ="Baseline Probability of Survival",
@@ -902,8 +898,8 @@ mbitesGadget = function(...){
 
     output$bm_Option_plot <- renderPlot({
       if(input$showBloodMeal_Option){
-        bm_a <- input$bm_mean_Option * input$bm_v_Option
-        bm_b <- (1 - input$bm_mean_Option) * input$bm_v_Option
+        bm_a <- input$bm_mean * input$bm_v
+        bm_b <- (1 - input$bm_mean) * input$bm_v
         curve(dbeta(x, bm_a, bm_b)/max(dbeta(x, bm_a, bm_b)),ylab = "Normalized Density", xlab = "Blood Meal Size", col = "Blue", lwd = 1.5)}
     })
 
@@ -911,8 +907,8 @@ mbitesGadget = function(...){
       if(input$overfeed_Option){
         # bm_a_Option <- input$bm_mean_Option * input$bm_v_Option
         # bm_b_Option <- (1 - input$bm_mean_Option) * input$bm_v_Option
-        a <- input$of_a_Option
-        b <- input$of_b_Option
+        a <- input$of_a
+        b <- input$of_b
         curve(exp(a * x)/(exp(a * x) + b),
           ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
     })
@@ -920,22 +916,22 @@ mbitesGadget = function(...){
 
     ################ Sugar Feeding ################################################
 
-    output$bm_plot <- renderPlot({
-      if(input$showBloodMeal){
-        bm_a <- input$bm_mean * input$bm_v
-        bm_b <- (1 - input$bm_mean) * input$bm_v
-        curve(dbeta(x, bm_a, bm_b)/max(dbeta(x, bm_a, bm_b)),ylab = "Normalized Density", xlab = "Blood Meal Size", col = "Blue", lwd = 1.5)}
-    })
+    # output$bm_plot <- renderPlot({
+    #   if(input$showBloodMeal){
+    #     bm_a <- input$bm_mean * input$bm_v
+    #     bm_b <- (1 - input$bm_mean) * input$bm_v
+    #     curve(dbeta(x, bm_a, bm_b)/max(dbeta(x, bm_a, bm_b)),ylab = "Normalized Density", xlab = "Blood Meal Size", col = "Blue", lwd = 1.5)}
+    # })
 
-    output$overfeeding_plot <- renderPlot({
-      if(input$overfeed){
-        # bm_a <- input$bm_mean * input$bm_v
-        # bm_b <- (1 - input$bm_mean) * input$bm_v
-        a <- input$of_a
-        b <- input$of_b
-        curve(exp(a * x)/(exp(a * x) + b),
-          ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
-    })
+    # output$overfeeding_plot <- renderPlot({
+    #   if(input$overfeed){
+    #     # bm_a <- input$bm_mean * input$bm_v
+    #     # bm_b <- (1 - input$bm_mean) * input$bm_v
+    #     a <- input$of_a
+    #     b <- input$of_b
+    #     curve(exp(a * x)/(exp(a * x) + b),
+    #       ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
+    # })
 
     
 
@@ -1393,34 +1389,38 @@ mbitesGadget = function(...){
               hr(),
               checkboxInput("showBloodMeal", "Blood Meal Size", FALSE),
               conditionalPanel(condition = "input.showBloodMeal",
-                wellPanel(
-                  # sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
-                  #         value = 7.5, min = 0, max = 20, step = 0.5),
-                  # sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
-                  #         value = 2.5, min = 0, max = 20, step = 0.5)
-                  sliderInput(inputId = "bm_mean", label ="Average blood meal Size",
-                          value = 0.5, min = 0, max = 1, step = 0.01),
-                  sliderInput(inputId = "bm_v", label ="Sample size for a blood meal Size: (a + b) in Beta(a,b)",
-                          value = 15, min = 0, max = 40, step = 0.5)
-                  )
+                helpText("Please set the parameters in Options - Blood Meal")
+                # wellPanel(
+                #   # # sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
+                #   # #         value = 7.5, min = 0, max = 20, step = 0.5),
+                #   # # sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
+                #   # #         value = 2.5, min = 0, max = 20, step = 0.5)
+                #   # sliderInput(inputId = "bm_mean", label ="Average blood meal Size",
+                #   #         value = 0.5, min = 0, max = 1, step = 0.01),
+                #   # sliderInput(inputId = "bm_v", label ="Sample size for a blood meal Size: (a + b) in Beta(a,b)",
+                #   #         value = 15, min = 0, max = 40, step = 0.5)
+                #   )
                 ),
               hr(),
               checkboxInput("overfeed", "Overfeed", FALSE),
               conditionalPanel(condition = "input.overfeed",
-                sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
-                  value = 8, min = 5, max = 10, step = 0.01),
-                sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
-                  value = 5000, min = 0, max = 10000, step = 100)),
+                helpText("Please set the parameters in Options - Blood Meal")
+                # sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
+                #   value = 8, min = 5, max = 10, step = 0.01),
+                # sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
+                #   value = 5000, min = 0, max = 10000, step = 100)
+                ),
               hr(),
               sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
                 value = 0, min = 0, max = 100, step = 1),
               sliderInput(inputId = "Q", label ="Human Blood Index",
                 value = 0.9, min = 0, max = 1, step = 0.1)
-              )),
-          column(6,
-            plotOutput(""),
-            plotOutput("bm_plot"),
-            plotOutput("overfeeding_plot")))
+              ))
+          # column(6,
+          #   plotOutput(""),
+          #   plotOutput("bm_plot"),
+          #   plotOutput("overfeeding_plot"))
+          )
         })
     output$panel_r <- renderUI({
         if (input$showR)
@@ -1505,18 +1505,20 @@ mbitesGadget = function(...){
               #sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.02, min = 0, max = 2, step = 0.01),
             wellPanel(
+              helpText("Please set the parameters in Options - Sugar Feeding")
               # h5("Mean Time Elapsed: "),
               #   fluidRow(
               #   column(6,selectInput("S_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
               #   column(6,selectInput("S_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
               #   ),
-              sliderInput(inputId = "S_succeed", label ="Probability of Success",
-                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-              sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",
-                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-              #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
-              sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-                              value = 0, min = 0, max = 100, step = 1)))
+              # sliderInput(inputId = "S_succeed", label ="Probability of Success",
+              #                 value = 0.99, min = 0.9, max = 1, step = 0.01),
+              # sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",
+              #                 value = 0.99, min = 0.9, max = 1, step = 0.01),
+              # #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+              # sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+              #                 value = 0, min = 0, max = 100, step = 1)
+              ))
     })
     output$panel_e <- renderUI({
         if (input$showE)
@@ -1613,9 +1615,10 @@ mbitesGadget = function(...){
                     	)),
                     checkboxInput("landscape_point_s", "{s}: Sugar Feeding Sites", TRUE),
                   
-                    checkboxInput("landscape_point_m", "{m}: Mating Sites", TRUE)),
-                    
-                checkboxInput("showKernels", "Kernels(Female)", FALSE),
+                    checkboxInput("landscape_point_m", "{m}: Mating Sites", TRUE))
+
+                ),
+              checkboxInput("showKernels", "Kernels(Female)", FALSE),
                 conditionalPanel(condition = "input.showKernels",
                   wellPanel(
                     helpText("f"),
@@ -1630,8 +1633,7 @@ mbitesGadget = function(...){
                     helpText("M"),
                     helpText("s")
                     )
-                  )
-                )),
+                  )),
               mainPanel(
                 tabsetPanel(
                 	id = "landscape_output",
