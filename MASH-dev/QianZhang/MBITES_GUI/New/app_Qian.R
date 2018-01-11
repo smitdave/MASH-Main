@@ -139,7 +139,7 @@ mbitesGadget = function(...){
                #    ),
 
                 #########################################################################
-                tabPanel("Waiting Time",
+                tabPanel("Resting Time",
                     tabsetPanel(
                       tabPanel("F",
                         column(4,
@@ -160,8 +160,12 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.F_dist == 'gamma'",
                           sliderInput("f_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
-                        ), 
+                          ),
+                        hr(),
+                        uiOutput('f_time_slider')
+  
+                        ),
+                        
                         column(6,
                           plotOutput("F_wt_plot_option")
                           )
@@ -186,7 +190,9 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.B_dist == 'gamma'",
                           sliderInput("b_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('b_time_slider')
                         ), 
                         column(6,
                           plotOutput("B_wt_plot_option")
@@ -203,16 +209,18 @@ mbitesGadget = function(...){
                         radioButtons("R_dist", "Distribution type:",
                           c("Exponentional" = "exp",
                             "Gamma" = "gamma"), inline = TRUE),
-                        conditionalPanel(condition = "input.R_dist == 'exp'",
-                          checkboxInput("R_diur", "Diurnal Pattern", FALSE)
-                          ),
+                        # conditionalPanel(condition = "input.R_dist == 'exp'",
+                        #   checkboxInput("R_diur", "Diurnal Pattern", FALSE)
+                        #   ),
                         # conditionalPanel(condition = "input.R_diur && input.R_dist == 'exp'",
                         #   sliderInput("R_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
                         #   sliderInput("R_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
                         #   ),
                         conditionalPanel(condition = "input.R_dist == 'gamma'",
                           sliderInput("r_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('r_time_slider')
                         ), 
                         column(6,
                           plotOutput("R_wt_plot_option")
@@ -238,7 +246,9 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.L_dist == 'gamma'",
                           sliderInput("l_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('l_time_slider')
                         ), 
                         column(6,
                           plotOutput("L_wt_plot_option")
@@ -264,7 +274,9 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.O_dist == 'gamma'",
                           sliderInput("o_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('o_time_slider')
                         ), 
                         column(6,
                           plotOutput("O_wt_plot_option")
@@ -290,64 +302,67 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.S_dist == 'gamma'",
                           sliderInput("s_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('s_time_slider')
                         ), 
                         column(6,
                           plotOutput("S_wt_plot_option")
                           )
-                        ),
-
-                      tabPanel("M",
-                        column(4,
-                        h5("Mean Time Elapsed: "),
-                        fluidRow(
-                        column(4,selectInput("M_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                        column(4,selectInput("M_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
-                        ),
-                        radioButtons("M_dist", "Distribution type:",
-                          c("Exponentional" = "exp",
-                            "Gamma" = "gamma"), inline = TRUE),
-                        # conditionalPanel(condition = "input.M_dist == 'exp'",
-                        #   checkboxInput("M_diur", "Diurnal Pattern", FALSE)
-                        #   ),
-                        # conditionalPanel(condition = "input.M_diur && input.M_dist == 'exp'",
-                        #   sliderInput("M_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
-                        #   sliderInput("M_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
-                        #   ),
-                        conditionalPanel(condition = "input.M_dist == 'gamma'",
-                          sliderInput("m_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
-                        ), 
-                        column(6,
-                          plotOutput("M_wt_plot_option")
-                          )
-                        ),
-
-                      tabPanel("E",
-                        column(4,
-                        h5("Mean Time Elapsed: "),
-                        fluidRow(
-                        column(4,selectInput("E_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                        column(4,selectInput("E_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
-                        ),
-                        radioButtons("E_dist", "Distribution type:",
-                          c("Exponentional" = "exp",
-                            "Gamma" = "gamma"), inline = TRUE),
-                        # conditionalPanel(condition = "input.E_dist == 'exp'",
-                        #   checkboxInput("E_diur", "Diurnal Pattern", FALSE)
-                        #   ),
-                        # conditionalPanel(condition = "input.E_diur && input.E_dist == 'exp'",
-                        #   sliderInput("E_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
-                        #   sliderInput("E_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
-                        #   ),
-                        conditionalPanel(condition = "input.E_dist == 'gamma'",
-                          sliderInput("e_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
-                        ), 
-                        column(6,
-                          plotOutput("E_wt_plot_option")
-                          )
                         )
+                      # ,
+
+                      # tabPanel("M",
+                      #   column(4,
+                      #   h5("Mean Time Elapsed: "),
+                      #   fluidRow(
+                      #   column(4,selectInput("M_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                      #   column(4,selectInput("M_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                      #   ),
+                      #   radioButtons("M_dist", "Distribution type:",
+                      #     c("Exponentional" = "exp",
+                      #       "Gamma" = "gamma"), inline = TRUE),
+                      #   # conditionalPanel(condition = "input.M_dist == 'exp'",
+                      #   #   checkboxInput("M_diur", "Diurnal Pattern", FALSE)
+                      #   #   ),
+                      #   # conditionalPanel(condition = "input.M_diur && input.M_dist == 'exp'",
+                      #   #   sliderInput("M_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
+                      #   #   sliderInput("M_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
+                      #   #   ),
+                      #   conditionalPanel(condition = "input.M_dist == 'gamma'",
+                      #     sliderInput("m_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                      #     )
+                      #   ), 
+                      #   column(6,
+                      #     plotOutput("M_wt_plot_option")
+                      #     )
+                      #   ),
+
+                      # tabPanel("E",
+                      #   column(4,
+                      #   h5("Mean Time Elapsed: "),
+                      #   fluidRow(
+                      #   column(4,selectInput("E_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                      #   column(4,selectInput("E_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                      #   ),
+                      #   radioButtons("E_dist", "Distribution type:",
+                      #     c("Exponentional" = "exp",
+                      #       "Gamma" = "gamma"), inline = TRUE),
+                      #   # conditionalPanel(condition = "input.E_dist == 'exp'",
+                      #   #   checkboxInput("E_diur", "Diurnal Pattern", FALSE)
+                      #   #   ),
+                      #   # conditionalPanel(condition = "input.E_diur && input.E_dist == 'exp'",
+                      #   #   sliderInput("E_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
+                      #   #   sliderInput("E_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
+                      #   #   ),
+                      #   conditionalPanel(condition = "input.E_dist == 'gamma'",
+                      #     sliderInput("e_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                      #     )
+                      #   ), 
+                      #   column(6,
+                      #     plotOutput("E_wt_plot_option")
+                      #     )
+                      #   )
                       )
                   ),
                 #############################################################################
@@ -706,268 +721,141 @@ mbitesGadget = function(...){
   #################### Option Output #####################################################
 
     ################## Waiting Time ###############################################
-
+    set.seed(123)
     output$F_wt_plot_option <- renderPlot({
       if(input$F_dist == "exp"){
-        # if(input$F_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$F_diur_now, peak = input$F_diur_peak)/max(rDiurnal(x, now = input$F_diur_now, peak = input$F_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
+      	f_t = as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60
+      	f_m = as.numeric(input$f_min_time)/60
+        curve(dexp(x, rate = 1/(f_t - f_m), log = FALSE)/
+          max(dexp(x, rate = 1/(f_t - f_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(f_m +24)))
         #}
       }else{
-        curve(dgamma(x, shape = input$f_wt_gamma_shape ,rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60 * input$f_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$f_wt_gamma_shape ,rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60 * input$f_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	f_t = as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60
+      	f_m = as.numeric(input$f_min_time)/60
+        curve(dgamma(x, shape = input$f_wt_gamma_shape ,rate = 1/(f_t - f_m), log = FALSE)/
+          max(dgamma(x, shape = input$f_wt_gamma_shape ,rate = 1/(f_t - f_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(f_m +24)))
       }
     })
 
     output$B_wt_plot_option <- renderPlot({
       if(input$B_dist == "exp"){
-        # if(input$B_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$B_diur_now, peak = input$B_diur_peak)/max(rDiurnal(x, now = input$B_diur_now, peak = input$B_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	b_t = as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60
+      	b_m = as.numeric(input$b_min_time)/60
+        curve(dexp(x, rate = 1/(b_t - b_m), log = FALSE)/
+          max(dexp(x, rate = 1/(b_t - b_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(b_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$b_wt_gamma_shape ,rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60 * input$b_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$b_wt_gamma_shape ,rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60 * input$b_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	b_t = as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60
+      	b_m = as.numeric(input$b_min_time)/60
+        curve(dgamma(x, shape = input$b_wt_gamma_shape ,rate = 1/(b_t - b_m), log = FALSE)/
+          max(dgamma(x, shape = input$b_wt_gamma_shape ,rate = 1/(b_t - b_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(b_m +24)))
       }
     })
 
     output$R_wt_plot_option <- renderPlot({
       if(input$R_dist == "exp"){
-        # if(input$R_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$R_diur_now, peak = input$R_diur_peak)/max(rDiurnal(x, now = input$R_diur_now, peak = input$R_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	r_t = as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60
+      	r_m = as.numeric(input$r_min_time)/60
+        curve(dexp(x, rate = 1/(r_t - r_m), log = FALSE)/
+          max(dexp(x, rate = 1/(r_t - r_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(r_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60 * input$r_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60 * input$r_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	r_t = as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60
+      	r_m = as.numeric(input$r_min_time)/60
+        curve(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(r_t - r_m), log = FALSE)/
+          max(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(r_t - r_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(r_m +24)))
       }
     })
 
     output$L_wt_plot_option <- renderPlot({
       if(input$L_dist == "exp"){
-        # if(input$L_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$L_diur_now, peak = input$L_diur_peak)/max(rDiurnal(x, now = input$L_diur_now, peak = input$L_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	l_t = as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60
+      	l_m = as.numeric(input$l_min_time)/60
+        curve(dexp(x, rate = 1/(l_t - l_m), log = FALSE)/
+          max(dexp(x, rate = 1/(l_t - l_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(l_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60 * input$l_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60 * input$l_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
-      }
-    })
-
-    output$R_wt_plot_option <- renderPlot({
-      if(input$R_dist == "exp"){
-        # if(input$R_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$R_diur_now, peak = input$R_diur_peak)/max(rDiurnal(x, now = input$R_diur_now, peak = input$R_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
-      }else{
-        curve(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60 * input$r_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60 * input$r_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
-      }
-    })
-
-    output$L_wt_plot_option <- renderPlot({
-      if(input$L_dist == "exp"){
-        # if(input$L_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$L_diur_now, peak = input$L_diur_peak)/max(rDiurnal(x, now = input$L_diur_now, peak = input$L_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
-      }else{
-        curve(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60 * input$l_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60 * input$l_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	l_t = as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60
+      	l_m = as.numeric(input$l_min_time)/60
+        curve(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(l_t - l_m), log = FALSE)/
+          max(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(l_t - l_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(l_m +24)))
       }
     })
 
     output$O_wt_plot_option <- renderPlot({
       if(input$O_dist == "exp"){
-        # if(input$O_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$O_diur_now, peak = input$R_diur_peak)/max(rDiurnal(x, now = input$O_diur_now, peak = input$O_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	o_t = as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60
+      	o_m = as.numeric(input$o_min_time)/60
+        curve(dexp(x, rate = 1/(o_t - o_m), log = FALSE)/
+          max(dexp(x, rate = 1/(o_t - o_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(o_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$o_wt_gamma_shape ,rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60 * input$o_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$o_wt_gamma_shape ,rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60 * input$o_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	o_t = as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60
+      	o_m = as.numeric(input$o_min_time)/60
+        curve(dgamma(x, shape = input$o_wt_gamma_shape ,rate = 1/(o_t - o_m), log = FALSE)/
+          max(dgamma(x, shape = input$o_wt_gamma_shape ,rate = 1/(o_t - o_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(o_m +24)))
       }
     })
 
     output$S_wt_plot_option <- renderPlot({
       if(input$S_dist == "exp"){
-        # if(input$S_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$S_diur_now, peak = input$S_diur_peak)/max(rDiurnal(x, now = input$S_diur_now, peak = input$S_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	s_t = as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60
+      	s_m = as.numeric(input$s_min_time)/60
+        curve(dexp(x, rate = 1/(s_t - s_m), log = FALSE)/
+          max(dexp(x, rate = 1/(s_t - s_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(s_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$s_wt_gamma_shape ,rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60 * input$s_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$s_wt_gamma_shape ,rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60 * input$s_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	s_t = as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60
+      	s_m = as.numeric(input$s_min_time)/60
+        curve(dgamma(x, shape = input$s_wt_gamma_shape ,rate = 1/(s_t - s_m), log = FALSE)/
+          max(dgamma(x, shape = input$s_wt_gamma_shape ,rate = 1/(s_t - s_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(s_m +24)))
       }
     })
 
-    output$M_wt_plot_option <- renderPlot({
-      if(input$M_dist == "exp"){
-        # if(input$M_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$M_diur_now, peak = input$M_diur_peak)/max(rDiurnal(x, now = input$M_diur_now, peak = input$M_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
-      }else{
-        curve(dgamma(x, shape = input$m_wt_gamma_shape ,rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60 * input$m_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$m_wt_gamma_shape ,rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60 * input$m_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
-      }
-    })
-
-    output$E_wt_plot_option <- renderPlot({
-      if(input$E_dist == "exp"){
-        # if(input$E_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$E_diur_now, peak = input$E_diur_peak)/max(rDiurnal(x, now = input$E_diur_now, peak = input$E_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
-      }else{
-        curve(dgamma(x, shape = input$e_wt_gamma_shape ,rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60 * input$e_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$e_wt_gamma_shape ,rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60 * input$e_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
-      }
-    })
 
     ################# Survival ####################################################
+    output$f_time_slider <- renderUI({
+    	sliderInput("f_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$F_time_h) * 60 + as.numeric(input$F_time_m)), 
+                        	value = round((as.numeric(input$F_time_h) * 60 + as.numeric(input$F_time_m)))/2, step = 1)
+    })
+    output$b_time_slider <- renderUI({
+    	sliderInput("b_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$B_time_h) * 60 + as.numeric(input$B_time_m)), 
+                        	value = round((as.numeric(input$B_time_h) * 60 + as.numeric(input$B_time_m)))/2, step = 1)
+    })
+    output$r_time_slider <- renderUI({
+    	sliderInput("r_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$R_time_h) * 60 + as.numeric(input$R_time_m)), 
+                        	value = round((as.numeric(input$R_time_h) * 60 + as.numeric(input$R_time_m)))/2, step = 1)
+    })
+    output$l_time_slider <- renderUI({
+    	sliderInput("l_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$L_time_h) * 60 + as.numeric(input$L_time_m)), 
+                        	value = round((as.numeric(input$L_time_h) * 60 + as.numeric(input$L_time_m)))/2, step = 1)
+    })
+    output$o_time_slider <- renderUI({
+    	sliderInput("o_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$O_time_h) * 60 + as.numeric(input$O_time_m)), 
+                        	value = round((as.numeric(input$O_time_h) * 60 + as.numeric(input$O_time_m)))/2, step = 1)
+    })
+    output$s_time_slider <- renderUI({
+    	sliderInput("s_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$S_time_h) * 60 + as.numeric(input$S_time_m)), 
+                        	value = round((as.numeric(input$S_time_h) * 60 + as.numeric(input$S_time_m)))/2, step = 1)
+    })
 
     output$flight_energetics_plot <- renderPlot({
         curve(exp(input$S_a * x)/(exp(input$S_a * x) + input$S_b), ylab = "Survival Probability", xlab = "Energy Reserves",
