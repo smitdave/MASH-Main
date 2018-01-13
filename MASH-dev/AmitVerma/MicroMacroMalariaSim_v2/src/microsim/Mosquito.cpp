@@ -47,7 +47,7 @@ Mosquito::~Mosquito() {
 }
 
 bool Mosquito::searchHouse (vector<Patch*> &patches) {
-	
+
 	for(int i=0; i< searchPatch->houses.size(); i++) {
 
 		House *hs = searchPatch->houses[i];
@@ -96,8 +96,8 @@ bool Mosquito::searchHouse () {
 }
 bool Mosquito::fly(bool searchHouse, bool reflect, double delta, double k, double time){
 	// Choose a direction
-	bool right = rand()%2;	
-	
+	bool right = rand()%2;
+
 	// Set i to mosquitos location in sorted locations vector and ySearchLine to take into account todays wind
 	int i;
 	double ySearchLine;
@@ -128,10 +128,10 @@ bool Mosquito::fly(bool searchHouse, bool reflect, double delta, double k, doubl
 		// Move along sorted locations vector
 		if(right) i++;
 		else i--;
-	
+
 		// Update currentLocation to location under consideration
 		currentLocation = sortedLocations[windForecast][i];
-		
+
 		// Search time
 		dayUsed += time;
 
@@ -139,20 +139,20 @@ bool Mosquito::fly(bool searchHouse, bool reflect, double delta, double k, doubl
               //  cout<<"\n"<<currentLocation.isPond;
               //    cout<<"\t"<<currentLocation.isHouse;
               //    cout<<"\t"<<windForecast<<"\t"<<i;
-		
+
 		// Skip if looking at a different type of location
 		if(searchHouse && !currentLocation->isHouse) continue;
 		else if(!searchHouse && currentLocation->isHouse) continue;
 
-		// Calculate y relative to wind for destination 	
+		// Calculate y relative to wind for destination
 		double y = sin(windForecast)*currentLocation->x + cos(windForecast)*currentLocation->y;
-		
+
 		// Skip if y of destination is below mosquitos current line of search
 		if(y < ySearchLine) continue;
-		
+
 		// Get y of destination relative to current location
 		y = abs(y - ySearchLine);
-		
+
 		// Get probability of choosing this location as the next destination
                 if(currentLocation->house==NULL) {
                    // cout<<"\ncurrentLocation.house=null";
@@ -234,8 +234,8 @@ bool Mosquito::flyToPond(double timePerSearch, int searchAlgo) {
 	do {
 		dayUsed = dayUsed + timePerSearch;
 		//currentLocation.setLocation(NULL,currentLocation.house->nearestPonds[(int)(((double) rand() / (double) RAND_MAX)*nSearchPond)]->loc->pond);
-		
-		
+
+
 //		cout<<"\n";
 //		cout<<"    mozzyID: "<<mozzyID;
 //		cout<<"    nSearchPond: "<<nSearchPond;
@@ -245,8 +245,8 @@ bool Mosquito::flyToPond(double timePerSearch, int searchAlgo) {
 //		if (currentLocation->pond!=NULL) cout<<"    current pond: "<<currentLocation->pond->pondID<<endl;
 //		cout<<"    patchID: "<<currentLocation->house->nearestPonds[selp]->loc->pond->patch->patchID<<endl;
 //		cout<<"    pondID: "<<currentLocation->house->nearestPonds[selp]->loc->pond->pondID<<endl;
-		
-		
+
+
 		//currentLocation = currentLocation->house->nearestPonds[(int)(((double) rand() / (double) RAND_MAX)*nSearchPond)]->loc;
 		double prbChoose = currentLocation->pond->pMozzyAttractIndex * 1000;
 		if ((double) rand() / (double) RAND_MAX < prbChoose) {
