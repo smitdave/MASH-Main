@@ -17,6 +17,9 @@
 #define _MACRO_PRNG_
 
 #include <random>
+#include <iostream>
+
+#include "MACRO-DEBUG.hpp"
 
 /* threadsafe prng singleton */
 class prng final {
@@ -34,9 +37,9 @@ public:
     int                                    get_rbinom(const int& n, const double& p);
 
 private:
-  /* default constructor & destructor */
-  prng() = default;
-  ~prng() = default;
+  /* constructor & destructor */
+  prng();
+  ~prng();
 
   /* delete all copy & move semantics */
   prng(const prng&) = delete;
@@ -46,6 +49,19 @@ private:
 
   std::mt19937                            rng;
   std::uniform_real_distribution<double>  runif;
+};
+
+/* constructor & destructor */
+prng::prng(){
+  #ifdef DEBUG_MACRO
+  std::cout << "prng being born at " << this << std::endl;
+  #endif
+};
+
+prng::~prng(){
+  #ifdef DEBUG_MACRO
+  std::cout << "prng being killed at " << this << std::endl;
+  #endif
 };
 
 /* utility methods */

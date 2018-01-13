@@ -6,3 +6,8 @@ test_human <- function() {
     invisible(.Call('_MACROv2_test_human', PACKAGE = 'MACROv2'))
 }
 
+#' @export
+test_prng <- function(seed_) {
+    invisible(.Call('_MACROv2_test_prng', PACKAGE = 'MACROv2', seed_))
+}
+
