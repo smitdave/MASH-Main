@@ -14,9 +14,20 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
+// test_prng
+void test_prng(const uint_least32_t& seed_);
+RcppExport SEXP _MACROv2_test_prng(SEXP seed_SEXP) {
+BEGIN_RCPP
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const uint_least32_t& >::type seed_(seed_SEXP);
+    test_prng(seed_);
+    return R_NilValue;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MACROv2_test_human", (DL_FUNC) &_MACROv2_test_human, 0},
+    {"_MACROv2_test_prng", (DL_FUNC) &_MACROv2_test_prng, 1},
     {NULL, NULL, 0}
 };
 
