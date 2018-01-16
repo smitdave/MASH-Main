@@ -12,10 +12,19 @@ lines(tt, lambda+0*tt, col = grey(0.5), lwd=2, lty=2)
 
 #plot(tt, exp(-lambda*2*((tt*2*pi*sin(2*pi*tt) + cos(2*pi*tt)-1)/(2*pi)^2)), type = "l")
 
+sinhaz = function(t){
+  #t^2 + t*sin(2*pi*t)/pi + cos(2*pi*t)/2/pi/pi - 1/2/pi/pi
+  t + sin(2*pi*t)/2/pi
+}
+
+plot(tt, lambda*tt, type = "l")
+lines(tt, sinhaz(tt), type = "l")
+
 plot(tt, exp(-lambda*tt), type = "l", col = grey(0.5), lwd=2, lty=2)
-#lines(tt, exp(-lambda*2*(tt^2/2 + (tt*2*pi*sin(2*pi*tt) + cos(2*pi*tt)-1)/(2*pi)^2)), type = "l")
+lines(tt, exp(-lambda*sinhaz(tt)), type = "l")
 
-lines(tt, exp(-lambda*(tt+sin(2*pi*tt)/2/pi)), type = "l", col = grey(0.5))
+#lines(tt, exp(-lambda*(tt+sin(2*pi*tt)/2/pi)), type = "l", col = grey(0.5))
 
-plot(exp(-lambda*tt), exp(-lambda*(tt+sin(2*pi*tt)/2/pi)), type = "l")
-segments(0,0,1,1)
+#plot(exp(-lambda*tt), exp(-lambda*(tt+sin(2*pi*tt)/2/pi)), type = "l")
+#segments(0,0,1,1)
+

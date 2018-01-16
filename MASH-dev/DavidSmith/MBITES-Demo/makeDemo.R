@@ -31,10 +31,10 @@ l.xy[,3] = rgamma(250,1,1)
 m.xy = cbind(m.xy, w=rgamma(10,1,1))
 s.xy = cbind(s.xy, w=rgamma(120,1,1))
 
-points(m.xy, pch=15, col = "orange", cex = m.xy[,3])
-points(f.xy, pch = 21, bg = "red", cex = f.xy[,3])
-points(l.xy, pch = 4, col = "blue", cex = l.xy[,3])
-points(s.xy, pch=6, col=grey(0.5), cex=s.xy[,3])
+points(m.xy, pch=15, col = "orange", cex = m.xy[,3]/2.5)
+points(f.xy, pch = 21, bg = "red", cex = f.xy[,3]/2.5)
+points(l.xy, pch = 4, col = "blue", cex = l.xy[,3]/2.5)
+points(s.xy, pch=6, col=grey(0.5), cex=s.xy[,3]/2.5)
 
 #points(s.xy, pch=15, col = "yellow")
 
