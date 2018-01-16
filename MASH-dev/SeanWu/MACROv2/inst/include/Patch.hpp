@@ -1,4 +1,5 @@
-
+#ifndef PATCH_MACRO
+#define PATCH_MACRO
 
 #include <iostream>
 #include <memory>
@@ -17,3 +18,5 @@ private:
 
   std::vector<humanP>                  humans;
 };
+
+#endif

@@ -15,6 +15,7 @@
 */
 
 #include "Human.hpp"
+#include "Events.hpp"
 
 /* constructor */
 human::human(const int& _id, const double& _age, tile* _tileP) : id(_id), alive(true), age(_age), tileP(_tileP) {
@@ -34,6 +35,8 @@ human::~human(){
 /* move operators */
 human::human(human&&) = default;
 human& human::operator=(human&&) = default;
+
+
 
 /* event queue */
 
