@@ -33,3 +33,5 @@ void InfectiousBite_pfsi::Fire(human_pfsi* human){
 double InfectiousBite_pfsi::ttInfectionPf(){
   return pfsi_parameters::instance()->get_LatentPf();
 }
+
+void InfectiousBite_pfsi::OnMessage(human_pfsi *human, const Message &message){};
