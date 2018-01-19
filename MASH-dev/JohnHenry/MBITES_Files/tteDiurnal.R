@@ -96,6 +96,7 @@ t = seq(0,7,.01)
 ## plotting to show dominance with constant c = 2.0495
 plot(t,gg(t,1),type="l")
 lines(t,c*GG(t,1))
+#polygon(c(t,rev(t)),c(gg(t,1),rev(c*GG(t,1))),col="red")
 
 
 tteDiurnal = function(N,lam){

@@ -2,84 +2,88 @@
 \contentsline {subsection}{\numberline {1.1}What is MBITES?}{4}
 \contentsline {subsection}{\numberline {1.2}What is MASH?}{4}
 \contentsline {subsection}{\numberline {1.3}What do I do with so many parameters?}{7}
-\contentsline {section}{\numberline {2}The Adult Female Mosquito: An Overview}{9}
-\contentsline {subsection}{\numberline {2.1}Running MBITES}{10}
-\contentsline {subsection}{\numberline {2.2}The {\em in Silico} Mosquito}{11}
-\contentsline {subsection}{\numberline {2.3}Behavioral States and Flight Bouts}{11}
-\contentsline {subsection}{\numberline {2.4}Options}{12}
-\contentsline {subsection}{\numberline {2.5}Implementation Notes}{13}
+\contentsline {section}{\numberline {2}Getting Started}{9}
+\contentsline {subsection}{\numberline {2.1}The Natural History of Mosquitoes}{9}
+\contentsline {subsection}{\numberline {2.2}Running MBITES}{10}
+\contentsline {subsection}{\numberline {2.3}The {\em in Silico} Mosquito}{11}
+\contentsline {subsection}{\numberline {2.4}Behavioral States and Flight Bouts}{12}
+\contentsline {subsection}{\numberline {2.5}Landing, Resting, and Survival}{12}
+\contentsline {subsection}{\numberline {2.6}Options}{13}
+\contentsline {subsection}{\numberline {2.7}Implementation Notes}{13}
 \contentsline {paragraph}{R-Code}{14}
-\contentsline {section}{\numberline {3}Landscape}{15}
-\contentsline {subsection}{\numberline {3.1}Overview}{15}
-\contentsline {subsubsection}{\numberline {3.1.1}Sites}{15}
-\contentsline {paragraph}{Mosquitoes}{15}
-\contentsline {subsubsection}{\numberline {3.1.2}Queues}{16}
-\contentsline {paragraph}{atRiskQ}{16}
-\contentsline {paragraph}{eggQ}{16}
-\contentsline {paragraph}{imagoQ}{16}
-\contentsline {paragraph}{matingQ}{16}
-\contentsline {subsection}{\numberline {3.2}Location, Search, \& Dispersion}{17}
-\contentsline {subsubsection}{\numberline {3.2.1}Options}{17}
-\contentsline {subsubsection}{\numberline {3.2.2}Implementation Notes}{17}
-\contentsline {paragraph}{Configuration}{17}
-\contentsline {subsection}{\numberline {3.3}Site Types}{18}
+\contentsline {section}{\numberline {3}Landscape}{16}
+\contentsline {subsection}{\numberline {3.1}Sites}{16}
+\contentsline {paragraph}{Mosquitoes}{16}
+\contentsline {subsection}{\numberline {3.2}Queues}{16}
+\contentsline {paragraph}{atRiskQ}{17}
+\contentsline {paragraph}{eggQ}{17}
+\contentsline {paragraph}{imagoQ}{17}
+\contentsline {paragraph}{matingQ}{17}
+\contentsline {subsection}{\numberline {3.3}Location, Search, \& Dispersion}{18}
 \contentsline {subsubsection}{\numberline {3.3.1}Options}{18}
-\contentsline {paragraph}{[0] Simple Site Type}{18}
-\contentsline {paragraph}{[1] The Homestead}{18}
-\contentsline {paragraph}{Configuration}{18}
-\contentsline {subsection}{\numberline {3.4}Resting Spot}{19}
+\contentsline {subsubsection}{\numberline {3.3.2}Implementation Notes}{18}
+\contentsline {subsection}{\numberline {3.4}Site Types and Resting Spot}{18}
+\contentsline {paragraph}{[0] Simple Site Type}{19}
+\contentsline {paragraph}{[1] The Homestead}{19}
 \contentsline {subsubsection}{\numberline {3.4.1}Options}{19}
-\contentsline {paragraph}{R Code}{19}
-\contentsline {subsection}{\numberline {3.5}The Blood Meal Host Environment}{19}
+\contentsline {subsubsection}{\numberline {3.4.2}Implementation Notes}{19}
+\contentsline {paragraph}{R Code}{20}
+\contentsline {subsection}{\numberline {3.5}The Blood Meal Host Environment}{20}
 \contentsline {subsubsection}{\numberline {3.5.1}Options}{20}
 \contentsline {paragraph}{Static Host Populations}{20}
+\contentsline {subsubsection}{\numberline {3.5.2}Implementation Notes}{20}
 \contentsline {subsection}{\numberline {3.6}Site-specific Hazards}{20}
-\contentsline {subsubsection}{\numberline {3.6.1}Options}{20}
-\contentsline {paragraph}{Configuration}{20}
-\contentsline {subsection}{\numberline {3.7}Making Landscapes}{20}
-\contentsline {paragraph}{I/O for Aquatic Habitats}{21}
-\contentsline {paragraph}{I/O for Sugar Sources}{21}
-\contentsline {paragraph}{I/O for Mating Sites}{21}
+\contentsline {subsubsection}{\numberline {3.6.1}Options}{21}
+\contentsline {paragraph}{Configuration}{21}
+\contentsline {subsection}{\numberline {3.7}Making Landscapes}{21}
+\contentsline {paragraph}{I/O for Aquatic Habitats}{22}
+\contentsline {paragraph}{I/O for Sugar Sources}{22}
+\contentsline {paragraph}{I/O for Mating Sites}{22}
 \contentsline {section}{\numberline {4}Resting Times}{22}
-\contentsline {paragraph}{Parsing}{22}
-\contentsline {section}{\numberline {5}Survival}{23}
-\contentsline {subsection}{\numberline {5.1}Flight Stress}{24}
-\contentsline {subsection}{\numberline {5.2}Senescence}{25}
-\contentsline {subsection}{\numberline {5.3}Physical and Physiological Damage}{26}
-\contentsline {subsubsection}{\numberline {5.3.1}Wing Tattering}{26}
-\contentsline {subsubsection}{\numberline {5.3.2}Physiological Damage}{27}
-\contentsline {section}{\numberline {6}Blood Feeding}{28}
-\contentsline {subsection}{\numberline {6.1}Blood Feeding Search Bout [F]}{28}
-\contentsline {paragraph}{Configuration}{28}
-\contentsline {paragraph}{Implementation}{28}
-\contentsline {paragraph}{Transition Probabilities}{29}
-\contentsline {paragraph}{R-Code}{29}
-\contentsline {subsection}{\numberline {6.2}Blood Feeding Attempt Bout [B]}{29}
-\contentsline {paragraph}{[B] Configuration}{30}
-\contentsline {paragraph}{Human Blood Meal}{30}
-\contentsline {paragraph}{Non-Human Blood Meal}{31}
-\contentsline {subsection}{\numberline {6.3}Pathogen Transmission}{31}
-\contentsline {section}{\numberline {7}The Blood Meal, Oogenesis, and Egg Maturation}{31}
-\contentsline {subsection}{\numberline {7.1}Post Prandial Resting Bout [R]}{31}
-\contentsline {subsection}{\numberline {7.2}Blood Meal Size}{32}
-\contentsline {subsubsection}{\numberline {7.2.1}Refeeding}{32}
-\contentsline {subsubsection}{\numberline {7.2.2}Overfeeding}{32}
-\contentsline {subsection}{\numberline {7.3}Egg Batch Size and Maturation}{32}
-\contentsline {paragraph}{Configuration Options}{33}
-\contentsline {section}{\numberline {8}Egg Laying}{33}
-\contentsline {subsection}{\numberline {8.1}Egg Laying Search Bout [L]}{33}
-\contentsline {paragraph}{Configuration}{34}
-\contentsline {subsection}{\numberline {8.2}Egg Laying Attempt Bout [O]}{34}
-\contentsline {section}{\numberline {9}Energetics and Sugar Feeding}{34}
-\contentsline {subsection}{\numberline {9.1}Flight Energetics}{34}
-\contentsline {subsection}{\numberline {9.2}Sugar Feeding}{35}
-\contentsline {subsubsection}{\numberline {9.2.1}[S] Sugar Feeding Bout}{35}
-\contentsline {subsubsection}{\numberline {9.2.2}Opportunistic Sugar Feeding}{36}
-\contentsline {paragraph}{Configuration}{36}
-\contentsline {section}{\numberline {10}Mating Bouts and Maturation}{37}
-\contentsline {subsection}{\numberline {10.1}[M] Mating Bout}{38}
-\contentsline {subsection}{\numberline {10.2}Male Mosquito Populations}{40}
-\contentsline {section}{\numberline {11}Estivation [E]}{41}
-\contentsline {section}{\numberline {12}Phenotypes, Inheritance and Evolution}{42}
-\contentsline {section}{\numberline {13}Aquatic Ecology}{43}
-\contentsline {section}{\numberline {14}The MBITES GUI}{44}
+\contentsline {subsection}{\numberline {4.1}Options}{23}
+\contentsline {paragraph}{Parsing}{23}
+\contentsline {section}{\numberline {5}Survival}{24}
+\contentsline {subsection}{\numberline {5.1}Flight Stress}{25}
+\contentsline {subsubsection}{\numberline {5.1.1}Implementation Notes}{25}
+\contentsline {subsection}{\numberline {5.2}Senescence}{26}
+\contentsline {subsection}{\numberline {5.3}Physical and Physiological Damage}{27}
+\contentsline {subsubsection}{\numberline {5.3.1}Wing Tattering}{27}
+\contentsline {subsubsection}{\numberline {5.3.2}Physiological Damage}{28}
+\contentsline {section}{\numberline {6}Blood Feeding}{29}
+\contentsline {subsection}{\numberline {6.1}Blood Feeding Search Bout [F]}{29}
+\contentsline {paragraph}{Configuration}{29}
+\contentsline {paragraph}{Implementation}{29}
+\contentsline {paragraph}{Transition Probabilities}{30}
+\contentsline {paragraph}{R-Code}{30}
+\contentsline {subsection}{\numberline {6.2}Blood Feeding Attempt Bout [B]}{30}
+\contentsline {paragraph}{[B] Configuration}{31}
+\contentsline {paragraph}{Human Blood Meal}{31}
+\contentsline {paragraph}{Non-Human Blood Meal}{32}
+\contentsline {subsection}{\numberline {6.3}Pathogen Transmission}{32}
+\contentsline {section}{\numberline {7}The Blood Meal, Oogenesis, and Egg Maturation}{32}
+\contentsline {subsection}{\numberline {7.1}Post Prandial Resting Bout [R]}{32}
+\contentsline {subsection}{\numberline {7.2}Blood Meal Size}{33}
+\contentsline {subsubsection}{\numberline {7.2.1}Refeeding}{33}
+\contentsline {subsubsection}{\numberline {7.2.2}Overfeeding}{33}
+\contentsline {subsection}{\numberline {7.3}Egg Batch Size and Maturation}{33}
+\contentsline {paragraph}{Configuration Options}{34}
+\contentsline {section}{\numberline {8}Egg Laying}{34}
+\contentsline {subsection}{\numberline {8.1}Egg Laying Search Bout [L]}{34}
+\contentsline {paragraph}{Configuration}{35}
+\contentsline {subsection}{\numberline {8.2}Egg Laying Attempt Bout [O]}{35}
+\contentsline {section}{\numberline {9}Energetics and Sugar Feeding}{35}
+\contentsline {subsection}{\numberline {9.1}Flight Energetics}{35}
+\contentsline {subsection}{\numberline {9.2}Sugar Feeding}{36}
+\contentsline {subsubsection}{\numberline {9.2.1}[S] Sugar Feeding Bout}{36}
+\contentsline {subsubsection}{\numberline {9.2.2}Opportunistic Sugar Feeding}{37}
+\contentsline {paragraph}{Configuration}{37}
+\contentsline {section}{\numberline {10}Mating Bouts and Maturation}{38}
+\contentsline {subsection}{\numberline {10.1}[M] Mating Bout}{39}
+\contentsline {subsection}{\numberline {10.2}Male Mosquito Populations}{41}
+\contentsline {section}{\numberline {11}Estivation [E]}{42}
+\contentsline {section}{\numberline {12}Phenotypes, Inheritance and Evolution}{43}
+\contentsline {section}{\numberline {13}Aquatic Ecology}{44}
+\contentsline {subsection}{\numberline {13.1}Emerge}{44}
+\contentsline {subsection}{\numberline {13.2}EL4P}{44}
+\contentsline {section}{\numberline {14}The MBITES GUI}{45}
+\contentsline {section}{\numberline {15}Analysis}{46}
