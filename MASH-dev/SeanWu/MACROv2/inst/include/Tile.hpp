@@ -14,6 +14,9 @@
  * ################################################################################
 */
 
+#ifndef TILE_MACRO
+#define TILE_MACRO
+
 #include <vector>
 #include <memory>
 
@@ -34,3 +37,5 @@ private:
   std::vector<humanP>                 Humans;
 
 };
+
+#endif

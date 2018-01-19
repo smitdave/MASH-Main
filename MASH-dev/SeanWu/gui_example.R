@@ -1,6 +1,10 @@
+# example for GUI
+
 ################################################################################################################
-# Bionomics Plotly Routines
+# 
+# functions to do plots
 # HMSC,SLW
+# 
 ################################################################################################################
 
 ###############################################################################
@@ -102,3 +106,87 @@ circlizeStatesTransitionMatrix <- function(history, stateSpace = c("D","M","F","
   colors=c("#555555","#95E455","pink","red","purple","cyan","blue","yellow","grey")
   chordDiagramFromMatrix(transitions,directional=1,grid.col=colors,direction.type="arrows",self.link=2)
 }
+
+
+################################################################################################################
+# 
+# make plots
+# 
+################################################################################################################
+
+library(stringr)
+library(chorddiag)
+library(jsonlite)
+library(markovchain)
+library(circlize)
+library(ggplot2)
+library(gridExtra)
+library(plotly)
+library(igraph)
+library(igraph)
+library(reshape2)
+library(RColorBrewer)
+# if you do not have chorddiag, use: devtools::install_github("mattflor/chorddiag")
+
+mosquito_dir = "/Users/slwu89/Desktop/MBITES/lscape1/MOSQUITO/" # wherever the json files are
+
+# files from each simulation
+files_l = system(command = paste0("ls ",mosquito_dir),intern = TRUE)
+hist_l = files_l[grep(pattern = "History",x = files_l)] # individual json histories
+pop_l = files_l[grep(pattern = "Pop",x = files_l)] # population csv
+
+# output
+mHist = fromJSON(txt = paste0(mosquito_dir,hist_l),flatten = FALSE,simplifyVector=FALSE)
+mPop = read.table(file = paste0(mosquito_dir,pop_l),header = TRUE,sep = ",")
+
+nullIx = which(vapply(X = mHist,FUN = function(x){x$ID[[1]]},FUN.VALUE = character(1)) == "NULL")
+mHist = mHist[-nullIx]
+
+axisSize = 12
+titleSize = 14.5
+
+lifespans = bionomics_lifespan(mHist)
+lifespans_plot = ggplot(data = data.frame(lifespan=lifespans)) +
+  geom_histogram(aes(lifespan),fill=rgb(0,.5,.5,.5)) +
+  theme_bw() + 
+  theme(panel.grid.minor = element_blank(),
+        axis.title=element_text(size=axisSize),
+        plot.title = element_text(size=titleSize)) +
+  guides(fill = FALSE) + 
+  labs(x="Days",y="Frequency",title="Mosquito Lifespans")
+
+BMintervals = bionomics_BMinterval(mHist)
+BMintervals_plot = ggplot(data = data.frame(BMinterval=BMintervals)) +
+  geom_histogram(aes(BMinterval), fill = rgb(0,.5,0,.5)) +
+  theme_bw() + 
+  theme(panel.grid.minor = element_blank(),
+        axis.title=element_text(size=axisSize),
+        plot.title = element_text(size=titleSize)) +
+  guides(fill = FALSE) + 
+  labs(x="Days",y="Frequency",title="Bloodmeal Interval")
+
+vectorialCapacity = bionomics_vc(mHist,eip = 8)
+vectorialCapacity_plot = ggplot(data = data.frame(vectorialCapacity=vectorialCapacity)) +
+  geom_histogram(aes(vectorialCapacity), fill = rgb(0,.5,0,.5),stat = "count") +
+  scale_x_continuous(breaks=0:(max(vectorialCapacity)+2)) + 
+  theme_bw() + 
+  theme(panel.grid.minor = element_blank(),
+        axis.title=element_text(size=axisSize),
+        plot.title = element_text(size=titleSize)) +
+  guides(fill = FALSE) + 
+  labs(x="Vectorial Capacity",y="Frequency",title="Individual Vectorial Capacity")
+
+HumanBMs = bionomics_HumanBM(mHist)
+HumanBMs_plot = ggplot(data = data.frame(HumanBM=HumanBMs)) +
+  geom_histogram(aes(HumanBM), fill = rgb(1,0,0,0.5),stat = "count") +
+  scale_x_continuous(breaks=0:(max(HumanBMs)+2)) + 
+  theme_bw() + 
+  theme(panel.grid.minor = element_blank(),
+        axis.title=element_text(size=axisSize),
+        plot.title = element_text(size=titleSize)) +
+  guides(fill = FALSE) + 
+  labs(x="Count",y="Frequency",title="Human Bloodmeals")
+
+grid.arrange(BMintervals_plot,HumanBMs_plot,lifespans_plot,vectorialCapacity_plot,nrow=2)
+
+circlizeStatesTransitionMatrix(history = mHist)

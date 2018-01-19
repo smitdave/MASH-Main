@@ -15,10 +15,11 @@
 */
 
 #include "Human.hpp"
+#include "Events.hpp"
 
 /* constructor */
 human::human(const int& _id, const double& _age, tile* _tileP) : id(_id), alive(true), age(_age), tileP(_tileP) {
-  EventQ.reserve(100);
+  EventQ.reserve(10);
   #ifdef DEBUG_MACRO
   std::cout << "human " << id << " being born at " << this << std::endl;
   #endif
@@ -34,6 +35,8 @@ human::~human(){
 /* move operators */
 human::human(human&&) = default;
 human& human::operator=(human&&) = default;
+
+
 
 /* event queue */
 

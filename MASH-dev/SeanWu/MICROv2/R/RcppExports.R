@@ -2,7 +2,7 @@
 # Generator token: 10BE3573-1514-4C36-9D1C-5A225CD40393
 
 #' @export
-rcpp_hello_world <- function() {
-    .Call('_MICROv2_rcpp_hello_world', PACKAGE = 'MICROv2')
+test_rcpp <- function() {
+    invisible(.Call('_MICROv2_test_rcpp', PACKAGE = 'MICROv2'))
 }
 
