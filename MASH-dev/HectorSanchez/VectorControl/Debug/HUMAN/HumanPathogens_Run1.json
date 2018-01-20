@@ -1,0 +1,737 @@
+{
+  "63_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 33.094],
+    "vectorInf": ["init", "initInf"]
+  },
+  "59_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 40.8456],
+    "vectorInf": ["init", "initInf"]
+  },
+  "45_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 13.795],
+    "vectorInf": ["init", "initInf"]
+  },
+  "31_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.6038],
+    "vectorInf": ["init", "initInf"]
+  },
+  "27_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 21.7601],
+    "vectorInf": ["init", "initInf"]
+  },
+  "9_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 1.9868],
+    "vectorInf": ["init", "initInf"]
+  },
+  "13_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 5.373],
+    "vectorInf": ["init", "initInf"]
+  },
+  "135_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 30.1014],
+    "vectorInf": ["init", "initInf"]
+  },
+  "121_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 31.6833],
+    "vectorInf": ["init", "initInf"]
+  },
+  "117_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 63.4489],
+    "vectorInf": ["init", "initInf"]
+  },
+  "92_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 0.0453],
+    "vectorInf": ["init", "initInf"]
+  },
+  "103_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 26.8002],
+    "vectorInf": ["init", "initInf"]
+  },
+  "88_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 20.375],
+    "vectorInf": ["init", "initInf"]
+  },
+  "74_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 5.567],
+    "vectorInf": ["init", "initInf"]
+  },
+  "60_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.6791],
+    "vectorInf": ["init", "initInf"]
+  },
+  "56_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "42_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 0.2594],
+    "vectorInf": ["init", "initInf"]
+  },
+  "38_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 33.6182],
+    "vectorInf": ["init", "initInf"]
+  },
+  "24_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 15.6806],
+    "vectorInf": ["init", "initInf"]
+  },
+  "6_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 13.0039],
+    "vectorInf": ["init", "initInf"]
+  },
+  "10_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.9652],
+    "vectorInf": ["init", "initInf"]
+  },
+  "146_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 18.3989],
+    "vectorInf": ["init", "initInf"]
+  },
+  "132_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 58.1457],
+    "vectorInf": ["init", "initInf"]
+  },
+  "128_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 1.2959],
+    "vectorInf": ["init", "initInf"]
+  },
+  "114_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 17.5335],
+    "vectorInf": ["init", "initInf"]
+  },
+  "99_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 46.8254],
+    "vectorInf": ["init", "initInf"]
+  },
+  "100_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.5313],
+    "vectorInf": ["init", "initInf"]
+  },
+  "85_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 7.6054],
+    "vectorInf": ["init", "initInf"]
+  },
+  "71_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 36.7221],
+    "vectorInf": ["init", "initInf"]
+  },
+  "67_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 18.8367],
+    "vectorInf": ["init", "initInf"]
+  },
+  "53_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "49_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 22.7947],
+    "vectorInf": ["init", "initInf"]
+  },
+  "35_1": {
+    "events": ["init", "S"],
+    "eventT": [-1, 0],
+    "vectorInf": ["init"]
+  },
+  "21_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 38.5351],
+    "vectorInf": ["init", "initInf"]
+  },
+  "17_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 7.1424],
+    "vectorInf": ["init", "initInf"]
+  },
+  "3_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 40.8968],
+    "vectorInf": ["init", "initInf"]
+  },
+  "143_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 20.0169],
+    "vectorInf": ["init", "initInf"]
+  },
+  "139_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 3.47],
+    "vectorInf": ["init", "initInf"]
+  },
+  "125_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 10.7648],
+    "vectorInf": ["init", "initInf"]
+  },
+  "111_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 0.4922],
+    "vectorInf": ["init", "initInf"]
+  },
+  "96_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 27.0735],
+    "vectorInf": ["init", "initInf"]
+  },
+  "107_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 24.6646],
+    "vectorInf": ["init", "initInf"]
+  },
+  "82_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 4.721],
+    "vectorInf": ["init", "initInf"]
+  },
+  "78_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 3.1888],
+    "vectorInf": ["init", "initInf"]
+  },
+  "64_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 36.3644],
+    "vectorInf": ["init", "initInf"]
+  },
+  "50_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "46_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 50.5794],
+    "vectorInf": ["init", "initInf"]
+  },
+  "32_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 13.1194],
+    "vectorInf": ["init", "initInf"]
+  },
+  "28_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "14_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 58.0859],
+    "vectorInf": ["init", "initInf"]
+  },
+  "140_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 6.712],
+    "vectorInf": ["init", "initInf"]
+  },
+  "136_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 10.6708],
+    "vectorInf": ["init", "initInf"]
+  },
+  "122_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "118_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 10.0741, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "93_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.838],
+    "vectorInf": ["init", "initInf"]
+  },
+  "104_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 5.2102],
+    "vectorInf": ["init", "initInf"]
+  },
+  "89_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 27.546],
+    "vectorInf": ["init", "initInf"]
+  },
+  "75_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 29.7781],
+    "vectorInf": ["init", "initInf"]
+  },
+  "61_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 18.8388],
+    "vectorInf": ["init", "initInf"]
+  },
+  "57_1": {
+    "events": ["init", "S"],
+    "eventT": [-1, 0],
+    "vectorInf": ["init"]
+  },
+  "43_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 1.6775],
+    "vectorInf": ["init", "initInf"]
+  },
+  "39_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 8.8692],
+    "vectorInf": ["init", "initInf"]
+  },
+  "25_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 0.5546],
+    "vectorInf": ["init", "initInf"]
+  },
+  "7_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 18.6351],
+    "vectorInf": ["init", "initInf"]
+  },
+  "11_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "147_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 33.1172],
+    "vectorInf": ["init", "initInf"]
+  },
+  "133_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 15.5272],
+    "vectorInf": ["init", "initInf"]
+  },
+  "129_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 20.2034],
+    "vectorInf": ["init", "initInf"]
+  },
+  "115_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 1.2888],
+    "vectorInf": ["init", "initInf"]
+  },
+  "90_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 6.9061],
+    "vectorInf": ["init", "initInf"]
+  },
+  "101_1": {
+    "events": ["init", "S"],
+    "eventT": [-1, 0],
+    "vectorInf": ["init"]
+  },
+  "86_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.3634],
+    "vectorInf": ["init", "initInf"]
+  },
+  "72_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 9.8424],
+    "vectorInf": ["init", "initInf"]
+  },
+  "68_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 3.5084],
+    "vectorInf": ["init", "initInf"]
+  },
+  "54_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 13.0559],
+    "vectorInf": ["init", "initInf"]
+  },
+  "40_1": {
+    "events": ["init", "S"],
+    "eventT": [-1, 0],
+    "vectorInf": ["init"]
+  },
+  "36_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 31.8482],
+    "vectorInf": ["init", "initInf"]
+  },
+  "22_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 27.4439],
+    "vectorInf": ["init", "initInf"]
+  },
+  "18_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 16.1255],
+    "vectorInf": ["init", "initInf"]
+  },
+  "4_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 48.3227],
+    "vectorInf": ["init", "initInf"]
+  },
+  "144_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 42.373],
+    "vectorInf": ["init", "initInf"]
+  },
+  "130_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 43.9264],
+    "vectorInf": ["init", "initInf"]
+  },
+  "126_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 38.6974],
+    "vectorInf": ["init", "initInf"]
+  },
+  "112_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 0.5485],
+    "vectorInf": ["init", "initInf"]
+  },
+  "97_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 38.0937],
+    "vectorInf": ["init", "initInf"]
+  },
+  "108_1": {
+    "events": ["init", "S"],
+    "eventT": [-1, 0],
+    "vectorInf": ["init"]
+  },
+  "83_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.7722],
+    "vectorInf": ["init", "initInf"]
+  },
+  "79_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 11.5267],
+    "vectorInf": ["init", "initInf"]
+  },
+  "65_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 3.9997],
+    "vectorInf": ["init", "initInf"]
+  },
+  "51_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 25.1295],
+    "vectorInf": ["init", "initInf"]
+  },
+  "47_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 5.3255],
+    "vectorInf": ["init", "initInf"]
+  },
+  "33_1": {
+    "events": ["init", "S"],
+    "eventT": [-1, 0],
+    "vectorInf": ["init"]
+  },
+  "29_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 4.6839],
+    "vectorInf": ["init", "initInf"]
+  },
+  "15_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 25.9627],
+    "vectorInf": ["init", "initInf"]
+  },
+  "1_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 11.159],
+    "vectorInf": ["init", "initInf"]
+  },
+  "141_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 27.8448],
+    "vectorInf": ["init", "initInf"]
+  },
+  "137_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 22.5673],
+    "vectorInf": ["init", "initInf"]
+  },
+  "123_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 5.6154],
+    "vectorInf": ["init", "initInf"]
+  },
+  "119_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 27.0293],
+    "vectorInf": ["init", "initInf"]
+  },
+  "94_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 4.6085],
+    "vectorInf": ["init", "initInf"]
+  },
+  "105_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.4597],
+    "vectorInf": ["init", "initInf"]
+  },
+  "80_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 34.8136],
+    "vectorInf": ["init", "initInf"]
+  },
+  "76_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 6.7814],
+    "vectorInf": ["init", "initInf"]
+  },
+  "62_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 7.1005],
+    "vectorInf": ["init", "initInf"]
+  },
+  "58_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 4.6004],
+    "vectorInf": ["init", "initInf"]
+  },
+  "44_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 9.3363],
+    "vectorInf": ["init", "initInf"]
+  },
+  "30_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.9655],
+    "vectorInf": ["init", "initInf"]
+  },
+  "26_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 0.3464],
+    "vectorInf": ["init", "initInf"]
+  },
+  "8_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 10.3719, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "12_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "134_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 12.2508],
+    "vectorInf": ["init", "initInf"]
+  },
+  "120_1": {
+    "events": ["init", "S"],
+    "eventT": [-1, 0],
+    "vectorInf": ["init"]
+  },
+  "116_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 10.3377],
+    "vectorInf": ["init", "initInf"]
+  },
+  "91_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "102_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 1.8362],
+    "vectorInf": ["init", "initInf"]
+  },
+  "87_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 28.9667],
+    "vectorInf": ["init", "initInf"]
+  },
+  "73_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 30.0241],
+    "vectorInf": ["init", "initInf"]
+  },
+  "69_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 8.2728],
+    "vectorInf": ["init", "initInf"]
+  },
+  "55_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 20.6784],
+    "vectorInf": ["init", "initInf"]
+  },
+  "41_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 16.8666],
+    "vectorInf": ["init", "initInf"]
+  },
+  "37_1": {
+    "events": ["init", "I", "F", "S"],
+    "eventT": [-1, 0, 10, 30.119],
+    "vectorInf": ["init", "initInf"]
+  },
+  "23_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 4.208],
+    "vectorInf": ["init", "initInf"]
+  },
+  "19_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 15.7135],
+    "vectorInf": ["init", "initInf"]
+  },
+  "5_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 20.8588],
+    "vectorInf": ["init", "initInf"]
+  },
+  "145_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "131_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 7.9621],
+    "vectorInf": ["init", "initInf"]
+  },
+  "127_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 5.1458],
+    "vectorInf": ["init", "initInf"]
+  },
+  "113_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 12.7534],
+    "vectorInf": ["init", "initInf"]
+  },
+  "98_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 12.9769],
+    "vectorInf": ["init", "initInf"]
+  },
+  "109_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 48.1745],
+    "vectorInf": ["init", "initInf"]
+  },
+  "84_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 93.7298],
+    "vectorInf": ["init", "initInf"]
+  },
+  "70_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 2.847],
+    "vectorInf": ["init", "initInf"]
+  },
+  "66_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 9.7236],
+    "vectorInf": ["init", "initInf"]
+  },
+  "52_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 1.1468],
+    "vectorInf": ["init", "initInf"]
+  },
+  "48_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 3.754],
+    "vectorInf": ["init", "initInf"]
+  },
+  "34_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 0.7877],
+    "vectorInf": ["init", "initInf"]
+  },
+  "20_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "16_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 9.7601],
+    "vectorInf": ["init", "initInf"]
+  },
+  "2_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 42.3478],
+    "vectorInf": ["init", "initInf"]
+  },
+  "142_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 120.3291],
+    "vectorInf": ["init", "initInf"]
+  },
+  "138_1": {
+    "events": ["init", "I", "F", "S", "P", "S"],
+    "eventT": [-1, 0, 10, 11, 11, 43],
+    "vectorInf": ["init", "initInf"]
+  },
+  "124_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 0.915],
+    "vectorInf": ["init", "initInf"]
+  },
+  "110_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 10.8711],
+    "vectorInf": ["init", "initInf"]
+  },
+  "95_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 4.7724],
+    "vectorInf": ["init", "initInf"]
+  },
+  "106_1": {
+    "events": ["init", "S"],
+    "eventT": [-1, 0],
+    "vectorInf": ["init"]
+  },
+  "81_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 1.9176],
+    "vectorInf": ["init", "initInf"]
+  },
+  "77_1": {
+    "events": ["init", "I", "S"],
+    "eventT": [-1, 0, 5.0831],
+    "vectorInf": ["init", "initInf"]
+  }
+}
