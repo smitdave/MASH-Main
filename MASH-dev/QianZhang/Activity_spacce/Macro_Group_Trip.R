@@ -167,7 +167,7 @@ returnHome <- function(tEvent, PAR){
   self$accumulate_bWeightHuman() # increment the biting weight where I go to
   
   # queue up my next trip
-  tDest = sample(x = 1:private$TilePointer$get_nPatch(),size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight()) # choose where i go
+  tDest = sample(x = 1:DestSites,size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight()) # choose where i go
   tTrip = tEvent + rexp(n=1,rate=private$tripFrequency) # choose when i go
   PAR = list(tDest=tDest)
   self$add2Q_takeTrip(tEvent = tTrip,PAR = PAR)
