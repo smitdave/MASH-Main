@@ -9,8 +9,8 @@ rm(list = ls())
 library(stringr)
 
 ### Input job_ids ###
-job_id_list <- c(159754607, 159754608, 159754610, 159754612)
-unique_id <- "_vary_n_patches" # Unique ID to be appended to end of results file
+job_id_list <- c(162314631, 162314632, 162314633, 162314634, 162314636, 162314637)
+unique_id <- "_vary_n_humans_3" # Unique ID to be appended to end of results file
 
 
 ### Create data frame to store results ###
@@ -36,4 +36,4 @@ for (job_id in job_id_list) {
   i <- i+1
 }
 
-write.csv(x = job_run_info, file = paste0(getwd(), "/BM_results/job_run_info", unique_id, ".csv"))
+write.csv(x = job_run_info, file = paste0("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Benchmarking", "/BM_results/job_run_info", unique_id, ".csv"))

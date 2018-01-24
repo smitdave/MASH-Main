@@ -8,16 +8,16 @@
 rm(list = ls())
 library(ggplot2)
 
-data <- read.csv("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/job_run_info_vary_n_patches.csv")
+data <- read.csv("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/job_run_info_vary_n_humans_2.csv")
 
 ### Specify x values for graph (name and value) ###
-x_var_text <- "n_patches"
-x_var_value <- c(10,100,1000,10000)
+x_var_text <- "n_humans"
+x_var_value <- c(1000,3000,10000,30000,100000,200000,300000)
 
-subtitle <- "Vary over n_patches, constant total population"
+subtitle <- "Vary over n_humans"
 
 ### Open pdf device to write to pdf ###
-pdf(file = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches.pdf", width = 6, height = 6)
+# pdf(file = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches.pdf", width = 6, height = 6)
 
 runtime_plot <- ggplot(data,
                  aes(x = log(x_var_value),
@@ -51,4 +51,4 @@ memory_plot +
   geom_smooth(method = "lm")
 
 ### Turn off pdf device, write to file ###
-dev.off()
+# dev.off()

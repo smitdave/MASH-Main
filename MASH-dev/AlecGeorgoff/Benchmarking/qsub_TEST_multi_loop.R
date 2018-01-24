@@ -31,7 +31,7 @@ slots <- 8
 data_directory <- "/share/scratch/users/georgoff/benchmarking_results/" # Location for output folders to be created
 shell <- "mash_shell_script.sh" # Shell script for MASH runs
 script <- "TEST-MACRO-BENCHMARK.R" # Script to run in each qsub
-optional_identifier <- "_weekend_run_2" # Put an identifier if running a job with the same parameters as a previously completed job (i.e. "_run2")
+optional_identifier <- "_monday_run_2" # Put an identifier if running a job with the same parameters as a previously completed job (i.e. "_run2")
 # WARNING: If optional_identifier is NOT included, results from previous runs that have identical parameters will be overwritten!!!
 
 ### Create flags for which parameter to vary over ###
@@ -51,7 +51,7 @@ if (vary_over_multi) {
     
     output_folder <- paste0("nh_", n_humans[i], "_np_", n_patches[i], "_tMax_", tMax[i], optional_identifier)
     
-    sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -l mem_free=", mem, "G -hold_jid ", holds)
+    sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -P proj_mmc", " -l mem_free=", mem, "G -hold_jid ", holds)
     args <- paste("--args", n_humans[i], n_patches[i], tMax[i], data_directory, output_folder)
     # This is a shell script, says which R to use, and passes arguments to the R script
     shell <- shell # [not necessary, just for clarity]
@@ -77,7 +77,7 @@ if (vary_over_n_humans) {
 
     output_folder <- paste0("nh_", n, "_np_", n_patches, "_tMax_", tMax, optional_identifier)
     
-    sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -l mem_free=", mem, "G -hold_jid ", holds)
+    sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -P proj_mmc", " -l mem_free=", mem, "G -hold_jid ", holds)
     args <- paste("--args", n, n_patches, tMax, data_directory, output_folder)
     # This is a shell script, says which R to use, and passes arguments to the R script
     shell <- shell # [not necessary, just for clarity]
@@ -103,7 +103,7 @@ if (vary_over_n_patches) {
 
     output_folder <- paste0("nh_", n_humans, "_np_", n, "_tMax_", tMax, optional_identifier)
     
-    sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -l mem_free=", mem, "G -hold_jid ", holds)
+    sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -P proj_mmc", " -l mem_free=", mem, "G -hold_jid ", holds)
     args <- paste("--args", n_humans, n, tMax, data_directory, output_folder)
     # This is a shell script, says which R to use, and passes arguments to the R script
     shell <- shell # [not necessary, just for clarity]
@@ -129,7 +129,7 @@ if (vary_over_tMax) {
 
     output_folder <- paste0("nh_", n_humans, "_np_", n_patches, "_tMax_", n, optional_identifier)
     
-    sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -l mem_free=", mem, "G -hold_jid ", holds)
+    sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -P proj_mmc", " -l mem_free=", mem, "G -hold_jid ", holds)
     args <- paste("--args", n_humans, n_patches, n, data_directory, output_folder)
     # This is a shell script, says which R to use, and passes arguments to the R script
     shell <- shell # [not necessary, just for clarity]
