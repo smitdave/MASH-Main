@@ -1,0 +1,234 @@
+<!doctype html>
+<html>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<head>
+
+	<!-- MASH Fonts -->
+	<style>
+	/* @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+	@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz); */
+	</style>
+	<!-- MASH Fonts -->
+	<style>
+	div.img_holder img
+		{
+				float: left;
+				padding: 50px;
+		}
+	</style>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/ucsf.css">
+	<link rel="stylesheet" href="lib/css/codeHighlighter.css">
+	<title>MBPT @ EpiRetreat</title>
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement( 'link' );
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+	<script src="./lib/w3.js"></script>
+</head>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<body>
+	<div class="reveal">
+		<!--<img src="./images/logos.png" alt="ITESM" height="50px"  style="border-radius: 5px; position: fixed; left: 25px;bottom: 25px; z-index: 10;   border-radius:5px; border-color:#000; border-width: 0px; border-style: solid" >-->
+		<div class="slides">
+			<section data-background="./images/NetworkBackground.png">
+
+
+				<!-- TITLE SPLASH BEGIN -->
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle style="font-size:45px">Consider a spherical mosquito...</sectionTitleStyle><br>
+					<p>Mathematical Models of Mosquito-borne Pathogen Transmission</p>
+					<!--<p style="font-size:20px; color:#555;">Mosquito Gene Drive Explorer</p>-->
+					<img src="./images/header.png" style="width:75%; border-radius: 5px;">
+					<br>
+
+					<ol style="font-size:21px; color:#052049;">
+					   <li> University of California, Berkeley
+					         <ul style="font-size:17px; color:#555;">Sean Wu, Biyonka Liang, Héctor M. Sánchez C., John M. Marshall</ul>
+					   </li><!-- close list item containing nested list -->
+
+						 <li> Institute for Health Metrics and Evaluation, Seattle
+								<ul style="font-size:17px; color:#555;">Daniel Citron, Qian Zhang, John Michael Henry, David L. Smith</ul>
+						 </li><!-- close list item containing nested list -->
+					</ol>
+
+				</section>
+				<!-- TITLE SPLASH END -->
+
+				<!-- SLIDE 1 BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Agenda</sectionTitleStyle><br><br>
+					<p3>1. Theory of Mosquito-borne Pathogen Transmission</p3><br>
+					<p3>2. Relevant Quantitative Measures of Transmission</p3><br>
+					<p3>3. Simulating Mosquitoes</p3><br>
+					<p3>4. Simulating People</p3><br>
+					<p3>5. Transmission Landscapes</p3><br>
+					<p3>6. Application</p3><br>
+				</section>
+				<!-- SLIDE 1 END -->
+
+				<!-- SLIDE 2 BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Theory of Mosquito-borne Pathogens</sectionTitleStyle><br><br>
+					<p4 style="color: #555; font-size:30px;">Classical models are based on the Ross-Macdonald framework</p4>
+					<br>
+					<img src="./images/rm_ode.gif">
+					<br>
+					<img src="./images/heterogeneity.png" style="width:30%;">
+					<p style="font-size:15px; color:#555;">
+						Image from: <a style="font-size:15px;" href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003327">Heterogeneity, Mixing, and the Spatial Scales of Mosquito-Borne Pathogen Transmission, https://doi.org/10.1371/journal.pcbi.1003327</a><br>
+					</p>
+
+				</section>
+				<!-- SLIDE 2 END -->
+
+				<!-- SLIDE 3 BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Quantitative Measures of <i>Pf</i> Transmission</sectionTitleStyle><br><br>
+
+					<p4 style="color: #555; font-size:22.5px;">Under certain assumptions, a set of quantities completely describes transmission:</p4>
+					<br>
+					<img src="./images/transmission_quantities.gif">
+					<br>
+					<p4 style="color: #555; font-size:22.5px;">But reality is not a well-mixed chemostat, how do we build mechanistic models to represent complex disease ecologies?</p4>
+
+				</section>
+				<!-- SLIDE 3 END -->
+
+				<!-- SLIDE 4 BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Continuous-time Discrete Event Simulation</sectionTitleStyle><br><br>
+
+					<p4 style="color: #555; font-size:22.5px;"></p4>
+
+					<iframe src="https://slwu89.shinyapps.io/DHM-Basic/" width="800px" height="500px" class="foo" scrolling="yes"></iframe>
+
+				</section>
+				<!-- SLIDE 4 END -->
+
+				<!-- SLIDE 5 BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Models of Within-host Infection Dynamics</sectionTitleStyle><br><br>
+
+					<p4 style="color: #555; font-size:22.5px;">Starting from classical assumptions, a series of models based on stochastic processes can be built:</p4>
+					<br>
+
+					<li>
+						<p4 style="font-size:20px">PfSI: Enhanced SIS Model</p54><br>
+						<img src="./images/MASH_PfSI.jpg" style="width:20%;">
+					</li>
+					<li>
+						<p4 style="font-size:20px">PfMOI: Multiplicity of Infection Model</p54><br>
+						<img src="./images/MASH_PfMOI.jpg" style="width:35%;">
+					</li>
+					<li>
+						<p4 style="font-size:20px">PfLOME: Lifetime Ontogeny of Malaria Epidemiology</p54><br>
+					</li>
+
+				</section>
+				<!-- SLIDE 5 END -->
+
+				<!-- SLIDE 6 BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Transmission Ecology</sectionTitleStyle><br><br>
+
+					<p4 style="color: #555; font-size:22.5px;">Disease ecology is the superposition of multiple stochastic processes which generate the data epidemiologists and entomologists collect.</p4>
+					<br>
+					<img src="./images/MASH_StaticNetwork.png" style="width:35%;">
+
+				</section>
+				<!-- SLIDE 6 END -->
+
+				<!-- SLIDE 7 BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Landscape Analysis</sectionTitleStyle><br><br>
+
+					<p4 style="color: #555; font-size:22.5px;">In a real scenario, data is messy, incomplete, and biased. By testing algorithms <i>in silico</i>, methods for analyzing pathogen dispersal can be developed</p4>
+					<br>
+					<img src="./images/network_clustering.png" style="width:80%;">
+
+				</section>
+				<!-- SLIDE 7 END -->
+
+				<!-- SLIDE 8 BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Models Support Policy</sectionTitleStyle><br><br>
+
+					<p4 style="color: #555; font-size:22.5px;">Spatial targeting of anti-sporozoite vaccine trials on Bioko Island</p4>
+					<br>
+					<img src="./images/BIOKO_50.gif" style="width:30%; border-radius:0px;">
+					<img src="./images/BIOKO_90.gif" style="width:30%; border-radius:0px;">
+
+				</section>
+				<!-- SLIDE 8 END -->
+
+				<!-- ACKNOWLEDGMENTS -->
+				<section style="border-width:10px;"><br>
+					<img src="./images/berkeley.jpg" style="width:30%; border-radius: 5px;">
+					<img src="./images/ihme.png" style="width:25%; border-radius: 5px;"> <br>
+					<img src="./images/gates.png" style="width:30%; border-radius: 5px;">
+					<img src="./images/DARPA.jpg" style="width:20%; border-radius: 5px;">
+				</section>
+				<!-- ACKNOWLEDGMENTS -->
+
+				<!-- EXTRA BITS -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Microsimulation</sectionTitleStyle><br><br>
+
+					<img src="./images/MASH_animation.gif" style="width:40%; border-radius:5px;">
+
+				</section>
+
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Extra 2</sectionTitleStyle><br><br>
+
+					<iframe src="https://slwu89.shinyapps.io/StaticsDynamics/" width="800px" height="500px" class="foo" scrolling="yes"></iframe>
+
+				</section>
+
+				<!-- EXTRA BITS -->
+			</section>
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+		</div>
+	</div>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+	<script>w3.includeHTML();</script>
+	<script>
+	// More info https://github.com/hakimel/reveal.js#configuration
+	Reveal.initialize({
+		controls: false,
+		progress: false,
+		history: true,
+		center: true,
+		transition: 'slide', // none/fade/slide/convex/concave/zoom
+		// More info https://github.com/hakimel/reveal.js#dependencies
+		dependencies: [
+			{src:'lib/js/classList.js', condition: function() { return !document.body.classList;}},
+			{src:'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' );}},
+			{src:'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' );}},
+			{src:'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad();}},
+			{src:'plugin/zoom-js/zoom.js', async: true},
+			{src:'plugin/notes/notes.js', async: true}
+		]
+	});
+	</script>
+</body>
+</html>
