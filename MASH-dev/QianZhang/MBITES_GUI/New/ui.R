@@ -51,7 +51,7 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                        navbarPage("Welcome ", id = "nav",
                                   #################################################################################
                                   tabPanel("Get Started", value = 'start',
-                                           navlistPanel(widths = c(2,4),
+                                           navlistPanel(widths = c(3,9),
                                                         tabPanel("Overview",
                                                                  includeMarkdown("instructions.md"),
                                                                  img(src='boutFull.png',align="center",width="50%")
@@ -78,6 +78,7 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                                                                             accept=c('text/csv',
                                                                                                      'text/comma-separated-values,text/plain',
                                                                                                      '.csv')),
+                                                                                  column(6,
                                                                                   wellPanel(checkboxInput('header_project', 'Header', TRUE),
                                                                                             radioButtons('sep_project', 'Separator',
                                                                                                          c(Comma=',',
@@ -85,7 +86,7 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                                                                                            Tab='\t'),
                                                                                                          ',')),
                                                                                   hr(),
-                                                                                  actionButton("launchgo", "Go!")
+                                                                                  actionButton("launchgo", "Go!"))
                                                                  )
                                                                  
                                                         )
