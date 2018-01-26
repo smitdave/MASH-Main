@@ -10,8 +10,11 @@ In the past decade:
 * Overall malaria mortality rate decreased from 0.98 per 100,000 (_2010_) to 0.12 per 100,000 (_2014_)
 
 Malaria transmission is still epidemic in 21/25 provinces
+
 Northeast region still accounts for over 70% of the malaria burden
+
 **Goal**: Reduce incidence of malaria to < 1 infection per 1000 people at risk in each operational district (OD)
+
 **Goal**: Eliminate _Plasmodium falciparum_ including multidrug resistance by 2020
 
 The malaria situation in Cambodia is __heterogeneous__, so ODs are placed in four strata:
@@ -30,26 +33,36 @@ CNM will aggressively pursue elimination in _low-endemic_ areas while strengthen
  
 #### Socio-Political System
 25 provinces, 4 municipalities
+
 _Province --> District --> Commune_
+
 _Municipality --> Section --> Quarter_
  
 Multi-party democracy under a constitutional monarchy
+
 _Prime Minister_: Hun Sen (Cambodian People's Party)
+
 _King_: Norodom Sihamoni
  
 #### Demographics
 Population: ~15 million people
+
 ~90% of population is Khmer
+
 Official language is Khmer
+
 Primary religion is Buddhism
  
 #### Environment and Climate
 Percentage of Cambodia covered in forest has fallen from ~72% in 1973 to ~46% in 2013
+
 At least 32% of the land is classified as agricultural
  
 #### Health Systems Analysis
 Communicable diseases account for 83% of reported disease burden
+
 Main objective in health sector reform is to improve and extend primary health services through implementation of the operational districts (OD) system
+
 Provincial health departments (PHDs) are the link between MOH and ODs
  
 Barriers to accessing services in the public health sector include:
@@ -71,6 +84,7 @@ National Strategic Plan for Elimination of Malaria in the Kingdom of Cambodia:
 #### Epidemiological Profile
 ##### Parasites
 Until 2011, P. falciparum was the predominant species
+
 In 2012, P. vivax accounted for the majority of cases for the first time
  
 ##### Vectors
@@ -78,30 +92,40 @@ In 2012, P. vivax accounted for the majority of cases for the first time
  
 ##### Malaria Transmission
 Endemic in 21/25 provinces
+
 Incidence is highest in the northeastern part of the country
+
 Transmission occurs primarily in the hot and rainy season between July and November
+
 Prevalence (as measured by PCR) was highest among forest-goers (5.4%) and travelers (2.2%)
  
 #### Current Situation and Trends
 ##### Morbidity and Mortality
 In the first 7 months of 2015, confirmed cases have risen by 36% compared to same period in 2014
+
 Overall case load doesn't include those treated by private sector, believed to treat up to 2/3 of patients
+
 Up to 60% of antimalarials are sold or distributed throughout the private sector
+
 Cambodia implemented _public-private mix (PPM)_ program, licensing certain health providers
+
 Data from **unlicensed** outlets that provide malaria services is not captured, so number of total cases is an underestimate
  
 8 ODs accounted for 73% of cases treated
+
 Combined population of 1.8 million (12% of total population)
  
 Case load is primarily concentrated in adult males
  
 ##### Multi-Drug Resistance
 No alternative antimalarial medicine available with same level of efficacy and tolerability as ACTs
+
 Dihydroartemisinin-piperaquine (DHA-PPQ) is current first-line treatment, except in provinces with DHQ-PPQ failure, where artesunate-mefloquine (AS-MQ) is used
  
 #### Program Organization, Management, and Performance
 ##### National Malaria Program Organization
 CNM has evolved from a vertical program to a more administratively decentralized and integrated program within the Cambodian public health system
+
 Providers in public health system:
 * Referral hospitals (RH)
 * HCs and Health Posts
@@ -148,7 +172,9 @@ Divided into three main bureaus: **technical**, **financial**, and **administrat
  
 ##### Program Performance
 Government supports decentralization of health activities to the peripheral level
+
 Low salaries and capacity within staff are significant challenges
+
 Coordination remains a challenge
  
 ### Strategic Plan
@@ -163,6 +189,7 @@ risk of malaria
  
 **GOAL: Reduce the incidence of malaria to less than 1 infection per 1000 people at risk in each
 operational district and eliminate Plasmodium falciparum including multidrug resistance by 2020**
+
 Specific objectives:
 1) Providing effective program management and coordination at all levels by 2017 to efficiently
 deliver a combination of targeted interventions for malaria elimination
@@ -185,6 +212,7 @@ and at least 85% of at-risk population utilizing an appropriate protection tool 
 Standard operating procedures (SOP) will be developed for all activities
  
 Annual Malaria Review Meeting - align operational plans, submit to the MOH
+
 CNM will carry-out bi-annual supervisory visits with field staff
  
 ##### Advocate for high level commitment to malaria elimination
@@ -195,6 +223,7 @@ Bi-annual meeting of National Multi-Sectoral Malaria Elimination Committee
  
 ##### Strengthen cross border collaboration for malaria elimination
 Harmonize and synchronize interventions at border areas with neighboring countries
+
 Coordination will be strengthened through data sharing agreements and formal action planning sessions
  
 ##### Mobilize resources to support program implementation
@@ -202,7 +231,9 @@ Engage with the private sector to ensure malaria elimination is a priority for i
  
 ##### Introduce and scale up appropriate interventions for mobile, migrant and other underserved populations at risk of malaria infection
 Mobility analysis will be carried out on a regular basis
+
 Mapping and census of MMPs will be conducted every year at regular intervals to target interventions
+
 CNM will collaborate with other sectors to target these populations:
 * Ministry of Foreign Affairs
 * Department of Immigration
@@ -222,19 +253,27 @@ CNM will implement a mHealth-based stock management system
  
 ### 2) Achieve universal coverage of case management services by 2016 to ensure 100% parasitological diagnosis of all suspected cases and effective treatment of all confirmed cases
 In an elimination setting, all suspected malaria cases must be diagnosed and confirmed with a parasitological diagnostic test
+
 Drug failure is increasing along the Cambodia-Thailand border
+
 Drug failure is defined by positivity up to 42 days after treatment
  
 ##### Strengthen the parasitological detection of malaria infections
 All suspected malaria cases will be parasitologically confirmed before treatment and treatment will only be provided to positive cases
+
 Diagnosis is done with microscopy and rapid diagnostic tests (RDTs), but microscopy is preferred
+
 As an operational district transitions toward elimination, all malaria cases confirmed by RDT and/or microscopy will be re-confirmed by an expert WHO-accredited microscopist
+
 Molecular diagnostics will be utilized as a surveillance tool for understanding the level of asymptomatic infections in low endemic areas with multidrug resistance to guide operations
  
 ##### Ensure prompt efficacious treatment of all confirmed uncomplicated and severe malaria cases according to national malaria treatment guidelines including the utilization of low dose primaquine to reduce the transmissibility of Pf and radical cure for Pv
 Treatment will be stricly based on parasitological results and all malaria infections will be treated regardless of presence of signs and symptoms
+
 All cases will be treated and tracked to ensure cure
+
 In elimination targeted ODs, follow-up will be on day 7 and day 28 - if still positive or symptomatic, treated with second-line medications
+
 DDF's Pharmacovigilance Unit will monitor healthcare workers
  
 ##### Increase availability of quality case management services among private sector providers and industrial work sites and plantations
@@ -242,12 +281,16 @@ Private providers that do not qualify for the Public-Private Mix (PPM) program w
  
 ##### Place at least one village malaria worker (VMW) in all villages in malaria risk areas
 Number of villages with VMWs and MMWs will scale up from 2539 to 4528
+
 Risk stratification will be used to prioritize villages in the highest incidence areas
+
 CNM will collaborate with MOH to convert VMWs into multi-purpose healthcare workers wherever possible in short-to-medium term and absorb them into the national network of community healthcare workers in long term
+
 CNM will map large-scale private sector work sites to identify areas vulnerable to importation from mobile and migrant populations
  
 ##### Strengthening the quality assurance and control systems for malaria diagnosis and antimalarial drugs
 All laboratories will participate in Accredited External Competency Assessment (ECA)
+
 Maintaining microscopy quality nationally will be essential to detecting treatment failure
  
 ##### Utilize mass drug administration (MDA) in targeted communities based on evidence and local context
@@ -257,6 +300,7 @@ CNM will consider the strategy of MDA in active foci with suspected reservoirs o
 
 ##### Develop vector management strategy for malaria elimination
 Take into account all potential intervention packages for reducing receptivity and human-vector interaction by geographical target area
+
 Take into account cost-effectiveness and potential impact of each strategy
 
 ##### Distribution of long lasting insecticide-treated nets (LLINs) and hammock nets (LLIHNs) to all populations at risk
@@ -267,6 +311,7 @@ Indoor residual spraying will be implemented in active foci in response to the p
 
 ##### Strengthen operational research on potential interventions to reduce residual transmission
 CNM will analyze the results of ongoing and completed operational research projects
+
 Personal protection packs for forest goers ("forest packs") are backpacks that can include an LLIN/LLIHN, hammock, repellent, rain coat, torch, and IEC materials - currently being distributed in two research pilots
 
 ##### Utilize environmental management strategies to reduce vector breeding sites
@@ -274,6 +319,7 @@ In active foci where entomological surveillance is carried out, CNM will assess 
 
 ##### Strengthen entomological surveillance for malaria elimination in active foci for malaria elimination
 CNM will hire and train additional staff for the entomology unit to build capacity necessary for entomological surveillance for elimination
+
 Entomological surveillance will include:
 * Identification of vector species
 * Monitoring vector behavior and bionomics
@@ -286,8 +332,8 @@ Entomological surveillance will include:
 CNM will work to harmonize current labs in Cambodia into one central lab for insecticide resistance monitoring and efficacy testing for vector control interventions
 
 ### 4) Enhance the surveillance system to detect, immediately notify, investigate, classify and respond to all cases and foci by 2017 to move toward malaria elimination
-
 Detect and notify all malaria infections
+
 Investigate each malaria case to determine whether it was locally acquired or imported from outside the country
 
 ##### Define system specifications for upgraded Malaria Information System (MIS)
@@ -298,12 +344,16 @@ CNM will also collaborate with Communicable Disease Control (CDC) Departments' R
 
 ##### Strengthen passive case detection and routine reporting by all health care providers
 Malaria will be a notifiable disease among all public and private sector providers and community healthcare workers across all endemic and non-endemic ODs
+
 CNM will utilize "Day 0 surveillance" system as a foundation for real-time case reporting in all low endemic ODs targeted for elimination
 
 ##### Strengthen active case detection, case investigation and reporting for all malaria infections
 All confirmed cases presenting at HC and hospital will be investigated following passive case detection, classified (local case, imported, introduced, and induced) taking into account patient household location and travel history, and reported via real-time case reporting system to MIS
+
 Reactive case detection, screening carried out in response to a reported case, will be conducted around index cases using RDTs and/or microscopy
+
 Regardless of results, all household members will be treated presumptively with first line antimalarials as per national drug policy
+
 Proactive case detection, screening conducted based on suspicion of transmission or infections among high-risk groups, will be carried out dependent on previous year's malaria trends, seasonality of transmission specific to an area, or based on an influx of mobile or migrant populations from endemic areas
 
 ##### Strengthen investigation, classification, and appropriate response to all malaria transmission foci
