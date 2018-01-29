@@ -152,10 +152,7 @@ server <- function(input, output, session) {
   })
   
   output$senescence_plot <- renderPlot({
-    #age <- seq(0, 50, 0.001)
-    # senescence_surv <- function(x, ...){
-    #   (2 + input$sns_b)/(1 + input$sns_b) - exp(x * input$sns_a)/(input$sns_b + x * input$sns_a)
-    # }
+
     if(!input$SENESCE){
       curve((2 + input$sns_b)/(1 + input$sns_b) - exp(x * input$sns_a)/(input$sns_b + x * input$sns_a), 
             ylim = c(0,1), xlim = c(0,50), col = "Blue",
@@ -163,12 +160,6 @@ server <- function(input, output, session) {
     }else{
       curve((0 * x + 1), from = 0, to = 50, ylim = c(0,1), col = "Green",
             xlab = "Chronological Age (days)", ylab = "Probability of Survival, per bout")
-      # ggplot(data.frame(age), aes(x = age)) + stat_function(fun= senescence_surv) + ylim(0,1) +
-      #   xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
-      # }else{
-      # ggplot(data.frame(age), aes(age)) + geom_hline(aes(yintercept = 1)) + ylim(0,1) +
-      # scale_x_discrete()+
-      #   xlab("Chronological Age (days)") + ylab("Probability of Survival, per bout")
     }
   })
   
@@ -198,34 +189,11 @@ server <- function(input, output, session) {
   
   output$overfeeding_Option_plot <- renderPlot({
     if(input$overfeed_Option){
-      # bm_a_Option <- input$bm_mean_Option * input$bm_v_Option
-      # bm_b_Option <- (1 - input$bm_mean_Option) * input$bm_v_Option
       a <- input$of_a
       b <- input$of_b
       curve(exp(a * x)/(exp(a * x) + b),
             ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
   })
-  
-  
-  ################ Sugar Feeding ################################################
-  
-  # output$bm_plot <- renderPlot({
-  #   if(input$showBloodMeal){
-  #     bm_a <- input$bm_mean * input$bm_v
-  #     bm_b <- (1 - input$bm_mean) * input$bm_v
-  #     curve(dbeta(x, bm_a, bm_b)/max(dbeta(x, bm_a, bm_b)),ylab = "Normalized Density", xlab = "Blood Meal Size", col = "Blue", lwd = 1.5)}
-  # })
-  
-  # output$overfeeding_plot <- renderPlot({
-  #   if(input$overfeed){
-  #     # bm_a <- input$bm_mean * input$bm_v
-  #     # bm_b <- (1 - input$bm_mean) * input$bm_v
-  #     a <- input$of_a
-  #     b <- input$of_b
-  #     curve(exp(a * x)/(exp(a * x) + b),
-  #       ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
-  # })
-  
   
   
   ######################################Landscape Output###########################################################
@@ -247,24 +215,6 @@ server <- function(input, output, session) {
   output$contentsL <- renderTable({
     dataL()
   })
-  # dataM <- reactive({
-  #     req(input$filem)
-  #     inFileM <- input$filem
-  #     dfM <- read.csv(inFileM$datapath, header = input$headerm, sep = input$sepm)
-  #     return(dfM)
-  #   })
-  # output$contentsM <- renderTable({
-  #       dataM()
-  #   })
-  # dataS <- reactive({
-  #     req(input$files)
-  #     inFileS <- input$files
-  #     dfS <- read.csv(inFileS$datapath, header = input$headers, sep = input$seps)
-  #     return(dfS)
-  #   })
-  # output$contentsS <- renderTable({
-  #       dataS()
-  #   })
   
   output$panel_landscape_out_site <- renderPlot({
     if(input$showPoints){
@@ -285,9 +235,7 @@ server <- function(input, output, session) {
         }
         x = x[-1]
         y = y[-1]
-        
-        #plot(x,y, pch = 15, col = "red")
-        cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+        cbind(x,y) 
       }
       
       if(input$landscape_f_input == 'cluster'){
@@ -342,162 +290,11 @@ server <- function(input, output, session) {
     }
   })
   
-  #  output$panel_landscape_out_f <- renderPlot({
-  #  	 if(input$landscape_point_f & input$landscape_f_input == "cluster"){
-  #  		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
-  #   set.seed(seed)
-  #   xCenters = runif(nCenters, -rng, rng)
-  #   yCenters = runif(nCenters, -rng, rng)
-  
-  #   x = 0
-  #   y=0
-  
-  #   n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
-  #   spread = rgamma(nCenters,1,1)*spr
-  
-  #   for(i in 1:nCenters){
-  #     x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
-  #     y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
-  #   }
-  #   x = x[-1]
-  #   y = y[-1]
-  
-  #   plot(x,y, pch = 15, col = "red")
-  #   cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
-  # }
-  
-  # xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
-  # xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
-  # N_l = length(xy_l[,1])
-  # w_l = rgamma(length(xy_f[,1]), 1,1)
-  
-  # xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
-  
-  # xy_f = rbind(xy_f, xy_f1)
-  # N_f = length(xy_f[,1])
-  # w_f = rgamma(length(xy_f[,1]), 1,1)
-  
-  # plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
-  
-  # points(xy_l, pch =15, col = "blue")
-  
-  #  	 }else{
-  #  	 	xF <- dataF()[, 1:2]
-  #   	plot(xF, col="red")
-  #  	 }
-  
-  #  })
-  
-  
-  #  output$panel_landscape_out_m <- renderPlot({
-  #  	 if(input$landscape_point_m & input$landscape_m_input == "cluster"){
-  #  		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
-  #   set.seed(seed)
-  #   xCenters = runif(nCenters, -rng, rng)
-  #   yCenters = runif(nCenters, -rng, rng)
-  
-  #   x = 0
-  #   y=0
-  
-  #   n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
-  #   spread = rgamma(nCenters,1,1)*spr
-  
-  #   for(i in 1:nCenters){
-  #     x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
-  #     y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
-  #   }
-  #   x = x[-1]
-  #   y = y[-1]
-  
-  #   plot(x,y, pch = 15, col = "red")
-  #   cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
-  # }
-  
-  # xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
-  # xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
-  # N_l = length(xy_l[,1])
-  # w_l = rgamma(length(xy_f[,1]), 1,1)
-  
-  # xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
-  
-  # xy_f = rbind(xy_f, xy_f1)
-  # N_f = length(xy_f[,1])
-  # w_f = rgamma(length(xy_f[,1]), 1,1)
-  
-  # plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
-  
-  # points(xy_l, pch =15, col = "blue")
-  
-  
-  
-  #  	 }else{
-  #  	 	xM <- dataM()[, 1:2]
-  #   	plot(xM, col="blue")
-  #  	 }
-  
-  #  })
-  
-  #  output$panel_landscape_out_s <- renderPlot({
-  #  	 if(input$landscape_point_s & input$landscape_s_input == "cluster"){
-  #  		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
-  #   set.seed(seed)
-  #   xCenters = runif(nCenters, -rng, rng)
-  #   yCenters = runif(nCenters, -rng, rng)
-  
-  #   x = 0
-  #   y=0
-  
-  #   n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
-  #   spread = rgamma(nCenters,1,1)*spr
-  
-  #   for(i in 1:nCenters){
-  #     x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
-  #     y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
-  #   }
-  #   x = x[-1]
-  #   y = y[-1]
-  
-  #   plot(x,y, pch = 15, col = "red")
-  #   cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
-  # }
-  
-  # xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
-  # xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
-  # N_l = length(xy_l[,1])
-  # w_l = rgamma(length(xy_f[,1]), 1,1)
-  
-  # xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
-  
-  # xy_f = rbind(xy_f, xy_f1)
-  # N_f = length(xy_f[,1])
-  # w_f = rgamma(length(xy_f[,1]), 1,1)
-  
-  # plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
-  
-  # points(xy_l, pch =15, col = "blue")
-  
-  
-  
-  #  	 }else{
-  #  	 	xS <- dataS()[, 1:2]
-  #   	plot(xS, col="green")
-  #  	 }
-  
-  #  })
   
   observe({
     toggle(condition = input$showPoints, selector = "#landscape_output li a[data-value=landscape_site]")
   })
-  #  observe({
-  #    toggle(condition = input$landscape_point_f, selector = "#landscape_output li a[data-value=landscape_out_f]")
-  #  })
-  #  observe({
-  #    toggle(condition = input$landscape_point_m, selector = "#landscape_output li a[data-value=landscape_out_m]")
-  #  })
-  #  observe({
-  #    toggle(condition = input$landscape_point_s, selector = "#landscape_output li a[data-value=landscape_out_s]")
-  #  })
-  
+
   #####################Simualtion output ########################################################
   output$sim_panel <- renderUI({
     if(input$project == 'demo'){
@@ -507,9 +304,7 @@ server <- function(input, output, session) {
                                  actionButton("JumpToMore", label = "Check it now!")
                     ),
                     mainPanel(
-                      # numericInput("N_female_demo", "Number of Female Mosquitoes", value = 50, min = 0, max = NA, step = 1),
-                      #        		numericInput("N_male_demo", "Number of Male Mosquitoes", value = 50, min = 0, max = NA, step = 1)
-                      # )
+
                       plotOutput("demo_sim_histogram"),
                       plotOutput("demo_sim_chord")
                     ))
@@ -806,14 +601,7 @@ server <- function(input, output, session) {
   output$panel_f <- renderUI({
     if (input$showF)
       column(6,
-             #sliderInput(inputId = "F_time", label ="Mean Time Elapsed (in days)",
-             #value = 0.02, min = 0, max = 1, step = 0.01),
              wellPanel(
-               # h5("Mean Time Elapsed: "),
-               # fluidRow(
-               # column(6,selectInput("F_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-               # column(6,selectInput("F_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-               # ),
                sliderInput(inputId = "F_succeed", label ="Probability of Success",
                            value = 0.98, min = 0.9, max = 1, step = 0.01),
                sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
@@ -829,19 +617,14 @@ server <- function(input, output, session) {
     if (input$showB)
       fluidRow(
         column(6,
-               #sliderInput(inputId = "B_time", label ="Mean Time Elapsed (in days)",
-               #value = 0.04, min = 0, max = 2, step = 0.01),
+
                wellPanel(
-                 # h5("Mean Time Elapsed: "),
-                 # fluidRow(
-                 #   column(6,selectInput("B_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-                 #   column(6,selectInput("B_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-                 #         ),
+
                  sliderInput(inputId = "B_succeed", label ="Probability of Success",
                              value = 0.95, min = 0.8, max = 1, step = 0.01),                #
                  sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",
                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-                 #textInput("B_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+ 
                  checkboxInput("showhuman", "Human Host Encounter", FALSE),
                  conditionalPanel(condition = "input.showhuman",
                                   wellPanel(sliderInput(inputId = "surviveH", label ="Survival Probability of Initial Encounter (Proceed to Probe)",
@@ -864,25 +647,13 @@ server <- function(input, output, session) {
                  checkboxInput("showBloodMeal", "Blood Meal Size", FALSE),
                  conditionalPanel(condition = "input.showBloodMeal",
                                   helpText("Please set the parameters in Options - Blood Meal")
-                                  # wellPanel(
-                                  #   # # sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
-                                  #   # #         value = 7.5, min = 0, max = 20, step = 0.5),
-                                  #   # # sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
-                                  #   # #         value = 2.5, min = 0, max = 20, step = 0.5)
-                                  #   # sliderInput(inputId = "bm_mean", label ="Average blood meal Size",
-                                  #   #         value = 0.5, min = 0, max = 1, step = 0.01),
-                                  #   # sliderInput(inputId = "bm_v", label ="Sample size for a blood meal Size: (a + b) in Beta(a,b)",
-                                  #   #         value = 15, min = 0, max = 40, step = 0.5)
-                                  #   )
+
                  ),
                  hr(),
                  checkboxInput("overfeed", "Overfeed", FALSE),
                  conditionalPanel(condition = "input.overfeed",
                                   helpText("Please set the parameters in Options - Blood Meal")
-                                  # sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
-                                  #   value = 8, min = 5, max = 10, step = 0.01),
-                                  # sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
-                                  #   value = 5000, min = 0, max = 10000, step = 100)
+
                  ),
                  hr(),
                  sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
@@ -890,27 +661,19 @@ server <- function(input, output, session) {
                  sliderInput(inputId = "Q", label ="Human Blood Index",
                              value = 0.9, min = 0, max = 1, step = 0.1)
                ))
-        # column(6,
-        #   plotOutput(""),
-        #   plotOutput("bm_plot"),
-        #   plotOutput("overfeeding_plot"))
+
       )
   })
   output$panel_r <- renderUI({
     if (input$showR)
       column(6,
              conditionalPanel(condition = "input.showR",
-                              #sliderInput(inputId = "R_time", label ="Mean Time Elapsed (in days)",
-                              #value = 1, min = 0, max = 3, step = 0.01),
+
                               wellPanel(
-                                # h5("Mean Time Elapsed: "),
-                                # fluidRow(
-                                # column(6,selectInput("R_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-                                # column(6,selectInput("R_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-                                # ),
+
                                 sliderInput(inputId = "R_surv", label ="Baseline Probability of Survival",
                                             value = 0.99, min = 0.9, max = 1, step = 0.01),
-                                #textInput("R_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+
                                 checkboxInput("REFEED", "Refeed", FALSE),
                                 conditionalPanel(condition = "input.refeed",
                                                  sliderInput(inputId = "rf_a", "Exp Param a for refeeding as function of bmSize",
@@ -922,76 +685,47 @@ server <- function(input, output, session) {
   output$panel_l <- renderUI({
     if (input$showL)
       column(6,
-             #sliderInput(inputId = "L_time", label ="Mean Time Elapsed (in days)",
-             #value = 0.02, min = 0, max = 2, step = 0.01),
+
              wellPanel(
-               # h5("Mean Time Elapsed: "),
-               #   fluidRow(
-               #   column(6,selectInput("L_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-               #   column(6,selectInput("L_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-               #   ),
+
                sliderInput(inputId = "L_succeed", label ="Probability of Success",
                            value = 0.98, min = 0.8, max = 1, step = 0.01),
                sliderInput(inputId = "L_surv", label ="Baseline Probability of Survival",
                            value = 0.99, min = 0.9, max = 1, step = 0.01)#,
-               #textInput("L_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+
              ))
   })
   output$panel_o <- renderUI({
     if (input$showO)
       column(6,
-             #sliderInput(inputId = "O_time", label ="Mean Time Elapsed (in days)",
-             #value = 0.04, min = 0, max = 2, step = 0.01),
+
              wellPanel(
-               # h5("Mean Time Elapsed: "),
-               #   fluidRow(
-               #   column(6,selectInput("O_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-               #   column(6,selectInput("O_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-               #   ),
+
                sliderInput(inputId = "O_succeed", label ="Probability of Success",
                            value = 0.99, min = 0.9, max = 1, step = 0.01),
                sliderInput(inputId = "O_surv", label ="Baseline Probability of Survival",
                            value = 0.99, min = 0.9, max = 1, step = 0.01)#,
-               #textInput("O_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+
              ))
   })
   output$panel_m <- renderUI({
     if (input$showM)
       column(6,
-             #sliderInput(inputId = "M_time", label ="Mean Time Elapsed (in days)",
-             #value = 0.02, min = 0, max = 2, step = 0.01),
+
              wellPanel(
-               # h5("Mean Time Elapsed: "),
-               #   fluidRow(
-               #   column(6,selectInput("M_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-               #   column(6,selectInput("M_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-               #   ),
+
                sliderInput(inputId = "M_succeed", label ="Probability of Success",
                            value = 0.95, min = 0.9, max = 1, step = 0.01),
                sliderInput(inputId = "M_surv", label ="Baseline Probability of Survival",
                            value = 0.99, min = 0.9, max = 1, step = 0.01)#,
-               #textInput("M_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
+
              ))
   })
   output$panel_s <- renderUI({
     if (input$showS)
       column(6,
-             #sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
-             #value = 0.02, min = 0, max = 2, step = 0.01),
              wellPanel(
                helpText("Please set the parameters in Options - Sugar Feeding")
-               # h5("Mean Time Elapsed: "),
-               #   fluidRow(
-               #   column(6,selectInput("S_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
-               #   column(6,selectInput("S_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
-               #   ),
-               # sliderInput(inputId = "S_succeed", label ="Probability of Success",
-               #                 value = 0.99, min = 0.9, max = 1, step = 0.01),
-               # sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",
-               #                 value = 0.99, min = 0.9, max = 1, step = 0.01),
-               # #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
-               # sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-               #                 value = 0, min = 0, max = 100, step = 1)
              ))
   })
   output$panel_e <- renderUI({
@@ -1115,16 +849,7 @@ server <- function(input, output, session) {
                             title = "Sites",
                             value = "landscape_site",
                             plotOutput("panel_landscape_out_site")
-                            # 	),
-                            # tabPanel(
-                            # 	title = "Point: m",
-                            # 	value = "landscape_out_m",
-                            # 	plotOutput("panel_landscape_out_m")
-                            # 	),
-                            # tabPanel(
-                            # 	title = "Point: s",
-                            # 	value = "landscape_out_s",
-                            # 	plotOutput("panel_landscape_out_s")
+
                           )
                         )
                       )
@@ -1481,18 +1206,10 @@ server <- function(input, output, session) {
     inputs_name <- append(inputs_name, 'ttsz_b')
     inputs_bout <- append(inputs_bout, (1 - input$ttsz_mean) * input$ttsz_v)
     
-    
-    # stateSpace <- NULL
-    # # if(input$showF){
-    # #   stateSpace <- append(stateSpace, "F")
-    # #   inputs_name <- append(inputs_name, 'F_time')
-    # #   inputs_bout <- append(inputs_bout, (as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60))
-    # #   }
+  
     inputs_name <- append(inputs_name, 'stateSpace')
     inputs_bout <- append(inputs_bout, stateSpace)
-    # print(inputs_name)
-    # print(inputs_bout)
-    
+
     # Inputs data.frame
     inputs_data_frame <- data.frame(inputId = inputs_name, value = inputs_bout)
     # Save Inputs

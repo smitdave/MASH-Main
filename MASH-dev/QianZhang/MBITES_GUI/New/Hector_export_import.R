@@ -37,7 +37,7 @@ import_MASH_parameters=function(file){
 # MASHmacro::DEBUG.MASHMACRO()
 
 # make a tile
-DIR = "/Users/sanchez.hmsc/Desktop/MBITES/"
+DIR = "/Users/qianzh/Desktop/MBITES/"
 
 # setup
 Humans.MICRO.Setup()
