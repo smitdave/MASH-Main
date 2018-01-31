@@ -116,18 +116,6 @@ mosquito_par = list(
   MBITES_PAR_FEMALE = mbites_par_female,
   MBITES_PAR_MALE = mbites_par_male
 )
-# Export to json ---------------------------------------------------------------
-# jsonOut=prettify(toJSON(human_par))
-# write(jsonOut,paste0(DIR,"human_par.json"))
-# human_par2=read_json(paste0(DIR,"human_par.json"),simplifyVector=TRUE)
-# jsonOut=prettify(toJSON(mbites_par_female))
-# write(jsonOut,paste0(DIR,"mbites_par_female.json"))
-# mbites_par_female2=read_json(paste0(DIR,"mbites_par_female.json"),simplifyVector=TRUE)
-# jsonOut=toJSON(mbites_par_male)
-# write(jsonOut,paste0(DIR,"mbites_par_male.json"))
-# mbites_par_male2=read_json(paste0(DIR,"mbites_par_male.json"),simplifyVector=FALSE)
-# ------------------------------------------------------------------------------
-
 
 MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
 MicroTile$get_HumanPop()$init_ActivitySpace()
