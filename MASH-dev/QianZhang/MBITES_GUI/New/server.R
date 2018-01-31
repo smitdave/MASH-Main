@@ -238,31 +238,31 @@ server <- function(input, output, session) {
                                           #########################################################################
                                           tabPanel("Blood Meal",
                                                    column(8,
-                                                          checkboxInput("showB_Option", "Setting Blood Meal Parameters", FALSE),
+                                                          checkboxInput("showB_Option", "Setting Blood Meal Parameters", value = ("M"%in%ParList$stateSpace)),
                                                           conditionalPanel(condition = "input.showB_Option",
                                                                            #helpText("The following parameters also can be set under 'Bouts' Panel"),
-                                                                           checkboxInput("showBloodMeal_Option", "Blood Meal Size", FALSE),
+                                                                           checkboxInput("showBloodMeal_Option", "Blood Meal Size", value = ("bm.a" %in% names(female_par))),
                                                                            conditionalPanel(condition = "input.showBloodMeal_Option",
                                                                                             fluidRow(
                                                                                               column(6,
                                                                                                      sliderInput(inputId = "bm_mean", label ="Average Bloodmeal Size",
-                                                                                                                 value = 0.5, min = 0, max = 1, step = 0.01),
+                                                                                                                 value = ParList$bm.a/(ParList$bm.a + ParList$bm.b), min = 0, max = 1, step = 0.01),
                                                                                                      sliderInput(inputId = "bm_v", label ="Parameter v for a Bloodmeal Size: (a + b) in Beta(a,b)",
-                                                                                                                 value = 15, min = 0, max = 40, step = 0.5)
+                                                                                                                 value = (ParList$bm.a + ParList$bm.b), min = 0, max = 40, step = 0.5)
                                                                                               ),
                                                                                               column(6,
                                                                                                      plotOutput("bm_Option_plot")
                                                                                               )
                                                                                             )),
                                                                            hr(),
-                                                                           checkboxInput("overfeed_Option", "Overfeed", FALSE),
+                                                                           checkboxInput("overfeed_Option", "Overfeed", ParList$OVERFEED),
                                                                            conditionalPanel(condition = "input.overfeed_Option",
                                                                                             fluidRow(
                                                                                               column(6,
                                                                                                      sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
-                                                                                                                 value = 8, min = 5, max = 10, step = 0.01),
+                                                                                                                 value = ParList$of.a, min = 5, max = 10, step = 0.01),
                                                                                                      sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
-                                                                                                                 value = 5000, min = 0, max = 10000, step = 100)),
+                                                                                                                 value = ParList$of.b, min = 0, max = 10000, step = 100)),
                                                                                               column(6,
                                                                                                      plotOutput("overfeeding_Option_plot")
                                                                                               ))
