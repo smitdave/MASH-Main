@@ -273,22 +273,22 @@ server <- function(input, output, session) {
                                           tabPanel("Sugar Feeding",
                                                    column(6,
                                                           sliderInput(inputId = "S_sa", label ="Shape Param a of Probability to queue Sugar bout",
-                                                                      value = 20, min = 0, max = 100, step = 1),
+                                                                      value = ParList$S.sa, min = 0, max = 100, step = 1),
                                                           sliderInput(inputId = "S_sb", label ="Shape Param b of Probability to queue Sugar bout",
-                                                                      value = 10, min = 0, max = 100, step = 1),
+                                                                      value = ParList$S.sa, min = 0, max = 100, step = 1),
                                                           sliderInput(inputId = "energyPreG", label ="Pre-gonotrophic Energy Requirement",
-                                                                      value = 0, min = 0, max = 100, step = 1),
+                                                                      value = ParList$energyPreG, min = 0, max = 100, step = 1),
                                                           hr(),
-                                                          checkboxInput("showS_Option", "Sugar Feeding Parameters:", FALSE),
+                                                          checkboxInput("showS_Option", "Sugar Feeding Parameters:", value = ("S" %in% ParList$stateSpace)),
                                                           conditionalPanel(condition = "input.showS_Option",
                                                                         
                                                                            sliderInput(inputId = "S_succeed_Option", label ="Probability of Success",
-                                                                                       value = 0.99, min = 0.9, max = 1, step = 0.01),
+                                                                                       value = ParList$S_succeed, min = 0.9, max = 1, step = 0.01),
                                                                            sliderInput(inputId = "S_surv_Option", label ="Baseline Probability of Survival",
-                                                                                       value = 0.99, min = 0.9, max = 1, step = 0.01),
+                                                                                       value = ParList$S_surv, min = 0.9, max = 1, step = 0.01),
                                                                            #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
                                                                            sliderInput(inputId = "preGsugar_Option", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-                                                                                       value = 0, min = 0, max = 100, step = 1))
+                                                                                       value = ParList$preGsugar, min = 0, max = 100, step = 1))
                                                    )),
                                         
                                           
