@@ -8,7 +8,385 @@ server <- function(input, output, session) {
   })
   
   #################### Option Output #####################################################
-  
+  output$panel_options <- renderUI({
+                           fluidPage(
+                             helpText("Please set parameters here. To save the selected parameters, go to 
+                                      'Bouts' panel and click the button when both panels are done"),
+                             navlistPanel(widths = c(2,10),
+                                          
+                                          #########################################################################
+                                          tabPanel("Resting Time",
+                                                   tabsetPanel(
+                                                     tabPanel("F",
+                                                              column(4,
+                                                                     h5("Mean Time Elapsed: "),
+                                                                     fluidRow(
+                                                                       column(4,selectInput("F_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                                                                       column(4,selectInput("F_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                     ),
+                                                                     radioButtons("F_dist", "Distribution type:",
+                                                                                  c("Exponentional" = "exp",
+                                                                                    "Gamma" = "gamma"), inline = TRUE),
+
+                                                                     conditionalPanel(condition = "input.F_dist == 'gamma'",
+                                                                                      sliderInput("f_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                                                                     ),
+                                                                     hr(),
+                                                                     uiOutput('f_time_slider')
+                                                                     
+                                                              ),
+                                                              
+                                                              column(6,
+                                                                     plotOutput("F_wt_plot_option")
+                                                              )
+                                                     ),
+                                                     
+                                                     tabPanel("B",
+                                                              column(4,
+                                                                     h5("Mean Time Elapsed: "),
+                                                                     fluidRow(
+                                                                       column(4,selectInput("B_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                                                                       column(4,selectInput("B_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                     ),
+                                                                     radioButtons("B_dist", "Distribution type:",
+                                                                                  c("Exponentional" = "exp",
+                                                                                    "Gamma" = "gamma"), inline = TRUE),
+ 
+                                                                     conditionalPanel(condition = "input.B_dist == 'gamma'",
+                                                                                      sliderInput("b_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                                                                     ),
+                                                                     hr(),
+                                                                     uiOutput('b_time_slider')
+                                                              ), 
+                                                              column(6,
+                                                                     plotOutput("B_wt_plot_option")
+                                                              )
+                                                     ),
+                                                     
+                                                     tabPanel("R",
+                                                              column(4,
+                                                                     h5("Mean Time Elapsed: "),
+                                                                     fluidRow(
+                                                                       column(4,selectInput("R_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                                                                       column(4,selectInput("R_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                     ),
+                                                                     radioButtons("R_dist", "Distribution type:",
+                                                                                  c("Exponentional" = "exp",
+                                                                                    "Gamma" = "gamma"), inline = TRUE),
+
+                                                                     conditionalPanel(condition = "input.R_dist == 'gamma'",
+                                                                                      sliderInput("r_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                                                                     ),
+                                                                     hr(),
+                                                                     uiOutput('r_time_slider')
+                                                              ), 
+                                                              column(6,
+                                                                     plotOutput("R_wt_plot_option")
+                                                              )
+                                                     ),
+                                                     
+                                                     tabPanel("L",
+                                                              column(4,
+                                                                     h5("Mean Time Elapsed: "),
+                                                                     fluidRow(
+                                                                       column(4,selectInput("L_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                                                                       column(4,selectInput("L_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                     ),
+                                                                     radioButtons("L_dist", "Distribution type:",
+                                                                                  c("Exponentional" = "exp",
+                                                                                    "Gamma" = "gamma"), inline = TRUE),
+
+                                                                     conditionalPanel(condition = "input.L_dist == 'gamma'",
+                                                                                      sliderInput("l_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                                                                     ),
+                                                                     hr(),
+                                                                     uiOutput('l_time_slider')
+                                                              ), 
+                                                              column(6,
+                                                                     plotOutput("L_wt_plot_option")
+                                                              )
+                                                     ),
+                                                     
+                                                     tabPanel("O",
+                                                              column(4,
+                                                                     h5("Mean Time Elapsed: "),
+                                                                     fluidRow(
+                                                                       column(4,selectInput("O_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                                                                       column(4,selectInput("O_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                     ),
+                                                                     radioButtons("O_dist", "Distribution type:",
+                                                                                  c("Exponentional" = "exp",
+                                                                                    "Gamma" = "gamma"), inline = TRUE),
+
+                                                                     conditionalPanel(condition = "input.O_dist == 'gamma'",
+                                                                                      sliderInput("o_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                                                                     ),
+                                                                     hr(),
+                                                                     uiOutput('o_time_slider')
+                                                              ), 
+                                                              column(6,
+                                                                     plotOutput("O_wt_plot_option")
+                                                              )
+                                                     ),
+                                                     
+                                                     tabPanel("S",
+                                                              column(4,
+                                                                     h5("Mean Time Elapsed: "),
+                                                                     fluidRow(
+                                                                       column(4,selectInput("S_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                                                                       column(4,selectInput("S_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                     ),
+                                                                     radioButtons("S_dist", "Distribution type:",
+                                                                                  c("Exponentional" = "exp",
+                                                                                    "Gamma" = "gamma"), inline = TRUE),
+   
+                                                                     conditionalPanel(condition = "input.S_dist == 'gamma'",
+                                                                                      sliderInput("s_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                                                                     ),
+                                                                     hr(),
+                                                                     uiOutput('s_time_slider')
+                                                              ), 
+                                                              column(6,
+                                                                     plotOutput("S_wt_plot_option")
+                                                              )
+                                                     )
+                                                     
+                                                   )
+                                          ),
+                                          #############################################################################
+                                          tabPanel("Survival",
+                                                   tabsetPanel(
+                                                     tabPanel("Flight Energetics",
+                                                              column(4,
+                                                                     # sliderInput(inputId = "S_u", label ="Per-bout Energy Expenditure",
+                                                                     #              value = 1/7, min = 0, max = 1, step = 0.01),
+                                                                     sliderInput(inputId = "S_u_inv", label ="Number of Bouts",
+                                                                                 value = 7, min = 0, max = 20, step = 1),
+                                                                     hr(),
+                                                                     tags$h5("Survival Probability Function of Energy Reserves:"),
+                                                                     sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probability of Survival",
+                                                                                 value = 20, min = 0, max = 100, step = 1),
+                                                                     sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probability of Survival",
+                                                                                 value = 10, min = 0, max = 100, step = 1)
+                                                              ),
+                                                              column(6,
+                                                                     plotOutput("flight_energetics_plot")
+                                                              )
+                                                     ),
+                                                     tabPanel("Senescence",
+                                                              column(4,
+                                                                     checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = FALSE),
+                                                                     conditionalPanel(condition = "!input.SENESCE",
+                                                                                      sliderInput(inputId = "sns_a", label ="Exp: a",
+                                                                                                  value = 0.085, min = 0, max = 0.1, step = 0.001),
+                                                                                      sliderInput(inputId = "sns_b", label ="Exp: b",
+                                                                                                  value = 100, min = 0, max = 1000, step = 1)
+                                                                     )),
+                                                              column(6,
+                                                                     plotOutput("senescence_plot")
+                                                              )
+                                                     ),
+                                                     tabPanel("Damage",
+                                                              column(4,
+                                                                     checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
+                                                                     sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
+                                                                                 value = 0.5, min = 0, max = 1, step = 0.1),
+                                                                     sliderInput(inputId = "ttsz_mean", label ="Mean of Tattering Damage",
+                                                                                 value = 0.4, min = 0, max = 1, step = 0.01),
+                                                                     sliderInput(inputId = "ttsz_v", label ="Dispersion of Tattering Damage (a + b) in Beta(a,b)",
+                                                                                 value = 5, min = 0, max = 20, step = 0.1),
+                                                                     hr(),
+                                                                     sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
+                                                                                 value = 15, min = 0, max = 100, step = 1),
+                                                                     sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
+                                                                                 value = 500, min = 0, max = 1000, step = 10)),
+                                                              column(6,
+                                                                     plotOutput("tattering_beta_plot"),
+                                                                     plotOutput("tattering_exp_plot")
+                                                              )
+                                                              
+                                                     )
+                                                   )),
+                                          
+                                          #########################################################################
+                                          tabPanel("Blood Meal",
+                                                   column(8,
+                                                          checkboxInput("showB_Option", "Setting Blood Meal Parameters", FALSE),
+                                                          conditionalPanel(condition = "input.showB_Option",
+                                                                           #helpText("The following parameters also can be set under 'Bouts' Panel"),
+                                                                           checkboxInput("showBloodMeal_Option", "Blood Meal Size", FALSE),
+                                                                           conditionalPanel(condition = "input.showBloodMeal_Option",
+                                                                                            fluidRow(
+                                                                                              column(6,
+                                                                                                     sliderInput(inputId = "bm_mean", label ="Average Bloodmeal Size",
+                                                                                                                 value = 0.5, min = 0, max = 1, step = 0.01),
+                                                                                                     sliderInput(inputId = "bm_v", label ="Parameter v for a Bloodmeal Size: (a + b) in Beta(a,b)",
+                                                                                                                 value = 15, min = 0, max = 40, step = 0.5)
+                                                                                              ),
+                                                                                              column(6,
+                                                                                                     plotOutput("bm_Option_plot")
+                                                                                              )
+                                                                                            )),
+                                                                           hr(),
+                                                                           checkboxInput("overfeed_Option", "Overfeed", FALSE),
+                                                                           conditionalPanel(condition = "input.overfeed_Option",
+                                                                                            fluidRow(
+                                                                                              column(6,
+                                                                                                     sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
+                                                                                                                 value = 8, min = 5, max = 10, step = 0.01),
+                                                                                                     sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
+                                                                                                                 value = 5000, min = 0, max = 10000, step = 100)),
+                                                                                              column(6,
+                                                                                                     plotOutput("overfeeding_Option_plot")
+                                                                                              ))
+                              
+                                                                           )))),
+                                          
+
+                                          tabPanel("Sugar Feeding",
+                                                   column(6,
+                                                          sliderInput(inputId = "S_sa", label ="Shape Param a of Probability to queue Sugar bout",
+                                                                      value = 20, min = 0, max = 100, step = 1),
+                                                          sliderInput(inputId = "S_sb", label ="Shape Param b of Probability to queue Sugar bout",
+                                                                      value = 10, min = 0, max = 100, step = 1),
+                                                          sliderInput(inputId = "energyPreG", label ="Pre-gonotrophic Energy Requirement",
+                                                                      value = 0, min = 0, max = 100, step = 1),
+                                                          hr(),
+                                                          checkboxInput("showS_Option", "Sugar Feeding Parameters:", FALSE),
+                                                          conditionalPanel(condition = "input.showS_Option",
+                                                                        
+                                                                           sliderInput(inputId = "S_succeed_Option", label ="Probability of Success",
+                                                                                       value = 0.99, min = 0.9, max = 1, step = 0.01),
+                                                                           sliderInput(inputId = "S_surv_Option", label ="Baseline Probability of Survival",
+                                                                                       value = 0.99, min = 0.9, max = 1, step = 0.01),
+                                                                           #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+                                                                           sliderInput(inputId = "preGsugar_Option", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+                                                                                       value = 0, min = 0, max = 100, step = 1))
+                                                   )),
+                                        
+                                          
+                                          tabPanel("Estivation"
+                                          ),
+                                          tabPanel("Maturation"
+                                          ),
+                                          tabPanel("Mating"
+                                          ),
+                                          tabPanel("Male Mosquitoes"
+                                          ),
+                                          tabPanel("Timing",
+                                                   sliderInput(inputId = "gammaShape", label ="Shape Param for Gamma Distributed Dwell Times:",
+                                                               value = 0.1, min = 1, max = 10, step = 0.1),
+                                                   sliderInput(inputId = "PfEIP", label ="Entomological Inoculation Period for Plasmodium falciparum During MosquitoFemale$probing()",
+                                                               value = 12, min = 0, max = 100, step = 1)
+                                          ),
+                                          tabPanel("Resting Spot",
+                                                   h4("Landing Spot Weights: Enter a vector (comma delimited) for each bout"),
+                                                   textInput("F_wts", "F: Blood Feeding Search", "1,1,1,1,1"),
+                                                   textInput("B_wts", "B: Blood Feeding Attempt", "1,1,1,1,1"),
+                                                   textInput("R_wts", "R: Post-prandial Resting", "1,1,1,1,1"),
+                                                   textInput("L_wts", "L: Egg Laying Search", "1,1,1,1,1"),
+                                                   textInput("O_wts", "O: Egg Laying Attempt", "1,1,1,1,1"),
+                                                   textInput("M_wts", "M: Mating", "1,1,1,1,1"),
+                                                   textInput("S_wts", "S: Sugar Feeding Attempt", "1,1,1,1,1")
+                                                   
+                                                   
+                                                   
+                                          ),
+                                          tabPanel("Egg",
+                                                   sliderInput(inputId = "bs_m", label ="Mean of Normally-distributed Egg Batch Size",
+                                                               value = 30, min = 0, max = 100, step = 1),
+                                                   sliderInput(inputId = "bs_v", label ="Standard Deviation of Normally-distributed Egg Batch Size",
+                                                               value = 30, min = 0, max = 100, step = 1),
+                                                   sliderInput(inputId = "maxBatch", label ="Maximum Egg Batch Size",
+                                                               value = 30, min = 0, max = 100, step = 1),
+                                                   sliderInput(inputId = "emt_m", label ="Mean of Normally-distributed Egg Batch Maturation Time",
+                                                               value = 3, min = 0, max = 10, step = 1),
+                                                   sliderInput(inputId = "emt_v", label ="Standard Deviation of Normally-distributed Egg Batch Maturation Time",
+                                                               value = 1, min = 0, max = 10, step = 1),
+                                                   sliderInput(inputId = "eggT", label ="Minimum Time to Egg Maturation",
+                                                               value = 0, min = 0, max = 10, step = 1),
+                                                   sliderInput(inputId = "eggP", label ="Minimum Provision to Produce Eggs",
+                                                               value = 0, min = 0, max = 10, step = 1)
+                                                   
+                                          )
+                                          
+                             )
+                             
+                             )
+  })
+
+output$panel_bouts <- renderUI({
+  fluidPage(
+       sidebarLayout(position = "right",
+                     sidebarPanel(
+                       helpText("Please choose the bouts:"),
+                       checkboxInput("showF", "F: Blood Feeding Search", FALSE),
+                       checkboxInput("showB", "B: Blood Feeding Attempt", FALSE),
+                       checkboxInput("showR", "R: Post-prandial Resting", FALSE),
+                       checkboxInput("showL", "L: Egg Laying Search", FALSE),
+                       checkboxInput("showO", "O: Egg Laying Attempt", FALSE),
+                       checkboxInput("showM", "M: Mating", FALSE),
+                       checkboxInput("showS", "S: Sugar Feeding Attempt", FALSE),
+                       checkboxInput("showE", "E: Estivation", FALSE),
+                       checkboxInput("showMale", "Male Mosquitoes", FALSE),
+                       actionButton('save_inputs_bout', 'Save inputs',width = "100%"),
+                       tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});')))
+                     )
+                     ,
+                     mainPanel(
+                       fluidRow(
+                         column(7,helpText("Set parameters for selected bouts:"))
+                       ),
+                       tabsetPanel(
+                         id = "boutbar",
+                         tabPanel(
+                           title = "F",
+                           value = "bout_f",
+                           uiOutput('panel_f')
+                         ),
+                         tabPanel(
+                           title = "B",
+                           value = "bout_b",
+                           uiOutput('panel_b')
+                         ),
+                         tabPanel(
+                           title = "R",
+                           value = "bout_r",
+                           uiOutput('panel_r')
+                         ),
+                         tabPanel(
+                           title = "L",
+                           value = "bout_l",
+                           uiOutput('panel_l')
+                         ),
+                         tabPanel(
+                           title = "O",
+                           value = "bout_o",
+                           uiOutput('panel_o')
+                         ),
+                         tabPanel(
+                           title = "M",
+                           value = "bout_m",
+                           uiOutput('panel_m')
+                         ),
+                         tabPanel(
+                           title = "S",
+                           value = "bout_s",
+                           uiOutput('panel_s')
+                         ),
+                         tabPanel(
+                           title = "E",
+                           value = "bout_e",
+                           uiOutput('panel_e')
+                         ),
+                         tabPanel(
+                           title = "Male",
+                           value = "bout_male",
+                           uiOutput('panel_male')
+                         )
+                       ))
+       ))
+})
   ################## Waiting Time ###############################################
   set.seed(123)
   output$F_wt_plot_option <- renderPlot({
@@ -120,6 +498,7 @@ server <- function(input, output, session) {
                 max = (as.numeric(input$F_time_h) * 60 + as.numeric(input$F_time_m)), 
                 value = round((as.numeric(input$F_time_h) * 60 + as.numeric(input$F_time_m)))/2, step = 1)
   })
+
   output$b_time_slider <- renderUI({
     sliderInput("b_min_time", "Minimal resting time in Minutes", min = 0, 
                 max = (as.numeric(input$B_time_h) * 60 + as.numeric(input$B_time_m)), 
