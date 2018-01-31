@@ -302,38 +302,38 @@ server <- function(input, output, session) {
                                           ),
                                           tabPanel("Timing",
                                                    sliderInput(inputId = "gammaShape", label ="Shape Param for Gamma Distributed Dwell Times:",
-                                                               value = 0.1, min = 1, max = 10, step = 0.1),
-                                                   sliderInput(inputId = "PfEIP", label ="Entomological Inoculation Period for Plasmodium falciparum During MosquitoFemale$probing()",
-                                                               value = 12, min = 0, max = 100, step = 1)
+                                                               value = ParList$gammaShape, min = 1, max = 10, step = 0.1),
+                                                   sliderInput(inputId = "PfEIP", label ="Extrinsic Incubation Period for Plasmodium falciparum During MosquitoFemale$probing()",
+                                                               value = ParList$PfEIP, min = 0, max = 100, step = 1)
                                           ),
                                           tabPanel("Resting Spot",
                                                    h4("Landing Spot Weights: Enter a vector (comma delimited) for each bout"),
-                                                   textInput("F_wts", "F: Blood Feeding Search", "1,1,1,1,1"),
-                                                   textInput("B_wts", "B: Blood Feeding Attempt", "1,1,1,1,1"),
-                                                   textInput("R_wts", "R: Post-prandial Resting", "1,1,1,1,1"),
-                                                   textInput("L_wts", "L: Egg Laying Search", "1,1,1,1,1"),
-                                                   textInput("O_wts", "O: Egg Laying Attempt", "1,1,1,1,1"),
-                                                   textInput("M_wts", "M: Mating", "1,1,1,1,1"),
-                                                   textInput("S_wts", "S: Sugar Feeding Attempt", "1,1,1,1,1")
+                                                   textInput("F_wts", "F: Blood Feeding Search", value = paste(ParList$F_wts, collapse = ",")),
+                                                   textInput("B_wts", "B: Blood Feeding Attempt", value = paste(ParList$B_wts, collapse = ",")),
+                                                   textInput("R_wts", "R: Post-prandial Resting", value = paste(ParList$R_wts, collapse = ",")),
+                                                   textInput("L_wts", "L: Egg Laying Search", value = paste(ParList$L_wts, collapse = ",")),
+                                                   textInput("O_wts", "O: Egg Laying Attempt", value = paste(ParList$O_wts, collapse = ",")),
+                                                   textInput("M_wts", "M: Mating", value = paste(ParList$M_wts, collapse = ",")),
+                                                   textInput("S_wts", "S: Sugar Feeding Attempt", value = paste(ParList$S_wts, collapse = ","))
                                                    
                                                    
                                                    
                                           ),
                                           tabPanel("Egg",
                                                    sliderInput(inputId = "bs_m", label ="Mean of Normally-distributed Egg Batch Size",
-                                                               value = 30, min = 0, max = 100, step = 1),
+                                                               value = ParList$bs.m, min = 0, max = 100, step = 1),
                                                    sliderInput(inputId = "bs_v", label ="Standard Deviation of Normally-distributed Egg Batch Size",
-                                                               value = 30, min = 0, max = 100, step = 1),
+                                                               value = ParList$bs.v, min = 0, max = 100, step = 1),
                                                    sliderInput(inputId = "maxBatch", label ="Maximum Egg Batch Size",
-                                                               value = 30, min = 0, max = 100, step = 1),
+                                                               value = ParList$maxBatch, min = 0, max = 100, step = 1),
                                                    sliderInput(inputId = "emt_m", label ="Mean of Normally-distributed Egg Batch Maturation Time",
-                                                               value = 3, min = 0, max = 10, step = 1),
+                                                               value = ParList$emt.m, min = 0, max = 10, step = 1),
                                                    sliderInput(inputId = "emt_v", label ="Standard Deviation of Normally-distributed Egg Batch Maturation Time",
-                                                               value = 1, min = 0, max = 10, step = 1),
+                                                               value = ParList$emt.v, min = 0, max = 10, step = 1),
                                                    sliderInput(inputId = "eggT", label ="Minimum Time to Egg Maturation",
-                                                               value = 0, min = 0, max = 10, step = 1),
+                                                               value = ParList$eggT, min = 0, max = 10, step = 1),
                                                    sliderInput(inputId = "eggP", label ="Minimum Provision to Produce Eggs",
-                                                               value = 0, min = 0, max = 10, step = 1)
+                                                               value = ParList$eggP, min = 0, max = 10, step = 1)
                                                    
                                           )
                                           
@@ -347,15 +347,15 @@ output$panel_bouts <- renderUI({
        sidebarLayout(position = "right",
                      sidebarPanel(
                        helpText("Please choose the bouts:"),
-                       checkboxInput("showF", "F: Blood Feeding Search", FALSE),
-                       checkboxInput("showB", "B: Blood Feeding Attempt", FALSE),
-                       checkboxInput("showR", "R: Post-prandial Resting", FALSE),
-                       checkboxInput("showL", "L: Egg Laying Search", FALSE),
-                       checkboxInput("showO", "O: Egg Laying Attempt", FALSE),
-                       checkboxInput("showM", "M: Mating", FALSE),
-                       checkboxInput("showS", "S: Sugar Feeding Attempt", FALSE),
-                       checkboxInput("showE", "E: Estivation", FALSE),
-                       checkboxInput("showMale", "Male Mosquitoes", FALSE),
+                       checkboxInput("showF", "F: Blood Feeding Search", value = ("F" %in% ParList$stateSpace)),
+                       checkboxInput("showB", "B: Blood Feeding Attempt", value = ("B" %in% ParList$stateSpace)),
+                       checkboxInput("showR", "R: Post-prandial Resting", value = ("R" %in% ParList$stateSpace)),
+                       checkboxInput("showL", "L: Egg Laying Search", value = ("L" %in% ParList$stateSpace)),
+                       checkboxInput("showO", "O: Egg Laying Attempt", value = ("O" %in% ParList$stateSpace)),
+                       checkboxInput("showM", "M: Mating", value = ("M" %in% ParList$stateSpace)),
+                       checkboxInput("showS", "S: Sugar Feeding Attempt", value = ("S" %in% ParList$stateSpace)),
+                       checkboxInput("showE", "E: Estivation", value = ("E" %in% ParList$stateSpace)),
+                       checkboxInput("showMale", "Male Mosquitoes", value = ("Male" %in% ParList$stateSpace)),
                        actionButton('save_inputs_bout', 'Save inputs',width = "100%"),
                        tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});')))
                      )
