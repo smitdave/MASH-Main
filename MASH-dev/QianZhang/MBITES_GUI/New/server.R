@@ -6,6 +6,12 @@ server <- function(input, output, session) {
   output$plot <- renderPlot({
     ggplot(data, aes_string(xvar, yvar)) + geom_point()
   })
+
+  #################### Loading parameter json file #####################################
+
+  demo_par = fromJSON("demo_json/demo.json", flatten=TRUE)
+
+  ParList = demo_par
   
   #################### Option Output #####################################################
   output$panel_options <- renderUI({
@@ -21,8 +27,8 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("F_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                                                                       column(4,selectInput("F_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                       column(4,selectInput("F_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$F_time), width = "100%")),
+                                                                       column(4,selectInput("F_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$F_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("F_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
@@ -45,8 +51,8 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("B_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                                                                       column(4,selectInput("B_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                       column(4,selectInput("B_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$B_time), width = "100%")),
+                                                                       column(4,selectInput("B_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$B_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("B_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
@@ -67,8 +73,8 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("R_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                                                                       column(4,selectInput("R_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                       column(4,selectInput("R_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$R_time), width = "100%")),
+                                                                       column(4,selectInput("R_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$R_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("R_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
@@ -89,8 +95,8 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("L_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                                                                       column(4,selectInput("L_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                       column(4,selectInput("L_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$L_time), width = "100%")),
+                                                                       column(4,selectInput("L_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$L_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("L_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
@@ -111,8 +117,8 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("O_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                                                                       column(4,selectInput("O_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                       column(4,selectInput("O_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$O_time), width = "100%")),
+                                                                       column(4,selectInput("O_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$O_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("O_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
@@ -128,13 +134,35 @@ server <- function(input, output, session) {
                                                                      plotOutput("O_wt_plot_option")
                                                               )
                                                      ),
+
+                                                     tabPanel("M",
+                                                              column(4,
+                                                                     h5("Mean Time Elapsed: "),
+                                                                     fluidRow(
+                                                                       column(4,selectInput("M_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$M_time), width = "100%")),
+                                                                       column(4,selectInput("M_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$M_time%%1*60), width = "100%"))
+                                                                     ),
+                                                                     radioButtons("M_dist", "Distribution type:",
+                                                                                  c("Exponentional" = "exp",
+                                                                                    "Gamma" = "gamma"), inline = TRUE),
+
+                                                                     conditionalPanel(condition = "input.M_dist == 'gamma'",
+                                                                                      sliderInput("m_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                                                                     ),
+                                                                     hr(),
+                                                                     uiOutput('m_time_slider')
+                                                              ), 
+                                                              column(6,
+                                                                     plotOutput("M_wt_plot_option")
+                                                              )
+                                                     ),
                                                      
                                                      tabPanel("S",
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("S_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                                                                       column(4,selectInput("S_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                                                                       column(4,selectInput("S_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$S_time), width = "100%")),
+                                                                       column(4,selectInput("S_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$S_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("S_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
@@ -473,6 +501,23 @@ output$panel_bouts <- renderUI({
             xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(o_m +24)))
     }
   })
+
+  output$M_wt_plot_option <- renderPlot({
+    if(input$M_dist == "exp"){
+      m_t = as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60
+      m_m = as.numeric(input$m_min_time)/60
+      curve(dexp(x, rate = 1/(m_t - m_m), log = FALSE)/
+              max(dexp(x, rate = 1/(m_t - m_m), log = FALSE)),
+            xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(m_m +24)))
+      #}
+    }else{
+      m_t = as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60
+      m_m = as.numeric(input$m_min_time)/60
+      curve(dgamma(x, shape = input$m_wt_gamma_shape ,rate = 1/(m_t - m_m), log = FALSE)/
+              max(dgamma(x, shape = input$m_wt_gamma_shape ,rate = 1/(m_t - m_m), log = FALSE)),
+            xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(m_m +24)))
+    }
+  })
   
   output$S_wt_plot_option <- renderPlot({
     if(input$S_dist == "exp"){
@@ -518,6 +563,11 @@ output$panel_bouts <- renderUI({
     sliderInput("o_min_time", "Minimal resting time in Minutes", min = 0, 
                 max = (as.numeric(input$O_time_h) * 60 + as.numeric(input$O_time_m)), 
                 value = round((as.numeric(input$O_time_h) * 60 + as.numeric(input$O_time_m)))/2, step = 1)
+  })
+  output$m_time_slider <- renderUI({
+    sliderInput("m_min_time", "Minimal resting time in Minutes", min = 0, 
+                max = (as.numeric(input$M_time_h) * 60 + as.numeric(input$M_time_m)), 
+                value = round((as.numeric(input$M_time_h) * 60 + as.numeric(input$M_time_m)))/2, step = 1)
   })
   output$s_time_slider <- renderUI({
     sliderInput("s_min_time", "Minimal resting time in Minutes", min = 0, 
