@@ -187,13 +187,13 @@ server <- function(input, output, session) {
                                                      tabPanel("Flight Energetics",
                                                               column(4,
                                                                      sliderInput(inputId = "S_u_inv", label ="Number of Bouts",
-                                                                                 value = 7, min = 0, max = 20, step = 1),
+                                                                                 value = round(1/ParList$S.u), min = 0, max = 20, step = 1),
                                                                      hr(),
                                                                      tags$h5("Survival Probability Function of Energy Reserves:"),
                                                                      sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probability of Survival",
-                                                                                 value = 20, min = 0, max = 100, step = 1),
+                                                                                 value = ParList$S.a, min = 0, max = 100, step = 1),
                                                                      sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probability of Survival",
-                                                                                 value = 10, min = 0, max = 100, step = 1)
+                                                                                 value = ParList$S.b, min = 0, max = 100, step = 1)
                                                               ),
                                                               column(6,
                                                                      plotOutput("flight_energetics_plot")
@@ -201,12 +201,12 @@ server <- function(input, output, session) {
                                                      ),
                                                      tabPanel("Senescence",
                                                               column(4,
-                                                                     checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = FALSE),
+                                                                     checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = ParList$SENESCE),
                                                                      conditionalPanel(condition = "!input.SENESCE",
                                                                                       sliderInput(inputId = "sns_a", label ="Exp: a",
-                                                                                                  value = 0.085, min = 0, max = 0.1, step = 0.001),
+                                                                                                  value = ParList$sns.a, min = 0, max = 0.1, step = 0.001),
                                                                                       sliderInput(inputId = "sns_b", label ="Exp: b",
-                                                                                                  value = 100, min = 0, max = 1000, step = 1)
+                                                                                                  value = ParList$sns.b, min = 0, max = 1000, step = 1)
                                                                      )),
                                                               column(6,
                                                                      plotOutput("senescence_plot")
@@ -214,22 +214,23 @@ server <- function(input, output, session) {
                                                      ),
                                                      tabPanel("Damage",
                                                               column(4,
-                                                                     checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = FALSE),
-                                                                     sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
-                                                                                 value = 0.5, min = 0, max = 1, step = 0.1),
-                                                                     sliderInput(inputId = "ttsz_mean", label ="Mean of Tattering Damage",
-                                                                                 value = 0.4, min = 0, max = 1, step = 0.01),
-                                                                     sliderInput(inputId = "ttsz_v", label ="Dispersion of Tattering Damage (a + b) in Beta(a,b)",
-                                                                                 value = 5, min = 0, max = 20, step = 0.1),
-                                                                     hr(),
-                                                                     sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
-                                                                                 value = 15, min = 0, max = 100, step = 1),
-                                                                     sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
-                                                                                 value = 500, min = 0, max = 1000, step = 10)),
-                                                              column(6,
-                                                                     plotOutput("tattering_beta_plot"),
-                                                                     plotOutput("tattering_exp_plot")
-                                                              )
+                                                                     checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = ParList$TATTER),
+                                                                     conditionalPanel(condition = "!input.TATTER",
+                                                                           sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
+                                                                                       value = 0.5, min = 0, max = 1, step = 0.1),
+                                                                           sliderInput(inputId = "ttsz_mean", label ="Mean of Tattering Damage",
+                                                                                       value = 0.4, min = 0, max = 1, step = 0.01),
+                                                                           sliderInput(inputId = "ttsz_v", label ="Dispersion of Tattering Damage (a + b) in Beta(a,b)",
+                                                                                       value = 5, min = 0, max = 20, step = 0.1),
+                                                                           hr(),
+                                                                           sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
+                                                                                       value = 15, min = 0, max = 100, step = 1),
+                                                                           sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
+                                                                                       value = 500, min = 0, max = 1000, step = 10))),
+                                                                            column(6,
+                                                                               plotOutput("tattering_beta_plot"),
+                                                                               plotOutput("tattering_exp_plot")
+                                                                    )
                                                               
                                                      )
                                                    )),
@@ -592,17 +593,19 @@ output$panel_bouts <- renderUI({
   
   
   output$tattering_exp_plot <- renderPlot({
+    if(!input$TATTER){
     curve((2 + input$ttr_b)/(1 + input$ttr_b) - exp(x * input$ttr_a)/(input$ttr_a + x * input$ttr_a),
           ylab = "Survival Probability", xlab = "Wing Tattering",
-          main = "Exponentional Distribution", col = "Green", lwd = 1.5, ylim = c(0,1))
+          main = "Exponentional Distribution", col = "Green", lwd = 1.5, ylim = c(0,1))}
   })
   
   output$tattering_beta_plot <- renderPlot({
+    if(!input$TATTER){
     ttsz_a <- input$ttsz_mean * input$ttsz_v
     ttsz_b <- (1 - input$ttsz_mean) * input$ttsz_v
     curve(((x < input$ttsz_p)* 0 + (x >= input$ttsz_p)*dbeta(x, ttsz_a, ttsz_b))/
             max((x < input$ttsz_p)* 0 + (x >= input$ttsz_p)*dbeta(x, ttsz_a, ttsz_b)),
-          ylab = "Normalized Density", xlab = "Wing Damage", main = "Beta Distribution", ylim = c(0,1), col = "Blue", lwd = 1.5)
+          ylab = "Normalized Density", xlab = "Wing Damage", main = "Beta Distribution", ylim = c(0,1), col = "Blue", lwd = 1.5)}
   })
   
   ################ Blood Meal ###################################################
