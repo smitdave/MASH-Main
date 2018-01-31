@@ -32,7 +32,7 @@ server <- function(input, output, session) {
                                                                      ),
                                                                      radioButtons("F_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList$F_dist, inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.F_dist == 'gamma'",
                                                                                       sliderInput("f_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -56,7 +56,7 @@ server <- function(input, output, session) {
                                                                      ),
                                                                      radioButtons("B_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList$B_dist, inline = TRUE),
  
                                                                      conditionalPanel(condition = "input.B_dist == 'gamma'",
                                                                                       sliderInput("b_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -78,7 +78,7 @@ server <- function(input, output, session) {
                                                                      ),
                                                                      radioButtons("R_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList$R_dist, inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.R_dist == 'gamma'",
                                                                                       sliderInput("r_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -100,7 +100,7 @@ server <- function(input, output, session) {
                                                                      ),
                                                                      radioButtons("L_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList$L_dist,  inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.L_dist == 'gamma'",
                                                                                       sliderInput("l_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -122,7 +122,7 @@ server <- function(input, output, session) {
                                                                      ),
                                                                      radioButtons("O_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList$O_dist,  inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.O_dist == 'gamma'",
                                                                                       sliderInput("o_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -144,7 +144,7 @@ server <- function(input, output, session) {
                                                                      ),
                                                                      radioButtons("M_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList$M_dist, inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.M_dist == 'gamma'",
                                                                                       sliderInput("m_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -166,7 +166,7 @@ server <- function(input, output, session) {
                                                                      ),
                                                                      radioButtons("S_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList$S_dist, inline = TRUE),
    
                                                                      conditionalPanel(condition = "input.S_dist == 'gamma'",
                                                                                       sliderInput("s_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -186,8 +186,6 @@ server <- function(input, output, session) {
                                                    tabsetPanel(
                                                      tabPanel("Flight Energetics",
                                                               column(4,
-                                                                     # sliderInput(inputId = "S_u", label ="Per-bout Energy Expenditure",
-                                                                     #              value = 1/7, min = 0, max = 1, step = 0.01),
                                                                      sliderInput(inputId = "S_u_inv", label ="Number of Bouts",
                                                                                  value = 7, min = 0, max = 20, step = 1),
                                                                      hr(),

@@ -5,6 +5,27 @@
     "MATE": [
         true
     ],
+    "F_dist": [
+        "exp"
+    ],
+    "B_dist": [
+        "gamma"
+    ],
+    "R_dist": [
+        "exp"
+    ],
+    "L_dist": [
+        "gamma"
+    ],
+    "O_dist": [
+        "exp"
+    ],
+    "M_dist": [
+        "gamma"
+    ],
+    "S_dist": [
+        "exp"
+    ],
     "F_time": [
         3.5
     ],
