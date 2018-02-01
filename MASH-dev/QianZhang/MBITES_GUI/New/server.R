@@ -241,7 +241,7 @@ server <- function(input, output, session) {
                                                           checkboxInput("showB_Option", "Setting Blood Meal Parameters", value = ("M"%in%ParList$stateSpace)),
                                                           conditionalPanel(condition = "input.showB_Option",
                                                                            #helpText("The following parameters also can be set under 'Bouts' Panel"),
-                                                                           checkboxInput("showBloodMeal_Option", "Blood Meal Size", value = ("bm.a" %in% names(female_par))),
+                                                                           checkboxInput("showBloodMeal_Option", "Blood Meal Size", value = ("bm.a" %in% names(ParList))),
                                                                            conditionalPanel(condition = "input.showBloodMeal_Option",
                                                                                             fluidRow(
                                                                                               column(6,
@@ -540,38 +540,38 @@ output$panel_bouts <- renderUI({
   output$f_time_slider <- renderUI({
     sliderInput("f_min_time", "Minimal resting time in Minutes", min = 0, 
                 max = (as.numeric(input$F_time_h) * 60 + as.numeric(input$F_time_m)), 
-                value = round((as.numeric(input$F_time_h) * 60 + as.numeric(input$F_time_m)))/2, step = 1)
+                value = 0, step = 1)
   })
 
   output$b_time_slider <- renderUI({
     sliderInput("b_min_time", "Minimal resting time in Minutes", min = 0, 
                 max = (as.numeric(input$B_time_h) * 60 + as.numeric(input$B_time_m)), 
-                value = round((as.numeric(input$B_time_h) * 60 + as.numeric(input$B_time_m)))/2, step = 1)
+                value = 0, step = 1)
   })
   output$r_time_slider <- renderUI({
     sliderInput("r_min_time", "Minimal resting time in Minutes", min = 0, 
                 max = (as.numeric(input$R_time_h) * 60 + as.numeric(input$R_time_m)), 
-                value = round((as.numeric(input$R_time_h) * 60 + as.numeric(input$R_time_m)))/2, step = 1)
+                value = 0, step = 1)
   })
   output$l_time_slider <- renderUI({
     sliderInput("l_min_time", "Minimal resting time in Minutes", min = 0, 
                 max = (as.numeric(input$L_time_h) * 60 + as.numeric(input$L_time_m)), 
-                value = round((as.numeric(input$L_time_h) * 60 + as.numeric(input$L_time_m)))/2, step = 1)
+                value = 0, step = 1)
   })
   output$o_time_slider <- renderUI({
     sliderInput("o_min_time", "Minimal resting time in Minutes", min = 0, 
                 max = (as.numeric(input$O_time_h) * 60 + as.numeric(input$O_time_m)), 
-                value = round((as.numeric(input$O_time_h) * 60 + as.numeric(input$O_time_m)))/2, step = 1)
+                value = 0, step = 1)
   })
   output$m_time_slider <- renderUI({
     sliderInput("m_min_time", "Minimal resting time in Minutes", min = 0, 
                 max = (as.numeric(input$M_time_h) * 60 + as.numeric(input$M_time_m)), 
-                value = round((as.numeric(input$M_time_h) * 60 + as.numeric(input$M_time_m)))/2, step = 1)
+                value = 0, step = 1)
   })
   output$s_time_slider <- renderUI({
     sliderInput("s_min_time", "Minimal resting time in Minutes", min = 0, 
                 max = (as.numeric(input$S_time_h) * 60 + as.numeric(input$S_time_m)), 
-                value = round((as.numeric(input$S_time_h) * 60 + as.numeric(input$S_time_m)))/2, step = 1)
+                value = 0, step = 1)
   })
   
   output$flight_energetics_plot <- renderPlot({
@@ -1033,9 +1033,9 @@ output$panel_bouts <- renderUI({
       column(6,
              wellPanel(
                sliderInput(inputId = "F_succeed", label ="Probability of Success",
-                           value = 0.98, min = 0.9, max = 1, step = 0.01),
+                           value = ParList$F_succeed, min = 0.9, max = 1, step = 0.01),
                sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
-                           value = 0.99, min = 0.9, max = 1, step = 0.01)#,
+                           value = ParList$F_surv, min = 0.9, max = 1, step = 0.01)#,
                #textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
              ))
     
@@ -1051,45 +1051,45 @@ output$panel_bouts <- renderUI({
                wellPanel(
 
                  sliderInput(inputId = "B_succeed", label ="Probability of Success",
-                             value = 0.95, min = 0.8, max = 1, step = 0.01),                #
+                             value = ParList$B_succeed, min = 0.8, max = 1, step = 0.01),                #
                  sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",
-                             value = 0.99, min = 0.9, max = 1, step = 0.01),
+                             value = ParList$B_surv, min = 0.9, max = 1, step = 0.01),
  
-                 checkboxInput("showhuman", "Human Host Encounter", FALSE),
+                 checkboxInput("showhuman", "Human Host Encounter", value = ("surviveH" %in% names(ParList))),
                  conditionalPanel(condition = "input.showhuman",
                                   wellPanel(sliderInput(inputId = "surviveH", label ="Survival Probability of Initial Encounter (Proceed to Probe)",
-                                                        value = 0.99, min = 0.9, max = 1, step = 0.01),
+                                                        value = ParList$surviveH, min = 0.9, max = 1, step = 0.01),
                                             sliderInput(inputId = "probeH", label ="Probability Undeterred and Begin Probing",
-                                                        value = 0.99, min = 0.9, max = 1, step = 0.01),
+                                                        value = ParList$probeH, min = 0.9, max = 1, step = 0.01),
                                             sliderInput(inputId = "surviveprobeH", label ="Survival Probability of Probing",
-                                                        value = 0.99, min = 0.9, max = 1, step = 0.01),
+                                                        value = ParList$surviveprobeH, min = 0.9, max = 1, step = 0.01),
                                             sliderInput(inputId = "feedH", label ="Probability to Successfully blood feed",
-                                                        value = 0.99, min = 0.9, max = 1, step = 0.01)
+                                                        value = ParList$feedH, min = 0.9, max = 1, step = 0.01)
                                   )),
-                 checkboxInput("shownonhuman", "Non-human Host Encounter", FALSE),
+                 checkboxInput("shownonhuman", "Non-human Host Encounter", value = ("surviveZ" %in% names(ParList))),
                  conditionalPanel(condition = "input.shownonhuman",
                                   wellPanel(sliderInput(inputId = "surviveZ", label ="Survival Probability of Initial Encounter (Proceed to Feed)",
-                                                        value = 0.99, min = 0.9, max = 1, step = 0.01),
+                                                        value = ParList$surviveZ, min = 0.9, max = 1, step = 0.01),
                                             sliderInput(inputId = "feedZ", label ="Probability to Successfully Blood Feed",
-                                                        value = 0.99, min = 0.9, max = 1, step = 0.01)
+                                                        value = ParList$feedZ, min = 0.9, max = 1, step = 0.01)
                                   )),
                  hr(),
-                 checkboxInput("showBloodMeal", "Blood Meal Size", FALSE),
+                 checkboxInput("showBloodMeal", "Blood Meal Size", value = input$showBloodMeal_Option),
                  conditionalPanel(condition = "input.showBloodMeal",
                                   helpText("Please set the parameters in Options - Blood Meal")
 
                  ),
                  hr(),
-                 checkboxInput("overfeed", "Overfeed", FALSE),
+                 checkboxInput("overfeed", "Overfeed", value = input$OVERFEED),
                  conditionalPanel(condition = "input.overfeed",
                                   helpText("Please set the parameters in Options - Blood Meal")
 
                  ),
                  hr(),
                  sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-                             value = 0, min = 0, max = 100, step = 1),
+                             value = ParList$preGblood, min = 0, max = 100, step = 1),
                  sliderInput(inputId = "Q", label ="Human Blood Index",
-                             value = 0.9, min = 0, max = 1, step = 0.1)
+                             value = ParList$Q, min = 0, max = 1, step = 0.1)
                ))
 
       )
@@ -1102,14 +1102,14 @@ output$panel_bouts <- renderUI({
                               wellPanel(
 
                                 sliderInput(inputId = "R_surv", label ="Baseline Probability of Survival",
-                                            value = 0.99, min = 0.9, max = 1, step = 0.01),
+                                            value = ParList$R_surv, min = 0.9, max = 1, step = 0.01),
 
-                                checkboxInput("REFEED", "Refeed", FALSE),
+                                checkboxInput("REFEED", "Refeed", ParList$REFEED),
                                 conditionalPanel(condition = "input.refeed",
                                                  sliderInput(inputId = "rf_a", "Exp Param a for refeeding as function of bmSize",
-                                                             value = 60, min = 0, max = 100, step = 1),
+                                                             value = ParList$rf_a, min = 0, max = 100, step = 1),
                                                  sliderInput(inputId = "rf_b", "Exp Param b for refeeding as function of bmSize",
-                                                             value = 5000, min = 0, max = 10000, step = 100))))
+                                                             value = ParList$rf_b, min = 0, max = 10000, step = 100))))
       )
   })
   output$panel_l <- renderUI({
@@ -1119,9 +1119,9 @@ output$panel_bouts <- renderUI({
              wellPanel(
 
                sliderInput(inputId = "L_succeed", label ="Probability of Success",
-                           value = 0.98, min = 0.8, max = 1, step = 0.01),
+                           value = ParList$L_succeed, min = 0.8, max = 1, step = 0.01),
                sliderInput(inputId = "L_surv", label ="Baseline Probability of Survival",
-                           value = 0.99, min = 0.9, max = 1, step = 0.01)#,
+                           value = ParList$L_surv, min = 0.9, max = 1, step = 0.01)#,
 
              ))
   })
@@ -1132,9 +1132,9 @@ output$panel_bouts <- renderUI({
              wellPanel(
 
                sliderInput(inputId = "O_succeed", label ="Probability of Success",
-                           value = 0.99, min = 0.9, max = 1, step = 0.01),
+                           value = ParList$O_succeed, min = 0.9, max = 1, step = 0.01),
                sliderInput(inputId = "O_surv", label ="Baseline Probability of Survival",
-                           value = 0.99, min = 0.9, max = 1, step = 0.01)#,
+                           value = ParList$O_surv, min = 0.9, max = 1, step = 0.01)#,
 
              ))
   })
@@ -1145,9 +1145,9 @@ output$panel_bouts <- renderUI({
              wellPanel(
 
                sliderInput(inputId = "M_succeed", label ="Probability of Success",
-                           value = 0.95, min = 0.9, max = 1, step = 0.01),
+                           value = ParList$M_succeed, min = 0.9, max = 1, step = 0.01),
                sliderInput(inputId = "M_surv", label ="Baseline Probability of Survival",
-                           value = 0.99, min = 0.9, max = 1, step = 0.01)#,
+                           value = ParList$M_surv, min = 0.9, max = 1, step = 0.01)#,
 
              ))
   })
@@ -1564,7 +1564,7 @@ output$panel_bouts <- renderUI({
     
     #Append all inputs before saving to folder
     if(input$showF){
-      stateSpace <- paste(stateSpace, "F", seq = "")
+      stateSpace <- paste(stateSpace, "F", seq = ",")
       for(input.i in f_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1572,7 +1572,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showB){
-      stateSpace <- paste(stateSpace, "B", seq = "")
+      stateSpace <- paste(stateSpace, "B", seq = ",")
       inputs_name <- append(inputs_name, 'bm_a')
       inputs_bout <- append(inputs_bout, input$bm_mean * input$bm_v)
       inputs_name <- append(inputs_name, 'bm_b')
@@ -1584,7 +1584,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showR){
-      stateSpace <- paste(stateSpace, "R", seq = "")
+      stateSpace <- paste(stateSpace, "R", seq = ",")
       for(input.i in r_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1592,7 +1592,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showL){
-      stateSpace <- paste(stateSpace, "L", seq = "")
+      stateSpace <- paste(stateSpace, "L", seq = ",")
       for(input.i in l_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1600,7 +1600,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showO){
-      stateSpace <- paste(stateSpace, "O", seq = "")
+      stateSpace <- paste(stateSpace, "O", seq = ",")
       for(input.i in o_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1608,7 +1608,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showM){
-      stateSpace <- paste(stateSpace, "M", seq = "")
+      stateSpace <- paste(stateSpace, "M", seq = ",")
       for(input.i in m_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1616,8 +1616,8 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showS){
-      stateSpace <- paste(stateSpace, "S", seq = "")
-      inputs_name <- append(inputs_name, 'S_u')
+      stateSpace <- paste(stateSpace, "S", seq = ",")
+      inputs_name <- append(inputs_name, 'S.u')
       inputs_bout <- append(inputs_bout, 1/input$S_u_inv)
       for(input.i in m_param_name){
         if(length(input[[input.i]]) != 0){
@@ -1631,9 +1631,9 @@ output$panel_bouts <- renderUI({
         inputs_bout <- append(inputs_bout, input[[input.i]])
       }}
     
-    inputs_name <- append(inputs_name, 'ttsz_a')
+    inputs_name <- append(inputs_name, 'ttsz.a')
     inputs_bout <- append(inputs_bout, input$ttsz_mean * input$ttsz_v)
-    inputs_name <- append(inputs_name, 'ttsz_b')
+    inputs_name <- append(inputs_name, 'ttsz.b')
     inputs_bout <- append(inputs_bout, (1 - input$ttsz_mean) * input$ttsz_v)
     
   
