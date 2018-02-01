@@ -47,7 +47,7 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                              });
                                              ")),
                        
-                       titlePanel(h1("MBITES Gadget")),
+                       titlePanel(h1("MBITES GUI")),
                        navbarPage("Welcome ", id = "nav",
                                   #################################################################################
                                   tabPanel("Get Started", value = 'start',
@@ -67,6 +67,15 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                                                                 "Start a new project" = "new",
                                                                                 "Work on an existing project" = "exist")),
                                                                  conditionalPanel(condition = "input.project == 'demo'",
+                                                                                  wellPanel(
+                                                                                    radioButtons("whichDemo", label = "Start with:", 
+                                                                                                 choices = c("Default Demo" = "default_demo",
+                                                                                                             "Customized Demo" = "cust_demo")),
+                                                                                    conditionalPanel(condition = "input.whichDemo == 'cust_demo'",
+                                                                                                     fileInput("load demo", "Choose your json file", 
+                                                                                                               accept = ".json")
+                                                                                    )
+                                                                                  ),
                                                                                   actionButton("createDemoFolder", "Run Demo")
                                                                  ),
                                                                  conditionalPanel(condition = "input.project == 'new'",
@@ -74,19 +83,26 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                                                                   actionButton("createNewFolder", "Create")
                                                                  ),
                                                                  conditionalPanel(condition = "input.project == 'exist'",
-                                                                                  fileInput('file_project', 'Choose .csv File',
-                                                                                            accept=c('text/csv',
-                                                                                                     'text/comma-separated-values,text/plain',
-                                                                                                     '.csv')),
-                                                                                  column(6,
-                                                                                  wellPanel(checkboxInput('header_project', 'Header', TRUE),
-                                                                                            radioButtons('sep_project', 'Separator',
-                                                                                                         c(Comma=',',
-                                                                                                           Semicolon=';',
-                                                                                                           Tab='\t'),
-                                                                                                         ',')),
+                                                                                  radioButtons("exist_file", label = "select your file format:",
+                                                                                               choices = c(".json" = "json",
+                                                                                                           ".csv" = "csv"), selected = "json"),
+                                                                                  conditionalPanel(condition = "input.exist_file == 'csv'",
+                                                                                      fileInput('file_project', 'Choose .csv File',
+                                                                                                accept=c('text/csv',
+                                                                                                         'text/comma-separated-values,text/plain',
+                                                                                                         '.csv')),
+                                                                                      column(6,
+                                                                                      wellPanel(checkboxInput('header_project', 'Header', TRUE),
+                                                                                                radioButtons('sep_project', 'Separator',
+                                                                                                             c(Comma=',',
+                                                                                                               Semicolon=';',
+                                                                                                               Tab='\t'),
+                                                                                                             ',')))),
+                                                                                  conditionalPanel(condition = "input.exist_file == 'json'",
+                                                                                    fileInput('exist_json', "choose your json file", accept = ".json")
+                                                                                    ),
                                                                                   hr(),
-                                                                                  actionButton("launchgo", "Go!"))
+                                                                                  actionButton("launchgo", "Go!")
                                                                  )
                                                                  
                                                         )
