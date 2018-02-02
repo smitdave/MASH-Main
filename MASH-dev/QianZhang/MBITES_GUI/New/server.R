@@ -8,11 +8,35 @@ server <- function(input, output, session) {
   })
 
   #################### Loading parameter json file #####################################
+# ParList <- reactive({
+#   fromJSON("demo_json/demo.json", flatten=TRUE)
+# })
 
-  demo_par = fromJSON("demo_json/demo.json", flatten=TRUE)
 
-  ParList = demo_par
-  
+ParList <- reactive({
+  if(input$project == 'demo'){
+    if(input$whichDemo == 'cust_demo'){
+      req(input$load_demo)
+      demoFile <- input$load_demo
+      return(fromJSON(demoFile$datapath, flatten=TRUE))
+    }else{
+      return(fromJSON("demo_json/demo.json", flatten=TRUE))
+    }}else if(input$project == 'exist'){
+      if(input$exist_file == 'json'){
+        req(input$exist_file)
+        jsonPar <- input$exist_json
+        return(fromJSON(jsonPar$datapath, flatten=TRUE))
+      }else{
+        req(input$file_project)
+        csvPar <- input$file_project
+        return(read.csv(csvPar$datapath, header = input$header_project, sep= input$sep_project))
+        }
+    }else{
+      return(fromJSON("demo_json/demo.json", flatten=TRUE))
+    }
+})
+
+
   #################### Option Output #####################################################
   output$panel_options <- renderUI({
                            fluidPage(
@@ -27,12 +51,12 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("F_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$F_time), width = "100%")),
-                                                                       column(4,selectInput("F_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$F_time%%1*60), width = "100%"))
+                                                                       column(4,selectInput("F_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList()$F_time), width = "100%")),
+                                                                       column(4,selectInput("F_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList()$F_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("F_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), selected = ParList$F_dist, inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList()$F_dist, inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.F_dist == 'gamma'",
                                                                                       sliderInput("f_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -51,12 +75,12 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("B_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$B_time), width = "100%")),
-                                                                       column(4,selectInput("B_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$B_time%%1*60), width = "100%"))
+                                                                       column(4,selectInput("B_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList()$B_time), width = "100%")),
+                                                                       column(4,selectInput("B_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList()$B_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("B_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), selected = ParList$B_dist, inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList()$B_dist, inline = TRUE),
  
                                                                      conditionalPanel(condition = "input.B_dist == 'gamma'",
                                                                                       sliderInput("b_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -73,12 +97,12 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("R_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$R_time), width = "100%")),
-                                                                       column(4,selectInput("R_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$R_time%%1*60), width = "100%"))
+                                                                       column(4,selectInput("R_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList()$R_time), width = "100%")),
+                                                                       column(4,selectInput("R_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList()$R_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("R_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), selected = ParList$R_dist, inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList()$R_dist, inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.R_dist == 'gamma'",
                                                                                       sliderInput("r_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -95,12 +119,12 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("L_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$L_time), width = "100%")),
-                                                                       column(4,selectInput("L_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$L_time%%1*60), width = "100%"))
+                                                                       column(4,selectInput("L_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList()$L_time), width = "100%")),
+                                                                       column(4,selectInput("L_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList()$L_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("L_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), selected = ParList$L_dist,  inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList()$L_dist,  inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.L_dist == 'gamma'",
                                                                                       sliderInput("l_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -117,12 +141,12 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("O_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$O_time), width = "100%")),
-                                                                       column(4,selectInput("O_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$O_time%%1*60), width = "100%"))
+                                                                       column(4,selectInput("O_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList()$O_time), width = "100%")),
+                                                                       column(4,selectInput("O_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList()$O_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("O_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), selected = ParList$O_dist,  inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList()$O_dist,  inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.O_dist == 'gamma'",
                                                                                       sliderInput("o_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -139,12 +163,12 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("M_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$M_time), width = "100%")),
-                                                                       column(4,selectInput("M_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$M_time%%1*60), width = "100%"))
+                                                                       column(4,selectInput("M_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList()$M_time), width = "100%")),
+                                                                       column(4,selectInput("M_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList()$M_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("M_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), selected = ParList$M_dist, inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList()$M_dist, inline = TRUE),
 
                                                                      conditionalPanel(condition = "input.M_dist == 'gamma'",
                                                                                       sliderInput("m_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -161,12 +185,12 @@ server <- function(input, output, session) {
                                                               column(4,
                                                                      h5("Mean Time Elapsed: "),
                                                                      fluidRow(
-                                                                       column(4,selectInput("S_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList$S_time), width = "100%")),
-                                                                       column(4,selectInput("S_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList$S_time%%1*60), width = "100%"))
+                                                                       column(4,selectInput("S_time_h", label = "Hours", choices = seq(0,24,1) , selected = trunc(ParList()$S_time), width = "100%")),
+                                                                       column(4,selectInput("S_time_m", label = "Minutes", choices = seq(0,59,1), selected = (ParList()$S_time%%1*60), width = "100%"))
                                                                      ),
                                                                      radioButtons("S_dist", "Distribution type:",
                                                                                   c("Exponentional" = "exp",
-                                                                                    "Gamma" = "gamma"), selected = ParList$S_dist, inline = TRUE),
+                                                                                    "Gamma" = "gamma"), selected = ParList()$S_dist, inline = TRUE),
    
                                                                      conditionalPanel(condition = "input.S_dist == 'gamma'",
                                                                                       sliderInput("s_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
@@ -187,13 +211,13 @@ server <- function(input, output, session) {
                                                      tabPanel("Flight Energetics",
                                                               column(4,
                                                                      sliderInput(inputId = "S_u_inv", label ="Number of Bouts",
-                                                                                 value = round(1/ParList$S.u), min = 0, max = 20, step = 1),
+                                                                                 value = round(1/ParList()$S.u), min = 0, max = 20, step = 1),
                                                                      hr(),
                                                                      tags$h5("Survival Probability Function of Energy Reserves:"),
                                                                      sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probability of Survival",
-                                                                                 value = ParList$S.a, min = 0, max = 100, step = 1),
+                                                                                 value = ParList()$S.a, min = 0, max = 100, step = 1),
                                                                      sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probability of Survival",
-                                                                                 value = ParList$S.b, min = 0, max = 100, step = 1)
+                                                                                 value = ParList()$S.b, min = 0, max = 100, step = 1)
                                                               ),
                                                               column(6,
                                                                      plotOutput("flight_energetics_plot")
@@ -201,12 +225,12 @@ server <- function(input, output, session) {
                                                      ),
                                                      tabPanel("Senescence",
                                                               column(4,
-                                                                     checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = ParList$SENESCE),
+                                                                     checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = ParList()$SENESCE),
                                                                      conditionalPanel(condition = "!input.SENESCE",
                                                                                       sliderInput(inputId = "sns_a", label ="Exp: a",
-                                                                                                  value = ParList$sns.a, min = 0, max = 0.1, step = 0.001),
+                                                                                                  value = ParList()$sns.a, min = 0, max = 0.1, step = 0.001),
                                                                                       sliderInput(inputId = "sns_b", label ="Exp: b",
-                                                                                                  value = ParList$sns.b, min = 0, max = 1000, step = 1)
+                                                                                                  value = ParList()$sns.b, min = 0, max = 1000, step = 1)
                                                                      )),
                                                               column(6,
                                                                      plotOutput("senescence_plot")
@@ -214,7 +238,7 @@ server <- function(input, output, session) {
                                                      ),
                                                      tabPanel("Damage",
                                                               column(4,
-                                                                     checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = ParList$TATTER),
+                                                                     checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = ParList()$TATTER),
                                                                      conditionalPanel(condition = "!input.TATTER",
                                                                            sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
                                                                                        value = 0.5, min = 0, max = 1, step = 0.1),
@@ -238,31 +262,31 @@ server <- function(input, output, session) {
                                           #########################################################################
                                           tabPanel("Blood Meal",
                                                    column(8,
-                                                          checkboxInput("showB_Option", "Setting Blood Meal Parameters", value = ("M"%in%ParList$stateSpace)),
+                                                          checkboxInput("showB_Option", "Setting Blood Meal Parameters", value = ("M"%in%ParList()$stateSpace)),
                                                           conditionalPanel(condition = "input.showB_Option",
                                                                            #helpText("The following parameters also can be set under 'Bouts' Panel"),
-                                                                           checkboxInput("showBloodMeal_Option", "Blood Meal Size", value = ("bm.a" %in% names(ParList))),
+                                                                           checkboxInput("showBloodMeal_Option", "Blood Meal Size", value = ("bm.a" %in% names(ParList()))),
                                                                            conditionalPanel(condition = "input.showBloodMeal_Option",
                                                                                             fluidRow(
                                                                                               column(6,
                                                                                                      sliderInput(inputId = "bm_mean", label ="Average Bloodmeal Size",
-                                                                                                                 value = ParList$bm.a/(ParList$bm.a + ParList$bm.b), min = 0, max = 1, step = 0.01),
+                                                                                                                 value = ParList()$bm.a/(ParList()$bm.a + ParList()$bm.b), min = 0, max = 1, step = 0.01),
                                                                                                      sliderInput(inputId = "bm_v", label ="Parameter v for a Bloodmeal Size: (a + b) in Beta(a,b)",
-                                                                                                                 value = (ParList$bm.a + ParList$bm.b), min = 0, max = 40, step = 0.5)
+                                                                                                                 value = (ParList()$bm.a + ParList()$bm.b), min = 0, max = 40, step = 0.5)
                                                                                               ),
                                                                                               column(6,
                                                                                                      plotOutput("bm_Option_plot")
                                                                                               )
                                                                                             )),
                                                                            hr(),
-                                                                           checkboxInput("overfeed_Option", "Overfeed", ParList$OVERFEED),
+                                                                           checkboxInput("overfeed_Option", "Overfeed", ParList()$OVERFEED),
                                                                            conditionalPanel(condition = "input.overfeed_Option",
                                                                                             fluidRow(
                                                                                               column(6,
                                                                                                      sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
-                                                                                                                 value = ParList$of.a, min = 5, max = 10, step = 0.01),
+                                                                                                                 value = ParList()$of.a, min = 5, max = 10, step = 0.01),
                                                                                                      sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
-                                                                                                                 value = ParList$of.b, min = 0, max = 10000, step = 100)),
+                                                                                                                 value = ParList()$of.b, min = 0, max = 10000, step = 100)),
                                                                                               column(6,
                                                                                                      plotOutput("overfeeding_Option_plot")
                                                                                               ))
@@ -273,22 +297,22 @@ server <- function(input, output, session) {
                                           tabPanel("Sugar Feeding",
                                                    column(6,
                                                           sliderInput(inputId = "S_sa", label ="Shape Param a of Probability to queue Sugar bout",
-                                                                      value = ParList$S.sa, min = 0, max = 100, step = 1),
+                                                                      value = ParList()$S.sa, min = 0, max = 100, step = 1),
                                                           sliderInput(inputId = "S_sb", label ="Shape Param b of Probability to queue Sugar bout",
-                                                                      value = ParList$S.sa, min = 0, max = 100, step = 1),
+                                                                      value = ParList()$S.sa, min = 0, max = 100, step = 1),
                                                           sliderInput(inputId = "energyPreG", label ="Pre-gonotrophic Energy Requirement",
-                                                                      value = ParList$energyPreG, min = 0, max = 100, step = 1),
+                                                                      value = ParList()$energyPreG, min = 0, max = 100, step = 1),
                                                           hr(),
-                                                          checkboxInput("showS_Option", "Sugar Feeding Parameters:", value = ("S" %in% ParList$stateSpace)),
+                                                          checkboxInput("showS_Option", "Sugar Feeding Parameters:", value = ("S" %in% ParList()$stateSpace)),
                                                           conditionalPanel(condition = "input.showS_Option",
                                                                         
                                                                            sliderInput(inputId = "S_succeed_Option", label ="Probability of Success",
-                                                                                       value = ParList$S_succeed, min = 0.9, max = 1, step = 0.01),
+                                                                                       value = ParList()$S_succeed, min = 0.9, max = 1, step = 0.01),
                                                                            sliderInput(inputId = "S_surv_Option", label ="Baseline Probability of Survival",
-                                                                                       value = ParList$S_surv, min = 0.9, max = 1, step = 0.01),
+                                                                                       value = ParList()$S_surv, min = 0.9, max = 1, step = 0.01),
                                                                            #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
                                                                            sliderInput(inputId = "preGsugar_Option", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-                                                                                       value = ParList$preGsugar, min = 0, max = 100, step = 1))
+                                                                                       value = ParList()$preGsugar, min = 0, max = 100, step = 1))
                                                    )),
                                         
                                           
@@ -302,38 +326,38 @@ server <- function(input, output, session) {
                                           ),
                                           tabPanel("Timing",
                                                    sliderInput(inputId = "gammaShape", label ="Shape Param for Gamma Distributed Dwell Times:",
-                                                               value = ParList$gammaShape, min = 1, max = 10, step = 0.1),
+                                                               value = ParList()$gammaShape, min = 1, max = 10, step = 0.1),
                                                    sliderInput(inputId = "PfEIP", label ="Extrinsic Incubation Period for Plasmodium falciparum During MosquitoFemale$probing()",
-                                                               value = ParList$PfEIP, min = 0, max = 100, step = 1)
+                                                               value = ParList()$PfEIP, min = 0, max = 100, step = 1)
                                           ),
                                           tabPanel("Resting Spot",
                                                    h4("Landing Spot Weights: Enter a vector (comma delimited) for each bout"),
-                                                   textInput("F_wts", "F: Blood Feeding Search", value = paste(ParList$F_wts, collapse = ",")),
-                                                   textInput("B_wts", "B: Blood Feeding Attempt", value = paste(ParList$B_wts, collapse = ",")),
-                                                   textInput("R_wts", "R: Post-prandial Resting", value = paste(ParList$R_wts, collapse = ",")),
-                                                   textInput("L_wts", "L: Egg Laying Search", value = paste(ParList$L_wts, collapse = ",")),
-                                                   textInput("O_wts", "O: Egg Laying Attempt", value = paste(ParList$O_wts, collapse = ",")),
-                                                   textInput("M_wts", "M: Mating", value = paste(ParList$M_wts, collapse = ",")),
-                                                   textInput("S_wts", "S: Sugar Feeding Attempt", value = paste(ParList$S_wts, collapse = ","))
+                                                   textInput("F_wts", "F: Blood Feeding Search", value = paste(ParList()$F_wts, collapse = ",")),
+                                                   textInput("B_wts", "B: Blood Feeding Attempt", value = paste(ParList()$B_wts, collapse = ",")),
+                                                   textInput("R_wts", "R: Post-prandial Resting", value = paste(ParList()$R_wts, collapse = ",")),
+                                                   textInput("L_wts", "L: Egg Laying Search", value = paste(ParList()$L_wts, collapse = ",")),
+                                                   textInput("O_wts", "O: Egg Laying Attempt", value = paste(ParList()$O_wts, collapse = ",")),
+                                                   textInput("M_wts", "M: Mating", value = paste(ParList()$M_wts, collapse = ",")),
+                                                   textInput("S_wts", "S: Sugar Feeding Attempt", value = paste(ParList()$S_wts, collapse = ","))
                                                    
                                                    
                                                    
                                           ),
                                           tabPanel("Egg",
                                                    sliderInput(inputId = "bs_m", label ="Mean of Normally-distributed Egg Batch Size",
-                                                               value = ParList$bs.m, min = 0, max = 100, step = 1),
+                                                               value = ParList()$bs.m, min = 0, max = 100, step = 1),
                                                    sliderInput(inputId = "bs_v", label ="Standard Deviation of Normally-distributed Egg Batch Size",
-                                                               value = ParList$bs.v, min = 0, max = 100, step = 1),
+                                                               value = ParList()$bs.v, min = 0, max = 100, step = 1),
                                                    sliderInput(inputId = "maxBatch", label ="Maximum Egg Batch Size",
-                                                               value = ParList$maxBatch, min = 0, max = 100, step = 1),
+                                                               value = ParList()$maxBatch, min = 0, max = 100, step = 1),
                                                    sliderInput(inputId = "emt_m", label ="Mean of Normally-distributed Egg Batch Maturation Time",
-                                                               value = ParList$emt.m, min = 0, max = 10, step = 1),
+                                                               value = ParList()$emt.m, min = 0, max = 10, step = 1),
                                                    sliderInput(inputId = "emt_v", label ="Standard Deviation of Normally-distributed Egg Batch Maturation Time",
-                                                               value = ParList$emt.v, min = 0, max = 10, step = 1),
+                                                               value = ParList()$emt.v, min = 0, max = 10, step = 1),
                                                    sliderInput(inputId = "eggT", label ="Minimum Time to Egg Maturation",
-                                                               value = ParList$eggT, min = 0, max = 10, step = 1),
+                                                               value = ParList()$eggT, min = 0, max = 10, step = 1),
                                                    sliderInput(inputId = "eggP", label ="Minimum Provision to Produce Eggs",
-                                                               value = ParList$eggP, min = 0, max = 10, step = 1)
+                                                               value = ParList()$eggP, min = 0, max = 10, step = 1)
                                                    
                                           )
                                           
@@ -347,15 +371,15 @@ output$panel_bouts <- renderUI({
        sidebarLayout(position = "right",
                      sidebarPanel(
                        helpText("Please choose the bouts:"),
-                       checkboxInput("showF", "F: Blood Feeding Search", value = ("F" %in% ParList$stateSpace)),
-                       checkboxInput("showB", "B: Blood Feeding Attempt", value = ("B" %in% ParList$stateSpace)),
-                       checkboxInput("showR", "R: Post-prandial Resting", value = ("R" %in% ParList$stateSpace)),
-                       checkboxInput("showL", "L: Egg Laying Search", value = ("L" %in% ParList$stateSpace)),
-                       checkboxInput("showO", "O: Egg Laying Attempt", value = ("O" %in% ParList$stateSpace)),
-                       checkboxInput("showM", "M: Mating", value = ("M" %in% ParList$stateSpace)),
-                       checkboxInput("showS", "S: Sugar Feeding Attempt", value = ("S" %in% ParList$stateSpace)),
-                       checkboxInput("showE", "E: Estivation", value = ("E" %in% ParList$stateSpace)),
-                       checkboxInput("showMale", "Male Mosquitoes", value = ("Male" %in% ParList$stateSpace)),
+                       checkboxInput("showF", "F: Blood Feeding Search", value = ("F" %in% ParList()$stateSpace)),
+                       checkboxInput("showB", "B: Blood Feeding Attempt", value = ("B" %in% ParList()$stateSpace)),
+                       checkboxInput("showR", "R: Post-prandial Resting", value = ("R" %in% ParList()$stateSpace)),
+                       checkboxInput("showL", "L: Egg Laying Search", value = ("L" %in% ParList()$stateSpace)),
+                       checkboxInput("showO", "O: Egg Laying Attempt", value = ("O" %in% ParList()$stateSpace)),
+                       checkboxInput("showM", "M: Mating", value = ("M" %in% ParList()$stateSpace)),
+                       checkboxInput("showS", "S: Sugar Feeding Attempt", value = ("S" %in% ParList()$stateSpace)),
+                       checkboxInput("showE", "E: Estivation", value = ("E" %in% ParList()$stateSpace)),
+                       checkboxInput("showMale", "Male Mosquitoes", value = ("Male" %in% ParList()$stateSpace)),
                        actionButton('save_inputs_bout', 'Save inputs',width = "100%"),
                        tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});')))
                      )
@@ -1033,9 +1057,9 @@ output$panel_bouts <- renderUI({
       column(6,
              wellPanel(
                sliderInput(inputId = "F_succeed", label ="Probability of Success",
-                           value = ParList$F_succeed, min = 0.9, max = 1, step = 0.01),
+                           value = ParList()$F_succeed, min = 0.9, max = 1, step = 0.01),
                sliderInput(inputId = "F_surv", label ="Baseline Probability of Survival",
-                           value = ParList$F_surv, min = 0.9, max = 1, step = 0.01)#,
+                           value = ParList()$F_surv, min = 0.9, max = 1, step = 0.01)#,
                #textInput("F_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1")
              ))
     
@@ -1051,27 +1075,27 @@ output$panel_bouts <- renderUI({
                wellPanel(
 
                  sliderInput(inputId = "B_succeed", label ="Probability of Success",
-                             value = ParList$B_succeed, min = 0.8, max = 1, step = 0.01),                #
+                             value = ParList()$B_succeed, min = 0.8, max = 1, step = 0.01),                #
                  sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",
-                             value = ParList$B_surv, min = 0.9, max = 1, step = 0.01),
+                             value = ParList()$B_surv, min = 0.9, max = 1, step = 0.01),
  
-                 checkboxInput("showhuman", "Human Host Encounter", value = ("surviveH" %in% names(ParList))),
+                 checkboxInput("showhuman", "Human Host Encounter", value = ("surviveH" %in% names(ParList()))),
                  conditionalPanel(condition = "input.showhuman",
                                   wellPanel(sliderInput(inputId = "surviveH", label ="Survival Probability of Initial Encounter (Proceed to Probe)",
-                                                        value = ParList$surviveH, min = 0.9, max = 1, step = 0.01),
+                                                        value = ParList()$surviveH, min = 0.9, max = 1, step = 0.01),
                                             sliderInput(inputId = "probeH", label ="Probability Undeterred and Begin Probing",
-                                                        value = ParList$probeH, min = 0.9, max = 1, step = 0.01),
+                                                        value = ParList()$probeH, min = 0.9, max = 1, step = 0.01),
                                             sliderInput(inputId = "surviveprobeH", label ="Survival Probability of Probing",
-                                                        value = ParList$surviveprobeH, min = 0.9, max = 1, step = 0.01),
+                                                        value = ParList()$surviveprobeH, min = 0.9, max = 1, step = 0.01),
                                             sliderInput(inputId = "feedH", label ="Probability to Successfully blood feed",
-                                                        value = ParList$feedH, min = 0.9, max = 1, step = 0.01)
+                                                        value = ParList()$feedH, min = 0.9, max = 1, step = 0.01)
                                   )),
-                 checkboxInput("shownonhuman", "Non-human Host Encounter", value = ("surviveZ" %in% names(ParList))),
+                 checkboxInput("shownonhuman", "Non-human Host Encounter", value = ("surviveZ" %in% names(ParList()))),
                  conditionalPanel(condition = "input.shownonhuman",
                                   wellPanel(sliderInput(inputId = "surviveZ", label ="Survival Probability of Initial Encounter (Proceed to Feed)",
-                                                        value = ParList$surviveZ, min = 0.9, max = 1, step = 0.01),
+                                                        value = ParList()$surviveZ, min = 0.9, max = 1, step = 0.01),
                                             sliderInput(inputId = "feedZ", label ="Probability to Successfully Blood Feed",
-                                                        value = ParList$feedZ, min = 0.9, max = 1, step = 0.01)
+                                                        value = ParList()$feedZ, min = 0.9, max = 1, step = 0.01)
                                   )),
                  hr(),
                  checkboxInput("showBloodMeal", "Blood Meal Size", value = input$showBloodMeal_Option),
@@ -1087,9 +1111,9 @@ output$panel_bouts <- renderUI({
                  ),
                  hr(),
                  sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-                             value = ParList$preGblood, min = 0, max = 100, step = 1),
+                             value = ParList()$preGblood, min = 0, max = 100, step = 1),
                  sliderInput(inputId = "Q", label ="Human Blood Index",
-                             value = ParList$Q, min = 0, max = 1, step = 0.1)
+                             value = ParList()$Q, min = 0, max = 1, step = 0.1)
                ))
 
       )
@@ -1102,14 +1126,14 @@ output$panel_bouts <- renderUI({
                               wellPanel(
 
                                 sliderInput(inputId = "R_surv", label ="Baseline Probability of Survival",
-                                            value = ParList$R_surv, min = 0.9, max = 1, step = 0.01),
+                                            value = ParList()$R_surv, min = 0.9, max = 1, step = 0.01),
 
-                                checkboxInput("REFEED", "Refeed", ParList$REFEED),
+                                checkboxInput("REFEED", "Refeed", ParList()$REFEED),
                                 conditionalPanel(condition = "input.refeed",
                                                  sliderInput(inputId = "rf_a", "Exp Param a for refeeding as function of bmSize",
-                                                             value = ParList$rf_a, min = 0, max = 100, step = 1),
+                                                             value = ParList()$rf_a, min = 0, max = 100, step = 1),
                                                  sliderInput(inputId = "rf_b", "Exp Param b for refeeding as function of bmSize",
-                                                             value = ParList$rf_b, min = 0, max = 10000, step = 100))))
+                                                             value = ParList()$rf_b, min = 0, max = 10000, step = 100))))
       )
   })
   output$panel_l <- renderUI({
@@ -1119,9 +1143,9 @@ output$panel_bouts <- renderUI({
              wellPanel(
 
                sliderInput(inputId = "L_succeed", label ="Probability of Success",
-                           value = ParList$L_succeed, min = 0.8, max = 1, step = 0.01),
+                           value = ParList()$L_succeed, min = 0.8, max = 1, step = 0.01),
                sliderInput(inputId = "L_surv", label ="Baseline Probability of Survival",
-                           value = ParList$L_surv, min = 0.9, max = 1, step = 0.01)#,
+                           value = ParList()$L_surv, min = 0.9, max = 1, step = 0.01)#,
 
              ))
   })
@@ -1132,9 +1156,9 @@ output$panel_bouts <- renderUI({
              wellPanel(
 
                sliderInput(inputId = "O_succeed", label ="Probability of Success",
-                           value = ParList$O_succeed, min = 0.9, max = 1, step = 0.01),
+                           value = ParList()$O_succeed, min = 0.9, max = 1, step = 0.01),
                sliderInput(inputId = "O_surv", label ="Baseline Probability of Survival",
-                           value = ParList$O_surv, min = 0.9, max = 1, step = 0.01)#,
+                           value = ParList()$O_surv, min = 0.9, max = 1, step = 0.01)#,
 
              ))
   })
@@ -1145,9 +1169,9 @@ output$panel_bouts <- renderUI({
              wellPanel(
 
                sliderInput(inputId = "M_succeed", label ="Probability of Success",
-                           value = ParList$M_succeed, min = 0.9, max = 1, step = 0.01),
+                           value = ParList()$M_succeed, min = 0.9, max = 1, step = 0.01),
                sliderInput(inputId = "M_surv", label ="Baseline Probability of Survival",
-                           value = ParList$M_surv, min = 0.9, max = 1, step = 0.01)#,
+                           value = ParList()$M_surv, min = 0.9, max = 1, step = 0.01)#,
 
              ))
   })

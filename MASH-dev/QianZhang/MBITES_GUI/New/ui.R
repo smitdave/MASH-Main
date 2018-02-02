@@ -72,7 +72,7 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                                                                                  choices = c("Default Demo" = "default_demo",
                                                                                                              "Customized Demo" = "cust_demo")),
                                                                                     conditionalPanel(condition = "input.whichDemo == 'cust_demo'",
-                                                                                                     fileInput("load demo", "Choose your json file", 
+                                                                                                     fileInput("load_demo", "Choose your json file", 
                                                                                                                accept = ".json")
                                                                                     )
                                                                                   ),
