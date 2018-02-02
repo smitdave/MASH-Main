@@ -174,13 +174,15 @@ MBITES is highly {\em mimetic} or {\em realistic}. It was designed to have a clo
 
 After maturation, an adult female begins a cycle of blood feeding and egg laying. After a search to find a potential blood meal host, she approaches a host in an attempt to blood feed. After the bloodmeal, the mosquito typically rests to shed some of the water weight. Blood is provisioned into eggs that require some time to mature. Once mature, she initiates a search to find aquatic habitat and then lays eggs. Sugar feeding can provide energy for flight, metabolism, and other activities.
 
-Each activity -- mating, searching, blood feeding, egg laying, or sugar feeding -- requires one or more flight bouts. In the model, the intent in each one of these flight bouts follows a logical sequence, albeit probabilistically, through eight distinct {\em behavioral} states (see below). MBITES represents each kind of mosquito behavioral flight bout explicitly, and the structure of each bout type is different, and it is possible to describe what happens during each bout in virtually unlimited detail. All of these activities must occur somewhere on a landscape. 
-
+Each activity -- mating, searching, blood feeding, egg laying, or sugar feeding -- requires one or more flight bouts. In the model, the intent in each one of these flight bouts follows a logical sequence, albeit probabilistically, through eight distinct {\em behavioral} states (see below). MBITES represents each kind of mosquito behavioral flight bout explicitly, and the structure of each bout type is different, and it is possible to describe what happens during each bout in virtually unlimited detail. 
+ 
 The progression through these states is partly determined by variables describing a mosquito's state (\eg eggs must be mature before egg-laying occurs), but features of the mosquito biology constrain the sequence, and progression through the states can be somewhat random and dependent on available cues and resources. Transition probabilities for behavioral states can be configured to match site-specific features or species-specific behaviors.
+
+What is also important for MBITES is that all of these activities must occur somewhere on a landscape. MBITES describes adult behavior on some specific distribution of resources. MBITES has utilities for visualizing and analyzing the resulting population dynamic processes.
 
 \subsection{Running MBITES}
 
-The philosophy of MBITES is that the process of building a simulation is as important as the output of the simulation. It's important for the MBITES jockey (\ie any user) to understand the limitations of any particular simulation. It is also important for the end user to understand how a model will be used. We recognize at least two broadly different kinds of activities: academic projects and policy analysis. Academic projects are designed to build on the knowledge base, while policy analysis is generally designed to address a specific question at a specific place and time. Regardless of the purpose, MBITES is a complex bit of software. The point of this user's guide is to help the MBITES jockey understand how to use it. 
+The philosophy of MBITES is that the process of building a simulation is as important as the output of the simulation. It's important for the MBITES jockey (\ie any user) to understand the limitations of any particular simulation. It is also important for the end user to understand how a model will be used. We recognize at least two broadly different kinds of activities: academic projects and policy analysis. Academic projects are designed to build on the knowledge base, while policy analysis is generally designed to address a specific question arising in a particular context. Regardless of the purpose, MBITES is a complex bit of software. The point of this user's guide is to help the MBITES jockey understand how to use it. 
 
 To learn MBITES, a simulation called \demo\; has been configured to illustrate the features of the model. \demo\; is run as the first option within the MBITES-GUI. The MBITES-GUI also has some built-in functionality to set up a simulation model; by default, it starts with a set of configured options for \minmod, a model that makes the simplest assumptions for each section. 
 
@@ -192,7 +194,7 @@ The task for MBITES was how to represent a mosquito in a simulation model that a
 %
 \begin{itemize}
 \item Unique identifier. For bookkeeping, pedigrees and inheritance.
-\item Behavioral state. What is a mosquito trying to do?
+\item Behavioral state. What is a mosquito trying to do? Is a mosquito still alive?
 \item Location. Where is the mosquito? 
 \item Resting microsite. Where is the mosquito resting (\eg inside or outside)?
 \item Energy reserve levels. How much sugar does a mosquito have in reserve? 
@@ -204,6 +206,7 @@ The task for MBITES was how to represent a mosquito in a simulation model that a
 \item Sexual maturity. Has a mosquito mated? 
 \item Type. What is a mosquito's genotype / phenotype for insecticide resistance, genetic modification, and for dealing with evolutionary problems? 
 \end{itemize}
+These states change as a mosquito ages and goes through its activities. 
 
 \subsection{Behavioral States and Flight Bouts}
 
