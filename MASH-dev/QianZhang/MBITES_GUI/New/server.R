@@ -211,13 +211,13 @@ ParList <- reactive({
                                                      tabPanel("Flight Energetics",
                                                               column(4,
                                                                      sliderInput(inputId = "S_u_inv", label ="Number of Bouts",
-                                                                                 value = round(1/ParList()$S.u), min = 0, max = 20, step = 1),
+                                                                                 value = round(1/ParList()$S_u), min = 0, max = 20, step = 1),
                                                                      hr(),
                                                                      tags$h5("Survival Probability Function of Energy Reserves:"),
                                                                      sliderInput(inputId = "S_a", label ="Shape Param a of per-bout Probability of Survival",
-                                                                                 value = ParList()$S.a, min = 0, max = 100, step = 1),
+                                                                                 value = ParList()$S_a, min = 0, max = 100, step = 1),
                                                                      sliderInput(inputId = "S_b", label ="Shape Param b of per-bout Probability of Survival",
-                                                                                 value = ParList()$S.b, min = 0, max = 100, step = 1)
+                                                                                 value = ParList()$S_b, min = 0, max = 100, step = 1)
                                                               ),
                                                               column(6,
                                                                      plotOutput("flight_energetics_plot")
@@ -228,9 +228,9 @@ ParList <- reactive({
                                                                      checkboxInput(inputId = "SENESCE", label = "Mortality during Generic Flight", value = ParList()$SENESCE),
                                                                      conditionalPanel(condition = "!input.SENESCE",
                                                                                       sliderInput(inputId = "sns_a", label ="Exp: a",
-                                                                                                  value = ParList()$sns.a, min = 0, max = 0.1, step = 0.001),
+                                                                                                  value = ParList()$sns_a, min = 0, max = 0.1, step = 0.001),
                                                                                       sliderInput(inputId = "sns_b", label ="Exp: b",
-                                                                                                  value = ParList()$sns.b, min = 0, max = 1000, step = 1)
+                                                                                                  value = ParList()$sns_b, min = 0, max = 1000, step = 1)
                                                                      )),
                                                               column(6,
                                                                      plotOutput("senescence_plot")
@@ -241,16 +241,16 @@ ParList <- reactive({
                                                                      checkboxInput(inputId = "TATTER", label = "During Generic Flight", value = ParList()$TATTER),
                                                                      conditionalPanel(condition = "!input.TATTER",
                                                                            sliderInput(inputId = "ttsz_p", label ="Zero-inflation for Tattering Damage",
-                                                                                       value = 0.5, min = 0, max = 1, step = 0.1),
+                                                                                       value = ParList()$ttsz_p, min = 0, max = 1, step = 0.1),
                                                                            sliderInput(inputId = "ttsz_mean", label ="Mean of Tattering Damage",
-                                                                                       value = 0.4, min = 0, max = 1, step = 0.01),
+                                                                                       value = (ParList()$ttsz_a/(ParList()$ttsz_a+ParList()$ttsz_b)), min = 0, max = 1, step = 0.01),
                                                                            sliderInput(inputId = "ttsz_v", label ="Dispersion of Tattering Damage (a + b) in Beta(a,b)",
-                                                                                       value = 5, min = 0, max = 20, step = 0.1),
+                                                                                       value = (ParList()$ttsz_a+ParList()$ttsz_b), min = 0, max = 20, step = 0.1),
                                                                            hr(),
                                                                            sliderInput(inputId = "ttr_a", label ="Exp: a for Tattering Survival",
-                                                                                       value = 15, min = 0, max = 100, step = 1),
+                                                                                       value = ParList()$ttr_a, min = 0, max = 100, step = 1),
                                                                            sliderInput(inputId = "ttr_b", label ="Exp: b for Tattering Survival",
-                                                                                       value = 500, min = 0, max = 1000, step = 10))),
+                                                                                       value = ParList()$ttr_b, min = 0, max = 1000, step = 10))),
                                                                             column(6,
                                                                                plotOutput("tattering_beta_plot"),
                                                                                plotOutput("tattering_exp_plot")
@@ -265,14 +265,14 @@ ParList <- reactive({
                                                           checkboxInput("showB_Option", "Setting Blood Meal Parameters", value = ("M"%in%ParList()$stateSpace)),
                                                           conditionalPanel(condition = "input.showB_Option",
                                                                            #helpText("The following parameters also can be set under 'Bouts' Panel"),
-                                                                           checkboxInput("showBloodMeal_Option", "Blood Meal Size", value = ("bm.a" %in% names(ParList()))),
+                                                                           checkboxInput("showBloodMeal_Option", "Blood Meal Size", value = ("bm_a" %in% names(ParList()))),
                                                                            conditionalPanel(condition = "input.showBloodMeal_Option",
                                                                                             fluidRow(
                                                                                               column(6,
                                                                                                      sliderInput(inputId = "bm_mean", label ="Average Bloodmeal Size",
-                                                                                                                 value = ParList()$bm.a/(ParList()$bm.a + ParList()$bm.b), min = 0, max = 1, step = 0.01),
+                                                                                                                 value = ParList()$bm_a/(ParList()$bm_a + ParList()$bm_b), min = 0, max = 1, step = 0.01),
                                                                                                      sliderInput(inputId = "bm_v", label ="Parameter v for a Bloodmeal Size: (a + b) in Beta(a,b)",
-                                                                                                                 value = (ParList()$bm.a + ParList()$bm.b), min = 0, max = 40, step = 0.5)
+                                                                                                                 value = (ParList()$bm_a + ParList()$bm_b), min = 0, max = 40, step = 0.5)
                                                                                               ),
                                                                                               column(6,
                                                                                                      plotOutput("bm_Option_plot")
@@ -284,9 +284,9 @@ ParList <- reactive({
                                                                                             fluidRow(
                                                                                               column(6,
                                                                                                      sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
-                                                                                                                 value = ParList()$of.a, min = 5, max = 10, step = 0.01),
+                                                                                                                 value = ParList()$of_a, min = 5, max = 10, step = 0.01),
                                                                                                      sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
-                                                                                                                 value = ParList()$of.b, min = 0, max = 10000, step = 100)),
+                                                                                                                 value = ParList()$of_b, min = 0, max = 10000, step = 100)),
                                                                                               column(6,
                                                                                                      plotOutput("overfeeding_Option_plot")
                                                                                               ))
@@ -297,9 +297,9 @@ ParList <- reactive({
                                           tabPanel("Sugar Feeding",
                                                    column(6,
                                                           sliderInput(inputId = "S_sa", label ="Shape Param a of Probability to queue Sugar bout",
-                                                                      value = ParList()$S.sa, min = 0, max = 100, step = 1),
+                                                                      value = ParList()$S_sa, min = 0, max = 100, step = 1),
                                                           sliderInput(inputId = "S_sb", label ="Shape Param b of Probability to queue Sugar bout",
-                                                                      value = ParList()$S.sa, min = 0, max = 100, step = 1),
+                                                                      value = ParList()$S_sb, min = 0, max = 100, step = 1),
                                                           sliderInput(inputId = "energyPreG", label ="Pre-gonotrophic Energy Requirement",
                                                                       value = ParList()$energyPreG, min = 0, max = 100, step = 1),
                                                           hr(),
@@ -345,15 +345,15 @@ ParList <- reactive({
                                           ),
                                           tabPanel("Egg",
                                                    sliderInput(inputId = "bs_m", label ="Mean of Normally-distributed Egg Batch Size",
-                                                               value = ParList()$bs.m, min = 0, max = 100, step = 1),
+                                                               value = ParList()$bs_m, min = 0, max = 100, step = 1),
                                                    sliderInput(inputId = "bs_v", label ="Standard Deviation of Normally-distributed Egg Batch Size",
-                                                               value = ParList()$bs.v, min = 0, max = 100, step = 1),
+                                                               value = ParList()$bs_v, min = 0, max = 100, step = 1),
                                                    sliderInput(inputId = "maxBatch", label ="Maximum Egg Batch Size",
                                                                value = ParList()$maxBatch, min = 0, max = 100, step = 1),
                                                    sliderInput(inputId = "emt_m", label ="Mean of Normally-distributed Egg Batch Maturation Time",
-                                                               value = ParList()$emt.m, min = 0, max = 10, step = 1),
+                                                               value = ParList()$emt_m, min = 0, max = 10, step = 1),
                                                    sliderInput(inputId = "emt_v", label ="Standard Deviation of Normally-distributed Egg Batch Maturation Time",
-                                                               value = ParList()$emt.v, min = 0, max = 10, step = 1),
+                                                               value = ParList()$emt_v, min = 0, max = 10, step = 1),
                                                    sliderInput(inputId = "eggT", label ="Minimum Time to Egg Maturation",
                                                                value = ParList()$eggT, min = 0, max = 10, step = 1),
                                                    sliderInput(inputId = "eggP", label ="Minimum Provision to Produce Eggs",
@@ -1567,12 +1567,12 @@ output$panel_bouts <- renderUI({
   
   observeEvent(input$save_inputs_bout, {
     # Define inputs to save
-    param_name <- c('N_female', 'N_male', 'gammaShape', 'SENESCE', 'sns_a', 'sns_b', 'TATTER', 'ttsz_p', 'ttr_a',
+    param_name <- c('gammaShape', 'SENESCE', 'sns_a', 'sns_b', 'TATTER', 'ttsz_p', 'ttr_a',
                     'ttr_b', 'S_u', 'S_a', 'S_b', 'S_sa', 'S_sb', 'bs_m', 'bs_v', 'maxBatch',
-                    'emt_m', 'emt_v','eggT', 'eggP', 'energyPreG', 'PfEIP'
-    )
+                    'emt_m', 'emt_v','eggT', 'eggP', 'energyPreG', 'PfEIP', 'F_dist', 'B_dist',
+                    'R_dist', 'L_dist', 'O_dist', 'M_dist', 'S_dist')
     f_param_name <- c('F_succeed', 'F_surv', 'F_wts')
-    b_param_name <- c('B_succeed', 'B_surv', 'B_wts',
+    b_param_name <- c('B_succeed', 'B_surv', 'B_wts', 
                       'surviveH', 'probeH', 'surviveprobeH', 'feedH',
                       'surviveZ', 'feedZ', 'bm_a', 'bm_b', 'OVERFEED', 'of_a', 'of_b', 'preGblood',
                       'Q')
@@ -1664,10 +1664,26 @@ output$panel_bouts <- renderUI({
     inputs_name <- append(inputs_name, 'stateSpace')
     inputs_bout <- append(inputs_bout, stateSpace)
 
+    inputs_name <- append(inputs_name, 'F_time')
+    inputs_bout <- append(inputs_bout, (as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60))
+    inputs_name <- append(inputs_name, 'B_time')
+    inputs_bout <- append(inputs_bout, (as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60))
+    inputs_name <- append(inputs_name, 'R_time')
+    inputs_bout <- append(inputs_bout, (as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60))
+    inputs_name <- append(inputs_name, 'L_time')
+    inputs_bout <- append(inputs_bout, (as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60))
+    inputs_name <- append(inputs_name, 'O_time')
+    inputs_bout <- append(inputs_bout, (as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60))
+    inputs_name <- append(inputs_name, 'M_time')
+    inputs_bout <- append(inputs_bout, (as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60))
+    inputs_name <- append(inputs_name, 'S_time')
+    inputs_bout <- append(inputs_bout, (as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60))
+
     # Inputs data.frame
     inputs_data_frame <- data.frame(inputId = inputs_name, value = inputs_bout)
     # Save Inputs
+    write.csv(inputs_data_frame, paste(getwd(), "/bout_option.csv",sep= ""),row.names = FALSE, col.names = FALSE)
     jsonOut=prettify(toJSON(inputs_data_frame))
-    write(jsonOut,paste0(DIR,"/Mosquito_par.json"))
+    write(jsonOut,paste(getwd(), "/bout_option.json",sep= ""))
   })
 }

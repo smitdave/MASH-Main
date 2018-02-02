@@ -193,85 +193,85 @@
     "feedZ": [
         1
     ],
-    "bm.a": [
+    "bm_a": [
         7.5
     ],
-    "bm.b": [
+    "bm_b": [
         2.5
     ],
     "REFEED": [
         false
     ],
-    "rf.a": [
+    "rf_a": [
         60
     ],
-    "rf.b": [
+    "rf_b": [
         5000
     ],
     "OVERFEED": [
         false
     ],
-    "of.a": [
+    "of_a": [
         5
     ],
-    "of.b": [
+    "of_b": [
         5000
     ],
     "SENESCE": [
         false
     ],
-    "sns.a": [
+    "sns_a": [
         0.085
     ],
-    "sns.b": [
+    "sns_b": [
         100
     ],
     "TATTER": [
         false
     ],
-    "ttsz.p": [
+    "ttsz_p": [
         0.5
     ],
-    "ttsz.a": [
+    "ttsz_a": [
         5
     ],
-    "ttsz.b": [
+    "ttsz_b": [
         95
     ],
-    "ttr.a": [
+    "ttr_a": [
         15
     ],
-    "ttr.b": [
+    "ttr_b": [
         500
     ],
-    "S.u": [
+    "S_u": [
         0.1429
     ],
-    "S.a": [
+    "S_a": [
         20
     ],
-    "S.b": [
+    "S_b": [
         10
     ],
-    "S.sa": [
+    "S_sa": [
         15
     ],
-    "S.sb": [
+    "S_sb": [
         5
     ],
-    "bs.m": [
+    "bs_m": [
         30
     ],
-    "bs.v": [
+    "bs_v": [
         5
     ],
     "maxBatch": [
         30
     ],
-    "emt.m": [
+    "emt_m": [
         3
     ],
-    "emt.v": [
+    "emt_v": [
         1
     ],
     "eggT": [
