@@ -56,9 +56,9 @@ Mosquito_RM <- R6::R6Class(classname="Mosquito_RM",
                        # Constructor
                        #################################################
 
-                       initialize = function(M, EIP, p=0.9, f=0.3, Q=0.9, v=20, psi = NULL){
+                       initialize = function(M, EIP, Y = 0, Z = 0, p=0.9, f=0.3, Q=0.9, v=20, psi = NULL){
 
-                         N = nrow(psi)
+                         N = nrow(psi) # Number of Patches
                          if(length(EIP)!=365){stop("Mosquito_RM must be initialized with length 365 EIP vector")}
                          if(length(M)!=N){stop("Mosquito_RM must be initialized with M vector equal to rows of psi matrix")}
 
@@ -70,9 +70,9 @@ Mosquito_RM <- R6::R6Class(classname="Mosquito_RM",
                          private$maxEIP        = max(EIP)+1L
 
                          private$M             = M
-                         private$Y             = rep(0L, N) # infected (incubating)
-                         private$Z             = rep(0L, N) # infectious
-                         private$ZZ            = matrix(data=0L,nrow=private$maxEIP,ncol=N) # each row is the number that will be added to the infectious state on that day
+                         private$Y             = rep(Y, N) # infected (incubating)
+                         private$Z             = rep(Z, N) # infectious
+                         private$ZZ            = matrix(data=Z*(1-p),nrow=private$maxEIP,ncol=N) # each row is the number that will be added to the infectious state on that day
 
                          private$psi           = psi
                          private$P             = p^c(1:private$maxEIP) # survival over EIP

@@ -141,11 +141,13 @@ Mosquito_RM$set(which = "public",name = "output",
 #'  * This method is bound to \code{Mosquito_RM$reset}
 #'
 reset_Mosquito_RM <- function(MosquitoPar){
+  N                     = nrow(MosquitoPar$psi)
   private$M             = MosquitoPar$M
-  private$Y             = private$Y*0
-  private$Z             = private$Z*0
-  private$ZZ            = private$ZZ*0
+  private$Y             = rep(MosquitoPar$Y, N)
+  private$Z             = rep(MosquitoPar$Z, N)
+  private$ZZ            = matrix(data=MosquitoPar$Z*(1-MosquitoPar$p),nrow= max(MosquitoPar$EIP)+1L, ncol=N)
 }
+
 
 Mosquito_RM$set(which = "public",name = "reset",
           value = reset_Mosquito_RM, overwrite = TRUE
