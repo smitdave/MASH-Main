@@ -500,7 +500,6 @@ mbites_oneBout <- function(){
   switch(private$state,
     F = {self$boutF()},
     B = {self$boutB()},
-    R = {self$boutR()},
     L = {self$boutL()},
     O = {self$boutO()},
     M = {self$boutM()},
@@ -511,7 +510,6 @@ mbites_oneBout <- function(){
   # landing spot
   self$restingSpot()
 
-  self$timing() # update tNext
 
   # energetics
   if(private$FemalePopPointer$get_MBITES_PAR("SUGAR")){
@@ -522,8 +520,17 @@ mbites_oneBout <- function(){
   self$surviveResting()     # MBITES-Generic-Survival.R
   self$surviveFlight()      # MBITES-Generic-Survival.R
 
+  self$timing() # update tNext, using stateNew
+
   # log history
   private$history$historyTrack(privateEnv = private, alive = self$isAlive())
+
+  if(private$stateNew == 'R'){
+    private$tNow = private$tNext # update time
+    private$state = private$stateNew # update current state
+    self$boutR()
+    private$history$historyTrack(privateEnv = private, alive = self$isAlive())
+  }
 }
 
 # if you were searching in L or F and you are marked "l", you need to compute all hazards and then try again.

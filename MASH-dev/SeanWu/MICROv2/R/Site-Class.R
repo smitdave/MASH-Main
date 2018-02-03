@@ -6,7 +6,7 @@
 #   /____/_/\__/\___/
 #
 #   MICRO
-#   Site Class
+#   Site Class Declaration
 #   MASH Team
 #   January 2018
 #
@@ -14,12 +14,12 @@
 
 
 ###############################################################################
-# Site Abstract Base Class
+# Site Class
 ###############################################################################
 
-#' Site Abstract Base Class
+#' Site Class
 #'
-#' Abstract base class for sites.
+#' A site is a location where resources can be found.
 #'
 #'
 #'
@@ -38,7 +38,7 @@
 #'  * field: im a field!
 #'
 #' @export
-Site_ABC <- R6::R6Class(classname = "Site_ABC",
+Site <- R6::R6Class(classname = "Site",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
@@ -47,10 +47,7 @@ Site_ABC <- R6::R6Class(classname = "Site_ABC",
                  # public members
                  public = list(
 
-                   #################################################
-                   # Initialize
-                   #################################################
-
+                   # Constructor
                    initialize = function(){
 
                    }
@@ -59,6 +56,26 @@ Site_ABC <- R6::R6Class(classname = "Site_ABC",
 
                  # private members
                  private = list(
+
+                   # basic information about a site
+                   siteXY                       = numeric(2),
+                   siteID                       = integer(1),
+                   siteType                     = integer(1),
+
+                   # references to resources found at this site
+                   site_f                       = list(), # std::vector<std::unique_ptr<FeedingSite>>
+                   site_l                       = list(),
+                   site_m                       = list(),
+                   site_s                       = list(),
+
+                   # weights of resouces found at this site
+                   site_f_w                     = numeric(1), # std::vector<double>
+                   site_l_w                     = numeric(1),
+                   site_m_w                     = numeric(1),
+                   site_s_w                     = numeric(1),
+
+                   # tile pointer
+                   tileP                        = NULL # tile* tileP;
 
                  )
 )

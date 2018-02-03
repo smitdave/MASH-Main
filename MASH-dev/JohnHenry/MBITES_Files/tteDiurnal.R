@@ -1,6 +1,6 @@
 
 ################# First Method - CDF Inversion Using Newton's Method ###################
-#################         More Accurate, Less Efficient              ###################
+#################                 Less Efficient                     ###################
 
 par(mfrow=c(2,2))
 
@@ -54,7 +54,7 @@ plot(seq(0,7,7/(length(count)-1)),cumsum(count)/sum(count),type="l",ylab="empiri
 
 
 ##################### Second Method - Rejection Method #####################
-#####################   Less Accurate, More Efficient  ##################### 
+#####################           More Efficient         ##################### 
 
 par(mfrow=c(1,1))
 
@@ -92,9 +92,12 @@ xval = newton(gp,gpp,2,10^-4)
 lam = 1
 c = g(xval,lam)
 
+t = seq(0,7,.01)
 ## plotting to show dominance with constant c = 2.0495
 plot(t,gg(t,1),type="l")
 lines(t,c*GG(t,1))
+#polygon(c(t,rev(t)),c(gg(t,1),rev(c*GG(t,1))),col="red")
+
 
 tteDiurnal = function(N,lam){
   v = rep(0,N)
@@ -104,7 +107,7 @@ tteDiurnal = function(N,lam){
     tt = 2
     u = 1
     while(tt*u > 1){
-      v[i] = rexp(1,2*lam)
+      v[i] = rexp(1,lam)
       tt = c*GG(v[i],lam)/gg(v[i],lam)
       u = runif(1)
     }
@@ -112,4 +115,5 @@ tteDiurnal = function(N,lam){
   return(v)
 }
 
-hist(tteDiurnal(100000,1),freq=F,breaks=100)
+count = c(0,hist(tteDiurnal(100000,1),freq=F,breaks=100)$count)
+plot(seq(0,7,7/(length(count)-1)),cumsum(count)/sum(count),type="l",ylab="empirical tteCDF",ylim=c(0,1))

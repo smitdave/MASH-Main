@@ -13,6 +13,15 @@ library(markdown)
 library(igraph)
 library(jsonlite)
 library(shinyFiles)
+library(stringr)
+library(chorddiag)
+library(markovchain)
+library(circlize)
+library(gridExtra)
+library(igraph)
+library(reshape2)
+library(RColorBrewer)
+
 if(system("whoami",intern=TRUE) == "chipdelmal"){
   DIR = "/Users/chipdelmal/Documents/Github/MASH-MAIN/MASH-dev/HectorSanchez/MBITES_GUI/New/"
   setwd(DIR)
@@ -60,6 +69,7 @@ mbitesGadget = function(...){
             $('#nav a:contains(\"Bouts\")').parent().addClass('hide');
             $('#nav a:contains(\"Landscape\")').parent().addClass('hide');
             $('#nav a:contains(\"Ecology\")').parent().addClass('hide');
+            $('#nav a:contains(\"Pathogen\")').parent().addClass('hide');
         };
 
         Shiny.addCustomMessageHandler('activeNavs', function(nav_label) {
@@ -114,7 +124,7 @@ mbitesGadget = function(...){
 
           #################################################################################
           tabPanel(title = "Landscape", value = 'landscape',
-          	uiOutput("panel_lanscape")
+          	uiOutput("panel_landscape")
           	),
           #################################################################################
 		tabPanel(title = "Simulation", value = "simulation",
@@ -138,7 +148,7 @@ mbitesGadget = function(...){
                #    ),
 
                 #########################################################################
-                tabPanel("Waiting Time",
+                tabPanel("Resting Time",
                     tabsetPanel(
                       tabPanel("F",
                         column(4,
@@ -159,8 +169,12 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.F_dist == 'gamma'",
                           sliderInput("f_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
-                        ), 
+                          ),
+                        hr(),
+                        uiOutput('f_time_slider')
+  
+                        ),
+                        
                         column(6,
                           plotOutput("F_wt_plot_option")
                           )
@@ -185,7 +199,9 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.B_dist == 'gamma'",
                           sliderInput("b_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('b_time_slider')
                         ), 
                         column(6,
                           plotOutput("B_wt_plot_option")
@@ -202,16 +218,18 @@ mbitesGadget = function(...){
                         radioButtons("R_dist", "Distribution type:",
                           c("Exponentional" = "exp",
                             "Gamma" = "gamma"), inline = TRUE),
-                        conditionalPanel(condition = "input.R_dist == 'exp'",
-                          checkboxInput("R_diur", "Diurnal Pattern", FALSE)
-                          ),
+                        # conditionalPanel(condition = "input.R_dist == 'exp'",
+                        #   checkboxInput("R_diur", "Diurnal Pattern", FALSE)
+                        #   ),
                         # conditionalPanel(condition = "input.R_diur && input.R_dist == 'exp'",
                         #   sliderInput("R_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
                         #   sliderInput("R_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
                         #   ),
                         conditionalPanel(condition = "input.R_dist == 'gamma'",
                           sliderInput("r_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('r_time_slider')
                         ), 
                         column(6,
                           plotOutput("R_wt_plot_option")
@@ -237,7 +255,9 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.L_dist == 'gamma'",
                           sliderInput("l_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('l_time_slider')
                         ), 
                         column(6,
                           plotOutput("L_wt_plot_option")
@@ -263,7 +283,9 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.O_dist == 'gamma'",
                           sliderInput("o_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('o_time_slider')
                         ), 
                         column(6,
                           plotOutput("O_wt_plot_option")
@@ -289,64 +311,67 @@ mbitesGadget = function(...){
                         #   ),
                         conditionalPanel(condition = "input.S_dist == 'gamma'",
                           sliderInput("s_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
+                          ),
+                        hr(),
+                        uiOutput('s_time_slider')
                         ), 
                         column(6,
                           plotOutput("S_wt_plot_option")
                           )
-                        ),
-
-                      tabPanel("M",
-                        column(4,
-                        h5("Mean Time Elapsed: "),
-                        fluidRow(
-                        column(4,selectInput("M_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                        column(4,selectInput("M_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
-                        ),
-                        radioButtons("M_dist", "Distribution type:",
-                          c("Exponentional" = "exp",
-                            "Gamma" = "gamma"), inline = TRUE),
-                        # conditionalPanel(condition = "input.M_dist == 'exp'",
-                        #   checkboxInput("M_diur", "Diurnal Pattern", FALSE)
-                        #   ),
-                        # conditionalPanel(condition = "input.M_diur && input.M_dist == 'exp'",
-                        #   sliderInput("M_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
-                        #   sliderInput("M_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
-                        #   ),
-                        conditionalPanel(condition = "input.M_dist == 'gamma'",
-                          sliderInput("m_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
-                        ), 
-                        column(6,
-                          plotOutput("M_wt_plot_option")
-                          )
-                        ),
-
-                      tabPanel("E",
-                        column(4,
-                        h5("Mean Time Elapsed: "),
-                        fluidRow(
-                        column(4,selectInput("E_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
-                        column(4,selectInput("E_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
-                        ),
-                        radioButtons("E_dist", "Distribution type:",
-                          c("Exponentional" = "exp",
-                            "Gamma" = "gamma"), inline = TRUE),
-                        # conditionalPanel(condition = "input.E_dist == 'exp'",
-                        #   checkboxInput("E_diur", "Diurnal Pattern", FALSE)
-                        #   ),
-                        # conditionalPanel(condition = "input.E_diur && input.E_dist == 'exp'",
-                        #   sliderInput("E_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
-                        #   sliderInput("E_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
-                        #   ),
-                        conditionalPanel(condition = "input.E_dist == 'gamma'",
-                          sliderInput("e_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
-                          )
-                        ), 
-                        column(6,
-                          plotOutput("E_wt_plot_option")
-                          )
                         )
+                      # ,
+
+                      # tabPanel("M",
+                      #   column(4,
+                      #   h5("Mean Time Elapsed: "),
+                      #   fluidRow(
+                      #   column(4,selectInput("M_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                      #   column(4,selectInput("M_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                      #   ),
+                      #   radioButtons("M_dist", "Distribution type:",
+                      #     c("Exponentional" = "exp",
+                      #       "Gamma" = "gamma"), inline = TRUE),
+                      #   # conditionalPanel(condition = "input.M_dist == 'exp'",
+                      #   #   checkboxInput("M_diur", "Diurnal Pattern", FALSE)
+                      #   #   ),
+                      #   # conditionalPanel(condition = "input.M_diur && input.M_dist == 'exp'",
+                      #   #   sliderInput("M_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
+                      #   #   sliderInput("M_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
+                      #   #   ),
+                      #   conditionalPanel(condition = "input.M_dist == 'gamma'",
+                      #     sliderInput("m_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                      #     )
+                      #   ), 
+                      #   column(6,
+                      #     plotOutput("M_wt_plot_option")
+                      #     )
+                      #   ),
+
+                      # tabPanel("E",
+                      #   column(4,
+                      #   h5("Mean Time Elapsed: "),
+                      #   fluidRow(
+                      #   column(4,selectInput("E_time_h", label = "Hours", choices = seq(0,24,1) , selected = 0, width = "100%")),
+                      #   column(4,selectInput("E_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30, width = "100%"))
+                      #   ),
+                      #   radioButtons("E_dist", "Distribution type:",
+                      #     c("Exponentional" = "exp",
+                      #       "Gamma" = "gamma"), inline = TRUE),
+                      #   # conditionalPanel(condition = "input.E_dist == 'exp'",
+                      #   #   checkboxInput("E_diur", "Diurnal Pattern", FALSE)
+                      #   #   ),
+                      #   # conditionalPanel(condition = "input.E_diur && input.E_dist == 'exp'",
+                      #   #   sliderInput("E_diur_now", "Time when the waiting period starts (in hours)", min = 0, max = 24, value = 3, step = 0.25),
+                      #   #   sliderInput("E_diur_peak", "Peak activity level (in hours)", min = 0, max = 24, value = 2, step = 0.25)
+                      #   #   ),
+                      #   conditionalPanel(condition = "input.E_dist == 'gamma'",
+                      #     sliderInput("e_wt_gamma_shape", "Shape Parameter", min = 0, max = 20, value = 3, step = 1)
+                      #     )
+                      #   ), 
+                      #   column(6,
+                      #     plotOutput("E_wt_plot_option")
+                      #     )
+                      #   )
                       )
                   ),
                 #############################################################################
@@ -409,18 +434,14 @@ mbitesGadget = function(...){
               		column(8,
               			checkboxInput("showB_Option", "Setting Blood Meal Parameters", FALSE),
               			conditionalPanel(condition = "input.showB_Option",
-                      helpText("The following parameters also can be set under 'Bouts' Panel"),
+                      #helpText("The following parameters also can be set under 'Bouts' Panel"),
               				checkboxInput("showBloodMeal_Option", "Blood Meal Size", FALSE),
                       		conditionalPanel(condition = "input.showBloodMeal_Option",
-                          	# sliderInput(inputId = "bm_a_Option", label ="Shape Param a for Bloodmeal Size",
-                           #        value = 7.5, min = 0, max = 20, step = 0.5),
-                          	# sliderInput(inputId = "bm_b_Option", label ="Shape Param b for Bloodmeal Size",
-                           #        value = 2.5, min = 0, max = 20, step = 0.5),
                             fluidRow(
                             column(6,
-                              sliderInput(inputId = "bm_mean_Option", label ="Average Bloodmeal Size",
+                              sliderInput(inputId = "bm_mean", label ="Average Bloodmeal Size",
                                     value = 0.5, min = 0, max = 1, step = 0.01),
-                              sliderInput(inputId = "bm_v_Option", label ="Parameter v for a Bloodmeal Size: (a + b) in Beta(a,b)",
+                              sliderInput(inputId = "bm_v", label ="Parameter v for a Bloodmeal Size: (a + b) in Beta(a,b)",
                                     value = 15, min = 0, max = 40, step = 0.5)
                         	   ),
                             column(6,
@@ -432,18 +453,18 @@ mbitesGadget = function(...){
 	                      	conditionalPanel(condition = "input.overfeed_Option",
                             fluidRow(
                               column(6,
-    	                        sliderInput(inputId = "of_a_Option", "Exp Param a for overfeeding as function of bmSize",
+    	                        sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
     	                          value = 8, min = 5, max = 10, step = 0.01),
-    	                        sliderInput(inputId = "of_b_Option", "Exp Param b for overfeeding as function of bmSize",
+    	                        sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
     	                          value = 5000, min = 0, max = 10000, step = 100)),
                               column(6,
                                 plotOutput("overfeeding_Option_plot")
-                                )),
-	                      	hr(),
-	                      	sliderInput(inputId = "preGblood_Option", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-	                        value = 0, min = 0, max = 100, step = 1),
-	                      	sliderInput(inputId = "Q_Option", label ="Human Blood Index",
-	                        value = 0.9, min = 0, max = 1, step = 0.1)
+                                ))
+	                      	# hr(),
+	                      	# sliderInput(inputId = "preGblood_Option", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+	                       #  value = 0, min = 0, max = 100, step = 1),
+	                      	# sliderInput(inputId = "Q_Option", label ="Human Blood Index",
+	                       #  value = 0.9, min = 0, max = 1, step = 0.1)
                   	)))),
 
               	#########################################################################
@@ -480,7 +501,7 @@ mbitesGadget = function(...){
 		              #   column(3,selectInput("S_time_h_Option", label = "hours", choices = seq(0,24,1) , selected = 0)),
 		              #   column(3,selectInput("S_time_m_Option", label = "Minutes", choices = seq(0,55,5), selected = 30))
 		              #   ),
-                      helpText("The following parameters also can be set under 'Bouts' Panel"),
+                      #helpText("The following parameters also can be set under 'Bouts' Panel"),
     		              sliderInput(inputId = "S_succeed_Option", label ="Probability of Success",
     		                              value = 0.99, min = 0.9, max = 1, step = 0.01),
     		              sliderInput(inputId = "S_surv_Option", label ="Baseline Probability of Survival",
@@ -651,6 +672,17 @@ mbitesGadget = function(...){
                 # )
             ))
             ),
+          #################################################################################
+          tabPanel(title = "Pathogen", value = "pathogen",
+            sidebarLayout(position = "right",
+              sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                helpText('Test')
+                ),
+              mainPanel(
+                helpText("test output")
+                )
+              )
+          ),
 
           
           #################################################################################
@@ -694,268 +726,141 @@ mbitesGadget = function(...){
   #################### Option Output #####################################################
 
     ################## Waiting Time ###############################################
-
+    set.seed(123)
     output$F_wt_plot_option <- renderPlot({
       if(input$F_dist == "exp"){
-        # if(input$F_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$F_diur_now, peak = input$F_diur_peak)/max(rDiurnal(x, now = input$F_diur_now, peak = input$F_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
+      	f_t = as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60
+      	f_m = as.numeric(input$f_min_time)/60
+        curve(dexp(x, rate = 1/(f_t - f_m), log = FALSE)/
+          max(dexp(x, rate = 1/(f_t - f_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(f_m +24)))
         #}
       }else{
-        curve(dgamma(x, shape = input$f_wt_gamma_shape ,rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60 * input$f_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$f_wt_gamma_shape ,rate = 1/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60 * input$f_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	f_t = as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60
+      	f_m = as.numeric(input$f_min_time)/60
+        curve(dgamma(x, shape = input$f_wt_gamma_shape ,rate = 1/(f_t - f_m), log = FALSE)/
+          max(dgamma(x, shape = input$f_wt_gamma_shape ,rate = 1/(f_t - f_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(f_m +24)))
       }
     })
 
     output$B_wt_plot_option <- renderPlot({
       if(input$B_dist == "exp"){
-        # if(input$B_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$B_diur_now, peak = input$B_diur_peak)/max(rDiurnal(x, now = input$B_diur_now, peak = input$B_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	b_t = as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60
+      	b_m = as.numeric(input$b_min_time)/60
+        curve(dexp(x, rate = 1/(b_t - b_m), log = FALSE)/
+          max(dexp(x, rate = 1/(b_t - b_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(b_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$b_wt_gamma_shape ,rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60 * input$b_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$b_wt_gamma_shape ,rate = 1/(as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60 * input$b_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	b_t = as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60
+      	b_m = as.numeric(input$b_min_time)/60
+        curve(dgamma(x, shape = input$b_wt_gamma_shape ,rate = 1/(b_t - b_m), log = FALSE)/
+          max(dgamma(x, shape = input$b_wt_gamma_shape ,rate = 1/(b_t - b_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(b_m +24)))
       }
     })
 
     output$R_wt_plot_option <- renderPlot({
       if(input$R_dist == "exp"){
-        # if(input$R_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$R_diur_now, peak = input$R_diur_peak)/max(rDiurnal(x, now = input$R_diur_now, peak = input$R_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	r_t = as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60
+      	r_m = as.numeric(input$r_min_time)/60
+        curve(dexp(x, rate = 1/(r_t - r_m), log = FALSE)/
+          max(dexp(x, rate = 1/(r_t - r_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(r_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60 * input$r_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60 * input$r_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	r_t = as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60
+      	r_m = as.numeric(input$r_min_time)/60
+        curve(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(r_t - r_m), log = FALSE)/
+          max(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(r_t - r_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(r_m +24)))
       }
     })
 
     output$L_wt_plot_option <- renderPlot({
       if(input$L_dist == "exp"){
-        # if(input$L_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$L_diur_now, peak = input$L_diur_peak)/max(rDiurnal(x, now = input$L_diur_now, peak = input$L_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	l_t = as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60
+      	l_m = as.numeric(input$l_min_time)/60
+        curve(dexp(x, rate = 1/(l_t - l_m), log = FALSE)/
+          max(dexp(x, rate = 1/(l_t - l_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(l_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60 * input$l_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60 * input$l_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
-      }
-    })
-
-    output$R_wt_plot_option <- renderPlot({
-      if(input$R_dist == "exp"){
-        # if(input$R_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$R_diur_now, peak = input$R_diur_peak)/max(rDiurnal(x, now = input$R_diur_now, peak = input$R_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
-      }else{
-        curve(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60 * input$r_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$r_wt_gamma_shape ,rate = 1/(as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60 * input$r_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
-      }
-    })
-
-    output$L_wt_plot_option <- renderPlot({
-      if(input$L_dist == "exp"){
-        # if(input$L_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$L_diur_now, peak = input$L_diur_peak)/max(rDiurnal(x, now = input$L_diur_now, peak = input$L_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
-      }else{
-        curve(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60 * input$l_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60 * input$l_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	l_t = as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60
+      	l_m = as.numeric(input$l_min_time)/60
+        curve(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(l_t - l_m), log = FALSE)/
+          max(dgamma(x, shape = input$l_wt_gamma_shape ,rate = 1/(l_t - l_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(l_m +24)))
       }
     })
 
     output$O_wt_plot_option <- renderPlot({
       if(input$O_dist == "exp"){
-        # if(input$O_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$O_diur_now, peak = input$R_diur_peak)/max(rDiurnal(x, now = input$O_diur_now, peak = input$O_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	o_t = as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60
+      	o_m = as.numeric(input$o_min_time)/60
+        curve(dexp(x, rate = 1/(o_t - o_m), log = FALSE)/
+          max(dexp(x, rate = 1/(o_t - o_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(o_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$o_wt_gamma_shape ,rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60 * input$o_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$o_wt_gamma_shape ,rate = 1/(as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60 * input$o_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	o_t = as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60
+      	o_m = as.numeric(input$o_min_time)/60
+        curve(dgamma(x, shape = input$o_wt_gamma_shape ,rate = 1/(o_t - o_m), log = FALSE)/
+          max(dgamma(x, shape = input$o_wt_gamma_shape ,rate = 1/(o_t - o_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(o_m +24)))
       }
     })
 
     output$S_wt_plot_option <- renderPlot({
       if(input$S_dist == "exp"){
-        # if(input$S_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$S_diur_now, peak = input$S_diur_peak)/max(rDiurnal(x, now = input$S_diur_now, peak = input$S_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
+      	s_t = as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60
+      	s_m = as.numeric(input$s_min_time)/60
+        curve(dexp(x, rate = 1/(s_t - s_m), log = FALSE)/
+          max(dexp(x, rate = 1/(s_t - s_m), log = FALSE)),
+          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(s_m +24)))
+        #}
       }else{
-        curve(dgamma(x, shape = input$s_wt_gamma_shape ,rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60 * input$s_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$s_wt_gamma_shape ,rate = 1/(as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60 * input$s_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
+      	s_t = as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60
+      	s_m = as.numeric(input$s_min_time)/60
+        curve(dgamma(x, shape = input$s_wt_gamma_shape ,rate = 1/(s_t - s_m), log = FALSE)/
+          max(dgamma(x, shape = input$s_wt_gamma_shape ,rate = 1/(s_t - s_m), log = FALSE)),
+          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(s_m +24)))
       }
     })
 
-    output$M_wt_plot_option <- renderPlot({
-      if(input$M_dist == "exp"){
-        # if(input$M_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$M_diur_now, peak = input$M_diur_peak)/max(rDiurnal(x, now = input$M_diur_now, peak = input$M_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
-      }else{
-        curve(dgamma(x, shape = input$m_wt_gamma_shape ,rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60 * input$m_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$m_wt_gamma_shape ,rate = 1/(as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60 * input$m_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
-      }
-    })
-
-    output$E_wt_plot_option <- renderPlot({
-      if(input$E_dist == "exp"){
-        # if(input$E_diur){
-        #   #  lambda :: the average activity level
-        #   #  now    :: time when the waiting period starts
-        #   #  peak   :: peak activity level 
-        #   rDiurnal = function(x, now=0, peak= 0){
-        #       t = dexp(x, rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60), log = FALSE)
-        #       ti = floor(t)
-        #       ti + (1+sin(2*pi*(t-ti+now-peak)))/2
-        #   }
-        #   curve(rDiurnal(x, now = input$E_diur_now, peak = input$E_diur_peak)/max(rDiurnal(x, now = input$E_diur_now, peak = input$E_diur_peak)), xlim = c(0,24),
-        #     xlab = "Exponentional-distributed bout lengths with Diurnal Pattern (in hours)", ylab = " Normalized Density", col = "Orange", lwd = 1.5)
-        # }else{
-        #f_wt_exp <- dexp(x, rate = 24/(as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60), log = FALSE)
-        curve(dexp(x, rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60), log = FALSE)/
-          max(dexp(x, rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60), log = FALSE)),
-          xlab = "Exponentially-distributed bout lengths (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,24))
-        # }
-      }else{
-        curve(dgamma(x, shape = input$e_wt_gamma_shape ,rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60 * input$e_wt_gamma_shape), log = FALSE)/
-          max(dgamma(x, shape = input$e_wt_gamma_shape ,rate = 1/(as.numeric(input$E_time_h) + as.numeric(input$E_time_m)/60 * input$e_wt_gamma_shape), log = FALSE)),
-          xlab = "Gamma-distributed bout lengths", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,24))
-      }
-    })
 
     ################# Survival ####################################################
+    output$f_time_slider <- renderUI({
+    	sliderInput("f_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$F_time_h) * 60 + as.numeric(input$F_time_m)), 
+                        	value = round((as.numeric(input$F_time_h) * 60 + as.numeric(input$F_time_m)))/2, step = 1)
+    })
+    output$b_time_slider <- renderUI({
+    	sliderInput("b_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$B_time_h) * 60 + as.numeric(input$B_time_m)), 
+                        	value = round((as.numeric(input$B_time_h) * 60 + as.numeric(input$B_time_m)))/2, step = 1)
+    })
+    output$r_time_slider <- renderUI({
+    	sliderInput("r_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$R_time_h) * 60 + as.numeric(input$R_time_m)), 
+                        	value = round((as.numeric(input$R_time_h) * 60 + as.numeric(input$R_time_m)))/2, step = 1)
+    })
+    output$l_time_slider <- renderUI({
+    	sliderInput("l_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$L_time_h) * 60 + as.numeric(input$L_time_m)), 
+                        	value = round((as.numeric(input$L_time_h) * 60 + as.numeric(input$L_time_m)))/2, step = 1)
+    })
+    output$o_time_slider <- renderUI({
+    	sliderInput("o_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$O_time_h) * 60 + as.numeric(input$O_time_m)), 
+                        	value = round((as.numeric(input$O_time_h) * 60 + as.numeric(input$O_time_m)))/2, step = 1)
+    })
+    output$s_time_slider <- renderUI({
+    	sliderInput("s_min_time", "Minimal resting time in Minutes", min = 0, 
+                        	max = (as.numeric(input$S_time_h) * 60 + as.numeric(input$S_time_m)), 
+                        	value = round((as.numeric(input$S_time_h) * 60 + as.numeric(input$S_time_m)))/2, step = 1)
+    })
 
     output$flight_energetics_plot <- renderPlot({
         curve(exp(input$S_a * x)/(exp(input$S_a * x) + input$S_b), ylab = "Survival Probability", xlab = "Energy Reserves",
@@ -1002,8 +907,8 @@ mbitesGadget = function(...){
 
     output$bm_Option_plot <- renderPlot({
       if(input$showBloodMeal_Option){
-        bm_a <- input$bm_mean_Option * input$bm_v_Option
-        bm_b <- (1 - input$bm_mean_Option) * input$bm_v_Option
+        bm_a <- input$bm_mean * input$bm_v
+        bm_b <- (1 - input$bm_mean) * input$bm_v
         curve(dbeta(x, bm_a, bm_b)/max(dbeta(x, bm_a, bm_b)),ylab = "Normalized Density", xlab = "Blood Meal Size", col = "Blue", lwd = 1.5)}
     })
 
@@ -1011,8 +916,8 @@ mbitesGadget = function(...){
       if(input$overfeed_Option){
         # bm_a_Option <- input$bm_mean_Option * input$bm_v_Option
         # bm_b_Option <- (1 - input$bm_mean_Option) * input$bm_v_Option
-        a <- input$of_a_Option
-        b <- input$of_b_Option
+        a <- input$of_a
+        b <- input$of_b
         curve(exp(a * x)/(exp(a * x) + b),
           ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
     })
@@ -1020,22 +925,22 @@ mbitesGadget = function(...){
 
     ################ Sugar Feeding ################################################
 
-    output$bm_plot <- renderPlot({
-      if(input$showBloodMeal){
-        bm_a <- input$bm_mean * input$bm_v
-        bm_b <- (1 - input$bm_mean) * input$bm_v
-        curve(dbeta(x, bm_a, bm_b)/max(dbeta(x, bm_a, bm_b)),ylab = "Normalized Density", xlab = "Blood Meal Size", col = "Blue", lwd = 1.5)}
-    })
+    # output$bm_plot <- renderPlot({
+    #   if(input$showBloodMeal){
+    #     bm_a <- input$bm_mean * input$bm_v
+    #     bm_b <- (1 - input$bm_mean) * input$bm_v
+    #     curve(dbeta(x, bm_a, bm_b)/max(dbeta(x, bm_a, bm_b)),ylab = "Normalized Density", xlab = "Blood Meal Size", col = "Blue", lwd = 1.5)}
+    # })
 
-    output$overfeeding_plot <- renderPlot({
-      if(input$overfeed){
-        # bm_a <- input$bm_mean * input$bm_v
-        # bm_b <- (1 - input$bm_mean) * input$bm_v
-        a <- input$of_a
-        b <- input$of_b
-        curve(exp(a * x)/(exp(a * x) + b),
-          ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
-    })
+    # output$overfeeding_plot <- renderPlot({
+    #   if(input$overfeed){
+    #     # bm_a <- input$bm_mean * input$bm_v
+    #     # bm_b <- (1 - input$bm_mean) * input$bm_v
+    #     a <- input$of_a
+    #     b <- input$of_b
+    #     curve(exp(a * x)/(exp(a * x) + b),
+    #       ylab = "Mortality", xlab = "Blood Meal Size", ylim = c(0,1), xlim = c(0,1), col = "Green", lwd = 1.5)}
+    # })
 
     
 
@@ -1049,28 +954,37 @@ mbitesGadget = function(...){
   	output$contentsF <- renderTable({
   	      dataF()
   	  })
-  	dataM <- reactive({
-  	    req(input$filem)
-  	    inFileM <- input$filem
-  	    dfM <- read.csv(inFileM$datapath, header = input$headerm, sep = input$sepm)
-  	    return(dfM)
+  	dataL <- reactive({
+	    req(input$filel)
+	    inFileL <- input$filel
+	    dfL <- read.csv(inFileL$datapath, header = input$headerl, sep = input$sepl)
+	    return(dfL)
+	  })
+  	output$contentsL <- renderTable({
+  	      dataL()
   	  })
-  	output$contentsM <- renderTable({
-  	      dataM()
-  	  })
-  	dataS <- reactive({
-  	    req(input$files)
-  	    inFileS <- input$files
-  	    dfS <- read.csv(inFileS$datapath, header = input$headers, sep = input$seps)
-  	    return(dfS)
-  	  })
-  	output$contentsS <- renderTable({
-  	      dataS()
-  	  })
+  	# dataM <- reactive({
+  	#     req(input$filem)
+  	#     inFileM <- input$filem
+  	#     dfM <- read.csv(inFileM$datapath, header = input$headerm, sep = input$sepm)
+  	#     return(dfM)
+  	#   })
+  	# output$contentsM <- renderTable({
+  	#       dataM()
+  	#   })
+  	# dataS <- reactive({
+  	#     req(input$files)
+  	#     inFileS <- input$files
+  	#     dfS <- read.csv(inFileS$datapath, header = input$headers, sep = input$seps)
+  	#     return(dfS)
+  	#   })
+  	# output$contentsS <- renderTable({
+  	#       dataS()
+  	#   })
 
-    output$panel_landscape_out_f <- renderPlot({
-    	 if(input$landscape_point_f & input$landscape_f_input == "cluster"){
-    		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+  	output$panel_landscape_out_site <- renderPlot({
+  		if(input$showPoints){
+  			getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
 			  set.seed(seed)
 			  xCenters = runif(nCenters, -rng, rng)
 			  yCenters = runif(nCenters, -rng, rng)
@@ -1088,138 +1002,217 @@ mbitesGadget = function(...){
 			  x = x[-1]
 			  y = y[-1]
 
-			  plot(x,y, pch = 15, col = "red")
+			  #plot(x,y, pch = 15, col = "red")
 			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
 			}
 
-			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
-			xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
-			N_l = length(xy_l[,1])
-			w_l = rgamma(length(xy_f[,1]), 1,1)
-
-			xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
-
-			xy_f = rbind(xy_f, xy_f1)
-			N_f = length(xy_f[,1])
-			w_f = rgamma(length(xy_f[,1]), 1,1)
-
-			plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
-
-			points(xy_l, pch =15, col = "blue")
-
-    	 }else{
-    	 	xF <- dataF()[, 1:2]
-	    	plot(xF, col="red")
-    	 }
-
-    })
-
-
-    output$panel_landscape_out_m <- renderPlot({
-    	 if(input$landscape_point_m & input$landscape_m_input == "cluster"){
-    		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
-			  set.seed(seed)
-			  xCenters = runif(nCenters, -rng, rng)
-			  yCenters = runif(nCenters, -rng, rng)
-
-			  x = 0
-			  y=0
-
-			  n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
-			  spread = rgamma(nCenters,1,1)*spr
-
-			  for(i in 1:nCenters){
-			    x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
-			    y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
-			  }
-			  x = x[-1]
-			  y = y[-1]
-
-			  plot(x,y, pch = 15, col = "red")
-			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			if(input$landscape_f_input == 'cluster'){
+				xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+				w_f = rgamma(length(xy_f[,1]), 1,1)
+				xy_f = cbind(xy_f, w = rgamma(length(xy_f[,1]), 1, 1))
+			}else if(input$landscape_f_input == 'imp_xyw'){
+				xy_f = dataF()[,1:3]
+			}else{
+				xy_f = dataF()[,1:2]
+				xy_f = cbind(xy_f, w = rgamma(length(xy_f[,1]), 1, 1))
 			}
-
-			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
-			xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
-			N_l = length(xy_l[,1])
-			w_l = rgamma(length(xy_f[,1]), 1,1)
-
-			xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
-
-			xy_f = rbind(xy_f, xy_f1)
 			N_f = length(xy_f[,1])
-			w_f = rgamma(length(xy_f[,1]), 1,1)
 
-			plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
-
-			points(xy_l, pch =15, col = "blue")
-
-
-
-    	 }else{
-    	 	xM <- dataM()[, 1:2]
-	    	plot(xM, col="blue")
-    	 }
-
-    })
-
-    output$panel_landscape_out_s <- renderPlot({
-    	 if(input$landscape_point_s & input$landscape_s_input == "cluster"){
-    		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
-			  set.seed(seed)
-			  xCenters = runif(nCenters, -rng, rng)
-			  yCenters = runif(nCenters, -rng, rng)
-
-			  x = 0
-			  y=0
-
-			  n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
-			  spread = rgamma(nCenters,1,1)*spr
-
-			  for(i in 1:nCenters){
-			    x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
-			    y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
-			  }
-			  x = x[-1]
-			  y = y[-1]
-
-			  plot(x,y, pch = 15, col = "red")
-			  cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			if(input$landscape_l_input == 'cluster'){
+				xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+				xy_l = cbind(xy_l, w = rgamma(length(xy_l[,1]), 1, 1))
+				}else if(input$landscape_l_input == 'imp_xyw'){
+					xy_l = dataL()[,1:3]
+				}else{
+					xy_l = dataL()[,1:2]
+					xy_l= cbind(xy_l, w = rgamma(length(xy_l[,1]), 1, 1))
 			}
-
-			xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
-			xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
 			N_l = length(xy_l[,1])
-			w_l = rgamma(length(xy_f[,1]), 1,1)
+			m_x = runif(10, -10, 10)/2
+			m_y = runif(10, -10, 10)/2
+			m_xy = cbind(x=m_x, y=m_y)
+			xx = unique(c(xy_f[,1], xy_l[,1]))
+			yy = unique(c(xy_f[,2], xy_l[,2])) 
+			lx = length(xx)
+			ix = sample(1:lx, 80)
+			s_x = c(xx[ix], runif(40, -10, 10)/2)
+			s_y = c(yy[ix], runif(40, -10, 10)/2)
+			s_xy = cbind(x=s_x, y=s_y)
 
-			xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+			xy_f= cbind(xy_f, w = rgamma(N_f, 1, 1))
+			xy_l= cbind(xy_l, w = rgamma(N_l, 1, 1))
+			m_xy = cbind(m_xy, w=rgamma(10,1,1))
+			s_xy = cbind(s_xy, w=rgamma(120,1,1))
 
-			xy_f = rbind(xy_f, xy_f1)
-			N_f = length(xy_f[,1])
-			w_f = rgamma(length(xy_f[,1]), 1,1)
+			plot(xy_f[,1], xy_f[,2], type = "n", pch = 3, col = "red", xlab = "East-West", ylab = "North-South")
 
-			plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+			
+			if(input$landscape_point_m){
+				points(m_xy, pch=15, col = "orange", cex = m_xy[,3])}
+			if(input$landscape_point_f){
+				points(xy_f, pch = 21, bg = "red", cex = xy_f[,3])}
+			if(input$landscape_point_l){
+				points(xy_l, pch = 4, col = "blue", cex = xy_l[,3])}
+			if(input$landscape_point_s){
+				points(s_xy, pch=6, col=grey(0.5), cex=s_xy[,3])}
+			}
+		})
 
-			points(xy_l, pch =15, col = "blue")
+   #  output$panel_landscape_out_f <- renderPlot({
+   #  	 if(input$landscape_point_f & input$landscape_f_input == "cluster"){
+   #  		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+			#   set.seed(seed)
+			#   xCenters = runif(nCenters, -rng, rng)
+			#   yCenters = runif(nCenters, -rng, rng)
+
+			#   x = 0
+			#   y=0
+
+			#   n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
+			#   spread = rgamma(nCenters,1,1)*spr
+
+			#   for(i in 1:nCenters){
+			#     x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
+			#     y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
+			#   }
+			#   x = x[-1]
+			#   y = y[-1]
+
+			#   plot(x,y, pch = 15, col = "red")
+			#   cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			# }
+
+			# xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+			# xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+			# N_l = length(xy_l[,1])
+			# w_l = rgamma(length(xy_f[,1]), 1,1)
+
+			# xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+
+			# xy_f = rbind(xy_f, xy_f1)
+			# N_f = length(xy_f[,1])
+			# w_f = rgamma(length(xy_f[,1]), 1,1)
+
+			# plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+
+			# points(xy_l, pch =15, col = "blue")
+
+   #  	 }else{
+   #  	 	xF <- dataF()[, 1:2]
+	  #   	plot(xF, col="red")
+   #  	 }
+
+   #  })
+
+
+   #  output$panel_landscape_out_m <- renderPlot({
+   #  	 if(input$landscape_point_m & input$landscape_m_input == "cluster"){
+   #  		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+			#   set.seed(seed)
+			#   xCenters = runif(nCenters, -rng, rng)
+			#   yCenters = runif(nCenters, -rng, rng)
+
+			#   x = 0
+			#   y=0
+
+			#   n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
+			#   spread = rgamma(nCenters,1,1)*spr
+
+			#   for(i in 1:nCenters){
+			#     x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
+			#     y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
+			#   }
+			#   x = x[-1]
+			#   y = y[-1]
+
+			#   plot(x,y, pch = 15, col = "red")
+			#   cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			# }
+
+			# xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+			# xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+			# N_l = length(xy_l[,1])
+			# w_l = rgamma(length(xy_f[,1]), 1,1)
+
+			# xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+
+			# xy_f = rbind(xy_f, xy_f1)
+			# N_f = length(xy_f[,1])
+			# w_f = rgamma(length(xy_f[,1]), 1,1)
+
+			# plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+
+			# points(xy_l, pch =15, col = "blue")
 
 
 
-    	 }else{
-    	 	xS <- dataS()[, 1:2]
-	    	plot(xS, col="green")
-    	 }
+   #  	 }else{
+   #  	 	xM <- dataM()[, 1:2]
+	  #   	plot(xM, col="blue")
+   #  	 }
 
-    })
+   #  })
+
+   #  output$panel_landscape_out_s <- renderPlot({
+   #  	 if(input$landscape_point_s & input$landscape_s_input == "cluster"){
+   #  		getPoints = function(seed, nCenters,  rng, nPaC, nPaCvr, spr, centers=NULL){
+			#   set.seed(seed)
+			#   xCenters = runif(nCenters, -rng, rng)
+			#   yCenters = runif(nCenters, -rng, rng)
+
+			#   x = 0
+			#   y=0
+
+			#   n = pmax(5, rnbinom(nCenters,mu=nPaC,size=nPaCvr))
+			#   spread = rgamma(nCenters,1,1)*spr
+
+			#   for(i in 1:nCenters){
+			#     x = c(x,xCenters[i]+rnorm(n[i],0,spread[i]))
+			#     y = c(y,yCenters[i]+rnorm(n[i],0,spread[i]))
+			#   }
+			#   x = x[-1]
+			#   y = y[-1]
+
+			#   plot(x,y, pch = 15, col = "red")
+			#   cbind(x,y) #return(list(xy=cbind(x,y), centers = cbind(xCenters, yCenters)))
+			# }
+
+			# xy_f = getPoints(21,nCenters=5,rng=10,nPaC=12,nPaCvr=2,spr=1)
+			# xy_l = getPoints(21,nCenters=25,rng=10,nPaC=8,nPaCvr=2,spr=.4)
+			# N_l = length(xy_l[,1])
+			# w_l = rgamma(length(xy_f[,1]), 1,1)
+
+			# xy_f1 = getPoints(23,nCenters=25,rng=10,nPaC=10,nPaCvr=2,spr=.6)
+
+			# xy_f = rbind(xy_f, xy_f1)
+			# N_f = length(xy_f[,1])
+			# w_f = rgamma(length(xy_f[,1]), 1,1)
+
+			# plot(xy_f, pch = 15, col = "red", xlim = range(xy_f, xy_l), ylim = range(xy_f, xy_l))
+
+			# points(xy_l, pch =15, col = "blue")
+
+
+
+   #  	 }else{
+   #  	 	xS <- dataS()[, 1:2]
+	  #   	plot(xS, col="green")
+   #  	 }
+
+   #  })
 
     observe({
-      toggle(condition = input$landscape_point_f, selector = "#landscape_output li a[data-value=landscape_out_f]")
+      toggle(condition = input$showPoints, selector = "#landscape_output li a[data-value=landscape_site]")
     })
-    observe({
-      toggle(condition = input$landscape_point_m, selector = "#landscape_output li a[data-value=landscape_out_m]")
-    })
-    observe({
-      toggle(condition = input$landscape_point_s, selector = "#landscape_output li a[data-value=landscape_out_s]")
-    })
+   #  observe({
+   #    toggle(condition = input$landscape_point_f, selector = "#landscape_output li a[data-value=landscape_out_f]")
+   #  })
+   #  observe({
+   #    toggle(condition = input$landscape_point_m, selector = "#landscape_output li a[data-value=landscape_out_m]")
+   #  })
+   #  observe({
+   #    toggle(condition = input$landscape_point_s, selector = "#landscape_output li a[data-value=landscape_out_s]")
+   #  })
 
 #####################Simualtion output ########################################################
     output$sim_panel <- renderUI({
@@ -1230,10 +1223,12 @@ mbitesGadget = function(...){
 					actionButton("JumpToMore", label = "Check it now!")
 					),
 				mainPanel(
-					numericInput("N_female_demo", "Number of Female Mosquitoes", value = 50, min = 0, max = NA, step = 1),
-            		numericInput("N_male_demo", "Number of Male Mosquitoes", value = 50, min = 0, max = NA, step = 1)
-					)
-            )
+					# numericInput("N_female_demo", "Number of Female Mosquitoes", value = 50, min = 0, max = NA, step = 1),
+     #        		numericInput("N_male_demo", "Number of Male Mosquitoes", value = 50, min = 0, max = NA, step = 1)
+					# )
+					plotOutput("demo_sim_histogram"),
+					plotOutput("demo_sim_chord")
+            ))
     		}else{
     		sidebarLayout(position = "right",
                 sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
@@ -1244,6 +1239,185 @@ mbitesGadget = function(...){
             		numericInput("N_male", "Number of Male Mosquitoes", value = 50, min = 0, max = NA, step = 1)
 					))
     	}
+    })
+
+
+		###############################################################################
+		# Histograms
+		###############################################################################
+
+		# these functions take parameter 'data' which is raw JSON read back into R
+
+		bionomics_lifespan <- function(data){
+		  lifespans = vapply(X = data,FUN = function(x){
+		    x$bionomics_lifespan[[1]]
+		  },FUN.VALUE = numeric(1),USE.NAMES = FALSE)
+		  return(lifespans)
+		}
+
+		bionomics_BMinterval <- function(data){
+		  BMintervals = vapply(X = data,FUN = function(x){
+		    if(x$bionomics_bmInt[[1]]>0){
+		      return(x$bionomics_bmInt[[1]])  
+		    } else {
+		      return(NaN) 
+		    }
+		  },FUN.VALUE = numeric(1),USE.NAMES = FALSE)
+		  BMintervals = Filter(Negate(is.nan),BMintervals)
+		  return(BMintervals)
+		}
+
+		bionomics_HumanBMinterval <- function(data){
+		  HumanBMintervals = vapply(X = data,FUN = function(x){
+		    if(x$bionomics_bmIntH[[1]]>0){
+		      return(x$bionomics_bmIntH[[1]])
+		    } else {
+		      return(NaN)
+		    }
+		  },FUN.VALUE = numeric(1),USE.NAMES = FALSE)
+		  HumanBMintervals = Filter(Negate(is.nan),HumanBMintervals)
+		  return(HumanBMintervals)
+		}
+
+		bionomics_HumanBM <- function(data){
+		  HumanBM = vapply(X = data,FUN = function(x){
+		    x$feedHumanH[[1]]
+		  },FUN.VALUE = numeric(1),USE.NAMES = FALSE)
+		  return(HumanBM)
+		}
+
+		bionomics_vc <- function(data, eip=10){
+		  vc = vapply(X = data,FUN = function(x,eip){
+		    feedT = unlist(x$feedAllT)
+		    if(length(feedT)<2 | is.null(feedT)){
+		      return(NaN)
+		    } else {
+		      if((diff(feedT)>eip)[1]){
+		        # sum all pairs of bites that are more than EIP days apart
+		        sum(apply(X = combn(feedT,2),MARGIN = 2,FUN = function(x){
+		          diff(x)>eip
+		        }))
+		      } else {
+		        return(NaN)
+		      }
+		    }
+		  },FUN.VALUE = numeric(1),eip = eip,USE.NAMES = FALSE)
+		  vc = Filter(Negate(is.nan),vc)
+		  return(vc)
+		}
+
+		# HMSC plotly histogram
+		histogramPlotLyGenericBionomics=function(data,title,color){
+		  p=plot_ly(x=data,name=title,marker=list(color=color),type="histogram") %>%
+		    layout(
+		      barmode="overlay",
+		      legend=list(x=1.05,y=.5,bgcolor="#FFFFFF"),
+		      title=paste(title, "( Mean: ",signif(mean(data),3),")"),
+		      bargap=0.1
+		    )
+		  p
+		}
+
+
+		###############################################################################
+		# Chord diagram
+		###############################################################################
+
+
+		# oneHistory: a single mosquito's JSON outfile
+		transitionsInMosquitoStates <- function(oneHistory, stateSpace = c("D","M","F","B","R","L","O","S","E")){
+		  states = oneHistory$stateH
+		  createSequenceMatrix(stringchar = unlist(states[-1]),possibleStates = stateSpace)
+		}
+
+		transitionsInMosquitoPopulation <- function(popHistory, stateSpace = c("D","M","F","B","R","L","O","S","E")){
+		  transMatrices = lapply(X = popHistory,FUN = transitionsInMosquitoStates)
+		  transitions = Reduce(f = "+",x = transMatrices)
+		  transitions[stateSpace,stateSpace]
+		}
+
+		circlizeStatesTransitionMatrix <- function(history, stateSpace = c("D","M","F","B","R","L","O","S","E")){
+		  transitions=transitionsInMosquitoPopulation(history,stateSpace=stateSpace)
+		  colors=c("#555555","#95E455","pink","red","purple","cyan","blue","yellow","grey")
+		  chordDiagramFromMatrix(transitions,directional=1,grid.col=colors,direction.type="arrows",self.link=2)
+		}
+
+
+		################################################################################################################
+		# 
+		# make plots
+		# 
+		################################################################################################################
+
+
+		# if you do not have chorddiag, use: devtools::install_github("mattflor/chorddiag")
+
+		mosquito_dir = "demo_json/" # wherever the json files are
+
+		# files from each simulation
+		files_l = system(command = paste0("ls ",mosquito_dir),intern = TRUE)
+		hist_l = files_l[grep(pattern = "History",x = files_l)] # individual json histories
+		pop_l = files_l[grep(pattern = "Pop",x = files_l)] # population csv
+
+		# output
+		mHist = fromJSON(txt = paste0(mosquito_dir,hist_l),flatten = FALSE,simplifyVector=FALSE)
+		mPop = read.table(file = paste0(mosquito_dir,pop_l),header = TRUE,sep = ",")
+
+		nullIx = which(vapply(X = mHist,FUN = function(x){x$ID[[1]]},FUN.VALUE = character(1)) == "NULL")
+		mHist = mHist[-nullIx]
+
+		axisSize = 12
+		titleSize = 14.5
+
+		lifespans = bionomics_lifespan(mHist)
+		lifespans_plot = ggplot(data = data.frame(lifespan=lifespans)) +
+		  geom_histogram(aes(lifespan),fill=rgb(0,.5,.5,.5)) +
+		  theme_bw() + 
+		  theme(panel.grid.minor = element_blank(),
+		        axis.title=element_text(size=axisSize),
+		        plot.title = element_text(size=titleSize)) +
+		  guides(fill = FALSE) + 
+		  labs(x="Days",y="Frequency",title="Mosquito Lifespans")
+
+		BMintervals = bionomics_BMinterval(mHist)
+		BMintervals_plot = ggplot(data = data.frame(BMinterval=BMintervals)) +
+		  geom_histogram(aes(BMinterval), fill = rgb(0,.5,0,.5)) +
+		  theme_bw() + 
+		  theme(panel.grid.minor = element_blank(),
+		        axis.title=element_text(size=axisSize),
+		        plot.title = element_text(size=titleSize)) +
+		  guides(fill = FALSE) + 
+		  labs(x="Days",y="Frequency",title="Bloodmeal Interval")
+
+		vectorialCapacity = bionomics_vc(mHist,eip = 8)
+		vectorialCapacity_plot = ggplot(data = data.frame(vectorialCapacity=vectorialCapacity)) +
+		  geom_histogram(aes(vectorialCapacity), fill = rgb(0,.5,0,.5),stat = "count") +
+		  scale_x_continuous(breaks=0:(max(vectorialCapacity)+2)) + 
+		  theme_bw() + 
+		  theme(panel.grid.minor = element_blank(),
+		        axis.title=element_text(size=axisSize),
+		        plot.title = element_text(size=titleSize)) +
+		  guides(fill = FALSE) + 
+		  labs(x="Vectorial Capacity",y="Frequency",title="Individual Vectorial Capacity")
+
+		HumanBMs = bionomics_HumanBM(mHist)
+		HumanBMs_plot = ggplot(data = data.frame(HumanBM=HumanBMs)) +
+		  geom_histogram(aes(HumanBM), fill = rgb(1,0,0,0.5),stat = "count") +
+		  scale_x_continuous(breaks=0:(max(HumanBMs)+2)) + 
+		  theme_bw() + 
+		  theme(panel.grid.minor = element_blank(),
+		        axis.title=element_text(size=axisSize),
+		        plot.title = element_text(size=titleSize)) +
+		  guides(fill = FALSE) + 
+		  labs(x="Count",y="Frequency",title="Human Bloodmeals")
+
+
+    output$demo_sim_histogram <- renderPlot({
+    	grid.arrange(BMintervals_plot,HumanBMs_plot,lifespans_plot,vectorialCapacity_plot,nrow=2)
+    })
+
+    output$demo_sim_chord <- renderPlot({
+    	circlizeStatesTransitionMatrix(history = mHist)
     })
     
 ######################################################################################################################
@@ -1265,6 +1439,7 @@ mbitesGadget = function(...){
             session$sendCustomMessage('activeNavs', 'Simulation')
             session$sendCustomMessage('activeNavs', 'Bouts')
             session$sendCustomMessage('activeNavs', 'Ecology')
+            session$sendCustomMessage('activeNavs', 'Pathogen')
         }
     })
     observe({
@@ -1285,6 +1460,7 @@ mbitesGadget = function(...){
             session$sendCustomMessage('activeNavs', 'Simulation')
             session$sendCustomMessage('activeNavs', 'Bouts')
             session$sendCustomMessage('activeNavs', 'Ecology')
+            session$sendCustomMessage('activeNavs', 'Pathogen')
         }
     })
 
@@ -1297,6 +1473,7 @@ mbitesGadget = function(...){
     	session$sendCustomMessage('activeNavs', 'Options')
     	session$sendCustomMessage('activeNavs', 'Bouts')
     	session$sendCustomMessage('activeNavs', 'Ecology')
+    	session$sendCustomMessage('activeNavs', 'Pathogen')
     	updateTabsetPanel(session, "nav", selected = "options")
     })
 
@@ -1402,34 +1579,38 @@ mbitesGadget = function(...){
               hr(),
               checkboxInput("showBloodMeal", "Blood Meal Size", FALSE),
               conditionalPanel(condition = "input.showBloodMeal",
-                wellPanel(
-                  # sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
-                  #         value = 7.5, min = 0, max = 20, step = 0.5),
-                  # sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
-                  #         value = 2.5, min = 0, max = 20, step = 0.5)
-                  sliderInput(inputId = "bm_mean", label ="Average blood meal Size",
-                          value = 0.5, min = 0, max = 1, step = 0.01),
-                  sliderInput(inputId = "bm_v", label ="Sample size for a blood meal Size: (a + b) in Beta(a,b)",
-                          value = 15, min = 0, max = 40, step = 0.5)
-                  )
+                helpText("Please set the parameters in Options - Blood Meal")
+                # wellPanel(
+                #   # # sliderInput(inputId = "bm_a", label ="Shape Param a for Bloodmeal Size",
+                #   # #         value = 7.5, min = 0, max = 20, step = 0.5),
+                #   # # sliderInput(inputId = "bm_b", label ="Shape Param b for Bloodmeal Size",
+                #   # #         value = 2.5, min = 0, max = 20, step = 0.5)
+                #   # sliderInput(inputId = "bm_mean", label ="Average blood meal Size",
+                #   #         value = 0.5, min = 0, max = 1, step = 0.01),
+                #   # sliderInput(inputId = "bm_v", label ="Sample size for a blood meal Size: (a + b) in Beta(a,b)",
+                #   #         value = 15, min = 0, max = 40, step = 0.5)
+                #   )
                 ),
               hr(),
               checkboxInput("overfeed", "Overfeed", FALSE),
               conditionalPanel(condition = "input.overfeed",
-                sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
-                  value = 8, min = 5, max = 10, step = 0.01),
-                sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
-                  value = 5000, min = 0, max = 10000, step = 100)),
+                helpText("Please set the parameters in Options - Blood Meal")
+                # sliderInput(inputId = "of_a", "Exp Param a for overfeeding as function of bmSize",
+                #   value = 8, min = 5, max = 10, step = 0.01),
+                # sliderInput(inputId = "of_b", "Exp Param b for overfeeding as function of bmSize",
+                #   value = 5000, min = 0, max = 10000, step = 100)
+                ),
               hr(),
               sliderInput(inputId = "preGblood", label ="Amount of Energy a Blood Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
                 value = 0, min = 0, max = 100, step = 1),
               sliderInput(inputId = "Q", label ="Human Blood Index",
                 value = 0.9, min = 0, max = 1, step = 0.1)
-              )),
-          column(6,
-            plotOutput(""),
-            plotOutput("bm_plot"),
-            plotOutput("overfeeding_plot")))
+              ))
+          # column(6,
+          #   plotOutput(""),
+          #   plotOutput("bm_plot"),
+          #   plotOutput("overfeeding_plot"))
+          )
         })
     output$panel_r <- renderUI({
         if (input$showR)
@@ -1514,18 +1695,20 @@ mbitesGadget = function(...){
               #sliderInput(inputId = "S_time", label ="Mean Time Elapsed (in days)",
                               #value = 0.02, min = 0, max = 2, step = 0.01),
             wellPanel(
+              helpText("Please set the parameters in Options - Sugar Feeding")
               # h5("Mean Time Elapsed: "),
               #   fluidRow(
               #   column(6,selectInput("S_time_h", label = "hours", choices = seq(0,24,1) , selected = 0)),
               #   column(6,selectInput("S_time_m", label = "Minutes", choices = seq(0,55,5), selected = 30))
               #   ),
-              sliderInput(inputId = "S_succeed", label ="Probability of Success",
-                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-              sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",
-                              value = 0.99, min = 0.9, max = 1, step = 0.01),
-              #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
-              sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
-                              value = 0, min = 0, max = 100, step = 1)))
+              # sliderInput(inputId = "S_succeed", label ="Probability of Success",
+              #                 value = 0.99, min = 0.9, max = 1, step = 0.01),
+              # sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",
+              #                 value = 0.99, min = 0.9, max = 1, step = 0.01),
+              # #textInput("S_wts", "Landing Spot Weights: Enter a vector (comma delimited)", "1,1,1,1,1"),
+              # sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)",
+              #                 value = 0, min = 0, max = 100, step = 1)
+              ))
     })
     output$panel_e <- renderUI({
         if (input$showE)
@@ -1544,7 +1727,7 @@ mbitesGadget = function(...){
               ))
     })
 
-    output$panel_lanscape <- renderUI({
+    output$panel_landscape <- renderUI({
     	if(input$project == 'demo'){
     		fluidPage(
     			sidebarLayout(position = "right", 
@@ -1569,13 +1752,14 @@ mbitesGadget = function(...){
             sidebarLayout(position = "right",
               sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
                 helpText("Please set the parameters"),
-                checkboxInput("showPoints", "Points", FALSE),
+                checkboxInput("showPoints", "Sites", FALSE),
                 conditionalPanel(condition = "input.showPoints",
                   wellPanel(
-                    checkboxInput("landscape_point_f", "f", FALSE),
+                  	helpText("space(x,y), a search weight (w)"),
+                    checkboxInput("landscape_point_f", "{f}: Haunts, blood feeding sites", TRUE),
                     conditionalPanel(condition = "input.landscape_point_f",
                     	wellPanel(
-                    	radioButtons(inputId = "landscape_f_input", "Provide the locations and weights:",
+                    	radioButtons(inputId = "landscape_f_input", "Provide the locations w/o weights:",
                     		choices = c("Clusters" = "cluster",
                     					"Import x, y, w" = "imp_xyw",
                     					"Import x, y" = "imp_xy"
@@ -1592,58 +1776,39 @@ mbitesGadget = function(...){
                                 Semicolon=';',
                                 Tab='\t'),
                               ','))
-                    		),
-                    	uiOutput("landscape_f_file")
+                    		)
+                 			#,
+                    	#uiOutput("landscape_f_file")
                     	)),
-                    checkboxInput("landscape_point_m", "m", FALSE),
-                    conditionalPanel(condition = "input.landscape_point_m",
+                    checkboxInput("landscape_point_l", "{l}: Habitats, egg laying sites", TRUE),
+                    conditionalPanel(condition = "input.landscape_point_l",
                     	wellPanel(
-                    	radioButtons(inputId = "landscape_m_input", "Provide the locations and weights:",
+                    	radioButtons(inputId = "landscape_l_input", "Provide the locations w/o weights:",
                     		choices = c("Clusters" = "cluster",
                     					"Import x, y, w" = "imp_xyw",
                     					"Import x, y" = "imp_xy"
                     					),
                     		selected = "cluster"),
-                    	conditionalPanel(condition = "input.landscape_m_input != 'cluster'",
-                    		fileInput('filem', 'Choose CSV File',
+                    	conditionalPanel(condition = "input.landscape_l_input != 'cluster'",
+                    		fileInput('filel', 'Choose CSV File',
                        			accept=c('text/csv',
                                 'text/comma-separated-values,text/plain',
                                 '.csv')),
-                    		wellPanel(checkboxInput('headerm', 'Header', TRUE),
-                 			radioButtons('sepm', 'Separator',
+                    		wellPanel(checkboxInput('headerl', 'Header', TRUE),
+                 			radioButtons('sepl', 'Separator',
                               c(Comma=',',
                                 Semicolon=';',
                                 Tab='\t'),
                               ','))
-                    		),
-                    	uiOutput("landscape_m_file")
+                    		)
+                    	#uiOutput("landscape_l_file")
                     	)),
-                    checkboxInput("landscape_point_s", "s", FALSE),
-                    conditionalPanel(condition = "input.landscape_point_s",
-                    	wellPanel(
-                    	radioButtons(inputId = "landscape_s_input", "Provide the locations and weights:",
-                    		choices = c("Clusters" = "cluster",
-                    					"Import x, y, w" = "imp_xyw",
-                    					"Import x, y" = "imp_xy"
-                    					),
-                    		selected = "cluster"),
-                    	conditionalPanel(condition = "input.landscape_s_input != 'cluster'",
-                    		fileInput('files', 'Choose CSV File',
-                       			accept=c('text/csv',
-                                'text/comma-separated-values,text/plain',
-                                '.csv')),
-                    		wellPanel(checkboxInput('headers', 'Header', TRUE),
-                 			radioButtons('seps', 'Separator',
-                              c(Comma=',',
-                                Semicolon=';',
-                                Tab='\t'),
-                              ','))
-                    		),
-                    	uiOutput("landscape_s_file")
-                    	))
-                    )
-                  ),
-                checkboxInput("showKernels", "Kernels(Female)", FALSE),
+                    checkboxInput("landscape_point_s", "{s}: Sugar Feeding Sites", TRUE),
+                  
+                    checkboxInput("landscape_point_m", "{m}: Mating Sites", TRUE))
+
+                ),
+              checkboxInput("showKernels", "Kernels(Female)", FALSE),
                 conditionalPanel(condition = "input.showKernels",
                   wellPanel(
                     helpText("f"),
@@ -1658,25 +1823,24 @@ mbitesGadget = function(...){
                     helpText("M"),
                     helpText("s")
                     )
-                  )
-                ),
+                  )),
               mainPanel(
                 tabsetPanel(
                 	id = "landscape_output",
                 	tabPanel(
-                		title = "Point: f",
-                		value = "landscape_out_f",
-                		plotOutput("panel_landscape_out_f")
-                		),
-                	tabPanel(
-                		title = "Point: m",
-                		value = "landscape_out_m",
-                		plotOutput("panel_landscape_out_m")
-                		),
-                	tabPanel(
-                		title = "Point: s",
-                		value = "landscape_out_s",
-                		plotOutput("panel_landscape_out_s")
+                		title = "Sites",
+                		value = "landscape_site",
+                		plotOutput("panel_landscape_out_site")
+                	# 	),
+                	# tabPanel(
+                	# 	title = "Point: m",
+                	# 	value = "landscape_out_m",
+                	# 	plotOutput("panel_landscape_out_m")
+                	# 	),
+                	# tabPanel(
+                	# 	title = "Point: s",
+                	# 	value = "landscape_out_s",
+                	# 	plotOutput("panel_landscape_out_s")
                 		)
                 	)
                 )
