@@ -81,7 +81,7 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                      cat("initializing mosquito population\n")
                      switch(MosquitoPar$model,
                        RM = {
-                         private$Mosquito = Mosquito_RM$new(M = MosquitoPar$M, EIP = MosquitoPar$EIP, p=MosquitoPar$p, f=MosquitoPar$f, Q=MosquitoPar$Q, v=MosquitoPar$v, psi=MosquitoPar$psi)
+                         private$Mosquito = Mosquito_RM$new(M = MosquitoPar$M, EIP = MosquitoPar$EIP, Y = MosquitoPar$Y, Z = MosquitoPar$Z, p=MosquitoPar$p, f=MosquitoPar$f, Q=MosquitoPar$Q, v=MosquitoPar$v, psi=MosquitoPar$psi)
                        },
                        {stop("invalid mosquito ecology model selected")}
                      )
