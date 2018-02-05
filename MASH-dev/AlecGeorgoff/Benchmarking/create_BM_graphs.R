@@ -8,7 +8,7 @@
 rm(list = ls())
 library(ggplot2)
 
-data <- read.csv("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/job_run_info_vary_n_humans_2.csv")
+data <- read.csv("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/job_run_info_vary_n_humans_3.csv")
 
 ### Specify x values for graph (name and value) ###
 x_var_text <- "n_humans"
