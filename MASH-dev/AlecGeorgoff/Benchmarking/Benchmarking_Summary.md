@@ -48,31 +48,43 @@ As discussed in the Background section, this testing involved running a simulati
 #### Results
 
 ##### _**Vary over tMax (500 Humans)**_
+![Vary over tMax, 500 Humans, data](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_500_DATA.PNG?raw=true)
+
 ![Vary over tMax, 500 Humans, runtime](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_500_RUNTIME.png?raw=true)
 
 ![Vary over tMax, 500 Humans, memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_500_MEMORY.png?raw=true)
 
 ##### _**Vary over tMax (5000 Humans)**_
+![Vary over tMax, 5000 Humans, data](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_5000_DATA.PNG?raw=true)
+
 ![Vary over tMax, 5000 Humans, runtime](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_5000_RUNTIME.png?raw=true)
 
 ![Vary over tMax, 5000 Humans, runtime](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_5000_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_patches**_
+![Vary over n\_patches, data](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_DATA.PNG?raw=true)
+
 ![Vary over n\_patches, runtime](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_RUNTIME.png?raw=true)
 
 ![Vary over n\_patches, memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_patches, keep humans per patch constant**_
+![Vary over n\_patches, keep humans per patch constant, data](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_const_ratio_DATA.PNG?raw=true)
+
 ![Vary over n\_patches, keep humans per patch constant, runtime](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_const_ratio_RUNTIME.png?raw=true)
 
 ![Vary over n\_patches, keep humans per patch constant, memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_const_ratio_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_humans (A)**_
+![Vary over n\_humans (A), data](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_humans_A_DATA.PNG?raw=true)
+
 ![Vary over n\_humans (A), runtime](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_humans_A_RUNTIME.png?raw=true)
 
 ![Vary over n\_humans (A), memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_humans_A_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_humans (B)**_
+![Vary over n\_humans (B), data](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_humans_B_DATA.PNG?raw=true)
+
 ![Vary over n\_humans (B), runtime](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_humans_B_RUNTIME.png?raw=true)
 
 ![Vary over n\_humans (B), memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_humans_B_MEMORY.png?raw=true)
