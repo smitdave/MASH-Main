@@ -1582,13 +1582,13 @@ output$panel_bouts <- renderUI({
     m_param_name <- c('M_succeed', 'M_surv', 'M_wts')
     s_param_name <- c('S_succeed', 'S_surv', 'preGsugar', 'S_wts')
     # Declare inputs
-    inputs_bout <- NULL
-    inputs_name <- NULL
-    stateSpace <- ""
+    inputs_bout <- list()
+    inputs_name <- list()
+    stateSpace <- list()
     
     #Append all inputs before saving to folder
     if(input$showF){
-      stateSpace <- paste(stateSpace, "F", seq = ",")
+      stateSpace <- append(stateSpace, "F")
       for(input.i in f_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1596,7 +1596,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showB){
-      stateSpace <- paste(stateSpace, "B", seq = ",")
+      stateSpace <- append(stateSpace, "B")
       inputs_name <- append(inputs_name, 'bm_a')
       inputs_bout <- append(inputs_bout, input$bm_mean * input$bm_v)
       inputs_name <- append(inputs_name, 'bm_b')
@@ -1608,7 +1608,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showR){
-      stateSpace <- paste(stateSpace, "R", seq = ",")
+      stateSpace <- append(stateSpace, "R")
       for(input.i in r_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1616,7 +1616,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showL){
-      stateSpace <- paste(stateSpace, "L", seq = ",")
+      stateSpace <- append(stateSpace, "L")
       for(input.i in l_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1624,7 +1624,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showO){
-      stateSpace <- paste(stateSpace, "O", seq = ",")
+      stateSpace <- append(stateSpace, "O")
       for(input.i in o_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1632,7 +1632,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showM){
-      stateSpace <- paste(stateSpace, "M", seq = ",")
+      stateSpace <- append(stateSpace, "M")
       for(input.i in m_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1640,10 +1640,10 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showS){
-      stateSpace <- paste(stateSpace, "S", seq = ",")
+      stateSpace <- append(stateSpace, "S")
       inputs_name <- append(inputs_name, 'S.u')
       inputs_bout <- append(inputs_bout, 1/input$S_u_inv)
-      for(input.i in m_param_name){
+      for(input.i in s_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
@@ -1662,7 +1662,7 @@ output$panel_bouts <- renderUI({
     
   
     inputs_name <- append(inputs_name, 'stateSpace')
-    inputs_bout <- append(inputs_bout, stateSpace)
+    inputs_bout <- append(inputs_bout, list(stateSpace))
 
     inputs_name <- append(inputs_name, 'F_time')
     inputs_bout <- append(inputs_bout, (as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60))
@@ -1679,11 +1679,20 @@ output$panel_bouts <- renderUI({
     inputs_name <- append(inputs_name, 'S_time')
     inputs_bout <- append(inputs_bout, (as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60))
 
-    # Inputs data.frame
-    inputs_data_frame <- data.frame(inputId = inputs_name, value = inputs_bout)
-    # Save Inputs
-    write.csv(inputs_data_frame, paste(getwd(), "/bout_option.csv",sep= ""),row.names = FALSE, col.names = FALSE)
-    jsonOut=prettify(toJSON(inputs_data_frame))
-    write(jsonOut,paste(getwd(), "/bout_option.json",sep= ""))
+    # # Inputs data.frame
+    # inputs_data_frame <- data.frame(value = inputs_bout, inputID = inputs_name)
+    # # Save Inputs
+    # write.csv(inputs_data_frame, paste(getwd(), "/bout_option.csv",sep= ""),row.names = FALSE)
+    names(inputs_bout) <- inputs_name
+    serial=prettify(toJSON(inputs_bout))
+    write(serial,paste(getwd(), "/bout_option.json",sep= ""))
+    inputs_bout$stateSpace <- paste(unlist(inputs_bout$stateSpace),collapse = "")
+	df = cbind(InputID = unlist(inputs_name), Value = unlist(inputs_bout))
+	write.table(df,file=paste(getwd(), "/bout_option.csv",sep= ""), quote=T,sep=",",row.names=F)
+
+  	
+
+    #jsonOut=prettify(toJSON(setNames(inputs_data_frame$value, rownames(inputs_data_frame))))
+    #write(jsonOut,paste(getwd(), "/bout_option.json",sep= ""))
   })
 }
