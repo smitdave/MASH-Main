@@ -382,7 +382,7 @@ output$panel_bouts <- renderUI({
                        checkboxInput("showMale", "Male Mosquitoes", value = ("Male" %in% ParList()$stateSpace)),
                        actionButton('save_inputs_bout', 'Save Inputs',width = "100%"),
                        hr(),
-                       actionButton('run_demo_again', 'Save Changes and Run',width = "100%"),
+                       actionButton('run_demo_again', 'Update My Demo',width = "100%"),
                        tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});')))
                      )
                      ,
@@ -1052,8 +1052,9 @@ output$panel_bouts <- renderUI({
   })
 
   observeEvent(input$run_demo_again, {
-    js_string_7 <- 'alert("The demo is refreshed!");'
+    js_string_7 <- 'alert("Your demo is updated!");'
     session$sendCustomMessage(type='jsCode', list(value = js_string_7))
+    updateTabsetPanel(session, "nav", selected = "simulation")
   })
   
   observeEvent(input$save_demo_land, {
@@ -1819,12 +1820,12 @@ output$panel_bouts <- renderUI({
 
 
 	    names(inputs_bout) <- inputs_name
-	    serial=prettify(toJSON(inputs_bout))
-	    write(serial,paste(getwd(), "/bout_option.json",sep= ""))
+	    serial=toJSON(inputs_bout)
+	    write(serial,paste(getwd(), "/run_again.json",sep= ""))
 	    inputs_bout$stateSpace <- paste(unlist(inputs_bout$stateSpace),collapse = "")
-		df = cbind(InputID = unlist(inputs_name), Value = unlist(inputs_bout))
-		write.table(df,file=paste(getwd(), "/bout_option.csv",sep= ""), quote=T,sep=",",row.names=F)
-		#source("simulation.R")
+		  df = cbind(InputID = unlist(inputs_name), Value = unlist(inputs_bout))
+		  write.table(df,file=paste(getwd(), "/run_again.csv",sep= ""), quote=T,sep=",",row.names=F)
+		  #source("simulation.R")
 
 	})
 }
