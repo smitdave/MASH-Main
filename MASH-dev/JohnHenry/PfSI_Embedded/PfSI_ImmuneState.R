@@ -67,14 +67,14 @@ ImmuneState <- R6Class("ImmuneState",
                            ##type specific immunity update
                            
                            self$update_typeImmunity(t,dt,ptype=NaN)
-                          
+                           
                            ##history update
                            self$update_history()
                          },
                          
                          update_history = function(){
                            for(i in 1:private$nBSImmCounters){
-                              private$history$BSImm[[i]] = c(private$history$BSImm[[i]], private$BSImm[i])
+                             private$history$BSImm[[i]] = c(private$history$BSImm[[i]], private$BSImm[i])
                            }
                            private$history$GenImm = c(private$history$GenImm, 1-prod(1-private$BSImm))
                          },
@@ -176,7 +176,7 @@ ImmuneState <- R6Class("ImmuneState",
                              ptypes[i,b]=c
                              ptypes[i,a]=0
                              if(nptypes[i]<max(nptypes)){
-                                ptypes[i,(nptypes[i]+1):max(nptypes)]=NaN
+                               ptypes[i,(nptypes[i]+1):max(nptypes)]=NaN
                              }
                            }
                            pmax(exp(-private$dxp*ptypes),0,na.rm=T)
