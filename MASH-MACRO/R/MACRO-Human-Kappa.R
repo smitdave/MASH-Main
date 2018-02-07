@@ -154,6 +154,16 @@ queueInfectiousBites_PfSI_Human <- function(){
   }
 }
 
+queueInfectiousBites_PfSI_Human_NBinom <- function(){
+  # EIR of the individual, weighted by that individual's biting weight
+  wEIR = private$EIR
+  k = 0.62*exp(-0.8*wEIR) # Because wEIR is small, k is usually pretty close to 0.62
+  nBites = rnbinom(n = 1, mu = wEIR, size = k)
+  if(nBites > 0){
+    self$add2Q_SimBitePfSI(tEvent = private$TilePointer$get_tNow())
+  }
+}
+
 #' PfMOI Queue my Daily Infectious Bites
 #'
 #' Based on my personal EIR value, queue infectious PfMOI bites by calling \code{\link{add2Q_SimBitePfMOI_Human}}
