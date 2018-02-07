@@ -39,7 +39,7 @@ Sh = S
 
 
 plotsh = function(Sh){
- mxx = function(x){which.max(x*10^(6:0))}
+ mxx = function(x){log10(sum(x[-7]*10^(c(11,9,7,5,3,1))))}
  Pt = 7-apply(Sh, 2, mxx)
  Pt = c(Pt[which(Pt>0)],0)
  t = 7*(1:length(Pt))
@@ -49,7 +49,7 @@ plotsh = function(Sh){
 }
 
 linesh = function(Sh){
-  mxx = function(x){which.max(x*10^(6:0))}
+  mxx = function(x){log10(sum(x[-7]*10^(c(11,9,7,5,3,1))))}
   Pt = 7-apply(Sh, 2, mxx)
   Pt = c(Pt[which(Pt>0)],0)
   t = 7*(1:length(Pt))
@@ -100,7 +100,7 @@ oneInfection = function(S, plotit="plot",i=0){
     Sh = cbind(Sh, S)
   }
 
-  mxx = function(x){which.max(x*10^(6:0))}
+  mxx = function(x){log10(sum(x*10^(6:0)))}
   Pt = 7-apply(Sh, 2, mxx)
   if(plotit=="plot") plotsh(Pt)
   if(plotit=="lines") linesh(Pt,i)
@@ -118,9 +118,9 @@ linesh = function(Pt,i=0){
   lines(t, Pt, type = "l", xlim = c(0, 700), col = i)
 }
 
-par(mfrow = c(2,1))
+par(mfrow = c(2,1), mar = c(3,3,1,1))
 
-S = c(2,0,0,0,0,0,0)
+S = c(1,0,0,0,0,0,0)
 meanInfection(S)
 
 Pt=oneInfection(S, "plot")
