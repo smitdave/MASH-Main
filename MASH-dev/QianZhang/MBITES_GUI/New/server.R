@@ -380,7 +380,9 @@ output$panel_bouts <- renderUI({
                        checkboxInput("showS", "S: Sugar Feeding Attempt", value = ("S" %in% ParList()$stateSpace)),
                        checkboxInput("showE", "E: Estivation", value = ("E" %in% ParList()$stateSpace)),
                        checkboxInput("showMale", "Male Mosquitoes", value = ("Male" %in% ParList()$stateSpace)),
-                       actionButton('save_inputs_bout', 'Save inputs',width = "100%"),
+                       actionButton('save_inputs_bout', 'Save Inputs',width = "100%"),
+                       hr(),
+                       actionButton('run_demo_again', 'Save Changes and Run',width = "100%"),
                        tags$head(tags$script(HTML('Shiny.addCustomMessageHandler("jsCode",function(message) {eval(message.value);});')))
                      )
                      ,
@@ -774,6 +776,14 @@ output$panel_bouts <- renderUI({
     }
   })
   
+
+  ########################Demo Running and Plottting #########################################
+
+  ################ Simulation ############################################################
+
+
+
+
   
   ###############################################################################
   # Histograms
@@ -1039,6 +1049,11 @@ output$panel_bouts <- renderUI({
   observeEvent(input$save_inputs_bout, {
     js_string_5 <- 'alert("Parameters Saved!");'
     session$sendCustomMessage(type='jsCode', list(value = js_string_5))
+  })
+
+  observeEvent(input$run_demo_again, {
+    js_string_7 <- 'alert("The demo is refreshed!");'
+    session$sendCustomMessage(type='jsCode', list(value = js_string_7))
   })
   
   observeEvent(input$save_demo_land, {
@@ -1582,13 +1597,13 @@ output$panel_bouts <- renderUI({
     m_param_name <- c('M_succeed', 'M_surv', 'M_wts')
     s_param_name <- c('S_succeed', 'S_surv', 'preGsugar', 'S_wts')
     # Declare inputs
-    inputs_bout <- NULL
-    inputs_name <- NULL
-    stateSpace <- ""
+    inputs_bout <- list()
+    inputs_name <- list()
+    stateSpace <- list()
     
     #Append all inputs before saving to folder
     if(input$showF){
-      stateSpace <- paste(stateSpace, "F", seq = ",")
+      stateSpace <- append(stateSpace, "F")
       for(input.i in f_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1596,7 +1611,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showB){
-      stateSpace <- paste(stateSpace, "B", seq = ",")
+      stateSpace <- append(stateSpace, "B")
       inputs_name <- append(inputs_name, 'bm_a')
       inputs_bout <- append(inputs_bout, input$bm_mean * input$bm_v)
       inputs_name <- append(inputs_name, 'bm_b')
@@ -1608,7 +1623,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showR){
-      stateSpace <- paste(stateSpace, "R", seq = ",")
+      stateSpace <- append(stateSpace, "R")
       for(input.i in r_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1616,7 +1631,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showL){
-      stateSpace <- paste(stateSpace, "L", seq = ",")
+      stateSpace <- append(stateSpace, "L")
       for(input.i in l_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1624,7 +1639,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showO){
-      stateSpace <- paste(stateSpace, "O", seq = ",")
+      stateSpace <- append(stateSpace, "O")
       for(input.i in o_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1632,7 +1647,7 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showM){
-      stateSpace <- paste(stateSpace, "M", seq = ",")
+      stateSpace <- append(stateSpace, "M")
       for(input.i in m_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
@@ -1640,10 +1655,10 @@ output$panel_bouts <- renderUI({
         }}}
     
     if(input$showS){
-      stateSpace <- paste(stateSpace, "S", seq = ",")
+      stateSpace <- append(stateSpace, "S")
       inputs_name <- append(inputs_name, 'S.u')
       inputs_bout <- append(inputs_bout, 1/input$S_u_inv)
-      for(input.i in m_param_name){
+      for(input.i in s_param_name){
         if(length(input[[input.i]]) != 0){
           inputs_name <- append(inputs_name,input.i)
           inputs_bout <- append(inputs_bout, input[[input.i]])
@@ -1662,7 +1677,7 @@ output$panel_bouts <- renderUI({
     
   
     inputs_name <- append(inputs_name, 'stateSpace')
-    inputs_bout <- append(inputs_bout, stateSpace)
+    inputs_bout <- append(inputs_bout, list(stateSpace))
 
     inputs_name <- append(inputs_name, 'F_time')
     inputs_bout <- append(inputs_bout, (as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60))
@@ -1679,11 +1694,137 @@ output$panel_bouts <- renderUI({
     inputs_name <- append(inputs_name, 'S_time')
     inputs_bout <- append(inputs_bout, (as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60))
 
-    # Inputs data.frame
-    inputs_data_frame <- data.frame(inputId = inputs_name, value = inputs_bout)
-    # Save Inputs
-    write.csv(inputs_data_frame, paste(getwd(), "/bout_option.csv",sep= ""),row.names = FALSE, col.names = FALSE)
-    jsonOut=prettify(toJSON(inputs_data_frame))
-    write(jsonOut,paste(getwd(), "/bout_option.json",sep= ""))
+
+    names(inputs_bout) <- inputs_name
+    serial=prettify(toJSON(inputs_bout))
+    write(serial,paste(getwd(), "/bout_option.json",sep= ""))
+    inputs_bout$stateSpace <- paste(unlist(inputs_bout$stateSpace),collapse = "")
+	df = cbind(InputID = unlist(inputs_name), Value = unlist(inputs_bout))
+	write.table(df,file=paste(getwd(), "/bout_option.csv",sep= ""), quote=T,sep=",",row.names=F)
+
   })
+
+	observeEvent(input$run_demo_again, {
+		param_name <- c('gammaShape', 'SENESCE', 'sns_a', 'sns_b', 'TATTER', 'ttsz_p', 'ttr_a',
+                    'ttr_b', 'S_u', 'S_a', 'S_b', 'S_sa', 'S_sb', 'bs_m', 'bs_v', 'maxBatch',
+                    'emt_m', 'emt_v','eggT', 'eggP', 'energyPreG', 'PfEIP', 'F_dist', 'B_dist',
+                    'R_dist', 'L_dist', 'O_dist', 'M_dist', 'S_dist')
+	    f_param_name <- c('F_succeed', 'F_surv', 'F_wts')
+	    b_param_name <- c('B_succeed', 'B_surv', 'B_wts', 
+	                      'surviveH', 'probeH', 'surviveprobeH', 'feedH',
+	                      'surviveZ', 'feedZ', 'bm_a', 'bm_b', 'OVERFEED', 'of_a', 'of_b', 'preGblood',
+	                      'Q')
+	    r_param_name <- c('R_surv', 'REFEED', 'rf_a', 'rf_b', 'R_wts')
+	    l_param_name <- c('L_succeed','L_surv', 'L_wts')
+	    o_param_name <- c('O_succeed', 'O_surv', 'O_wts')
+	    m_param_name <- c('M_succeed', 'M_surv', 'M_wts')
+	    s_param_name <- c('S_succeed', 'S_surv', 'preGsugar', 'S_wts')
+	    # Declare inputs
+	    inputs_bout <- list()
+	    inputs_name <- list()
+	    stateSpace <- list()
+	    
+	    #Append all inputs before saving to folder
+	    if(input$showF){
+	      stateSpace <- append(stateSpace, "F")
+	      for(input.i in f_param_name){
+	        if(length(input[[input.i]]) != 0){
+	          inputs_name <- append(inputs_name,input.i)
+	          inputs_bout <- append(inputs_bout, input[[input.i]])
+	        }}}
+	    
+	    if(input$showB){
+	      stateSpace <- append(stateSpace, "B")
+	      inputs_name <- append(inputs_name, 'bm_a')
+	      inputs_bout <- append(inputs_bout, input$bm_mean * input$bm_v)
+	      inputs_name <- append(inputs_name, 'bm_b')
+	      inputs_bout <- append(inputs_bout, (1 - input$bm_mean) * input$bm_v)
+	      for(input.i in b_param_name){
+	        if(length(input[[input.i]]) != 0){
+	          inputs_name <- append(inputs_name,input.i)
+	          inputs_bout <- append(inputs_bout, input[[input.i]])
+	        }}}
+	    
+	    if(input$showR){
+	      stateSpace <- append(stateSpace, "R")
+	      for(input.i in r_param_name){
+	        if(length(input[[input.i]]) != 0){
+	          inputs_name <- append(inputs_name,input.i)
+	          inputs_bout <- append(inputs_bout, input[[input.i]])
+	        }}}
+	    
+	    if(input$showL){
+	      stateSpace <- append(stateSpace, "L")
+	      for(input.i in l_param_name){
+	        if(length(input[[input.i]]) != 0){
+	          inputs_name <- append(inputs_name,input.i)
+	          inputs_bout <- append(inputs_bout, input[[input.i]])
+	        }}}
+	    
+	    if(input$showO){
+	      stateSpace <- append(stateSpace, "O")
+	      for(input.i in o_param_name){
+	        if(length(input[[input.i]]) != 0){
+	          inputs_name <- append(inputs_name,input.i)
+	          inputs_bout <- append(inputs_bout, input[[input.i]])
+	        }}}
+	    
+	    if(input$showM){
+	      stateSpace <- append(stateSpace, "M")
+	      for(input.i in m_param_name){
+	        if(length(input[[input.i]]) != 0){
+	          inputs_name <- append(inputs_name,input.i)
+	          inputs_bout <- append(inputs_bout, input[[input.i]])
+	        }}}
+	    
+	    if(input$showS){
+	      stateSpace <- append(stateSpace, "S")
+	      inputs_name <- append(inputs_name, 'S.u')
+	      inputs_bout <- append(inputs_bout, 1/input$S_u_inv)
+	      for(input.i in s_param_name){
+	        if(length(input[[input.i]]) != 0){
+	          inputs_name <- append(inputs_name,input.i)
+	          inputs_bout <- append(inputs_bout, input[[input.i]])
+	        }}}
+	    
+	    for(input.i in param_name){
+	      if(length(input[[input.i]]) != 0){
+	        inputs_name <- append(inputs_name,input.i)
+	        inputs_bout <- append(inputs_bout, input[[input.i]])
+	      }}
+	    
+	    inputs_name <- append(inputs_name, 'ttsz.a')
+	    inputs_bout <- append(inputs_bout, input$ttsz_mean * input$ttsz_v)
+	    inputs_name <- append(inputs_name, 'ttsz.b')
+	    inputs_bout <- append(inputs_bout, (1 - input$ttsz_mean) * input$ttsz_v)
+	    
+	  
+	    inputs_name <- append(inputs_name, 'stateSpace')
+	    inputs_bout <- append(inputs_bout, list(stateSpace))
+
+	    inputs_name <- append(inputs_name, 'F_time')
+	    inputs_bout <- append(inputs_bout, (as.numeric(input$F_time_h) + as.numeric(input$F_time_m)/60))
+	    inputs_name <- append(inputs_name, 'B_time')
+	    inputs_bout <- append(inputs_bout, (as.numeric(input$B_time_h) + as.numeric(input$B_time_m)/60))
+	    inputs_name <- append(inputs_name, 'R_time')
+	    inputs_bout <- append(inputs_bout, (as.numeric(input$R_time_h) + as.numeric(input$R_time_m)/60))
+	    inputs_name <- append(inputs_name, 'L_time')
+	    inputs_bout <- append(inputs_bout, (as.numeric(input$L_time_h) + as.numeric(input$L_time_m)/60))
+	    inputs_name <- append(inputs_name, 'O_time')
+	    inputs_bout <- append(inputs_bout, (as.numeric(input$O_time_h) + as.numeric(input$O_time_m)/60))
+	    inputs_name <- append(inputs_name, 'M_time')
+	    inputs_bout <- append(inputs_bout, (as.numeric(input$M_time_h) + as.numeric(input$M_time_m)/60))
+	    inputs_name <- append(inputs_name, 'S_time')
+	    inputs_bout <- append(inputs_bout, (as.numeric(input$S_time_h) + as.numeric(input$S_time_m)/60))
+
+
+	    names(inputs_bout) <- inputs_name
+	    serial=prettify(toJSON(inputs_bout))
+	    write(serial,paste(getwd(), "/bout_option.json",sep= ""))
+	    inputs_bout$stateSpace <- paste(unlist(inputs_bout$stateSpace),collapse = "")
+		df = cbind(InputID = unlist(inputs_name), Value = unlist(inputs_bout))
+		write.table(df,file=paste(getwd(), "/bout_option.csv",sep= ""), quote=T,sep=",",row.names=F)
+		#source("simulation.R")
+
+	})
 }

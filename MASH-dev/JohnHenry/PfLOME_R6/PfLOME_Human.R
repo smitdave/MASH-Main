@@ -17,6 +17,7 @@ Human <- R6Class("Human",
                      private$immuneState = ImmuneState$new()
                      private$healthState = HealthState$new()
                      private$history = list()
+              
                    },
                    
                    
@@ -52,11 +53,12 @@ Human <- R6Class("Human",
                    
                    ########## Update Function #########
                    
+                   ## **edit updateHuman to allow for variable update steps **
                    
-                   updateHuman = function(t){
-                     private$immuneState$update_immuneState(t,self$get_Ptot())
-                     private$healthState$update_healthState(t,self$get_Ptot(),self$get_history()$RBC)
-                     private$pathogen$update_pathogen(t,self$get_PD())
+                   updateHuman = function(t,dt){
+                     private$immuneState$update_immuneState(t,dt,self$get_Ptot())
+                     private$healthState$update_healthState(t,dt,self$get_Ptot(),self$get_history()$RBC)
+                     private$pathogen$update_pathogen(t,dt,self$get_PD())
                    },
                    
                    

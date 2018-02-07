@@ -1,11 +1,12 @@
 rm(list=ls());gc()
-library(MASHmacro)
+library("MASHmacro", lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs")
+library("MASHcpp", lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs")
 
 PfSI.Setup()
 SimBitePfSI.Setup()
 MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/28,tripDuration = 14)
 
-directory = "/Users/slwu89/Desktop/MACRO"
+directory = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/MACRO_test/PROFILING"
 
 n = 10
 

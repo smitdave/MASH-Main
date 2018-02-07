@@ -35,10 +35,10 @@ Pathogen <- R6Class("Pathogen",
                       
                       ## update pathogens
                       
-                      update_pathogen = function(t,PD){
+                      update_pathogen = function(t,dt,PD){
                         for(i in 1:length(private$PfPathogen)){
                           Pttemp = private$PfPathogen[[i]]$get_Pt()
-                          private$PfPathogen[[i]]$update_Pf(t,PD)
+                          private$PfPathogen[[i]]$update_Pf(t,dt,PD)
                           if(is.na(private$PfPathogen[[i]]$get_Pt()) & !is.na(Pttemp)){
                             self$set_PfMOI(private$PfMOI-1)
                           }
@@ -267,14 +267,16 @@ Pf <- R6Class("Pf",
                 ########## update methods ##########
                 
                 
-                update_Pf = function(t,PD){
-                  self$update_Pt(t,PD)
-                  self$update_Ptt()
-                  self$update_Gt(t)
+                update_Pf = function(t,dt,PD){
+                  for(i in 1:dt){
+                    self$update_Pt(t,PD)
+                    self$update_Ptt()
+                    self$update_Gt()
+                  }
                 },
                 
                 update_Pt = function(t,PD){
-                  self$set_Pt(self$dPdt_tent(t,private$Pt,private$PAR,PD))
+                  self$set_Pt(self$dPdt_tent(t+i-1,private$Pt,private$PAR,PD))
                   if(is.na(private$Pt)){
                     private$PAR$tEnd = t - private$PAR$t0
                     self$set_activeP(0)
@@ -356,11 +358,12 @@ Pf <- R6Class("Pf",
                 })},
                 
                 dPdt_tent = function(t, P, PAR, PD=0, IM=0){with(PAR,{
-                  age = ifelse(t>=t0, t-t0+1, 0)
-                  P = ifelse(age>=1 & age<=tEnd,
+                  age = ifelse(t>=t0, t-t0, 0)
+                    P = ifelse(age>=1 & age<=tEnd,
                              pmin(mxPD, P + self$gr_tent(age,PAR))-PD-IM,
                              NaN)
-                  ifelse(!is.na(P)&P>0, P, NaN)
+                    ifelse(!is.na(P)&P>0, P, NaN)
+                    return(P)
                 })},
                 
                 shift = function(v,places,dir="right") {

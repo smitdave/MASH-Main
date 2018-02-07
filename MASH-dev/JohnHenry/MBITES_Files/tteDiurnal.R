@@ -89,6 +89,7 @@ gpp = function(t){
 }
 
 xval = newton(gp,gpp,2,10^-4)
+gpp(xval)
 lam = 1
 c = g(xval,lam)
 

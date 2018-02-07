@@ -57,7 +57,7 @@ HealthState <- R6Class("HealthState",
                          ############ Update Methods ##############
                          
                          
-                         update_healthState = function(t,Ptot,RBCHist){
+                         update_healthState = function(t,dt,Ptot,RBCHist){
                            self$update_Fever(Ptot)
                            self$update_HRP2(Ptot)
                            self$update_pLDH(Ptot)
@@ -78,15 +78,15 @@ HealthState <- R6Class("HealthState",
                          update_HRP2 = function(Ptot){
                            a = .0019
                            b = log(2)/3.67
-                           private$HRP2 = ifelse(is.na(Ptot),log10(10^private$HRP2-b*10^private$HRP2),log10(10^private$HRP2+a*10^Ptot-b*10^private$HRP2))
+                           private$HRP2 = ifelse(is.na(Ptot),log10(10^private$HRP2-dt*b*10^private$HRP2),log10(10^private$HRP2+dt*(a*10^Ptot-b*10^private$HRP2)))
                          },
                          
                          update_pLDH = function(Ptot){
                            a = .13
                            b = log(2)/2
                            private$pLDH = ifelse(!is.na(Ptot),
-                                                 log10((1-b)*10^private$pLDH + a*10^Ptot),
-                                                 log10((1-b)*10^private$pLDH))
+                                                 log10(10^private$pLDH - dt*(b*10^private$pLDH + a*10^Ptot)),
+                                                 log10((1-dt*b)*10^private$pLDH))
                          },
                          
                          update_RBC = function(Ptot,RBCHist){
@@ -98,8 +98,8 @@ HealthState <- R6Class("HealthState",
                            rhat = ifelse(t<7,2.5,RBCHist[t-6])
                            r = private$RBC
                            private$RBC = ifelse(is.nan(Ptot),
-                                                r - a*r + b*exp(-c*rhat),
-                                                r - a*r + b*exp(-c*rhat) - d*10^Ptot/(e+10^Ptot)*r)
+                                                r + dt*(- a*r + b*exp(-c*rhat)),
+                                                r + dt*(- a*r + b*exp(-c*rhat) - d*10^Ptot/(e+10^Ptot)*r))
                          },
                          
                          update_PD = function(t){

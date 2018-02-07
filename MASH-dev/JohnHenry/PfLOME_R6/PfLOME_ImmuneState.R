@@ -56,7 +56,7 @@ ImmuneState <- R6Class("ImmuneState",
                            rowSums(weight*private$typeImm)
                          },
                          
-                         update_immuneState = function(t,Ptot){
+                         update_immuneState = function(t,dt,Ptot){
                            
                            ##BS immunity update
                            for(i in 1:private$nBSImmCounters){
@@ -66,7 +66,7 @@ ImmuneState <- R6Class("ImmuneState",
                            
                            ##type specific immunity update
                            
-                           self$update_typeImmunity(t,ptype=NaN)
+                           self$update_typeImmunity(t,dt,ptype=NaN)
                           
                            ##history update
                            self$update_history()
@@ -104,13 +104,13 @@ ImmuneState <- R6Class("ImmuneState",
                          daysSinceUnder = function(X, P, PAR){with(PAR,{
                            X = ifelse(is.na(X),0,X)
                            P = ifelse(is.na(P),0,P)
-                           ifelse(P<Pthresh, X+1, 0)
+                           ifelse(P<Pthresh, X+dt, 0)
                          })},
                          
                          daysSinceOver = function(X, P, PAR){with(PAR,{
                            X = ifelse(is.na(X),0,X)
                            P = ifelse(is.na(P),0,P)
-                           ifelse(P>Pthresh, X+1, 0)
+                           ifelse(P>Pthresh, X+dt, 0)
                          })},
                          
                          antibodyRegister  = function(pfid, t, ixH){
@@ -159,10 +159,10 @@ ImmuneState <- R6Class("ImmuneState",
                            }
                          },
                          
-                         update_typeImmunity = function(t,ptype){
+                         update_typeImmunity = function(t,dt,ptype){
                            nptypes = pfped$get_nptypes()
                            ptype = ifelse(is.na(ptype),rep(0,10),ptype)
-                           private$ptypesTime = pmax(self$ptype2Mat(ptype,nptypes)*t,private$ptypesTime,na.rm=T)
+                           private$ptypesTime = pmax(self$ptype2Mat(ptype,nptypes)*t*dt,private$ptypesTime,na.rm=T)
                            private$typeImm = pmax(exp(-private$dtp*private$ptypesTime),0,na.rm=T)
                          },
                          

@@ -1,0 +1,77 @@
+rm(list=ls());gc()
+library("MASHmacro", lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs")
+library("MASHcpp", lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs")
+
+PfSI.Setup()
+SimBitePfSI.Setup()
+MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/28,tripDuration = 14)
+
+arguments = commandArgs(trailingOnly = T)
+n_humans = as.integer(arguments[1]) # NUMBER OF HUMANS
+n = as.integer(arguments[2]) # NUMBER OF PATCHES
+tMax = as.integer(arguments[3]) # NUMBER OF DAYS TO SIMULATE
+data_directory = arguments[4] # Directory to host all output folders for individual runs
+output_folder = arguments[5] # Specific output folder for this run
+
+directory = paste0(data_directory, output_folder)
+
+# n = 10
+
+# aquatic ecology parameters
+aquaPar = AquaPop_Emerge.Parameters(nPatch = n,lambda = rep(50,n),seasonality = TRUE)
+
+# patch parameters
+patchPar = replicate(n = n,expr = list(bWeightZoo=1,bWeightZootox=0),simplify = FALSE)
+# make movement follow AR(1) covariance structure, then subtract out the diagonal and renormalize
+rho = 0.75
+element = function(i,j){rho^abs(i-j)}
+moveMat = outer(1:n,1:n,FUN=function(i,j) element(i,j))
+diag(moveMat) = 0
+for(i in 1:nrow(moveMat)){
+  moveMat[i,] = moveMat[i,]/sum(moveMat[i,])
+}
+patchPar = lapply(X = 1:n,FUN = function(i){
+  list(
+    bWeightZoo = 1,
+    bWeightZootox = 0,
+    travelWeight = moveMat[i,]
+  )
+})
+
+# mosquito parameters
+mosquitoPar = list(model="RM", M=rep(50,n),EIP = rep(11,365),p=0.9, f=0.3, Q=0.9, v=20, psi = diag(n))
+
+# human parameters
+# patch_humans = rpois(n = n,lambda = 20)
+# TOTAL NUMBER OF HUMANS was determined at start of code
+patch_humans = rep(n_humans/n, times = n)
+# n_humans = sum(patch_humans)
+patch_id = rep(x = 1:n,patch_humans)
+home_id = rep(x = 1:n,patch_humans)
+human_ages = unlist(lapply(X = patch_humans,FUN = siteAges_HumanPop))
+human_bWeight = bitingWeight_HumanPop(human_ages)
+
+humanPar = lapply(X = 1:n_humans,function(i){
+  list(
+    houseID = home_id[i],
+    patchID = patch_id[i],
+    homeHouseID = home_id[i],
+    homePatchID = patch_id[i],
+    age = human_ages[i],
+    bWeight = human_bWeight[i]
+
+  )
+})
+
+# PfPR
+pfpr = rep(0.5,n)
+
+# make a tile
+tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = directory)
+
+# tile$get_HumansPointer()$init_PfSI(pfpr)
+
+# run simulations
+tile$simMacro(tMax = tMax,PfPAR = pfpr)
+tile$resetMacro(PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar)
+
