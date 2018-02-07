@@ -49,6 +49,11 @@ MACRO.Human.Setup <- function(pathogen = "PfSI", tripFrequency = 1/365, tripDura
                 value = updateKappa_PfSI_Human, overwrite = TRUE
       )
     },
+    PfSI_NBinom = {
+      Human$set(which = "public",name = "updateKappa",
+                value = updateKappa_PfSI_Human, overwrite = TRUE
+      )
+    },
     PfMOI = {
       Human$set(which = "public",name = "updateKappa",
                 value = updateKappa_PfMOI_Human, overwrite = TRUE
