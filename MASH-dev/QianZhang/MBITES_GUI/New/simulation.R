@@ -1,0 +1,229 @@
+###############################################################################
+#       __  ___      ____  _____________________
+#      /  |/  /     / __ )/  _/_  __/ ____/ ___/
+#     / /|_/ /_____/ __  |/ /  / / / __/  \__ \
+#    / /  / /_____/ /_/ // /  / / / /___ ___/ /
+#   /_/  /_/     /_____/___/ /_/ /_____//____/
+#
+#   MICRO
+#   MBITES: Testing
+#   MASH Team
+#   January 2018
+#
+###############################################################################
+
+
+###############################################################################
+# M-BITES: Complex Female Only Run with Emerge
+###############################################################################
+
+rm(list=ls());gc()
+library(MASHmicro)
+library(jsonlite)
+set.seed(42L)
+
+# load parameters from json
+DIR = paste(getwd(), "/demo/",sep= "")
+json_par = fromJSON("~/project/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/New/bout_option.json")
+change_list = c("bm_a", "bm_b", "rf_a", "rf_b", "of_a", "of_b", "sns_a", "sns_b", 
+                "ttsz_p", "ttsz_a", "ttsz_b", "ttr_a", "ttr_b", "S_u", "S_a", 
+                "S_b", "S_sa", "S_sb", "bs_m", "bs_v", "emt_m", "emt_v")
+json_name <- names(json_par)
+len <- length(json_name)
+for (i in 1:len){
+  if(json_name[i] %in% change_list){
+    json_name[i] <- gsub("_", ".", json_name[i])
+  }
+}
+names(json_par) = json_name
+inter_list = intersect(json_name, names(MBITES.Complex.Parameters()))
+par_list = json_par[inter_list]
+# setup
+Humans.MICRO.Setup()
+PfSI.MICRO.Setup()
+AQUA.Emerge.Setup()
+
+# MBITES setup
+MBITES.Setup(SUGAR = FALSE, MATE = FALSE, aquaModule = "emerge",timing = "exponential")
+
+# SEARCH setup
+MBITES.Search.Setup(module = "kernel")
+  
+# landscape parameters
+nAqua = 20
+nPeriDom = 0
+nFeed = 15
+nSugar = 12
+nMate = 10
+emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
+landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,nMate = nMate,nSugar = nSugar,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
+
+# set up the peri-domestic bit
+periDomestic = rep(FALSE,nFeed)
+lambda = replicate(n = nFeed,expr = NULL,simplify = FALSE)
+module = rep(NA,nFeed)
+
+if(nPeriDom>0){
+  periDomestic[1:nPeriDom] = TRUE
+  lambda[1:nPeriDom] = simpleLambda_Emerge(N = nPeriDom,lambda = 5)
+  module[1:nPeriDom] = "emerge"
+}
+
+landscape_par$FeedingSite_PAR$periDomestic = periDomestic
+landscape_par$FeedingSite_PAR$lambda = lambda
+landscape_par$FeedingSite_PAR$module = module
+
+# human parameters
+patch_humans = rep(1,nFeed)
+n_humans = sum(patch_humans)
+patch_id = rep(x = 1:nFeed,patch_humans)
+home_id = rep(x = 1:nFeed,patch_humans)
+human_ages = unlist(lapply(X = patch_humans,FUN = MASHmacro:::siteAges_HumanPop))
+human_bWeight = MASHmacro:::bitingWeight_HumanPop(human_ages)
+human_par = lapply(X = 1:n_humans,function(i){
+  list(
+    houseID = home_id[i],
+    patchID = patch_id[i],
+    homeHouseID = home_id[i],
+    homePatchID = patch_id[i],
+    age = human_ages[i],
+    bWeight = human_bWeight[i]
+    
+  )
+})
+
+# M-BITES parameters
+nMosy = 50
+
+
+mbites_par_female = MBITES.Complex.Parameters(PfEIP = 1,SUGAR = FALSE, MATE = FALSE)
+mbites_par_female[names(par_list)] <- par_list
+mosquito_par = list(
+  N_female = nMosy,
+  ix_female = rep(1,nMosy),
+  genotype_female = rep(1,nMosy),
+  MBITES_PAR_FEMALE = mbites_par_female
+)
+
+MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+
+# PfPR
+pfpr = rep(0.5,nFeed)
+
+MicroTile$simMICRO_oneRun(tMax = 50,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
+
+MicroTile$resetMicro(MosquitoPar = mosquito_par,HumanPar = human_par,EL4P = FALSE,mating = TRUE)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+MicroTile$simMICRO_oneRun(tMax = 50,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
+
+detach("package:MASHmicro", unload=TRUE)
+
+
+###############################################################################
+# M-BITES: Complex Female + MBITES-Male Run with Emerge
+###############################################################################
+
+rm(list=ls());gc()
+library(MASHmicro)
+# set.seed(42L)
+
+# DEBUG.MASHMICRO()
+# MASHcpp::DEBUG.MASHCPP()
+# MASHmacro::DEBUG.MASHMACRO()
+
+# load parameters from json
+DIR = paste(getwd(), "/demo/",sep= "")
+json_par = fromJSON("~/project/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/New/bout_option.json")
+change_list = c("bm_a", "bm_b", "rf_a", "rf_b", "of_a", "of_b", "sns_a", "sns_b", 
+                "ttsz_p", "ttsz_a", "ttsz_b", "ttr_a", "ttr_b", "S_u", "S_a", 
+                "S_b", "S_sa", "S_sb", "bs_m", "bs_v", "emt_m", "emt_v")
+json_name <- names(json_par)
+len <- length(json_name)
+for (i in 1:len){
+  if(json_name[i] %in% change_list){
+    json_name[i] <- gsub("_", ".", json_name[i])
+  }
+}
+names(json_par) = json_name
+# setup
+Humans.MICRO.Setup()
+PfSI.MICRO.Setup()
+AQUA.Emerge.Setup()
+
+# MBITES setup
+MBITES.Setup(aquaModule = "emerge",timing = "exponential")
+MBITES.Male.Setup(timing = "exponential")
+
+# SEARCH setup
+MBITES.Search.Setup(module = "kernel")
+
+# landscape parameters
+nAqua = 20
+nPeriDom = 2
+nFeed = 15
+nSugar = 12
+nMate = 10
+emerge_par = list(N = nAqua,lambda = 25, lambdaWeight = NULL, offset = NULL)
+landscape_par = Landscape.Parameters(nFeed = nFeed,nAqua = nAqua,nMate = nMate,nSugar = nSugar,pointGen = "lattice",module = "emerge",modulePars = emerge_par)
+
+# set up the peri-domestic bit
+periDomestic = rep(FALSE,nFeed)
+lambda = replicate(n = nFeed,expr = NULL,simplify = FALSE)
+module = rep(NA,nFeed)
+
+periDomestic[1:nPeriDom] = TRUE
+lambda[1:nPeriDom] = simpleLambda_Emerge(N = nPeriDom,lambda = 5)
+module[1:nPeriDom] = "emerge"
+
+landscape_par$FeedingSite_PAR$periDomestic = periDomestic
+landscape_par$FeedingSite_PAR$lambda = lambda
+landscape_par$FeedingSite_PAR$module = module
+
+# human parameters
+patch_humans = rep(1,nFeed)
+n_humans = sum(patch_humans)
+patch_id = rep(x = 1:nFeed,patch_humans)
+home_id = rep(x = 1:nFeed,patch_humans)
+human_ages = unlist(lapply(X = patch_humans,FUN = MASHmacro:::siteAges_HumanPop))
+human_bWeight = MASHmacro:::bitingWeight_HumanPop(human_ages)
+human_par = lapply(X = 1:n_humans,function(i){
+  list(
+    houseID = home_id[i],
+    patchID = patch_id[i],
+    homeHouseID = home_id[i],
+    homePatchID = patch_id[i],
+    age = human_ages[i],
+    bWeight = human_bWeight[i]
+    
+  )
+})
+
+# M-BITES parameters
+nMosy = 50
+mbites_par_female = modifyList(MBITES.Complex.Parameters(PfEIP = 1), json_par)
+mbites_par_male = MBITES.Male.Parameters(maleHistory = TRUE)
+mosquito_par = list(
+  N_female = nMosy,
+  N_male = nMosy,
+  ix_female = rep(1,nMosy),
+  ix_male = rep(1,nMosy),
+  genotype_female = rep(1,nMosy),
+  genotype_male = rep(1,nMosy),
+  MBITES_PAR_FEMALE = mbites_par_female,
+  MBITES_PAR_MALE = mbites_par_male
+)
+
+MicroTile = Tile$new(Landscape_PAR = landscape_par,HumanPop_PAR = human_par,MosquitoPop_PAR = mosquito_par,directory = DIR)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+
+# PfPR
+pfpr = rep(0.5,nFeed)
+
+MicroTile$simMICRO_oneRun(tMax = 50,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
+
+MicroTile$resetMicro(MosquitoPar = mosquito_par,HumanPar = human_par,EL4P = FALSE,mating = TRUE)
+MicroTile$get_HumanPop()$init_ActivitySpace()
+MicroTile$simMICRO_oneRun(tMax = 50,PfPAR = pfpr,verbose = TRUE,trackPop = TRUE)
+
+detach("package:MASHmicro", unload=TRUE)

@@ -34,7 +34,7 @@ bites = unique(cumsum(bites))
 moi = 1+rnbinom(length(bites), mu=3, size = .3)
 
 dt = 7
-tFinal = 10*365
+tFinal = 2*365
 t = 1
 
 while(t < tFinal){
@@ -69,7 +69,7 @@ while(t < tFinal){
 tFinal = ifelse(dt%%2==1,tFinal-1,tFinal)
 t = seq(1,tFinal,dt)/365
 plot(t,someGuy$get_history()$Ptot,type="l",
-     ylim=c(-5,11),xlim=c(0,10),xlab='years',ylab='log10 iRBC')
+     ylim=c(-5,11),xlim=c(0,2),xlab='years',ylab='log10 iRBC')
 lines(t,someGuy$get_history()$Gtot,lty=2)
 lines(t,someGuy$get_history()$Fever)
 lines(t,2*someGuy$get_history()$GenImm-3,type="l")
@@ -80,7 +80,7 @@ abline(h=-5,lty=2)
 text(.1,-3.5, paste("MOI, max=", max(someGuy$get_history()$PfMOI)), col = "blue", pos = 4)
 
 plot(t,someGuy$get_history()$GenImm,type="l",xlab='years',ylab='% of max strength of immunity')
-for(i in 4:someGuy$get_immuneState()$get_nBSImmCounters()){
+for(i in 1:someGuy$get_immuneState()$get_nBSImmCounters()){
   lines(c(0,t),someGuy$get_history()$BSImm[[i]],lty=2)
 }
 
