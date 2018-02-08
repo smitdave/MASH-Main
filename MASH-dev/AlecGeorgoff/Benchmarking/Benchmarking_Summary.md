@@ -5,9 +5,12 @@ The purpose of this testing was to determine how the time and memory demands of 
 
 ### Methods
 _Notes:_
+
 _The original `TEST-MACRO.R` file can be found [here](https://github.com/smitdave/MASH-Main/tree/master/MASH-Test)_.
+
 _All custom files used in this testing can be found [here](https://github.com/smitdave/MASH-Main/tree/master/MASH-dev/AlecGeorgoff/Benchmarking)_.
-_Testing was conducting using a verion of MASH built on 12/7/17. Subsequent versions of MASH are not guaranteed to produce the same results_
+
+_Testing was conducting using a verion of MASH built on 12/7/17. Subsequent versions of MASH are not guaranteed to produce the same results_.
 
 #### Modifying script
 The testing used a modified version of `TEST-MACRO.R`, titled `TEST-MACRO-BENCHMARK.R`, which has been modified so that its arguments can be expressed from the command line when the script is called.
