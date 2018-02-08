@@ -144,11 +144,30 @@ set_EIR_Human <- function(EIR){
 #'
 #' Based on my personal EIR value, queue infectious PfSI bites by calling \code{\link{add2Q_SimBitePfSI_Human}}
 #'
+#' Each Human experiences a Poisson-distributed number of bites, with mean given by an individual's weighted EIR
+#'
 #'   * This method is bound to \code{Human$queueInfectiousBites}
 #'
 queueInfectiousBites_PfSI_Human <- function(){
   # nBites = rnbinom(n=1,mu=private$EIR,size=0.1) # number of bites today
   nBites = rpois(n=1,lambda=private$EIR)
+  if(nBites > 0){
+    self$add2Q_SimBitePfSI(tEvent = private$TilePointer$get_tNow())
+  }
+}
+#' PfSI Queue my Daily Infectious Bites
+#'
+#' Based on my personal EIR value, queue infectious PfSI bites by calling \code{\link{add2Q_SimBitePfSI_Human}}
+#'
+#' Each Human experiences a negative Binomial-distributed number of biting events, with mean given by an individual's weighted EIR and size that depends on the mean
+#'
+#'   * This method is bound to \code{Human$queueInfectiousBites}
+#'
+queueInfectiousBites_PfSI_Human_NBinom <- function(){
+  # EIR of the individual, weighted by that individual's biting weight
+  wEIR = private$EIR
+  k = 0.62*exp(-0.8*wEIR) # Because wEIR is small, k is usually pretty close to 0.62
+  nBites = rnbinom(n = 1, mu = wEIR, size = k)
   if(nBites > 0){
     self$add2Q_SimBitePfSI(tEvent = private$TilePointer$get_tNow())
   }

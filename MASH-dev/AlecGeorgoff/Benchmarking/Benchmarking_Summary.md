@@ -5,9 +5,12 @@ The purpose of this testing was to determine how the time and memory demands of 
 
 ### Methods
 _Notes:_
+
 _The original `TEST-MACRO.R` file can be found [here](https://github.com/smitdave/MASH-Main/tree/master/MASH-Test)_.
+
 _All custom files used in this testing can be found [here](https://github.com/smitdave/MASH-Main/tree/master/MASH-dev/AlecGeorgoff/Benchmarking)_.
-_Testing was conducting using a verion of MASH built on 12/7/17. Subsequent versions of MASH are not guaranteed to produce the same results_
+
+_Testing was conducting using a verion of MASH built on 12/7/17. Subsequent versions of MASH are not guaranteed to produce the same results_.
 
 #### Modifying script
 The testing used a modified version of `TEST-MACRO.R`, titled `TEST-MACRO-BENCHMARK.R`, which has been modified so that its arguments can be expressed from the command line when the script is called.
@@ -31,7 +34,7 @@ To graph the benchmarking results, a script titled `create_BM_graphs.R` was writ
 As discussed in the Background section, this testing involved running a simulation multiple times while only varying one parameter between runs; this was done to isolate the effect of that parameter on time and memory usage. The following charts detail the varying of certain parameters:
 
 ##### _**Vary over tMax (500 Humans)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 500 | 10 | **100** | 2
@@ -39,9 +42,9 @@ n\_humans | n\_patches | tMax | slots
 500 | 10 | **1000** | 2
 500 | 10 | **3000** | 2
 500 | 10 | **10000** | 2
-&nbsp;
+
 ##### _**Vary over tMax (5000 Humans)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 5000 | 10 | **100** | 2
@@ -49,18 +52,18 @@ n\_humans | n\_patches | tMax | slots
 5000 | 10 | **1000** | 2
 5000 | 10 | **3000** | 2
 5000 | 10 | **10000** | 2
-&nbsp;
+
 ##### _**Vary over n\_patches**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 50000 | **10** | 365 | 2
 50000 | **100** | 365 | 2
 50000 | **1000** | 365 | 2
 50000 | **100000** | 365 | 2
-&nbsp;
+
 ##### _**Vary over n\_patches, keep humans per patch constant**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 **100** | **10** | 365 | 2
@@ -69,9 +72,9 @@ n\_humans | n\_patches | tMax | slots
 **3000** | **300** | 365 | 2
 **10000** | **1000** | 365 | 2
 **100000** | **3000** | 365 | 2
-&nbsp;
+
 ##### _**Vary over n\_humans (A)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 **1000** | 10 | 365 | 2
@@ -81,9 +84,9 @@ n\_humans | n\_patches | tMax | slots
 **100000** | 10 | 365 | 2
 **200000** | 10 | 365 | 2
 **300000** | 10 | 365 | 2
-&nbsp;
+
 ##### _**Vary over n\_humans (B)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 **1000** | 10 | 365 | 2
@@ -98,7 +101,7 @@ n\_humans | n\_patches | tMax | slots
 _A standard linear regression fit is added to each graph to show linearity or lack thereof_
 
 ##### _**Vary over tMax (500 Humans)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (min) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 500 | 10 | 100 | 2 | 0.5157 | 95.63
@@ -112,7 +115,7 @@ n\_humans | n\_patches | tMax | slots | runtime (min) | memory (MB)
 ![Vary over tMax, 500 Humans, memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_500_MEMORY.png?raw=true)
 
 ##### _**Vary over tMax (5000 Humans)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 5000 | 10 | 100 | 2 | 0.05285 | 318.3
@@ -126,7 +129,7 @@ n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 ![Vary over tMax, 5000 Humans, runtime](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_5000_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_patches**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 50000 | 10 | 365 | 2 | 2.177 | 2122
@@ -139,7 +142,7 @@ n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 ![Vary over n\_patches, memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_patches, keep humans per patch constant**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (min) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 100 | 10 | 365 | 2 | 0.5161 | 85.77
@@ -154,7 +157,7 @@ n\_humans | n\_patches | tMax | slots | runtime (min) | memory (MB)
 ![Vary over n\_patches, keep humans per patch constant, memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_const_ratio_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_humans (A)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 1000 | 10 | 365 | 2 | 0.05036 | 133.6
@@ -170,7 +173,7 @@ n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 ![Vary over n\_humans (A), memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_humans_A_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_humans (B)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 1000 | 10 | 365 | 2 | 0.02456 | 143.8
