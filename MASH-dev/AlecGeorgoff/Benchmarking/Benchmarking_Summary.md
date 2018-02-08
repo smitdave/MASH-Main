@@ -31,7 +31,7 @@ To graph the benchmarking results, a script titled `create_BM_graphs.R` was writ
 As discussed in the Background section, this testing involved running a simulation multiple times while only varying one parameter between runs; this was done to isolate the effect of that parameter on time and memory usage. The following charts detail the varying of certain parameters:
 
 ##### _**Vary over tMax (500 Humans)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 500 | 10 | **100** | 2
@@ -39,7 +39,7 @@ n\_humans | n\_patches | tMax | slots
 500 | 10 | **1000** | 2
 500 | 10 | **3000** | 2
 500 | 10 | **10000** | 2
-&nbsp;
+
 ##### _**Vary over tMax (5000 Humans)**_
 &nbsp;
 n\_humans | n\_patches | tMax | slots
