@@ -41,7 +41,7 @@ n\_humans | n\_patches | tMax | slots
 500 | 10 | **10000** | 2
 
 ##### _**Vary over tMax (5000 Humans)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 5000 | 10 | **100** | 2
@@ -49,18 +49,18 @@ n\_humans | n\_patches | tMax | slots
 5000 | 10 | **1000** | 2
 5000 | 10 | **3000** | 2
 5000 | 10 | **10000** | 2
-&nbsp;
+
 ##### _**Vary over n\_patches**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 50000 | **10** | 365 | 2
 50000 | **100** | 365 | 2
 50000 | **1000** | 365 | 2
 50000 | **100000** | 365 | 2
-&nbsp;
+
 ##### _**Vary over n\_patches, keep humans per patch constant**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 **100** | **10** | 365 | 2
@@ -69,9 +69,9 @@ n\_humans | n\_patches | tMax | slots
 **3000** | **300** | 365 | 2
 **10000** | **1000** | 365 | 2
 **100000** | **3000** | 365 | 2
-&nbsp;
+
 ##### _**Vary over n\_humans (A)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 **1000** | 10 | 365 | 2
@@ -81,9 +81,9 @@ n\_humans | n\_patches | tMax | slots
 **100000** | 10 | 365 | 2
 **200000** | 10 | 365 | 2
 **300000** | 10 | 365 | 2
-&nbsp;
+
 ##### _**Vary over n\_humans (B)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots
 :---: | :---: | :---: | :---:
 **1000** | 10 | 365 | 2
@@ -98,7 +98,7 @@ n\_humans | n\_patches | tMax | slots
 _A standard linear regression fit is added to each graph to show linearity or lack thereof_
 
 ##### _**Vary over tMax (500 Humans)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (min) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 500 | 10 | 100 | 2 | 0.5157 | 95.63
@@ -112,7 +112,7 @@ n\_humans | n\_patches | tMax | slots | runtime (min) | memory (MB)
 ![Vary over tMax, 500 Humans, memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_500_MEMORY.png?raw=true)
 
 ##### _**Vary over tMax (5000 Humans)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 5000 | 10 | 100 | 2 | 0.05285 | 318.3
@@ -126,7 +126,7 @@ n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 ![Vary over tMax, 5000 Humans, runtime](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_tMax_nh_5000_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_patches**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 50000 | 10 | 365 | 2 | 2.177 | 2122
@@ -139,7 +139,7 @@ n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 ![Vary over n\_patches, memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_patches, keep humans per patch constant**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (min) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 100 | 10 | 365 | 2 | 0.5161 | 85.77
@@ -154,7 +154,7 @@ n\_humans | n\_patches | tMax | slots | runtime (min) | memory (MB)
 ![Vary over n\_patches, keep humans per patch constant, memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_patches_const_ratio_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_humans (A)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 1000 | 10 | 365 | 2 | 0.05036 | 133.6
@@ -170,7 +170,7 @@ n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 ![Vary over n\_humans (A), memory](https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/AlecGeorgoff/Benchmarking/BM_results/benchmarking_results_vary_n_humans_A_MEMORY.png?raw=true)
 
 ##### _**Vary over n\_humans (B)**_
-&nbsp;
+
 n\_humans | n\_patches | tMax | slots | runtime (hr) | memory (MB)
 :---: | :---: | :---: | :---: | :---: | :---:
 1000 | 10 | 365 | 2 | 0.02456 | 143.8
