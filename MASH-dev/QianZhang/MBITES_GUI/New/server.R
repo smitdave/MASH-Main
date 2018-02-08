@@ -1052,7 +1052,7 @@ output$panel_bouts <- renderUI({
   })
 
   observeEvent(input$run_demo_again, {
-    js_string_7 <- 'alert("Your demo is updated!");'
+    js_string_7 <- 'alert("Your demo is updated! Please wait 1-2 minutes. The page will be automatically switched when it is done");'
     session$sendCustomMessage(type='jsCode', list(value = js_string_7))
     updateTabsetPanel(session, "nav", selected = "simulation")
   })
@@ -1825,7 +1825,7 @@ output$panel_bouts <- renderUI({
 	    inputs_bout$stateSpace <- paste(unlist(inputs_bout$stateSpace),collapse = "")
 		  df = cbind(InputID = unlist(inputs_name), Value = unlist(inputs_bout))
 		  write.table(df,file=paste(getwd(), "/run_again.csv",sep= ""), quote=T,sep=",",row.names=F)
-		  #source("simulation.R")
+		  source("simulation.R")
 
 	})
 }
