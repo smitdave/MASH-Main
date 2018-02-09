@@ -1,0 +1,77 @@
+rm(list = ls())
+
+library(deSolve, lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs")
+
+# Define general parameters
+b = 0.55 # Probability of bites by infectious mosquitoes that cause an infection
+r = 1/200 # Rate that humans recover from an infection
+a = 0 # Human blood feeding rate (1/a = interval between blood meals)
+g = 0 # Per capita death rate of mosquitoes
+c = 0.1 # Proportion of mosquitoes infected after biting infectious human
+n = 8 # Time for sporogonic cycle
+
+# Define forest-specific parameters
+a_f = 0.3 # Human blood feeding rate in forest
+g_f = 0.1 # Per capita death rate of mosquitoes in forest
+H_f = 1000 # Human population (density?) in forest
+X_f = 0 # Number of infected forest-goers
+p = 0.6 # Proportion of time forest-goers spend in the forest
+V_f = 5000 # Vector population in forest
+Y_f = 0 # Number of infected vectors in forest
+Z_f = exp(-g*n)*Y_f # Number of infectious vectors in forest
+
+# Define village-specific parameters
+a_v = 0.3 # Human blood feeding rate in village
+g_v = 0.1 # Per capita death rate of mosquitoes in village
+H_v = 5000 # Human population (density?) in village
+X_v = 0 # Number of infected villagers
+# 1 - p # Proportion of time forest-goers spend in the village
+V_v = 500 # Vector population in village
+Y_v = 0 # Number of infected vectors in village
+Z_v = exp(-g*n)*Y_v # Number of infectious vectors in village
+
+# Define differential equations
+# dX_f = ((b*(1-p)*a_v*Z_v)/(H_f*(1-p)+H_v)+(b*p*a_f*Z_f)/H_f)*(H_f-X_f) - r*X_f
+# 
+# dX_v = ((b*a_v*Z_v)/(H_f*(1-p)+H_v))*(H_v-X_v) - r*X_v
+# 
+# dY_f = ((a_f*c*X_f)/H_f)*(V_f-Y_f) - g_f*Y_f
+# 
+# dY_v = a_v*c*(((X_f*(1-p))/H_f)+(X_v/H_v))*(V_v-Y_v) - g_v*Y_v
+
+# Initial conditions
+X_f0 = 100
+X_v0 = 50
+Y_f0 = 500
+Y_v0 = 20
+
+
+tm = 0:2000
+
+require(deSolve)
+FM.ode = function(t,y,parms){with(as.list(c(y,parms)),{
+  dX_f = ((b*(1-p)*a_v*Z_v)/(H_f*(1-p)+H_v)+(b*p*a_f*Z_f)/H_f)*(H_f-X_f) - r*X_f
+  
+  dX_v = ((b*a_v*Z_v)/(H_f*(1-p)+H_v))*(H_v-X_v) - r*X_v
+  
+  dY_f = ((a_f*c*X_f)/H_f)*(V_f-Y_f) - g_f*Y_f
+  
+  dY_v = a_v*c*(((X_f*(1-p))/H_f)+(X_v/H_v))*(V_v-Y_v) - g_v*Y_v
+  list(c(dX_f, dX_v, dY_f, dY_v))
+})}
+# FM.solve = function(m,a,b,r,c,g,x0,y0,tm
+# ){
+#   params = c(m=m,a=a,b=b,r=r,c=c,g=g)
+#   inits = c(x=x0,y=y0)
+#   data.frame(lsoda(inits,tm,RM.ode,params))
+# }
+
+parms = c(b=b, r=r, c=c, n=n,
+          a_f=a_f, g_f=g_f, H_f=H_f, X_f=X_f, p=p, V_f=V_f, Y_f=Y_f, Z_f=Z_f,
+          a_v=a_v, g_v=g_v, H_v=H_v, X_v=X_v, V_v=V_v, Y_v=Y_v, Z_v=Z_v)
+
+times = 0:100
+
+inits = c(X_f=X_f0, X_v=X_v0, Y_f=Y_f0, Y_v=Y_v0)
+
+out = lsoda(inits, times, FM.ode, parms)
