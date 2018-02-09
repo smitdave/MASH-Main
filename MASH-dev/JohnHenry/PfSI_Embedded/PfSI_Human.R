@@ -9,9 +9,11 @@ Human <- R6Class("Human",
                    ## Initialization of Components
                    
                    initialize = function(ixH = NA, age = NA, sex = NA, locH = NA){
+                     
                      private$ixH = ixH
                      private$pathogen = Pathogen$new()
                      private$healthState = HealthState$new()
+                     private$immuneState = ImmuneState$new()
                      private$history = list()
                      
                    },
@@ -20,21 +22,16 @@ Human <- R6Class("Human",
                    ######## Infection Methods #########
                    
                    
-                   infectHuman = function(t,pfid){
-                     mic = pfped$get_mic(pfid)
-                     mac = pfped$get_mac(pfid)
-                     gtype = pfped$get_gtype(pfid)
-                     BSImm = private$immuneState$get_BSImm()
-                     #typeImm = private$immuneState$get_typeImm(t,ptype)
-                     private$pathogen$add_Pf(t,pfid,mic,mac,gtype,BSImm)
-                     pfped$set_th(pfid,t)
+                   infectHuman = function(t){
+                     private$pathogen$add_Pf(t)
                    },
+                   
                    ## write method to remove particular infection
                    clearPathogen = function(t, pfid){
                      private$pathogen$PfPathogen[[pfid]] = NULL
-                     private$pathogen$set_PfMOI(private$pathogen$get_PfMOI()-1)
                      pfped$set_thEnd(pfid,t)
                    },
+                   
                    infectMosquito = function(t, pfid, ixm){
                      
                    },
@@ -67,30 +64,6 @@ Human <- R6Class("Human",
                    
                    set_ixH = function(newixH){
                      private$ixH = newixH
-                   },
-                   
-                   get_age = function(){
-                     private$age
-                   },
-                   
-                   set_age = function(newAge){
-                     private$age = newAge
-                   },
-                   
-                   get_sex = function(){
-                     private$sex
-                   },
-                   
-                   set_sex = function(newSex){
-                     private$sex = newSex
-                   },
-                   
-                   get_locH = function(){
-                     private$locH
-                   },
-                   
-                   set_locH = function(newlocH){
-                     private$locH = newlocH
                    },
                    
                    get_immuneState = function(){

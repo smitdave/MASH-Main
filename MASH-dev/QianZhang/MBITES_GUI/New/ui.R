@@ -17,15 +17,15 @@ library(gridExtra)
 library(igraph)
 library(reshape2)
 library(RColorBrewer)
-
+library(MASHmicro)
 
 ################################################################################################################
 # CONSTANTS
 ################################################################################################################
-INITIAL_GUI_WIDTH = 2000
-INITIAL_GUI_HEIGHT = 1000
-VAR_DESCR_COL_WIDTH = 3
-VAR_SLIDE_COL_WIDTH = 4
+# INITIAL_GUI_WIDTH = 2000
+# INITIAL_GUI_HEIGHT = 1000
+# VAR_DESCR_COL_WIDTH = 3
+# VAR_SLIDE_COL_WIDTH = 4
 THEME = "flatly"#themeSource="https://bootswatch.com/flatly/"
 
 #########################################################################################

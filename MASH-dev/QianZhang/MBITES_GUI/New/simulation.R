@@ -25,6 +25,14 @@ set.seed(42L)
 # load parameters from json
 DIR = paste(getwd(), "/demo/",sep= "")
 json_par = fromJSON("~/project/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/New/bout_option.json")
+wt_list = c("F_wts", "B_wts", "R_wts", "O_wts", "L_wts", "M_wts", "S_wts")
+
+for ( name in wt_list){
+  if(exists(name, where = json_par)){
+    json_par[[name]]<-as.numeric(unlist(strsplit(json_par[[name]], ',')))
+  }
+}
+
 change_list = c("bm_a", "bm_b", "rf_a", "rf_b", "of_a", "of_b", "sns_a", "sns_b", 
                 "ttsz_p", "ttsz_a", "ttsz_b", "ttr_a", "ttr_b", "S_u", "S_a", 
                 "S_b", "S_sa", "S_sb", "bs_m", "bs_v", "emt_m", "emt_v")
@@ -126,7 +134,7 @@ detach("package:MASHmicro", unload=TRUE)
 
 rm(list=ls());gc()
 library(MASHmicro)
-# set.seed(42L)
+set.seed(42L)
 
 # DEBUG.MASHMICRO()
 # MASHcpp::DEBUG.MASHCPP()
@@ -135,6 +143,14 @@ library(MASHmicro)
 # load parameters from json
 DIR = paste(getwd(), "/demo/",sep= "")
 json_par = fromJSON("~/project/MASH-Main/MASH-dev/QianZhang/MBITES_GUI/New/bout_option.json")
+wt_list = c("F_wts", "B_wts", "R_wts", "O_wts", "L_wts", "M_wts", "S_wts")
+
+for ( name in wt_list){
+  if(exists(name, where = json_par)){
+    json_par[[name]]<-as.numeric(unlist(strsplit(json_par[[name]], ',')))
+  }
+}
+
 change_list = c("bm_a", "bm_b", "rf_a", "rf_b", "of_a", "of_b", "sns_a", "sns_b", 
                 "ttsz_p", "ttsz_a", "ttsz_b", "ttr_a", "ttr_b", "S_u", "S_a", 
                 "S_b", "S_sa", "S_sb", "bs_m", "bs_v", "emt_m", "emt_v")
@@ -146,6 +162,8 @@ for (i in 1:len){
   }
 }
 names(json_par) = json_name
+inter_list = intersect(json_name, names(MBITES.Complex.Parameters()))
+par_list = json_par[inter_list]
 # setup
 Humans.MICRO.Setup()
 PfSI.MICRO.Setup()
@@ -201,7 +219,8 @@ human_par = lapply(X = 1:n_humans,function(i){
 
 # M-BITES parameters
 nMosy = 50
-mbites_par_female = modifyList(MBITES.Complex.Parameters(PfEIP = 1), json_par)
+mbites_par_female = MBITES.Complex.Parameters(PfEIP = 1,SUGAR = FALSE, MATE = FALSE)
+mbites_par_female[names(par_list)] <- par_list
 mbites_par_male = MBITES.Male.Parameters(maleHistory = TRUE)
 mosquito_par = list(
   N_female = nMosy,
