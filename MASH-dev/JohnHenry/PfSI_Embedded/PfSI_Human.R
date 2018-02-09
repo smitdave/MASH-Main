@@ -14,7 +14,6 @@ Human <- R6Class("Human",
                      private$pathogen = Pathogen$new()
                      private$healthState = HealthState$new()
                      private$immuneState = ImmuneState$new()
-                     private$history = list()
                      
                    },
                    
@@ -78,14 +77,6 @@ Human <- R6Class("Human",
                      private$pathogen
                    },
                    
-                   get_HRP2 = function(){
-                     private$healthState$get_HRP2()
-                   },
-                   
-                   get_pLDH = function(){
-                     private$healthState$get_pLDH()
-                   },
-                   
                    get_Ptot = function(){
                      private$pathogen$get_Ptot()
                    },
@@ -132,8 +123,7 @@ Human <- R6Class("Human",
                    locH = NULL,
                    pathogen = NULL,
                    immuneState = NULL,
-                   healthState = NULL,
-                   history = NULL
+                   healthState = NULL
                    
                  )
                  

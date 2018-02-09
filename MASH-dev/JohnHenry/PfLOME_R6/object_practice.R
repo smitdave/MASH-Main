@@ -24,8 +24,8 @@ someGuy$get_Gtot()
 
 bites = 0
 tt = 0
-while(tt<365*10){
-  bite = rgeom(1,3/365)
+while(tt<365*2){
+  bite = rgeom(1,100/365)
   bites = c(bites,bite)
   tt = cumsum(bites)[length(bites)]
 }

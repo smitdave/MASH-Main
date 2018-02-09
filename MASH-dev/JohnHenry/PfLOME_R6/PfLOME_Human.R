@@ -16,7 +16,6 @@ Human <- R6Class("Human",
                      private$pathogen = Pathogen$new()
                      private$immuneState = ImmuneState$new()
                      private$healthState = HealthState$new()
-                     private$history = list()
               
                    },
                    
@@ -163,8 +162,7 @@ Human <- R6Class("Human",
                    locH = NULL,
                    pathogen = NULL,
                    immuneState = NULL,
-                   healthState = NULL,
-                   history = NULL
+                   healthState = NULL
                    
                  )
                  
