@@ -19,35 +19,38 @@ n = 12     # Time for sporogonic cycle
 
 # Define forest-specific parameters
 a_f = 0.88   # Human blood feeding rate in forest
-g_f = 0.03   # Per capita death rate of mosquitoes in forest
-H_f = 10000  # Human population (density?) in forest
+g_f = 0.1   # Per capita death rate of mosquitoes in forest
+H_f = 1000  # Human population (density?) in forest
 X_f = 0     # Number of infected forest-goers
-p = 0.4     # Proportion of time forest-goers spend in the forest
+p = 0.7     # Proportion of time forest-goers spend in the forest
 V_f = 1000  # Vector population in forest
 Y_f = 0     # Number of infected vectors in forest
 Z_f = exp(-g_f*n)*Y_f # Number of infectious vectors in forest
 
 # Define village-specific parameters
-a_v = 0.3   # Human blood feeding rate in village
+a_v = 0.88   # Human blood feeding rate in village
 g_v = 0.1   # Per capita death rate of mosquitoes in village
 H_v = 5000  # Human population (density?) in village
 X_v = 0     # Number of infected villagers
 # 1 - p     # Proportion of time forest-goers spend in the village
-V_v = 1000   # Vector population in village
+V_v = 5000   # Vector population in village
 Y_v = 0     # Number of infected vectors in village
 Z_v = exp(-g_v*n)*Y_v # Number of infectious vectors in village
 
 # Initial conditions
 X_f0 = 50
 X_v0 = 50
-Y_f0 = 500
-Y_v0 = 20
+Y_f0 = 1000
+Y_v0 = 500
 
 # Set time scale
-times = 0:1000
+times = 0:365
 
 require(deSolve)
 FM.ode = function(t,y,parms){with(as.list(c(y,parms)),{
+  Z_f = exp(-g_f*n)*Y_f
+  Z_v = exp(-g_v*n)*Y_v
+  
   # Change in number of infected forest goers:
   dX_f = ((b*(1-p)*a_v*Z_v)/(H_f*(1-p)+H_v)+(b*p*a_f*Z_f)/H_f)*(H_f-X_f) - r*X_f
   
@@ -58,7 +61,7 @@ FM.ode = function(t,y,parms){with(as.list(c(y,parms)),{
   dY_f = ((a_f*c*X_f)/H_f)*(V_f-Y_f) - g_f*Y_f
   
   # Change in number of infected vectors in village:
-  dY_v = a_v*c*(((X_f*(1-p))/H_f)+(X_v/H_v))*(V_v-Y_v) - g_v*Y_v
+  dY_v = a_v*c*((X_f*(1-p)+X_v)/(H_f*(1-p)+H_v))*(V_v-Y_v) - g_v*Y_v
   
   list(c(dX_f, dX_v, dY_f, dY_v))
 })}
