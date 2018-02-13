@@ -70,8 +70,8 @@ Mosquito_RM <- R6::R6Class(classname="Mosquito_RM",
                          private$maxEIP        = max(EIP)+1L
 
                          private$M             = M
-                         private$Y             = rep(Y, N) # infected (incubating)
-                         private$Z             = rep(Z, N) # infectious
+                         private$Y             = Y #rep(Y, N) # infected (incubating)
+                         private$Z             = Z # rep(Z, N) # infectious
                          private$ZZ            = matrix(data=Z*(1-p),nrow=private$maxEIP,ncol=N) # each row is the number that will be added to the infectious state on that day
 
                          private$psi           = psi
