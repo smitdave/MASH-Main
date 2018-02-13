@@ -143,8 +143,8 @@ Mosquito_RM$set(which = "public",name = "output",
 reset_Mosquito_RM <- function(MosquitoPar){
   N                     = nrow(MosquitoPar$psi)
   private$M             = MosquitoPar$M
-  private$Y             = rep(MosquitoPar$Y, N)
-  private$Z             = rep(MosquitoPar$Z, N)
+  private$Y             = MosquitoPar$Y #rep(MosquitoPar$Y, N)
+  private$Z             = MosquitoPar$Z #rep(MosquitoPar$Z, N)
   private$ZZ            = matrix(data=MosquitoPar$Z*(1-MosquitoPar$p),nrow= max(MosquitoPar$EIP)+1L, ncol=N)
 }
 
