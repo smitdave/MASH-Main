@@ -896,15 +896,15 @@ output$panel_bouts <- renderUI({
   # if you do not have chorddiag, use: devtools::install_github("mattflor/chorddiag")
   
   mosquito_dir = "demo_json/" # wherever the json files are
-  
+  demo_plot <- function(path){
   # files from each simulation
-  files_l = system(command = paste0("ls ",mosquito_dir),intern = TRUE)
+  files_l = system(command = paste0("ls ",path),intern = TRUE)
   hist_l = files_l[grep(pattern = "History",x = files_l)] # individual json histories
   pop_l = files_l[grep(pattern = "Pop",x = files_l)] # population csv
   
   # output
-  mHist = fromJSON(txt = paste0(mosquito_dir,hist_l),flatten = FALSE,simplifyVector=FALSE)
-  mPop = read.table(file = paste0(mosquito_dir,pop_l),header = TRUE,sep = ",")
+  mHist = fromJSON(txt = paste0(path,hist_l[1]),flatten = FALSE,simplifyVector=FALSE)
+  mPop = read.table(file = paste0(path,pop_l[1]),header = TRUE,sep = ",",fill = TRUE)
   
   nullIx = which(vapply(X = mHist,FUN = function(x){x$ID[[1]]},FUN.VALUE = character(1)) == "NULL")
   mHist = mHist[-nullIx]
@@ -953,16 +953,18 @@ output$panel_bouts <- renderUI({
           plot.title = element_text(size=titleSize)) +
     guides(fill = FALSE) + 
     labs(x="Count",y="Frequency",title="Human Bloodmeals")
+    return(list(BMintervals_plot = BMintervals_plot, HumanBMs_plot = HumanBMs_plot,lifespans_plot = lifespans_plot, 
+      vectorialCapacity_plot = vectorialCapacity_plot, mHist = mHist))
+  }
   
-  
+  plot_try <- demo_plot(mosquito_dir)
   output$demo_sim_histogram <- renderPlot({
-    grid.arrange(BMintervals_plot,HumanBMs_plot,lifespans_plot,vectorialCapacity_plot,nrow=2)
+    grid.arrange(plot_try$BMintervals_plot,plot_try$HumanBMs_plot,plot_try$lifespans_plot,plot_try$vectorialCapacity_plot,nrow=2)
   })
   
   output$demo_sim_chord <- renderPlot({
-    circlizeStatesTransitionMatrix(history = mHist)
+    circlizeStatesTransitionMatrix(history = plot_try$mHist)
   })
-  
   ######################################################################################################################
   
   
@@ -1052,7 +1054,7 @@ output$panel_bouts <- renderUI({
   })
 
   observeEvent(input$run_demo_again, {
-    js_string_7 <- 'alert("Your demo is updated!");'
+    js_string_7 <- 'alert("Your demo is updated! Please wait 1-2 minutes. The page will be automatically switched when it is done");'
     session$sendCustomMessage(type='jsCode', list(value = js_string_7))
     updateTabsetPanel(session, "nav", selected = "simulation")
   })
@@ -1825,7 +1827,15 @@ output$panel_bouts <- renderUI({
 	    inputs_bout$stateSpace <- paste(unlist(inputs_bout$stateSpace),collapse = "")
 		  df = cbind(InputID = unlist(inputs_name), Value = unlist(inputs_bout))
 		  write.table(df,file=paste(getwd(), "/run_again.csv",sep= ""), quote=T,sep=",",row.names=F)
-		  #source("simulation.R")
+		  source("simulation.R")
+      plot_try <- demo_plot(paste(getwd(), "/demo/MOSQUITO/", sep = ""))
+      print(paste(getwd(), "/demo/MOSQUITO/", sep = ""))
+      output$demo_sim_histogram <- renderPlot({
+      grid.arrange(plot_try$BMintervals_plot,plot_try$HumanBMs_plot,plot_try$lifespans_plot,plot_try$vectorialCapacity_plot,nrow=2)
+      })
+      output$demo_sim_chord <- renderPlot({
+        circlizeStatesTransitionMatrix(history = plot_try$mHist)
+      })
 
 	})
 }

@@ -4,25 +4,49 @@ ImmuneState <- R6Class("ImmuneState",
                          
                          initialize = function(){
                            
+                           ## set up Blood State Immune Counters
+                           
                            private$nBSImmCounters = 4
                            private$BSImm = rep(0,private$nBSImmCounters)
                            private$wx = dt*c(1/30, 1/90, 1/270, 1/5/365)
                            private$wn = dt*c(1/30, 1/90, 1/270, 0)
                            
-                           BSImmCounters = list()
+                           private$BSImmCounters = list()
                            for(i in 1:private$nBSImmCounters){
                              private$BSImmCounters[[i]] = list(
-                               PAR = self$gImPAR(wx=private$wx[i], wn=private$wn[i], P50=6, Ps=5),
+                               PAR = self$ImPAR(wx=private$wx[i], wn=private$wn[i], P50=6, Ps=5),
                                F = self$dynamicXdt
                              )
                            }
                            
+                           ## set up Gametocyte Immune Counters
+                           
+                           private$nGSImmCounters = 4
+                           private$GSImm = rep(0,private$nGSImmCounters)
+                           private$Gwx = dt*c(1/30, 1/90, 1/270, 1/5/365)
+                           private$Gwn = dt*c(1/30, 1/90, 1/270, 0)
+                           
+                           private$GSImmCounters = list()
+                           for(i in 1:private$nGSImmCounters){
+                             private$GSImmCounters[[i]] = list(
+                               PAR = self$ImPAR(Gwx=private$Gwx[i], Gwn=private$Gwn[i],P50=6,Ps=5),
+                               F = self$dynamicXdt
+                             )
+                           }
+                           
+                           ## set up history to track the BS and GS immune counters
+                           
                            private$history = list()
                            private$history$BSImm = list()
+                           private$history$GSImm = list()
                            for(i in 1:private$nBSImmCounters){
                              private$history$BSImm[[i]] = 0
                            }
-                           private$GenImm = 0
+                           for(i in 1:private$nGSImmCounters){
+                             private$history$GSImm[[i]] = 0
+                           }
+                           private$GenImmBS = 0
+                           private$GenImmGS = 0
                            
                            private$dxp = 1
                            private$dtp = 1/100
@@ -56,13 +80,19 @@ ImmuneState <- R6Class("ImmuneState",
                            rowSums(weight*private$typeImm)
                          },
                          
-                         update_immuneState = function(t,dt,Ptot){
+                         update_immuneState = function(t,dt,Ptot,Gtot){
                            
                            ##BS immunity update
                            for(i in 1:private$nBSImmCounters){
                              private$BSImm[i] = with(private$BSImmCounters[[i]], F(private$BSImm[i], Ptot, PAR)) # bloodstage immune counters
                            }
-                           private$GenImm = 1-prod(1-private$BSImm)
+                           private$GenImmBS = 1-prod(1-private$BSImm)
+                           
+                           ##GS immunity update
+                           for(i in 1:private$nGSImmCounters){
+                             private$GSImm[i] = with(private$GSImmCounters[[i]], F(private$GSImm[i], Gtot, PAR))
+                           }
+                           private$GenImmGS = 1-prod(1-private$GSImm)
                            
                            ##type specific immunity update
                            
@@ -76,7 +106,13 @@ ImmuneState <- R6Class("ImmuneState",
                            for(i in 1:private$nBSImmCounters){
                               private$history$BSImm[[i]] = c(private$history$BSImm[[i]], private$BSImm[i])
                            }
-                           private$history$GenImm = c(private$history$GenImm, 1-prod(1-private$BSImm))
+                           private$history$GenImmBS = c(private$history$GenImmBS, private$GenImmBS)
+                           
+                           for(i in 1:private$nGSImmCounters){
+                              private$history$GSImm[[i]] = c(private$history$GSImm[[i]], private$GSImm[i])
+                           }
+                           private$history$GenImmGS = c(private$history$GenImmGS, private$GenImmGS)
+                           
                          },
                          
                          ############ General immune methods ################
@@ -127,7 +163,7 @@ ImmuneState <- R6Class("ImmuneState",
                            Xt
                          },
                          
-                         gImPAR = function(wx=1/80, wn=1/180, P50=6, Ps=1, atMax=11, b=2, sigma=1){
+                         ImPAR = function(wx=1/80, wn=1/180, P50=6, Ps=1, atMax=11, b=2, sigma=1){
                            list(wx=wx,wn=wn,P50=P50,Ps=Ps,atMax=atMax,b=b,sigma=sigma)
                          },
                          
@@ -182,8 +218,6 @@ ImmuneState <- R6Class("ImmuneState",
                            pmax(exp(-private$dxp*ptypes),0,na.rm=T)
                          }
                          
-                         
-                         
                        ),
                        
                        
@@ -194,9 +228,15 @@ ImmuneState <- R6Class("ImmuneState",
                          nBSImmCounters = NULL,
                          BSImmCounters = NULL,
                          BSImm = NULL,
-                         GenImm = NULL,
+                         GenImmBS = NULL,
                          wx = NULL,
                          wn = NULL,
+                         nGSImmCounters = NULL,
+                         GSImmCounters = NULL,
+                         GSImm = NULL,
+                         GenImmGS = NULL,
+                         Gwx = NULL,
+                         Gwn = NULL,
                          ptypesTime = NULL,
                          typeImm = NULL,
                          dxp = NULL,

@@ -339,7 +339,7 @@ Pf <- R6Class("Pf",
                 
                 dPdt = function(t){with(PAR,{
                   return(ifelse(t >= tEnd,0,1))
-                })}
+                })},
                 
                 shift = function(v,places,dir="right") {
                   places = places%%length(v)
