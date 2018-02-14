@@ -17,6 +17,9 @@
 \newcommand{\Sbout}{{\bf [S]}}
 \newcommand{\Mbout}{{\bf [M]}}
 \newcommand{\Ebout}{{\bf [E]}}
+\newcommand{\SSbout}{{\bf [Ss]}}
+\newcommand{\MSbout}{{\bf [Ms]}}
+\newcommand{\ESbout}{{\bf [Es]}}
 \newcommand{\Dead}{{\bf [D]}}
 \newcommand{\demo}{{{\bf \em The Demo}}}
 \newcommand{\minmod}{{{\bf \em The Minimal Model}}}
@@ -192,18 +195,35 @@ This document is structured around \demo\; and \minmod. The following sub-sectio
 The task for MBITES was how to represent a mosquito in a simulation model that accurately mimics what mosquitoes do in real life. In the model, each mosquito is represented as a set of variables representing its state, including quantitative or categorial variables that track where a mosquito is, its physiological status, behavioral intent, and etc. The list of variables is the following: 
 %
 \begin{itemize}
-\item Unique identifier. For bookkeeping, pedigrees and inheritance.
-\item Behavioral state. What is a mosquito trying to do? Is a mosquito still alive?
-\item Location. Where is the mosquito? 
-\item Resting microsite. Where is the mosquito resting (\eg inside or outside)?
+\item A unique identifier for this mosquito, used for bookkeeping, pedigrees and inheritance.
+\item Behavioral state.
+\begin{itemize} 
+  \item Blood feed [B], lay eggs [O], mate [M], sugar feed [S], or estivate [E]
+  \item Search or Attempt. The single letter name usually refers to the attempt, but the blood feeding search is denoted [F=Bs] and the egg laying search is [L=Os] (mainly for the MDETES equations). The other search states have not been given a single letter name, they are called [Ms], [Ss], or [Es]. 
+\end{itemize}
+\item Location. 
+\begin{itemize} 
+\item Where is the mosquito in space? (\ie at what site) 
+\item Resting microsite. On what kind of surface  is the mosquito resting (\eg inside wall)?
+\end{itemize}
+\item Variables describing a mosquito's condition or status
+\begin{itemize}
 \item Energy reserve levels. How much sugar does a mosquito have in reserve? 
 \item Physical condition. How much physical damage has a mosquito sustained? 
 \item Physiological condition. How much physiological damage has a mosquito sustained?
-\item Chronological age. How old is a mosquito? MBITES keeps track of the birth moment. 
-\item Reproductive age. How many egg batches has a mosquito laid (\ie parity)? 
 \item Infectious status. Is a mosquito infected or infectious with a pathogen? 
 \item Sexual maturity. Has a mosquito mated? 
-\item Type. What is a mosquito's genotype / phenotype for insecticide resistance, genetic modification, and for dealing with evolutionary problems? 
+\end{itemize}
+\item Variables describing a mosquito's age
+\begin{itemize}
+\item Chronological age. How old is a mosquito? MBITES keeps track of the birth moment. 
+\item Reproductive age. How many egg batches has a mosquito laid (\ie parity)? 
+\end{itemize}
+\item Type. 
+\begin{itemize}
+\item What is a mosquito's genotype / phenotype for insecticide resistance, genetic modification, and for dealing with evolutionary problems?
+\item What is the type of the male mosquitoes with which a female has mated?
+\end{itemize}
 \end{itemize}
 These states change as a mosquito ages and goes through its activities. 
 
@@ -216,9 +236,12 @@ A crude description of a mosquito's activities would be that a mosquito's life i
 \item[\Rbout] :: The post-prandial resting bout
 \item[\Lbout] :: Egg laying habitat search to find a place where egg laying can occur
 \item[\Obout] :: Attempt to lay eggs / oviposit 
-\item[\Sbout] :: Sugar feeding, which could include a search flight 
-\item[\Mbout] :: Mating, which could include a search flight 
-\item[\Ebout] :: Estivation, in which a mosquito becomes inactive 
+\item[\SSbout] :: Sugar feeding search bout
+\item[\Sbout] :: Sugar feeding attempt 
+\item[\MSbout] :: Mating search bout
+\item[\Mbout] :: Mating attempt bout
+\item[\ESbout] :: Estivation search bout 
+\item[\Ebout] :: Estivation bout, in which a mosquito becomes active
 \end{itemize}
 %
 The final state of a mosquito is \Dead, for ``dead." The {\bf Try} part (\ie the intentive flight) of each bout type  is different -- what happens between launching and landing is elaborated upon in each bout. The intentive flight is assumed to be of comparatively short duration and (if successful) to lead to a state transition. 
