@@ -501,6 +501,7 @@ mbites_oneBout <- function(){
     F = {self$boutF()},
     B = {self$boutB()},
     L = {self$boutL()},
+    R = {self$boutR()},
     O = {self$boutO()},
     M = {self$boutM()},
     S = {self$boutS()},
@@ -525,12 +526,6 @@ mbites_oneBout <- function(){
   # log history
   private$history$historyTrack(privateEnv = private, alive = self$isAlive())
 
-  if(private$stateNew == 'R'){
-    private$tNow = private$tNext # update time
-    private$state = private$stateNew # update current state
-    self$boutR()
-    private$history$historyTrack(privateEnv = private, alive = self$isAlive())
-  }
 }
 
 # if you were searching in L or F and you are marked "l", you need to compute all hazards and then try again.
