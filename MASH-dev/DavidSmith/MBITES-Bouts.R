@@ -583,12 +583,12 @@ mbites_checkForResource <- function(){
 mbites_oneMosquito_MBITES <- function(){
 
   # run algorithm while alive and has not overrun tile time
-  while(private$tNext < private$TilePointer$get_tNow() & private$stateNew != "D"){
+  while(private$tNext < private$TilePointer$get_tNow() & private$state != 'D'){
     self$oneBout()
   }
 
   # if mosquito is dead output data if asked and remove it from the enclosing storage object
-  if(private$stateNew == "D"){
+  if(private$state == 'D'){
     self$writeAndDelete(conHist = private$TilePointer$get_FemaleHistoryCon(), conPath = private$TilePointer$get_MosquitoPathogenCon())
   }
 
