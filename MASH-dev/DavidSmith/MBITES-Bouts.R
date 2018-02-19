@@ -194,7 +194,7 @@ mbites_searchFail <- function(){
 mbites_boutBS <- function(){
 
   # mosquito transitions to attempting a blood feeding attempt if she isn't leaving the area and succeeds
-#    CHANGE F_succeed 
+#    CHANGE F_succeed
 #    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("F_succeed")){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("BS_succeed"))
     private$search = FALSE
@@ -286,10 +286,10 @@ mbites_OvipositSearchCheck <- function(){
 #'
 mbites_boutOS <- function(){
 
-#    CHANGE L_succeed 
+#    CHANGE L_succeed
 #    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("L_succeed")){
     if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("OS_succeed"))
-      private$search = FALSE 
+      private$search = FALSE
 }
 
 
@@ -361,7 +361,7 @@ mbites_layEggs_EL4P <- function(){
 
 
 #################################################################
-# M-BITES: Sugar Feeding Search Bout :: SS 
+# M-BITES: Sugar Feeding Search Bout :: SS
 #################################################################
 
 #' M-BITES: Sugar Feeding Search Bout (L) \code{MosquitoFemale}
@@ -369,9 +369,9 @@ mbites_layEggs_EL4P <- function(){
 #' write me!
 #'
 mbites_boutSS <- function(){
-#    ADD SS_succeed 
+#    ADD SS_succeed
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("SS_succeed"))
-    private$search = FALSE 
+    private$search = FALSE
 }
 
 #################################################################
@@ -406,7 +406,7 @@ mbites_boutS <- function(){
 }
 
 #################################################################
-# M-BITES: Mating Search Bout :: MS 
+# M-BITES: Mating Search Bout :: MS
 #################################################################
 
 #' M-BITES: Mating Search Bout (MS) \code{MosquitoFemale}
@@ -414,9 +414,9 @@ mbites_boutS <- function(){
 #' write me!
 #'
 mbites_boutMS <- function(){
-#    ADD MS_succeed 
+#    ADD MS_succeed
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("MS_succeed"))
-    private$search = FALSE 
+    private$search = FALSE
 }
 
 
@@ -434,8 +434,8 @@ mbites_boutMS <- function(){
 mbites_boutM <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("M_succeed")){
     self$chooseMate()
-    private$mated = TRUE  
-  }   
+    private$mated = TRUE
+  }
 
   #### SwarmSpray #############################################################################################
   swarmSpray=private$LandscapePointer$get_MatingSites(private$locNow)$get_swarmSpray()
@@ -486,15 +486,15 @@ mbites_oneBout <- function(){
   private$tNow = private$tNext # update time
   private$state = private$stateNew # update current state
 
-  # if the required resource is not present at this site, then  
-  # set search==TRUE 
-  self$checkForResource() 
-  
+  # if the required resource is not present at this site, then
+  # set search==TRUE
+  self$checkForResource()
+
   # LAUNCH & TRY
   if(private$search==TRUE){
     self$moveMe()
     switch(private$state,
-      # The Search Bouts 
+      # The Search Bouts
       B = {self$boutBS()},
       O = {self$boutOS()},
       M = {self$boutMS()},
@@ -503,36 +503,36 @@ mbites_oneBout <- function(){
     )
   } else {
     switch(private$state,
-      # The Attempt Bouts 
+      # The Attempt Bouts
       B = {self$boutB()},
       O = {self$boutO()},
       M = {self$boutM()},
       S = {self$boutS()},
       {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
     )
-  }    
+  }
 
-  # LAND 
+  # LAND
   self$restingSpot()
 
-  # REST  
-  self$updateState() 
+  # REST
+  self$updateState()
 
-  # prepare to LAUNCH again   
-  self$timing() 
+  # prepare to LAUNCH again
+  self$timing()
 
   # log history
   private$history$historyTrack(privateEnv = private, alive = self$isAlive())
 }
 
 #################################################################
-# M-BITES: Update State  
+# M-BITES: Update State
 #################################################################
 
 #' M-BITES: Update the Behavioral State at the End of a Bout for \code{\link{MosquitoFemale}}
 #'
-#' After running a bout, this code reads the outcome to determine what the ne 
-#'   the mosquito's next state.  
+#' After running a bout, this code reads the outcome to determine what the ne
+#'   the mosquito's next state.
 #'
 
 mbites_updateState <- function(){
@@ -545,14 +545,14 @@ mbites_updateState <- function(){
   self$surviveResting()     # MBITES-Generic-Survival.R
   self$surviveFlight()      # MBITES-Generic-Survival.R
 
-  # The states in priority order 
+  # The states in priority order
   if(private$state == 'D')   { nextState = 'D'} else {
   if(private$starved == TRUE){ nextState = 'S'} else {
-  if(private$gravid == TRUE) { nextState = 'O'} else { 
-    nextState = 'B' 
+  if(private$gravid == TRUE) { nextState = 'O'} else {
+    nextState = 'B'
   }}}
-  private$nextState = nextState 
-} 
+  private$nextState = nextState
+}
 
 mbites_checkForResource <- function(){
     switch(private$state,
@@ -562,7 +562,7 @@ mbites_checkForResource <- function(){
       S = {private$search=TRUE},
       {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
     )
-} 
+}
 
 
 # if you were searching in L or F and you are marked "l", you need to compute all hazards and then try again.
