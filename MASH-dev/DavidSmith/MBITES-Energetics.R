@@ -34,6 +34,15 @@ mbites_bloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
   }
 }
 
+#' M-BITES: Choose a sugar source \code{MosquitoFemale}
+#'
+#'  * This method is bound to \code{MosquitoFemale$boutS()}.
+#' 
+mbites_chooseSugarSource <- function(){
+  # write me 
+} 
+
+
 #' MBITES-Generic: Sugar Energetics for \code{\link{MosquitoFemale}}
 #'
 #' Add to energy from blood feeding 
