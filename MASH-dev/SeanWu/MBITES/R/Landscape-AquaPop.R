@@ -15,7 +15,8 @@
 #' Landscape Aquatic Population Model Class
 #'
 #' A \code{Aqua_Pop} object is an abstract base class for models of aquatic population dynamics following the pimpl idiom within a
-#' \code{\link[MBITES]{Aqua_Resource}}.
+#' \code{\link[MBITES]{Aqua_Resource}}. This class defines an interface called from \code{\link[MBITES]{Aqua_Resource}}, such that
+#' any aquatic population model must provide definitions of the interface functions.
 #'
 #'
 #' @docType class
@@ -23,13 +24,15 @@
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'  * argument: im an agument!
+#'  * none
 #'
 #' @section **Methods**:
-#'  * method: im a method!
+#'  * add_egg: function that must take an EggQ (a \code{list} object) and add egg batches to the population; it should return a modified EggQ with those elements corresponding to 'processed' egg batches zeroed out
+#'  * one_day: function with void return that runs one day of the specific aquatic population simulation implementation
+#'  * get_imago: function that returns an ImagoQ (a \code{list} object) for imagos (adult mosquitoes) ready to emerge on that day
 #'
 #' @section **Fields**:
-#'  * field: im a field!
+#'  * none
 #'
 #' @export
 Aqua_Pop <- R6::R6Class(classname = "Aqua_Pop",

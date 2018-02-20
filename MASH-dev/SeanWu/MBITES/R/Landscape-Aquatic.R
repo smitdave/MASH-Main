@@ -51,7 +51,7 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                    # one day population dynamics
                    one_day = function(){
                      # add newly oviposited egg batches to aquatic population
-                     # private$AquaPopP$add_egg(private$EggQ)
+                    # private$EggQ = private$AquaPopP$add_egg(private$EggQ)
 
                      # run one day simulation of aquatic population
                      # private$AquaPopP$one_day()
