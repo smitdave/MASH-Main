@@ -135,27 +135,6 @@ mbites_restingSpot <- function(){
   }
 }
 
-# #' M-BITES: Check State Transition for Resting Spot \code{MosquitoFemale}
-# #'
-# #' Return \code{TRUE} if mosquito stays in "L" or "F" state.
-# #'
-# #'  * This method is bound to \code{MosquitoFemale$searchFail()}.
-# #'
-# mbites_searchFail <- function(){
-#   # if mosy is not on first iteration
-#   if(private$tNow > private$bDay){
-#     if(private$state == "L" & private$stateNew == "L"){
-#       return(TRUE)
-#     } else if(private$state == "F" & private$stateNew == "F"){
-#       return(TRUE)
-#     } else {
-#       return(FALSE)
-#     }
-#   } else {
-#     return(FALSE)
-#   }
-# }
-
 #' M-BITES: Check State Transition for Resting Spot \code{MosquitoFemale}
 #'
 #' Return \code{TRUE} if mosquito stays in "L" or "F" state.
@@ -187,22 +166,26 @@ mbites_searchFail <- function(){
 # M-BITES: The Generic Search Bout :: search=TRUE 
 #################################################################
 
-#' M-BITES: Generic Search Bout (F) \code{MosquitoFemale}
+#' M-BITES: Generic Search Bout \code{MosquitoFemale}
 #'
-#' write me!
-#'
+#' The generic search bout: 
+#'   1) call moveMe() to find a new site;
+#'   2a) a mosquito leaves to initiate a new search;
+#'   2b) a mosquito stays (a success) and attenpts to land. 
+#'  
 mbites_boutSearch <- function(){
   self$moveMe()
   pr_success = switch(private$state,
-    B = private$FemalePopPointer$get_MBITES_PAR("F_succeed")
-    O = private$FemalePopPointer$get_MBITES_PAR("L_succeed")
+    B = private$FemalePopPointer$get_MBITES_PAR("Bs_succeed")
+    O = private$FemalePopPointer$get_MBITES_PAR("Os_succeed")
     S = private$FemalePopPointer$get_MBITES_PAR("Ss_succeed")
     M = private$FemalePopPointer$get_MBITES_PAR("Ms_succeed")
   )
-  if(runif(1) < pr_success)
-    private$search = FALSE
+  if(runif(1) < pr_success){
+    private$search = FALSE      # the next bout will be an attempt
+    private$lspot = "l"         # initialize restingSpot() 
+  }
 }
-
 
 #################################################################
 # M-BITES: Blood Feeding Attempt Bout :: B
@@ -210,12 +193,17 @@ mbites_boutSearch <- function(){
 
 #' M-BITES: Blood Feeding Attempt Bout (B) \code{MosquitoFemale}
 #'
-#' write me!
-#'
+#' The attempt bout has the following structure: 
+#'    1) choose a host; 
+#'    2a) if the host is human, simulate a human encounter
+#'    2b) if the host is not human, simulate a zoonotic encounter
+#'    2c) a null host is provided for a failed attempt 
+#'    2d) traps and other vector control devices could be appended here 
+#'  
 mbites_boutB <- function(){
   # check success
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("B_succeed")){
-    self$chooseHost() # MBITES-Generic-ChooseHost.R
+    self$chooseHost() # MBITES-ChooseHost.R
   } else {
     private$hostID = 0L
   }
@@ -241,26 +229,45 @@ mbites_boutB <- function(){
 #' write me!
 #'
 mbites_boutO <- function(){
-  # peri-domestic site
-  if(private$periDomestic){
-    if(self$isAlive()){
-      self$layEggs()
-    }
+  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("O_succeed")){
+    self$chooseHabitat() 
   } else {
-  # standard site
-    #### Ovitrap #############################################################################################
-    ovitrap=private$LandscapePointer$get_AquaSites(private$locNow)$get_ovitrap()
-    if(!is.null(ovitrap)){
-      #print("OVI Present")
-      private$stateNew = ovitrap$mosquitoKillEncounter(private$stateNew,interventionType="OVI")
-      private$lspot = ovitrap$mosquitoRepelEncounter(private$lspot,interventionType="OVI")
-    }else{
-      if(self$isAlive()){
-        self$layEggs()
-      }
-    }
+    private$habitatID = 0L
+  }
+
+  if(private$habitatID > 0){
+    self$layEggs() # MBITES-HostEncounter.R
+  } else if(private$habitatID == -1){
+    self$ovitrap()  
+  } else if(private$habitatID == 0){
+    return(NULL)
+  } else {
+    stop("illegal hostID value")
   }
 }
+
+#' M-BITES: Choose a Habitat \code{MosquitoFemale}
+#'
+#' Returns the ID of the local aquatic habitat or a code for an
+#' ovitrap. 
+#'
+mbites_chooseHabitat<-function(){
+  
+#    ovitrap=private$LandscapePointer$get_AquaSites(private$locNow)$get_ovitrap()
+#    if(!is.null(ovitrap)){
+#      #print("OVI Present")
+#    } else 
+
+}
+
+#' M-BITES: Encounter an Ovitrap \code{MosquitoFemale}
+#'
+#' write me!
+#'
+mbites_ovitrap<-function(){
+   private$state = ovitrap$mosquitoKillEncounter(private$stateNew,interventionType="OVI")
+   private$lspot = ovitrap$mosquitoRepelEncounter(private$lspot,interventionType="OVI")
+} 
 
 #' M-BITES: Lay Eggs for 'Emerge' \code{\link{MosquitoFemale}}
 #'
@@ -311,16 +318,37 @@ mbites_layEggs_EL4P <- function(){
 #'
 mbites_boutS <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("S_succeed")){
-    self$sugarEnergetics() 
+    self$chooseSugarSource() 
+  } else {
+    private$sugarID = 0L
+  }
 
-    #### ATSB ################################################################################################
-    atsb=private$LandscapePointer$get_SugarSites(private$locNow)$get_attractiveSugarBait()
-    if(is.null(atsb)==FALSE){
-        private$stateNew = atsb$mosquitoKillEncounter(private$stateNew,interventionType="ATSB")
-        private$lspot = atsb$mosquitoRepelEncounter(private$lspot,interventionType="ATSB")
-    }
+  if(private$sugarID > 0){
+    self$sugarEnergetics()   # MBITES-Energetics.R
+  } else if(private$sugarID == -1){
+    self$atsb()
+  } else if(private$sugarID == 0){
+    return(NULL)
+  } else {
+    stop("illegal sugarID value")
   }
 }
+
+mbites_atsb <- function(){
+
+#  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("S_succeed")){
+#    self$sugarEnergetics() 
+#
+#    #### ATSB ################################################################################################
+#    atsb=private$LandscapePointer$get_SugarSites(private$locNow)$get_attractiveSugarBait()
+#    if(is.null(atsb)==FALSE){
+#        private$stateNew = atsb$mosquitoKillEncounter(private$stateNew,interventionType="ATSB")
+#        private$lspot = atsb$mosquitoRepelEncounter(private$lspot,interventionType="ATSB")
+#    }
+#  }
+#}
+
+} 
 
 #################################################################
 # M-BITES: Mating Bout :: M
@@ -357,14 +385,13 @@ mbites_boutM <- function(){
 #'
 #' Mosquito behavior has a finite set of states (state space of model), within which there are certain biological functions that are always evaluated.
 #' A bout is the actions taken by a mosquito between a launch and landing; \code{mbites_oneBout} handles all the biological imperatives that occur during a bout,
-#' while specialized bout action methods handle the events that occur due to the purpose of the bout.
-#'  * \code{\link{mbites_boutF}}: blood feeding search bout
+#' while specialized bout action methods handle the events that occur due to the intent of the mosquito during the bout. The two classes of bouts are SEARCH and ATTEMPT. 
+#' Search bouts are similar enough that there is a generic version of it. 
 #'  * \code{\link{mbites_boutB}}: blood feeding attempt bout
-#'  * \code{\link{mbites_boutR}}: post-prandial resting bout
-#'  * \code{\link{mbites_boutL}}: egg laying search bout
 #'  * \code{\link{mbites_boutO}}: egg laying attempt bout
 #'  * \code{\link{mbites_boutS}}: sugar feeding attempt bout
 #'  * \code{\link{mbites_boutM}}: mating bout
+#'  * \code{\link{mbites_boutSearch}}: a search bout for any 
 #'
 #' The generic bout runs necessary updates of timing, state, survival, energetics, and queue checks prior to calling the nested
 #' specific bout action, and checks that the mosquito is alive/active before calling the bout. It updates \code{tNext} and \code{stateNew}.
