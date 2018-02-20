@@ -184,21 +184,42 @@ mbites_searchFail <- function(){
 #################################################################
 
 #################################################################
-# M-BITES: Blood Feeding Search Bout :: BS = F
+# M-BITES: The Generic Search Bout :: search=TRUE 
 #################################################################
 
-#' M-BITES: Blood Feeding Search Bout (F) \code{MosquitoFemale}
+#' M-BITES: Generic Search Bout (F) \code{MosquitoFemale}
 #'
 #' write me!
 #'
-mbites_boutBS <- function(){
-
-  # mosquito transitions to attempting a blood feeding attempt if she isn't leaving the area and succeeds
-#    CHANGE F_succeed 
-#    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("F_succeed")){
-  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("BS_succeed"))
+mbites_boutSearch <- function(){
+  self$moveMe()
+  pr_success = switch(private$state,
+    B = private$FemalePopPointer$get_MBITES_PAR("F_succeed")
+    O = private$FemalePopPointer$get_MBITES_PAR("L_succeed")
+    S = private$FemalePopPointer$get_MBITES_PAR("Ss_succeed")
+    M = private$FemalePopPointer$get_MBITES_PAR("Ms_succeed")
+  )
+  if(runif(1) < pr_success)
     private$search = FALSE
 }
+
+
+###################################################################
+### M-BITES: Blood Feeding Search Bout :: BS = F
+###################################################################
+##
+###' M-BITES: Blood Feeding Search Bout (F) \code{MosquitoFemale}
+###'
+###' write me!
+###'
+##mbites_boutBS <- function(){
+##
+##  # mosquito transitions to attempting a blood feeding attempt if she isn't leaving the area and succeeds
+###    CHANGE F_succeed 
+###    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("F_succeed")){
+##  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("BS_succeed"))
+##    private$search = FALSE
+##}
 
 
 #################################################################
@@ -229,31 +250,31 @@ mbites_boutB <- function(){
 }
 
 
-#################################################################
-# M-BITES: Post-Prandial Resting Bout :: R
-#################################################################
-
-#' M-BITES: Post-Prandial Resting Bout (R) \code{MosquitoFemale}
-#'
-#' write me!
-#'
-mbites_boutR <- function(){
-
-  if(self$isAlive()){
-    if(private$FemalePopPointer$get_MBITES_PAR("REFEED")){
-      if(runif(1) < self$pReFeed()){
-        private$stateNew = "F"
-      } else {
-        # check if peri-domestic
-        # private$stateNew = "L"
-      }
-    } else {
-      # check if peri-domestic
-      # private$stateNew = "L"
-      self$OvipositSearchCheck()
-    }
-  }
-}
+###################################################################
+### M-BITES: Post-Prandial Resting Bout :: R
+###################################################################
+##
+###' M-BITES: Post-Prandial Resting Bout (R) \code{MosquitoFemale}
+###'
+###' write me!
+###'
+##mbites_boutR <- function(){
+##
+##  if(self$isAlive()){
+##    if(private$FemalePopPointer$get_MBITES_PAR("REFEED")){
+##      if(runif(1) < self$pReFeed()){
+##        private$stateNew = "F"
+##      } else {
+##        # check if peri-domestic
+##        # private$stateNew = "L"
+##      }
+##    } else {
+##      # check if peri-domestic
+##      # private$stateNew = "L"
+##      self$OvipositSearchCheck()
+##    }
+##  }
+##}
 
 #' M-BITES: Check for Oviposit Search Bout \code{MosquitoFemale}
 #'
@@ -276,21 +297,21 @@ mbites_OvipositSearchCheck <- function(){
 }
 
 
-#################################################################
-# M-BITES: Egg Laying Search Bout :: OS = L
-#################################################################
-
-#' M-BITES: Egg Laying Search Bout (L) \code{MosquitoFemale}
-#'
-#' write me!
-#'
-mbites_boutOS <- function(){
-
-#    CHANGE L_succeed 
-#    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("L_succeed")){
-    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("OS_succeed"))
-      private$search = FALSE 
-}
+###################################################################
+### M-BITES: Egg Laying Search Bout :: OS = L
+###################################################################
+##
+###' M-BITES: Egg Laying Search Bout (L) \code{MosquitoFemale}
+###'
+###' write me!
+###'
+##mbites_boutOS <- function(){
+##
+###    CHANGE L_succeed 
+###    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("L_succeed")){
+##    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("OS_succeed"))
+##      private$search = FALSE 
+##}
 
 
 #################################################################
@@ -360,19 +381,19 @@ mbites_layEggs_EL4P <- function(){
 }
 
 
-#################################################################
-# M-BITES: Sugar Feeding Search Bout :: SS 
-#################################################################
-
-#' M-BITES: Sugar Feeding Search Bout (L) \code{MosquitoFemale}
-#'
-#' write me!
-#'
-mbites_boutSS <- function(){
-#    ADD SS_succeed 
-  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("SS_succeed"))
-    private$search = FALSE 
-}
+###################################################################
+### M-BITES: Sugar Feeding Search Bout :: SS 
+###################################################################
+##
+###' M-BITES: Sugar Feeding Search Bout (L) \code{MosquitoFemale}
+###'
+###' write me!
+###'
+##mbites_boutSS <- function(){
+###    ADD SS_succeed 
+##  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("SS_succeed"))
+##    private$search = FALSE 
+##}
 
 #################################################################
 # M-BITES: Sugar Feeding Attempt Bout :: S
@@ -387,14 +408,7 @@ mbites_boutSS <- function(){
 #'
 mbites_boutS <- function(){
   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("S_succeed")){
-      private$energy = 1
-
-      if(!private$mature){
-        private$energyPreG = private$energyPreG - private$FemalePopPointer$get_MBITES_PAR("preGsugar")
-        if(private$energyPreG <= 0){
-          private$mature = TRUE
-        }
-      }
+    self$sugarEnergetics() 
 
     #### ATSB ################################################################################################
     atsb=private$LandscapePointer$get_SugarSites(private$locNow)$get_attractiveSugarBait()
@@ -405,19 +419,19 @@ mbites_boutS <- function(){
   }
 }
 
-#################################################################
-# M-BITES: Mating Search Bout :: MS 
-#################################################################
-
-#' M-BITES: Mating Search Bout (MS) \code{MosquitoFemale}
-#'
-#' write me!
-#'
-mbites_boutMS <- function(){
-#    ADD MS_succeed 
-  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("MS_succeed"))
-    private$search = FALSE 
-}
+###################################################################
+### M-BITES: Mating Search Bout :: MS 
+###################################################################
+##
+###' M-BITES: Mating Search Bout (MS) \code{MosquitoFemale}
+###'
+###' write me!
+###'
+##mbites_boutMS <- function(){
+###    ADD MS_succeed 
+##  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("MS_succeed"))
+##    private$search = FALSE 
+##}
 
 
 #################################################################
@@ -484,23 +498,10 @@ mbites_oneBout <- function(){
 
   # update time and state
   private$tNow = private$tNext # update time
-  private$state = private$stateNew # update current state
-
-  # if the required resource is not present at this site, then  
-  # set search==TRUE 
-  self$checkForResource() 
   
   # LAUNCH & TRY
   if(private$search==TRUE){
-    self$moveMe()
-    switch(private$state,
-      # The Search Bouts 
-      B = {self$boutBS()},
-      O = {self$boutOS()},
-      M = {self$boutMS()},
-      S = {self$boutSS()},
-      {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
-    )
+    self$boutSearch() 
   } else {
     switch(private$state,
       # The Attempt Bouts 
@@ -510,16 +511,18 @@ mbites_oneBout <- function(){
       S = {self$boutS()},
       {stop(cat("illegal behavioral state: ",private$state,"\n",sep=""))}
     )
-  }    
+  }
 
   # LAND 
   self$restingSpot()
 
   # REST  
   self$updateState() 
-
-  # prepare to LAUNCH again   
-  self$timing() 
+  self$timing()
+ 
+  # if there are no resources of the required type present, set  
+  # search = TRUE 
+  self$checkForResources() 
 
   # log history
   private$history$historyTrack(privateEnv = private, alive = self$isAlive())
@@ -536,25 +539,22 @@ mbites_oneBout <- function(){
 #'
 
 mbites_updateState <- function(){
-  # energetics
-  if(private$FemalePopPointer$get_MBITES_PAR("SUGAR")){
-    self$sugarEnergetics()  # MBITES-Generic-Energetics.R
-  }
-
-  # survival
-  self$surviveResting()     # MBITES-Generic-Survival.R
-  self$surviveFlight()      # MBITES-Generic-Survival.R
+  self$energetics()    # MBITES-Energetics.R
+  self$survival()      # MBITES-Survival.R
 
   # The states in priority order 
   if(private$state == 'D')   { nextState = 'D'} else {
   if(private$starved == TRUE){ nextState = 'S'} else {
   if(private$gravid == TRUE) { nextState = 'O'} else { 
     nextState = 'B' 
-  }}}
+  }}}} 
+
+  self$checkRefeed()   # MBITES-Bloodmeal.R
+
   private$nextState = nextState 
 } 
 
-mbites_checkForResource <- function(){
+mbites_checkForResources <- function(){
     switch(private$state,
       B = {private$search=TRUE},
       O = {self$OvipositSearchCheck()},
