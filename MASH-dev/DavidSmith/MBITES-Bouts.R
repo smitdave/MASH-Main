@@ -204,24 +204,6 @@ mbites_boutSearch <- function(){
 }
 
 
-###################################################################
-### M-BITES: Blood Feeding Search Bout :: BS = F
-###################################################################
-##
-###' M-BITES: Blood Feeding Search Bout (F) \code{MosquitoFemale}
-###'
-###' write me!
-###'
-##mbites_boutBS <- function(){
-##
-##  # mosquito transitions to attempting a blood feeding attempt if she isn't leaving the area and succeeds
-###    CHANGE F_succeed 
-###    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("F_succeed")){
-##  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("BS_succeed"))
-##    private$search = FALSE
-##}
-
-
 #################################################################
 # M-BITES: Blood Feeding Attempt Bout :: B
 #################################################################
@@ -248,70 +230,6 @@ mbites_boutB <- function(){
     stop("illegal hostID value")
   }
 }
-
-
-###################################################################
-### M-BITES: Post-Prandial Resting Bout :: R
-###################################################################
-##
-###' M-BITES: Post-Prandial Resting Bout (R) \code{MosquitoFemale}
-###'
-###' write me!
-###'
-##mbites_boutR <- function(){
-##
-##  if(self$isAlive()){
-##    if(private$FemalePopPointer$get_MBITES_PAR("REFEED")){
-##      if(runif(1) < self$pReFeed()){
-##        private$stateNew = "F"
-##      } else {
-##        # check if peri-domestic
-##        # private$stateNew = "L"
-##      }
-##    } else {
-##      # check if peri-domestic
-##      # private$stateNew = "L"
-##      self$OvipositSearchCheck()
-##    }
-##  }
-##}
-
-#' M-BITES: Check for Oviposit Search Bout \code{MosquitoFemale}
-#'
-#' During a resting bout \code{\link{mbites_boutR}}, the mosquito checks if she is in a
-#'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
-mbites_OvipositSearchCheck <- function(){
-  if(private$pSetNow=="f"){
-    # check for peri-domestic breeding sites
-    if(!is.null(private$LandscapePointer$get_FeedingSites(private$locNow)$get_periDomestic())){
-      # has peri-domestic breeding site
-      private$stateNew = "O"
-      private$periDomestic = TRUE
-    } else {
-      # does not have peri-domestic breeding site
-      private$search = TRUE
-    }
-  } else {
-    private$search=TRUE
-  }
-}
-
-
-###################################################################
-### M-BITES: Egg Laying Search Bout :: OS = L
-###################################################################
-##
-###' M-BITES: Egg Laying Search Bout (L) \code{MosquitoFemale}
-###'
-###' write me!
-###'
-##mbites_boutOS <- function(){
-##
-###    CHANGE L_succeed 
-###    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("L_succeed")){
-##    if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("OS_succeed"))
-##      private$search = FALSE 
-##}
 
 
 #################################################################
@@ -380,21 +298,6 @@ mbites_layEggs_EL4P <- function(){
   }
 }
 
-
-###################################################################
-### M-BITES: Sugar Feeding Search Bout :: SS 
-###################################################################
-##
-###' M-BITES: Sugar Feeding Search Bout (L) \code{MosquitoFemale}
-###'
-###' write me!
-###'
-##mbites_boutSS <- function(){
-###    ADD SS_succeed 
-##  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("SS_succeed"))
-##    private$search = FALSE 
-##}
-
 #################################################################
 # M-BITES: Sugar Feeding Attempt Bout :: S
 #################################################################
@@ -418,21 +321,6 @@ mbites_boutS <- function(){
     }
   }
 }
-
-###################################################################
-### M-BITES: Mating Search Bout :: MS 
-###################################################################
-##
-###' M-BITES: Mating Search Bout (MS) \code{MosquitoFemale}
-###'
-###' write me!
-###'
-##mbites_boutMS <- function(){
-###    ADD MS_succeed 
-##  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("MS_succeed"))
-##    private$search = FALSE 
-##}
-
 
 #################################################################
 # M-BITES: Mating Bout :: M
@@ -537,7 +425,6 @@ mbites_oneBout <- function(){
 #' After running a bout, this code reads the outcome to determine what the ne 
 #'   the mosquito's next state.  
 #'
-
 mbites_updateState <- function(){
   self$energetics()    # MBITES-Energetics.R
   self$survival()      # MBITES-Survival.R
@@ -549,11 +436,21 @@ mbites_updateState <- function(){
     nextState = 'B' 
   }}}} 
 
-  self$checkRefeed()   # MBITES-Bloodmeal.R
+  self$checkRefeed()   # MBITES-Oogenesis.R
 
   private$nextState = nextState 
 } 
 
+#################################################################
+# M-BITES: Check to see if a search is required  
+#################################################################
+
+#' M-BITES: If the required resource is not here, initiate a search \code{\link{MosquitoFemale}}
+#'
+#' After running a bout, this code checks the mosquito's
+#' behavioral state agains the local resources to see if a search is
+#' required 
+#'
 mbites_checkForResources <- function(){
     switch(private$state,
       B = {private$search=TRUE},
@@ -564,10 +461,25 @@ mbites_checkForResources <- function(){
     )
 } 
 
-
-# if you were searching in L or F and you are marked "l", you need to compute all hazards and then try again.
-# this is all determined by the restingSpot() function (to be renamed restingSpot).
-# just making sure F->F or L->L is working correctly.
+#' M-BITES: Check for Oviposit Search Bout \code{MosquitoFemale}
+#'
+#' During a resting bout \code{\link{mbites_boutR}}, the mosquito checks if she is in a
+#'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
+mbites_OvipositSearchCheck <- function(){
+  if(private$pSetNow=="f"){
+    # check for peri-domestic breeding sites
+    if(!is.null(private$LandscapePointer$get_FeedingSites(private$locNow)$get_periDomestic())){
+      # has peri-domestic breeding site
+      private$stateNew = "O"
+      private$periDomestic = TRUE
+    } else {
+      # does not have peri-domestic breeding site
+      private$search = TRUE
+    }
+  } else {
+    private$search=TRUE
+  }
+}
 
 
 #################################################################
