@@ -66,9 +66,7 @@ mbites_zooEncounter <- function(){
       self$BloodMeal() # MBITES-Energetics.R
       private$history$historyFeed(privateEnv = private) # MOSQUITO-History.hpp
     }
-
   }
-
 }
 
 

@@ -118,37 +118,45 @@ MosquitoFemale <- R6::R6Class(classname = "MosquitoFemale",
                             tNext     = numeric(1),        # time to next event
                             genotype  = integer(1),        # genotype of mosquito
 
-                            # State and Location
+                            # Behavioral State 
                             state        = character(1),       # {F,B,R,L,O,S,M,E,D}
-                            stateNew     = character(1),       # {F,B,R,L,O,S,M,E,D}
+                            search       = logical(1),
+ 
+                            # Location  
                             pSetNow      = character(1),       # class of site {f,l,s,m}
                             pSetOld      = character(1),
                             locNow       = integer(1),       # index of site
                             locOld       = integer(1),
-                            mature       = logical(1),       # mature
                             periDomestic = logical(1),
-                            boutFail     = logical(1),       # did i fail my current bout? (used to select resting spots)
-
-                            # Other State Variables
                             lspot     = character(1),        # landing spot (i: inside wall, w: outside wall, v: outside vegetation, r: feed, l: leave)
-                            damage    = numeric(1),        # wing tattering
-                            energy    = numeric(1),        # energy reserves
 
-                            history   = NULL,        # history object
+                            # Energetics  
+                            energy    = numeric(1),        # energy reserves
+                            starved   = logical(1),        # energy reserves
 
                             # Female Fields
 
                             # Egg Batch Variables
+                            bloodfed= logical(1), 
+                            gravid = logical(1), 
                             bmSize = numeric(1),         # the size of the blood meal, relative to max
                             batch  = numeric(1),         # female eggs in batch
                             eggT   = numeric(1),         # the minimum time before eggs are mature
                             eggP   = numeric(1),         # the mimimum provision for eggs to mature
 
+
                             # Maturation & Reproduction
+                            mature        = logical(1),       # mature
                             mateID        = character(1),
                             mateGenotype  = integer(1),
                             energyPreG    = numeric(1),          # pre-gonotrophic energy requirement
                             hostID        = character(1),           # the id of the host: -1::none; 0::not human
+
+                            # Other State Variables
+                            damage_physical    = numeric(1),        # wing tattering
+                            damage_chemical    = numeric(1),        # wing tattering
+
+                            history   = NULL,        # history object
 
                             # Pathogens
                             Pathogens      = NULL,
