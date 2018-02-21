@@ -98,8 +98,16 @@ updateKappa_HumanPop <- function(){
 #'  * This method is bound to \code{Human$updateEIR}
 #'
 updateEIR_Human <- function(){
-  myEIR = private$bWeight * (private$TilePointer$get_MosquitoPointer()$get_a() * private$TilePointer$get_MosquitoPointer()$get_Z(private$patchID))
-  myEIR = myEIR / (private$TilePointer$get_Patch(private$patchID)$get_bWeightHuman() + private$TilePointer$get_Patch(private$patchID)$get_bWeightZoo() + private$TilePointer$get_Patch(private$patchID)$get_bWeightZootox()) # renormalize
+  # check whether the Human is located in a Reservoir Patch
+  if (private$TilePointer$get_Patch(private$patchID)$get_reservoir()){
+    # If part of a reservoir, return the value of EIR in that reservoir
+    myEIR = private$TilePointer$get_Patch(private$patchID)$get_resEIR()
+    # Note that resEIR should already be normalized appropriately ~ a*Z/H
+  } else {
+    myEIR = private$bWeight * (private$TilePointer$get_MosquitoPointer()$get_a() * private$TilePointer$get_MosquitoPointer()$get_Z(private$patchID))
+    # normalize
+    myEIR = myEIR / (private$TilePointer$get_Patch(private$patchID)$get_bWeightHuman() + private$TilePointer$get_Patch(private$patchID)$get_bWeightZoo() + private$TilePointer$get_Patch(private$patchID)$get_bWeightZootox())
+  }
   private$EIR = myEIR
 }
 
