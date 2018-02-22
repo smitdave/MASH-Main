@@ -5,18 +5,16 @@
 #      / /  / /_____/ /_/ // /  / / / /___ ___/ /
 #     /_/  /_/     /_____/___/ /_/ /_____//____/
 #
-#     Landscape-Resource-Aquatic Habitat-Aquatic Population pimpl
+#     Landscape-Resource-Aquatic Habitat-Aquatic Population (Emerge) pimpl
 #     MBITES Team
 #     February 2018
 #
 ###############################################################################
 
 
-#' Landscape Aquatic Population Model Class
+#' Landscape Aquatic Population Emerge Model Class
 #'
-#' A \code{Aqua_Pop} object is an abstract base class for models of aquatic population dynamics following the pimpl idiom within a
-#' \code{\link[MBITES]{Aqua_Resource}}. This class defines an interface called from \code{\link[MBITES]{Aqua_Resource}}, such that
-#' any aquatic population model must provide definitions of the interface functions.
+#' Class that implements the 'Emerge' model of aquatic ecology, inheriting the interface of \code{\link[MBITES]{Aqua_Base}}.
 #'
 #'
 #' @docType class
@@ -35,37 +33,57 @@
 #'  * none
 #'
 #' @export
-Aqua_Pop <- R6::R6Class(classname = "Aqua_Pop",
+Aqua_Emerge <- R6::R6Class(classname = "Aqua_Emerge",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
+                 inherit = MBITES:::Aqua_Base,
 
                  # public members
                  public = list(
 
                    # begin constructor
-                   initialize = function(){
-
+                   initialize = function(lambda){
+                     if(length(lambda)<365 & length(lambda)>1){
+                       stop(cat("length of provided lambda vector: ",length(lambda),", but require vector either >= 365 days or 1 day (constant emergence)"))
+                     }
+                     if(length(lambda)==1){
+                       private$constant = TRUE
+                     }
                    }, # end constructor
 
                    # add egg batches to aquatic population
                    add_egg = function(EggQ){
-                     stop("add_egg should never be called from abstract base class 'Aqua_Pop'!")
+                     # if(MBITES:::MBITES_Pars$get_log_egg()){
+                     #   # log eggs
+                     # }
                    },
 
                    # one day of aquatic population
-                   one_day = function(){
-                     stop("one_day should never be called from abstract base class 'Aqua_Pop'!")
+                   one_day = function(tNow){
+                     if(private$constant){
+                       lambda_t = rpois(n = 1, lambda = private$lambda)
+                     } else {
+                       lambda_now = private$lambda[floor(tNow)%%365+1]
+                       lambda_t = rpois(n = 1, lambda = lambda_now)
+                     }
+                     if(lambda_t>0){
+
+                     }
                    },
 
                    # get emerging imagos
                    get_imago = function(){
-                     stop("get_imago should never be called from abstract base class 'Aqua_Pop'!")
+
                    }
 
                  ),
 
                  # private members
-                 private = list()
+                 private = list(
+                   lambda            = numeric(1),
+                   constant          = logical(1),
+                   ImagoQ            = numeric(1)
+                 )
 )

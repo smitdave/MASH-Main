@@ -14,7 +14,7 @@
 #' MBITES Parameters Singleton
 #'
 #' This class is a singleton object in the \code{MBITES} package namespace that stores parameters needed for the MBITES simulation.
-#' 
+#' It can be accessed by \code{MBITES:::MBITES_Pars}.
 #'
 #'
 #'
@@ -50,4 +50,4 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 )
 
 # assign MBITES parameters instance in the package namespace (a bit hacky)
-MBITES_Parameters_Instance <- MBITES_Parameters$new()
+MBITES_Pars <- MBITES_Parameters$new()

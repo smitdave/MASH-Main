@@ -16,7 +16,7 @@
 #'
 #' A \code{Aqua_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel for oviposition of eggs
 #' and from which new imagos (adult mosquitoes) emerge from. Dynamics of aquatic habitats are simulated by a reference (pimpl idiom)
-#' to the specific model chosen. In C++ we would pass \code{this} as a parameter to the methods of the \code{\link[MBITES]{Aqua_Pop}} class
+#' to the specific model chosen. In C++ we would pass \code{this} as a parameter to the methods of the \code{\link[MBITES]{Aqua_Base}} class
 #' but here we just pass the \code{EggQ} and reassign to the \code{ImagoQ}.
 #'
 #'
@@ -32,7 +32,7 @@
 #'  * method: im a method!
 #'
 #' @section **Fields**:
-#'  * AquaPopP: a reference to a class that inherits the interface of \code{\link[MBITES]{Aqua_Pop}}
+#'  * AquaPopP: a reference to a class that inherits the interface of \code{\link[MBITES]{Aqua_Base}}
 #'  * EggQ: a list of egg batches
 #'  * ImagoQ: a list of emerging imagos (adult mosquitoes)
 #'
@@ -69,7 +69,9 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
 
                      # add emerging adults to mosquito population
                      # private$SiteP$get_TilePointer()$get_MosquitoPop()$add_Imago(private$ImagoQ)
-                   }
+                   },
+
+
 
                  ),
 
