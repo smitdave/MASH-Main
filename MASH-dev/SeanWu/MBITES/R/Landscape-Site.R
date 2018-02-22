@@ -40,10 +40,7 @@ Site <- R6::R6Class(classname = "Site",
                  # public members
                  public = list(
 
-                   ##############################################################
-                   # constructor
-                   ##############################################################
-
+                   # begin constructor
                    initialize = function(){
 
                    } # end constructor
@@ -56,11 +53,13 @@ Site <- R6::R6Class(classname = "Site",
                    id             = integer(1), # integer id
                    xy             = numeric(2), # xy-coordinates
                    res_feed       = list(), # list of references to 'feeding'-type resources
+                   res_feed_w     = numeric(1), # weights of 'feeding'-type resources
                    res_aqua       = list(), # list of references to 'aqua'-type resources
+                   res_aqua_w     = numeric(1), # weights of 'aqua'-type resources
                    res_sugar      = list(), # list of references to 'sugar'-type resources
-                   res_mate       = list() # list of references to 'mate'-type resources
+                   res_sugar_w    = numeric(1), # weights of 'sugar'-type resources
+                   res_mate       = list(), # list of references to 'mate'-type resources
+                   res_mate_w     = numeric(1) # weights of 'mate'-type resources
 
                  )
-
-
 )

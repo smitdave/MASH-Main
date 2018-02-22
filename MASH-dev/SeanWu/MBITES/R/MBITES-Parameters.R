@@ -5,16 +5,19 @@
 #      / /  / /_____/ /_/ // /  / / / /___ ___/ /
 #     /_/  /_/     /_____/___/ /_/ /_____//____/
 #
-#     MBITES-Mosquito
+#     MBITES-Parameters
 #     MBITES Team
 #     February 2018
 #
 ###############################################################################
 
-
-#' Mosquito Abstract Base Class
+#' MBITES Parameters Singleton
 #'
-#' All mosquitoes inherit from the \code{Mosquito} abstract base class object.
+#' This class is a singleton object in the \code{MBITES} package namespace that stores parameters needed for the MBITES simulation.
+#' 
+#'
+#'
+#'
 #'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object
@@ -27,36 +30,24 @@
 #'  * method: im a method!
 #'
 #' @section **Fields**:
-#'  * id: character of format tEmerge_id_genotype (ie; "5_42_2" is the 42nd mosquito emerging on day 5 with genotype 2)
+#'  * id: integer identifier of site
 #'  * field: im a field!
 #'
-#' @export
-Mosquito <- R6::R6Class(classname = "Mosquito",
+MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
 
-                 # public members
                  public = list(
-
-                   ##############################################################
-                   # constructor
-                   ##############################################################
-
-                   initialize = function(){
-
-                   } # end constructor
-
+                   set_x = function(xx){private$x = xx},
+                   get_x = function(){private$x}
                  ),
 
-                 # private members
                  private = list(
-
-                   id             = integer(1) # integer id
-
-
-                 )
-
-
+                   x = numeric(1)
+                 ),
 )
+
+# assign MBITES parameters instance in the package namespace (a bit hacky)
+MBITES_Parameters_Instance <- MBITES_Parameters$new()

@@ -16,7 +16,8 @@
 #'
 #' A \code{Aqua_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel for oviposition of eggs
 #' and from which new imagos (adult mosquitoes) emerge from. Dynamics of aquatic habitats are simulated by a reference (pimpl idiom)
-#' to the specific model chosen.
+#' to the specific model chosen. In C++ we would pass \code{this} as a parameter to the methods of the \code{\link[MBITES]{Aqua_Pop}} class
+#' but here we just pass the \code{EggQ} and reassign to the \code{ImagoQ}.
 #'
 #'
 #'
@@ -31,7 +32,9 @@
 #'  * method: im a method!
 #'
 #' @section **Fields**:
-#'  * field: im a field!
+#'  * AquaPopP: a reference to a class that inherits the interface of \code{\link[MBITES]{Aqua_Pop}}
+#'  * EggQ: a list of egg batches
+#'  * ImagoQ: a list of emerging imagos (adult mosquitoes)
 #'
 #' @export
 Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
@@ -48,10 +51,15 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
 
                    }, # end constructor
 
+                   # begin destructor
+                   finalize = function(){
+                     rm(private$AquaPopP) # remove reference to AquaPopP
+                   }, # end destructor
+
                    # one day population dynamics
                    one_day = function(){
                      # add newly oviposited egg batches to aquatic population
-                    # private$EggQ = private$AquaPopP$add_egg(private$EggQ)
+                     # private$EggQ = private$AquaPopP$add_egg(private$EggQ)
 
                      # run one day simulation of aquatic population
                      # private$AquaPopP$one_day()
@@ -73,8 +81,5 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                    ImagoQ              = list(), # list of newly emerging imagos
                    SiteP               = NULL # pointer to my enclosing Site (has-a relationship; Sites manage Resource lifespans)
 
-
                  )
-
-
-)
+) # end Aqua_Resource class definition
