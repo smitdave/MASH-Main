@@ -81,7 +81,7 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                     kappa                     = numeric(1),
 
                     # reservoir parameters
-                    reservoir                 = logical,
+                    reservoir                 = logical(1),
                     resEIR                    = numeric(1),
 
                     # Pointers
