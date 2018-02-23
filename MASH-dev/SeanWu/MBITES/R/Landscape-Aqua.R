@@ -12,12 +12,11 @@
 ###############################################################################
 
 
-#' Landscape Aquatic Habitat Resource Class
+#' Landscape Aquatic Habitat Resource Base Class
 #'
-#' A \code{Aqua_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel for oviposition of eggs
-#' and from which new imagos (adult mosquitoes) emerge from. Dynamics of aquatic habitats are simulated by a reference (pimpl idiom)
-#' to the specific model chosen. In C++ we would pass \code{this} as a parameter to the methods of the \code{\link[MBITES]{Aqua_Base}} class
-#' but here we just pass the \code{EggQ} and reassign to the \code{ImagoQ}.
+#' A \code{Aqua_Resource_Base} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel for oviposition of eggs
+#' and from which new imagos (adult mosquitoes) emerge from. This abstract base class defines an interface which all models of aquatic ecology
+#' must inherit from to generate concrete implementations of the interface methods.
 #'
 #'
 #'
@@ -29,15 +28,17 @@
 #'  * argument: im an agument!
 #'
 #' @section **Methods**:
-#'  * method: im a method!
+#'  * add_egg: function that must take an egg batch and add it to the \code{EggQ}
+#'  * one_day: function that updates daily aquatic population dynamics
+#'  * push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
 #'
 #' @section **Fields**:
-#'  * AquaPopP: a reference to a class that inherits the interface of \code{\link[MBITES]{Aqua_Base}}
 #'  * EggQ: a list of egg batches
 #'  * ImagoQ: a list of emerging imagos (adult mosquitoes)
+#'  * SiteP: a reference to a class that inherits the interface of \code{\link[MBITES]{Aqua_Base}}
 #'
 #' @export
-Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
+Aqua_Resource_Base <- R6::R6Class(classname = "Aqua_Resource_Base",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
@@ -48,37 +49,29 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
 
                    # begin constructor
                    initialize = function(){
-
+                     stop("initialize should never be called from abstract base class 'Aqua_Resource_Base'!")
                    }, # end constructor
 
-                   # begin destructor
-                   finalize = function(){
-                     rm(private$AquaPopP) # remove reference to AquaPopP
-                   }, # end destructor
-
-                   # one day population dynamics
-                   one_day = function(){
-                     # add newly oviposited egg batches to aquatic population
-                     # private$EggQ = private$AquaPopP$add_egg(private$EggQ)
-
-                     # run one day simulation of aquatic population
-                     # private$AquaPopP$one_day()
-
-                     # get emerging imagos
-                     # private$ImagoQ = private$AquaPopP$get_imago()
-
-                     # add emerging adults to mosquito population
-                     # private$SiteP$get_TilePointer()$get_MosquitoPop()$add_Imago(private$ImagoQ)
+                   # add egg batches to aquatic population
+                   add_egg = function(){
+                     stop("add_egg should never be called from abstract base class 'Aqua_Resource_Base'!")
                    },
 
+                   # one day of aquatic population
+                   one_day = function(){
+                     stop("one_day should never be called from abstract base class 'Aqua_Resource_Base'!")
+                   },
 
+                   # send emerging imagos to adult population
+                   push_imago = function(){
+                     stop("push_imago should never be called from abstract base class 'Aqua_Resource_Base'!")
+                   }
 
                  ),
 
                  # private members
                  private = list(
 
-                   AquaPopP            = NULL, # reference (pimpl) to aquatic dynamic model
                    EggQ                = list(), # list of egg batches
                    ImagoQ              = list(), # list of newly emerging imagos
                    SiteP               = NULL # pointer to my enclosing Site (has-a relationship; Sites manage Resource lifespans)

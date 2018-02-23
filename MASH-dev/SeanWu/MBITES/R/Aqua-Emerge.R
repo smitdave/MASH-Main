@@ -22,7 +22,8 @@
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'  * none
+#'  * lambda: either numeric or vector of at least length 365
+#'  * SiteP: a reference to a \code{\link[MBITES]{Site}} object
 #'
 #' @section **Methods**:
 #'  * add_egg: function that must take an EggQ (a \code{list} object) and add egg batches to the population; it should return a modified EggQ with those elements corresponding to 'processed' egg batches zeroed out
@@ -30,27 +31,34 @@
 #'  * get_imago: function that returns an ImagoQ (a \code{list} object) for imagos (adult mosquitoes) ready to emerge on that day
 #'
 #' @section **Fields**:
-#'  * none
+#'  * lambda: numeric vector
+#'  * constant: logical
 #'
 #' @export
-Aqua_Emerge <- R6::R6Class(classname = "Aqua_Emerge",
+Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
-                 inherit = MBITES:::Aqua_Base,
+                 inherit = MBITES:::Aqua_Resource_Base,
 
                  # public members
                  public = list(
 
                    # begin constructor
-                   initialize = function(lambda){
+                   initialize = function(lambda, SiteP){
                      if(length(lambda)<365 & length(lambda)>1){
                        stop(cat("length of provided lambda vector: ",length(lambda),", but require vector either >= 365 days or 1 day (constant emergence)"))
                      }
                      if(length(lambda)==1){
                        private$constant = TRUE
+                       private$lambda = lambda
+                     } else {
+                       private$constant = FALSE
+                       private$lambda = lambda
                      }
+
+                     private$SiteP = SiteP
                    }, # end constructor
 
                    # add egg batches to aquatic population
@@ -83,7 +91,6 @@ Aqua_Emerge <- R6::R6Class(classname = "Aqua_Emerge",
                  # private members
                  private = list(
                    lambda            = numeric(1),
-                   constant          = logical(1),
-                   ImagoQ            = numeric(1)
+                   constant          = logical(1) # boolean indicating constant emergence or lambda vector
                  )
 )
