@@ -12,7 +12,7 @@
 ###############################################################################
 
 
-#' Landscape Aquatic Population Emerge Model Class
+#' Aquatic Ecology: Emerge Model Class
 #'
 #' Class that implements the 'Emerge' model of aquatic ecology, inheriting the interface of \code{\link[MBITES]{Aqua_Base}}.
 #'
@@ -45,7 +45,9 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
                  # public members
                  public = list(
 
+                   #############################################################
                    # begin constructor
+                   #############################################################
                    initialize = function(lambda, SiteP){
                      if(length(lambda)<365 & length(lambda)>1){
                        stop(cat("length of provided lambda vector: ",length(lambda),", but require vector either >= 365 days or 1 day (constant emergence)"))
@@ -58,39 +60,75 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
                        private$lambda = lambda
                      }
 
+                     # set pointer to site
                      private$SiteP = SiteP
-                   }, # end constructor
+                   } # end constructor
 
-                   # add egg batches to aquatic population
-                   add_egg = function(EggQ){
-                     # if(MBITES:::MBITES_Pars$get_log_egg()){
-                     #   # log eggs
-                     # }
-                   },
-
-                   # one day of aquatic population
-                   one_day = function(tNow){
-                     if(private$constant){
-                       lambda_t = rpois(n = 1, lambda = private$lambda)
-                     } else {
-                       lambda_now = private$lambda[floor(tNow)%%365+1]
-                       lambda_t = rpois(n = 1, lambda = lambda_now)
-                     }
-                     if(lambda_t>0){
-
-                     }
-                   },
-
-                   # get emerging imagos
-                   get_imago = function(){
-
-                   }
-
-                 ),
+                 ), # end public
 
                  # private members
                  private = list(
                    lambda            = numeric(1),
                    constant          = logical(1) # boolean indicating constant emergence or lambda vector
-                 )
+                 ) # end private
+) # end Aqua_Resource_Emerge
+
+
+###############################################################################
+# add egg batches to aquatic population
+###############################################################################
+
+#' Aquatic Ecology: Emerge - Add Eggs
+#'
+#' Add an egg batch from a successful oviposition attempt to this \code{\link{Aqua_Resource_Emerge}}.
+#'
+#'  * This method is bound to \code{Aqua_Resource_Emerge$add_egg()}.
+#'
+#' @param EggQ egg batch
+#'
+add_egg_Emerge <- function(EggQ){
+  # if(MBITES:::MBITES_Pars$get_log_egg()){
+  #   # log eggs
+  # }
+}
+
+Aqua_Resource_Emerge$set(which = "public",name = "add_egg",
+          value = add_egg_Emerge, overwrite = TRUE
+)
+
+
+###############################################################################
+# one day of aquatic population dynamics
+###############################################################################
+
+one_day_Emerge <- function(tNow){
+  # sample number of emerging mosquitoes
+  if(private$constant){
+    lambda_t = rpois(n = 1, lambda = private$lambda)
+  } else {
+    lambda_now = private$lambda[floor(tNow)%%365+1]
+    lambda_t = rpois(n = 1, lambda = lambda_now)
+  }
+  # if emerging mosquitoes, send them to the population
+  if(lambda_t>0){
+    private$ImagoQ = Aqua_make_imagos(N=lambda_t,ix=private$SiteP$get_ix())
+  }
+} # end one_day
+
+Aqua_Resource_Emerge$set(which = "public",name = "one_day",
+          value = one_day_Emerge, overwrite = TRUE
+)
+
+
+###############################################################################
+# get emerging imagos
+###############################################################################
+
+get_imago_Emerge <- function(){
+
+} # end get_imago
+
+
+Aqua_Resource_Emerge$set(which = "public",name = "get_imago",
+          value = get_imago_Emerge, overwrite = TRUE
 )

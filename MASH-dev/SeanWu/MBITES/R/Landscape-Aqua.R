@@ -12,7 +12,7 @@
 ###############################################################################
 
 
-#' Landscape Aquatic Habitat Resource Base Class
+#' Aquatic Habitat Resource Base Class
 #'
 #' A \code{Aqua_Resource_Base} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel for oviposition of eggs
 #' and from which new imagos (adult mosquitoes) emerge from. This abstract base class defines an interface which all models of aquatic ecology
@@ -78,3 +78,18 @@ Aqua_Resource_Base <- R6::R6Class(classname = "Aqua_Resource_Base",
 
                  )
 ) # end Aqua_Resource class definition
+
+
+#' Aquatic Ecology: Make Imagos
+#'
+#' Make a list of emerging imagos to put in the ImagoQ.
+#'
+#' @param N number of emerging imagos
+#' @param ix index of site
+#'
+Aqua_make_imagos <- function(N,ix){
+  list(
+    N=N,
+    ix=ix
+  )
+}
