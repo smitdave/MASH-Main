@@ -6,7 +6,7 @@
 #   /_/  /_/     /_____/___/ /_/ /_____//____/
 #
 #   MASH-MICRO
-#   M-BITES: Resting Spot 
+#   M-BITES: Resting Spot
 #   MASH-MICRO Team
 #   September 2017
 #
@@ -154,4 +154,3 @@ mbites_searchFail <- function(){
     return(FALSE)
   }
 }
-

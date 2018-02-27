@@ -6,14 +6,14 @@
 #   /_/  /_/     /_____/___/ /_/ /_____//____/
 #
 #   MASH-MICRO
-#   M-BITES: The Blood Meal  
+#   M-BITES: The Blood Meal
 #   MASH-MICRO Team
 #   September 7, 2017
 #
 ###############################################################################
 
 #################################################################
-# The Blood Meal  
+# The Blood Meal
 #################################################################
 
 #' M-BITES: Bloodmeal Energetics for \code{\link{MosquitoFemale}}
@@ -23,14 +23,14 @@
 #'  * This method is bound to \code{MosquitoFemale$BloodMeal()}.
 #' @md
 mbites_BloodMeal <- function(){
-  private$bloodfed = TRUE  
+  private$bloodfed = TRUE
   private$bmSize = self$rBloodMealSize()
-  
-  self$Overfeeding() 
-  self$BloodEnergetics() 
-  
+
+  self$Overfeeding()
+  self$BloodEnergetics()
+
   # egg production
-  self$oogenesis() 
+  self$oogenesis()
 }
 
 mbites_Overfeeding <- function(){
@@ -40,10 +40,10 @@ mbites_Overfeeding <- function(){
       private$state = 'D'
     }
   }
-} 
+}
 
 ###############################################################################
-# Blood Meal 
+# Blood Meal
 ###############################################################################
 
 #' MBITES-Generic: Draw Bloodmeal Size for \code{\link{MosquitoFemale}}
@@ -73,7 +73,7 @@ mbites_pOverFeed <- function(){
   )
 }
 
-### NOTE: Moved to MBITES-Oogenesis.R 
+### NOTE: Moved to MBITES-Oogenesis.R
 #################################################################################
 ### Refeed
 #################################################################################
@@ -89,4 +89,3 @@ mbites_pOverFeed <- function(){
 ##  )
 ##}
 ##
-

@@ -27,7 +27,7 @@ mbites_humanEncounter <- function(){
   } else { # survives to probe
 
     if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("probeH")){ # undeterred
-      self$probing() # PATHOGEN-XX-Methods.R (infect host?) 
+      self$probing() # PATHOGEN-XX-Methods.R (infect host?)
       if(runif(1) < 1-private$FemalePopPointer$get_MBITES_PAR("surviveprobeH")){ # does not survive probing
         private$state = 'D'
       } else { # survives probing

@@ -41,7 +41,12 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                  public = list(
 
-
+                   # reset all values
+                   reset = function(){
+                     cat("reset all MBITES global parameters to initial values\n")
+                     private$t_now = 0L
+                     private$mosquito_id = 0L
+                   },
 
                    get_mosquito_id = function(){
                      private$mosquito_id = private$mosquito_id + 1L
@@ -68,4 +73,4 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 )
 
 # assign MBITES globals instance in the package namespace (a bit hacky)
-MBITES_Global <- MBITES_Globals$new()
+Globals <- MBITES_Globals$new()

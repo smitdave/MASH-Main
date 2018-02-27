@@ -19,15 +19,15 @@
 
 #' MBITES-Generic: Blood Energetics for \code{\link{MosquitoFemale}}
 #'
-#' Add to energy from blood feeding 
+#' Add to energy from blood feeding
 #'  * This method is bound to \code{MosquitoFemale$BloodMeal()}.
 #'
 mbites_bloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
   energyFromBlood = private$FemalePopPointer$get_MBITES_PAR("energyFromBlood")
-  topUp = energyFromBlood(private$bmSize) 
-  private$energy = min(1, private$energy + topUp) 
+  topUp = energyFromBlood(private$bmSize)
+  private$energy = min(1, private$energy + topUp)
   if(!private$mature){
-    private$energyPreG = private$energyPreG - topUp  
+    private$energyPreG = private$energyPreG - topUp
     if(private$energyPreG <= 0 & private$mated == TRUE){
       private$mature = TRUE
     }
@@ -37,15 +37,15 @@ mbites_bloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
 #' M-BITES: Choose a sugar source \code{MosquitoFemale}
 #'
 #'  * This method is bound to \code{MosquitoFemale$boutS()}.
-#' 
+#'
 mbites_chooseSugarSource <- function(){
-  # write me 
-} 
+  # write me
+}
 
 
 #' MBITES-Generic: Sugar Energetics for \code{\link{MosquitoFemale}}
 #'
-#' Add to energy from blood feeding 
+#' Add to energy from blood feeding
 #'  * This method is bound to \code{MosquitoFemale$BloodMeal()}.
 #'
 
@@ -57,7 +57,7 @@ mbites_sugarMeal <- function(){ # called from MBITES-Bouts.R, boutS
     if(private$energyPreG <= 0){
       private$mature = TRUE
     }
-  }  
+  }
 }
 
 
@@ -69,17 +69,17 @@ mbites_sugarMeal <- function(){ # called from MBITES-Bouts.R, boutS
 mbites_energetics <- function(){
   if(self$isAlive()){
     flightBurnEnergy = private$FemalePopPointer$get_MBITES_PAR("flightBurnEnergy"))
-    private$energy = max(0, private$energy - flightBurnEnergy()) 
+    private$energy = max(0, private$energy - flightBurnEnergy())
     self$queueSugarBout()
-  } 
+  }
 }
 
 
-### MODULARIZE 
+### MODULARIZE
 mbites_flightBurnEnergy <- function(){
   private$energy = max(0,private$energy - private$FemalePopPointer$get_MBITES_PAR("S.u"))
 }
- 
+
 #' MBITES-Generic: Mean Flight Energetics for \code{\link{MosquitoFemale}}
 #'
 #' Reduce this mosquito's energy reserves by mean amount averaged over possible flight distances.
@@ -106,7 +106,7 @@ mbites_flightEnergetics_Exact <- function(){
 #'
 mbites_queueSugarBout <- function(){
   if(runif(1) < self$pSugarBout()){
-    private$starved = TRUE 
+    private$starved = TRUE
   }
 }
 
@@ -120,4 +120,3 @@ mbites_pSugarBout <- function(){
     (2+private$FemalePopPointer$get_MBITES_PAR("S.sb"))/(1+private$FemalePopPointer$get_MBITES_PAR("S.sb"))-exp(private$FemalePopPointer$get_MBITES_PAR("S.sa")*private$energy)/(private$FemalePopPointer$get_MBITES_PAR("S.sb")+exp(private$FemalePopPointer$get_MBITES_PAR("S.sa")*private$energy))
   )
 }
-
