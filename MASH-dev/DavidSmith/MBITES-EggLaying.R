@@ -6,7 +6,7 @@
 #   /_/  /_/     /_____/___/ /_/ /_____//____/
 #
 #   MASH-MICRO
-#   M-BITES: Egg Laying 
+#   M-BITES: Egg Laying
 #   MASH-MICRO Team
 #   September 2017
 #
@@ -16,18 +16,18 @@
 #' M-BITES: Choose a Habitat \code{MosquitoFemale}
 #'
 #' Returns the ID of the local aquatic habitat or a code for an
-#' ovitrap. 
+#' ovitrap.
 #'
 mbites_chooseHabitat<-function(){
-  # To be written   
+  # To be written
 }
 
 #' M-BITES: Encounter an Ovitrap \code{MosquitoFemale}
 #'
 #' write me!
 #'
-mbites_ovitrap<-function(){ 
-   # write me! 
+mbites_ovitrap<-function(){
+   # write me!
 } 
 
 #' M-BITES: Lay Eggs for 'Emerge' \code{\link{MosquitoFemale}}
