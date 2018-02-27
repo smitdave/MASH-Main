@@ -27,7 +27,7 @@
 #'  * method: im a method!
 #'
 #' @section **Fields**:
-#'  * id: character of format tEmerge_id_genotype (ie; "5_42_2" is the 42nd mosquito emerging on day 5 with genotype 2)
+#'  * id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
 #'  * field: im a field!
 #'
 #' @export
@@ -53,7 +53,20 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  # private members
                  private = list(
 
-                   id             = integer(1) # integer id
+                   id             = integer(1), # character id
+
+                   t_next         = numeric(1), # time of my next launch
+                   t_now          = numeric(1), # time of my current launch
+
+                   search         = logical(1), # next launch is for search or attempt bout?
+                   rspot          = character(1), # my current resting spot
+
+
+                   hostID         = integer(1), # id of my blood host
+                   habitatID      = integer(1), # id of my aquatic habitat
+                   sugarID        = integer(1), # id of my sugar source
+                   mateID         = integer(1), # id of my mate
+
 
 
                  )

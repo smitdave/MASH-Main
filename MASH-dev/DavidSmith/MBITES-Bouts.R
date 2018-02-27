@@ -183,7 +183,7 @@ mbites_boutM <- function(){
     private$mateID = 0L
   }
 
-  if(private$sugarID > 0){
+  if(private$mateID > 0){
     #self$mating()
     private$mated = TRUE
   } else if(private$mateID == -1){
@@ -191,7 +191,7 @@ mbites_boutM <- function(){
   } else if(private$mateID == 0){
     return(NULL)
   } else {
-    stop("illegal sugarID value")
+    stop("illegal mateID value")
   }
 
 
