@@ -49,22 +49,16 @@ HashMap <- R6::R6Class(classname="HashMap",
                      #public members
                      public = list(
 
-                       #################################################
-                       # Constructor
-                       #################################################
-
+                       # begin constructor
                        initialize = function(N = 100L){
                          private$storage = new.env(hash=TRUE,size=N)
-                       },
+                       }, # end constructor
 
-                       #################################################
-                       # Destructor
-                       #################################################
-
+                       # begin destructor
                        finalize = function(){
                          self$rm_all()
                          invisible(gc())
-                       }
+                       } # end destructor
 
                      ),
 

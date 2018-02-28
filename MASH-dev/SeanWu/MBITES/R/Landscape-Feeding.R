@@ -42,7 +42,9 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
                  public = list(
 
                    # begin constructor
-                   initialize = function(){
+                   initialize = function(w){
+
+                     private$w = w
 
                    } # end constructor
 
@@ -51,10 +53,26 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
                  # private members
                  private = list(
 
+                   w                  = numeric(1) # weight for this resource
+
                    # SiteP             = NULL, # pointer to my enclosing Site (has-a relationship; Sites manage Resource lifespans)
 
 
                  )
 
 
+)
+
+
+#' Feeding_Resource: Get Resource Weight
+#'
+#' Get the weight associated to this resource.
+#'  * binding: \code{Feeding_Resource$get_w}
+#'
+get_w_Feeding_Resource <- function(){
+  return(private$w)
+}
+
+Feeding_Resource$set(which = "public",name = "get_w",
+    value = get_w_Feeding_Resource, overwrite = TRUE
 )
