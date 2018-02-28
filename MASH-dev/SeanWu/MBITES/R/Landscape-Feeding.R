@@ -50,6 +50,8 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 
                      private$w = w
 
+                     private$RiskQ = make_RiskQ()
+
                    } # end constructor
 
                  ),
@@ -72,73 +74,58 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 # Risk Queue Object
 ###############################################################################
 
+#' Make a Risk Queue
+#'
+#' Generates a closure that contains the following fields:
+#'  * id: integer vector of hosts at this risk queue
+#'  * weight: numeric vector of host biting weights
+#'  * time: numeric vector of aggregated host times at risk
+#'
+#' The closure also contains the following functions:
+#'  * add2Q(id_n,weight_n,time_n): add a new host to the queue
+#'  * rmFromQ(id_r): id of the host to remove from the queue
+#'  * sampleQ(): sample a host id from the queue
+#'  * printQ(): print the risk queue
+#'
+#' @export
 make_RiskQ <- function(){
 
   # data for the closure
   id <- integer(1)
   weight <- numeric(1)
   time <- numeric(1)
-
-  return(
-    list(
-      add2Q = function(id,weight,time){
-        ix <- match(x = id,table = id)
-        # person already in the risk queue
-        if(length(ix)>0L){
-          weight[ix] <<- weight
-          time[ix] <<- time
-        # new person to be added to the risk queue
-        } else {
-          id <<- append(id,id)
-          weight <<- append(weight,weight)
-          time <<- append(time,time)
-        }
-      },
-      rmFromQ = function(id){
-        ix <- match(x = id,table = id)
-        if(length(ix)>0L){
-          id <<- id[-ix]
-          weight <<- weight[-ix]
-          time <<- time[-ix]
-        }
-      },
-      sampleQ = function(){
-        return(sample(x = id,size = 1,replace = FALSE,prob = weight*time))
-      },
-      printQ = function(){
-        cat("priting a risk queue ... \n")
-        print(get("ix",envir = parent.env(environment())));print(get("weight",envir = parent.env(environment())));print(get("time",envir = parent.env(environment())))
-      }
-    )
-  )
-}
-
-make_RiskQ <- function(){
-
-  # data for the closure
-  id <- integer(1)
-  weight <- numeric(1)
-  time <- numeric(1)
+  NEW <- TRUE
 
   # add2Q: add a human to the queue
-  add2Q <- function(id,weight,time){
-    ix <- match(x = id,table = id)
-    # person already in the risk queue
-    if(length(ix)>0L){
-      weight[ix] <<- weight
-      time[ix] <<- time
-    # new person to be added to the risk queue
+  add2Q <- function(id_n,weight_n,time_n){
+    # new RiskQ
+    if(NEW){
+      id <<- id_n
+      weight <<- weight_n
+      time <<- time_n
+      NEW <<- FALSE
+    # not a new RiskQ
     } else {
-      id <<- append(id,id)
-      weight <<- append(weight,weight)
-      time <<- append(time,time)
+      ix <- match(x = id_n,table = id)
+      # person already in the risk queue
+      if(!is.na(ix)){
+        weight[ix] <<- weight_n
+        time[ix] <<- time_n
+      # new person to be added to the risk queue
+      } else {
+        id <<- append(id,id_n)
+        weight <<- append(weight,weight_n)
+        time <<- append(time,time_n)
+      }
+
     }
+
   }
 
   # rmFromQ: remove a human from the queue
-  rmFromQ <- function(id){
-    ix <- match(x = id,table = id)
-    if(length(ix)>0L){
+  rmFromQ <- function(id_r){
+    ix <- match(x = id_r,table = id)
+    if(!is.na(ix)){
       id <<- id[-ix]
       weight <<- weight[-ix]
       time <<- time[-ix]
@@ -153,74 +140,13 @@ make_RiskQ <- function(){
   # printQ: print the queue
   printQ <- function(){
     cat("priting a risk queue ... \n")
-    print(get("ix"));print(get("weight"));print(get("time"))
+    print(id)
+    print(weight)
+    print(time)
   }
-
-  return(
-    list(
-      add2Q = add2Q,
-      rmFromQ = rmFromQ,
-      sampleQ = sampleQ,
-      printQ = printQ
-    )
-  )
-}
-
-
-make_RiskQ <- function() {
-
-  # data for the closure
-  id <- integer(1)
-  weight <- numeric(1)
-  time <- numeric(1)
-
-  # add2Q: add a human to the queue
-  add2Q <- function(id,weight,time){
-    ix <- match(x = id,table = id)
-    # person already in the risk queue
-    if(length(ix)>0L){
-      weight[ix] <<- weight
-      time[ix] <<- time
-    # new person to be added to the risk queue
-    } else {
-      id <<- append(id,id)
-      weight <<- append(weight,weight)
-      time <<- append(time,time)
-    }
-  }
-
-  # rmFromQ: remove a human from the queue
-  rmFromQ <- function(id){
-    ix <- match(x = id,table = id)
-    if(length(ix)>0L){
-      id <<- id[-ix]
-      weight <<- weight[-ix]
-      time <<- time[-ix]
-    }
-  }
-
-  # sampleQ: sample a human id from the queue
-  sampleQ <- function(){
-    return(sample(x = id,size = 1,replace = FALSE,prob = weight*time))
-  }
-
-  # printQ: print the queue
-  printQ <- function(){
-    cat("priting a risk queue ... \n")
-    print(dynGet("ix"))
-    print(dynGet("weight"))
-    print(dynGet("time"))
-  }
-
 
  list(add2Q = add2Q, rmFromQ = rmFromQ,sampleQ=sampleQ,printQ=printQ)
 }
-
-queue1 <- make_RiskQ()
-queue2 <- make_RiskQ()
-queue1$add2Q(5L,52.32,1.32)
-queue1$add2Q(1L,7.092,7.54)
-queue1$printQ()
 
 
 ###############################################################################
