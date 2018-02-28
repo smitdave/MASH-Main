@@ -42,9 +42,5 @@ MosquitoPop <- R6::R6Class(classname = "MosquitoPop",
                  # private members
                  private = list(
 
-                   EggQ                = list(), # list of egg batches
-                   ImagoQ              = list(), # list of newly emerging imagos
-                   SiteP               = NULL # pointer to my enclosing Site (has-a relationship; Sites manage Resource lifespans)
-
                  )
 ) # end MosquitoPop class definition

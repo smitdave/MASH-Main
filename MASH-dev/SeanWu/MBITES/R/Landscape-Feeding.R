@@ -54,17 +54,22 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 
                    } # end constructor
 
-                 ),
+                   # begin destructor
+                   finalize = function(){
+                     self$RiskQ = NULL
+                   }, # end destructor
+
+                   # closure fields
+                   RiskQ = NULL
+
+                 ), # end public members
 
                  # private members
                  private = list(
 
-                   w                  = numeric(1), # weight for this resource
+                   w                  = numeric(1) # weight for this resource
 
-                   RiskQ              = NULL
-
-
-                 )
+                 ) # end private members
 
 
 ) # end Feeding_Resource class definition

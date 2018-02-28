@@ -51,10 +51,10 @@ Site <- R6::R6Class(classname = "Site",
 
                    # begin destructor
                    finalize = function(){
-                     rm(res_feed)
-                     rm(res_aqua)
-                     rm(res_sugar)
-                     rm(res_mate)
+                     private$res_feed = NULL
+                     private$res_aqua = NULL
+                     private$res_sugar = NULL
+                     private$res_mate = NULL
                      invisible(gc())
                    } # end destructor
 
@@ -70,13 +70,13 @@ Site <- R6::R6Class(classname = "Site",
 
                    # resources
                    res_feed       = list(), # list of references to 'feeding'-type resources
-                   res_feed_w     = numeric(1), # weights of 'feeding'-type resources
+                   res_feed_w     = NULL, # weights of 'feeding'-type resources
                    res_aqua       = list(), # list of references to 'aqua'-type resources
-                   res_aqua_w     = numeric(1), # weights of 'aqua'-type resources
+                   res_aqua_w     = NULL, # weights of 'aqua'-type resources
                    res_sugar      = list(), # list of references to 'sugar'-type resources
-                   res_sugar_w    = numeric(1), # weights of 'sugar'-type resources
+                   res_sugar_w    = NULL, # weights of 'sugar'-type resources
                    res_mate       = list(), # list of references to 'mate'-type resources
-                   res_mate_w     = numeric(1) # weights of 'mate'-type resources
+                   res_mate_w     = NULL # weights of 'mate'-type resources
 
                  ) # end private members
 ) # end Site class definition
