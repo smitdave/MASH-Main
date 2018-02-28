@@ -27,24 +27,15 @@ MosquitoPop <- R6::R6Class(classname = "MosquitoPop",
                  public = list(
 
                    # begin constructor
-                   initialize = function(){
-                     stop("initialize should never be called from abstract base class 'Aqua_Resource_Base'!")
+                   initialize = function(N){
+                     super$initialize(N=N)
                    }, # end constructor
 
-                   # add egg batches to aquatic population
-                   add_egg = function(){
-                     stop("add_egg should never be called from abstract base class 'Aqua_Resource_Base'!")
-                   },
+                   # begin destructor
+                   finalize = function(){
+                     super$finalize()
+                   } # end destructor
 
-                   # one day of aquatic population
-                   one_day = function(){
-                     stop("one_day should never be called from abstract base class 'Aqua_Resource_Base'!")
-                   },
-
-                   # send emerging imagos to adult population
-                   push_imago = function(){
-                     stop("push_imago should never be called from abstract base class 'Aqua_Resource_Base'!")
-                   }
 
                  ),
 

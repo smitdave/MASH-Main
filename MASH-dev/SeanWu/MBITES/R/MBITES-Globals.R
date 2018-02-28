@@ -65,9 +65,11 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                  private = list(
 
-                   mosquito_id        = 0L # global counter of IDs
+                   t_now              = 0L, # current simulation time
 
-                   t_now              = 0L # current simulation time
+                   mosquito_id        = -1L, # global counter of IDs
+                   mosquito_f_out     = NULL, # connection object for logging female mosquito histories
+                   mosquito_m_out     = NULL # connection object for logging male mosquito histories
 
                  ),
 )
