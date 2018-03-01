@@ -3,7 +3,7 @@
 \docType{class}
 \name{Mosquito}
 \alias{Mosquito}
-\title{Mosquito Abstract Base Class}
+\title{MBITES: Mosquito Class}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
 Mosquito
@@ -11,20 +11,26 @@ Mosquito
 \description{
 All mosquitoes inherit from the \code{Mosquito} abstract base class object.
 }
-\section{**Constructor**}{
+\section{\strong{Constructor}}{
 
- * argument: im an agument!
+\itemize{
+\item argument: im an agument!
+}
 }
 
-\section{**Methods**}{
+\section{\strong{Methods}}{
 
- * method: im a method!
+\itemize{
+\item method: im a method!
+}
 }
 
-\section{**Fields**}{
+\section{\strong{Fields}}{
 
- * id: character of format tEmerge_id_genotype (ie; "5_42_2" is the 42nd mosquito emerging on day 5 with genotype 2)
- * field: im a field!
+\itemize{
+\item id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
+\item field: im a field!
+}
 }
 
 \keyword{R6}

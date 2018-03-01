@@ -90,7 +90,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    hostID         = integer(1), # id of my blood host
                    habitatID      = integer(1), # id of my aquatic habitat
                    sugarID        = integer(1), # id of my sugar source
-                   mateID         = integer(1), # id of my mate
+                   mateID         = integer(1) # id of my mate
 
                  )
 

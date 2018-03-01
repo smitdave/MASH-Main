@@ -55,10 +55,10 @@ Mating_Resource <- R6::R6Class(classname = "Mating_Resource",
                    # begin destructor
                    finalize = function(){
                      self$MatingQ = NULL
-                   } # end destructor
+                   }, # end destructor
 
                    # closure fields
-                   MatingQ = NULL, # closure of male swarms
+                   MatingQ = NULL # closure of male swarms
 
                  ),
 
