@@ -108,11 +108,11 @@ Site$set(which = "public",name = "set_feed",
 #' Add a aquatic habitat resource to this site.
 #'  * binding: \code{Site$set_aqua}
 #'
-#' @param Aqua_Resource_Base a reference to an object deriving from \code{\link[MBITES]{Aqua_Resource_Base}}
+#' @param Aqua_Resource a reference to an object deriving from \code{\link[MBITES]{Aqua_Resource}}
 #'
-set_aqua_Site <- function(Aqua_Resource_Base){
-  private$res_aqua = append(private$res_aqua,Aqua_Resource_Base)
-  private$res_aqua_w = append(private$res_aqua_w,Aqua_Resource_Base$get_w())
+set_aqua_Site <- function(Aqua_Resource){
+  private$res_aqua = append(private$res_aqua,Aqua_Resource)
+  private$res_aqua_w = append(private$res_aqua_w,Aqua_Resource$get_w())
 }
 
 Site$set(which = "public",name = "set_aqua",

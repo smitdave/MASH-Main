@@ -12,6 +12,10 @@
 ###############################################################################
 
 
+###############################################################################
+# Aquatic Habitat Resource Class
+###############################################################################
+
 #' Aquatic Habitat Resource Base Class
 #'
 #' A \code{Aqua_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel for oviposition of eggs
@@ -75,7 +79,11 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                  ),
 
                  # private members
-                 private = list()
+                 private = list(
+
+                   w = numeric(1) # search weight
+
+                 )
 
 ) # end Aqua_Resource class definition
 
@@ -200,3 +208,21 @@ make_ImagoQ <- function(){
 
  list(add2Q = add2Q, popQ = popQ,printQ = printQ)
 }
+
+
+###############################################################################
+# Aquatic Habitat Resource Methods
+###############################################################################
+
+#' Aqua_Resource: Get Resource Weight
+#'
+#' Get the weight associated to this resource.
+#'  * binding: \code{Aqua_Resource$get_w}
+#'
+get_w_Aqua_Resource <- function(){
+  return(private$w)
+}
+
+Aqua_Resource$set(which = "public",name = "get_w",
+    value = get_w_Aqua_Resource, overwrite = TRUE
+)

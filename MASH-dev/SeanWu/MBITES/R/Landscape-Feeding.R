@@ -89,6 +89,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 #' The closure also contains the following functions:
 #'  * add2Q(id_n,weight_n,time_n): add a new host to the queue
 #'  * rmFromQ(id_r): id of the host to remove from the queue
+#'  * clearQ(): clear id, weight, time fields (set to \code{NULL})
 #'  * sampleQ(): sample a host id from the queue
 #'  * printQ(): print the risk queue
 #'
@@ -112,7 +113,7 @@ make_RiskQ <- function(){
     # not a new RiskQ
     } else {
       ix <- match(x = id_n,table = id)
-      # person already in the risk queue
+      # person already in the risk queue (update weight and time)
       if(!is.na(ix)){
         weight[ix] <<- weight_n
         time[ix] <<- time_n
@@ -122,7 +123,6 @@ make_RiskQ <- function(){
         weight <<- append(weight,weight_n)
         time <<- append(time,time_n)
       }
-
     }
 
   }
@@ -137,9 +137,22 @@ make_RiskQ <- function(){
     }
   }
 
+  # clearQ: set elements of queue to NULL
+  clearQ <- function(){
+    id <<- NULL
+    weight <<- NULL
+    time <<- NULL
+  }
+
   # sampleQ: sample a human id from the queue
   sampleQ <- function(){
-    return(MBITES::sample(x = id,size = 1,replace = FALSE,prob = weight*time))
+    # check for empty queue, return -10L if empty
+    out <- -10L
+    if(length(id)==0L){
+      return(out)
+    } else {
+      MBITES::sample(x = id,size = 1,replace = FALSE,prob = weight*time)
+    }
   }
 
   # printQ: print the queue
@@ -150,7 +163,7 @@ make_RiskQ <- function(){
     print(time)
   }
 
- list(add2Q = add2Q, rmFromQ = rmFromQ,sampleQ=sampleQ,printQ=printQ)
+ list(add2Q = add2Q, rmFromQ = rmFromQ,clearQ = clearQ,sampleQ = sampleQ,printQ = printQ)
 }
 
 

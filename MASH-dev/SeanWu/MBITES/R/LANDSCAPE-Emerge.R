@@ -14,7 +14,7 @@
 
 #' Aquatic Ecology: Emerge Model Class
 #'
-#' Class that implements the 'Emerge' model of aquatic ecology, inheriting the interface of \code{\link[MBITES]{Aqua_Base}}.
+#' Class that implements the 'Emerge' model of aquatic ecology, inheriting the interface of \code{\link[MBITES]{Aqua_Resource}}.
 #'
 #'
 #' @docType class
@@ -40,7 +40,7 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
-                 inherit = MBITES:::Aqua_Resource_Base,
+                 inherit = MBITES:::Aqua_Resource,
 
                  # public members
                  public = list(

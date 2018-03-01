@@ -32,7 +32,7 @@
 #' @section **Fields**:
 #'  * EggQ: a list of egg batches
 #'  * ImagoQ: a list of emerging imagos (adult mosquitoes)
-#'  * SiteP: a reference to a class that inherits the interface of \code{\link[MBITES]{Aqua_Base}}
+#'  * SiteP: a reference to a class that inherits the interface of \code{\link[MBITES]{Aqua_Resource}}
 #'
 #' @export
 Tile <- R6::R6Class(classname = "Tile",
