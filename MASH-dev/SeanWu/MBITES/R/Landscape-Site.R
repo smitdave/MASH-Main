@@ -1,10 +1,10 @@
 ###############################################################################
-#         __  ___      ____  _____________________
-#        /  |/  /     / __ )/  _/_  __/ ____/ ___/
-#       / /|_/ /_____/ __  |/ /  / / / __/  \__ \
-#      / /  / /_____/ /_/ // /  / / / /___ ___/ /
-#     /_/  /_/     /_____/___/ /_/ /_____//____/
-#
+#         __                    __
+#        / /   ____ _____  ____/ /_____________ _____  ___
+#       / /   / __ `/ __ \/ __  / ___/ ___/ __ `/ __ \/ _ \
+#      / /___/ /_/ / / / / /_/ (__  ) /__/ /_/ / /_/ /  __/
+#     /_____/\__,_/_/ /_/\__,_/____/\___/\__,_/ .___/\___/
+#                                            /_/
 #     Landscape-Point
 #     MBITES Team
 #     February 2018
@@ -51,10 +51,10 @@ Site <- R6::R6Class(classname = "Site",
 
                    # begin destructor
                    finalize = function(){
-                     rm(res_feed)
-                     rm(res_aqua)
-                     rm(res_sugar)
-                     rm(res_mate)
+                     private$res_feed = NULL
+                     private$res_aqua = NULL
+                     private$res_sugar = NULL
+                     private$res_mate = NULL
                      invisible(gc())
                    } # end destructor
 
@@ -70,13 +70,13 @@ Site <- R6::R6Class(classname = "Site",
 
                    # resources
                    res_feed       = list(), # list of references to 'feeding'-type resources
-                   res_feed_w     = numeric(1), # weights of 'feeding'-type resources
+                   res_feed_w     = NULL, # weights of 'feeding'-type resources
                    res_aqua       = list(), # list of references to 'aqua'-type resources
-                   res_aqua_w     = numeric(1), # weights of 'aqua'-type resources
+                   res_aqua_w     = NULL, # weights of 'aqua'-type resources
                    res_sugar      = list(), # list of references to 'sugar'-type resources
-                   res_sugar_w    = numeric(1), # weights of 'sugar'-type resources
+                   res_sugar_w    = NULL, # weights of 'sugar'-type resources
                    res_mate       = list(), # list of references to 'mate'-type resources
-                   res_mate_w     = numeric(1) # weights of 'mate'-type resources
+                   res_mate_w     = NULL # weights of 'mate'-type resources
 
                  ) # end private members
 ) # end Site class definition
@@ -108,11 +108,11 @@ Site$set(which = "public",name = "set_feed",
 #' Add a aquatic habitat resource to this site.
 #'  * binding: \code{Site$set_aqua}
 #'
-#' @param Aqua_Resource_Base a reference to an object deriving from \code{\link[MBITES]{Aqua_Resource_Base}}
+#' @param Aqua_Resource a reference to an object deriving from \code{\link[MBITES]{Aqua_Resource}}
 #'
-set_aqua_Site <- function(Aqua_Resource_Base){
-  private$res_aqua = append(private$res_aqua,Aqua_Resource_Base)
-  private$res_aqua_w = append(private$res_aqua_w,Aqua_Resource_Base$get_w())
+set_aqua_Site <- function(Aqua_Resource){
+  private$res_aqua = append(private$res_aqua,Aqua_Resource)
+  private$res_aqua_w = append(private$res_aqua_w,Aqua_Resource$get_w())
 }
 
 Site$set(which = "public",name = "set_aqua",

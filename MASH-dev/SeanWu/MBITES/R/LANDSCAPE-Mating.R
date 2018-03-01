@@ -5,7 +5,7 @@
 #      / /___/ /_/ / / / / /_/ (__  ) /__/ /_/ / /_/ /  __/
 #     /_____/\__,_/_/ /_/\__,_/____/\___/\__,_/ .___/\___/
 #                                            /_/
-#     Landscape-Resource-Feeding
+#     Landscape-Resource-Mating Swarm
 #     MBITES Team
 #     February 2018
 #
@@ -13,13 +13,13 @@
 
 
 ###############################################################################
-# Feeding Resource Class
+# Mating Resource Class
 ###############################################################################
 
-#' Landscape Feeding Resource Class
+#' Mating Resource Base Class
 #'
-#' A \code{Feeding_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes can expect to find
-#' human or other vertebrate hosts when seeking a blood meal.
+#' A \code{Mating_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel mating.
+#'
 #'
 #'
 #' @docType class
@@ -30,13 +30,15 @@
 #'  * argument: im an agument!
 #'
 #' @section **Methods**:
-#'  * method: im a method!
+#'  * add_egg: function that must take an egg batch and add it to the \code{EggQ}
+#'  * one_day: function that updates daily aquatic population dynamics
+#'  * push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
 #'
 #' @section **Fields**:
-#'  * field: im a field!
+#'  * MatingQ: a closure of male swarms (see \code{\link[MBITES]{make_MatingQ}}
 #'
 #' @export
-Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
+Mating_Resource <- R6::R6Class(classname = "Mating_Resource",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
@@ -46,121 +48,98 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
                  public = list(
 
                    # begin constructor
-                   initialize = function(w){
-
-                     private$w = w
-
-                     private$RiskQ = make_RiskQ()
-
-                   } # end constructor
+                   initialize = function(){
+                     self$MatingQ = make_MatingQ()
+                   }, # end constructor
 
                    # begin destructor
                    finalize = function(){
-                     self$RiskQ = NULL
-                   }, # end destructor
+                     self$MatingQ = NULL
+                   } # end destructor
 
                    # closure fields
-                   RiskQ = NULL
+                   MatingQ = NULL, # closure of male swarms
 
-                 ), # end public members
+                 ),
 
                  # private members
                  private = list(
 
-                   w                  = numeric(1) # weight for this resource
+                   w = numeric(1) # search weight
 
-                 ) # end private members
+                 )
 
-
-) # end Feeding_Resource class definition
+) # end Mating_Resource class definition
 
 
 ###############################################################################
-# Risk Queue Object
+# Mating Queue Object
 ###############################################################################
 
-#' Make a Risk Queue
+#' Make a Mating Queue
 #'
 #' Generates a closure that contains the following fields:
-#'  * id: integer vector of hosts at this risk queue
-#'  * weight: numeric vector of host biting weights
-#'  * time: numeric vector of aggregated host times at risk
+#'  * id: integer vector of males at this mating queue
+#'  * weight: numeric vector of male mating weights
 #'
 #' The closure also contains the following functions:
-#'  * add2Q(id_n,weight_n,time_n): add a new host to the queue
-#'  * rmFromQ(id_r): id of the host to remove from the queue
-#'  * clearQ(): clear id, weight, time fields (set to \code{NULL})
-#'  * sampleQ(): sample a host id from the queue
-#'  * printQ(): print the risk queue
+#'  * add2Q(id_n,weight_n): add a new mosquito to the queue
+#'  * clearQ(): clear the mating queue
+#'  * sampleQ(): sample a mosquito id from the queue
+#'  * printQ(): print the mating queue
 #'
 #' @export
-make_RiskQ <- function(){
+make_MatingQ <- function(){
 
   # data for the closure
   id <- integer(1)
   weight <- numeric(1)
-  time <- numeric(1)
   NEW <- TRUE
 
-  # add2Q: add a human to the queue
-  add2Q <- function(id_n,weight_n,time_n){
-    # new RiskQ
+  # add2Q: add a mosquito to the queue
+  add2Q <- function(id_n,weight_n){
+    # new MatingQ
     if(NEW){
       id <<- id_n
       weight <<- weight_n
-      time <<- time_n
       NEW <<- FALSE
-    # not a new RiskQ
+    # not a new MatingQ
     } else {
       ix <- match(x = id_n,table = id)
-      # person already in the risk queue (update weight and time)
+      # mosquito already in the mating queue (update weight)
       if(!is.na(ix)){
         weight[ix] <<- weight_n
-        time[ix] <<- time_n
-      # new person to be added to the risk queue
+      # new mosquito to be added to the mating queue
       } else {
         id <<- append(id,id_n)
         weight <<- append(weight,weight_n)
-        time <<- append(time,time_n)
       }
     }
 
-  }
-
-  # rmFromQ: remove a human from the queue
-  rmFromQ <- function(id_r){
-    ix <- match(x = id_r,table = id)
-    if(!is.na(ix)){
-      id <<- id[-ix]
-      weight <<- weight[-ix]
-      time <<- time[-ix]
-    }
   }
 
   # clearQ: set elements of queue to NULL
   clearQ <- function(){
     id <<- NULL
     weight <<- NULL
-    time <<- NULL
   }
 
-  # sampleQ: sample a human id from the queue
+  # sampleQ: sample a mosquito id from the queue
   sampleQ <- function(){
     # check for empty queue, return -10L if empty
     out <- -10L
     if(length(id)==0L){
       return(out)
     } else {
-      MBITES::sample(x = id,size = 1,replace = FALSE,prob = weight*time)
+      MBITES::sample(x = id,size = 1,replace = FALSE,prob = weight)
     }
   }
 
   # printQ: print the queue
   printQ <- function(){
-    cat("priting a risk queue ... \n")
+    cat("priting a mating queue ... \n")
     print(id)
     print(weight)
-    print(time)
   }
 
  list(add2Q = add2Q, rmFromQ = rmFromQ,clearQ = clearQ,sampleQ = sampleQ,printQ = printQ)
@@ -168,19 +147,18 @@ make_RiskQ <- function(){
 
 
 ###############################################################################
-# Feeding Resource Methods
+# Mating Resource Methods
 ###############################################################################
 
-
-#' Feeding_Resource: Get Resource Weight
+#' Mating_Resource: Get Resource Weight
 #'
 #' Get the weight associated to this resource.
-#'  * binding: \code{Feeding_Resource$get_w}
+#'  * binding: \code{Mating_Resource$get_w}
 #'
-get_w_Feeding_Resource <- function(){
+get_w_Mating_Resource <- function(){
   return(private$w)
 }
 
-Feeding_Resource$set(which = "public",name = "get_w",
-    value = get_w_Feeding_Resource, overwrite = TRUE
+Mating_Resource$set(which = "public",name = "get_w",
+    value = get_w_Mating_Resource, overwrite = TRUE
 )

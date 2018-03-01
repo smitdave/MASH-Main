@@ -1,10 +1,10 @@
 ###############################################################################
-#         __  ___      ____  _____________________
-#        /  |/  /     / __ )/  _/_  __/ ____/ ___/
-#       / /|_/ /_____/ __  |/ /  / / / __/  \__ \
-#      / /  / /_____/ /_/ // /  / / / /___ ___/ /
-#     /_/  /_/     /_____/___/ /_/ /_____//____/
-#
+#         __                    __
+#        / /   ____ _____  ____/ /_____________ _____  ___
+#       / /   / __ `/ __ \/ __  / ___/ ___/ __ `/ __ \/ _ \
+#      / /___/ /_/ / / / / /_/ (__  ) /__/ /_/ / /_/ /  __/
+#     /_____/\__,_/_/ /_/\__,_/____/\___/\__,_/ .___/\___/
+#                                            /_/
 #     Landscape-Resource-Aquatic Habitat-Aquatic Population (Emerge) pimpl
 #     MBITES Team
 #     February 2018
@@ -14,7 +14,7 @@
 
 #' Aquatic Ecology: Emerge Model Class
 #'
-#' Class that implements the 'Emerge' model of aquatic ecology, inheriting the interface of \code{\link[MBITES]{Aqua_Base}}.
+#' Class that implements the 'Emerge' model of aquatic ecology, inheriting the interface of \code{\link[MBITES]{Aqua_Resource}}.
 #'
 #'
 #' @docType class
@@ -40,7 +40,7 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
-                 inherit = MBITES:::Aqua_Resource_Base,
+                 inherit = MBITES:::Aqua_Resource,
 
                  # public members
                  public = list(
