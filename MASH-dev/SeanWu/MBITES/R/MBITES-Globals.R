@@ -14,7 +14,7 @@
 #' MBITES Globals Singleton
 #'
 #' This class is a singleton object in the \code{MBITES} package namespace that stores global values needed for the MBITES simulation.
-#' It can be accessed by \code{MBITES:::MBITES_Global}.
+#' It can be accessed by \code{MBITES:::Globals}.
 #'
 #'
 #'
@@ -69,7 +69,8 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                    mosquito_id        = -1L, # global counter of IDs
                    mosquito_f_out     = NULL, # connection object for logging female mosquito histories
-                   mosquito_m_out     = NULL # connection object for logging male mosquito histories
+                   mosquito_m_out     = NULL, # connection object for logging male mosquito histories
+                   human_out          = NULL # connection object for logging human histories
 
                  ),
 )

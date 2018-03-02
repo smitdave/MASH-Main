@@ -10,7 +10,7 @@ MBITES_Globals
 }
 \description{
 This class is a singleton object in the \code{MBITES} package namespace that stores global values needed for the MBITES simulation.
-It can be accessed by \code{MBITES:::MBITES_Global}.
+It can be accessed by \code{MBITES:::Globals}.
 }
 \section{\strong{Constructor}}{
 

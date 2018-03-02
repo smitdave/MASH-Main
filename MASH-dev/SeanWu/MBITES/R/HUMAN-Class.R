@@ -53,7 +53,9 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                    }, # end constructor
 
                    # begin destructor
-                   finalize = function(){} # end destructor
+                   finalize = function(){
+
+                   } # end destructor
 
                  ),
 

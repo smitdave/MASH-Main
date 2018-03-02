@@ -44,9 +44,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    # constructor
                    ##############################################################
 
-                   initialize = function(
-                     id, b_day
-                   ){
+                   initialize = function(id, b_day){
                      private$id = id
                      private$b_day = b_day
                      private$t_now = b_day
