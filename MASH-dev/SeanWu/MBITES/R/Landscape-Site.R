@@ -76,14 +76,20 @@ Site <- R6::R6Class(classname = "Site",
                    res_sugar      = list(), # list of references to 'sugar'-type resources
                    res_sugar_w    = NULL, # weights of 'sugar'-type resources
                    res_mate       = list(), # list of references to 'mate'-type resources
-                   res_mate_w     = NULL # weights of 'mate'-type resources
+                   res_mate_w     = NULL, # weights of 'mate'-type resources
+
+                   # mosquito queries
+                   bool_feed       = FALSE,
+                   bool_aqua       = FALSE,
+                   bool_sugar      = FALSE,
+                   bool_mate       = FALSE
 
                  ) # end private members
 ) # end Site class definition
 
 
 ###############################################################################
-# Methods
+# Add Resources
 ###############################################################################
 
 #' Site: Add a Blood Feeding Resource
@@ -151,4 +157,60 @@ set_mate_Site <- function(Mating_Resource){
 
 Site$set(which = "public",name = "set_mate",
     value = set_mate_Site, overwrite = TRUE
+)
+
+###############################################################################
+# Query Resources
+###############################################################################
+
+#' Site: Has Blood Feeding Resources?
+#'
+#' Query if this site has \code{\link[MBITES]{Feeding_Resource}} present.
+#'  * binding: \code{Site$has_feed}
+#'
+has_feed_Site <- function(){
+  return(private$bool_feed)
+}
+
+Site$set(which = "public",name = "has_feed",
+    value = has_feed_Site, overwrite = TRUE
+)
+
+#' Site: Has Aquatic Habitats?
+#'
+#' Query if this site has \code{\link[MBITES]{Aqua_Resource}} present.
+#'  * binding: \code{Site$has_aqua}
+#'
+has_aqua_Site <- function(){
+  return(private$bool_aqua)
+}
+
+Site$set(which = "public",name = "has_aqua",
+    value = has_aqua_Site, overwrite = TRUE
+)
+
+#' Site: Has Sugar Feeding Resources?
+#'
+#' Query if this site has \code{\link[MBITES]{Sugar_Resource}} present.
+#'  * binding: \code{Site$has_sugar}
+#'
+has_sugar_Site <- function(){
+  return(private$bool_sugar)
+}
+
+Site$set(which = "public",name = "has_sugar",
+    value = has_sugar_Site, overwrite = TRUE
+)
+
+#' Site: Has Mating Swarms?
+#'
+#' Query if this site has \code{\link[MBITES]{Mating_Resource}} present.
+#'  * binding: \code{Site$has_mate}
+#'
+has_mate_Site <- function(){
+  return(private$bool_mate)
+}
+
+Site$set(which = "public",name = "has_mate",
+    value = has_mate_Site, overwrite = TRUE
 )

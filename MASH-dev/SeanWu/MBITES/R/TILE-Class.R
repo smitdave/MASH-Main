@@ -57,7 +57,7 @@ Tile <- R6::R6Class(classname = "Tile",
                  # private members
                  private = list(
 
-                   Sites = list() # list of references to Site objects
+                   Sites = list(), # list of references to Site objects
                    Mosquitoes = NULL, # a MosquitoPop object
                    Humans = NULL # a HumanPop object
 

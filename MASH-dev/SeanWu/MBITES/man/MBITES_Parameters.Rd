@@ -10,21 +10,28 @@ MBITES_Parameters
 }
 \description{
 This class is a singleton object in the \code{MBITES} package namespace that stores parameters needed for the MBITES simulation.
+It can be accessed by \code{MBITES:::MBITES_Pars}.
 }
-\section{**Constructor**}{
+\section{\strong{Constructor}}{
 
- * argument: im an agument!
+\itemize{
+\item argument: im an agument!
 }
-
-\section{**Methods**}{
-
- * method: im a method!
 }
 
-\section{**Fields**}{
+\section{\strong{Methods}}{
 
- * id: integer identifier of site
- * field: im a field!
+\itemize{
+\item method: im a method!
+}
+}
+
+\section{\strong{Fields}}{
+
+\itemize{
+\item id: integer identifier of site
+\item field: im a field!
+}
 }
 
 \keyword{R6}

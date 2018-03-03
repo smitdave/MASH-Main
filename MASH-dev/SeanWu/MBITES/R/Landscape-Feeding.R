@@ -52,7 +52,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 
                      private$RiskQ = make_RiskQ()
 
-                   } # end constructor
+                   }, # end constructor
 
                    # begin destructor
                    finalize = function(){

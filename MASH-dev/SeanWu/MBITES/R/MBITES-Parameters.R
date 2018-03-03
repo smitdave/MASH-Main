@@ -50,4 +50,4 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 )
 
 # assign MBITES parameters instance in the package namespace (a bit hacky)
-MBITES_Pars <- MBITES_Parameters$new()
+Parameters <- MBITES_Parameters$new()
