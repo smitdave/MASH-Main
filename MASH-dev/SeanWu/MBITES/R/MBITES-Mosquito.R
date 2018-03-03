@@ -58,6 +58,11 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    # basic parameters
                    id             = integer(1), # character id
 
+                   # location
+                   site           = NULL, # reference to my current site
+                   rspot          = character(1), # my current resting spot
+
+
                    # timing
                    b_day          = numeric(1), # the day i emerged
                    t_next         = numeric(1), # time of my next launch
@@ -68,7 +73,6 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    state          = character(1), # my current behavioral state
                    starved        = logical(1), # am i starved for sugar?
                    gravid         = logical(1), # am i gravid to oviposit?
-                   rspot          = character(1), # my current resting spot
                    bout_fail      = logical(1), # did i fail my current bout?
 
                    # energetics
