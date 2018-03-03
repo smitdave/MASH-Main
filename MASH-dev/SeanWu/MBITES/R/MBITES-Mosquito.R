@@ -12,6 +12,10 @@
 ###############################################################################
 
 
+###############################################################################
+# Abstract Base Mosquito
+###############################################################################
+
 #' MBITES: Mosquito Class
 #'
 #' All mosquitoes inherit from the \code{Mosquito} abstract base class object.
@@ -40,14 +44,19 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  # public members
                  public = list(
 
-                   ##############################################################
-                   # constructor
-                   ##############################################################
+                   # begin constructor
+                   initialize = function(b_day, site){
 
-                   initialize = function(id, b_day){
-                     private$id = id
+                     private$id = MBITES:::Globals$get_mosquito_id()
+
+                     private$site = site
+
                      private$b_day = b_day
                      private$t_now = b_day
+                     private$t_next = b_day
+
+                     private$search = FALSE
+
                    } # end constructor
 
                  ),
@@ -62,7 +71,6 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    site           = NULL, # reference to my current site
                    rspot          = character(1), # my current resting spot
 
-
                    # timing
                    b_day          = numeric(1), # the day i emerged
                    t_next         = numeric(1), # time of my next launch
@@ -72,12 +80,12 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    search         = logical(1), # next launch is for search or attempt bout?
                    state          = character(1), # my current behavioral state
                    starved        = logical(1), # am i starved for sugar?
-                   gravid         = logical(1), # am i gravid to oviposit?
+                   # gravid         = logical(1), # am i gravid to oviposit?
                    bout_fail      = logical(1), # did i fail my current bout?
 
                    # energetics
                    energy         = numeric(1), # my current energy
-                   energy_preG    = numeric(1), # pre-gonotrophic energy requirement
+                   # energy_preG    = numeric(1), # pre-gonotrophic energy requirement
                    mature         = logical(1), # am i mature?
 
                    # survival
@@ -85,16 +93,129 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    damage_chemical = numeric(1), # chemical damage
 
                    # bloodfeeding and oogenesis
+                   # batch          = integer(1), # size of my egg batch
+                   # bm_size        = numeric(1), # size of my blood meal
+
+                   # resource ids
+                   # hostID         = integer(1), # id of my blood host
+                   # habitatID      = integer(1), # id of my aquatic habitat
+                   sugarID        = integer(1), # id of my sugar source
+                   mateID         = integer(1) # id of my mate
+
+                 )
+)
+
+
+###############################################################################
+# Female Mosquito
+###############################################################################
+
+#' MBITES: Female Mosquito Class
+#'
+#' Female mosquitoes inherit from the \code{\link[MBITES]{Mosquito}} abstract base class object.
+#'
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object
+#' @keywords R6 class
+#'
+#' @section **Constructor**:
+#'  * argument: im an agument!
+#'
+#' @section **Methods**:
+#'  * method: im a method!
+#'
+#' @section **Fields**:
+#'  * id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
+#'  * field: im a field!
+#'
+#' @export
+Female_Mosquito <- R6::R6Class(classname = "Female_Mosquito",
+                 portable = TRUE,
+                 cloneable = FALSE,
+                 lock_class = FALSE,
+                 lock_objects = FALSE,
+                 inherit = MBITES:::Mosquito,
+
+                 # public members
+                 public = list(
+
+                   # begin constructor
+                   initialize = function(b_day, site){
+
+                     super$initialize(b_day,site) # construct the base-class parts
+
+                     private$state = MBITES:::Parameters$get_female_state()
+
+                     private$energy_preG = MBITES:::Parameters$get_energy_preG()
+
+                   } # end constructor
+
+                 ),
+
+                 # private members
+                 private = list(
+
+                   # behavioral state parameters
+                   gravid         = logical(1), # am i gravid to oviposit?
+
+                   # energetics
+                   energy_preG    = numeric(1), # pre-gonotrophic energy requirement
+
+                   # bloodfeeding and oogenesis
                    batch          = integer(1), # size of my egg batch
                    bm_size        = numeric(1), # size of my blood meal
 
                    # resource ids
                    hostID         = integer(1), # id of my blood host
-                   habitatID      = integer(1), # id of my aquatic habitat
-                   sugarID        = integer(1), # id of my sugar source
-                   mateID         = integer(1) # id of my mate
+                   habitatID      = integer(1) # id of my aquatic habitat
 
                  )
+)
 
 
+###############################################################################
+# Male Mosquito
+###############################################################################
+
+#' MBITES: Male Mosquito Class
+#'
+#' Male mosquitoes inherit from the \code{\link[MBITES]{Mosquito}} abstract base class object.
+#'
+#' @docType class
+#' @format An \code{\link{R6Class}} generator object
+#' @keywords R6 class
+#'
+#' @section **Constructor**:
+#'  * argument: im an agument!
+#'
+#' @section **Methods**:
+#'  * method: im a method!
+#'
+#' @section **Fields**:
+#'  * id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
+#'  * field: im a field!
+#'
+#' @export
+Male_Mosquito <- R6::R6Class(classname = "Male_Mosquito",
+                 portable = TRUE,
+                 cloneable = FALSE,
+                 lock_class = FALSE,
+                 lock_objects = FALSE,
+                 inherit = MBITES:::Mosquito,
+
+                 # public members
+                 public = list(
+
+                   # begin constructor
+                   initialize = function(b_day, site){
+
+                     super$initialize(b_day,site) # construct the base-class parts
+
+
+                   } # end constructor
+
+                 ),
+
+                 # private members
+                 private = list()
 )

@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Bout.R
 \name{mbites_search}
 \alias{mbites_search}
-\title{MBITES Search Bout}
+\title{MBITES: Search Bout}
 \usage{
 mbites_search()
 }

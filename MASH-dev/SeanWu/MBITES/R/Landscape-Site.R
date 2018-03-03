@@ -76,7 +76,7 @@ Site <- R6::R6Class(classname = "Site",
                    res_sugar      = list(), # list of references to 'sugar'-type resources
                    res_sugar_w    = NULL, # weights of 'sugar'-type resources
                    res_mate       = list(), # list of references to 'mate'-type resources
-                   res_mate_w     = NULL # weights of 'mate'-type resources
+                   res_mate_w     = NULL, # weights of 'mate'-type resources
 
                    # mosquito queries
                    bool_feed       = FALSE,

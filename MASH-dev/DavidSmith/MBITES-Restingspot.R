@@ -102,7 +102,7 @@ mbites_enterHouse <- function(){
     private$lspot = self$newSpot()
     self$surviveFlight()
     if(private$lspot == "i"){
-      Recall()
+      self$enterHouse()
     }
   }
 }
