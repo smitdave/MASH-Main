@@ -5,7 +5,7 @@
 #      / /___/ /_/ / / / / /_/ (__  ) /__/ /_/ / /_/ /  __/
 #     /_____/\__,_/_/ /_/\__,_/____/\___/\__,_/ .___/\___/
 #                                            /_/
-#     Landscape-Point
+#     Landscape-Site
 #     MBITES Team
 #     February 2018
 #
@@ -97,6 +97,11 @@ Site <- R6::R6Class(classname = "Site",
 # movement; when a mosquito calls 'search' return a new site it moves to
 ###############################################################################
 
+#' Site: Move Mosquito
+#'
+#' Sample from the movement kernel centered on this site, returns a reference to the destination \code{\link[MBITES]{Site}} object.
+#'  * binding: \code{Site$move_mosquito}
+#'
 move_mosquito_Site <- function(){
   ix = MBITES::sample(x=private$move_id,size=1L,replace=FALSE,prob=private$move)
   return(MBITES:::Globals$get_tile()$get_Site(ix))
@@ -111,7 +116,58 @@ Site$set(which = "public",name = "move_mosquito",
 # Sample Resources
 ###############################################################################
 
-# sample from resources available here
+#' Site: Sample Blood Feeding Resources
+#'
+#' Sample a blood feeding resource at this site, returns a reference to a \code{\link[MBITES]{Feeding_Resource}} object.
+#'  * binding: \code{Site$sample_feed}
+#'
+sample_feed_Site <- function(){
+  MBITES::sample(x=private$res_feed,size=1L,replace=FALSE,prob=private$res_feed_w)
+}
+
+#' Site: Sample Aquatic Habitat Resources
+#'
+#' Sample a aquatic habitat resource at this site, returns a reference to a \code{\link[MBITES]{Aqua_Resource}} object.
+#'  * binding: \code{Site$sample_aqua}
+#'
+sample_aqua_Site <- function(){
+  MBITES::sample(x=private$res_aqua,size=1L,replace=FALSE,prob=private$res_aqua_w)
+}
+
+#' Site: Sample Sugar Feeding Resources
+#'
+#' Sample a sugar feeding resource at this site, returns a reference to a \code{\link[MBITES]{Sugar_Resource}} object.
+#'  * binding: \code{Site$sample_sugar}
+#'
+sample_sugar_Site <- function(){
+  MBITES::sample(x=private$res_sugar,size=1L,replace=FALSE,prob=private$res_sugar_w)
+}
+
+#' Site: Sample Mating Swarm Resources
+#'
+#' Sample a mating swarm resource at this site, returns a reference to a \code{\link[MBITES]{Mating_Resource}} object.
+#'  * binding: \code{Site$sample_mate}
+#'
+sample_mate_Site <- function(){
+  MBITES::sample(x=private$res_mate,size=1L,replace=FALSE,prob=private$res_mate_w)
+}
+
+Site$set(which = "public",name = "sample_feed",
+    value = sample_feed_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "sample_aqua",
+    value = sample_aqua_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "sample_sugar",
+    value = sample_sugar_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "sample_mate",
+    value = sample_mate_Site, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Add Resources

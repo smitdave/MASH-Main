@@ -48,7 +48,10 @@ Mating_Resource <- R6::R6Class(classname = "Mating_Resource",
                  public = list(
 
                    # begin constructor
-                   initialize = function(){
+                   initialize = function(w){
+
+                     super$initialize(w,NULL) # construct base-class parts
+
                      self$MatingQ = make_MatingQ()
                    }, # end constructor
 
@@ -144,21 +147,3 @@ make_MatingQ <- function(){
 
  list(add2Q = add2Q, rmFromQ = rmFromQ,clearQ = clearQ,sampleQ = sampleQ,printQ = printQ)
 }
-
-
-###############################################################################
-# Mating Resource Methods
-###############################################################################
-
-#' Mating_Resource: Get Resource Weight
-#'
-#' Get the weight associated to this resource.
-#'  * binding: \code{Mating_Resource$get_w}
-#'
-get_w_Mating_Resource <- function(){
-  return(private$w)
-}
-
-Mating_Resource$set(which = "public",name = "get_w",
-    value = get_w_Mating_Resource, overwrite = TRUE
-)

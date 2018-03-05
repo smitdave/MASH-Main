@@ -48,7 +48,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
                    # begin constructor
                    initialize = function(w){
 
-                     private$w = w
+                     super$initialize(w,NULL) # construct base-class parts
 
                      private$RiskQ = make_RiskQ()
 
@@ -65,11 +65,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
                  ), # end public members
 
                  # private members
-                 private = list(
-
-                   w                  = numeric(1) # weight for this resource
-
-                 ) # end private members
+                 private = list() # end private members
 
 
 ) # end Feeding_Resource class definition
@@ -165,22 +161,3 @@ make_RiskQ <- function(){
 
  list(add2Q = add2Q, rmFromQ = rmFromQ,clearQ = clearQ,sampleQ = sampleQ,printQ = printQ)
 }
-
-
-###############################################################################
-# Feeding Resource Methods
-###############################################################################
-
-
-#' Feeding_Resource: Get Resource Weight
-#'
-#' Get the weight associated to this resource.
-#'  * binding: \code{Feeding_Resource$get_w}
-#'
-get_w_Feeding_Resource <- function(){
-  return(private$w)
-}
-
-Feeding_Resource$set(which = "public",name = "get_w",
-    value = get_w_Feeding_Resource, overwrite = TRUE
-)
