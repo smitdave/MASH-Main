@@ -25,7 +25,7 @@
 #' 
 #'  * This method is bound to \code{MosquitoFemale$timing()}.
 #'
-mbites_checkMating <- function(){
+mbites_findSwarm <- function(){
   if(private$mature == FALSE){ 
     #tSwarm is a time of day
     tSwarm = private$FemalePopPointer$get_MBITES_PAR("tSwarm")
@@ -39,7 +39,7 @@ mbites_checkMating <- function(){
       private$state = 'M' 
       private$tNext = floor(private$tNow) + tSwarm 
     }  
-  } 
+  }
 }
  
 #' M-BITES: Simulates estivation \code{MosquitoFemale}
@@ -104,7 +104,7 @@ mbites_timing <- function(){
       )
     } 
     private$tNext = ttBout(private$tNow) 
-    self$checkMating()
+    self$findSwarm()
     self$checkEstivation() 
   }
 }
@@ -117,11 +117,11 @@ mbites_timing <- function(){
 # 
 #################################################################
 
-mbites_tteGenExp= function(t, rate, tmin=0){
+mbites_tteGenExp= function(t, rate=1, tmin=0){
   tmin + rexp(1, rate) 
 } 
 
-mbites_tteGamma = function(t, mean, cv, tmin=0){
+mbites_tteGamma = function(t, mean=1, cv=1, tmin=0){
   # mean  = shape*scale 
   # cv    = shape*scale^2/(shape/scale)^2 = 1/shape
   # shape = 1/cv 
@@ -130,7 +130,6 @@ mbites_tteGamma = function(t, mean, cv, tmin=0){
   tmin + rgamma(1,shape=1/cv,scale=mean*cv)  
 }  
 
-mbites_tteDiurnal = function(t, peak, tmin=0){
+mbites_tteDiurnal = function(t, peak=1, tmin=0){
   t=t+tmin
-  
 }

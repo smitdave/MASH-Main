@@ -41,6 +41,7 @@ mbites_boutSearch <- function(){
     private$search = FALSE      # the next bout will be an attempt
     private$lspot = "l"         # initialize restingSpot() 
   }
+  #TO DO: Implement area repellants
 }
 
 
@@ -288,16 +289,18 @@ mbites_updateState <- function(){
 
   # The states in priority order 
   if(private$state == 'D'){ 
-		private$state = 'D'}else{
+    private$state = 'D'}else{
     if(private$starved == TRUE){ 
-			private$state = 'S'}else{
-  		if(private$gravid == TRUE) { 
-    		self$checkRefeed()}else{     #MBITES-Oogenesis.R
-    			private$state = 'B'}}} 
+      private$state = 'S'}else{
+      if(private$gravid == TRUE) { 
+        self$checkRefeed()}else{     #MBITES-Oogenesis.R
+          private$state = 'B'}}} 
 
   # The states in priority order 
-  self$timing()  #MBITES-Timing.R 
-                 #NOTE: timing() can set state = 'M'  
+  self$timing()  # MBITES-Timing.R 
+                 # NOTE: timing() handles the transition to mating.
+                 #      if state='B', it can be reset to
+                 #      state='M'  
 
   # if there are no resources of the required type present, set  
   # search = TRUE 
