@@ -11,7 +11,7 @@
 #   September 2017
 #
 ###############################################################################
- 
+
 
 
 #' M-BITES: Simulate survival, per bout \code{\link{MosquitoFemale}}
@@ -20,9 +20,9 @@
 #'  * This method is bound to \code{MosquitoFemale$get_surviveFlightProb()}.
 #'
 mbites_survival <- function(){
-  self$surviveFlight() 
-  self$surviveHazards() 
-}  
+  self$surviveFlight()
+  self$surviveHazards()
+}
 
 ###############################################################################
 # Flight Survival
@@ -34,7 +34,7 @@ mbites_survival <- function(){
 #'  * This method is bound to \code{MosquitoFemale$get_surviveFlightProb()}.
 #'
 mbites_get_surviveFlightBaseProb <- function(){
- 
+
   if(private$search == TRUE){
     switch(private$search,
       B = {return(private$FemalePopPointer$get_MBITES_PAR("Bs_surv"))},
@@ -42,7 +42,7 @@ mbites_get_surviveFlightBaseProb <- function(){
       M = {return(private$FemalePopPointer$get_MBITES_PAR("Ms_surv"))},
       S = {return(private$FemalePopPointer$get_MBITES_PAR("Ss_surv"))},
       {stop("illegal behavioral state for M-BITES")}
-    )} else{  
+    )} else{
     switch(private$state,
       B = {return(private$FemalePopPointer$get_MBITES_PAR("B_surv"))},
       O = {return(private$FemalePopPointer$get_MBITES_PAR("O_surv"))},
@@ -50,7 +50,7 @@ mbites_get_surviveFlightBaseProb <- function(){
       S = {return(private$FemalePopPointer$get_MBITES_PAR("S_surv"))},
       {stop("illegal behavioral state for M-BITES")}
     )
-  } 
+  }
 }
 
 #' MBITES-Generic: Flight Survival for \code{\link{MosquitoFemale}}
@@ -136,7 +136,7 @@ mbites_WingTattering_Mean <- function(){
 }
 
 #################################################################
-# Survive Physical Damage  
+# Survive Physical Damage
 #################################################################
 
 #' MBITES-Generic: Probability of Death due to Wing Tattering for \code{\link{MosquitoFemale}}
@@ -149,7 +149,7 @@ mbites_pTatter <- function(){
 }
 
 #################################################################
-# Survive Chemical Damage  
+# Survive Chemical Damage
 #################################################################
 
 #' MBITES-Generic: Probability of Death due to Chemical Damage for \code{\link{MosquitoFemale}}

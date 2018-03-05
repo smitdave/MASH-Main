@@ -6,7 +6,7 @@
 #   /_/  /_/     /_____/___/ /_/ /_____//____/
 #
 #   MASH-MICRO
-#   M-BITES: Oogenesis 
+#   M-BITES: Oogenesis
 #   MASH-MICRO Team
 #   September 7, 2017
 #
@@ -18,44 +18,44 @@
 #'
 #' In the first model, egg batch size is proportional to blood
 #' meal size, the egg batch incubation period is equal to the
-#' post-prandial resting period, but the mosquito can refeed 
+#' post-prandial resting period, but the mosquito can refeed
 #' with some probability (depending on egg batch size) with some
-#' probability. 
-#' 
+#' probability.
+#'
 #' In the second model, a batch of eggs (of some size) commits to
 #' development at the first bloodmeal after hatching or laying.
-#' The total blood required for maturation is proportional to the  
-#' egg batch size. At the end of the post-prandial period after 
+#' The total blood required for maturation is proportional to the
+#' egg batch size. At the end of the post-prandial period after
 #' completing the blood requirement, the eggs are mature and the
-#' mosquito is gravid.  
-#'  
+#' mosquito is gravid.
+#'
 #'  * This method is bound to \code{MosquitoFemale$rBatchSize()}.
 #' @md
 mbites_oogenesis <- function(){
    oogModel <- private$FemalePopPointer$get_MBITES_PAR("oogModel"))
    switch(oogModel,
-     '1' = {self$oogenesis1()}, 
-     '2' = {self$oogenesis2()}, 
-     {stop(cat("non-existent oogenesis model: ",oogModel,"\n",sep=""))} 
-   ) 
-} 
+     '1' = {self$oogenesis1()},
+     '2' = {self$oogenesis2()},
+     {stop(cat("non-existent oogenesis model: ",oogModel,"\n",sep=""))}
+   )
+}
 
 ###############################################################################
-# Oogenesis Model #1  
+# Oogenesis Model #1
 ###############################################################################
 
 mbites_oogenesis1 <- function(){
   private$batch = self$rBatchSize()
-  private$eggT = self$rEggMaturationTime() 
-  #NOTE: the post prandial resting period is in MBITES-Timing.R  
-  #NOTE: self$checkRefeed() is called in MBITES-Bouts.R :: updateState() 
-} 
+  private$eggT = self$rEggMaturationTime()
+  #NOTE: the post prandial resting period is in MBITES-Timing.R
+  #NOTE: self$checkRefeed() is called in MBITES-Bouts.R :: updateState()
+}
 
-mbites_checkRefeed <- function(){ 
-  if (private$FemalePopPointer$get_MBITES_PAR("oogModel"))=='1') 
+mbites_checkRefeed <- function(){
+  if (private$FemalePopPointer$get_MBITES_PAR("oogModel"))=='1')
     if(private$FemalePopPointer$get_MBITES_PAR("REFEED"))
       gravid = ifelse(runif(1) < self$pReFeed(),FALSE, TRUE)
-} 
+}
 
 ###############################################################################
 # Refeed
@@ -74,16 +74,16 @@ mbites_pReFeed <- function(){
 
 
 ###############################################################################
-# Oogenesis Model #2  
+# Oogenesis Model #2
 ###############################################################################
 mbites_oogenesis2 <- function(){
-  if(private$batch == 0){ 
+  if(private$batch == 0){
     private$batch = self$rBatchSize()
     private$eggP = private$FemalePopPointer$get_MBITES_PAR("bloodPerEgg")*private$batch
-  } 
+  }
   private$eggP = private$eggP - private$bmSize
-  if(private$eggP < 0) private$gravid = TRUE 
-} 
+  if(private$eggP < 0) private$gravid = TRUE
+}
 
 
 #' MBITES-Generic: Draw Normally-distributed Egg Batch Size for \code{\link{MosquitoFemale}}

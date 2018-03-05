@@ -42,8 +42,10 @@ initialize_travel_HumanPop <- function(){
 #'  * This method is bound to \code{Human$initialize_travel}
 #'
 initialize_travel_Human <- function(){
-  tDest = sample(x = 1:private$TilePointer$get_nPatch(),size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight()) # choose where i go
-  tTrip = private$TilePointer$get_tNow() + rexp(n=1,rate=private$tripFrequency) # choose when i go
+  # choose where i go
+  tDest = sample(x = 1:private$TilePointer$get_nPatch(),size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight()) 
+  # choose when i go
+  tTrip = private$TilePointer$get_tNow() + rexp(n=1,rate=private$tripFrequency)
 
   # queue the trip
   PAR = list(tDest=tDest)
@@ -159,8 +161,10 @@ returnHome <- function(tEvent, PAR){
   self$accumulate_bWeightHuman() # increment the biting weight where I go to
 
   # queue up my next trip
-  tDest = sample(x = 1:private$TilePointer$get_nPatch(),size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight()) # choose where i go
-  tTrip = tEvent + rexp(n=1,rate=private$tripFrequency) # choose when i go
+  # choose where i go
+  tDest = sample(x = 1:private$TilePointer$get_nPatch(),size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight())
+  # choose when i go
+  tTrip = tEvent + rexp(n=1,rate=private$tripFrequency)
 
   PAR = list(tDest=tDest)
   self$add2Q_takeTrip(tEvent = tTrip,PAR = PAR)

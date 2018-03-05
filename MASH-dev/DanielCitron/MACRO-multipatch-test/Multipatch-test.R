@@ -70,20 +70,3 @@ tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPa
 
 # run simulations
 tile$simMacro(tMax = 1000, PfPAR = pfpr)
-
-# Total number people infected, over time:
-pfsihist <- read.csv(paste0(directory, "/", "HumanPathogen_Run0.csv"))
-event.tally <- table(data.frame(time = ceiling(pfsihist$time), event = pfsihist$event))
-I <- append(event.tally[1,1], event.tally[1,1] + cumsum(as.vector(event.tally[-1,1])) - cumsum(as.vector(event.tally[-1,2])), 1)
-# Save Infection data
-I.data = data.frame(time = unique(sort(ceiling(pfsihist$time))), I = I)
-write.table(I.data, file = paste0(directory,"/si_dynamics_data_run_0.csv"), sep=",")
-
-# Mosquito statuses, over time
-moshist <- read.csv(paste0(directory, "/", "Mosquito_Run0.csv"))
-M <- moshist$patch1[moshist$state == "M"]
-Y <- moshist$patch1[moshist$state == "Y"]
-Z <- moshist$patch1[moshist$state == "Z"]
-# Save mos data
-mos.data <- data.frame(M = M, Y = Y, Z = Z)
-write.table(mos.data, file = paste0(directory,"/mosquito_dynamics_data_run_0.csv"), sep=",")
