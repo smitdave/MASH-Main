@@ -157,7 +157,7 @@ make_RiskQ <- function(){
 
   # printQ: print the queue
   printQ <- function(){
-    cat("priting a risk queue ... \n")
+    cat("printing a risk queue ... \n")
     print(id)
     print(weight)
     print(time)

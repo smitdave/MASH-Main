@@ -3,6 +3,7 @@
 }
 
 # assign data here to user global environment
-# .onLoad <- function(libname, pkgname) {
-#
-# }
+.onLoad <- function(libname, pkgname) {
+  futile.logger::flog.threshold(futile.logger::TRACE) # FOR DEBUGGING
+  futile.logger::flog.appender(futile.logger::appender.tee('mbites.log'))
+}

@@ -15,7 +15,7 @@ Class that implements the 'Emerge' model of aquatic ecology, inheriting the inte
 
 \itemize{
 \item lambda: either numeric or vector of at least length 365
-\item SiteP: a reference to a \code{\link[MBITES]{Site}} object
+\item site: a reference to a \code{\link[MBITES]{Site}} object
 }
 }
 

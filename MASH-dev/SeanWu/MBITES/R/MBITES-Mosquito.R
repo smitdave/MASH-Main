@@ -45,10 +45,9 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  public = list(
 
                    # begin constructor
-                   initialize = function(b_day, site){
+                   initialize = function(id, b_day, site){
 
-                     private$id = MBITES:::Globals$get_mosquito_id()
-
+                     private$id = id
                      private$site = site
 
                      private$b_day = b_day
@@ -129,7 +128,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 #'  * field: im a field!
 #'
 #' @export
-Female_Mosquito <- R6::R6Class(classname = "Female_Mosquito",
+Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
@@ -140,9 +139,9 @@ Female_Mosquito <- R6::R6Class(classname = "Female_Mosquito",
                  public = list(
 
                    # begin constructor
-                   initialize = function(b_day, site){
+                   initialize = function(id, b_day, site){
 
-                     super$initialize(b_day,site) # construct the base-class parts
+                     super$initialize(id, b_day,site) # construct the base-class parts
 
                      private$state = MBITES:::Parameters$get_female_state()
 
@@ -196,7 +195,7 @@ Female_Mosquito <- R6::R6Class(classname = "Female_Mosquito",
 #'  * field: im a field!
 #'
 #' @export
-Male_Mosquito <- R6::R6Class(classname = "Male_Mosquito",
+Mosquito_Male <- R6::R6Class(classname = "Mosquito_Male",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
@@ -207,9 +206,9 @@ Male_Mosquito <- R6::R6Class(classname = "Male_Mosquito",
                  public = list(
 
                    # begin constructor
-                   initialize = function(b_day, site){
+                   initialize = function(id, b_day, site){
 
-                     super$initialize(b_day,site) # construct the base-class parts
+                     super$initialize(id, b_day,site) # construct the base-class parts
 
 
                    } # end constructor

@@ -5,6 +5,7 @@
 .Rhistory
 .RData
 .Ruserdata
+*.log # for futile.logger created log files
 
 #####################################
 # Xcode

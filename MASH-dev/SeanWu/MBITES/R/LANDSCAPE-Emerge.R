@@ -23,7 +23,7 @@
 #'
 #' @section **Constructor**:
 #'  * lambda: either numeric or vector of at least length 365
-#'  * SiteP: a reference to a \code{\link[MBITES]{Site}} object
+#'  * site: a reference to a \code{\link[MBITES]{Site}} object
 #'
 #' @section **Methods**:
 #'  * add_egg: function that must take an EggQ (a \code{list} object) and add egg batches to the population; it should return a modified EggQ with those elements corresponding to 'processed' egg batches zeroed out
@@ -45,13 +45,15 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
                  # public members
                  public = list(
 
-                   #############################################################
                    # begin constructor
-                   #############################################################
-                   initialize = function(lambda, SiteP){
+                   initialize = function(w, site, lambda){
+
                      if(length(lambda)<365 & length(lambda)>1){
                        stop(cat("length of provided lambda vector: ",length(lambda),", but require vector either >= 365 days or 1 day (constant emergence)"))
                      }
+
+                     super$initialize(w,site) # construct base-class parts
+
                      if(length(lambda)==1){
                        private$constant = TRUE
                        private$lambda = lambda
@@ -60,8 +62,6 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
                        private$lambda = lambda
                      }
 
-                     # set pointer to site
-                     private$SiteP = SiteP
                    } # end constructor
 
                  ), # end public
@@ -101,18 +101,30 @@ Aqua_Resource_Emerge$set(which = "public",name = "add_egg",
 # one day of aquatic population dynamics
 ###############################################################################
 
-one_day_Emerge <- function(tNow){
+#' Aquatic Ecology: Emerge - Daily Emergence
+#'
+#' Add a cohort of emerging imagos based on current value of \eqn{\lambda} by calling \code{add2Q} function of the imago closure object, see \code{\link[MBITES]{make_ImagoQ}}.
+#'
+#'  * This method is bound to \code{Aqua_Resource_Emerge$one_day()}.
+#'
+#'
+one_day_Emerge <- function(){
+
+  t_now = MBITES:::Globals$get_t_now()
+
   # sample number of emerging mosquitoes
   if(private$constant){
     lambda_t = rpois(n = 1, lambda = private$lambda)
   } else {
-    lambda_now = private$lambda[floor(tNow)%%365+1]
+    lambda_now = private$lambda[floor(t_now)%%365+1]
     lambda_t = rpois(n = 1, lambda = lambda_now)
   }
+
   # if emerging mosquitoes, send them to the population
   if(lambda_t>0){
-    private$ImagoQ = Aqua_make_imagos(N=lambda_t,ix=private$SiteP$get_ix())
+    self$ImagoQ$add2Q(N=lambda_t,time_e=t_now)
   }
+
 } # end one_day
 
 Aqua_Resource_Emerge$set(which = "public",name = "one_day",
@@ -124,11 +136,31 @@ Aqua_Resource_Emerge$set(which = "public",name = "one_day",
 # get emerging imagos
 ###############################################################################
 
-get_imago_Emerge <- function(){
+push_imago_Emerge <- function(){
 
+  t_now = MBITES:::Globals$get_t_now() # time now
+  tile = MBITES:::Globals$get_tile() # tile reference
+
+  imagos = self$ImagoQ$popQ(time_e=t_now) # emerging imagos
+
+  # if there is a cohort of imagos ready to go
+  if(!is.na(imagos$female[1])){
+
+    for(i in 1:length(imagos$female)){
+      id = MBITES:::Globals$get_mosquito_id()
+      mosy = NULL
+      if(imagos$female[i]){
+        mosy = Mosquito_Female$new(id,t_now,private$SiteP)
+      } else {
+        mosy = Mosquito_Male$new(id,t_now,private$SiteP)
+      }
+      tile$get_mosquitoes()$assign(key=id,value=mosy)
+    }
+
+  }
 } # end get_imago
 
 
-Aqua_Resource_Emerge$set(which = "public",name = "get_imago",
-          value = get_imago_Emerge, overwrite = TRUE
+Aqua_Resource_Emerge$set(which = "public",name = "push_imago",
+          value = push_imago_Emerge, overwrite = TRUE
 )

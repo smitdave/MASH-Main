@@ -50,7 +50,6 @@ Sugar_Resource <- R6::R6Class(classname = "Sugar_Resource",
 
                      private$w = w
 
-
                    } # end constructor
 
                    # begin destructor
