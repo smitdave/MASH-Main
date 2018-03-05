@@ -26,6 +26,7 @@
 #' @section **Constructor**:
 #'  * id: integer id
 #'  * w: numeric biting weight
+#'  * home: id of the \code{\link[MBITES]{Site}} where my biting weight will be added
 #'
 #' @section **Methods**:
 #'  * method: i'm a method!
@@ -47,14 +48,21 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id,w){
+                   initialize = function(id,w,home){
+
+                     futile.logger::flog.trace("Human_NULL %i being born at self: %s , private: %s",id,pryr::address(self),pryr::address(private))
+
+                     # basic parameters
                      private$id = id
                      private$w = w
+
+                     # add my risk to my home site
+                     MBITES:::Globals$get_tile()$get_site(home)$get_feed(1L)$RiskQ$add2Q(id,w,1)
                    }, # end constructor
 
                    # begin destructor
                    finalize = function(){
-
+                     futile.logger::flog.trace("Human_NULL %i being killed at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
                    } # end destructor
 
                  ),

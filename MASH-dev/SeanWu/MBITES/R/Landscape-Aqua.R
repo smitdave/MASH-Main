@@ -47,6 +47,7 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
+                 inherit = MBITES:::Resource,
 
                  # public members
                  public = list(
@@ -54,13 +55,12 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                    # begin constructor
                    initialize = function(w, site){
 
+                     super$initialize(w,site) # construct the base-class parts
+
                      # set local closures
                      self$EggQ = make_EggQ()
                      self$ImagoQ = make_ImagoQ()
 
-                     # set private fields
-                     private$w = w
-                     private$SiteP = site
                    }, # end constructor
 
                    # begin destructor
@@ -90,13 +90,7 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                  ),
 
                  # private members
-                 private = list(
-
-                   w = numeric(1), # search weight
-
-                   SiteP = NULL # reference to enclosing tile
-
-                 )
+                 private = list()
 
 ) # end Aqua_Resource class definition
 
@@ -228,21 +222,3 @@ make_ImagoQ <- function(){
 
  list(add2Q = add2Q, popQ = popQ,printQ = printQ)
 }
-
-
-###############################################################################
-# Aquatic Habitat Resource Methods
-###############################################################################
-
-#' Aqua_Resource: Get Resource Weight
-#'
-#' Get the weight associated to this resource.
-#'  * binding: \code{Aqua_Resource$get_w}
-#'
-get_w_Aqua_Resource <- function(){
-  return(private$w)
-}
-
-Aqua_Resource$set(which = "public",name = "get_w",
-    value = get_w_Aqua_Resource, overwrite = TRUE
-)

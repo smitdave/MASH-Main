@@ -41,6 +41,7 @@ Sugar_Resource <- R6::R6Class(classname = "Sugar_Resource",
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
+                 inherit = MBITES:::Resource,                 
 
                  # public members
                  public = list(
@@ -48,7 +49,8 @@ Sugar_Resource <- R6::R6Class(classname = "Sugar_Resource",
                    # begin constructor
                    initialize = function(w){
 
-                     private$w = w
+                     super$initialize(w,NULL) # construct base-class parts
+
 
                    } # end constructor
 
@@ -58,11 +60,7 @@ Sugar_Resource <- R6::R6Class(classname = "Sugar_Resource",
                  ), # end public members
 
                  # private members
-                 private = list(
-
-                   w                  = numeric(1) # weight for this resource
-
-                 ) # end private members
+                 private = list() # end private members
 
 
 ) # end Feeding_Resource class definition
