@@ -137,7 +137,7 @@ make_MatingQ <- function(){
 
   # printQ: print the queue
   printQ <- function(){
-    cat("priting a mating queue ... \n")
+    cat("printing a mating queue ... \n")
     print(id)
     print(weight)
   }

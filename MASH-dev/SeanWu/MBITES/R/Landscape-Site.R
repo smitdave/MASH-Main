@@ -21,7 +21,10 @@
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'  * argument: im an agument!
+#'  * id: integer id of site
+#'  * xy: numeric vector of coordinates
+#'  * move: numeric vector of outbound transition probabilities
+#'  * move_id: integer vector of outbound transition id's to other \code{\link[MBITES]{Site}} objects on the landscape
 #'
 #' @section **Methods**:
 #'  * method: im a method!
@@ -41,11 +44,12 @@ Site <- R6::R6Class(classname = "Site",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, xy, move){
+                   initialize = function(id, xy, move, move_id){
 
                      private$id = id
                      private$xy = xy
                      private$move = move
+                     private$move_id = move_id
 
                    }, # end constructor
 
@@ -67,6 +71,7 @@ Site <- R6::R6Class(classname = "Site",
                    id             = integer(1), # integer id
                    xy             = numeric(2), # xy-coordinates
                    move           = numeric(1), # 'row' of the transition matrix for movement from this site to all other sites
+                   move_id        = integer(1), # id's of sites associated with the 'move' transition probabilities
 
                    # resources
                    res_feed       = list(), # list of references to 'feeding'-type resources
@@ -87,6 +92,26 @@ Site <- R6::R6Class(classname = "Site",
                  ) # end private members
 ) # end Site class definition
 
+
+###############################################################################
+# movement; when a mosquito calls 'search' return a new site it moves to
+###############################################################################
+
+move_mosquito_Site <- function(){
+  ix = MBITES::sample(x=private$move_id,size=1L,replace=FALSE,prob=private$move)
+  return(MBITES:::Globals$get_tile()$get_Site(ix))
+}
+
+Site$set(which = "public",name = "move_mosquito",
+    value = move_mosquito_Site, overwrite = TRUE
+)
+
+
+###############################################################################
+# Sample Resources
+###############################################################################
+
+# sample from resources available here
 
 ###############################################################################
 # Add Resources
@@ -159,6 +184,7 @@ Site$set(which = "public",name = "set_mate",
     value = set_mate_Site, overwrite = TRUE
 )
 
+
 ###############################################################################
 # Query Resources
 ###############################################################################
@@ -213,4 +239,22 @@ has_mate_Site <- function(){
 
 Site$set(which = "public",name = "has_mate",
     value = has_mate_Site, overwrite = TRUE
+)
+
+
+###############################################################################
+# Getters & Setters
+###############################################################################
+
+#' Site: Return Tile Reference
+#'
+#' Return a reference to the enclosing \code{\link[MBITES]{Tile}}
+#'  * binding: \code{Site$get_tile}
+#'
+get_tile_Site <- function(){
+  return(private$TileP)
+}
+
+Site$set(which = "public",name = "get_tile",
+    value = get_tile_Site, overwrite = TRUE
 )

@@ -10,14 +10,15 @@ make_ImagoQ()
 Generates a closure that contains the following fields:
 \itemize{
 \item imagos: integer vector of emerging imago cohort sizes
+\item female: boolean vector indicating female or male cohort
 \item times: numeric vector of imago emergence times
 }
 }
 \details{
 The closure also contains the following functions:
 \itemize{
-\item add2Q(batch_n,time_n): add a new imago cohort to the queue
-\item popQ(time_e): return a vector of imago cohorts that have emerged
+\item add2Q(batch_n,time_e,imago_f): add a new imago cohort of size \code{imago_n} and boolean sex \code{imago_f} to the queue that will emerge at \code{time_e}
+\item popQ(time_e,imago_f): return a vector of imago cohorts that are due to emerge by \code{time_e} and of boolean sex \code{imago_f}
 \item printQ(): print the imago queue
 }
 }

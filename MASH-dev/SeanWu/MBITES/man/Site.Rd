@@ -14,7 +14,10 @@ A landscape consists of a set of \code{Site} objects, each of which may have one
 \section{\strong{Constructor}}{
 
 \itemize{
-\item argument: im an agument!
+\item id: integer id of site
+\item xy: numeric vector of coordinates
+\item move: numeric vector of outbound transition probabilities
+\item move_id: integer vector of outbound transition id's to other \code{\link[MBITES]{Site}} objects on the landscape
 }
 }
 

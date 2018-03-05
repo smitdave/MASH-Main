@@ -29,7 +29,8 @@
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'  * argument: im an agument!
+#'  * w: a numeric search weight
+#'  * site: a reference to a \code{\link[MBITES]{Site}} object
 #'
 #' @section **Methods**:
 #'  * add_egg: function that must take an egg batch and add it to the \code{EggQ}
@@ -51,9 +52,15 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                  public = list(
 
                    # begin constructor
-                   initialize = function(){
+                   initialize = function(w, site){
+
+                     # set local closures
                      self$EggQ = make_EggQ()
                      self$ImagoQ = make_ImagoQ()
+
+                     # set private fields
+                     private$w = w
+                     private$SiteP = site
                    }, # end constructor
 
                    # begin destructor
@@ -61,6 +68,10 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                      self$EggQ = NULL
                      self$ImagoQ = NULL
                    }, # end destructor
+
+                   add_egg = function(){
+                     stop("add_egg should never be called from abstract base class 'Aqua_Resource'!")
+                   },
 
                    # one day of aquatic population
                    one_day = function(){
@@ -81,7 +92,9 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                  # private members
                  private = list(
 
-                   w = numeric(1) # search weight
+                   w = numeric(1), # search weight
+
+                   SiteP = NULL # reference to enclosing tile
 
                  )
 
@@ -140,7 +153,7 @@ make_EggQ <- function(){
 
   # printQ: print the queue
   printQ <- function(){
-    cat("priting a egg queue ... \n")
+    cat("printing a egg queue ... \n")
     print(batches)
     print(times)
   }
@@ -157,11 +170,12 @@ make_EggQ <- function(){
 #'
 #' Generates a closure that contains the following fields:
 #'  * imagos: integer vector of emerging imago cohort sizes
+#'  * female: boolean vector indicating female or male cohort
 #'  * times: numeric vector of imago emergence times
 #'
 #' The closure also contains the following functions:
-#'  * add2Q(batch_n,time_n): add a new imago cohort to the queue
-#'  * popQ(time_e): return a vector of imago cohorts that have emerged
+#'  * add2Q(batch_n,time_e,imago_f): add a new imago cohort of size \code{imago_n} and boolean sex \code{imago_f} to the queue that will emerge at \code{time_e}
+#'  * popQ(time_e,imago_f): return a vector of imago cohorts that are due to emerge by \code{time_e} and of boolean sex \code{imago_f}
 #'  * printQ(): print the imago queue
 #'
 #' @export
@@ -169,40 +183,46 @@ make_ImagoQ <- function(){
 
   # data for the closure
   imagos <- integer(1)
+  female <- logical(1)
   times <- numeric(1)
   NEW <- TRUE
 
   # add2Q: add a batch to the queue
-  add2Q <- function(imago_n,time_n){
+  add2Q <- function(imago_n,time_e,imago_f){
     # new ImagoQ
     if(NEW){
       imagos <<- c(-99L,imago_n)
-      times <<- c(2e16,time_n)
+      female <<- c(NA,imago_f)
+      times <<- c(2e16,time_e)
       NEW <<- FALSE
     # not a new ImagoQ
     } else {
       imagos <<- append(imagos,imago_n)
-      times <<- append(times,time_n)
+      female <<- append(female,imago_f)
+      times <<- append(times,time_e)
     }
-
   }
 
   # popQ: remove imagos from the queue
   popQ <- function(time_e){
-    ix <- which(times <= time_p) # which imagos are ready to go
-    out <- 0L # return 0 if no imagos ready to go or queue is depleted
+    ix <- which(times <= time_e) # which imagos are ready to go
+    out_imago <- 0L # return 0 if no imagos ready to go or queue is depleted
+    out_sex <- NA
     if(length(ix)>0){
-      out <- imagos[ix] # prepare them as the return value
+      out_imago <- imagos[ix] # prepare them as the return value
+      out_sex <- female[ix]
       imagos <<- imagos[-ix] # delete from queue
+      female <<- female[-ix]
       times <<- times[-ix]
     }
-    return(out) # return imagos
+    return(list(imagos=out_imago,female=out_sex)) # return imagos
   }
 
   # printQ: print the queue
   printQ <- function(){
-    cat("priting a imago queue ... \n")
+    cat("printing a imago queue ... \n")
     print(imagos)
+    print(female)
     print(times)
   }
 

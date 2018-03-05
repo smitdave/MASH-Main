@@ -41,6 +41,22 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                  public = list(
 
+                   initialize = function(){
+                     futile.logger::flog.trace("MBITES_Globals being born at: %s",pryr::address(self))
+                   },
+
+                   finalize = function(){
+                     futile.logger::flog.trace("MBITES_Globals being killed at: %s",pryr::address(self))
+                   },
+
+                   # # for debugging
+                   # print = function(){
+                   #   selfAd=pryr::address(self)
+                   #   privAd = pryr::address(private)
+                   #   cat("i'm a MBITES_Globals instance residing as self: ",selfAd," and private: ",privAd,"\n")
+                   #   return(list(selfAd,privAd))
+                   # },
+
                    # reset all values
                    reset = function(){
                      cat("reset all MBITES global parameters to initial values\n")
@@ -79,7 +95,37 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                    tile               = NULL # reference to tile
 
                  ),
+) # end MBITES_Globals definition
+
+# global assignment to package namespace at end of script
+
+###############################################################################
+# Methods
+###############################################################################
+
+#' MBITES Globals: Set Tile Reference
+#'
+#' Set the reference to a tile
+#'
+#'  * This method is bound to \code{MBITES_Globals$set_tile()}.
+#'
+#' @param tile a reference to a \code{\link[MBITES]{Tile}} object
+#'
+set_tile_MBITES_Globals <- function(tile){
+  private$tile = tile
+}
+
+MBITES_Globals$set(which = "public",name = "set_tile",
+          value = set_tile_MBITES_Globals, overwrite = TRUE
 )
 
+
+
+
+
+
+###############################################################################
 # assign MBITES globals instance in the package namespace (a bit hacky)
+###############################################################################
+
 Globals <- MBITES_Globals$new()
