@@ -70,10 +70,10 @@ Tile <- R6::R6Class(classname = "Tile",
 #'
 #' Return the reference to a given \code{\link[MBITES]{Site}} object by id.
 #'
-get_Site_Tile <- function(i){
+get_site_Tile <- function(i){
   return(private$Sites[[i]])
 }
 
-Tile$set(which = "public",name = "get_Site",
-    value = get_Site_Tile, overwrite = TRUE
+Tile$set(which = "public",name = "get_site",
+    value = get_site_Tile, overwrite = TRUE
 )

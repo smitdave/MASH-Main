@@ -314,3 +314,33 @@ get_tile_Site <- function(){
 Site$set(which = "public",name = "get_tile",
     value = get_tile_Site, overwrite = TRUE
 )
+
+# Feeding Resource accessors
+
+#' Site: Return Blood Feeding Resource Reference
+#'
+#' Return a reference to the i'th \code{\link[MBITES]{Feeding_Resource}}
+#'  * binding: \code{Site$get_feed}
+#'
+#' @param i integer index of resource to return
+#'
+get_feed_Site <- function(i){
+  return(private$res_feed[[i]])
+}
+
+#' Site: Return Blood Feeding Resource Weights
+#'
+#' Return a numeric vector of \code{\link[MBITES]{Feeding_Resource}} weights at this site.
+#'  * binding: \code{Site$get_feed_w}
+#'
+get_feed_w_Site <- function(){
+  return(private$res_feed_w)
+}
+
+Site$set(which = "public",name = "get_feed",
+    value = get_feed_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "get_feed_w",
+    value = get_feed_w_Site, overwrite = TRUE
+)

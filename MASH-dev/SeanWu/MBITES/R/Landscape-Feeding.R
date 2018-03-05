@@ -41,6 +41,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
+                 inherit = MBITES:::Resource,
 
                  # public members
                  public = list(
@@ -50,7 +51,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 
                      super$initialize(w,NULL) # construct base-class parts
 
-                     private$RiskQ = make_RiskQ()
+                     self$RiskQ = make_RiskQ()
 
                    }, # end constructor
 

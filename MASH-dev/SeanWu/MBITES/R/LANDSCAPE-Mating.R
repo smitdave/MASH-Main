@@ -43,6 +43,7 @@ Mating_Resource <- R6::R6Class(classname = "Mating_Resource",
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
+                 inherit = MBITES:::Resource,                 
 
                  # public members
                  public = list(

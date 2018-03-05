@@ -42,6 +42,7 @@ Resource <- R6::R6Class(classname = "Mosquito",
 
                    # begin constructor
                    initialize = function(w,site){
+
                      futile.logger::flog.trace("Resource being born at: %s",pryr::address(self))
 
                      private$w = w
@@ -53,7 +54,6 @@ Resource <- R6::R6Class(classname = "Mosquito",
                    finalize = function(){
                      futile.logger::flog.trace("Resource being killed at: %s",pryr::address(self))
                    }
-
 
                  ),
 
@@ -87,12 +87,12 @@ Resource$set(which = "public",name = "get_w",
 #' Resource: Get Site
 #'
 #' Get a reference to the enclosing \code{\link[MBITES]{Site}} object.
-#'  * binding: \code{Resource$get_SiteP}
+#'  * binding: \code{Resource$get_site}
 #'
-get_SiteP_Resource <- function(){
+get_site_Resource <- function(){
   return(private$SiteP)
 }
 
-Resource$set(which = "public",name = "get_SiteP",
-          value = get_SiteP_Resource, overwrite = TRUE
+Resource$set(which = "public",name = "get_site",
+          value = get_site_Resource, overwrite = TRUE
 )
