@@ -287,7 +287,6 @@ mbites_updateState <- function(){
   self$energetics()    # MBITES-Energetics.R
   self$survival()      # MBITES-Survival.R
 
-<<<<<<< HEAD
   # The states in priority order 
   if(private$state == 'D'){ 
     private$state = 'D'}else{
@@ -302,20 +301,6 @@ mbites_updateState <- function(){
                  # NOTE: timing() handles the transition to mating.
                  #      if state='B', it can be reset to
                  #      state='M'  
-=======
-  # The states in priority order
-  if(private$state == 'D'){
-		private$state = 'D'}else{
-    if(private$starved == TRUE){
-			private$state = 'S'}else{
-  		if(private$gravid == TRUE) {
-    		self$checkRefeed()}else{     #MBITES-Oogenesis.R
-    			private$state = 'B'}}}
-
-  # The states in priority order
-  self$timing()  #MBITES-Timing.R
-                 #NOTE: timing() can set state = 'M'
->>>>>>> origin/master
 
   # if there are no resources of the required type present, set
   # search = TRUE
