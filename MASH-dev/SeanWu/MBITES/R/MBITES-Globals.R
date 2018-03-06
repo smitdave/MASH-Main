@@ -42,11 +42,11 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                  public = list(
 
                    initialize = function(){
-                     futile.logger::flog.trace("MBITES_Globals being born at: %s",pryr::address(self))
+                     futile.logger::flog.trace("MBITES_Globals being born at: self %s , private %s",pryr::address(self),pryr::address(private))
                    },
 
                    finalize = function(){
-                     futile.logger::flog.trace("MBITES_Globals being killed at: %s",pryr::address(self))
+                     futile.logger::flog.trace("MBITES_Globals being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
                    },
 
                    # # for debugging

@@ -80,7 +80,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    state          = character(1), # my current behavioral state
                    starved        = logical(1), # am i starved for sugar?
                    # gravid         = logical(1), # am i gravid to oviposit?
-                   bout_fail      = logical(1), # did i fail my current bout?
+                   bout_fail      = integer(1), # counter
 
                    # energetics
                    energy         = numeric(1), # my current energy
