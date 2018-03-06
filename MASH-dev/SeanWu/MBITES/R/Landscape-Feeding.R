@@ -79,12 +79,16 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 #' Make a Risk Queue
 #'
 #' Generates a closure that contains the following fields:
-#'  * id: integer vector of hosts at this risk queue
-#'  * weight: numeric vector of host biting weights
-#'  * time: numeric vector of aggregated host times at risk
+#'  * id: integer vector of human hosts at this risk queue
+#'  * weight: numeric vector of human host biting weights
+#'  * time: numeric vector of aggregated human host times at risk
+#'  * n_o: integer count of zoo host (or generic blood host) types at this risk queue
+#'  * id_o: integer vector of zoo hosts (or generic blood host) at this risk queue
+#'  * weight_o: numeric vector of zoo host (or generic blood host) biting weights
 #'
 #' The closure also contains the following functions:
-#'  * add2Q(id_n,weight_n,time_n): add a new host to the queue
+#'  * add2Q(id_n,weight_n,time_n): add a new human host to the queue
+#'  * add2Q(id_n,weight_n): add a new zoo host (or generic blood host) to the queue
 #'  * rmFromQ(id_r): id of the host to remove from the queue
 #'  * clearQ(): clear id, weight, time fields (set to \code{NULL})
 #'  * sampleQ(): sample a host id from the queue
@@ -94,10 +98,16 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 make_RiskQ <- function(){
 
   # data for the closure
+  # human blood hosts
   id <- integer(1)
   weight <- numeric(1)
   time <- numeric(1)
   NEW <- TRUE
+  # zoo blood hosts
+  n_o <- 0L
+  id_o <- integer(1)
+  weight_o <- numeric(1)
+  NEWZOO <- TRUE
 
   # add2Q: add a human to the queue
   add2Q <- function(id_n,weight_n,time_n){
@@ -121,7 +131,33 @@ make_RiskQ <- function(){
         time <<- append(time,time_n)
       }
     }
+  }
 
+  # add2Q_zoo: add a zoo blood host (or generic host) to a queue
+  add2Q_zoo <- function(id_n,weight_n){
+    # check id is negative integer
+    if(id_n > 0){
+      stop("when adding zoo hosts to a risk queue the id must be < 0; input: ",id_n)
+    }
+    # new RiskQ
+    if(NEWZOO){
+      n_o <<- 1L
+      id_o <<- id_n
+      weight_o <<- weight_n
+      NEWZOO <<- FALSE
+    # not a new RiskQ
+    } else {
+      ix <- match(x = id_n,table = id_o)
+      # zoo host already in the risk queue
+      if(!is.na(ix)){
+        weight_o[ix] <<- weight_n
+      # new zoo host to be added to the risk queue
+      } else {
+        n_o <<- n_o + 1L
+        id_o <<- append(id_o,id_n)
+        weight_o <<- append(weight_o,weight_n)
+      }
+    }
   }
 
   # rmFromQ: remove a human from the queue
@@ -141,15 +177,20 @@ make_RiskQ <- function(){
     time <<- NULL
   }
 
-  # sampleQ: sample a human id from the queue
+  # sampleQ: sample a host id from the queue
   sampleQ <- function(){
-    # check for empty queue, return -10L if empty
-    out <- -10L
-    if(length(id)==0L){
-      return(out)
-    } else {
-      MBITES::sample(x = id,size = 1,replace = FALSE,prob = weight*time)
-    }
+
+
+
+
+
+    # # check for empty queue, return 0L if empty
+    # out <- 0L
+    # if(length(id)==0L){
+    #   return(out)
+    # } else {
+    #   MBITES::sample(x = id,size = 1,replace = FALSE,prob = weight*time)
+    # }
   }
 
   # printQ: print the queue

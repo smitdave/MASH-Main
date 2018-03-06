@@ -13,7 +13,7 @@
 
 
 mbites_enterHouse <- function(){
-
+  p = private$site$
 }
 
 mbites_restingSpot <- function(){

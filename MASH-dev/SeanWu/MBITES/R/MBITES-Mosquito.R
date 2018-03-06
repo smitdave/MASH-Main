@@ -165,6 +165,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    bm_size        = numeric(1), # size of my blood meal
 
                    # resource ids
+                   houseID        = integer(1), # id of the blood feeding resource i chose
                    hostID         = integer(1), # id of my blood host
                    habitatID      = integer(1) # id of my aquatic habitat
 
