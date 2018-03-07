@@ -54,6 +54,7 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
 
                    # begin constructor
                    initialize = function(w, site){
+                     futile.logger::flog.trace("Aqua_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      super$initialize(w,site) # construct the base-class parts
 
@@ -65,6 +66,8 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
 
                    # begin destructor
                    finalize = function(){
+                     futile.logger::flog.trace("Aqua_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
+
                      self$EggQ = NULL
                      self$ImagoQ = NULL
                    }, # end destructor

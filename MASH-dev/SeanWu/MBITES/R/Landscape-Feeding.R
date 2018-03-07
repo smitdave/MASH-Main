@@ -48,6 +48,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 
                    # begin constructor
                    initialize = function(w){
+                     futile.logger::flog.trace("Feeding_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      super$initialize(w,NULL) # construct base-class parts
 
@@ -57,6 +58,8 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 
                    # begin destructor
                    finalize = function(){
+                     futile.logger::flog.trace("Feeding_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
+
                      self$RiskQ = NULL
                    }, # end destructor
 
@@ -131,7 +134,7 @@ make_RiskQ <- function(){
         time <<- append(time,time_n)
       }
     }
-  }
+  } # end add2Q
 
   # add2Q_zoo: add a zoo blood host (or generic host) to a queue
   add2Q_zoo <- function(id_n,weight_n){
@@ -158,7 +161,7 @@ make_RiskQ <- function(){
         weight_o <<- append(weight_o,weight_n)
       }
     }
-  }
+  } # end add2Q_zoo
 
   # rmFromQ: remove a human from the queue
   rmFromQ <- function(id_r){
@@ -168,38 +171,50 @@ make_RiskQ <- function(){
       weight <<- weight[-ix]
       time <<- time[-ix]
     }
-  }
+  } # end rmFromQ
 
   # clearQ: set elements of queue to NULL
   clearQ <- function(){
     id <<- NULL
     weight <<- NULL
     time <<- NULL
-  }
+  } # end clearQ
 
   # sampleQ: sample a host id from the queue
   sampleQ <- function(){
 
+    # if zoo hosts present
+    if(n_o > 0L){
 
+      # sample from both sets of hosts
+      probs = weight*time
+      probs = append(probs,weight_o)
+      ids = c(id,id_o)
+      return(MBITES::sample(x = ids,size = 1,replace = FALSE,prob = probs))
 
+    # no zoo hosts present
+    } else {
+      # check for empty queue
+      if(length(id)==0L){
+        return(0L)
+      # sample human hosts
+      } else {
+        return(MBITES::sample(x = id,size = 1,replace = FALSE,prob = weight*time))
+      }
+    }
 
-
-    # # check for empty queue, return 0L if empty
-    # out <- 0L
-    # if(length(id)==0L){
-    #   return(out)
-    # } else {
-    #   MBITES::sample(x = id,size = 1,replace = FALSE,prob = weight*time)
-    # }
-  }
+  } # end sampleQ
 
   # printQ: print the queue
   printQ <- function(){
-    cat("printing a risk queue ... \n")
+    cat("printing a risk queue ... humans first \n")
     print(id)
     print(weight)
     print(time)
-  }
+    cat(" ... printing zoo hosts ... \n")
+    print(id_o)
+    print(weight_o)
+  } # end printQ
 
- list(add2Q = add2Q, rmFromQ = rmFromQ,clearQ = clearQ,sampleQ = sampleQ,printQ = printQ)
+ list(add2Q = add2Q, add2Q_zoo = add2Q_zoo, rmFromQ = rmFromQ,clearQ = clearQ,sampleQ = sampleQ,printQ = printQ)
 }

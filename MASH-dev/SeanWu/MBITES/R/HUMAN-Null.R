@@ -49,7 +49,6 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
 
                    # begin constructor
                    initialize = function(id,w,home){
-
                      futile.logger::flog.trace("Human_NULL %i being born at self: %s , private: %s",id,pryr::address(self),pryr::address(private))
 
                      # basic parameters

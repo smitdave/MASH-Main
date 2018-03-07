@@ -45,6 +45,7 @@ Site <- R6::R6Class(classname = "Site",
 
                    # begin constructor
                    initialize = function(id, xy, type, move, move_id){
+                     futile.logger::flog.trace("Site %i being born at: self %s , private %s",id,pryr::address(self),pryr::address(private))
 
                      private$id = id
                      private$xy = xy
@@ -56,6 +57,8 @@ Site <- R6::R6Class(classname = "Site",
 
                    # begin destructor
                    finalize = function(){
+                     futile.logger::flog.trace("Site %i being killed at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+
                      private$res_feed = NULL
                      private$res_aqua = NULL
                      private$res_sugar = NULL
