@@ -10,7 +10,7 @@ Tile
 }
 \description{
 A \code{Tile} consists of a set of \code{\link[MBITES]{Site}} objects defininng where events occur,
-and the agents that direct the dynamics on the tile.
+and the agents that enact the dynamics on the tile.
 }
 \section{\strong{Constructor}}{
 
@@ -22,18 +22,14 @@ and the agents that direct the dynamics on the tile.
 \section{\strong{Methods}}{
 
 \itemize{
-\item add_egg: function that must take an egg batch and add it to the \code{EggQ}
-\item one_day: function that updates daily aquatic population dynamics
-\item push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
+\item method: i'm a method!
 }
 }
 
 \section{\strong{Fields}}{
 
 \itemize{
-\item EggQ: a list of egg batches
-\item ImagoQ: a list of emerging imagos (adult mosquitoes)
-\item SiteP: a reference to a class that inherits the interface of \code{\link[MBITES]{Aqua_Resource}}
+\item field: i'm a field!
 }
 }
 

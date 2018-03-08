@@ -9,15 +9,19 @@ make_RiskQ()
 \description{
 Generates a closure that contains the following fields:
 \itemize{
-\item id: integer vector of hosts at this risk queue
-\item weight: numeric vector of host biting weights
-\item time: numeric vector of aggregated host times at risk
+\item id: integer vector of human hosts at this risk queue
+\item weight: numeric vector of human host biting weights
+\item time: numeric vector of aggregated human host times at risk
+\item n_o: integer count of zoo host (or generic blood host) types at this risk queue
+\item id_o: integer vector of zoo hosts (or generic blood host) at this risk queue
+\item weight_o: numeric vector of zoo host (or generic blood host) biting weights
 }
 }
 \details{
 The closure also contains the following functions:
 \itemize{
-\item add2Q(id_n,weight_n,time_n): add a new host to the queue
+\item add2Q(id_n,weight_n,time_n): add a new human host to the queue
+\item add2Q(id_n,weight_n): add a new zoo host (or generic blood host) to the queue
 \item rmFromQ(id_r): id of the host to remove from the queue
 \item clearQ(): clear id, weight, time fields (set to \code{NULL})
 \item sampleQ(): sample a host id from the queue

@@ -41,6 +41,7 @@
 #'
 #'  * This method is bound to \code{MosquitoFemale$oneBout()}.
 #'
+#' @include MBITES-Mosquito.R
 mbites_bout <- function(){
 
   # launch at the previously scheduled launch time
@@ -48,7 +49,7 @@ mbites_bout <- function(){
 
   # launch and try
   if(private$search){
-    self$search() # search
+    self$searchBout() # search
   } else {
     # attempt an action
     switch(private$state,
@@ -82,7 +83,8 @@ mbites_bout <- function(){
 #'      * a mosquito leaves to initiate a new search
 #'      * a mosquito stays (a success) and attenpts to land
 #'
-mbites_search <- function(){
+#'
+mbites_searchBout <- function(){
   p = switch(private$state,
     B = MBITES:::Parameters$get_Bs_succeed(),
     O = MBITES:::Parameters$get_Os_succeed(),
@@ -94,14 +96,14 @@ mbites_search <- function(){
   }
 }
 
-Mosquito$set(which = "public",name = "search",
-    value = mbites_search, overwrite = TRUE
+Mosquito$set(which = "public",name = "searchBout",
+    value = mbites_searchBout, overwrite = TRUE
 )
 
 #' MBITES: Move
 #'
 #' If successful, the mosquito moves to a new \code{\link[MBITES]{Site}} object from querying
-#' the current site by \code{\link[MBITES]{move_mosquito_Site}}. This method is called from \code{\link[MBITES]{mbites_search}}
+#' the current site by \code{\link[MBITES]{move_mosquito_Site}}. This method is called from \code{\link[MBITES]{mbites_searchBout}}
 #'      * binding: \code{Mosquito$move}
 #'
 mbites_move <- function(){

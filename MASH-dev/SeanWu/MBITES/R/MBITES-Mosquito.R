@@ -45,9 +45,9 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, b_day, site, tileID){
+                   initialize = function(b_day, site, tileID){
 
-                     private$id = id
+                     private$id = MBITES:::Globals$get_mosquito_id()
                      private$site = site
                      private$tileID = tileID
 
@@ -106,6 +106,8 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  )
 )
 
+# get_id
+
 
 ###############################################################################
 # Female Mosquito
@@ -141,7 +143,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, b_day, site, tileID){
+                   initialize = function(b_day, site, tileID){
 
                      super$initialize(id, b_day,site,tileID) # construct the base-class parts
 
@@ -209,9 +211,9 @@ Mosquito_Male <- R6::R6Class(classname = "Mosquito_Male",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, b_day, site, tileID){
+                   initialize = function(b_day, site, tileID){
 
-                     super$initialize(id, b_day,site,tileID) # construct the base-class parts
+                     super$initialize(b_day,site,tileID) # construct the base-class parts
 
 
                    } # end constructor

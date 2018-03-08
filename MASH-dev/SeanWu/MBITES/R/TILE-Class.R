@@ -69,6 +69,9 @@ Tile <- R6::R6Class(classname = "Tile",
                  )
 ) # end Tile class definition
 
+# get_mosquitoes
+
+# get_humans
 
 
 #' Tile: Return a Site Reference

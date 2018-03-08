@@ -7,4 +7,5 @@
   message("DEBUGGING ON: see mbites.log for logged messages!")
   futile.logger::flog.threshold(futile.logger::TRACE) # FOR DEBUGGING
   futile.logger::flog.appender(futile.logger::appender.tee('mbites.log'))
+  futile.logger::flog.trace("MBITES logging being initiated")
 }

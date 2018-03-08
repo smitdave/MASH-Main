@@ -12,9 +12,9 @@
 ###############################################################################
 
 
-mbites_enterHouse <- function(){
-  p = private$site$
-}
+# mbites_enterHouse <- function(){
+#   p = private$site$
+# }
 
 mbites_restingSpot <- function(){
   if(self$isActive()){ # if mosquito not dead

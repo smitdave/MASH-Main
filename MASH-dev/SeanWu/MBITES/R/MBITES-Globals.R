@@ -75,9 +75,12 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                    t_now              = 0L, # current simulation time
 
+                   # mosquito globals
                    mosquito_id        = 0L, # global counter of IDs
                    mosquito_f_out     = NULL, # connection object for logging female mosquito histories
                    mosquito_m_out     = NULL, # connection object for logging male mosquito histories
+
+                   # human globals
                    human_out          = NULL, # connection object for logging human histories
 
                    tile_id            = 0L, # global counter of tile IDs
@@ -90,7 +93,11 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
 
 ###############################################################################
-# Methods
+# Mosquito related methods
+###############################################################################
+
+###############################################################################
+# Tile related methods
 ###############################################################################
 
 #' MBITES Globals: Get a new Tile ID
@@ -129,6 +136,16 @@ get_tile_MBITES_Globals <- function(id){
   return(private$tiles[[id]])
 }
 
+#' MBITES Globals: Get Number of Tiles
+#'
+#' Return the total number of tiles created.
+#'
+#'  * This method is bound to \code{MBITES_Globals$get_n_tile}.
+#'
+get_n_tile_MBITES_Globals <- function(){
+  return(length(private$tiles))
+}
+
 MBITES_Globals$set(which = "public",name = "get_tileID",
           value = get_tileID_MBITES_Globals, overwrite = TRUE
 )
@@ -141,6 +158,9 @@ MBITES_Globals$set(which = "public",name = "get_tile",
           value = get_tile_MBITES_Globals, overwrite = TRUE
 )
 
+MBITES_Globals$set(which = "public",name = "get_n_tile",
+          value = get_n_tile_MBITES_Globals, overwrite = TRUE
+)
 
 
 
