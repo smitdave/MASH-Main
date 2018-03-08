@@ -63,5 +63,7 @@ Mosquito_Population <- R6::R6Class(classname = "Mosquito_Population",
                  ),
 
                  # private members
-                 private = list()
+                 private = list(
+                   tileID = integer(1) # id of the tile this mosquito population inhabits
+                 )
 ) # end MosquitoPop class definition

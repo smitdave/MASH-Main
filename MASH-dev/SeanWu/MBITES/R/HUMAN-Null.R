@@ -74,8 +74,38 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                    w                   = numeric(1), # my biting weight
 
                    # biting dynamics
+                   UNBITTEN            = TRUE, # have i been bitten yet?
                    mosquito_id         = integer(1), # vector of mosquitoes that have bitten me
                    mosquito_t          = numeric(1) # vector of times i was bitten
 
                  )
 ) # end Human_NULL class definition
+
+# pushes information from a bite into the human's history counter
+pushBite_Human_NULL <- function(m_id,t){
+  if(private$UNBITTEN){
+    private$mosquito_id = m_id
+    private$mosquito_t = t
+    private$UNBITTEN = FALSE
+  } else {
+    private$mosquito_id = append(private$mosquito_id,m_id)
+    private$mosquito_t = append(private$mosquito_t,t)
+  }
+}
+
+Human_NULL$set(which = "public",name = "pushBite",
+    value = pushBite_Human_NULL, overwrite = TRUE
+)
+
+
+# normally, the functions below would go in the PATHOGEN-XX-XX.R file
+
+# this function fills in for pathogen specific probeHost methods if no pathogen model is used
+probeHost_NULL <- function(){
+  MBITES:::Globals$get_tile()$get_Humans()$get_Human(private$hostID)$pushBite(m_id=private$id,t=private$t_now)
+}
+
+# this function fills in for pathogen specific bloodFeed methods if no pathogen model is used
+bloodFeed_NULL <- function(){
+
+}

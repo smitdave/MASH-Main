@@ -25,6 +25,7 @@
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
+#'  * id: id of the \code{\link[MBITES]{Tile}} that this object is being created in
 #'  * N = 100L: size to allocate to the HashMap
 #'
 #' @section **Methods**:
@@ -50,8 +51,9 @@ HashMap <- R6::R6Class(classname="HashMap",
                      public = list(
 
                        # begin constructor
-                       initialize = function(N = 100L){
+                       initialize = function(id, N = 100L){
                          private$storage = new.env(hash=TRUE,size=N)
+                         private$tileID = id
                        }, # end constructor
 
                        # begin destructor
@@ -65,6 +67,7 @@ HashMap <- R6::R6Class(classname="HashMap",
                      #private members
                      private = list(
 
+                       tileID  = integer(1),
                        storage = NULL
 
                      )
@@ -99,8 +102,8 @@ rm_all_HashMap <- function(){
 }
 
 HashMap$set(which = "public",name = "rm_all",
-  value = rm_all_HashMap,
-  overwrite = TRUE)
+  value = rm_all_HashMap, overwrite = TRUE
+)
 
 
 #' HashMap: Check if Value Exists
@@ -114,8 +117,8 @@ exists_HashMap <- function(key){
 }
 
 HashMap$set(which = "public",name = "exists",
-  value = exists_HashMap,
-  overwrite = TRUE)
+  value = exists_HashMap, overwrite = TRUE
+)
 
 #' HashMap: Views all Objects in Hash Table
 #'
@@ -126,8 +129,8 @@ ls_HashMap <- function(){
 }
 
 HashMap$set(which = "public",name = "ls",
-  value = ls_HashMap,
-  overwrite = TRUE)
+  value = ls_HashMap, overwrite = TRUE
+)
 
 #' HashMap: Assign a Key-Value Pair to the Hash Table
 #'
@@ -141,8 +144,8 @@ assign_HashMap <- function(key, value){
 }
 
 HashMap$set(which = "public",name = "assign",
-  value = assign_HashMap,
-  overwrite = TRUE)
+  value = assign_HashMap, overwrite = TRUE
+)
 
 #' HashMap: Get the Value Assigned to a Key
 #'
@@ -156,8 +159,20 @@ get_HashMap <- function(key){
 }
 
 HashMap$set(which = "public",name = "get",
-  value = get_HashMap,
-  overwrite = TRUE)
+  value = get_HashMap, overwrite = TRUE
+)
+
+#' HashMap: Get Tile ID of this Hash Table
+#'
+#' Return the id of the \code{\link[MBITES]{Tile}} this hash table object is associated to.
+#'
+get_tileID_HashMap <- function(){
+  private$tileID
+}
+
+HashMap$set(which = "public",name = "get_tileID",
+  value = get_tileID_HashMap, overwrite = TRUE
+)
 
 
 ###############################################################################
@@ -192,5 +207,5 @@ eapply_HashMap <- function(tag, return = FALSE, ...){
 }
 
 HashMap$set(which = "public",name = "apply",
-  value = eapply_HashMap,
-  overwrite = TRUE)
+  value = eapply_HashMap, overwrite = TRUE
+)
