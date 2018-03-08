@@ -145,7 +145,8 @@ Aqua_Resource_Emerge$set(which = "public",name = "one_day",
 push_imago_Emerge <- function(){
 
   t_now = MBITES:::Globals$get_t_now() # time now
-  tile = MBITES:::Globals$get_tile() # tile reference
+  tile_id = private$SiteP$get_tileID() # integer id of my tile
+  tile = MBITES:::Globals$get_tile(tile_id) # tile reference
 
   imagos = self$ImagoQ$popQ(time_e=t_now) # emerging imagos
 

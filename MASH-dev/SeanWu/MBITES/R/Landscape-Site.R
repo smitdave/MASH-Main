@@ -44,11 +44,12 @@ Site <- R6::R6Class(classname = "Site",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, xy, type, move, move_id){
+                   initialize = function(id, xy, tileID, type, move, move_id){
                      futile.logger::flog.trace("Site %i being born at: self %s , private %s",id,pryr::address(self),pryr::address(private))
 
                      private$id = id
                      private$xy = xy
+                     private$tileID = tileID
                      private$type = type
                      private$move = move
                      private$move_id = move_id
@@ -74,6 +75,7 @@ Site <- R6::R6Class(classname = "Site",
                    # site characteristics
                    id             = integer(1), # integer id
                    xy             = numeric(2), # xy-coordinates
+                   tileID         = integer(1), # integer id of the tile this site is in
                    move           = numeric(1), # 'row' of the transition matrix for movement from this site to all other sites
                    move_id        = integer(1), # id's of sites associated with the 'move' transition probabilities
                    type           = integer(1), # type of site (for matrix of weights controlling where resting occurs)
@@ -244,17 +246,17 @@ Site$set(which = "public",name = "set_mate",
 # Getters & Setters
 ###############################################################################
 
-#' Site: Return Tile Reference
+#' Site: Return ID of Tile this Site is in
 #'
-#' Return a reference to the enclosing \code{\link[MBITES]{Tile}}
-#'  * binding: \code{Site$get_tile}
+#' Return the id to the enclosing \code{\link[MBITES]{Tile}}
+#'  * binding: \code{Site$get_tileID}
 #'
-get_tile_Site <- function(){
+get_tileID_Site <- function(){
   return(private$TileP)
 }
 
-Site$set(which = "public",name = "get_tile",
-    value = get_tile_Site, overwrite = TRUE
+Site$set(which = "public",name = "get_tileID",
+    value = get_tileID_Site, overwrite = TRUE
 )
 
 # Feeding Resource accessors

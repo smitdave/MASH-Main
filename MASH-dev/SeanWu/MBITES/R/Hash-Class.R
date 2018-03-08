@@ -25,7 +25,6 @@
 #' @keywords R6 class
 #'
 #' @section **Constructor**:
-#'  * id: id of the \code{\link[MBITES]{Tile}} that this object is being created in
 #'  * N = 100L: size to allocate to the HashMap
 #'
 #' @section **Methods**:
@@ -51,9 +50,8 @@ HashMap <- R6::R6Class(classname="HashMap",
                      public = list(
 
                        # begin constructor
-                       initialize = function(id, N = 100L){
+                       initialize = function(N = 100L){
                          private$storage = new.env(hash=TRUE,size=N)
-                         private$tileID = id
                        }, # end constructor
 
                        # begin destructor
@@ -65,12 +63,7 @@ HashMap <- R6::R6Class(classname="HashMap",
                      ),
 
                      #private members
-                     private = list(
-
-                       tileID  = integer(1),
-                       storage = NULL
-
-                     )
+                     private = list(storage = NULL)
 
 ) #end class definition
 
@@ -160,18 +153,6 @@ get_HashMap <- function(key){
 
 HashMap$set(which = "public",name = "get",
   value = get_HashMap, overwrite = TRUE
-)
-
-#' HashMap: Get Tile ID of this Hash Table
-#'
-#' Return the id of the \code{\link[MBITES]{Tile}} this hash table object is associated to.
-#'
-get_tileID_HashMap <- function(){
-  private$tileID
-}
-
-HashMap$set(which = "public",name = "get_tileID",
-  value = get_tileID_HashMap, overwrite = TRUE
 )
 
 

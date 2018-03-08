@@ -45,10 +45,11 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, b_day, site){
+                   initialize = function(id, b_day, site, tileID){
 
                      private$id = id
                      private$site = site
+                     private$tileID = tileID
 
                      private$b_day = b_day
                      private$t_now = b_day
@@ -67,6 +68,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    id             = integer(1), # character id
 
                    # location
+                   tileID         = integer(1), # id of the tile i am in
                    site           = NULL, # reference to my current site
                    rspot          = character(1), # my current resting spot
 
@@ -139,9 +141,9 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, b_day, site){
+                   initialize = function(id, b_day, site, tileID){
 
-                     super$initialize(id, b_day,site) # construct the base-class parts
+                     super$initialize(id, b_day,site,tileID) # construct the base-class parts
 
                      private$state = MBITES:::Parameters$get_female_state()
 
@@ -207,9 +209,9 @@ Mosquito_Male <- R6::R6Class(classname = "Mosquito_Male",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, b_day, site){
+                   initialize = function(id, b_day, site, tileID){
 
-                     super$initialize(id, b_day,site) # construct the base-class parts
+                     super$initialize(id, b_day,site,tileID) # construct the base-class parts
 
 
                    } # end constructor
