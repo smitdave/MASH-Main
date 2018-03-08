@@ -1,24 +1,27 @@
 # ###############################################################################
-# #         __  ___      ____  _____________________
-# #        /  |/  /     / __ )/  _/_  __/ ____/ ___/
-# #       / /|_/ /_____/ __  |/ /  / / / __/  \__ \
-# #      / /  / /_____/ /_/ // /  / / / /___ ___/ /
-# #     /_/  /_/     /_____/___/ /_/ /_____//____/
+# #         __  __
+# #        / / / /_  ______ ___  ____ _____
+# #       / /_/ / / / / __ `__ \/ __ `/ __ \
+# #      / __  / /_/ / / / / / / /_/ / / / /
+# #     /_/ /_/\__,_/_/ /_/ /_/\__,_/_/ /_/
 # #
-# #     MBITES-Mosquito Population
+# #     Human Population
 # #     MBITES Team
-# #     February 2018
+# #     March 2018
 # #
 # ###############################################################################
 #
 #
+#
+#
+#
 # ###############################################################################
-# # Mosquito_Population
+# # Human_Population
 # ###############################################################################
 #
-# #' Mosquito Population Class
+# #' Human Population Class
 # #'
-# #' A \code{Mosquito_Population} inherits from the \code{\link[MBITES]{HashMap}} class, including the interface.
+# #' A \code{Human_Population} inherits from the \code{\link[MBITES]{HashMap}} class, including the interface.
 # #'
 # #'
 # #'
@@ -30,13 +33,10 @@
 # #'  * argument: im an agument!
 # #'
 # #' @section **Methods**:
-# #'  * add_egg: function that must take an egg batch and add it to the \code{EggQ}
-# #'  * one_day: function that updates daily aquatic population dynamics
-# #'  * push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
+# #'  * method: i'm a method!
 # #'
 # #' @section **Fields**:
-# #'  * EggQ: a closure of egg batches (see \code{\link[MBITES]{make_EggQ}})
-# #'  * ImagoQ: a closure of imago cohorts (see \code{\link[MBITES]{make_ImagoQ}})
+# #'  * field: i'm a field!
 # #'
 # #' @export
 # Mosquito_Population <- R6::R6Class(classname = "Mosquito_Population",

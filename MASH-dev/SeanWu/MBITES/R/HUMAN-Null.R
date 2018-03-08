@@ -107,5 +107,5 @@ probeHost_NULL <- function(){
 
 # this function fills in for pathogen specific bloodFeed methods if no pathogen model is used
 bloodFeed_NULL <- function(){
-
+  
 }

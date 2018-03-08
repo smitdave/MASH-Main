@@ -36,11 +36,6 @@ test_fn<-function(item) {
   return(ans)
 }
 
-a<-spawn_fn(1, prev_mutex)
-test_fn(a)
-
-jobs<-rep(x = list(list()),20)
-
 prev_mutex<-synchronicity::boost.mutex(mut_name<-synchronicity::uuid())
 for(i in seq(100)) {
   cat('\n')
@@ -59,6 +54,12 @@ for(i in seq(100)) {
   jobs[[job_nr]]<-spawn_fn(r, prev_mutex)
   prev_mutex<-jobs[[job_nr]]$next_m
 }
+
+a<-spawn_fn(1, prev_mutex)
+test_fn(a)
+
+jobs<-rep(x = list(list()),20)
+
 
 # @ https://stackoverflow.com/questions/31575585/shared-memory-in-parallel-foreach-in-r/37964291#37964291
 #
