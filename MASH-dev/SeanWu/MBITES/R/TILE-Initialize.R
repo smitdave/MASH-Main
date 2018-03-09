@@ -45,7 +45,7 @@ Tile_Initialize <- function(landscape){
 
     if(!is.null(site_p$mate)){
       for(i in site_p$mate){
-        mate = Mating_Resource$new(w=i$w,site=site) # make a sugar resource
+        mate = Mating_Resource$new(w=i$w,site=site) # make a mating resource
         site$add_mate(mate) # add it to the site
       }
     }
