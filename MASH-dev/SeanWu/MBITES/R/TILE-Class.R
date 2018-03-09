@@ -48,6 +48,7 @@ Tile <- R6::R6Class(classname = "Tile",
                      MBITES:::Globals$add_tile(self)
 
                      # create containers
+                     private$Sites = HashMap$new(N=1e2L)
                      private$Mosquitoes = HashMap$new(N=1e4L)
                      private$Human = HashMap$new(N=1e3L)
 
@@ -66,9 +67,9 @@ Tile <- R6::R6Class(classname = "Tile",
                  private = list(
 
                    id               = integer(1), # integer ID of this tile
-                   Sites            = list(), # list of references to Site objects
-                   Mosquitoes       = NULL, # a MosquitoPop object
-                   Humans           = NULL # a HumanPop object
+                   Sites            = NULL, # hash table of sites
+                   Mosquitoes       = NULL, # hash table of mosquitoes
+                   Humans           = NULL # hash table of humans
 
                  )
 ) # end Tile class definition
@@ -82,10 +83,18 @@ Tile <- R6::R6Class(classname = "Tile",
 #'
 #' Return the reference to a given \code{\link[MBITES]{Site}} object by id.
 #'
-get_site_Tile <- function(i){
-  return(private$Sites[[i]])
+get_sites_Tile <- function(){
+  return(private$Sites)
 }
 
-Tile$set(which = "public",name = "get_site",
-    value = get_site_Tile, overwrite = TRUE
+Tile$set(which = "public",name = "get_sites",
+    value = get_sites_Tile, overwrite = TRUE
+)
+
+get_id_Tile <- function(){
+  return(private$id)
+}
+
+Tile$set(which = "public",name = "get_id",
+    value = get_id_Tile, overwrite = TRUE
 )

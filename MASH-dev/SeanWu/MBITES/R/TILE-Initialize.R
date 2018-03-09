@@ -18,22 +18,29 @@
 
 #' Initialize Landscape
 #'
-#' Initialize \code{\link[MBITES]{Site}} objects and their resources on a tile.
+#' Initialize \code{\link[MBITES]{Site}} objects and their resources on a tile. This function should be called once for each
+#' \code{\link[MBITES]{Tile}} being initialized.
 #'
 #' @param landscape a \code{\link{list}} object where each row corresponds to a site
 #'
+#' @details
+#'
+#'
+#'
+#' @export
 Tile_Initialize <- function(landscape){
 
   n = nrow(landscape)
   pb = txtProgressBar(min = 0, max = n, initial = 0)
+  tile = Tile$new() # make a new tile and register it with MBITES:::Globals
+  tileID = tile$get_id() # id of the new tile
 
   for(i in 1:n){
 
     site_p = landscape[[i]] # parameters for this site
-    tile = site_p$tileID # the tile this site is in
 
     # make the site
-    site = Site$new(id=site_p$id,xy=site_p$xy,tileID=tile,type=site_p$type,move=site_p$move,move_id=site_p$move_id)
+    site = Site$new(id=site_p$id,xy=site_p$xy,tileID=tileID,type=site_p$type,move=site_p$move,move_id=site_p$move_id)
 
     # add resources (if present)
     if(!is.null(site_p$sugar)){
@@ -59,7 +66,8 @@ Tile_Initialize <- function(landscape){
 
     if(!is.null(site_p$aqua)){
       if(MBITES:::Parameters$get_aqua_model()=="emerge"){
-
+        aqua = Aqua_Resource_Emerge$new(w=i$w,site=site,lambda=i$lambda)
+        site$add_aqua(aqua)
       }
       if(MBITES:::Parameters$get_aqua_model()=="EL4P"){
         stop("EL4P model not finished\n")
@@ -67,7 +75,7 @@ Tile_Initialize <- function(landscape){
       # do check for EL4P or Emerge
     }
 
-    MBITES:::Globals$get_tile(tile)$get_sites()$assign(key=site_p$id,value=site)
+    MBITES:::Globals$get_tile(tileID)$get_sites()$assign(key=site_p$id,value=site)
 
     setTxtProgressBar(pb,i)
   }

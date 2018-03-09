@@ -105,7 +105,7 @@ Site <- R6::R6Class(classname = "Site",
 #'
 move_mosquito_Site <- function(){
   ix = MBITES::sample(x=private$move_id,size=1L,replace=FALSE,prob=private$move)
-  return(MBITES:::Globals$get_tile(private$tileID)$get_site(ix))
+  return(MBITES:::Globals$get_tile(private$tileID)$get_sites()$get(ix))
 }
 
 Site$set(which = "public",name = "move_mosquito",
@@ -252,7 +252,7 @@ Site$set(which = "public",name = "add_mate",
 #'  * binding: \code{Site$get_tileID}
 #'
 get_tileID_Site <- function(){
-  return(private$TileP)
+  return(private$tileID)
 }
 
 Site$set(which = "public",name = "get_tileID",

@@ -41,25 +41,24 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 
                  public = list(
 
+                   # begin constructor
                    initialize = function(){
                      futile.logger::flog.trace("MBITES_Parameters being born at: self %s , private %s",pryr::address(self),pryr::address(private))
-                   },
+                   }, # end constructor
 
+                   # begin destructor
                    finalize = function(){
                      futile.logger::flog.trace("MBITES_Parameters being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
-                   },
+                   } # end destructor
 
-                   set_x = function(xx){private$x = xx},
-                   get_x = function(){private$x}
                  ),
 
                  private = list(
-                   x = numeric(1),
 
                    aqua_model = character(1),
 
                    boutFail_p = numeric(1) # 1/number of failed bouts until mosquito gives up and searches
-                 ),
+                 )
 )
 
 

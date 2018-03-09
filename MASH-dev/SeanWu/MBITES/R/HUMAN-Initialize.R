@@ -22,6 +22,11 @@
 #'
 #' @param human_init a \code{\link{data.frame}} object where each row corresponds to a human
 #'
+#' @details
+#'
+#'
+#'
+#' @export
 Human_NULL_Initialize <- function(human_init){
 
   n = nrow(human_init)

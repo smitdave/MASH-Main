@@ -63,7 +63,7 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                      private$tileID = tileID
 
                      # add my risk to my home site
-                     MBITES:::Globals$get_tile(tileID)$get_site(siteID)$get_feed(feedingID)$RiskQ$add2Q(id,w,1)
+                     MBITES:::Globals$get_tile(tileID)$get_sites()$get(siteID)$get_feed(feedingID)$RiskQ$add2Q(id,w,1)
                    }, # end constructor
 
                    # begin destructor
@@ -114,7 +114,7 @@ Human_NULL$set(which = "public",name = "pushBite",
 
 # this function fills in for pathogen specific probeHost methods if no pathogen model is used
 probeHost_NULL <- function(){
-  MBITES:::Globals$get_tile()$get_Humans()$get_Human(private$hostID)$pushBite(m_id=private$id,t=private$t_now)
+  MBITES:::Globals$get_tile()$get_humans()$get(private$hostID)$pushBite(m_id=private$id,t=private$t_now)
 }
 
 # this function fills in for pathogen specific bloodFeed methods if no pathogen model is used

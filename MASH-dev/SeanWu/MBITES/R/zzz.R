@@ -8,11 +8,11 @@
 
   # erase old logger file
   dir = system.file(package="MBITES")
-  cat("dir: ",dir,"\n")
+  cat("MBITES dir: ",dir,"\n")
   file = file.path(dir,"mbites.log")
-  cat("file: ",file,"\n")
+  cat("MBITES log file: ",file,"\n")
   if(file.exists(file)){
-    cat("removing the file\n")
+    cat("removing previous log file: ",file,"\n")
     file.remove(file)
   }
 
