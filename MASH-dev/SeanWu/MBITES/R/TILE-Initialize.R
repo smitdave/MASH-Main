@@ -18,7 +18,7 @@
 
 #' Initialize Landscape
 #'
-#' Initialize \code{\link[MBITES]{Site}} objects and their resources on a tile
+#' Initialize \code{\link[MBITES]{Site}} objects and their resources on a tile.
 #'
 #' @param landscape a \code{\link{list}} object where each row corresponds to a site
 #'
@@ -52,11 +52,18 @@ Tile_Initialize <- function(landscape){
 
     if(!is.null(site_p$feed)){
       for(i in site_p$feed){
-
+        feed = Feeding_Resource$new(w=i$w,site=site)
+        site$add_feed(feed)
       }
     }
 
     if(!is.null(site_p$aqua)){
+      if(MBITES:::Parameters$get_aqua_model()=="emerge"){
+
+      }
+      if(MBITES:::Parameters$get_aqua_model()=="EL4P"){
+        stop("EL4P model not finished\n")
+      }
       # do check for EL4P or Emerge
     }
 

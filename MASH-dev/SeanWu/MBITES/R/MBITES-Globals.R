@@ -67,7 +67,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                    # tile globals
                    tile_id            = 0L, # global counter of tile IDs
-                   tiles              = list() # reference to all the tiles
+                   tiles              = list() # references to all the tiles
 
                  ),
 ) # end MBITES_Globals definition

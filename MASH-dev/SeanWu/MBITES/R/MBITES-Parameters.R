@@ -56,6 +56,8 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
                  private = list(
                    x = numeric(1),
 
+                   aqua_model = character(1),
+
                    boutFail_p = numeric(1) # 1/number of failed bouts until mosquito gives up and searches
                  ),
 )
