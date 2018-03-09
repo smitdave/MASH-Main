@@ -43,21 +43,24 @@ Mating_Resource <- R6::R6Class(classname = "Mating_Resource",
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
-                 inherit = MBITES:::Resource,                 
+                 inherit = MBITES:::Resource,
 
                  # public members
                  public = list(
 
                    # begin constructor
-                   initialize = function(w){
+                   initialize = function(w,site){
+                     futile.logger::flog.trace("Mating_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
-                     super$initialize(w,NULL) # construct base-class parts
+                     super$initialize(w,site) # construct base-class parts
 
                      self$MatingQ = make_MatingQ()
                    }, # end constructor
 
                    # begin destructor
                    finalize = function(){
+                     futile.logger::flog.trace("Mating_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
+
                      self$MatingQ = NULL
                    }, # end destructor
 

@@ -42,8 +42,7 @@ Resource <- R6::R6Class(classname = "Mosquito",
 
                    # begin constructor
                    initialize = function(w,site){
-
-                     futile.logger::flog.trace("Resource being born at: %s",pryr::address(self))
+                     futile.logger::flog.trace("Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      private$w = w
                      private$SiteP = site
@@ -52,7 +51,7 @@ Resource <- R6::R6Class(classname = "Mosquito",
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Resource being killed at: %s",pryr::address(self))
+                     futile.logger::flog.trace("Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
                    }
 
                  ),

@@ -26,7 +26,9 @@
 #' @section **Constructor**:
 #'  * id: integer id
 #'  * w: numeric biting weight
-#'  * home: id of the \code{\link[MBITES]{Site}} where my biting weight will be added
+#'  * feedingID: id of the \code{\link[MBITES]{Feeding_Resource}} where my biting weight will be added
+#'  * siteID: id of the \code{\link[MBITES]{Site}} where my feeding site resides
+#'  * tileID: id of the \code{\link[MBITES]{Tile}} where I reside
 #'
 #' @section **Methods**:
 #'  * method: i'm a method!
@@ -48,16 +50,20 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id,w,home){
-
+                   initialize = function(id,w,feedingID,siteID,tileID){
                      futile.logger::flog.trace("Human_NULL %i being born at self: %s , private: %s",id,pryr::address(self),pryr::address(private))
 
                      # basic parameters
                      private$id = id
                      private$w = w
 
+                     # location fields
+                     private$feedingID = feedingID
+                     private$siteID = siteID
+                     private$tileID = tileID
+
                      # add my risk to my home site
-                     MBITES:::Globals$get_tile()$get_site(home)$get_feed(1L)$RiskQ$add2Q(id,w,1)
+                     MBITES:::Globals$get_tile(tileID)$get_site(siteID)$get_feed(feedingID)$RiskQ$add2Q(id,w,1)
                    }, # end constructor
 
                    # begin destructor
@@ -74,9 +80,44 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                    id                  = integer(1), # my id
                    w                   = numeric(1), # my biting weight
 
+                   # location fields
+                   feedingID           = integer(1),
+                   siteID              = integer(1),
+                   tileID              = integer(1),
+
                    # biting dynamics
+                   UNBITTEN            = TRUE, # have i been bitten yet?
                    mosquito_id         = integer(1), # vector of mosquitoes that have bitten me
                    mosquito_t          = numeric(1) # vector of times i was bitten
 
                  )
 ) # end Human_NULL class definition
+
+# pushes information from a bite into the human's history counter
+pushBite_Human_NULL <- function(m_id,t){
+  if(private$UNBITTEN){
+    private$mosquito_id = m_id
+    private$mosquito_t = t
+    private$UNBITTEN = FALSE
+  } else {
+    private$mosquito_id = append(private$mosquito_id,m_id)
+    private$mosquito_t = append(private$mosquito_t,t)
+  }
+}
+
+Human_NULL$set(which = "public",name = "pushBite",
+    value = pushBite_Human_NULL, overwrite = TRUE
+)
+
+
+# normally, the functions below would go in the PATHOGEN-XX-XX.R file
+
+# this function fills in for pathogen specific probeHost methods if no pathogen model is used
+probeHost_NULL <- function(){
+  MBITES:::Globals$get_tile()$get_Humans()$get_Human(private$hostID)$pushBite(m_id=private$id,t=private$t_now)
+}
+
+# this function fills in for pathogen specific bloodFeed methods if no pathogen model is used
+bloodFeed_NULL <- function(){
+
+}

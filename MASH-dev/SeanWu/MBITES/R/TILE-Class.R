@@ -14,7 +14,7 @@
 #' Tile Class
 #'
 #' A \code{Tile} consists of a set of \code{\link[MBITES]{Site}} objects defininng where events occur,
-#' and the agents that direct the dynamics on the tile.
+#' and the agents that enact the dynamics on the tile.
 #'
 #'
 #' @docType class
@@ -25,14 +25,10 @@
 #'  * argument: im an agument!
 #'
 #' @section **Methods**:
-#'  * add_egg: function that must take an egg batch and add it to the \code{EggQ}
-#'  * one_day: function that updates daily aquatic population dynamics
-#'  * push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
+#'  * method: i'm a method!
 #'
 #' @section **Fields**:
-#'  * EggQ: a list of egg batches
-#'  * ImagoQ: a list of emerging imagos (adult mosquitoes)
-#'  * SiteP: a reference to a class that inherits the interface of \code{\link[MBITES]{Aqua_Resource}}
+#'  * field: i'm a field!
 #'
 #' @export
 Tile <- R6::R6Class(classname = "Tile",
@@ -46,10 +42,22 @@ Tile <- R6::R6Class(classname = "Tile",
 
                    # begin constructor
                    initialize = function(){
+
+                     # get a tile id from global parameters and add my reference to the globals
+                     private$id = MBITES:::Globals$get_tileID()
+                     MBITES:::Globals$add_tile(self)
+
+                     # create containers
+                     private$Mosquitoes = HashMap$new(N=1e4L)
+                     private$Human = HashMap$new(N=1e3L)
+
+                     # log the event
+                     futile.logger::flog.trace("Tile %i being born at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
                    }, # end constructor
 
                    # begin destructor
                    finalize = function(){
+                     futile.logger::flog.trace("Tile %i being killed at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
                    } # end destructor
 
                  ),
@@ -57,13 +65,17 @@ Tile <- R6::R6Class(classname = "Tile",
                  # private members
                  private = list(
 
-                   Sites = list(), # list of references to Site objects
-                   Mosquitoes = NULL, # a MosquitoPop object
-                   Humans = NULL # a HumanPop object
+                   id               = integer(1), # integer ID of this tile
+                   Sites            = list(), # list of references to Site objects
+                   Mosquitoes       = NULL, # a MosquitoPop object
+                   Humans           = NULL # a HumanPop object
 
                  )
-) # end Aqua_Resource class definition
+) # end Tile class definition
 
+# get_mosquitoes
+
+# get_humans
 
 
 #' Tile: Return a Site Reference

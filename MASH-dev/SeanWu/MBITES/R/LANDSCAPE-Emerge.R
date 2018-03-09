@@ -47,6 +47,7 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
 
                    # begin constructor
                    initialize = function(w, site, lambda){
+                     futile.logger::flog.trace("Aqua_Resource_Emerge being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      if(length(lambda)<365 & length(lambda)>1){
                        stop(cat("length of provided lambda vector: ",length(lambda),", but require vector either >= 365 days or 1 day (constant emergence)"))
@@ -62,7 +63,12 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
                        private$lambda = lambda
                      }
 
-                   } # end constructor
+                   }, # end constructor
+
+                   # begin destructor
+                   finalize = function(){
+                     futile.logger::flog.trace("Aqua_Resource_Emerge being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
+                   } # end destructor
 
                  ), # end public
 
@@ -139,7 +145,8 @@ Aqua_Resource_Emerge$set(which = "public",name = "one_day",
 push_imago_Emerge <- function(){
 
   t_now = MBITES:::Globals$get_t_now() # time now
-  tile = MBITES:::Globals$get_tile() # tile reference
+  tile_id = private$SiteP$get_tileID() # integer id of my tile
+  tile = MBITES:::Globals$get_tile(tile_id) # tile reference
 
   imagos = self$ImagoQ$popQ(time_e=t_now) # emerging imagos
 

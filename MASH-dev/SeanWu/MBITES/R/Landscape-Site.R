@@ -44,10 +44,13 @@ Site <- R6::R6Class(classname = "Site",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, xy, move, move_id){
+                   initialize = function(id, xy, tileID, type, move, move_id){
+                     futile.logger::flog.trace("Site %i being born at: self %s , private %s",id,pryr::address(self),pryr::address(private))
 
                      private$id = id
                      private$xy = xy
+                     private$tileID = tileID
+                     private$type = type
                      private$move = move
                      private$move_id = move_id
 
@@ -55,6 +58,8 @@ Site <- R6::R6Class(classname = "Site",
 
                    # begin destructor
                    finalize = function(){
+                     futile.logger::flog.trace("Site %i being killed at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+
                      private$res_feed = NULL
                      private$res_aqua = NULL
                      private$res_sugar = NULL
@@ -70,8 +75,10 @@ Site <- R6::R6Class(classname = "Site",
                    # site characteristics
                    id             = integer(1), # integer id
                    xy             = numeric(2), # xy-coordinates
+                   tileID         = integer(1), # integer id of the tile this site is in
                    move           = numeric(1), # 'row' of the transition matrix for movement from this site to all other sites
                    move_id        = integer(1), # id's of sites associated with the 'move' transition probabilities
+                   type           = integer(1), # type of site (for matrix of weights controlling where resting occurs)
 
                    # resources
                    res_feed       = list(), # list of references to 'feeding'-type resources
@@ -81,13 +88,7 @@ Site <- R6::R6Class(classname = "Site",
                    res_sugar      = list(), # list of references to 'sugar'-type resources
                    res_sugar_w    = NULL, # weights of 'sugar'-type resources
                    res_mate       = list(), # list of references to 'mate'-type resources
-                   res_mate_w     = NULL, # weights of 'mate'-type resources
-
-                   # mosquito queries
-                   bool_feed       = FALSE,
-                   bool_aqua       = FALSE,
-                   bool_sugar      = FALSE,
-                   bool_mate       = FALSE
+                   res_mate_w     = NULL # weights of 'mate'-type resources
 
                  ) # end private members
 ) # end Site class definition
@@ -104,7 +105,7 @@ Site <- R6::R6Class(classname = "Site",
 #'
 move_mosquito_Site <- function(){
   ix = MBITES::sample(x=private$move_id,size=1L,replace=FALSE,prob=private$move)
-  return(MBITES:::Globals$get_tile()$get_Site(ix))
+  return(MBITES:::Globals$get_tile(private$tileID)$get_site(ix))
 }
 
 Site$set(which = "public",name = "move_mosquito",
@@ -176,125 +177,68 @@ Site$set(which = "public",name = "sample_mate",
 #' Site: Add a Blood Feeding Resource
 #'
 #' Add a blood feeding resource to this site.
-#'  * binding: \code{Site$set_feed}
+#'  * binding: \code{Site$add_feed}
 #'
 #' @param Feeding_Resource a reference to a \code{\link[MBITES]{Feeding_Resource}} object
 #'
-set_feed_Site <- function(Feeding_Resource){
+add_feed_Site <- function(Feeding_Resource){
   private$res_feed = append(private$res_feed,Feeding_Resource)
   private$res_feed_w = append(private$res_feed_w,Feeding_Resource$get_w())
 }
 
-Site$set(which = "public",name = "set_feed",
-    value = set_feed_Site, overwrite = TRUE
+Site$set(which = "public",name = "add_feed",
+    value = add_feed_Site, overwrite = TRUE
 )
 
 
 #' Site: Add a Aquatic Habitat Resource
 #'
 #' Add a aquatic habitat resource to this site.
-#'  * binding: \code{Site$set_aqua}
+#'  * binding: \code{Site$add_aqua}
 #'
 #' @param Aqua_Resource a reference to an object deriving from \code{\link[MBITES]{Aqua_Resource}}
 #'
-set_aqua_Site <- function(Aqua_Resource){
+add_aqua_Site <- function(Aqua_Resource){
   private$res_aqua = append(private$res_aqua,Aqua_Resource)
   private$res_aqua_w = append(private$res_aqua_w,Aqua_Resource$get_w())
 }
 
-Site$set(which = "public",name = "set_aqua",
-    value = set_aqua_Site, overwrite = TRUE
+Site$set(which = "public",name = "add_aqua",
+    value = add_aqua_Site, overwrite = TRUE
 )
 
 
 #' Site: Add a Sugar Feeding Resource
 #'
 #' Add a sugar feeding resource to this site.
-#'  * binding: \code{Site$set_sugar}
+#'  * binding: \code{Site$add_sugar}
 #'
 #' @param Sugar_Resource a reference to a \code{\link[MBITES]{Sugar_Resource}} object
 #'
-set_sugar_Site <- function(Sugar_Resource){
+add_sugar_Site <- function(Sugar_Resource){
   private$res_sugar = append(private$res_sugar,Sugar_Resource)
   private$res_sugar_w = append(private$res_sugar_w,Sugar_Resource$get_w())
 }
 
-Site$set(which = "public",name = "set_sugar",
-    value = set_sugar_Site, overwrite = TRUE
+Site$set(which = "public",name = "add_sugar",
+    value = add_sugar_Site, overwrite = TRUE
 )
 
 
 #' Site: Add a Mating Resource
 #'
 #' Add a mating resource to this site.
-#'  * binding: \code{Site$set_mate}
+#'  * binding: \code{Site$add_mate}
 #'
 #' @param Mating_Resource a reference to a \code{\link[MBITES]{Mating_Resource}} object
 #'
-set_mate_Site <- function(Mating_Resource){
+add_mate_Site <- function(Mating_Resource){
   private$res_mate = append(private$res_mate,Mating_Resource)
   private$res_mate_w = append(private$res_mate_w,Mating_Resource$get_w())
 }
 
-Site$set(which = "public",name = "set_mate",
-    value = set_mate_Site, overwrite = TRUE
-)
-
-
-###############################################################################
-# Query Resources
-###############################################################################
-
-#' Site: Has Blood Feeding Resources?
-#'
-#' Query if this site has \code{\link[MBITES]{Feeding_Resource}} present.
-#'  * binding: \code{Site$has_feed}
-#'
-has_feed_Site <- function(){
-  return(private$bool_feed)
-}
-
-Site$set(which = "public",name = "has_feed",
-    value = has_feed_Site, overwrite = TRUE
-)
-
-#' Site: Has Aquatic Habitats?
-#'
-#' Query if this site has \code{\link[MBITES]{Aqua_Resource}} present.
-#'  * binding: \code{Site$has_aqua}
-#'
-has_aqua_Site <- function(){
-  return(private$bool_aqua)
-}
-
-Site$set(which = "public",name = "has_aqua",
-    value = has_aqua_Site, overwrite = TRUE
-)
-
-#' Site: Has Sugar Feeding Resources?
-#'
-#' Query if this site has \code{\link[MBITES]{Sugar_Resource}} present.
-#'  * binding: \code{Site$has_sugar}
-#'
-has_sugar_Site <- function(){
-  return(private$bool_sugar)
-}
-
-Site$set(which = "public",name = "has_sugar",
-    value = has_sugar_Site, overwrite = TRUE
-)
-
-#' Site: Has Mating Swarms?
-#'
-#' Query if this site has \code{\link[MBITES]{Mating_Resource}} present.
-#'  * binding: \code{Site$has_mate}
-#'
-has_mate_Site <- function(){
-  return(private$bool_mate)
-}
-
-Site$set(which = "public",name = "has_mate",
-    value = has_mate_Site, overwrite = TRUE
+Site$set(which = "public",name = "add_mate",
+    value = add_mate_Site, overwrite = TRUE
 )
 
 
@@ -302,17 +246,17 @@ Site$set(which = "public",name = "has_mate",
 # Getters & Setters
 ###############################################################################
 
-#' Site: Return Tile Reference
+#' Site: Return ID of Tile this Site is in
 #'
-#' Return a reference to the enclosing \code{\link[MBITES]{Tile}}
-#'  * binding: \code{Site$get_tile}
+#' Return the id to the enclosing \code{\link[MBITES]{Tile}}
+#'  * binding: \code{Site$get_tileID}
 #'
-get_tile_Site <- function(){
+get_tileID_Site <- function(){
   return(private$TileP)
 }
 
-Site$set(which = "public",name = "get_tile",
-    value = get_tile_Site, overwrite = TRUE
+Site$set(which = "public",name = "get_tileID",
+    value = get_tileID_Site, overwrite = TRUE
 )
 
 # Feeding Resource accessors

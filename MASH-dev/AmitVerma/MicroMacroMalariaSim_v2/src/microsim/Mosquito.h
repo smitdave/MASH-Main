@@ -38,7 +38,7 @@ public:
     // Location
     location *currentLocation; ///< current location of the Mosquito
     Patch *patch; ///< reference to the home Patch
-    //	int     pondID;              
+    //	int     pondID;
     //	int     patchID;
     //	int     houseID;
 

@@ -10,6 +10,7 @@ queueInfectiousBites_PfSI_Human()
 Based on my personal EIR value, queue infectious PfSI bites by calling \code{\link{add2Q_SimBitePfSI_Human}}
 }
 \details{
+Each Human experiences a Poisson-distributed number of bites, with mean given by an individual's weighted EIR
 \itemize{
 \item This method is bound to \code{Human$queueInfectiousBites}
 }

@@ -41,21 +41,24 @@ Sugar_Resource <- R6::R6Class(classname = "Sugar_Resource",
                  cloneable = FALSE,
                  lock_class = FALSE,
                  lock_objects = FALSE,
-                 inherit = MBITES:::Resource,                 
+                 inherit = MBITES:::Resource,
 
                  # public members
                  public = list(
 
                    # begin constructor
-                   initialize = function(w){
+                   initialize = function(w,site){
+                     futile.logger::flog.trace("Sugar_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
-                     super$initialize(w,NULL) # construct base-class parts
+                     super$initialize(w,site) # construct base-class parts
 
 
-                   } # end constructor
+                   }, # end constructor
 
                    # begin destructor
-                   # finalize = function(){}, # end destructor
+                   finalize = function(){
+                     futile.logger::flog.trace("Sugar_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
+                   } # end destructor
 
                  ), # end public members
 
