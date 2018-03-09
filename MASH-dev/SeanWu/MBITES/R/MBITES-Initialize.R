@@ -32,6 +32,7 @@ MBITES_Initialize <- function(mosy_init){
     tileID = mosy_init[i,"tileID"]
     siteID = mosy_init[i,"siteID"]
     female = mosy_init[i,"female"]
+    id = MBITES:::Globals$get_mosquito_id()
     site = MBITES:::Globals$get_tile(tileID)$get_site(siteID)
     mosy = NULL
     if(female){

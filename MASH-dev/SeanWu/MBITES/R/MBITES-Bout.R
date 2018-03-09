@@ -107,7 +107,7 @@ Mosquito$set(which = "public",name = "searchBout",
 #'      * binding: \code{Mosquito$move}
 #'
 mbites_move <- function(){
-  private$site = private$site$move_mosquito()
+  private$site = private$site$move_mosquito() # see LANDSCAPE-Site.R
   private$search = FALSE
 }
 

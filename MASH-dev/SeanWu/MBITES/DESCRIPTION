@@ -15,7 +15,9 @@ Imports: R6, futile.logger, pryr, jsonlite
 ByteCompile: true
 Collate: 
     'Auxiliary.R'
+    'HUMAN-Initialize.R'
     'HUMAN-Null.R'
+    'HUMAN-Population.R'
     'Hash-Class.R'
     'LANDSCAPE-Aqua.R'
     'LANDSCAPE-EL4P.R'

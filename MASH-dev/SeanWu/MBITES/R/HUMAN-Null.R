@@ -26,7 +26,9 @@
 #' @section **Constructor**:
 #'  * id: integer id
 #'  * w: numeric biting weight
-#'  * home: id of the \code{\link[MBITES]{Site}} where my biting weight will be added
+#'  * feedingID: id of the \code{\link[MBITES]{Feeding_Resource}} where my biting weight will be added
+#'  * siteID: id of the \code{\link[MBITES]{Site}} where my feeding site resides
+#'  * tileID: id of the \code{\link[MBITES]{Tile}} where I reside
 #'
 #' @section **Methods**:
 #'  * method: i'm a method!
@@ -48,15 +50,20 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id,w,home){
+                   initialize = function(id,w,feedingID,siteID,tileID){
                      futile.logger::flog.trace("Human_NULL %i being born at self: %s , private: %s",id,pryr::address(self),pryr::address(private))
 
                      # basic parameters
                      private$id = id
                      private$w = w
 
+                     # location fields
+                     private$feedingID = feedingID
+                     private$siteID = siteID
+                     private$tileID = tileID
+
                      # add my risk to my home site
-                     MBITES:::Globals$get_tile()$get_site(home)$get_feed(1L)$RiskQ$add2Q(id,w,1)
+                     MBITES:::Globals$get_tile(tileID)$get_site(siteID)$get_feed(feedingID)$RiskQ$add2Q(id,w,1)
                    }, # end constructor
 
                    # begin destructor
@@ -72,6 +79,11 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                    # local fields
                    id                  = integer(1), # my id
                    w                   = numeric(1), # my biting weight
+
+                   # location fields
+                   feedingID           = integer(1),
+                   siteID              = integer(1),
+                   tileID              = integer(1),
 
                    # biting dynamics
                    UNBITTEN            = TRUE, # have i been bitten yet?
@@ -107,5 +119,5 @@ probeHost_NULL <- function(){
 
 # this function fills in for pathogen specific bloodFeed methods if no pathogen model is used
 bloodFeed_NULL <- function(){
-  
+
 }

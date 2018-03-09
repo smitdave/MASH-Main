@@ -105,7 +105,7 @@ Site <- R6::R6Class(classname = "Site",
 #'
 move_mosquito_Site <- function(){
   ix = MBITES::sample(x=private$move_id,size=1L,replace=FALSE,prob=private$move)
-  return(MBITES:::Globals$get_tile()$get_Site(ix))
+  return(MBITES:::Globals$get_tile(private$tileID)$get_site(ix))
 }
 
 Site$set(which = "public",name = "move_mosquito",
@@ -177,68 +177,68 @@ Site$set(which = "public",name = "sample_mate",
 #' Site: Add a Blood Feeding Resource
 #'
 #' Add a blood feeding resource to this site.
-#'  * binding: \code{Site$set_feed}
+#'  * binding: \code{Site$add_feed}
 #'
 #' @param Feeding_Resource a reference to a \code{\link[MBITES]{Feeding_Resource}} object
 #'
-set_feed_Site <- function(Feeding_Resource){
+add_feed_Site <- function(Feeding_Resource){
   private$res_feed = append(private$res_feed,Feeding_Resource)
   private$res_feed_w = append(private$res_feed_w,Feeding_Resource$get_w())
 }
 
-Site$set(which = "public",name = "set_feed",
-    value = set_feed_Site, overwrite = TRUE
+Site$set(which = "public",name = "add_feed",
+    value = add_feed_Site, overwrite = TRUE
 )
 
 
 #' Site: Add a Aquatic Habitat Resource
 #'
 #' Add a aquatic habitat resource to this site.
-#'  * binding: \code{Site$set_aqua}
+#'  * binding: \code{Site$add_aqua}
 #'
 #' @param Aqua_Resource a reference to an object deriving from \code{\link[MBITES]{Aqua_Resource}}
 #'
-set_aqua_Site <- function(Aqua_Resource){
+add_aqua_Site <- function(Aqua_Resource){
   private$res_aqua = append(private$res_aqua,Aqua_Resource)
   private$res_aqua_w = append(private$res_aqua_w,Aqua_Resource$get_w())
 }
 
-Site$set(which = "public",name = "set_aqua",
-    value = set_aqua_Site, overwrite = TRUE
+Site$set(which = "public",name = "add_aqua",
+    value = add_aqua_Site, overwrite = TRUE
 )
 
 
 #' Site: Add a Sugar Feeding Resource
 #'
 #' Add a sugar feeding resource to this site.
-#'  * binding: \code{Site$set_sugar}
+#'  * binding: \code{Site$add_sugar}
 #'
 #' @param Sugar_Resource a reference to a \code{\link[MBITES]{Sugar_Resource}} object
 #'
-set_sugar_Site <- function(Sugar_Resource){
+add_sugar_Site <- function(Sugar_Resource){
   private$res_sugar = append(private$res_sugar,Sugar_Resource)
   private$res_sugar_w = append(private$res_sugar_w,Sugar_Resource$get_w())
 }
 
-Site$set(which = "public",name = "set_sugar",
-    value = set_sugar_Site, overwrite = TRUE
+Site$set(which = "public",name = "add_sugar",
+    value = add_sugar_Site, overwrite = TRUE
 )
 
 
 #' Site: Add a Mating Resource
 #'
 #' Add a mating resource to this site.
-#'  * binding: \code{Site$set_mate}
+#'  * binding: \code{Site$add_mate}
 #'
 #' @param Mating_Resource a reference to a \code{\link[MBITES]{Mating_Resource}} object
 #'
-set_mate_Site <- function(Mating_Resource){
+add_mate_Site <- function(Mating_Resource){
   private$res_mate = append(private$res_mate,Mating_Resource)
   private$res_mate_w = append(private$res_mate_w,Mating_Resource$get_w())
 }
 
-Site$set(which = "public",name = "set_mate",
-    value = set_mate_Site, overwrite = TRUE
+Site$set(which = "public",name = "add_mate",
+    value = add_mate_Site, overwrite = TRUE
 )
 
 

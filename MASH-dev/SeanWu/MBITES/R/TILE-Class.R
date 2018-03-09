@@ -47,6 +47,10 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$id = MBITES:::Globals$get_tileID()
                      MBITES:::Globals$add_tile(self)
 
+                     # create containers
+                     private$Mosquitoes = HashMap$new(N=1e4L)
+                     private$Human = HashMap$new(N=1e3L)
+
                      # log the event
                      futile.logger::flog.trace("Tile %i being born at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
                    }, # end constructor

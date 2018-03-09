@@ -47,32 +47,13 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                    finalize = function(){
                      futile.logger::flog.trace("MBITES_Globals being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
-                   },
-
-                   # reset all values
-                   reset = function(){
-                     cat("reset all MBITES global parameters to initial values\n")
-                     private$t_now = 0L
-                     private$mosquito_id = 0L
-                   },
-
-                   get_mosquito_id = function(){
-                     private$mosquito_id = private$mosquito_id + 1L
-                     return(private$mosquito_id)
-                   },
-
-                   get_t_now = function(){
-                     return(private$t_now)
-                   },
-
-                   increment_t_now = function(){
-                     private$t_now = private$t_now + 1L
                    }
 
                  ),
 
                  private = list(
 
+                   # world-state globals
                    t_now              = 0L, # current simulation time
 
                    # mosquito globals
@@ -81,8 +62,10 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                    mosquito_m_out     = NULL, # connection object for logging male mosquito histories
 
                    # human globals
+                   human_id           = 0L, # global counter of IDs
                    human_out          = NULL, # connection object for logging human histories
 
+                   # tile globals
                    tile_id            = 0L, # global counter of tile IDs
                    tiles              = list() # reference to all the tiles
 
@@ -93,8 +76,49 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
 
 ###############################################################################
+# World-state global methods
+###############################################################################
+
+get_t_now_MBITES_Globals <- function(){
+  return(private$t_now)
+}
+
+increment_t_now_MBITES_Globals <- function(){
+  private$t_now = private$t_now + 1L
+}
+
+###############################################################################
 # Mosquito related methods
 ###############################################################################
+
+#' MBITES Globals: Get a new Mosquito ID
+#'
+#' Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link[MBITES]{Mosquito}}
+#' objects.
+#'
+#'  * This method is bound to \code{MBITES_Globals$get_mosquito_id}.
+#'
+get_mosquito_id_MBITES_Globals <- function(){
+  private$mosquito_id = private$mosquito_id + 1L
+  return(private$mosquito_id)
+}
+
+
+###############################################################################
+# Human related methods
+###############################################################################
+
+#' MBITES Globals: Get a new Human ID
+#'
+#' Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link[MBITES]{Human_NULL}} or Human
+#' objects.
+#'
+#'  * This method is bound to \code{MBITES_Globals$get_human_id}.
+#'
+get_human_id_MBITES_Globals <- function(){
+  private$human_id = private$human_id + 1L
+  return(private$human_id)
+}
 
 ###############################################################################
 # Tile related methods

@@ -17,7 +17,9 @@ to be simulated explicitly.
 \itemize{
 \item id: integer id
 \item w: numeric biting weight
-\item home: id of the \code{\link[MBITES]{Site}} where my biting weight will be added
+\item feedingID: id of the \code{\link[MBITES]{Feeding_Resource}} where my biting weight will be added
+\item siteID: id of the \code{\link[MBITES]{Site}} where my feeding site resides
+\item tileID: id of the \code{\link[MBITES]{Tile}} where I reside
 }
 }
 
