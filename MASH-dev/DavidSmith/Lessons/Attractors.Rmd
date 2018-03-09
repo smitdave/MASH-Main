@@ -1,0 +1,33 @@
+---
+title: "Attractors"
+author: "David L Smith"
+date: "3/8/2018"
+output: html_document
+---
+
+## Basic Analysis 
+# Steady States
+
+Let's start with logistic growth, a fairly simple differential equation $$\frac{dx}{dt} = \dot x = r x \left(1-\frac{x}{K}\right),$$ where $r>0$ is called the growth rate and $K=0$ is called the carrying capacity. 
+
+A steady state is a value of the variable $x$ such that $\dot x=f(x)=0$. Solving $f(x) = rx(1-x/K)=0$, we find that the steady states are at $x=0$ and $x=K$.
+
+## Stability
+
+If we plot $rx(1-x/K)$ we get an idea of the way the system changes. We're particularly interested in knowing what happens around the steady states. The following diagram adds some arrows to emphasize the direction of change: 
+```{r}
+r = .1; K=2
+xx = seq(-.1, 2.1, length.out = 40)
+plot(xx, r*xx*(1-xx/K), type = "l", bty="n", xlab = expression(x), ylab = expression(rx(1-x/K)), xaxt = "n", yaxt = "n")
+lines(xx, 0*xx, col = grey(0.5))
+segments(0,-0.01,0,0.1, col = grey(0.5))
+axis(1, c(0,K), c(0, "K"))
+axis(2, c(0,r/2), c(0, "r/2"))
+arrows(0, 0,.2,0, lwd=2, length=0.25)
+arrows(K-.2,0,K,0, lwd=2, length =0.25)
+arrows(K+.2,0,K,0, lwd=2, length=0.25)
+```
+
+
+for $x\in (0,K)$, $\dot x>0$. To put it another way, $x$ grows until it reaches $K$. For $x >K$, $\dot x < 0$, so $x$ will shrink until it reaches $K$.  All roads lead to $K$, so we call it a stable steady state.  
+
