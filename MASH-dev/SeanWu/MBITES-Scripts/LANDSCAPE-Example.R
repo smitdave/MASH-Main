@@ -16,15 +16,14 @@ library(spatstat)
 library(truncdist)
 library(viridis)
 
+# number of sites
+nSite = 200
+
 # number of resources
 nFeed = 100
 nAqua = 120
 nSugar = 40
 nMate = 20
-
-# number of sites
-nSite = sum(nFeed,nAqua,nSugar,nMate)
-nSite = floor(nSite/5)
 
 # assign resources to sites
 ix_feed = sample(x=1:nSite,size=nFeed,replace=TRUE)
@@ -36,13 +35,19 @@ w_sugar = rgamma(n=nSugar,shape=1,rate=1)
 ix_mate = sample(x=1:nSite,size=nMate,replace=TRUE)
 w_mate = rgamma(n=nMate,shape=1,rate=1)
 
+# generate lambda
+lambda_a = 100 # lambda summed across all sites
+lambda_w = rgamma(nAqua, shape=1, scale = 1) # relative weights of sites
+K = lambda_a*lambda_w / sum(lambda_w) # carrying capacity of each site
+lambda = lapply(K,function(x){x*(1+sin(2*pi*(1:365)/365))})
+
 # 2d plane
 xy_plane = owin(xrange = c(0,1),yrange = c(0,1))
 
 # poisson scatter, matérn clustering, overdispersed
 xy_pois <- rpoispp(lambda = nSite,win = xy_plane)
 xy_pois <- cbind(xy_pois$x,xy_pois$y)
-xy_clust <- rMatClust(kappa = nSite/10,scale = 0.1,mu = nSite/10,win = xy_plane)
+xy_clust <- rMatClust(kappa = nSite/5,scale = 0.1,mu = nSite/10,win = xy_plane)
 xy_clust <- cbind(xy_clust$x,xy_clust$y)
 xy_overdisp <- rSSI(r = 0.05,n = nSite,win = xy_plane)
 xy_overdisp <- cbind(xy_overdisp$x,xy_overdisp$y)
@@ -101,7 +106,42 @@ for(i in 1:nSite){
   landscape_overdisp[[i]]$aqua = NULL
 }
 
-# assign resources
+# assign feeding resources
 for(i in 1:nFeed){
+  res_feed = list(w=w_feed[i])
+  if(is.null(landscape_overdisp[[ix_feed[i]]]$feed)){
+    landscape_overdisp[[ix_feed[i]]]$feed[[1]] = res_feed
+  } else {
+    landscape_overdisp[[ix_feed[i]]]$feed[[length(landscape_overdisp[[ix_feed[i]]]$feed)+1]] = res_feed
+  }
+}
 
+# assign aquatic resources
+for(i in 1:nAqua){
+  res_aqua = list(w=w_aqua[i],lambda=lambda[[i]])
+  if(is.null(landscape_overdisp[[ix_aqua[i]]]$aqua)){
+    landscape_overdisp[[ix_aqua[i]]]$aqua[[1]] = res_aqua
+  } else {
+    landscape_overdisp[[ix_aqua[i]]]$aqua[[length(landscape_overdisp[[ix_aqua[i]]]$aqua)+1]] = res_aqua
+  }
+}
+
+# assign sugar resources
+for(i in 1:nSugar){
+  res_sugar = list(w=w_sugar[i])
+  if(is.null(landscape_overdisp[[ix_sugar[i]]]$sugar)){
+    landscape_overdisp[[ix_sugar[i]]]$sugar[[1]] = res_sugar
+  } else {
+    landscape_overdisp[[ix_sugar[i]]]$sugar[[length(landscape_overdisp[[ix_sugar[i]]]$sugar)+1]] = res_sugar
+  }
+}
+
+# assign mating resources
+for(i in 1:nMate){
+  res_mate = list(w=w_mate[i])
+  if(is.null(landscape_overdisp[[ix_mate[i]]]$mate)){
+    landscape_overdisp[[ix_mate[i]]]$mate[[1]] = res_mate
+  } else {
+    landscape_overdisp[[ix_mate[i]]]$mate[[length(landscape_overdisp[[ix_mate[i]]]$mate)+1]] = res_mate
+  }
 }

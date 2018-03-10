@@ -30,14 +30,14 @@
 #' @export
 Tile_Initialize <- function(landscape){
 
-  n = nrow(landscape)
+  n = length(landscape)
   pb = txtProgressBar(min = 0, max = n, initial = 0)
   tile = Tile$new() # make a new tile and register it with MBITES:::Globals
   tileID = tile$get_id() # id of the new tile
 
-  for(i in 1:n){
+  for(s in 1:n){
 
-    site_p = landscape[[i]] # parameters for this site
+    site_p = landscape[[s]] # parameters for this site
 
     # make the site
     site = Site$new(id=site_p$id,xy=site_p$xy,tileID=tileID,type=site_p$type,move=site_p$move,move_id=site_p$move_id)
@@ -65,18 +65,19 @@ Tile_Initialize <- function(landscape){
     }
 
     if(!is.null(site_p$aqua)){
-      if(MBITES:::Parameters$get_aqua_model()=="emerge"){
-        aqua = Aqua_Resource_Emerge$new(w=i$w,site=site,lambda=i$lambda)
-        site$add_aqua(aqua)
+      for(i in site_p$aqua){
+        if(MBITES:::Parameters$get_aqua_model()=="emerge"){
+          aqua = Aqua_Resource_Emerge$new(w=i$w,site=site,lambda=i$lambda)
+          site$add_aqua(aqua)
+        }
+        if(MBITES:::Parameters$get_aqua_model()=="EL4P"){
+          stop("EL4P model not finished\n")
+        }
       }
-      if(MBITES:::Parameters$get_aqua_model()=="EL4P"){
-        stop("EL4P model not finished\n")
-      }
-      # do check for EL4P or Emerge
     }
 
     MBITES:::Globals$get_tile(tileID)$get_sites()$assign(key=site_p$id,value=site)
 
-    setTxtProgressBar(pb,i)
+    setTxtProgressBar(pb,s)
   }
 }

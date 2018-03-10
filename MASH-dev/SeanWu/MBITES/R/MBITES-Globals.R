@@ -70,7 +70,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                      # tile globals
                      private$tile_id = 0L
-                     private$tiles = NULL
+                     private$tiles = list()
 
                      invisible(gc())
                    } # end destructor

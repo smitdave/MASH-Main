@@ -55,14 +55,20 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 
                  private = list(
 
-                   aqua_model = character(1),
+                   aqua_model = "emerge",
 
                    boutFail_p = numeric(1) # 1/number of failed bouts until mosquito gives up and searches
                  )
 )
 
 
+get_aqua_model_MBITES_Parameters <- function(){
+  return(private$aqua_model)
+}
 
+MBITES_Parameters$set(which = "public",name = "get_aqua_model",
+    value = get_aqua_model_MBITES_Parameters, overwrite = TRUE
+)
 
 
 ###############################################################################
