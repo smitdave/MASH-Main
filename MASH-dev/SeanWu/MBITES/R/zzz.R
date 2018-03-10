@@ -22,6 +22,8 @@
 
   rm(dir)
   rm(file)
+
+  # MBITES:::Globals$init_lock()
 }
 
 .onUnload <- function(libpath) {

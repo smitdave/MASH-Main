@@ -80,4 +80,5 @@ Tile_Initialize <- function(landscape){
 
     setTxtProgressBar(pb,s)
   }
+
 }

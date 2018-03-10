@@ -81,6 +81,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                    # world-state globals
                    t_now              = 0L, # current simulation time
+                   mutex              = NULL,
 
                    # mosquito globals
                    mosquito_id        = 0L, # global counter of IDs
@@ -105,6 +106,18 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 # World-state global methods
 ###############################################################################
 
+init_lock_MBITES_Globals <- function(){
+  private$mutex = synchronicity::boost.mutex()
+}
+
+get_lock_MBITES_Globals <- function(){
+  synchronicity::lock(private$mutex)
+}
+
+release_lock_MBITES_Globals <- function(){
+  synchronicity::unlock(private$mutex)
+}
+
 get_t_now_MBITES_Globals <- function(){
   return(private$t_now)
 }
@@ -112,6 +125,28 @@ get_t_now_MBITES_Globals <- function(){
 increment_t_now_MBITES_Globals <- function(){
   private$t_now = private$t_now + 1L
 }
+
+MBITES_Globals$set(which = "public",name = "increment_t_now",
+          value = increment_t_now_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_t_now",
+          value = get_t_now_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_lock",
+          value = get_lock_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "release_lock",
+          value = release_lock_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "init_lock",
+          value = init_lock_MBITES_Globals, overwrite = TRUE
+)
+
+
 
 ###############################################################################
 # Mosquito related methods
@@ -129,6 +164,10 @@ get_mosquito_id_MBITES_Globals <- function(){
   return(private$mosquito_id)
 }
 
+MBITES_Globals$set(which = "public",name = "get_mosquito_id",
+          value = get_mosquito_id_MBITES_Globals, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Human related methods
@@ -145,6 +184,11 @@ get_human_id_MBITES_Globals <- function(){
   private$human_id = private$human_id + 1L
   return(private$human_id)
 }
+
+MBITES_Globals$set(which = "public",name = "get_human_id",
+          value = get_human_id_MBITES_Globals, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Tile related methods
