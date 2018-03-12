@@ -42,14 +42,14 @@
 #'  * This method is bound to \code{MosquitoFemale$oneBout()}.
 #'
 #' @include MBITES-Mosquito.R
-mbites_bout <- function(){
+mbites_oneBout <- function(){
 
   # launch at the previously scheduled launch time
   private$t_now = private$t_next
 
   # launch and try
   if(private$search){
-    self$searchBout() # search
+    self$attempt_search() # search
   } else {
     # attempt an action
     switch(private$state,
@@ -71,6 +71,10 @@ mbites_bout <- function(){
   self$trackHistory()
 }
 
+Mosquito$set(which = "public",name = "oneBout",
+    value = mbites_oneBout, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Search Bout
@@ -84,7 +88,10 @@ mbites_bout <- function(){
 #'      * a mosquito stays (a success) and attenpts to land
 #'
 #'
-mbites_searchBout <- function(){
+mbites_attempt_search <- function(){
+  # move to a new site
+  self$move()
+  # get 1 - probability i leave and search again
   p = switch(private$state,
     B = MBITES:::Parameters$get_Bs_succeed(),
     O = MBITES:::Parameters$get_Os_succeed(),
@@ -92,28 +99,156 @@ mbites_searchBout <- function(){
     M = MBITES:::Parameters$get_Ms_succeed()
   )
   if(runif(1) < p){
-    self$move()
+    private$search = FALSE # next bout will be an attempt
+    # private$rspot = "l" # initialize resting spot behavior
   }
 }
 
-Mosquito$set(which = "public",name = "searchBout",
-    value = mbites_searchBout, overwrite = TRUE
+Mosquito$set(which = "public",name = "attempt_search",
+    value = mbites_attempt_search, overwrite = TRUE
 )
 
 #' MBITES: Move
 #'
 #' If successful, the mosquito moves to a new \code{\link[MBITES]{Site}} object from querying
-#' the current site by \code{\link[MBITES]{move_mosquito_Site}}. This method is called from \code{\link[MBITES]{mbites_searchBout}}
+#' the current site by \code{\link[MBITES]{move_mosquito_Site}}. This method is called from \code{\link[MBITES]{mbites_attempt_search}}
 #'      * binding: \code{Mosquito$move}
 #'
 mbites_move <- function(){
   private$site = private$site$move_mosquito() # see LANDSCAPE-Site.R
-  private$search = FALSE
 }
 
 Mosquito$set(which = "public",name = "move_mosquito",
     value = move_mosquito_Site, overwrite = TRUE
 )
+
+
+#################################################################
+# Rest
+#################################################################
+
+#' MBITES: Update the Behavioral State at the End of a Bout for \code{\link{MosquitoFemale}}
+#'
+#' After landing, during the resting period, the mosquito's
+#' behavioral state and other state variables are updated.
+#'
+#' M-BITES checks the state variables during the resting
+#' period to determine what the next state will be. There is
+#' a natural hierarchy: a dead mosquito can never be revived;
+#' a starved mosquito will seek sugar; a gravid mosquito will
+#' tend to lay eggs, though it might decide to top up with
+#' blood; if nothing else, a mosquito will seek blood.
+#'
+mbites_updateState <- function(){
+
+  self$energetics()    # MBITES-Energetics.R
+  self$survival()      # MBITES-Survival.R
+
+  # The states in priority order
+  if(private$state == "D"){
+		private$state = "D"
+  } else {
+    if(private$starved){
+			private$state = "S"
+    } else {
+  		if(private$gravid) {
+    		self$checkRefeed()  # MBITES-Oogenesis.R
+      } else {
+  			private$state = "B"
+      }
+    }
+  }
+
+  # The states in priority order
+  self$timing()  #MBITES-Timing.R
+                 #NOTE: timing() can set state = 'M'
+
+  # if there are no resources of the required type present, set
+  # search = TRUE
+  self$checkForResources()
+}
+
+
+#################################################################
+# checkForResources: Check if search required
+#################################################################
+
+#' MBITES: If the required resource is not here, initiate a search \code{\link{MosquitoFemale}}
+#'
+#' After running a bout, this code checks the mosquito's
+#' behavioral state agains the local resources to see if a search is
+#' required
+#'
+mbites_checkForResources <- function(){
+    switch(private$state,
+      B = {self$BloodFeedingSearchCheck()},
+      O = {self$OvipositSearchCheck()},
+      M = {private$MatingSearchCheck()},
+      S = {private$SugarSearchCheck()},
+      {stop("illegal behavioral state: ",private$state,"\n")}
+    )
+}
+
+#' MBITES: Check for Blood Feeding Search Bout
+#'
+#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has a
+#' blood hosts present.
+#'  * this method is bound to \code{MosquitoFemale$BloodFeedingSearchCheck}
+mbites_BloodFeedingSearchCheck <- function(){
+
+  if(private$site$has_feed()){
+    private$state = "B"
+  } else {
+    private$search = TRUE
+  }
+
+}
+
+#' MBITES: Check for Oviposit Search Bout
+#'
+#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has an
+#' aquatic habitat present for oviposition.
+#'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
+mbites_OvipositSearchCheck <- function(){
+
+  if(private$site$has_aqua()){
+    private$state = "O"
+  } else {
+    private$search = TRUE
+  }
+
+}
+
+#' MBITES: Check for Sugar Search Bout
+#'
+#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has a
+#' sugar feeding resource present.
+#'  * this method is bound to \code{MosquitoFemale$SugarSearchCheck}
+mbites_SugarSearchCheck <- function(){
+
+  if(private$site$has_sugar()){
+    private$state = "S"
+  } else {
+    private$search = TRUE
+  }
+
+}
+
+#' MBITES: Check for Oviposit Search Bout
+#'
+#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has an
+#' aquatic habitat present for oviposition.
+#'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
+mbites_MatingSearchCheck <- function(){
+
+  if(private$site$has_mate()){
+    private$state = "M"
+  } else {
+    private$search = TRUE
+  }
+
+}
+
 
 
 # ###############################################################################
@@ -189,109 +324,3 @@ Mosquito$set(which = "public",name = "move_mosquito",
 #     stop("illegal hostID value")
 #   }
 # }
-
-
-
-
-
-
-
-
-
-
-
-#################################################################
-# Rest
-#################################################################
-
-#' MBITES: Update the Behavioral State at the End of a Bout for \code{\link{MosquitoFemale}}
-#'
-#' After landing, during the resting period, the mosquito's
-#' behavioral state and other state variables are updated.
-#'
-#' M-BITES checks the state variables during the resting
-#' period to determine what the next state will be. There is
-#' a natural hierarchy: a dead mosquito can never be revived;
-#' a starved mosquito will seek sugar; a gravid mosquito will
-#' tend to lay eggs, though it might decide to top up with
-#' blood; if nothing else, a mosquito will seek blood.
-#'
-mbites_updateState <- function(){
-
-  self$energetics()    # MBITES-Energetics.R
-  self$survival()      # MBITES-Survival.R
-
-  # The states in priority order
-  if(private$state == "D"){
-		private$state = "D"
-  } else {
-    if(private$starved){
-			private$state = "S"
-    } else {
-  		if(private$gravid) {
-    		self$checkRefeed()  # MBITES-Oogenesis.R
-      } else {
-  			private$state = "B"
-      }
-    }
-  }
-
-  # The states in priority order
-  self$timing()  #MBITES-Timing.R
-                 #NOTE: timing() can set state = 'M'
-
-  # if there are no resources of the required type present, set
-  # search = TRUE
-  self$checkForResources()
-}
-
-
-#################################################################
-# checkForResources: Check if search required
-#################################################################
-
-#' MBITES: If the required resource is not here, initiate a search \code{\link{MosquitoFemale}}
-#'
-#' After running a bout, this code checks the mosquito's
-#' behavioral state agains the local resources to see if a search is
-#' required
-#'
-mbites_checkForResources <- function(){
-    switch(private$state,
-      B = {self$BloodFeedingSearchCheck()},
-      O = {self$OvipositSearchCheck()},
-      M = {private$MatingSearchCheck()},
-      S = {private$SugarSearchCheck()},
-      {stop("illegal behavioral state: ",private$state,"\n")}
-    )
-}
-
-#' MBITES: Check for Oviposit Search Bout
-#'
-#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has an
-#' aquatic habitat present for oviposition.
-#'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
-mbites_OvipositSearchCheck <- function(){
-
-  if(private$site$has_feed()){
-    private$state = "O"
-  } else {
-    private$search = TRUE
-  }
-
-}
-
-#' MBITES: Check for Blood Feeding Search Bout
-#'
-#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has a
-#' blood hosts present.
-#'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
-mbites_BloodFeedingSearchCheck <- function(){
-
-  if(private$site$has_feed()){
-    private$state = "O"
-  } else {
-    private$search = TRUE
-  }
-
-}

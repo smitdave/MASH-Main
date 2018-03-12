@@ -47,12 +47,14 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
                  public = list(
 
                    # begin constructor
-                   initialize = function(w,site){
+                   initialize = function(w,site,enterP){
                      futile.logger::flog.trace("Feeding_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      super$initialize(w,site) # construct base-class parts
 
                      self$RiskQ = make_RiskQ()
+
+                     private$enterP = enterP
 
                    }, # end constructor
 
@@ -69,10 +71,29 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
                  ), # end public members
 
                  # private members
-                 private = list() # end private members
+                 private = list(
+                   enterP = numeric(1) # probability of a mosquito to successfully enter the house
+                 ) # end private members
 
 
 ) # end Feeding_Resource class definition
+
+###############################################################################
+# Feeding Resource Methods
+###############################################################################
+
+#' Blood Feeding Resource: Get House Entry Probability
+#'
+#' Get the probability of a mosquito successfully enters this house.
+#'  * This method is bound to \code{Feeding_Resource$get_enterP}.
+#'
+get_enterP_Feeding_Resource <- function(){
+  return(private$enterP)
+}
+
+Feeding_Resource$set(which = "public",name = "get_enter_p",
+          value = get_enterP_Feeding_Resource, overwrite = TRUE
+)
 
 
 ###############################################################################
@@ -207,7 +228,7 @@ make_RiskQ <- function(){
 
   # printQ: print the queue
   printQ <- function(){
-    cat("printing a risk queue ... humans first \n")
+    cat("printing a risk queue ... printing human hosts ... \n")
     print(id)
     print(weight)
     print(time)

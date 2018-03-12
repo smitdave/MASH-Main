@@ -108,7 +108,7 @@ for(i in 1:nSite){
 
 # assign feeding resources
 for(i in 1:nFeed){
-  res_feed = list(w=w_feed[i])
+  res_feed = list(w=w_feed[i],enterP=1)
   if(is.null(landscape_overdisp[[ix_feed[i]]]$feed)){
     landscape_overdisp[[ix_feed[i]]]$feed[[1]] = res_feed
   } else {

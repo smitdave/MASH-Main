@@ -59,7 +59,7 @@ Tile_Initialize <- function(landscape){
 
     if(!is.null(site_p$feed)){
       for(i in site_p$feed){
-        feed = Feeding_Resource$new(w=i$w,site=site)
+        feed = Feeding_Resource$new(w=i$w,site=site,enter_p=i$enter_p)
         site$add_feed(feed)
       }
     }
