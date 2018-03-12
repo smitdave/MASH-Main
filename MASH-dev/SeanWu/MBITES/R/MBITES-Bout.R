@@ -100,7 +100,6 @@ mbites_attempt_search <- function(){
   )
   if(runif(1) < p){
     private$search = FALSE # next bout will be an attempt
-    # private$rspot = "l" # initialize resting spot behavior
   }
 }
 
@@ -116,6 +115,7 @@ Mosquito$set(which = "public",name = "attempt_search",
 #'
 mbites_move <- function(){
   private$site = private$site$move_mosquito() # see LANDSCAPE-Site.R
+  private$rspot = "l" # initialize resting spot behavior when i get to a new site
 }
 
 Mosquito$set(which = "public",name = "move_mosquito",
