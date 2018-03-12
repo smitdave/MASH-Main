@@ -4,19 +4,19 @@ library(synchronicity)
 spawn_fn<-function(tag, prev_mutex) {
   next_mutex <- synchronicity::boost.mutex(mut_name<-synchronicity::uuid())
   synchronicity::lock(next_mutex) #We start the thread locked
-  
+
   env<-new.env()
   env$a<-tag
   env$m_next_descr <- synchronicity::describe(next_mutex)
   env$m_previous_descr <- synchronicity::describe(prev_mutex)
-  
+
   j<-eval(quote(parallel::mcparallel({
     m_next<-synchronicity::attach.mutex(m_next_descr)
     m_previous<-synchronicity::attach.mutex(m_previous_descr)
-    
+
     synchronicity::lock(m_previous)
     synchronicity::unlock(m_previous)
-    
+
     Sys.sleep(1)
     b<-list(value=a, walltime=as.numeric(Sys.time()))
     synchronicity::unlock(m_next)
@@ -46,7 +46,7 @@ for(i in seq(100)) {
     ans<-test_fn(j)
     jobs[[job_nr]]<-list()
     cat(paste0("Execution walltime: ",ans$walltime))
-    
+
     cat('\n')
   }
   r<-runif(1)
@@ -85,12 +85,12 @@ shared_sync[1]  <- 0
 m <- boost.mutex()
 
 ### increment functions
-inc_race <- function() 
+inc_race <- function()
 {
   shared[1] <- shared[1] + 1
 }
 
-inc_sync <- function() 
+inc_sync <- function()
 {
   lock(m)
   shared_sync[1] <- shared_sync[1] + 1

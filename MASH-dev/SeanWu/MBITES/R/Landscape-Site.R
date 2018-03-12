@@ -81,6 +81,12 @@ Site <- R6::R6Class(classname = "Site",
                    type           = integer(1), # type of site (for matrix of weights controlling where resting occurs)
 
                    # resources
+                   # has resources?
+                   has_feed_b     = FALSE,
+                   has_aqua_b     = FALSE,
+                   has_sugar_b    = FALSE,
+                   has_mate_b     = FALSE,
+                   # references and weights
                    res_feed       = list(), # list of references to 'feeding'-type resources
                    res_feed_w     = NULL, # weights of 'feeding'-type resources
                    res_aqua       = list(), # list of references to 'aqua'-type resources
@@ -105,7 +111,7 @@ Site <- R6::R6Class(classname = "Site",
 #'
 move_mosquito_Site <- function(){
   ix = MBITES::sample(x=private$move_id,size=1L,replace=FALSE,prob=private$move)
-  return(MBITES:::Globals$get_tile(private$tileID)$get_site(ix))
+  return(MBITES:::Globals$get_tile(private$tileID)$get_sites()$get(ix))
 }
 
 Site$set(which = "public",name = "move_mosquito",
@@ -171,6 +177,63 @@ Site$set(which = "public",name = "sample_mate",
 
 
 ###############################################################################
+# Check Resources
+###############################################################################
+
+#' Site: Check Blood Feeding Resources
+#'
+#' Check if any \code{\link[MBITES]{Feeding_Resource}} are present at this site. This is queried by mosquitoes during \code{\link[MBITES]{mbites_checkForResources}}.
+#'  * binding: \code{Site$has_feed}
+#'
+has_feed_Site <- function(){
+  return(private$has_feed_b)
+}
+
+#' Site: Check Aquatic Habitat Resources
+#'
+#' Check if any \code{\link[MBITES]{Aqua_Resource}} are present at this site. This is queried by mosquitoes during \code{\link[MBITES]{mbites_checkForResources}}.
+#'  * binding: \code{Site$has_aqua}
+#'
+has_aqua_Site <- function(){
+  return(private$has_aqua_b)
+}
+
+#' Site: Check Sugar Feeding Resources
+#'
+#' Check if any \code{\link[MBITES]{Sugar_Resource}} are present at this site. This is queried by mosquitoes during \code{\link[MBITES]{mbites_checkForResources}}.
+#'  * binding: \code{Site$has_sugar}
+#'
+has_sugar_Site <- function(){
+  return(private$has_sugar_b)
+}
+
+#' Site: Check Mating Swarm Resources
+#'
+#' Check if any \code{\link[MBITES]{Mating_Resource}} are present at this site. This is queried by mosquitoes during \code{\link[MBITES]{mbites_checkForResources}}.
+#'  * binding: \code{Site$has_mate}
+#'
+has_mate_Site <- function(){
+  return(private$has_mate_b)
+}
+
+Site$set(which = "public",name = "has_feed",
+    value = has_feed_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "has_aqua",
+    value = has_aqua_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "has_sugar",
+    value = has_sugar_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "has_mate",
+    value = has_mate_Site, overwrite = TRUE
+)
+
+
+###############################################################################
 # Add Resources
 ###############################################################################
 
@@ -182,6 +245,7 @@ Site$set(which = "public",name = "sample_mate",
 #' @param Feeding_Resource a reference to a \code{\link[MBITES]{Feeding_Resource}} object
 #'
 add_feed_Site <- function(Feeding_Resource){
+  private$has_feed_b = TRUE
   private$res_feed = append(private$res_feed,Feeding_Resource)
   private$res_feed_w = append(private$res_feed_w,Feeding_Resource$get_w())
 }
@@ -199,6 +263,7 @@ Site$set(which = "public",name = "add_feed",
 #' @param Aqua_Resource a reference to an object deriving from \code{\link[MBITES]{Aqua_Resource}}
 #'
 add_aqua_Site <- function(Aqua_Resource){
+  private$has_aqua_b = TRUE
   private$res_aqua = append(private$res_aqua,Aqua_Resource)
   private$res_aqua_w = append(private$res_aqua_w,Aqua_Resource$get_w())
 }
@@ -216,6 +281,7 @@ Site$set(which = "public",name = "add_aqua",
 #' @param Sugar_Resource a reference to a \code{\link[MBITES]{Sugar_Resource}} object
 #'
 add_sugar_Site <- function(Sugar_Resource){
+  private$has_sugar_b = TRUE
   private$res_sugar = append(private$res_sugar,Sugar_Resource)
   private$res_sugar_w = append(private$res_sugar_w,Sugar_Resource$get_w())
 }
@@ -233,6 +299,7 @@ Site$set(which = "public",name = "add_sugar",
 #' @param Mating_Resource a reference to a \code{\link[MBITES]{Mating_Resource}} object
 #'
 add_mate_Site <- function(Mating_Resource){
+  private$has_mate_b = TRUE
   private$res_mate = append(private$res_mate,Mating_Resource)
   private$res_mate_w = append(private$res_mate_w,Mating_Resource$get_w())
 }
@@ -252,7 +319,7 @@ Site$set(which = "public",name = "add_mate",
 #'  * binding: \code{Site$get_tileID}
 #'
 get_tileID_Site <- function(){
-  return(private$TileP)
+  return(private$tileID)
 }
 
 Site$set(which = "public",name = "get_tileID",

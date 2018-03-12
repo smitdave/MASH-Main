@@ -45,9 +45,10 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  public = list(
 
                    # begin constructor
-                   initialize = function(b_day, site, tileID){
+                   initialize = function(female, b_day, site, tileID){
 
                      private$id = MBITES:::Globals$get_mosquito_id()
+
                      private$site = site
                      private$tileID = tileID
 
@@ -71,6 +72,10 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    tileID         = integer(1), # id of the tile i am in
                    site           = NULL, # reference to my current site
                    rspot          = character(1), # my current resting spot
+
+                   # resources
+                   sugar_res      = NULL, # reference to my current sugar resource
+                   mate_res       = NULL, # reference to my current mating swarm resource
 
                    # timing
                    b_day          = numeric(1), # the day i emerged
@@ -97,10 +102,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    # batch          = integer(1), # size of my egg batch
                    # bm_size        = numeric(1), # size of my blood meal
 
-                   # resource ids
-                   # hostID         = integer(1), # id of my blood host
-                   # habitatID      = integer(1), # id of my aquatic habitat
-                   sugarID        = integer(1), # id of my sugar source
+                   # mate ids
                    mateID         = integer(1) # id of my mate
 
                  )
@@ -145,7 +147,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    # begin constructor
                    initialize = function(b_day, site, tileID){
 
-                     super$initialize(id, b_day,site,tileID) # construct the base-class parts
+                     super$initialize(TRUE, b_day,site,tileID) # construct the base-class parts
 
                      private$state = MBITES:::Parameters$get_female_state()
 
@@ -158,6 +160,10 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  # private members
                  private = list(
 
+                   # resources
+                   aqua_res       = NULL, # reference to my current aquatic habitat resource
+                   feed_res       = NULL, # reference to my current blood feeding resource
+
                    # behavioral state parameters
                    gravid         = logical(1), # am i gravid to oviposit?
 
@@ -168,10 +174,8 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    batch          = integer(1), # size of my egg batch
                    bm_size        = numeric(1), # size of my blood meal
 
-                   # resource ids
-                   houseID        = integer(1), # id of the blood feeding resource i chose
-                   hostID         = integer(1), # id of my blood host
-                   habitatID      = integer(1) # id of my aquatic habitat
+                   # host ids
+                   hostID         = integer(1) # id of my blood host
 
                  )
 )
@@ -213,7 +217,7 @@ Mosquito_Male <- R6::R6Class(classname = "Mosquito_Male",
                    # begin constructor
                    initialize = function(b_day, site, tileID){
 
-                     super$initialize(b_day,site,tileID) # construct the base-class parts
+                     super$initialize(FALSE,b_day,site,tileID) # construct the base-class parts
 
 
                    } # end constructor

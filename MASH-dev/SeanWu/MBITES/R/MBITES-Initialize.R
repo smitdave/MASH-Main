@@ -22,6 +22,11 @@
 #'
 #' @param mosy_init a \code{\link{data.frame}} object where each row corresponds to a mosquito
 #'
+#' @details
+#'
+#'
+#'
+#' @export
 MBITES_Initialize <- function(mosy_init){
 
   n = nrow(mosy_init)

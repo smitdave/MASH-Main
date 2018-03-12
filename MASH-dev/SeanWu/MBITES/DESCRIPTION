@@ -11,13 +11,12 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Imports: R6, futile.logger, pryr, jsonlite
+Imports: R6, futile.logger, pryr, jsonlite, spatstat
 ByteCompile: true
 Collate: 
     'Auxiliary.R'
     'HUMAN-Initialize.R'
     'HUMAN-Null.R'
-    'HUMAN-Population.R'
     'Hash-Class.R'
     'LANDSCAPE-Aqua.R'
     'LANDSCAPE-EL4P.R'
@@ -31,9 +30,11 @@ Collate:
     'MBITES-Bout.R'
     'MBITES-Globals.R'
     'MBITES-Initialize.R'
-    'MBITES-MosquitoPop.R'
     'MBITES-Parameters.R'
     'MBITES-Resting.R'
+    'MBITES-Setup.R'
+    'MBITES-Timing.R'
     'PATHOGEN-Generic-SIS.R'
     'TILE-Class.R'
+    'TILE-Initialize.R'
     'zzz.R'

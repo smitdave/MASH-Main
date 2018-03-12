@@ -10,6 +10,6 @@ mbites_BloodFeedingSearchCheck()
 During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has a
 blood hosts present.
 \itemize{
-\item this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
+\item this method is bound to \code{MosquitoFemale$BloodFeedingSearchCheck}
 }
 }

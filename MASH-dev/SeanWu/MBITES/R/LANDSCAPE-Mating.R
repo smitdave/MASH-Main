@@ -125,6 +125,15 @@ make_MatingQ <- function(){
 
   }
 
+  # rmFromQ: remove a mosquito from the queue
+  rmFromQ <- function(id_r){
+    ix <- match(x = id_r,table = id)
+    if(!is.na(ix)){
+      id <<- id[-ix]
+      weight <<- weight[-ix]
+    }
+  } # end rmFromQ
+
   # clearQ: set elements of queue to NULL
   clearQ <- function(){
     id <<- NULL
