@@ -58,7 +58,9 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 
                    ttEvent_BoutBs = function(){stop("ttEvent_BoutBs requires a concrete implementation!")},
                    ttEvent_BoutOs = function(){stop("ttEvent_BoutOs requires a concrete implementation!")},
-                   ttEvent_BoutSs = function(){stop("ttEvent_BoutSs requires a concrete implementation!")}
+                   ttEvent_BoutSs = function(){stop("ttEvent_BoutSs requires a concrete implementation!")},
+
+                   ttEvent_Estivate = function(){stop("ttEvent_Estivate requires a concrete implementation!")}
 
                  ),
 
@@ -75,12 +77,8 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
                    InAndOut = matrix(0L,5,5), # weights on transitioning between resting spots
 
                    # Timing
-                   ttEvent_BoutF = numeric(1),
-                   ttEvent_BoutO = numeric(1),
-                   ttEvent_BoutS = numeric(1),
-                   ttEvent_BoutBs = numeric(1),
-                   ttEvent_BoutOs = numeric(1),
-                   ttEvent_BoutSs = numeric(1)
+                   tSwarm = numeric(1), # mating swarm timing
+
                  )
 ) # end MBITES_Parameters class definition
 

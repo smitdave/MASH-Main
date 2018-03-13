@@ -116,19 +116,19 @@ Aqua_Resource_Emerge$set(which = "public",name = "add_egg",
 #'
 one_day_Emerge <- function(){
 
-  t_now = MBITES:::Globals$get_t_now()
+  tNow = MBITES:::Globals$get_tNow()
 
   # sample number of emerging mosquitoes
   if(private$constant){
     lambda_t = rpois(n = 1, lambda = private$lambda)
   } else {
-    lambda_now = private$lambda[floor(t_now)%%365+1]
+    lambda_now = private$lambda[floor(tNow)%%365+1]
     lambda_t = rpois(n = 1, lambda = lambda_now)
   }
 
   # if emerging mosquitoes, send them to the population
   if(lambda_t>0){
-    self$ImagoQ$add2Q(N=lambda_t,time_e=t_now)
+    self$ImagoQ$add2Q(N=lambda_t,time_e=tNow)
   }
 
 } # end one_day
@@ -144,11 +144,11 @@ Aqua_Resource_Emerge$set(which = "public",name = "one_day",
 
 push_imago_Emerge <- function(){
 
-  t_now = MBITES:::Globals$get_t_now() # time now
+  tNow = MBITES:::Globals$get_tNow() # time now
   tile_id = private$SiteP$get_tileID() # integer id of my tile
   tile = MBITES:::Globals$get_tile(tile_id) # tile reference
 
-  imagos = self$ImagoQ$popQ(time_e=t_now) # emerging imagos
+  imagos = self$ImagoQ$popQ(time_e=tNow) # emerging imagos
 
   # if there is are cohort(s) of imagos ready to go
   if(!is.na(imagos$female[1])){
@@ -158,12 +158,12 @@ push_imago_Emerge <- function(){
       # female cohort
       if(imagos$female[i]){
         for(j in 1:imagos$imagos[i]){
-          mosy = Mosquito_Female$new(t_now,private$SiteP,tile_id)
+          mosy = Mosquito_Female$new(tNow,private$SiteP,tile_id)
           tile$get_mosquitoes()$assign(key=mosy$get_id(),value=mosy)
         }
       # male cohort
       } else {
-        mosy = Mosquito_Male$new(t_now,private$SiteP,tile_id)
+        mosy = Mosquito_Male$new(tNow,private$SiteP,tile_id)
         tile$get_mosquitoes()$assign(key=mosy$get_id(),value=mosy)
       }
     } # end loop over cohorts i

@@ -51,7 +51,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                      futile.logger::flog.trace("MBITES_Globals being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      # world state globals
-                     private$t_now = 0L
+                     private$tNow = 0L
 
                      # mosquito globals
                      private$mosquito_id = 0L
@@ -80,7 +80,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                  private = list(
 
                    # world-state globals
-                   t_now              = 0L, # current simulation time
+                   tNow              = 0L, # current simulation time
                    mutex              = NULL,
 
                    # mosquito globals
@@ -118,20 +118,20 @@ release_lock_MBITES_Globals <- function(){
   synchronicity::unlock(private$mutex)
 }
 
-get_t_now_MBITES_Globals <- function(){
-  return(private$t_now)
+get_tNow_MBITES_Globals <- function(){
+  return(private$tNow)
 }
 
-increment_t_now_MBITES_Globals <- function(){
-  private$t_now = private$t_now + 1L
+increment_tNow_MBITES_Globals <- function(){
+  private$tNow = private$tNow + 1L
 }
 
-MBITES_Globals$set(which = "public",name = "increment_t_now",
-          value = increment_t_now_MBITES_Globals, overwrite = TRUE
+MBITES_Globals$set(which = "public",name = "increment_tNow",
+          value = increment_tNow_MBITES_Globals, overwrite = TRUE
 )
 
-MBITES_Globals$set(which = "public",name = "get_t_now",
-          value = get_t_now_MBITES_Globals, overwrite = TRUE
+MBITES_Globals$set(which = "public",name = "get_tNow",
+          value = get_tNow_MBITES_Globals, overwrite = TRUE
 )
 
 MBITES_Globals$set(which = "public",name = "get_lock",

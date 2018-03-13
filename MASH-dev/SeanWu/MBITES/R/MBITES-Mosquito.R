@@ -45,16 +45,16 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  public = list(
 
                    # begin constructor
-                   initialize = function(female, b_day, site, tileID){
+                   initialize = function(female, bDay, site, tileID){
 
                      private$id = MBITES:::Globals$get_mosquito_id()
 
                      private$site = site
                      private$tileID = tileID
 
-                     private$b_day = b_day
-                     private$t_now = b_day
-                     private$t_next = b_day
+                     private$bDay = bDay
+                     private$tNow = bDay
+                     private$tNext = bDay
 
                      private$search = FALSE
 
@@ -78,9 +78,9 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    mate_res       = NULL, # reference to my current mating swarm resource
 
                    # timing
-                   b_day          = numeric(1), # the day i emerged
-                   t_next         = numeric(1), # time of my next launch
-                   t_now          = numeric(1), # time of my current launch
+                   bDay          = numeric(1), # the day i emerged
+                   tNext         = numeric(1), # time of my next launch
+                   tNow          = numeric(1), # time of my current launch
 
                    # behavioral state parameters
                    search         = logical(1), # next launch is for search or attempt bout?
@@ -145,9 +145,9 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  public = list(
 
                    # begin constructor
-                   initialize = function(b_day, site, tileID){
+                   initialize = function(bDay, site, tileID){
 
-                     super$initialize(TRUE, b_day,site,tileID) # construct the base-class parts
+                     super$initialize(TRUE, bDay,site,tileID) # construct the base-class parts
 
                      private$state = MBITES:::Parameters$get_female_state()
 
@@ -215,9 +215,9 @@ Mosquito_Male <- R6::R6Class(classname = "Mosquito_Male",
                  public = list(
 
                    # begin constructor
-                   initialize = function(b_day, site, tileID){
+                   initialize = function(bDay, site, tileID){
 
-                     super$initialize(FALSE,b_day,site,tileID) # construct the base-class parts
+                     super$initialize(FALSE,bDay,site,tileID) # construct the base-class parts
 
 
                    } # end constructor
