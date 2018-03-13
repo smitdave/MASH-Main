@@ -52,6 +52,22 @@ mbites_timing <- function(){
 # Event Flags
 ###############################################################################
 
+#' M-BITES: Simulates the post-prandial resting period for \code{MosquitoFemale}
+#'
+#' Method checks to see if the mosquito has bloodfed and is in a
+#' post prandial state; if so, it resets tNow and tNext to
+#' tNow + ttEvent_ppRest()
+#'
+#'  * This method is bound to \code{MosquitoFemale$timing()}.
+#'
+mbites_checkPostPrandial <- function(){
+  if(private$bloodfed){
+    ppRest = MBITES:::Parameters$ttEvent_ppRest()
+    private$tNext = private$tNow = private$tNow + ppRest
+    private$bloodfed = FALSE
+  }
+}
+
 mbites_findSwarm <- function(){
   if(!private$mature){
     # tSwarm is a time of day
@@ -66,22 +82,5 @@ mbites_findSwarm <- function(){
       private$state = "M"
       private$tNext = floor(private$tNow) + tSwarm
     }
-  }
-}
-
-#' M-BITES: Simulates the post-prandial resting period for \code{MosquitoFemale}
-#'
-#' Method checks to see if the mosquito has bloodfed and is in a
-#' post prandial state; if so, it resets tNow and tNext to
-#' tNow + ttEvent_ppRest()
-#'
-#'  * This method is bound to \code{MosquitoFemale$timing()}.
-#'
-mbites_checkPostPrandial <- function(){
-  if(private$bloodfed){
-    ppRest = private$FemalePopPointer$get_MBITES_PAR("ttEvent_ppRest")
-    private$tNow = private$tNow + self$ppRest()
-    private$tNext = private$tNow
-    private$bloodfed = FALSE
   }
 }

@@ -79,6 +79,43 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
                    # Timing
                    tSwarm = numeric(1), # mating swarm timing
 
+                   # Energetics
+                   energyPreG = numeric(1), # pre-gonotrophic energy requirement
+                   preGsugar = numeric(1), # sugar energy that can satisfy pre-gonotrophic energy
+                   energyFromBlood_b = numeric(1), # half-maximum parameter for mbites_energyFromBlood
+                   S_u = numeric(1), # energy expended during a flight
+                   S_sa = numeric(1), # pSugarBout
+                   S_sb = numeric(1), # pSugarBout
+
+                   # Survival
+                   Bs_surv = numeric(1),
+                   Os_surv = numeric(1),
+                   Ms_surv = numeric(1),
+                   Ss_surv = numeric(1),
+
+                   B_surv = numeric(1),
+                   O_surv = numeric(1),
+                   M_surv = numeric(1),
+                   S_surv = numeric(1),
+
+                   PPR_a = numeric(1), # mbites_pPPRFlight
+                   PPR_b = numeric(1), # mbites_pPPRFlight
+                   S_a = numeric(1), # mbites_pEnergySurvival
+                   S_b= numeric(1), # mbites_pEnergySurvival
+
+                   ttsz_p = numeric(1), # wing tattering (size of damage)
+                   ttsz_a = numeric(1),
+                   ttsz_b = numeric(1),
+
+                   ttr_a = numeric(1), # wing tattering (probability of death)
+                   ttr_b = numeric(1),
+
+                   chm_a = numeric(1), # chemical damage to mosquito body
+                   chm_b = numeric(1),
+
+                   sns_a = numeric(1), # senescence parameters
+                   sns_b = numeric(1) # senescence parameters
+
                  )
 ) # end MBITES_Parameters class definition
 
@@ -91,8 +128,9 @@ MBITES_Parameters$set(which = "public",name = "get_aqua_model",
     value = get_aqua_model_MBITES_Parameters, overwrite = TRUE
 )
 
+
 ###############################################################################
-# Timing closures
+# Timing
 ###############################################################################
 
 #' Make a Shifted Exponential Time-to-Event Closure
