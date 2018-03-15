@@ -114,7 +114,7 @@ Human_NULL$set(which = "public",name = "pushBite",
 
 # this function fills in for pathogen specific probeHost methods if no pathogen model is used
 probeHost_NULL <- function(){
-  MBITES:::Globals$get_tile()$get_humans()$get(private$hostID)$pushBite(m_id=private$id,t=private$t_now)
+  MBITES:::Globals$get_tile()$get_humans()$get(private$hostID)$pushBite(m_id=private$id,t=private$tNow)
 }
 
 # this function fills in for pathogen specific bloodFeed methods if no pathogen model is used

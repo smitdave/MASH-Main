@@ -45,7 +45,7 @@
 mbites_oneBout <- function(){
 
   # launch at the previously scheduled launch time
-  private$t_now = private$t_next
+  private$tNow = private$tNext
 
   # launch and try
   if(private$search){
@@ -100,7 +100,6 @@ mbites_attempt_search <- function(){
   )
   if(runif(1) < p){
     private$search = FALSE # next bout will be an attempt
-    # private$rspot = "l" # initialize resting spot behavior
   }
 }
 
@@ -116,6 +115,7 @@ Mosquito$set(which = "public",name = "attempt_search",
 #'
 mbites_move <- function(){
   private$site = private$site$move_mosquito() # see LANDSCAPE-Site.R
+  private$rspot = "l" # initialize resting spot behavior when i get to a new site
 }
 
 Mosquito$set(which = "public",name = "move_mosquito",
@@ -195,13 +195,10 @@ mbites_checkForResources <- function(){
 #' blood hosts present.
 #'  * this method is bound to \code{MosquitoFemale$BloodFeedingSearchCheck}
 mbites_BloodFeedingSearchCheck <- function(){
-
-  if(private$site$has_feed()){
-    private$state = "B"
-  } else {
+  # if no resources here, go search
+  if(!private$site$has_feed()){
     private$search = TRUE
   }
-
 }
 
 #' MBITES: Check for Oviposit Search Bout
@@ -210,13 +207,10 @@ mbites_BloodFeedingSearchCheck <- function(){
 #' aquatic habitat present for oviposition.
 #'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
 mbites_OvipositSearchCheck <- function(){
-
-  if(private$site$has_aqua()){
-    private$state = "O"
-  } else {
+  # if no resources here, go search
+  if(!private$site$has_aqua()){
     private$search = TRUE
   }
-
 }
 
 #' MBITES: Check for Sugar Search Bout
@@ -225,13 +219,10 @@ mbites_OvipositSearchCheck <- function(){
 #' sugar feeding resource present.
 #'  * this method is bound to \code{MosquitoFemale$SugarSearchCheck}
 mbites_SugarSearchCheck <- function(){
-
-  if(private$site$has_sugar()){
-    private$state = "S"
-  } else {
+  # if no resources here, go search
+  if(!private$site$has_sugar()){
     private$search = TRUE
   }
-
 }
 
 #' MBITES: Check for Oviposit Search Bout
@@ -240,13 +231,10 @@ mbites_SugarSearchCheck <- function(){
 #' aquatic habitat present for oviposition.
 #'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
 mbites_MatingSearchCheck <- function(){
-
-  if(private$site$has_mate()){
-    private$state = "M"
-  } else {
+  # if no resources here, go search
+  if(!private$site$has_mate()){
     private$search = TRUE
   }
-
 }
 
 

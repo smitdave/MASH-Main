@@ -44,7 +44,7 @@ Site <- R6::R6Class(classname = "Site",
                  public = list(
 
                    # begin constructor
-                   initialize = function(id, xy, tileID, type, move, move_id){
+                   initialize = function(id, xy, tileID, type, move, move_id, haz){
                      futile.logger::flog.trace("Site %i being born at: self %s , private %s",id,pryr::address(self),pryr::address(private))
 
                      private$id = id
@@ -53,6 +53,7 @@ Site <- R6::R6Class(classname = "Site",
                      private$type = type
                      private$move = move
                      private$move_id = move_id
+                     private$haz = haz
 
                    }, # end constructor
 
@@ -79,6 +80,7 @@ Site <- R6::R6Class(classname = "Site",
                    move           = numeric(1), # 'row' of the transition matrix for movement from this site to all other sites
                    move_id        = integer(1), # id's of sites associated with the 'move' transition probabilities
                    type           = integer(1), # type of site (for matrix of weights controlling where resting occurs)
+                   haz            = numeric(1), # baseline mosquito resting hazard
 
                    # resources
                    # has resources?
@@ -325,6 +327,10 @@ get_tileID_Site <- function(){
 Site$set(which = "public",name = "get_tileID",
     value = get_tileID_Site, overwrite = TRUE
 )
+
+get_haz_Site <- function(){
+  return(private$haz)
+}
 
 # Feeding Resource accessors
 

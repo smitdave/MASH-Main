@@ -58,29 +58,85 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 
                    ttEvent_BoutBs = function(){stop("ttEvent_BoutBs requires a concrete implementation!")},
                    ttEvent_BoutOs = function(){stop("ttEvent_BoutOs requires a concrete implementation!")},
-                   ttEvent_BoutSs = function(){stop("ttEvent_BoutSs requires a concrete implementation!")}
+                   ttEvent_BoutSs = function(){stop("ttEvent_BoutSs requires a concrete implementation!")},
+
+                   ttEvent_Estivate = function(){stop("ttEvent_Estivate requires a concrete implementation!")}
 
                  ),
 
                  private = list(
 
-                   aqua_model = "emerge",
+                   aqua_model           = "emerge",
 
                    # Post-bout Landing, House Entering, and Resting
-                   boutFail_p = integer(1), # 1/number of failed bouts until mosquito gives up and searches
-                   b_wts = numeric(5), # weights on {i,r,v,w,l}
-                   o_wts = numeric(5),
-                   m_wts = numeric(5),
-                   s_wts = numeric(5),
-                   InAndOut = matrix(0L,5,5), # weights on transitioning between resting spots
+                   boutFail_p           = integer(1), # 1/number of failed bouts until mosquito gives up and searches
+                   b_wts                = numeric(5), # weights on {i,r,v,w,l}
+                   o_wts                = numeric(5),
+                   m_wts                = numeric(5),
+                   s_wts                = numeric(5),
+                   InAndOut             = matrix(0L,5,5), # weights on transitioning between resting spots
 
                    # Timing
-                   ttEvent_BoutF = numeric(1),
-                   ttEvent_BoutO = numeric(1),
-                   ttEvent_BoutS = numeric(1),
-                   ttEvent_BoutBs = numeric(1),
-                   ttEvent_BoutOs = numeric(1),
-                   ttEvent_BoutSs = numeric(1)
+                   tSwarm               = numeric(1), # mating swarm timing
+
+                   # Energetics
+                   energyPreG           = numeric(1), # pre-gonotrophic energy requirement
+                   preGsugar            = numeric(1), # sugar energy that can satisfy pre-gonotrophic energy
+                   energyFromBlood_b    = numeric(1), # half-maximum parameter for mbites_energyFromBlood
+                   S_u                  = numeric(1), # energy expended during a flight
+                   S_sa                 = numeric(1), # pSugarBout
+                   S_sb                 = numeric(1), # pSugarBout
+
+                   # Survival
+                   Bs_surv              = numeric(1),
+                   Os_surv              = numeric(1),
+                   Ms_surv              = numeric(1),
+                   Ss_surv              = numeric(1),
+
+                   B_surv               = numeric(1),
+                   O_surv               = numeric(1),
+                   M_surv               = numeric(1),
+                   S_surv               = numeric(1),
+
+                   PPR_a                = numeric(1), # mbites_pPPRFlight
+                   PPR_b                = numeric(1), # mbites_pPPRFlight
+                   S_a                  = numeric(1), # mbites_pEnergySurvival
+                   S_b                  = numeric(1), # mbites_pEnergySurvival
+
+                   TATTER               = logical(1), # control tattering
+                   ttsz_p               = numeric(1), # wing tattering (size of damage)
+                   ttsz_a               = numeric(1),
+                   ttsz_b               = numeric(1),
+
+                   ttr_a                = numeric(1), # wing tattering (probability of death)
+                   ttr_b                = numeric(1),
+
+                   chm_a                = numeric(1), # chemical damage to mosquito body
+                   chm_b                = numeric(1),
+
+                   SENESCE              = logical(1), # control senescence
+                   sns_a                = numeric(1), # senescence parameters
+                   sns_b                = numeric(1), # senescence parameters
+
+                   # BloodMeal
+                   bm_a                 = numeric(1), # Beta-distributed bloodmeal size
+                   bm_b                 = numeric(1), # Beta-distributed bloodmeal size
+
+                   OVERFEED             = logical(1), # control overfeeding
+                   of_a                 = numeric(1),
+                   of_b                 = numeric(1),
+
+                   # Oogenesis
+                   bloodPerEgg          = numeric(1), # egg provision: how much blood does each egg need?
+                   bs_m                 = numeric(1), # mean of normally dist. egg batch
+                   bs_sd                = numeric(1), # sd of normally dist. egg batch
+                   maxBatch             = integer(1), # max batch size
+                   emt_m                = numeric(1), # mean of normally dist. maturation time
+                   emt_sd               = numeric(1), # sd of normally dist. maturation time
+
+                   rf_a                 = numeric(1), # refeeding probability
+                   rf_b                 = numeric(1)
+
                  )
 ) # end MBITES_Parameters class definition
 
@@ -93,8 +149,9 @@ MBITES_Parameters$set(which = "public",name = "get_aqua_model",
     value = get_aqua_model_MBITES_Parameters, overwrite = TRUE
 )
 
+
 ###############################################################################
-# Timing closures
+# Timing
 ###############################################################################
 
 #' Make a Shifted Exponential Time-to-Event Closure

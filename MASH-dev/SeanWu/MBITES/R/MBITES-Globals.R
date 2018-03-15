@@ -39,6 +39,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                  lock_class = FALSE,
                  lock_objects = FALSE,
 
+                 # public fields
                  public = list(
 
                    # begin constructor
@@ -51,7 +52,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                      futile.logger::flog.trace("MBITES_Globals being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      # world state globals
-                     private$t_now = 0L
+                     private$tNow = 0L
 
                      # mosquito globals
                      private$mosquito_id = 0L
@@ -75,13 +76,15 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                      invisible(gc())
                    } # end destructor
 
-                 ),
+                 ), # end public fields
 
+                 # private fields
                  private = list(
 
                    # world-state globals
-                   t_now              = 0L, # current simulation time
+                   tNow               = 0L, # current simulation time
                    mutex              = NULL,
+                   SETUP              = FALSE,
 
                    # mosquito globals
                    mosquito_id        = 0L, # global counter of IDs
@@ -96,7 +99,8 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                    tile_id            = 0L, # global counter of tile IDs
                    tiles              = list() # references to all the tiles
 
-                 )
+                 ) # end private fields
+
 ) # end MBITES_Globals definition
 
 # global assignment to package namespace at end of script
@@ -118,20 +122,31 @@ release_lock_MBITES_Globals <- function(){
   synchronicity::unlock(private$mutex)
 }
 
-get_t_now_MBITES_Globals <- function(){
-  return(private$t_now)
+get_tNow_MBITES_Globals <- function(){
+  return(private$tNow)
 }
 
-increment_t_now_MBITES_Globals <- function(){
-  private$t_now = private$t_now + 1L
+increment_tNow_MBITES_Globals <- function(){
+  private$tNow = private$tNow + 1L
 }
 
-MBITES_Globals$set(which = "public",name = "increment_t_now",
-          value = increment_t_now_MBITES_Globals, overwrite = TRUE
+get_SETUP_MBITES_Globals <- function(){
+  return(private$SETUP)
+}
+
+set_SETUP_MBITES_Globals <- function(bool){
+  if(!is.logical(bool)){
+    stop("setup flag in MBITES_Globals must be a logical\n")
+  }
+  private$SETUP = bool
+}
+
+MBITES_Globals$set(which = "public",name = "increment_tNow",
+          value = increment_tNow_MBITES_Globals, overwrite = TRUE
 )
 
-MBITES_Globals$set(which = "public",name = "get_t_now",
-          value = get_t_now_MBITES_Globals, overwrite = TRUE
+MBITES_Globals$set(which = "public",name = "get_tNow",
+          value = get_tNow_MBITES_Globals, overwrite = TRUE
 )
 
 MBITES_Globals$set(which = "public",name = "get_lock",
@@ -144,6 +159,14 @@ MBITES_Globals$set(which = "public",name = "release_lock",
 
 MBITES_Globals$set(which = "public",name = "init_lock",
           value = init_lock_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_SETUP",
+          value = get_SETUP_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "set_SETUP",
+          value = set_SETUP_MBITES_Globals, overwrite = TRUE
 )
 
 

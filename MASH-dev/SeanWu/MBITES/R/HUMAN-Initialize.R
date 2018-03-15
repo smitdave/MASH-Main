@@ -31,7 +31,7 @@ Human_NULL_Initialize <- function(human_init){
 
   n = nrow(human_init)
   pb = txtProgressBar(min = 0, max = n, initial = 0)
-  time = MBITES:::Globals$get_t_now()
+  time = MBITES:::Globals$get_tNow()
 
   for(i in 1:n){
     tileID = human_init[i,"tileID"]
