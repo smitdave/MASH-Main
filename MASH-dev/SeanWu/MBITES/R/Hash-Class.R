@@ -11,6 +11,26 @@
 #
 ###############################################################################
 
+
+#' Map a function over a hash table
+#'
+#' This is an internal function for MBITES that rewrite eapply such that
+#' no memory is allocated for return values. It is only for functions being called
+#' for their side effects.
+#'
+#' @param X a hashed \code{\link[base]{environment}}
+#' @param FUN a function
+#' @param ... optional named arguments
+#'
+#' @name hash_apply
+#' @useDynLib MBITES hash_apply_c
+#'
+hash_apply <- function(X,FUN,...){
+  call <- match.call(expand.dots = FALSE)
+  .Call(hash_apply_c,call,environment())
+}
+
+
 ###############################################################################
 # HashMap: Class Definition
 ###############################################################################

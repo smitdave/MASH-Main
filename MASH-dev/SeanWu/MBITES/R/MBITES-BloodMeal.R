@@ -20,7 +20,7 @@
 #' Handle bloodmeal size (see \code{\link{mbites_rBloodMealSize}}), overfeeding (see \code{\link{mbites_pOverFeed}}),
 #' and egg batch size and maturation time. Note that refeeding behavior is calculated during resting bout.
 #'  * This method is bound to \code{MosquitoFemale$BloodMeal()}.
-#' @md
+#'
 mbites_BloodMeal <- function(){
   private$bloodfed = TRUE
   private$bmSize = self$rBloodMealSize()
@@ -37,7 +37,7 @@ mbites_BloodMeal <- function(){
 #'
 #' Draw a bloodmeal size from Beta(bm.a,bm.b)
 #'  * This method is bound to \code{MosquitoFemale$rBloodMealSize()}.
-#' @md
+#'
 mbites_rBloodMealSize <- function(){
   rbeta(n=1,MBITES:::Parameters$get_bm_a(),MBITES::Parameters$get_bm_b())
 }
@@ -60,7 +60,7 @@ mbites_Overfeeding <- function(){
 #'
 #' Probability of death due to overfeeding from bloodmeal size given by \deqn{\frac{e^{of.a\times bmSize}}{of.b+e^{of.a\times bmSize}}}
 #'  * This method is bound to \code{MosquitoFemale$pOverFeed()}.
-#' @md
+#'
 mbites_pOverFeed <- function(){
   of_a = MBITES:::Parameters$get_of_a()
   of_b = MBITES:::Parameters$get_of_b()

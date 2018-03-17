@@ -28,7 +28,7 @@ mbites_chooseHabitat<-function(){
 #'
 mbites_ovitrap<-function(){
    # write me!
-} 
+}
 
 #' M-BITES: Lay Eggs for 'Emerge' \code{\link{MosquitoFemale}}
 #'
