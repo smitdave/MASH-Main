@@ -23,7 +23,7 @@ NULL
 
 
 ###############################################################################
-# Energetics
+# Blood Energetics
 ###############################################################################
 
 #' MBITES: Blood Energetics
@@ -48,13 +48,30 @@ mbites_energyFromBlood <- function(){
 }
 
 
+###############################################################################
+# Sugar Energetics
+###############################################################################
+
+#' MBITES: Choose Sugar Source
+#'
+#' If the mosquito passes the check for a successful sugar feeding attempt bout, it proceeds to choose a sugar source
+#' at the \code{\link{Site}} it is at.
+#'  * this method is bound to \code{Mosquito$chooseSugarSource}
+mbites_chooseSugarSource <- function(){
+  # when atsb, etc exist, do the checks here
+  private$sugar_res = private$site$sample_sugar() # sample resources
+  private$sugarID = 1L # normal sugar source
+
+}
 
 #' MBITES: Sugar Energetics
 #'
 #' Add energy derived from sugar to the mosquito's fuel tank. This method is called from \code{\link{mbites_boutS}}.
+#' This function resets the \code{boutFail} counter back to 0.
 #'  * This method is bound to \code{MosquitoFemale$sugarMeal}.
 #'
 mbites_sugarMeal <- function(){ # called from MBITES-Bouts.R, boutS
+  private$boutFail = 0L # reset bout failure to 0
   private$energy = 1 # always top up to full
   if(!private$mature){
     private$energyPreG = private$energyPreG - MBITES:::Parameters$get_preGsugar()

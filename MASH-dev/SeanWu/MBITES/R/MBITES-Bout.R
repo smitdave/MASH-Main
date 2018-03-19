@@ -87,10 +87,10 @@ Mosquito$set(which = "public",name = "oneBout",
 
 
 ###############################################################################
-# Search Bout
+# Search Attempt
 ###############################################################################
 
-#' MBITES: Search Bout
+#' MBITES: Search Attempt
 #'
 #' The generic search bout for a mosquito is called if the search flag is \code{TRUE}.
 #'  1. call \code{\link{mbites_move}} to find a new site, this search can succeed or fail resulting in:
@@ -234,9 +234,6 @@ mbites_SugarSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_sugar()){
     private$search = TRUE
-  # if resources here, sample from them
-  } else {
-    private$sugar_res = private$site$sample_sugar()
   }
 }
 
@@ -249,12 +246,8 @@ mbites_MatingSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_mate()){
     private$search = TRUE
-  # if resources here, sample from them
-  } else {
-    private$mate_res = private$site$sample_mate()
   }
 }
-
 
 
 ###############################################################################
@@ -341,6 +334,80 @@ mbites_attempt_O <- function(){
     # if i did not succeed my bout, increment failure counter
     private$boutFail = private$boutFail + 1L
   }
+}
 
 
+###############################################################################
+# Attempt Bout: Mating
+###############################################################################
+
+#' M-BITES: Mating Bout (M) \code{MosquitoFemale}
+#'
+#' A mosquito performs mating bout.
+#'
+#'    1) choose a mate from the swarmingQ ;
+#'    2a) mate
+#'    2b) the swarm has been sprayed.
+#'    2c) a null mate is for a failed attempt
+#
+#'  * This method is bound to \code{MosquitoFemale$boutM()}.
+#'
+mbites_attempt_M <- function(){
+  # bout success
+  if(runif(1) < MBITES:::Parameters$get_Ms_succeed()){
+    self$chooseMate()
+
+    # found a mate
+    if(private$mateID > 0L){
+      self$mating()
+    # empty queue
+    } else if(private$mateID == 0L){
+      # nothing yet.
+    # bad mateID
+    } else {
+      stop("illegal mateID value")
+    }
+
+  # bout failure
+  } else {
+
+  }
+}
+
+
+###############################################################################
+# Attempt Bout: Sugar Feeding
+###############################################################################
+
+#' M-BITES: Sugar Feeding Bout (S) \code{MosquitoFemale}
+#'
+#'
+#' The sugar feeding attempt bout has the following structure:
+#'
+#'    1) choose a sugar source;
+#'    2a) take a sugar meal
+#'    2b) if a mosuqito chooses an atsb, simulate the outcome
+#'    2c) a null source is for a failed attempt
+#'
+#'  * This method is bound to \code{MosquitoFemale$boutS()}.
+#'
+mbites_attempt_S <- function(){
+  # bout success
+  if(runif(1) < MBITES:::Parameters$get_S_succeed()){
+
+    # sample resources
+    self$chooseSugarSource() # MBITES-Energetics.R
+
+    if(private$sugarID > 0L){
+      self$sugarMeal() # MBITES-Energetics.R
+    } else if(private$sugarID == -1L){
+      # self$atsb()
+    } else {
+      stop("illegal sugarID value")
+    }
+
+  } else {
+    # if i did not succeed my bout, increment failure counter
+    private$boutFail = private$boutFail + 1L
+  }
 }

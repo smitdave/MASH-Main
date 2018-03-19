@@ -142,8 +142,8 @@ make_MatingQ <- function(){
 
   # sampleQ: sample a mosquito id from the queue
   sampleQ <- function(){
-    # check for empty queue, return -10L if empty
-    out <- -10L
+    # check for empty queue, return 0L if empty
+    out <- 0L
     if(length(id)==0L){
       return(out)
     } else {

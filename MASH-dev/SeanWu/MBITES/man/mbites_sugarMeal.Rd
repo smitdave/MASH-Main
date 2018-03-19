@@ -8,6 +8,7 @@ mbites_sugarMeal()
 }
 \description{
 Add energy derived from sugar to the mosquito's fuel tank. This method is called from \code{\link{mbites_boutS}}.
+This function resets the \code{boutFail} counter back to 0.
 \itemize{
 \item This method is bound to \code{MosquitoFemale$sugarMeal}.
 }
