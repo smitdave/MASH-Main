@@ -370,7 +370,7 @@ mbites_attempt_M <- function(){
 
   # bout failure
   } else {
-
+    # might not need to increment boutFail, see comments in https://github.com/smitdave/MASH-Main/pull/90
   }
 }
 
@@ -408,6 +408,7 @@ mbites_attempt_S <- function(){
 
   } else {
     # if i did not succeed my bout, increment failure counter
+    # actually even this might not be necessary since i'll be starved if i dont have enough fuel in my tank.
     private$boutFail = private$boutFail + 1L
   }
 }

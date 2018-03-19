@@ -82,10 +82,35 @@ Tile <- R6::R6Class(classname = "Tile",
                  )
 ) # end Tile class definition
 
-# get_mosquitoes
 
-# get_humans
+###############################################################################
+# Accessors
+###############################################################################
 
+#' get this tile's id
+get_id_Tile <- function(){
+  return(private$id)
+}
+
+#' get the hashmap that stores all the mosquitoes
+get_mosquitoes_Tile <- function(){
+  return(private$Mosquitoes)
+}
+
+#' get a mosquito by id
+get_mosquito_Tile <- function(id){
+  return(private$Mosquitoes$get(id))
+}
+
+#' get the hashmap that stores all the humans
+get_humans_Tile <- function(){
+  return(private$Humans)
+}
+
+#' get a human by id
+get_human_Tile <- function(id){
+  return(private$Humans$get(id))
+}
 
 #' Tile: Return a Site Reference
 #'
@@ -95,14 +120,26 @@ get_sites_Tile <- function(){
   return(private$Sites)
 }
 
-Tile$set(which = "public",name = "get_sites",
-    value = get_sites_Tile, overwrite = TRUE
-)
-
-get_id_Tile <- function(){
-  return(private$id)
-}
-
 Tile$set(which = "public",name = "get_id",
     value = get_id_Tile, overwrite = TRUE
+)
+
+Tile$set(which = "public",name = "get_mosquitoes",
+    value = get_mosquitoes_Tile, overwrite = TRUE
+)
+
+Tile$set(which = "public",name = "get_mosquito",
+    value = get_mosquito_Tile, overwrite = TRUE
+)
+
+Tile$set(which = "public",name = "get_humans",
+    value = get_humans_Tile, overwrite = TRUE
+)
+
+Tile$set(which = "public",name = "get_human",
+    value = get_human_Tile, overwrite = TRUE
+)
+
+Tile$set(which = "public",name = "get_sites",
+    value = get_sites_Tile, overwrite = TRUE
 )
