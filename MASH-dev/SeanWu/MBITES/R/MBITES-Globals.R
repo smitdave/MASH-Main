@@ -129,19 +129,19 @@ set_SETUP_MBITES_Globals <- function(bool){
 }
 
 MBITES_Globals$set(which = "public",name = "increment_tNow",
-          value = increment_tNow_MBITES_Globals, overwrite = TRUE
+  value = increment_tNow_MBITES_Globals, overwrite = TRUE
 )
 
 MBITES_Globals$set(which = "public",name = "get_tNow",
-          value = get_tNow_MBITES_Globals, overwrite = TRUE
+  value = get_tNow_MBITES_Globals, overwrite = TRUE
 )
 
 MBITES_Globals$set(which = "public",name = "get_SETUP",
-          value = get_SETUP_MBITES_Globals, overwrite = TRUE
+  value = get_SETUP_MBITES_Globals, overwrite = TRUE
 )
 
 MBITES_Globals$set(which = "public",name = "set_SETUP",
-          value = set_SETUP_MBITES_Globals, overwrite = TRUE
+  value = set_SETUP_MBITES_Globals, overwrite = TRUE
 )
 
 
