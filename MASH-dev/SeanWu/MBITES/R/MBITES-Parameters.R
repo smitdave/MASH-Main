@@ -220,6 +220,24 @@ make_ttEvent_Diurnal <- function(peak, tmin){
 
 
 ###############################################################################
+# Queries from Mosquitoes
+###############################################################################
+
+#' MBITES Parameters: Return Resting Spot Weights for Behavioral States
+#'
+#' Return the specific weights for different resting spots associated with mosquito behavioral states.
+#'
+get_wts_MBITES_Parameters <- function(state){
+  switch(private$state,
+    b = {private$b_wts},
+    o = {private$o_wts},
+    m = {private$m_wts},
+    s = {private$s_wts},
+    {stop("illegal behavioral state entered from call to get_wts_MBITES_Parameters")}
+  )
+}
+
+###############################################################################
 # Set Parameters
 ###############################################################################
 
@@ -234,8 +252,15 @@ make_ttEvent_Diurnal <- function(peak, tmin){
 # }
 
 
+# should be a named matrix because indexing is going to be on dimension names.
+get_InAndOut_row_MBITES_Parameters <- function(i){
+  private$InAndOut[i,]
+}
+
+
 ###############################################################################
 # assign MBITES parameters instance in the package namespace (a bit hacky)
 ###############################################################################
 
 Parameters <- MBITES_Parameters$new()
+rspot <- c("i","w","v","r","l")

@@ -103,10 +103,6 @@ mbites_attempt_search <- function(){
   }
 }
 
-Mosquito$set(which = "public",name = "attempt_search",
-    value = mbites_attempt_search, overwrite = TRUE
-)
-
 #' MBITES: Move
 #'
 #' If successful, the mosquito moves to a new \code{\link[MBITES]{Site}} object from querying
@@ -117,6 +113,10 @@ mbites_move <- function(){
   private$site = private$site$move_mosquito() # see LANDSCAPE-Site.R
   private$rspot = "l" # initialize resting spot behavior when i get to a new site
 }
+
+Mosquito$set(which = "public",name = "attempt_search",
+    value = mbites_attempt_search, overwrite = TRUE
+)
 
 Mosquito$set(which = "public",name = "move_mosquito",
     value = move_mosquito_Site, overwrite = TRUE

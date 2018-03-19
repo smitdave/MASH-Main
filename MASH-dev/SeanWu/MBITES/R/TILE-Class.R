@@ -43,6 +43,10 @@ Tile <- R6::R6Class(classname = "Tile",
                    # begin constructor
                    initialize = function(){
 
+                     if(!MBITES:::Globals$get_SETUP()){
+                       stop("please run MBITES_Setup before initializing any tiles\n")
+                     }
+
                      # get a tile id from global parameters and add my reference to the globals
                      private$id = MBITES:::Globals$get_tileID()
                      MBITES:::Globals$add_tile(self)

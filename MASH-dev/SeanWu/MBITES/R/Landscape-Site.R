@@ -252,11 +252,6 @@ add_feed_Site <- function(Feeding_Resource){
   private$res_feed_w = append(private$res_feed_w,Feeding_Resource$get_w())
 }
 
-Site$set(which = "public",name = "add_feed",
-    value = add_feed_Site, overwrite = TRUE
-)
-
-
 #' Site: Add a Aquatic Habitat Resource
 #'
 #' Add a aquatic habitat resource to this site.
@@ -269,11 +264,6 @@ add_aqua_Site <- function(Aqua_Resource){
   private$res_aqua = append(private$res_aqua,Aqua_Resource)
   private$res_aqua_w = append(private$res_aqua_w,Aqua_Resource$get_w())
 }
-
-Site$set(which = "public",name = "add_aqua",
-    value = add_aqua_Site, overwrite = TRUE
-)
-
 
 #' Site: Add a Sugar Feeding Resource
 #'
@@ -288,11 +278,6 @@ add_sugar_Site <- function(Sugar_Resource){
   private$res_sugar_w = append(private$res_sugar_w,Sugar_Resource$get_w())
 }
 
-Site$set(which = "public",name = "add_sugar",
-    value = add_sugar_Site, overwrite = TRUE
-)
-
-
 #' Site: Add a Mating Resource
 #'
 #' Add a mating resource to this site.
@@ -306,6 +291,18 @@ add_mate_Site <- function(Mating_Resource){
   private$res_mate_w = append(private$res_mate_w,Mating_Resource$get_w())
 }
 
+Site$set(which = "public",name = "add_feed",
+    value = add_feed_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "add_aqua",
+    value = add_aqua_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "add_sugar",
+    value = add_sugar_Site, overwrite = TRUE
+)
+
 Site$set(which = "public",name = "add_mate",
     value = add_mate_Site, overwrite = TRUE
 )
@@ -314,6 +311,17 @@ Site$set(which = "public",name = "add_mate",
 ###############################################################################
 # Getters & Setters
 ###############################################################################
+
+# Basic attributes of a site
+
+#' Site: Site ID
+#'
+#' Return the id of this site.
+#'  * binding: \code{Site$get_id}
+#'
+get_id_Site <- function(){
+  return(private$id)
+}
 
 #' Site: Return ID of Tile this Site is in
 #'
@@ -324,13 +332,39 @@ get_tileID_Site <- function(){
   return(private$tileID)
 }
 
+#' Site: Return Type of this Site
+#'
+#' Return the integer type of this site.
+#'  * binding: \code{Site$get_type}
+#'
+get_type_Site <- function(){
+  return(private$type)
+}
+
+#' Site: Get Resting Hazard
+#'
+#' Return the resting hazard of this site.
+#'  * binding: \code{Site$get_haz}
+#'
+get_haz_Site <- function(){
+  return(private$haz)
+}
+
+Site$set(which = "public",name = "get_id",
+    value = get_id_Site, overwrite = TRUE
+)
+
 Site$set(which = "public",name = "get_tileID",
     value = get_tileID_Site, overwrite = TRUE
 )
 
-get_haz_Site <- function(){
-  return(private$haz)
-}
+Site$set(which = "public",name = "get_type",
+    value = get_type_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "get_haz",
+    value = get_haz_Site, overwrite = TRUE
+)
 
 # Feeding Resource accessors
 

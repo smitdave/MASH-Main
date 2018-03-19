@@ -2,27 +2,13 @@
 % Please edit documentation in R/MBITES-Resting.R
 \name{mbites_enterHouse}
 \alias{mbites_enterHouse}
-\title{M-BITES: Generate New Landing Spot for \code{MosquitoFemale}}
+\title{M-BITES: Attempt to Enter a House for \code{MosquitoFemale}}
 \usage{
 mbites_enterHouse()
 }
-\value{
-character corresponding to new resting spot
-}
 \description{
-Method for return a new landing spot based on behavioral state of mosquito and weights from \code{\link{mbites_get_WTS}}.
-New landing spots generated at the end of the search bout, attempt bout, or after oviposition a mosquito has entered
-the area around a feeding site and either rested or attempted to rest. If the site is not a \code{\link{FeedingSite}} or peri-domestic the mosquito always rests on vegetation.
+Method to simulate attempted house entry for mosquito, and call appropriate events if the mosquito enters.
 \itemize{
-\item i: rest on the inside wall of a structure
-\item w: rest on the outside wall of a structure
-\item v: rest on vegetation
-\item r: reattempt without resting
-\item l: leave the area
-}
-}
-\details{
-\itemize{
-\item This method is bound to \code{MosquitoFemale$newSpot()}.
+\item This method is bound to \code{MosquitoFemale$enterHouse()}.
 }
 }

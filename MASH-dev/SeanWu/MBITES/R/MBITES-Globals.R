@@ -83,7 +83,6 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                    # world-state globals
                    tNow               = 0L, # current simulation time
-                   mutex              = NULL,
                    SETUP              = FALSE,
 
                    # mosquito globals
@@ -110,18 +109,6 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 # World-state global methods
 ###############################################################################
 
-init_lock_MBITES_Globals <- function(){
-  private$mutex = synchronicity::boost.mutex()
-}
-
-get_lock_MBITES_Globals <- function(){
-  synchronicity::lock(private$mutex)
-}
-
-release_lock_MBITES_Globals <- function(){
-  synchronicity::unlock(private$mutex)
-}
-
 get_tNow_MBITES_Globals <- function(){
   return(private$tNow)
 }
@@ -147,18 +134,6 @@ MBITES_Globals$set(which = "public",name = "increment_tNow",
 
 MBITES_Globals$set(which = "public",name = "get_tNow",
           value = get_tNow_MBITES_Globals, overwrite = TRUE
-)
-
-MBITES_Globals$set(which = "public",name = "get_lock",
-          value = get_lock_MBITES_Globals, overwrite = TRUE
-)
-
-MBITES_Globals$set(which = "public",name = "release_lock",
-          value = release_lock_MBITES_Globals, overwrite = TRUE
-)
-
-MBITES_Globals$set(which = "public",name = "init_lock",
-          value = init_lock_MBITES_Globals, overwrite = TRUE
 )
 
 MBITES_Globals$set(which = "public",name = "get_SETUP",
