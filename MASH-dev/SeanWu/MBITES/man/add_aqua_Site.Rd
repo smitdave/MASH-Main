@@ -7,7 +7,7 @@
 add_aqua_Site(Aqua_Resource)
 }
 \arguments{
-\item{Aqua_Resource}{a reference to an object deriving from \code{\link[MBITES]{Aqua_Resource}}}
+\item{Aqua_Resource}{a reference to an object deriving from \code{\link{Aqua_Resource}}}
 }
 \description{
 Add a aquatic habitat resource to this site.

@@ -7,7 +7,7 @@
 get_human_id_MBITES_Globals()
 }
 \description{
-Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link[MBITES]{Human_NULL}} or Human
+Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link{Human_NULL}} or Human
 objects.
 }
 \details{

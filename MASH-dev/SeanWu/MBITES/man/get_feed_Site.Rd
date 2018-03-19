@@ -10,7 +10,7 @@ get_feed_Site(i)
 \item{i}{integer index of resource to return}
 }
 \description{
-Return a reference to the i'th \code{\link[MBITES]{Feeding_Resource}}
+Return a reference to the i'th \code{\link{Feeding_Resource}}
 \itemize{
 \item binding: \code{Site$get_feed}
 }

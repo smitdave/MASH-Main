@@ -18,7 +18,7 @@
 
 #' Mating Resource Base Class
 #'
-#' A \code{Mating_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel mating.
+#' A \code{Mating_Resource} is a type of resource at a \code{\link{Site}} where mosquitoes travel mating.
 #'
 #'
 #'
@@ -35,7 +35,7 @@
 #'  * push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
 #'
 #' @section **Fields**:
-#'  * MatingQ: a closure of male swarms (see \code{\link[MBITES]{make_MatingQ}}
+#'  * MatingQ: a closure of male swarms (see \code{\link{make_MatingQ}}
 #'
 #' @export
 Mating_Resource <- R6::R6Class(classname = "Mating_Resource",

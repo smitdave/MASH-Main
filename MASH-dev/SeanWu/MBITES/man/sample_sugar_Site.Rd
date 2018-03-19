@@ -7,7 +7,7 @@
 sample_sugar_Site()
 }
 \description{
-Sample a sugar feeding resource at this site, returns a reference to a \code{\link[MBITES]{Sugar_Resource}} object.
+Sample a sugar feeding resource at this site, returns a reference to a \code{\link{Sugar_Resource}} object.
 \itemize{
 \item binding: \code{Site$sample_sugar}
 }

@@ -18,7 +18,7 @@
 
 #' Aquatic Habitat Resource Base Class
 #'
-#' A \code{Aqua_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel for oviposition of eggs
+#' A \code{Aqua_Resource} is a type of resource at a \code{\link{Site}} where mosquitoes travel for oviposition of eggs
 #' and from which new imagos (adult mosquitoes) emerge from. This abstract base class defines an interface which all models of aquatic ecology
 #' must inherit from to generate concrete implementations of the interface methods.
 #'
@@ -30,7 +30,7 @@
 #'
 #' @section **Constructor**:
 #'  * w: a numeric search weight
-#'  * site: a reference to a \code{\link[MBITES]{Site}} object
+#'  * site: a reference to a \code{\link{Site}} object
 #'
 #' @section **Methods**:
 #'  * add_egg: function that must take an egg batch and add it to the \code{EggQ}
@@ -38,8 +38,8 @@
 #'  * push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
 #'
 #' @section **Fields**:
-#'  * EggQ: a closure of egg batches (see \code{\link[MBITES]{make_EggQ}})
-#'  * ImagoQ: a closure of imago cohorts (see \code{\link[MBITES]{make_ImagoQ}})
+#'  * EggQ: a closure of egg batches (see \code{\link{make_EggQ}})
+#'  * ImagoQ: a closure of imago cohorts (see \code{\link{make_ImagoQ}})
 #'
 #' @export
 Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",

@@ -7,7 +7,7 @@
 mbites_bloodEnergetics()
 }
 \description{
-Add energy derived from blood to the mosquito's fuel tank. This method is called from \code{\link[MBITES]{mbites_BloodMeal}}.
+Add energy derived from blood to the mosquito's fuel tank. This method is called from \code{\link{mbites_BloodMeal}}.
 \itemize{
 \item This method is bound to \code{MosquitoFemale$bloodEnergetics}.
 }

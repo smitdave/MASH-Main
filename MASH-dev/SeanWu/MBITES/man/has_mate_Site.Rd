@@ -7,7 +7,7 @@
 has_mate_Site()
 }
 \description{
-Check if any \code{\link[MBITES]{Mating_Resource}} are present at this site. This is queried by mosquitoes during \code{\link[MBITES]{mbites_checkForResources}}.
+Check if any \code{\link{Mating_Resource}} are present at this site. This is queried by mosquitoes during \code{\link{mbites_checkForResources}}.
 \itemize{
 \item binding: \code{Site$has_mate}
 }

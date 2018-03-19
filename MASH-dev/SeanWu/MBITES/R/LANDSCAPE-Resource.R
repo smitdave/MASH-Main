@@ -27,7 +27,7 @@
 #'  * method: im a method!
 #'
 #' @section **Fields**:
-#'  * id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
+#'  * id: integer id (obtained from \code{\link{MBITES_Globals}})
 #'  * field: im a field!
 #'
 #' @export
@@ -85,7 +85,7 @@ Resource$set(which = "public",name = "get_w",
 
 #' Resource: Get Site
 #'
-#' Get a reference to the enclosing \code{\link[MBITES]{Site}} object.
+#' Get a reference to the enclosing \code{\link{Site}} object.
 #'  * binding: \code{Resource$get_site}
 #'
 get_site_Resource <- function(){

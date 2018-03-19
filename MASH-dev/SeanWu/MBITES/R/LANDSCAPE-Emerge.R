@@ -14,7 +14,7 @@
 
 #' Aquatic Ecology: Emerge Model Class
 #'
-#' Class that implements the 'Emerge' model of aquatic ecology, inheriting the interface of \code{\link[MBITES]{Aqua_Resource}}.
+#' Class that implements the 'Emerge' model of aquatic ecology, inheriting the interface of \code{\link{Aqua_Resource}}.
 #'
 #'
 #' @docType class
@@ -23,7 +23,7 @@
 #'
 #' @section **Constructor**:
 #'  * lambda: either numeric or vector of at least length 365
-#'  * site: a reference to a \code{\link[MBITES]{Site}} object
+#'  * site: a reference to a \code{\link{Site}} object
 #'
 #' @section **Methods**:
 #'  * add_egg: function that must take an EggQ (a \code{list} object) and add egg batches to the population; it should return a modified EggQ with those elements corresponding to 'processed' egg batches zeroed out
@@ -109,7 +109,7 @@ Aqua_Resource_Emerge$set(which = "public",name = "add_egg",
 
 #' Aquatic Ecology: Emerge - Daily Emergence
 #'
-#' Add a cohort of emerging imagos based on current value of \eqn{\lambda} by calling \code{add2Q} function of the imago closure object, see \code{\link[MBITES]{make_ImagoQ}}.
+#' Add a cohort of emerging imagos based on current value of \eqn{\lambda} by calling \code{add2Q} function of the imago closure object, see \code{\link{make_ImagoQ}}.
 #'
 #'  * This method is bound to \code{Aqua_Resource_Emerge$one_day()}.
 #'

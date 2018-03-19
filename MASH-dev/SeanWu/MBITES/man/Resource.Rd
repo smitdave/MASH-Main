@@ -28,7 +28,7 @@ All resources inherit from the \code{Resource} abstract base class object.
 \section{\strong{Fields}}{
 
 \itemize{
-\item id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
+\item id: integer id (obtained from \code{\link{MBITES_Globals}})
 \item field: im a field!
 }
 }

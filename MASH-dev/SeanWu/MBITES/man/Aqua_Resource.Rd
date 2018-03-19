@@ -9,7 +9,7 @@
 Aqua_Resource
 }
 \description{
-A \code{Aqua_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel for oviposition of eggs
+A \code{Aqua_Resource} is a type of resource at a \code{\link{Site}} where mosquitoes travel for oviposition of eggs
 and from which new imagos (adult mosquitoes) emerge from. This abstract base class defines an interface which all models of aquatic ecology
 must inherit from to generate concrete implementations of the interface methods.
 }
@@ -17,7 +17,7 @@ must inherit from to generate concrete implementations of the interface methods.
 
 \itemize{
 \item w: a numeric search weight
-\item site: a reference to a \code{\link[MBITES]{Site}} object
+\item site: a reference to a \code{\link{Site}} object
 }
 }
 
@@ -33,8 +33,8 @@ must inherit from to generate concrete implementations of the interface methods.
 \section{\strong{Fields}}{
 
 \itemize{
-\item EggQ: a closure of egg batches (see \code{\link[MBITES]{make_EggQ}})
-\item ImagoQ: a closure of imago cohorts (see \code{\link[MBITES]{make_ImagoQ}})
+\item EggQ: a closure of egg batches (see \code{\link{make_EggQ}})
+\item ImagoQ: a closure of imago cohorts (see \code{\link{make_ImagoQ}})
 }
 }
 

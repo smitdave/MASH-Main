@@ -7,7 +7,7 @@
 get_mosquito_id_MBITES_Globals()
 }
 \description{
-Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link[MBITES]{Mosquito}}
+Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link{Mosquito}}
 objects.
 }
 \details{

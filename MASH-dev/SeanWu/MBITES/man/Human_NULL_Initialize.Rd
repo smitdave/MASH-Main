@@ -10,5 +10,5 @@ Human_NULL_Initialize(human_init)
 \item{human_init}{a \code{\link{data.frame}} object where each row corresponds to a human}
 }
 \description{
-Initialize \code{\link[MBITES]{Human_NULL}} populations
+Initialize \code{\link{Human_NULL}} populations
 }

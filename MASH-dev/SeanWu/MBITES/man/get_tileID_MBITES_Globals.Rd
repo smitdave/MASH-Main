@@ -7,7 +7,7 @@
 get_tileID_MBITES_Globals()
 }
 \description{
-Increments and gets a new tile ID; this function should only be called from the constructor of \code{\link[MBITES]{Tile}}
+Increments and gets a new tile ID; this function should only be called from the constructor of \code{\link{Tile}}
 objects.
 }
 \details{

@@ -7,7 +7,7 @@
 add_tile_MBITES_Globals(tile)
 }
 \arguments{
-\item{tile}{a reference to a \code{\link[MBITES]{Tile}} object}
+\item{tile}{a reference to a \code{\link{Tile}} object}
 }
 \description{
 Adds a reference to a tile to the list of all tiles in the simulation.

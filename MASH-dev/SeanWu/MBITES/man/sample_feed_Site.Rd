@@ -7,7 +7,7 @@
 sample_feed_Site()
 }
 \description{
-Sample a blood feeding resource at this site, returns a reference to a \code{\link[MBITES]{Feeding_Resource}} object.
+Sample a blood feeding resource at this site, returns a reference to a \code{\link{Feeding_Resource}} object.
 \itemize{
 \item binding: \code{Site$sample_feed}
 }

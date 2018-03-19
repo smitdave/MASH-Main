@@ -31,7 +31,7 @@
 #'  * method: im a method!
 #'
 #' @section **Fields**:
-#'  * id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
+#'  * id: integer id (obtained from \code{\link{MBITES_Globals}})
 #'  * field: im a field!
 #'
 #' @export
@@ -117,7 +117,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 
 #' MBITES: Female Mosquito Class
 #'
-#' Female mosquitoes inherit from the \code{\link[MBITES]{Mosquito}} abstract base class object.
+#' Female mosquitoes inherit from the \code{\link{Mosquito}} abstract base class object.
 #'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object
@@ -130,7 +130,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 #'  * method: im a method!
 #'
 #' @section **Fields**:
-#'  * id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
+#'  * id: integer id (obtained from \code{\link{MBITES_Globals}})
 #'  * field: im a field!
 #'
 #' @export
@@ -187,7 +187,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
 
 #' MBITES: Male Mosquito Class
 #'
-#' Male mosquitoes inherit from the \code{\link[MBITES]{Mosquito}} abstract base class object.
+#' Male mosquitoes inherit from the \code{\link{Mosquito}} abstract base class object.
 #'
 #' @docType class
 #' @format An \code{\link{R6Class}} generator object
@@ -200,7 +200,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
 #'  * method: im a method!
 #'
 #' @section **Fields**:
-#'  * id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
+#'  * id: integer id (obtained from \code{\link{MBITES_Globals}})
 #'  * field: im a field!
 #'
 #' @export

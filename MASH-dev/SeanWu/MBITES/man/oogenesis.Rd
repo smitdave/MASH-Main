@@ -11,7 +11,7 @@ mbites_oogenesis1()
 mbites_oogenesis2()
 }
 \description{
-Oogenesis model should be selected in \code{\link[MBITES]{MBITES_Setup}} prior to creating any objects.
+Oogenesis model should be selected in \code{\link{MBITES_Setup}} prior to creating any objects.
 }
 \details{
 In the first model, egg batch size is proportional to blood

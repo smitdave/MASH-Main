@@ -7,7 +7,7 @@
 mbites_sugarMeal()
 }
 \description{
-Add energy derived from sugar to the mosquito's fuel tank. This method is called from \code{\link[MBITES]{mbites_boutS}}.
+Add energy derived from sugar to the mosquito's fuel tank. This method is called from \code{\link{mbites_boutS}}.
 \itemize{
 \item This method is bound to \code{MosquitoFemale$sugarMeal}.
 }

@@ -7,7 +7,7 @@
 sample_mate_Site()
 }
 \description{
-Sample a mating swarm resource at this site, returns a reference to a \code{\link[MBITES]{Mating_Resource}} object.
+Sample a mating swarm resource at this site, returns a reference to a \code{\link{Mating_Resource}} object.
 \itemize{
 \item binding: \code{Site$sample_mate}
 }

@@ -9,7 +9,7 @@
 Mating_Resource
 }
 \description{
-A \code{Mating_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes travel mating.
+A \code{Mating_Resource} is a type of resource at a \code{\link{Site}} where mosquitoes travel mating.
 }
 \section{\strong{Constructor}}{
 
@@ -30,7 +30,7 @@ A \code{Mating_Resource} is a type of resource at a \code{\link[MBITES]{Site}} w
 \section{\strong{Fields}}{
 
 \itemize{
-\item MatingQ: a closure of male swarms (see \code{\link[MBITES]{make_MatingQ}}
+\item MatingQ: a closure of male swarms (see \code{\link{make_MatingQ}}
 }
 }
 

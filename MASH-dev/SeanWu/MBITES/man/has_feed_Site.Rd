@@ -7,7 +7,7 @@
 has_feed_Site()
 }
 \description{
-Check if any \code{\link[MBITES]{Feeding_Resource}} are present at this site. This is queried by mosquitoes during \code{\link[MBITES]{mbites_checkForResources}}.
+Check if any \code{\link{Feeding_Resource}} are present at this site. This is queried by mosquitoes during \code{\link{mbites_checkForResources}}.
 \itemize{
 \item binding: \code{Site$has_feed}
 }

@@ -11,13 +11,24 @@
 #
 ###############################################################################
 
+#' MBITES: Energetics
+#'
+#' write about me!
+#'
+#'
+#'
+#' @name Energetics
+NULL
+#> NULL
+
+
 ###############################################################################
 # Energetics
 ###############################################################################
 
 #' MBITES: Blood Energetics
 #'
-#' Add energy derived from blood to the mosquito's fuel tank. This method is called from \code{\link[MBITES]{mbites_BloodMeal}}.
+#' Add energy derived from blood to the mosquito's fuel tank. This method is called from \code{\link{mbites_BloodMeal}}.
 #'  * This method is bound to \code{MosquitoFemale$bloodEnergetics}.
 #'
 mbites_bloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
@@ -40,7 +51,7 @@ mbites_energyFromBlood <- function(){
 
 #' MBITES: Sugar Energetics
 #'
-#' Add energy derived from sugar to the mosquito's fuel tank. This method is called from \code{\link[MBITES]{mbites_boutS}}.
+#' Add energy derived from sugar to the mosquito's fuel tank. This method is called from \code{\link{mbites_boutS}}.
 #'  * This method is bound to \code{MosquitoFemale$sugarMeal}.
 #'
 mbites_sugarMeal <- function(){ # called from MBITES-Bouts.R, boutS

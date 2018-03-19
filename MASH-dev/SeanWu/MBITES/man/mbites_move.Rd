@@ -7,7 +7,7 @@
 mbites_move()
 }
 \description{
-If successful, the mosquito moves to a new \code{\link[MBITES]{Site}} object from querying
-the current site by \code{\link[MBITES]{move_mosquito_Site}}. This method is called from \code{\link[MBITES]{mbites_attempt_search}}
+If successful, the mosquito moves to a new \code{\link{Site}} object from querying
+the current site by \code{\link{move_mosquito_Site}}. This method is called from \code{\link{mbites_attempt_search}}
 * binding: \code{Mosquito$move}
 }

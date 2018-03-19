@@ -18,7 +18,7 @@
 
 #' Landscape Sugar Resource Class
 #'
-#' A \code{Sugar_Resource} is a type of resource at a \code{\link[MBITES]{Site}} where mosquitoes can expect to find
+#' A \code{Sugar_Resource} is a type of resource at a \code{\link{Site}} where mosquitoes can expect to find
 #' human or other vertebrate hosts when seeking a blood meal.
 #'
 #'

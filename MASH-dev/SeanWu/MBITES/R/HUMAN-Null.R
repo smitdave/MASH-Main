@@ -26,9 +26,9 @@
 #' @section **Constructor**:
 #'  * id: integer id
 #'  * w: numeric biting weight
-#'  * feedingID: id of the \code{\link[MBITES]{Feeding_Resource}} where my biting weight will be added
-#'  * siteID: id of the \code{\link[MBITES]{Site}} where my feeding site resides
-#'  * tileID: id of the \code{\link[MBITES]{Tile}} where I reside
+#'  * feedingID: id of the \code{\link{Feeding_Resource}} where my biting weight will be added
+#'  * siteID: id of the \code{\link{Site}} where my feeding site resides
+#'  * tileID: id of the \code{\link{Tile}} where I reside
 #'
 #' @section **Methods**:
 #'  * method: i'm a method!

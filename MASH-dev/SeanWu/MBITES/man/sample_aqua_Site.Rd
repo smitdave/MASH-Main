@@ -7,7 +7,7 @@
 sample_aqua_Site()
 }
 \description{
-Sample a aquatic habitat resource at this site, returns a reference to a \code{\link[MBITES]{Aqua_Resource}} object.
+Sample a aquatic habitat resource at this site, returns a reference to a \code{\link{Aqua_Resource}} object.
 \itemize{
 \item binding: \code{Site$sample_aqua}
 }

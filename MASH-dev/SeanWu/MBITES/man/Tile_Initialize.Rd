@@ -10,6 +10,6 @@ Tile_Initialize(landscape)
 \item{landscape}{a \code{\link{list}} object where each row corresponds to a site}
 }
 \description{
-Initialize \code{\link[MBITES]{Site}} objects and their resources on a tile. This function should be called once for each
-\code{\link[MBITES]{Tile}} being initialized.
+Initialize \code{\link{Site}} objects and their resources on a tile. This function should be called once for each
+\code{\link{Tile}} being initialized.
 }

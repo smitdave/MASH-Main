@@ -7,7 +7,7 @@
 get_feed_w_Site()
 }
 \description{
-Return a numeric vector of \code{\link[MBITES]{Feeding_Resource}} weights at this site.
+Return a numeric vector of \code{\link{Feeding_Resource}} weights at this site.
 \itemize{
 \item binding: \code{Site$get_feed_w}
 }
