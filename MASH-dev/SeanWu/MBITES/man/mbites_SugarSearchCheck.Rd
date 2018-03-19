@@ -7,7 +7,7 @@
 mbites_SugarSearchCheck()
 }
 \description{
-During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has a
+During the resting period \code{\link{mbites_updateState}}, check if the local site has a
 sugar feeding resource present.
 \itemize{
 \item this method is bound to \code{MosquitoFemale$SugarSearchCheck}

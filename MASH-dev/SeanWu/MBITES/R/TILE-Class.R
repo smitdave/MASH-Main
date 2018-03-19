@@ -13,7 +13,7 @@
 
 #' Tile Class
 #'
-#' A \code{Tile} consists of a set of \code{\link[MBITES]{Site}} objects defininng where events occur,
+#' A \code{Tile} consists of a set of \code{\link{Site}} objects defininng where events occur,
 #' and the agents that enact the dynamics on the tile.
 #'
 #'
@@ -42,6 +42,10 @@ Tile <- R6::R6Class(classname = "Tile",
 
                    # begin constructor
                    initialize = function(){
+
+                     if(!MBITES:::Globals$get_SETUP()){
+                       stop("please run MBITES_Setup before initializing any tiles\n")
+                     }
 
                      # get a tile id from global parameters and add my reference to the globals
                      private$id = MBITES:::Globals$get_tileID()
@@ -85,7 +89,7 @@ Tile <- R6::R6Class(classname = "Tile",
 
 #' Tile: Return a Site Reference
 #'
-#' Return the reference to a given \code{\link[MBITES]{Site}} object by id.
+#' Return the reference to a given \code{\link{Site}} object by id.
 #'
 get_sites_Tile <- function(){
   return(private$Sites)

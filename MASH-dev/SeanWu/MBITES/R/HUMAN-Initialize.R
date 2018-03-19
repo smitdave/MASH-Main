@@ -18,7 +18,7 @@
 
 #' Initialize Null Human Populations
 #'
-#' Initialize \code{\link[MBITES]{Human_NULL}} populations
+#' Initialize \code{\link{Human_NULL}} populations
 #'
 #' @param human_init a \code{\link{data.frame}} object where each row corresponds to a human
 #'

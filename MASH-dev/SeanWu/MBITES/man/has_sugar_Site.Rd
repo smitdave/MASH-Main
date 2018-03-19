@@ -7,7 +7,7 @@
 has_sugar_Site()
 }
 \description{
-Check if any \code{\link[MBITES]{Sugar_Resource}} are present at this site. This is queried by mosquitoes during \code{\link[MBITES]{mbites_checkForResources}}.
+Check if any \code{\link{Sugar_Resource}} are present at this site. This is queried by mosquitoes during \code{\link{mbites_checkForResources}}.
 \itemize{
 \item binding: \code{Site$has_sugar}
 }

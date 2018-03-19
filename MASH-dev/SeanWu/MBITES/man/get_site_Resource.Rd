@@ -7,7 +7,7 @@
 get_site_Resource()
 }
 \description{
-Get a reference to the enclosing \code{\link[MBITES]{Site}} object.
+Get a reference to the enclosing \code{\link{Site}} object.
 \itemize{
 \item binding: \code{Resource$get_site}
 }

@@ -7,7 +7,7 @@
 add_sugar_Site(Sugar_Resource)
 }
 \arguments{
-\item{Sugar_Resource}{a reference to a \code{\link[MBITES]{Sugar_Resource}} object}
+\item{Sugar_Resource}{a reference to a \code{\link{Sugar_Resource}} object}
 }
 \description{
 Add a sugar feeding resource to this site.

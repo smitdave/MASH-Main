@@ -11,6 +11,16 @@
 #
 ###############################################################################
 
+#' MBITES: Bout
+#'
+#' write about me!
+#'
+#'
+#'
+#' @name Bout
+NULL
+#> NULL
+
 
 ###############################################################################
 # Generic Bout
@@ -82,16 +92,18 @@ Mosquito$set(which = "public",name = "oneBout",
 
 #' MBITES: Search Bout
 #'
-#' The generic search bout for a mosquito is called if the boolean field \code{search = TRUE}.
-#'  1. call \code{\link[MBITES]{mbites_move}} to find a new site
-#'      * a mosquito leaves to initiate a new search
+#' The generic search bout for a mosquito is called if the search flag is \code{TRUE}.
+#'  1. call \code{\link{mbites_move}} to find a new site, this search can succeed or fail resulting in:
+#'      * a mosquito leaves (a failure) to initiate a new search
 #'      * a mosquito stays (a success) and attenpts to land
 #'
+#'  2. If the search is successful, the search flag is set to \code{FALSE} and the mosquito samples an appropriate
+#'     resource from the current site it is at.
 #'
 mbites_attempt_search <- function(){
   # move to a new site
   self$move()
-  # get 1 - probability i leave and search again
+  # P(succeed)
   p = switch(private$state,
     B = MBITES:::Parameters$get_Bs_succeed(),
     O = MBITES:::Parameters$get_Os_succeed(),
@@ -103,20 +115,20 @@ mbites_attempt_search <- function(){
   }
 }
 
-Mosquito$set(which = "public",name = "attempt_search",
-    value = mbites_attempt_search, overwrite = TRUE
-)
-
 #' MBITES: Move
 #'
-#' If successful, the mosquito moves to a new \code{\link[MBITES]{Site}} object from querying
-#' the current site by \code{\link[MBITES]{move_mosquito_Site}}. This method is called from \code{\link[MBITES]{mbites_attempt_search}}
+#' If successful, the mosquito moves to a new \code{\link{Site}} object from querying
+#' the current site by \code{\link{move_mosquito_Site}}. This method is called from \code{\link{mbites_attempt_search}}
 #'      * binding: \code{Mosquito$move}
 #'
 mbites_move <- function(){
   private$site = private$site$move_mosquito() # see LANDSCAPE-Site.R
   private$rspot = "l" # initialize resting spot behavior when i get to a new site
 }
+
+Mosquito$set(which = "public",name = "attempt_search",
+    value = mbites_attempt_search, overwrite = TRUE
+)
 
 Mosquito$set(which = "public",name = "move_mosquito",
     value = move_mosquito_Site, overwrite = TRUE
@@ -191,7 +203,7 @@ mbites_checkForResources <- function(){
 
 #' MBITES: Check for Blood Feeding Search Bout
 #'
-#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has a
+#' During the resting period \code{\link{mbites_updateState}}, check if the local site has a
 #' blood hosts present.
 #'  * this method is bound to \code{MosquitoFemale$BloodFeedingSearchCheck}
 mbites_BloodFeedingSearchCheck <- function(){
@@ -203,7 +215,7 @@ mbites_BloodFeedingSearchCheck <- function(){
 
 #' MBITES: Check for Oviposit Search Bout
 #'
-#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has an
+#' During the resting period \code{\link{mbites_updateState}}, check if the local site has an
 #' aquatic habitat present for oviposition.
 #'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
 mbites_OvipositSearchCheck <- function(){
@@ -215,100 +227,120 @@ mbites_OvipositSearchCheck <- function(){
 
 #' MBITES: Check for Sugar Search Bout
 #'
-#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has a
+#' During the resting period \code{\link{mbites_updateState}}, check if the local site has a
 #' sugar feeding resource present.
 #'  * this method is bound to \code{MosquitoFemale$SugarSearchCheck}
 mbites_SugarSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_sugar()){
     private$search = TRUE
+  # if resources here, sample from them
+  } else {
+    private$sugar_res = private$site$sample_sugar()
   }
 }
 
 #' MBITES: Check for Oviposit Search Bout
 #'
-#' During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has an
+#' During the resting period \code{\link{mbites_updateState}}, check if the local site has an
 #' aquatic habitat present for oviposition.
 #'  * this method is bound to \code{MosquitoFemale$OvipositSearchCheck}
 mbites_MatingSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_mate()){
     private$search = TRUE
+  # if resources here, sample from them
+  } else {
+    private$mate_res = private$site$sample_mate()
   }
 }
 
 
 
-# ###############################################################################
-# # Attempt Bout: Blood Feeding
-# ###############################################################################
-#
-# #' MBITES: Blood Feeding Attempt Bout
-# #'
-# #' The blood feeding attempt bout has the following structure:
-# #'
-# #'    * call \code{\link[MBITES]{mbites_chooseHost}} to choose a host:
-# #'      * if the host is human, simulate a human encounter (see \code{\link[MBITES]{mbites_humanEncounter}})
-# #'      * if the host is not human, simulate a zoonotic encounter (see \code{\link[MBITES]{mbites_zooEncounter}})
-# #'      * if the mosquito chooses a trap, simulate the outcome
-# #'        NOTE: a CDC light trap is one kind of trap
-# #'      * a null host is for a failed attempt
-# #'
-# #' NOTE: host encounters are found in MBITES-HostEncounter.R
-# #'       bloodtrap() is found in ...
-# #'
-# mbites_attempt_B <- function(){
-#   # check success
-#   if(runif(1) < MBITES:::Parameters$B_succeed()){
-#     self$chooseHost() # MBITES-ChooseHost.R
-#   } else {
-#     private$hostID = 0L
-#   }
-#
-#   if(private$hostID > 0L){
-#     self$humanEncounter()
-#   } else if(private$hostID == -1L){
-#     self$zooEncounter()
-#   } else if(private$hostID == -2L){
-#     self$bloodtrap()
-#   } else if(private$hostID == 0L){
-#     return(NULL)
-#   } else {
-#     stop("illegal hostID value")
-#   }
-# }
-#
-#
-# ###############################################################################
-# # Attempt Bout: Oviposition
-# ###############################################################################
-#
-# #' MBITES: Oviposition Attempt Bout
-# #'
-# #' The egg laying attempt bout has the following structure:
-# #'
-# #'    1) choose a habitat;
-# #'    2a) lay eggs in a habitat
-# #'    2b) if a mosuqito chooses an ovitrap, simulate the outcome
-# #'    2c) a null habitat is for a failed attempt
-# #'
-# #'
-# #'
-# mbites_attempt_O <- function(){
-#   if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("O_succeed")){
-#     self$chooseHabitat() # MBITES-EggLaying.R
-#   } else {
-#     private$habitatID = 0L
-#   }
-#
-#   if(private$habitatID > 0){
-#     self$layEggs() # MBITES-EggLaying.R
-#   } else if(private$habitatID == -1){
-#     #print("OVI Present")
-#     self$ovitrap()
-#   } else if(private$habitatID == 0){
-#     return(NULL)
-#   } else {
-#     stop("illegal hostID value")
-#   }
-# }
+###############################################################################
+# Attempt Bout: Blood Feeding
+###############################################################################
+
+#' MBITES: Blood Feeding Attempt Bout
+#'
+#' The blood feeding attempt bout has the following structure:
+#'
+#'    * call \code{\link{mbites_chooseHost}} to choose a host:
+#'      * if the host is human, simulate a human encounter (see \code{\link{mbites_humanEncounter}})
+#'      * if the host is not human, simulate a zoonotic encounter (see \code{\link{mbites_zooEncounter}})
+#'      * if the mosquito chooses a trap, simulate the outcome
+#'        NOTE: a CDC light trap is one kind of trap
+#'      * a null host is for a failed attempt
+#'
+#' NOTE: host encounters are found in MBITES-HostEncounter.R
+#'       bloodtrap() is found in ...
+#'
+mbites_attempt_B <- function(){
+  # bout success
+  if(runif(1) < MBITES:::Parameters$get_B_succeed()){
+
+    # sample resources and hosts
+    private$feed_res = private$site$sample_feed() # sample feeding resources
+    self$chooseHost() # MBITES-HostEncounter.R
+
+    # specific host encounter routines
+    if(private$hostID > 0L){
+      self$humanEncounter()
+    } else if(private$hostID == -1L){
+      self$zooEncounter()
+    } else if(private$hostID == -2L){
+      self$bloodtrap()
+    } else if(private$hostID == 0L){
+      # an empty risk queue implies a failure to get a blood meal, thus the bout failed
+      private$boutFail = private$boutFail + 1L
+    } else {
+      stop("illegal hostID value")
+    }
+
+  # bout failure
+  } else {
+    # if i did not succeed my bout, increment failure counter
+    private$boutFail = private$boutFail + 1L
+  }
+}
+
+
+###############################################################################
+# Attempt Bout: Oviposition
+###############################################################################
+
+#' MBITES: Oviposition Attempt Bout
+#'
+#' The egg laying attempt bout has the following structure:
+#'
+#'    1) choose a habitat;
+#'    2a) lay eggs in a habitat
+#'    2b) if a mosuqito chooses an ovitrap, simulate the outcome
+#'    2c) a null habitat is for a failed attempt
+#'
+#'
+#'
+mbites_attempt_O <- function(){
+  # bout success
+  if(runif(1) < MBITES:::Parameters$get_O_succeed()){
+
+    # sample resources
+    self$chooseHabitat() # MBITES-Oviposition.R
+
+    # check habitat type
+    if(private$habitatID > 0L){
+      self$layEggs() # MBITES-Oviposition.R
+    } else if(private$habitatID == -1L){
+      self$ovitrap()
+    } else {
+      stop("illegal habitatID value")
+    }
+
+  # bout failure
+  } else {
+    # if i did not succeed my bout, increment failure counter
+    private$boutFail = private$boutFail + 1L
+  }
+
+
+}

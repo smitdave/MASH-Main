@@ -11,6 +11,14 @@
 #
 ###############################################################################
 
+#' MBITES: Blood Feeding
+#'
+#' write about me!
+#'
+#' @name BloodMeal
+NULL
+#> NULL
+
 ###############################################################################
 # Bloodmeal (note: refeeding is now in MBITES-Oogenesis)
 ###############################################################################
@@ -22,6 +30,7 @@
 #'  * This method is bound to \code{MosquitoFemale$BloodMeal()}.
 #'
 mbites_BloodMeal <- function(){
+  private$boutFail = 0L
   private$bloodfed = TRUE
   private$bmSize = self$rBloodMealSize()
 

@@ -83,7 +83,6 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                    # world-state globals
                    tNow               = 0L, # current simulation time
-                   mutex              = NULL,
                    SETUP              = FALSE,
 
                    # mosquito globals
@@ -109,18 +108,6 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 ###############################################################################
 # World-state global methods
 ###############################################################################
-
-init_lock_MBITES_Globals <- function(){
-  private$mutex = synchronicity::boost.mutex()
-}
-
-get_lock_MBITES_Globals <- function(){
-  synchronicity::lock(private$mutex)
-}
-
-release_lock_MBITES_Globals <- function(){
-  synchronicity::unlock(private$mutex)
-}
 
 get_tNow_MBITES_Globals <- function(){
   return(private$tNow)
@@ -149,18 +136,6 @@ MBITES_Globals$set(which = "public",name = "get_tNow",
           value = get_tNow_MBITES_Globals, overwrite = TRUE
 )
 
-MBITES_Globals$set(which = "public",name = "get_lock",
-          value = get_lock_MBITES_Globals, overwrite = TRUE
-)
-
-MBITES_Globals$set(which = "public",name = "release_lock",
-          value = release_lock_MBITES_Globals, overwrite = TRUE
-)
-
-MBITES_Globals$set(which = "public",name = "init_lock",
-          value = init_lock_MBITES_Globals, overwrite = TRUE
-)
-
 MBITES_Globals$set(which = "public",name = "get_SETUP",
           value = get_SETUP_MBITES_Globals, overwrite = TRUE
 )
@@ -177,7 +152,7 @@ MBITES_Globals$set(which = "public",name = "set_SETUP",
 
 #' MBITES Globals: Get a new Mosquito ID
 #'
-#' Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link[MBITES]{Mosquito}}
+#' Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link{Mosquito}}
 #' objects.
 #'
 #'  * This method is bound to \code{MBITES_Globals$get_mosquito_id}.
@@ -198,7 +173,7 @@ MBITES_Globals$set(which = "public",name = "get_mosquito_id",
 
 #' MBITES Globals: Get a new Human ID
 #'
-#' Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link[MBITES]{Human_NULL}} or Human
+#' Increments and gets a new mosquito ID; this function should only be called from the constructor of \code{\link{Human_NULL}} or Human
 #' objects.
 #'
 #'  * This method is bound to \code{MBITES_Globals$get_human_id}.
@@ -219,7 +194,7 @@ MBITES_Globals$set(which = "public",name = "get_human_id",
 
 #' MBITES Globals: Get a new Tile ID
 #'
-#' Increments and gets a new tile ID; this function should only be called from the constructor of \code{\link[MBITES]{Tile}}
+#' Increments and gets a new tile ID; this function should only be called from the constructor of \code{\link{Tile}}
 #' objects.
 #'
 #'  * This method is bound to \code{MBITES_Globals$get_tileID}.
@@ -235,7 +210,7 @@ get_tileID_MBITES_Globals <- function(){
 #'
 #'  * This method is bound to \code{MBITES_Globals$add_tile}.
 #'
-#' @param tile a reference to a \code{\link[MBITES]{Tile}} object
+#' @param tile a reference to a \code{\link{Tile}} object
 #'
 add_tile_MBITES_Globals <- function(tile){
   private$tiles = append(private$tiles,tile)
@@ -243,7 +218,7 @@ add_tile_MBITES_Globals <- function(tile){
 
 #' MBITES Globals: Return a Tile Reference
 #'
-#' Returns the reference to the \code{\link[MBITES]{Tile}} object with the associated id.
+#' Returns the reference to the \code{\link{Tile}} object with the associated id.
 #'
 #'  * This method is bound to \code{MBITES_Globals$get_tile}.
 #'

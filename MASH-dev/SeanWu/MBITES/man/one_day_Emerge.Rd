@@ -7,7 +7,7 @@
 one_day_Emerge()
 }
 \description{
-Add a cohort of emerging imagos based on current value of \eqn{\lambda} by calling \code{add2Q} function of the imago closure object, see \code{\link[MBITES]{make_ImagoQ}}.
+Add a cohort of emerging imagos based on current value of \eqn{\lambda} by calling \code{add2Q} function of the imago closure object, see \code{\link{make_ImagoQ}}.
 }
 \details{
 \itemize{

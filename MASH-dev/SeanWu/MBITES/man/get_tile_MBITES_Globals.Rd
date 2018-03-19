@@ -10,7 +10,7 @@ get_tile_MBITES_Globals(id)
 \item{id}{an integer tile id}
 }
 \description{
-Returns the reference to the \code{\link[MBITES]{Tile}} object with the associated id.
+Returns the reference to the \code{\link{Tile}} object with the associated id.
 }
 \details{
 \itemize{

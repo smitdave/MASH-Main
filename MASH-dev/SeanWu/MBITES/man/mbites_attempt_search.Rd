@@ -7,12 +7,18 @@
 mbites_attempt_search()
 }
 \description{
-The generic search bout for a mosquito is called if the boolean field \code{search = TRUE}.
+The generic search bout for a mosquito is called if the search flag is \code{TRUE}.
 \enumerate{
-\item call \code{\link[MBITES]{mbites_move}} to find a new site
+\item call \code{\link{mbites_move}} to find a new site, this search can succeed or fail resulting in:
 \itemize{
-\item a mosquito leaves to initiate a new search
+\item a mosquito leaves (a failure) to initiate a new search
 \item a mosquito stays (a success) and attenpts to land
 }
+}
+}
+\details{
+\enumerate{
+\item If the search is successful, the search flag is set to \code{FALSE} and the mosquito samples an appropriate
+resource from the current site it is at.
 }
 }

@@ -9,7 +9,7 @@
 Mosquito_Female
 }
 \description{
-Female mosquitoes inherit from the \code{\link[MBITES]{Mosquito}} abstract base class object.
+Female mosquitoes inherit from the \code{\link{Mosquito}} abstract base class object.
 }
 \section{\strong{Constructor}}{
 
@@ -28,7 +28,7 @@ Female mosquitoes inherit from the \code{\link[MBITES]{Mosquito}} abstract base 
 \section{\strong{Fields}}{
 
 \itemize{
-\item id: integer id (obtained from \code{\link[MBITES]{MBITES_Globals}})
+\item id: integer id (obtained from \code{\link{MBITES_Globals}})
 \item field: im a field!
 }
 }

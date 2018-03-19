@@ -7,7 +7,7 @@
 add_mate_Site(Mating_Resource)
 }
 \arguments{
-\item{Mating_Resource}{a reference to a \code{\link[MBITES]{Mating_Resource}} object}
+\item{Mating_Resource}{a reference to a \code{\link{Mating_Resource}} object}
 }
 \description{
 Add a mating resource to this site.

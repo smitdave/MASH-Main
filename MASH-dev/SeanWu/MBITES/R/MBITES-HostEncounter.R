@@ -23,6 +23,15 @@ NULL
 #> NULL
 
 ###############################################################################
+# Choose a Host
+###############################################################################
+
+mbites_chooseHost <- function(){
+  private$hostID = private$feed_res$RiskQ$sampleQ()
+}
+
+
+###############################################################################
 # Human Host Encounter
 ###############################################################################
 
@@ -49,8 +58,14 @@ mbites_humanEncounter <- function(){
           # successfully begins blood feeding
           self$BloodMeal() # MBITES-Energetics.R
           self$feedHost() # PATHOGEN-XX.R
+        } else {
+          # if i did not successfully begin blood feeding, this bout was a failure
+          private$boutFail = private$boutFail + 1L
         }
       }
+    # if i was deterred, this bout was a failure
+    } else {
+      private$boutFail = private$boutFail + 1L
     }
   }
 }
@@ -74,6 +89,9 @@ mbites_zooEncounter <- function(){
     if(runif(1) < MBITES:::Parameters$get_feedZ()){
       # successfully begins blood feeding
       self$BloodMeal() # MBITES-Energetics.R
+    } else {
+      # if i did not successfully begin blood feeding, this bout was a failure
+      private$boutFail = private$boutFail + 1L
     }
   }
 }

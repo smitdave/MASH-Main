@@ -7,7 +7,7 @@
 get_tileID_Site()
 }
 \description{
-Return the id to the enclosing \code{\link[MBITES]{Tile}}
+Return the id to the enclosing \code{\link{Tile}}
 \itemize{
 \item binding: \code{Site$get_tileID}
 }

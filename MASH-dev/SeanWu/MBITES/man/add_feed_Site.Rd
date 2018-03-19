@@ -7,7 +7,7 @@
 add_feed_Site(Feeding_Resource)
 }
 \arguments{
-\item{Feeding_Resource}{a reference to a \code{\link[MBITES]{Feeding_Resource}} object}
+\item{Feeding_Resource}{a reference to a \code{\link{Feeding_Resource}} object}
 }
 \description{
 Add a blood feeding resource to this site.

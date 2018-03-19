@@ -7,7 +7,7 @@
 move_mosquito_Site()
 }
 \description{
-Sample from the movement kernel centered on this site, returns a reference to the destination \code{\link[MBITES]{Site}} object.
+Sample from the movement kernel centered on this site, returns a reference to the destination \code{\link{Site}} object.
 \itemize{
 \item binding: \code{Site$move_mosquito}
 }

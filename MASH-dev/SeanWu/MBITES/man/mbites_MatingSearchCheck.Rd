@@ -7,7 +7,7 @@
 mbites_MatingSearchCheck()
 }
 \description{
-During the resting period \code{\link[MBITES]{mbites_updateState}}, check if the local site has an
+During the resting period \code{\link{mbites_updateState}}, check if the local site has an
 aquatic habitat present for oviposition.
 \itemize{
 \item this method is bound to \code{MosquitoFemale$OvipositSearchCheck}

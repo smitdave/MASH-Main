@@ -11,14 +11,9 @@
 #
 ###############################################################################
 
-
-###############################################################################
-# Oogenesis
-###############################################################################
-
 #' MBITES: Oogenesis
 #'
-#' Oogenesis model should be selected in \code{\link[MBITES]{MBITES_Setup}} prior to creating any objects.
+#' Oogenesis model should be selected in \code{\link{MBITES_Setup}} prior to creating any objects.
 #'
 #' In the first model, egg batch size is proportional to blood
 #' meal size, the egg batch incubation period is equal to the
@@ -37,6 +32,11 @@
 #' @name oogenesis
 NULL
 #> NULL
+
+
+###############################################################################
+# Oogenesis
+###############################################################################
 
 #' @rdname oogenesis
 mbites_oogenesis1 <- function(){
