@@ -21,6 +21,22 @@
 NULL
 #> NULL
 
+###############################################################################
+# Emerge
+###############################################################################
+
+#' MBITES: Choose an Aquatic Habitat
+#'
+#' Choose a \code{\link{Aqua_Resource}} for oviposition; if ovitraps, etc exist at this \code{\link{Site}}, those
+#' pseudo-resources compete for the mosquito's attention.
+#'  * this method is bound to \code{Mosquito_Female$chooseHabitat}
+#'
+mbites_chooseHabitat <- function(){
+  # when ovitraps, etc exist, do the checks here
+  private$aqua_res = private$site$sample_aqua() # sample resources
+  private$habitatID = 1L # normal aquatic habitat
+}
+
 
 ###############################################################################
 # Emerge

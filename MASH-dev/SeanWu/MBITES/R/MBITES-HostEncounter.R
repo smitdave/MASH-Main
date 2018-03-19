@@ -26,9 +26,9 @@ NULL
 # Choose a Host
 ###############################################################################
 
-# mbites_chooseHost <- function(){
-#   private$hostID = private$
-# }
+mbites_chooseHost <- function(){
+  private$hostID = private$feed_res$RiskQ$sampleQ()
+}
 
 
 ###############################################################################

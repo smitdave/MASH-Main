@@ -210,9 +210,6 @@ mbites_BloodFeedingSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_feed()){
     private$search = TRUE
-  # if resources here, sample from them
-  } else {
-    private$feed_res = private$site$sample_feed()
   }
 }
 
@@ -225,9 +222,6 @@ mbites_OvipositSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_aqua()){
     private$search = TRUE
-  # if resources here, sample from them
-  } else {
-    private$aqua_res = private$site$sample_aqua()
   }
 }
 
@@ -282,23 +276,31 @@ mbites_MatingSearchCheck <- function(){
 #'       bloodtrap() is found in ...
 #'
 mbites_attempt_B <- function(){
-  # check success
+  # bout success
   if(runif(1) < MBITES:::Parameters$get_B_succeed()){
-    self$chooseHost() # MBITES-HostEncounter.R
-  } else {
-    # if we did not find a host, this bout was a failure
-    private$boutFail = private$boutFail + 1L
-    private$hostID = 0L
-  }
 
-  if(private$hostID > 0L){
-    self$humanEncounter()
-  } else if(private$hostID == -1L){
-    self$zooEncounter()
-  } else if(private$hostID == -2L){
-    self$bloodtrap()
+    # sample resources and hosts
+    private$feed_res = private$site$sample_feed() # sample feeding resources
+    self$chooseHost() # MBITES-HostEncounter.R
+
+    # specific host encounter routines
+    if(private$hostID > 0L){
+      self$humanEncounter()
+    } else if(private$hostID == -1L){
+      self$zooEncounter()
+    } else if(private$hostID == -2L){
+      self$bloodtrap()
+    } else if(private$hostID == 0L){
+      # an empty risk queue implies a failure to get a blood meal, thus the bout failed
+      private$boutFail = private$boutFail + 1L
+    } else {
+      stop("illegal hostID value")
+    }
+
+  # bout failure
   } else {
-    stop("illegal hostID value")
+    # if i did not succeed my bout, increment failure counter
+    private$boutFail = private$boutFail + 1L
   }
 }
 
@@ -319,20 +321,26 @@ mbites_attempt_B <- function(){
 #'
 #'
 mbites_attempt_O <- function(){
-  if(runif(1) < private$FemalePopPointer$get_MBITES_PAR("O_succeed")){
-    self$chooseHabitat() # MBITES-EggLaying.R
+  # bout success
+  if(runif(1) < MBITES:::Parameters$get_O_succeed()){
+
+    # sample resources
+    self$chooseHabitat() # MBITES-Oviposition.R
+
+    # check habitat type
+    if(private$habitatID > 0L){
+      self$layEggs() # MBITES-Oviposition.R
+    } else if(private$habitatID == -1L){
+      self$ovitrap()
+    } else {
+      stop("illegal habitatID value")
+    }
+
+  # bout failure
   } else {
-    private$habitatID = 0L
+    # if i did not succeed my bout, increment failure counter
+    private$boutFail = private$boutFail + 1L
   }
 
-  if(private$habitatID > 0){
-    self$layEggs() # MBITES-EggLaying.R
-  } else if(private$habitatID == -1){
-    #print("OVI Present")
-    self$ovitrap()
-  } else if(private$habitatID == 0){
-    return(NULL)
-  } else {
-    stop("illegal hostID value")
-  }
+
 }
