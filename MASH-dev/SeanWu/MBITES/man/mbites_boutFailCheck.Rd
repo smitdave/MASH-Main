@@ -15,6 +15,7 @@ The \code{boutFail} counter is incremented whenever the mosquito probabilistical
 \item \code{\link{mbites_BloodMeal}}
 \item \code{\link{mbites_layEggs_Emerge}}
 \item \code{\link{mbites_layEggs_EL4P}}
+\item \code{\link{mbites_sugarMeal}}
 }
 }
 \details{

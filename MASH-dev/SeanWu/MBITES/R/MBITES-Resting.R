@@ -71,7 +71,7 @@ mbites_restingSpot <- function(){
 #'  * \code{\link{mbites_BloodMeal}}
 #'  * \code{\link{mbites_layEggs_Emerge}}
 #'  * \code{\link{mbites_layEggs_EL4P}}
-#'
+#'  * \code{\link{mbites_sugarMeal}}
 #'
 #'  * this method is bound to \code{Mosquito_Female$boutFailCheck}
 #'

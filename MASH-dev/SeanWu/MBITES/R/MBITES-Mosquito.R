@@ -102,7 +102,8 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    # batch          = integer(1), # size of my egg batch
                    # bm_size        = numeric(1), # size of my blood meal
 
-                   # mate ids
+                   # resource ids
+                   sugarID        = integer(1), # id of my sugar  source
                    mateID         = integer(1) # id of my mate
 
                  )
@@ -165,6 +166,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    feed_res       = NULL, # reference to my current blood feeding resource
 
                    # behavioral state parameters
+                   mated          = FALSE, # have i mated yet?
                    gravid         = logical(1), # am i gravid to oviposit?
 
                    # energetics
