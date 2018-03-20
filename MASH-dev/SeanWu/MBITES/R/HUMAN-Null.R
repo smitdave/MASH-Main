@@ -12,6 +12,10 @@
 ###############################################################################
 
 
+###############################################################################
+# Class definition
+###############################################################################
+
 #' NULL Human Class
 #'
 #' A \code{Human_NULL} can be used as a drop-in replacement when human dynamics do not need
@@ -36,8 +40,10 @@
 #' @section **Fields**:
 #'  * id: integer id
 #'  * w: numeric biting weight
+#'  * UNBITTEN: logical flag
 #'  * mosquito_id: integer vector of mosquitoes that have bitten me
 #'  * mosquito_t: numeric vector of times i was bitten
+#'  * bloodFeed: \code{FALSE} corresponds to probing-only events, \code{TRUE} corresponds to combined probe-bloodfeed events.
 #'
 #' @export
 Human_NULL <- R6::R6Class(classname = "Human_NULL",
@@ -88,36 +94,82 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                    # biting dynamics
                    UNBITTEN            = TRUE, # have i been bitten yet?
                    mosquito_id         = integer(1), # vector of mosquitoes that have bitten me
-                   mosquito_t          = numeric(1) # vector of times i was bitten
+                   mosquito_t          = numeric(1), # vector of times i was bitten
+                   bloodFeed           = logical(1) # F for probing-only events, T for blood feeding events
 
                  )
 ) # end Human_NULL class definition
 
-# pushes information from a bite into the human's history counter
-pushBite_Human_NULL <- function(m_id,t){
+
+###############################################################################
+# Human methods for logging bites
+###############################################################################
+
+#' Push Host Probing Event to History
+#'
+#' If using the null human and pathogen model this function logs host probing events on this \code{\link{Human_NULL}}.
+#'
+#' @param m_id id of the \code{\link{Mosquito_Female}}
+#' @param t time of the probing event
+#'
+pushProbe_Human_NULL <- function(m_id,t){
   if(private$UNBITTEN){
     private$mosquito_id = m_id
     private$mosquito_t = t
+    private$probe = FALSE
     private$UNBITTEN = FALSE
   } else {
     private$mosquito_id = append(private$mosquito_id,m_id)
     private$mosquito_t = append(private$mosquito_t,t)
+    private$probe = append(private$probe,FALSE)
   }
 }
 
-Human_NULL$set(which = "public",name = "pushBite",
-    value = pushBite_Human_NULL, overwrite = TRUE
+#' Push Host Blood feeding Event to History
+#'
+#' If using the null human and pathogen model this function logs host blood feeding events on this \code{\link{Human_NULL}}.
+#'
+pushFeed_Human_NULL <- function(){
+  private$probeOnly[length(private$probeOnly)] = TRUE
+}
+
+Human_NULL$set(which = "public",name = "pushProbe",
+    value = pushProbe_Human_NULL, overwrite = TRUE
+)
+
+Human_NULL$set(which = "public",name = "pushFeed",
+    value = pushFeed_Human_NULL, overwrite = TRUE
 )
 
 
+###############################################################################
+# Mosquito methods for probeHost and feedHost
 # normally, the functions below would go in the PATHOGEN-XX-XX.R file
+#' @include MBITES-Mosquito.R
+###############################################################################
 
-# this function fills in for pathogen specific probeHost methods if no pathogen model is used
+#' Null Host Probing
+#'
+#' This method fills in for pathogen model specific host probing (mosquito to human transmission) methods
+#' if using the null human & pathogen model. It calls \code{\link{pushProbe_Human_NULL}} to log probing events.
+#'
 probeHost_NULL <- function(){
-  MBITES:::Globals$get_tile()$get_humans()$get(private$hostID)$pushBite(m_id=private$id,t=private$tNow)
+  MBITES:::Globals$get_tile(private$tileID)$get_human(private$hostID)$pushProbe(m_id=private$id,t=private$tNow)
 }
 
-# this function fills in for pathogen specific bloodFeed methods if no pathogen model is used
-bloodFeed_NULL <- function(){
-
+#' Null Host Blood feeding
+#'
+#' This method fills in for pathogen model specific host blood feeding (human to mosquito transmission) methods
+#' if using the null human & pathogen model. It calls \code{\link{pushFeed_Human_NULL}} to log probing events.
+#'
+feedHost_NULL <- function(){
+  MBITES:::Globals$get_tile(private$tileID)$get_human(private$hostID)$pushFeed()
 }
+
+Mosquito_Female$set(which = "public",name = "probeHost",
+    value = probeHost_NULL, overwrite = TRUE
+)
+
+Mosquito_Female$set(which = "public",name = "feedHost",
+    value = feedHost_NULL, overwrite = TRUE
+)

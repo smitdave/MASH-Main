@@ -17,6 +17,7 @@ ByteCompile: true
 Collate: 
     'Auxiliary.R'
     'HUMAN-Initialize.R'
+    'MBITES-Mosquito.R'
     'HUMAN-Null.R'
     'Hash-Class.R'
     'LANDSCAPE-Aqua.R'
@@ -28,7 +29,6 @@ Collate:
     'LANDSCAPE-Site.R'
     'LANDSCAPE-Sugar.R'
     'MBITES-BloodMeal.R'
-    'MBITES-Mosquito.R'
     'MBITES-Bout.R'
     'MBITES-Energetics.R'
     'MBITES-Globals.R'
@@ -47,6 +47,7 @@ Collate:
     'PATHOGEN-Generic-Parameters.R'
     'PATHOGEN-Generic-Pedigree.R'
     'PATHOGEN-Generic-SIS.R'
+    'SEARCH-Kernel.R'
     'TILE-Class.R'
     'TILE-Initialize.R'
     'zzz.R'

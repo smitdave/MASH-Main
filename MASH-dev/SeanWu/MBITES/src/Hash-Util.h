@@ -19,6 +19,8 @@
 
 /* ################################################################################
  * BEGIN UTILITY FUNCTIONS
+ * copied from: https://github.com/wch/r-source/blob/trunk/src/main/envir.c
+ * because they are not part of the user-facing C API for R
 ################################################################################ */
 
 #define NONEMPTY_(_FRAME_) \

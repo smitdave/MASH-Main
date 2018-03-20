@@ -26,6 +26,11 @@ NULL
 # Choose a Host
 ###############################################################################
 
+#' MBITES: Choose a Blood Host
+#'
+#' Sample a blood host from the \code{\link{make_RiskQ}} closure this mosquito is at.
+#'  * This method is bound to \code{Mosquito_Female$chooseHost}.
+#'
 mbites_chooseHost <- function(){
   private$hostID = private$feed_res$RiskQ$sampleQ()
 }

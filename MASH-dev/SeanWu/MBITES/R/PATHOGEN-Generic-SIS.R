@@ -115,7 +115,7 @@ push2pedigree_SEI <- function(hID,mID,tEvent,event){
 probeHost_SEI <- function(){
   if(private$pathogen$m2h_transmission()){
     # based on pf dynamics; recombination occurs in the mosquito, therefore a simple clone
-    # of the object is all that's needed
+    # of the object is all that's needed for the human.
     pathogen = pathogen$clone()
     pathogen$mosquito2human()
     MBITES:::Globals$get_tile(private$tileID)$get_human(private$hostID)$add_pathogen(pathogen)
@@ -178,7 +178,9 @@ bloodFeed_SEI <- function(){
       # if it was actually infectious
       if(hPathogen$h2m_transmission()){
         # generate a new pathogen and push it to the pedigree (recombination occurs in mosquito)
-        private$pathogen = SEI_Pathogen$new(parentID = hPathogen$get_id())
+        mPathogen = SEI_Pathogen$new(parentID = hPathogen$get_id())
+        mPathogen$human2mosquito()
+        private$pathogen = mPathogen
         private$pathogen$push2pedigree(hID=private$hostID,mID$private$id,tEvent=private$tNow,event="H2M")
       }
     }
@@ -207,7 +209,7 @@ human2mosquito_SEI <- function(){
 
 # pathogen method: overwrite oneDay_mosquito
 oneBout_mosquito_SEI <- function(){
-  # if not infectious advance the incubation period by one day
+  # if not infectious advance the incubation period to the time of next launch
   if(!infectious){
     private$incubating = private$incubating + private$tNext
     if(private$incubating >= private$incubation_m){

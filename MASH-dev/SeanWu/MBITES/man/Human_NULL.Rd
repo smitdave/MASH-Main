@@ -35,8 +35,10 @@ to be simulated explicitly.
 \itemize{
 \item id: integer id
 \item w: numeric biting weight
+\item UNBITTEN: logical flag
 \item mosquito_id: integer vector of mosquitoes that have bitten me
 \item mosquito_t: numeric vector of times i was bitten
+\item bloodFeed: \code{FALSE} corresponds to probing-only events, \code{TRUE} corresponds to combined probe-bloodfeed events.
 }
 }
 

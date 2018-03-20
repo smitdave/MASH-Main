@@ -14,10 +14,13 @@ All pathogen modules need to implement the following methods in humans:
 }
 
 All pathogen modules need to implement the following methods in mosquitoes:
+\itemize{
+\item pathogenDynamics
+}
 
 All pathogen modules need to implement the following methods in pathogens:
 \itemize{
 \item oneDay_human
-\item oneDay_mosquito
+\item onBout_mosquito
 }
 }
