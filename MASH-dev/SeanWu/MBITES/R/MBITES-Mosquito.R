@@ -154,7 +154,12 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
 
                      private$energy_preG = MBITES:::Parameters$get_energy_preG()
 
-                   } # end constructor
+                   }, # end constructor
+
+                   # pathogenDynamics
+                   pathogenDynamics = function(){
+                     futile.logger::flog.warn("default 'pathogenDynamics' being called for mosquito: ",private$id)
+                   }
 
                  ),
 

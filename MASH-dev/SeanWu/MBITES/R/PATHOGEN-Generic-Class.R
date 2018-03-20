@@ -20,10 +20,11 @@
 #'  * add_pathogen(pathogen): during successful mosquito -> human transmission
 #'
 #' All pathogen modules need to implement the following methods in mosquitoes:
+#'  * pathogenDynamics
 #'
 #' All pathogen modules need to implement the following methods in pathogens:
 #'  * oneDay_human
-#'  * oneDay_mosquito
+#'  * onBout_mosquito
 #'
 #'
 #' @name PathogenGeneric
@@ -78,8 +79,8 @@ Generic_Pathogen <- R6::R6Class(classname = "Generic_Pathogen",
                      stop("oneDay_human should never be called from abstract base class 'Generic_Pathogen'!")
                    },
 
-                   oneDay_mosquito = function(){
-                     stop("oneDay_mosquito should never be called from abstract base class 'Generic_Pathogen'!")
+                   oneBout_mosquito = function(){
+                     stop("oneBout_mosquito should never be called from abstract base class 'Generic_Pathogen'!")
                    }
 
                  ),

@@ -179,6 +179,11 @@ mbites_updateState <- function(){
   # if there are no resources of the required type present, set
   # search = TRUE
   self$checkForResources()
+
+  # call pathogen dynamics last so that EIP uses the tNext (time of next launch)
+  # to increment its incubation period now. this ensures that at the start of a bout,
+  # the pathogen is referencing the correct day.
+  self$pathogenDynamics()
 }
 
 
