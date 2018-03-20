@@ -123,6 +123,7 @@ mbites_attempt_search <- function(){
 #'
 mbites_move <- function(){
   private$site = private$site$move_mosquito() # see LANDSCAPE-Site.R
+  private$boutFail = 0L # bout fail counter resets at a new site
   private$rspot = "l" # initialize resting spot behavior when i get to a new site
 }
 
@@ -285,15 +286,19 @@ mbites_attempt_B <- function(){
       self$bloodtrap()
     } else if(private$hostID == 0L){
       # an empty risk queue implies a failure to get a blood meal, thus the bout failed
-      private$boutFail = private$boutFail + 1L
     } else {
       stop("illegal hostID value")
     }
 
+  }
+
   # bout failure
-  } else {
+  if(!bloodfed){
     # if i did not succeed my bout, increment failure counter
     private$boutFail = private$boutFail + 1L
+  } else {
+    # reset flags
+    private$boutFail = 0L
   }
 }
 
@@ -328,11 +333,15 @@ mbites_attempt_O <- function(){
     } else {
       stop("illegal habitatID value")
     }
+  }
 
   # bout failure
-  } else {
+  if(private$batch > 0){
     # if i did not succeed my bout, increment failure counter
     private$boutFail = private$boutFail + 1L
+  } else {
+    # reset flags
+    private$boutFail = 0L
   }
 }
 
@@ -367,10 +376,15 @@ mbites_attempt_M <- function(){
     } else {
       stop("illegal mateID value")
     }
+  }
 
   # bout failure
+  if(!private$mated){
+    # if i did not succeed my bout, increment failure counter
+    private$boutFail = private$boutFail + 1L
   } else {
-    # might not need to increment boutFail, see comments in https://github.com/smitdave/MASH-Main/pull/90
+    # reset flags
+    private$boutFail = 0L
   }
 }
 
@@ -405,10 +419,14 @@ mbites_attempt_S <- function(){
     } else {
       stop("illegal sugarID value")
     }
+  }
 
-  } else {
+  # bout failure
+  if(private$energy < 1){
     # if i did not succeed my bout, increment failure counter
-    # actually even this might not be necessary since i'll be starved if i dont have enough fuel in my tank.
     private$boutFail = private$boutFail + 1L
+  } else {
+    # reset flags
+    private$boutFail = 0L
   }
 }

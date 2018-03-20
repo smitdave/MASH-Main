@@ -16,7 +16,14 @@
 #' All pathogen objects need to be able to communicate with a pathogen pedigree, which
 #' links all clonal variants together through a \code{id} and \code{parentID} field.
 #'
+#' All pathogen modules need to implement the following methods in humans:
+#'  * add_pathogen(pathogen): during successful mosquito -> human transmission
 #'
+#' All pathogen modules need to implement the following methods in mosquitoes:
+#'
+#' All pathogen modules need to implement the following methods in pathogens:
+#'  * oneDay_human
+#'  * oneDay_mosquito
 #'
 #'
 #' @name PathogenGeneric
@@ -24,7 +31,7 @@ NULL
 #> NULL
 
 
-#' Generic Pathogen Class
+#' Pathogen: Generic Class
 #'
 #' i'm a class!
 #'
@@ -52,9 +59,12 @@ Generic_Pathogen <- R6::R6Class(classname = "Generic_Pathogen",
                  public = list(
 
                    # begin constructor
-                   initialize = function(){
+                   initialize = function(parentID = NULL){
 
                      private$id = MBITES:::Pedigree$get_pathogen_id()
+                     if(is.null(parentID)){
+                       private$parentID = 0L
+                     }
 
                      futile.logger::flog.trace("Generic_Pathogen being born at self: %s , private: %s",pryr::address(self),pryr::address(private))
                    }, # end constructor
@@ -62,7 +72,15 @@ Generic_Pathogen <- R6::R6Class(classname = "Generic_Pathogen",
                    # begin destructor
                    finalize = function(){
                      futile.logger::flog.trace("Generic_Pathogen being killed at self: %s , private: %s",pryr::address(self),pryr::address(private))
-                   } # end destructor
+                   }, # end destructor
+
+                   oneDay_human = function(){
+                     stop("oneDay_human should never be called from abstract base class 'Generic_Pathogen'!")
+                   },
+
+                   oneDay_mosquito = function(){
+                     stop("oneDay_mosquito should never be called from abstract base class 'Generic_Pathogen'!")
+                   }
 
                  ),
 
@@ -73,4 +91,24 @@ Generic_Pathogen <- R6::R6Class(classname = "Generic_Pathogen",
                    parentID = integer(1) # parent id
 
                  )
-) # end SEI_Pathogen class definition
+) # end Generic_Pathogen class definition
+
+
+
+# methods
+
+get_id_Generic_Pathogen <- function(){
+  return(private$id)
+}
+
+get_parentID_Generic_Pathogen <- function(){
+  return(private$parentID)
+}
+
+Generic_Pathogen$set(which = "public",name = "get_id",
+  value = get_id_Generic_Pathogen, overwrite = TRUE
+)
+
+Generic_Pathogen$set(which = "public",name = "get_parentID",
+  value = get_parentID_Generic_Pathogen, overwrite = TRUE
+)
