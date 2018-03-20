@@ -68,7 +68,7 @@ SEI_Pathogen <- R6::R6Class(classname = "SEI_Pathogen",
                  private = list(
 
                    infectious = FALSE, # state: SI?
-                   incubating = 0L, # how long i have been incubating
+                   incubating = 0, # how long i have been incubating
                    incubation_h = integer(1), # incubation in humans
                    incubation_m = integer(1), # incubation in mosquitoes (EIP)
 
@@ -206,12 +206,19 @@ human2mosquito_SEI <- function(){
 }
 
 # pathogen method: overwrite oneDay_mosquito
-oneDay_mosquito_SEI <- function(){
+oneBout_mosquito_SEI <- function(){
   # if not infectious advance the incubation period by one day
   if(!infectious){
-    private$incubating = private$incubating + 1L
+    private$incubating = private$incubating + private$tNext
     if(private$incubating >= private$incubation_m){
       private$infectious = TRUE
     }
+  }
+}
+
+# mosquito method: update dynamics after the bout.
+pathogenDynamics_SEI <- function(){
+  if(!is.null(private$pathogen)){
+    private$pathogen$oneBout()
   }
 }
