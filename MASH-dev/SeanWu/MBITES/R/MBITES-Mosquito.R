@@ -87,7 +87,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    state          = character(1), # my current behavioral state
                    starved        = logical(1), # am i starved for sugar?
                    # gravid         = logical(1), # am i gravid to oviposit?
-                   bout_fail      = integer(1), # counter
+                   boutFail      = integer(1), # counter
 
                    # energetics
                    energy         = numeric(1), # my current energy
@@ -173,6 +173,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    energy_preG    = numeric(1), # pre-gonotrophic energy requirement
 
                    # bloodfeeding and oogenesis
+                   bloodfed       = logical(1), # have i fed on blood this bout?
                    batch          = integer(1), # size of my egg batch
                    bm_size        = numeric(1), # size of my blood meal
 

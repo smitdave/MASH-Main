@@ -67,11 +67,9 @@ mbites_chooseSugarSource <- function(){
 #' MBITES: Sugar Energetics
 #'
 #' Add energy derived from sugar to the mosquito's fuel tank. This method is called from \code{\link{mbites_boutS}}.
-#' This function resets the \code{boutFail} counter back to 0.
 #'  * This method is bound to \code{MosquitoFemale$sugarMeal}.
 #'
 mbites_sugarMeal <- function(){ # called from MBITES-Bouts.R, boutS
-  private$boutFail = 0L # reset bout failure to 0
   private$energy = 1 # always top up to full
   if(!private$mature){
     private$energyPreG = private$energyPreG - MBITES:::Parameters$get_preGsugar()

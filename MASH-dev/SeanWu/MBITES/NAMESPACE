@@ -3,6 +3,8 @@
 export(Aqua_Resource)
 export(Aqua_Resource_Emerge)
 export(Feeding_Resource)
+export(Generic_Pathogen)
+export(Generic_Pathogen_Parameters)
 export(HashMap)
 export(Human_NULL)
 export(Human_NULL_Initialize)

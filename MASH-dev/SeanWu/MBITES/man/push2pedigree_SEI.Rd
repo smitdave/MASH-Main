@@ -4,20 +4,18 @@
 \alias{push2pedigree_SEI}
 \title{Generic SEI: Push a Pathogen to the Pedigree}
 \usage{
-push2pedigree_SEI(id, parentID, hID, mID, tInf, infEvent)
+push2pedigree_SEI(hID, mID, tEvent, event)
 }
 \arguments{
-\item{id}{id of this pathogen}
-
-\item{parentID}{id of the parent of this pathogen}
-
 \item{hID}{id of the human involved in this transmission event}
 
 \item{mID}{id of the mosquito involved in this transmission event}
 
-\item{tInf}{time of the infection}
+\item{tEvent}{time of the event}
 
-\item{infEvent}{"M2H" or "H2M" for mosquito to human and human to mosquito transmission, respectively}
+\item{event}{"M2H" or "H2M" for mosquito to human and human to mosquito transmission, respectively}
+
+\item{pathogen}{object of class \code{\link{SEI_Pathogen}}}
 }
 \description{
 During a transmission event, push a pathogen to the pedigree.

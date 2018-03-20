@@ -51,9 +51,6 @@ mbites_layEggs_Emerge <- function(){
   if(runif(1) < MBITES:::Parameters$get_O_succeed()){
     private$batch = 0
     private$stateNew = "F"
-    private$boutFail = 0L
-  } else {
-    private$boutFail = private$boutFail + 1L
   }
 }
 
@@ -72,8 +69,5 @@ mbites_layEggs_EL4P <- function(){
     private$aqua_res$EggQ$add2Q(private$batch,private$tNow)
     private$batch = 0
     private$stateNew = "F"
-    private$boutFail = 0L
-  } else {
-    private$boutFail = private$boutFail + 1L
   }
 }
