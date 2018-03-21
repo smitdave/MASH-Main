@@ -7,7 +7,7 @@
 mbites_chooseSugarSource()
 }
 \description{
-If the mosquito passes the check for a successful sugar feeding attempt bout, it proceeds to choose a sugar source
+During a sugar bout the mosquito samples from available sugar feeding resources
 at the \code{\link{Site}} it is at.
 \itemize{
 \item this method is bound to \code{Mosquito$chooseSugarSource}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Bout.R
 \name{mbites_move}
 \alias{mbites_move}
-\title{MBITES: Move}
+\title{MBITES: Move to a new Site}
 \usage{
 mbites_move()
 }

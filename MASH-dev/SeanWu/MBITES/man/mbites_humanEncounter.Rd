@@ -2,13 +2,22 @@
 % Please edit documentation in R/MBITES-HostEncounter.R
 \name{mbites_humanEncounter}
 \alias{mbites_humanEncounter}
-\title{MBITES-BRO: Human Host Encounter for \code{\link{MosquitoFemale}}}
+\title{MBITES: Human Host Encounter}
 \usage{
 mbites_humanEncounter()
 }
 \description{
 After calling \code{\link{mbites_chooseHost}}, the mosquito encounters the human host and attempts to feed.
+The encounter process consists of several stages:
+\enumerate{
+\item Check initial survival to see if the mosquito survives to probe
+\item Check if the mosquito is deterred from probing, if undeterred, call pathogen-specific routines \code{probeHost}
+\item Check if the mosquito survived probing to attempt blood feeding
+\item Check if the mosquito is able to successfully begin blood feeding; take a blood meal via \code{\link{mbites_BloodMeal}} and then call pathogen-specific routines \code{feedHost}
+}
+}
+\details{
 \itemize{
-\item This method is bound to \code{MosquitoFemale$humanEncounter()}.
+\item This method is bound to \code{Mosquito_Female$humanEncounter}.
 }
 }

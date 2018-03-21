@@ -13,7 +13,7 @@
 
 #' MBITES: Bout
 #'
-#' write about me!
+#' In MBITES, mosquito behavioral bouts consist of a cycle of events: launch -> try -> land -> rest.
 #'
 #'
 #'
@@ -81,6 +81,7 @@ mbites_oneBout <- function(){
   self$trackHistory()
 }
 
+# set methods
 Mosquito$set(which = "public",name = "oneBout",
     value = mbites_oneBout, overwrite = TRUE
 )
@@ -115,7 +116,7 @@ mbites_attempt_search <- function(){
   }
 }
 
-#' MBITES: Move
+#' MBITES: Move to a new Site
 #'
 #' If successful, the mosquito moves to a new \code{\link{Site}} object from querying
 #' the current site by \code{\link{move_mosquito_Site}}. This method is called from \code{\link{mbites_attempt_search}}
@@ -127,6 +128,7 @@ mbites_move <- function(){
   private$rspot = "l" # initialize resting spot behavior when i get to a new site
 }
 
+# set methods
 Mosquito$set(which = "public",name = "attempt_search",
     value = mbites_attempt_search, overwrite = TRUE
 )
@@ -137,7 +139,7 @@ Mosquito$set(which = "public",name = "move_mosquito",
 
 
 #################################################################
-# Rest
+# Resting
 #################################################################
 
 #' MBITES: Update the Behavioral State at the End of a Bout for \code{\link{MosquitoFemale}}
@@ -164,7 +166,7 @@ mbites_updateState <- function(){
     if(private$starved){
 			private$state = "S"
     } else {
-  		if(private$gravid) {
+  		if(private$gravid){
     		self$checkRefeed()  # MBITES-Oogenesis.R
       } else {
   			private$state = "B"
@@ -186,6 +188,11 @@ mbites_updateState <- function(){
   self$pathogenDynamics()
 }
 
+# set methods
+Mosquito$set(which = "public",name = "updateState",
+    value = mbites_updateState, overwrite = TRUE
+)
+
 
 #################################################################
 # checkForResources: Check if search required
@@ -201,8 +208,8 @@ mbites_checkForResources <- function(){
     switch(private$state,
       B = {self$BloodFeedingSearchCheck()},
       O = {self$OvipositSearchCheck()},
-      M = {private$MatingSearchCheck()},
-      S = {private$SugarSearchCheck()},
+      M = {self$MatingSearchCheck()},
+      S = {self$SugarSearchCheck()},
       {stop("illegal behavioral state: ",private$state,"\n")}
     )
 }
@@ -254,6 +261,27 @@ mbites_MatingSearchCheck <- function(){
     private$search = TRUE
   }
 }
+
+# set methods
+Mosquito$set(which = "public",name = "checkForResources",
+    value = mbites_checkForResources, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "BloodFeedingSearchCheck",
+    value = mbites_BloodFeedingSearchCheck, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "OvipositSearchCheck",
+    value = mbites_OvipositSearchCheck, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "SugarSearchCheck",
+    value = mbites_SugarSearchCheck, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "MatingSearchCheck",
+    value = mbites_MatingSearchCheck, overwrite = TRUE
+)
 
 
 ###############################################################################
@@ -307,6 +335,11 @@ mbites_attempt_B <- function(){
   }
 }
 
+# set methods
+Mosquito$set(which = "public",name = "attempt_B",
+    value = mbites_attempt_B, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Attempt Bout: Oviposition
@@ -349,6 +382,11 @@ mbites_attempt_O <- function(){
     private$boutFail = 0L
   }
 }
+
+# set methods
+Mosquito$set(which = "public",name = "attempt_O",
+    value = mbites_attempt_O, overwrite = TRUE
+)
 
 
 ###############################################################################
@@ -393,6 +431,11 @@ mbites_attempt_M <- function(){
   }
 }
 
+# set methods
+Mosquito$set(which = "public",name = "attempt_M",
+    value = mbites_attempt_M, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Attempt Bout: Sugar Feeding
@@ -435,3 +478,8 @@ mbites_attempt_S <- function(){
     private$boutFail = 0L
   }
 }
+
+# set methods
+Mosquito$set(which = "public",name = "attempt_S",
+    value = mbites_attempt_S, overwrite = TRUE
+)

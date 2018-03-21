@@ -74,7 +74,7 @@ NULL
 #'
 #'  **Blood Feeding resources:**
 #'    * \code{w}: numeric weight; used by mosquitoes to select blood feeding resources if there are more than 1.
-#'    * \code{enter_p}: numeric probability for mosquito to successfully enter the house
+#'    * \code{enterP}: numeric probability for mosquito to successfully enter the house
 #'
 #'  **Aquatic Habitat resources:**
 #'    * \code{w}: numeric weight; used by mosquitoes to select aquatic habitat resources if there are more than 1.
@@ -116,7 +116,7 @@ Tile_Initialize <- function(landscape){
 
     if(!is.null(site_p$feed)){
       for(i in site_p$feed){
-        feed = Feeding_Resource$new(w=i$w,site=site,enter_p=i$enter_p)
+        feed = Feeding_Resource$new(w=i$w,site=site,enterP=i$enterP)
         site$add_feed(feed)
       }
     }
