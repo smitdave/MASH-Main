@@ -48,6 +48,16 @@ mbites_oogenesis1 <- function(){
   private$eggT = self$rEggMaturationTime()
   #NOTE: the post prandial resting period is in MBITES-Timing.R
   #NOTE: self$checkRefeed() is called in MBITES-Bouts.R :: updateState()
+  # private$bmSize = 0 # check with DS IN mbites_checkPostPrandial
+}
+
+#' MBITES: Oogenesis Model 1 Blood Meal Size Reset
+#'
+#' In the first model of oogenesis blood meal size is reset to 0 during the
+#' post-prandial rest (\code{\link{mbites_checkPostPrandial}}).
+#'  * This method is bound to \code{Mosquito_Female$PPRbmSize}
+mbites_PPRbmSize1 <- function(){
+  private$bmSize = 0
 }
 
 #' MBITES: Normally-distributed Egg Maturation Time
@@ -81,9 +91,20 @@ mbites_oogenesis2 <- function(){
   }
   # egg provision: after we've fed enough then mosquito is gravid
   private$eggP = private$eggP - private$bmSize
+  # private$bmSize = max(0,private$bmSize - private$eggP) # check with DS IN mbites_checkPostPrandial
   if(private$eggP < 0){
     private$gravid = TRUE
   }
+}
+
+#' MBITES: Oogenesis Model 2 Blood Meal Size Reset
+#'
+#' In the second model of oogenesis blood meal size is reduced by an amount equal to
+#' the amount of blood used in the egg provision, or to 0 if that would induce a negative amount.
+#' This occurs during the post-prandial rest (\code{\link{mbites_checkPostPrandial}}).
+#'  * This method is bound to \code{Mosquito_Female$PPRbmSize}
+mbites_PPRbmSize2 <- function(){
+  private$bmSize = max(0,private$bmSize - private$eggP)
 }
 
 #' MBITES: Draw Normally-distributed Egg Batch Size

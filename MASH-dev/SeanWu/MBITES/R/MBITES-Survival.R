@@ -13,8 +13,8 @@
 
 #' MBITES: Survival
 #'
-#' write about me!
-#'
+#' Survival from flight and local hazards is calculated after the mosquito chooses
+#' a resting spot, after the "attempt" part of the bout (called in \code{\link{mbites_updateState}}).
 #'
 #'
 #' @name Survival
