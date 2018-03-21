@@ -26,24 +26,30 @@ NULL
 # Per-bout survival
 ###############################################################################
 
-#' M-BITES: Simulate survival, per bout \code{\link{MosquitoFemale}}
+#' MBITES: Per-bout Survival
 #'
-#' Get baseline survival probability for \code{\link{mbites_surviveFlight}}.
-#'  * This method is bound to \code{MosquitoFemale$survival}.
+#' Simulate flight survival and survival of local hazards.
+#'  * This method is bound to \code{Mosquito$survival}
 #'
 mbites_survival <- function(){
   self$surviveFlight()
   self$surviveHazards()
 }
 
+# set methods
+Mosquito$set(which = "public",name = "survival",
+    value = mbites_survival, overwrite = TRUE
+)
+
+
 ###############################################################################
 # Flight Survival
 ###############################################################################
 
-#' M-BITES: Get Baseline Survival Probability for \code{\link{MosquitoFemale}}
+#' MBITES: Get Baseline Flight Survival Probability
 #'
 #' Get baseline survival probability for \code{\link{mbites_surviveFlight}}.
-#'  * This method is bound to \code{MosquitoFemale$get_surviveFlightProb()}.
+#'  * This method is bound to \code{Mosquito$get_surviveFlightProb}.
 #'
 mbites_get_surviveFlightBaseProb <- function(){
 
@@ -66,11 +72,19 @@ mbites_get_surviveFlightBaseProb <- function(){
   }
 }
 
-#' MBITES-Generic: Flight Survival for \code{\link{MosquitoFemale}}
+#' MBITES: Flight Survival
 #'
 #' Run generic flight survival probailities for bouts (launch to launch).
+#' Survival is calculated as:
+#'  1. Get baseline flight survival probability
+#'  2. Multiply by the effect due to the blood meal during post-prandial flight
+#'  3. Multiply by the effect due to energy levels
+#'  4. Multiply by the effect due to chemical damage
+#'  5. Multiply by the effect due to wing tattering and physical damage
+#'  6. Multiply by the effect due to senescence
+#'
 #' Depending on settings from M-BITES parameters, senescence and/or tattering may also be simulated.
-#'  * This method is bound to \code{MosquitoFemale$surviveFlight()}.
+#'  * This method is bound to \code{Mosquito$surviveFlight}.
 #'
 mbites_surviveFlight <- function(){
   if(private$state != "D"){
@@ -94,10 +108,10 @@ mbites_surviveFlight <- function(){
   }
 }
 
-#' MBITES-Generic: Probability of Death due to the Blood Meal during the Post Prandial Flight  \code{\link{MosquitoFemale}}
+#' MBITES: Probability of Death due to the Blood Meal during the Post Prandial Flight
 #'
-#' Incremental mortality as a function of being laden during the post-prandial flight \deqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
-#'  * This method is bound to \code{MosquitoFemale$pEnergySurvival()}.
+#' Incremental mortality as a function of being laden during the post-prandial flight \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
+#'  * This method is bound to \code{Mosquito$pEnergySurvival}.
 #'
 mbites_pPPRFlight <- function(){
   PPR_a = MBITES:::Parameters$get_PPR_a()
@@ -105,24 +119,40 @@ mbites_pPPRFlight <- function(){
   exp(PPR_a*private$bmSize)/(PPR_b + exp(PPR_a*private$bmSize))
 }
 
-#' MBITES-Generic: Probability of Death due to Energy Reserves for \code{\link{MosquitoFemale}}
+#' MBITES: Probability of Death due to Energy Reserves
 #'
-#' Incremental mortality as a function of energy reserves given by \deqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
-#'  * This method is bound to \code{MosquitoFemale$pEnergySurvival()}.
+#' Incremental mortality as a function of energy reserves given by \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
+#'  * This method is bound to \code{Mosquito$pEnergySurvival}.
 #'
 mbites_pEnergySurvival <- function(){
   S_a = MBITES:::Parameters$get_S_a()
   S_b = MBITES:::Parameters$get_S_b()
   exp(S_a*private$energy)/(S_b + exp(S_a*private$energy))
-
 }
+
+# set methods
+Mosquito$set(which = "public",name = "get_surviveFlightBaseProb",
+    value = mbites_get_surviveFlightBaseProb, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "surviveFlight",
+    value = mbites_surviveFlight, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "pPPRFlight",
+    value = mbites_pPPRFlight, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "pEnergySurvival",
+    value = mbites_pEnergySurvival, overwrite = TRUE
+)
 
 
 ###############################################################################
 #  Damage (wing tattering, chemical, physical)
 ###############################################################################
 
-#' MBITES-Generic: Mean Wing Tattering for \code{\link{MosquitoFemale}}
+#' MBITES: Sample Wing Tattering Damage
 #'
 #' Draw from a zero-inflated Beta distribution for additive wing damage_physical from tattering.
 #' Wing damage_physical is given by \deqn{ \left\{\begin{matrix}
@@ -130,7 +160,7 @@ mbites_pEnergySurvival <- function(){
 #' \\
 #' x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
 #' \end{matrix}\right. }
-#'  * This method is bound to \code{MosquitoFemale$WingTattering()}.
+#'  * This method is bound to \code{Mosquito$WingTattering}.
 #'
 mbites_WingTattering <- function(){
   if(runif(1) < MBITES:::Parameters$get_ttsz_p()){
@@ -140,14 +170,20 @@ mbites_WingTattering <- function(){
   }
 }
 
+# set methods
+Mosquito$set(which = "public",name = "WingTattering",
+    value = mbites_WingTattering, overwrite = TRUE
+)
+
+
 ###############################################################################
 # Survive Physical Damage
 ###############################################################################
 
-#' MBITES-Generic: Probability of Death due to Wing Tattering for \code{\link{MosquitoFemale}}
+#' MBITES: Probability of Death due to Wing Tattering
 #'
 #' probability of death due to tattering given by \deqn{ \frac{2+ttr.b}{1+ttr.b} - \frac{e^{damage_physical\times ttr.a}}{ttr.b+e^{damage_physical\times ttr.a}} }
-#'  * This method is bound to \code{MosquitoFemale$pTatter()}.
+#'  * This method is bound to \code{Mosquito$pTatter}.
 #'
 mbites_pTatter <- function(){
   ttr_b = MBITES:::Parameters$get_ttr_b()
@@ -155,31 +191,43 @@ mbites_pTatter <- function(){
   (2+ttr_b)/(1+ttr_b) - exp(private$damage_physical*ttr_a)/(ttr_b + exp(private$damage_physical*ttr_a))
 }
 
+# set methods
+Mosquito$set(which = "public",name = "pTatter",
+    value = mbites_pTatter, overwrite = TRUE
+)
+
+
 ###############################################################################
 # Survive Chemical Damage
 ###############################################################################
 
-#' MBITES-Generic: Probability of Death due to Chemical Damage for \code{\link{MosquitoFemale}}
+#' MBITES: Probability of Death due to Chemical Damage
 #'
-#' probability of death due to tattering given by \deqn{
+#' Probability of death due to tattering given by \deqn{
 #' \frac{2+chm.b}{1+chm.b} - \frac{e^{damage_physical\times chm.a}}{chm.b+e^{damage_chemical\times chm.a}} }
-#'  * This method is bound to \code{MosquitoFemale$pTatter()}.
-#' @md
+#'  * This method is bound to \code{Mosquito$pTatter}.
+#'
 mbites_pChem<- function(){
   chm_a = MBITES:::Parameters$get_chm_a()
   chm_b = MBITES:::Parameters$get_chm_b()
   (2+chm_b)/(1+chm_b) - exp(private$damage_chemicall*chm_a)/(chm_b + exp(private$damage_chemicall*chm_a))
 }
 
+# set methods
+Mosquito$set(which = "public",name = "pChem",
+    value = mbites_pChem, overwrite = TRUE
+)
+
+
 ###############################################################################
 # Senescence
 ###############################################################################
 
-#' MBITES-Generic: Probability of Death due to Senescence for \code{\link{MosquitoFemale}}
+#' MBITES: Probability of Death due to Senescence
 #'
 #' probability of death due to senescence given by \deqn{ \frac{2+sns.b}{1+sns.b} - \frac{e^{sns.a\times age}}{sns.b+e^{sns.a\times age}} }
-#'  * This method is bound to \code{MosquitoFemale$pSenesce()}.
-#' @md
+#'  * This method is bound to \code{Mosquito$pSenesce}.
+#'
 mbites_pSenesce <- function(){
   age = private$tNow - private$bDay
   sns_a = MBITES:::Parameters$get_sns_a()
@@ -187,20 +235,30 @@ mbites_pSenesce <- function(){
   (2+sns_b)/(1+sns_b) - exp(sns_a*age)/(sns_b + exp(sns_a*age))
 }
 
+# set methods
+Mosquito$set(which = "public",name = "pSenesce",
+    value = mbites_pSenesce, overwrite = TRUE
+)
+
 
 ###############################################################################
-# Resting Survival
+# Local Hazards Survival
 ###############################################################################
 
-#' MBITES-Generic: Resting Survival for \code{\link{MosquitoFemale}}
+#' MBITES: Survive Local Hazards
 #'
-#' Run generic resting survival probailities for bouts (launch to launch).
-#'  * This method is bound to \code{MosquitoFemale$surviveResting()}.
-#' @md
-mbites_surviveResting <- function(){
+#' Run generic local hazard survival probailities for bouts (launch to launch).
+#'  * This method is bound to \code{Mosquito$surviveHazards}
+#'
+mbites_surviveHazards <- function(){
   if(private$state != "D"){
     if(runif(1) < private$site$get_haz()){
       private$state = "D"
     }
   }
 }
+
+# set methods
+Mosquito$set(which = "public",name = "surviveHazards",
+    value = mbites_surviveHazards, overwrite = TRUE
+)

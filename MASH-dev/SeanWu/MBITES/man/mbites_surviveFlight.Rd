@@ -2,14 +2,25 @@
 % Please edit documentation in R/MBITES-Survival.R
 \name{mbites_surviveFlight}
 \alias{mbites_surviveFlight}
-\title{MBITES-Generic: Flight Survival for \code{\link{MosquitoFemale}}}
+\title{MBITES: Flight Survival}
 \usage{
 mbites_surviveFlight()
 }
 \description{
 Run generic flight survival probailities for bouts (launch to launch).
+Survival is calculated as:
+\enumerate{
+\item Get baseline flight survival probability
+\item Multiply by the effect due to the blood meal during post-prandial flight
+\item Multiply by the effect due to energy levels
+\item Multiply by the effect due to chemical damage
+\item Multiply by the effect due to wing tattering and physical damage
+\item Multiply by the effect due to senescence
+}
+}
+\details{
 Depending on settings from M-BITES parameters, senescence and/or tattering may also be simulated.
 \itemize{
-\item This method is bound to \code{MosquitoFemale$surviveFlight()}.
+\item This method is bound to \code{Mosquito$surviveFlight}.
 }
 }

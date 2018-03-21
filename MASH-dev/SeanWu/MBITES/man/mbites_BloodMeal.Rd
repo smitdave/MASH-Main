@@ -2,14 +2,15 @@
 % Please edit documentation in R/MBITES-BloodMeal.R
 \name{mbites_BloodMeal}
 \alias{mbites_BloodMeal}
-\title{M-BITES: Bloodmeal Energetics for \code{\link{MosquitoFemale}}}
+\title{MBITES: The Blood Meal Event}
 \usage{
 mbites_BloodMeal()
 }
 \description{
 Handle bloodmeal size (see \code{\link{mbites_rBloodMealSize}}), overfeeding (see \code{\link{mbites_pOverFeed}}),
-and egg batch size and maturation time. Note that refeeding behavior is calculated during resting bout.
+and egg batch size and maturation time. Note that refeeding behavior is calculated during resting bout, depending
+on the selection of oogenesis model.
 \itemize{
-\item This method is bound to \code{MosquitoFemale$BloodMeal()}.
+\item This method is bound to \code{Mosquito_Female$BloodMeal}.
 }
 }

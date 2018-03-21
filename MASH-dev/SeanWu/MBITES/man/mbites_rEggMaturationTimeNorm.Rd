@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-Oogenesis.R
 \name{mbites_rEggMaturationTimeNorm}
 \alias{mbites_rEggMaturationTimeNorm}
-\title{MBITES-Generic: Normally-distributed Egg Maturation Time for \code{\link{MosquitoFemale}}}
+\title{MBITES: Normally-distributed Egg Maturation Time}
 \usage{
 mbites_rEggMaturationTimeNorm()
 }
 \description{
-Draw an egg maturation time from Normal(emt.m,emt.v)
+Draw an egg maturation time from Normal(emt_m,emt_sd)
 \itemize{
-\item This method is bound to \code{MosquitoFemale$rEggMaturationTime()}.
+\item This method is bound to \code{Mosquito_Female$rEggMaturationTime}.
 }
 }

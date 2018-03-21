@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Survival.R
 \name{mbites_WingTattering}
 \alias{mbites_WingTattering}
-\title{MBITES-Generic: Mean Wing Tattering for \code{\link{MosquitoFemale}}}
+\title{MBITES: Sample Wing Tattering Damage}
 \usage{
 mbites_WingTattering()
 }
@@ -14,6 +14,6 @@ x=0; P(ttsz.p)
 x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
 \end{matrix}\right. }
 \itemize{
-\item This method is bound to \code{MosquitoFemale$WingTattering()}.
+\item This method is bound to \code{Mosquito$WingTattering}.
 }
 }

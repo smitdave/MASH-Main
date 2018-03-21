@@ -127,3 +127,20 @@ mbites_enterHouse <- function(){
     }
   }
 }
+
+# set methods
+Mosquito$set(which = "public",name = "restingSpot",
+    value = mbites_restingSpot, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "boutFailCheck",
+    value = mbites_boutFailCheck, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "newSpot",
+    value = mbites_newSpot, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "enterHouse",
+    value = mbites_enterHouse, overwrite = TRUE
+)

@@ -21,8 +21,9 @@
 NULL
 #> NULL
 
+
 ###############################################################################
-# Emerge
+# Sample Habitat
 ###############################################################################
 
 #' MBITES: Choose an Aquatic Habitat
@@ -37,9 +38,14 @@ mbites_chooseHabitat <- function(){
   private$habitatID = 1L # normal aquatic habitat
 }
 
+# set methods
+Mosquito_Female$set(which = "public",name = "chooseHabitat",
+    value = mbites_chooseHabitat, overwrite = TRUE
+)
+
 
 ###############################################################################
-# Emerge
+# Emerge (set in MBITES_Setup)
 ###############################################################################
 
 #' M-BITES: Lay Eggs for 'Emerge' \code{\link{MosquitoFemale}}
@@ -56,7 +62,7 @@ mbites_layEggs_Emerge <- function(){
 
 
 ###############################################################################
-# EL4P
+# EL4P (set in MBITES_Setup)
 ###############################################################################
 
 #' M-BITES: Lay Eggs for 'EL4P' \code{\link{MosquitoFemale}}

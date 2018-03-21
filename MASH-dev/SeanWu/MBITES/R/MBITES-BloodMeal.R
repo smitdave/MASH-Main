@@ -11,9 +11,19 @@
 #
 ###############################################################################
 
-#' MBITES: Blood Feeding
+#' MBITES: Blood Meal
 #'
-#' write about me!
+#' During a human host encounter (\code{\link{mbites_humanEncounter}}) or a non-human host encounter
+#' (\code{\link{mbites_zooEncounter}}), if the mosquito survives to blood feed, it takes a blood meal.
+#'
+#' The blood meal sets the \code{bloodfed} flag to true, which resets \code{boutFail} flag to 0 at the end of
+#' \code{\link{mbites_attempt_B}}.
+#'
+#' The blood meal consists of:
+#'  1. Sampling a blood meal size (\code{\link{mbites_rBloodMealSize}})
+#'  2. Checking for mortality from overfeeding (\code{\link{mbites_Overfeeding}})
+#'  3. Calculating energetics/maturation from blood (\code{\link{mbites_bloodEnergetics}})
+#'  4. Simulating oogenesis/egg production (\code{\link{oogenesis}})
 #'
 #' @name BloodMeal
 NULL
@@ -23,14 +33,14 @@ NULL
 # Bloodmeal (note: refeeding is now in MBITES-Oogenesis)
 ###############################################################################
 
-#' M-BITES: Bloodmeal Energetics for \code{\link{MosquitoFemale}}
+#' MBITES: The Blood Meal Event
 #'
 #' Handle bloodmeal size (see \code{\link{mbites_rBloodMealSize}}), overfeeding (see \code{\link{mbites_pOverFeed}}),
-#' and egg batch size and maturation time. Note that refeeding behavior is calculated during resting bout.
-#'  * This method is bound to \code{MosquitoFemale$BloodMeal()}.
+#' and egg batch size and maturation time. Note that refeeding behavior is calculated during resting bout, depending
+#' on the selection of oogenesis model.
+#'  * This method is bound to \code{Mosquito_Female$BloodMeal}.
 #'
 mbites_BloodMeal <- function(){
-  private$boutFail = 0L
   private$bloodfed = TRUE
   private$bmSize = self$rBloodMealSize()
 
@@ -41,21 +51,34 @@ mbites_BloodMeal <- function(){
   self$oogenesis() # MBITES-Oogenesis
 }
 
-
-#' MBITES-Generic: Draw Bloodmeal Size for \code{\link{MosquitoFemale}}
+#' MBITES: Draw Bloodmeal Size
 #'
 #' Draw a bloodmeal size from Beta(bm.a,bm.b)
-#'  * This method is bound to \code{MosquitoFemale$rBloodMealSize()}.
+#'  * This method is bound to \code{Mosquito_Female$rBloodMealSize}.
 #'
 mbites_rBloodMealSize <- function(){
   rbeta(n=1,MBITES:::Parameters$get_bm_a(),MBITES::Parameters$get_bm_b())
 }
+
+# set methods
+Mosquito_Female$set(which = "public",name = "BloodMeal",
+    value = mbites_BloodMeal, overwrite = TRUE
+)
+
+Mosquito_Female$set(which = "public",name = "rBloodMealSize",
+    value = mbites_rBloodMealSize, overwrite = TRUE
+)
 
 
 ###############################################################################
 # Overfeeding
 ###############################################################################
 
+#' MBITES: Overfeeding Mortality
+#'
+#' Calculate overfeeding mortality (see \code{\link{mbites_pOverFeed}}).
+#'  * This method is bound to \code{MosquitoFemale$Overfeeding}.
+#'
 mbites_Overfeeding <- function(){
   # Overfeeding mortality
   if(MBITES:::Parameters$get_OVERFEED()){
@@ -65,13 +88,22 @@ mbites_Overfeeding <- function(){
   }
 }
 
-#' MBITES-Generic: Probaility of Overfeeding due to Bloodmeal Size for \code{\link{MosquitoFemale}}
+#' MBITES: Probaility of Overfeeding due to Bloodmeal Size
 #'
-#' Probability of death due to overfeeding from bloodmeal size given by \deqn{\frac{e^{of.a\times bmSize}}{of.b+e^{of.a\times bmSize}}}
-#'  * This method is bound to \code{MosquitoFemale$pOverFeed()}.
+#' Probability of death due to overfeeding from bloodmeal size given by \eqn{\frac{e^{of.a\times bmSize}}{of.b+e^{of.a\times bmSize}}}
+#'  * This method is bound to \code{MosquitoFemale$pOverFeed}.
 #'
 mbites_pOverFeed <- function(){
   of_a = MBITES:::Parameters$get_of_a()
   of_b = MBITES:::Parameters$get_of_b()
   exp(of_a*private$bmSize)/(of_b + exp(of_a*private$bmSize))
 }
+
+# set methods
+Mosquito_Female$set(which = "public",name = "Overfeeding",
+    value = mbites_Overfeeding, overwrite = TRUE
+)
+
+Mosquito_Female$set(which = "public",name = "pOverFeed",
+    value = mbites_pOverFeed, overwrite = TRUE
+)

@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-Survival.R
 \name{mbites_pEnergySurvival}
 \alias{mbites_pEnergySurvival}
-\title{MBITES-Generic: Probability of Death due to Energy Reserves for \code{\link{MosquitoFemale}}}
+\title{MBITES: Probability of Death due to Energy Reserves}
 \usage{
 mbites_pEnergySurvival()
 }
 \description{
-Incremental mortality as a function of energy reserves given by \deqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
+Incremental mortality as a function of energy reserves given by \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
 \itemize{
-\item This method is bound to \code{MosquitoFemale$pEnergySurvival()}.
+\item This method is bound to \code{Mosquito$pEnergySurvival}.
 }
 }

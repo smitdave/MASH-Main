@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-Oogenesis.R
 \name{mbites_rBatchSizeNorm}
 \alias{mbites_rBatchSizeNorm}
-\title{MBITES-Generic: Draw Normally-distributed Egg Batch Size for \code{\link{MosquitoFemale}}}
+\title{MBITES: Draw Normally-distributed Egg Batch Size}
 \usage{
 mbites_rBatchSizeNorm()
 }
 \description{
-Draw a egg batch size from Normal(bs.m,bs.v)
+Draw a egg batch size from Normal(bs_m,bs_sd)
 \itemize{
-\item This method is bound to \code{MosquitoFemale$rBatchSize()}.
+\item This method is bound to \code{MosquitoFemale$rBatchSize}.
 }
 }
