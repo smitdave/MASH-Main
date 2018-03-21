@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-BloodMeal.R
 \name{mbites_pOverFeed}
 \alias{mbites_pOverFeed}
-\title{MBITES-Generic: Probaility of Overfeeding due to Bloodmeal Size for \code{\link{MosquitoFemale}}}
+\title{MBITES: Probaility of Overfeeding due to Bloodmeal Size}
 \usage{
 mbites_pOverFeed()
 }
 \description{
-Probability of death due to overfeeding from bloodmeal size given by \deqn{\frac{e^{of.a\times bmSize}}{of.b+e^{of.a\times bmSize}}}
+Probability of death due to overfeeding from bloodmeal size given by \eqn{\frac{e^{of.a\times bmSize}}{of.b+e^{of.a\times bmSize}}}
 \itemize{
-\item This method is bound to \code{MosquitoFemale$pOverFeed()}.
+\item This method is bound to \code{MosquitoFemale$pOverFeed}.
 }
 }

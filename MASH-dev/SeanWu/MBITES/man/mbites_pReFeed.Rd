@@ -2,12 +2,12 @@
 % Please edit documentation in R/MBITES-Oogenesis.R
 \name{mbites_pReFeed}
 \alias{mbites_pReFeed}
-\title{MBITES-Generic: Probaility to re-enter Blood Feeding Cycle from Incomplete Feeding for \code{\link{MosquitoFemale}}}
+\title{MBITES: Probability of Refeeding}
 \usage{
 mbites_pReFeed()
 }
 \description{
-Probability to re-enter blood feeding cycle after incomplete blood feeding given by \deqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times bmSize}}{rf.b+e^{rf.a\times bmSize}} }
+Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times batch}}{rf.b+e^{rf.a\times batch}} }
 \itemize{
 \item This method is bound to \code{MosquitoFemale$pReFeed()}.
 }

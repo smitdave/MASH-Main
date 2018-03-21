@@ -42,7 +42,7 @@ A description of the parameter format this function expects is given below:
 \strong{Blood Feeding resources:}
 \itemize{
 \item \code{w}: numeric weight; used by mosquitoes to select blood feeding resources if there are more than 1.
-\item \code{enter_p}: numeric probability for mosquito to successfully enter the house
+\item \code{enterP}: numeric probability for mosquito to successfully enter the house
 }
 
 \strong{Aquatic Habitat resources:}

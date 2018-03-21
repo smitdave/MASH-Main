@@ -11,16 +11,20 @@ mbites_oogenesis1()
 mbites_oogenesis2()
 }
 \description{
-Oogenesis model should be selected in \code{\link{MBITES_Setup}} prior to creating any objects.
+Oogenesis model should be selected in \code{\link{MBITES_Setup}} prior to creating any objects, note
+that if using the first model of oogenesis, then \code{\link{mbites_checkRefeed}} should be used
+as the refeeding model, if using the second model of oogenesis, refeeding behavior
+should be disabled by selecting \code{\link{mbites_checkRefeed_null}} as the refeed function.
+Oogenesis occurs during the blood meal, see \code{\link{BloodMeal}}.
 }
 \details{
-In the first model, egg batch size is proportional to blood
+In the first model (\code{\link{mbites_oogenesis1}}), egg batch size is proportional to blood
 meal size, the egg batch incubation period is equal to the
 post-prandial resting period, but the mosquito can refeed
 with some probability (depending on egg batch size) with some
 probability.
 
-In the second model, a batch of eggs (of some size) commits to
+In the second model (\code{\link{mbites_oogenesis2}}), a batch of eggs (of some size) commits to
 development at the first bloodmeal after hatching or laying.
 The total blood required for maturation is proportional to the
 egg batch size. At the end of the post-prandial period after

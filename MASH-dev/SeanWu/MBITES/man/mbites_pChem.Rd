@@ -2,14 +2,14 @@
 % Please edit documentation in R/MBITES-Survival.R
 \name{mbites_pChem}
 \alias{mbites_pChem}
-\title{MBITES-Generic: Probability of Death due to Chemical Damage for \code{\link{MosquitoFemale}}}
+\title{MBITES: Probability of Death due to Chemical Damage}
 \usage{
 mbites_pChem()
 }
 \description{
-probability of death due to tattering given by \deqn{
+Probability of death due to tattering given by \deqn{
 \frac{2+chm.b}{1+chm.b} - \frac{e^{damage_physical\times chm.a}}{chm.b+e^{damage_chemical\times chm.a}} }
 \itemize{
-\item This method is bound to \code{MosquitoFemale$pTatter()}.
+\item This method is bound to \code{Mosquito$pTatter}.
 }
 }

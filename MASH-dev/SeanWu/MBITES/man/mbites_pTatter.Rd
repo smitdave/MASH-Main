@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-Survival.R
 \name{mbites_pTatter}
 \alias{mbites_pTatter}
-\title{MBITES-Generic: Probability of Death due to Wing Tattering for \code{\link{MosquitoFemale}}}
+\title{MBITES: Probability of Death due to Wing Tattering}
 \usage{
 mbites_pTatter()
 }
 \description{
 probability of death due to tattering given by \deqn{ \frac{2+ttr.b}{1+ttr.b} - \frac{e^{damage_physical\times ttr.a}}{ttr.b+e^{damage_physical\times ttr.a}} }
 \itemize{
-\item This method is bound to \code{MosquitoFemale$pTatter()}.
+\item This method is bound to \code{Mosquito$pTatter}.
 }
 }

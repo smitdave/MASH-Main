@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-Oogenesis.R
 \name{mbites_rEggMaturationTimeOff}
 \alias{mbites_rEggMaturationTimeOff}
-\title{MBITES-Generic: No Egg Maturation Time for \code{\link{MosquitoFemale}}}
+\title{MBITES: No Egg Maturation Time}
 \usage{
 mbites_rEggMaturationTimeOff()
 }
 \description{
 Instant egg maturation.
 \itemize{
-\item This method is bound to \code{MosquitoFemale$rEggMaturationTime()}.
+\item This method is bound to \code{Mosquito_Female$rEggMaturationTime}.
 }
 }

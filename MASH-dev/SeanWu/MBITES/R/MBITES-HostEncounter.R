@@ -35,15 +35,26 @@ mbites_chooseHost <- function(){
   private$hostID = private$feed_res$RiskQ$sampleQ()
 }
 
+# set methods
+Mosquito_Female$set(which = "public",name = "chooseHost",
+    value = mbites_chooseHost, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Human Host Encounter
 ###############################################################################
 
-#' MBITES-BRO: Human Host Encounter for \code{\link{MosquitoFemale}}
+#' MBITES: Human Host Encounter
 #'
 #' After calling \code{\link{mbites_chooseHost}}, the mosquito encounters the human host and attempts to feed.
-#'  * This method is bound to \code{MosquitoFemale$humanEncounter()}.
+#' The encounter process consists of several stages:
+#'  1. Check initial survival to see if the mosquito survives to probe
+#'  2. Check if the mosquito is deterred from probing, if undeterred, call pathogen-specific routines \code{probeHost}
+#'  3. Check if the mosquito survived probing to attempt blood feeding
+#'  4. Check if the mosquito is able to successfully begin blood feeding; take a blood meal via \code{\link{mbites_BloodMeal}} and then call pathogen-specific routines \code{feedHost}
+#'
+#'  * This method is bound to \code{Mosquito_Female$humanEncounter}.
 #'
 mbites_humanEncounter <- function(){
   if(runif(1) < 1-MBITES:::Parameters$get_surviveH()){
@@ -69,15 +80,24 @@ mbites_humanEncounter <- function(){
   }
 }
 
+# set methods
+Mosquito_Female$set(which = "public",name = "humanEncounter",
+    value = mbites_humanEncounter, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Zoo Host Encounter
 ###############################################################################
 
-#' MBITES: Non-Human Host Encounter for \code{\link{MosquitoFemale}}
+#' MBITES: Non-Human Host Encounter
 #'
 #' After calling \code{\link{mbites_chooseHost}}, the mosquito encounters the non-human host and attempts to feed.
-#'  * This method is bound to \code{MosquitoFemale$zooEncounter()}.
+#' The encounter process consists of several stages:
+#'  1. Check initial survival to see if the mosquito survives to feed
+#'  2. Check if the mosquito is able to successfully begin blood feeding; take a blood meal via \code{\link{mbites_BloodMeal}}
+#'
+#'  * This method is bound to \code{Mosquito_Female$zooEncounter}.
 #'
 mbites_zooEncounter <- function(){
   if(runif(1) < 1-MBITES:::Parameters$get_surviveZ()){
@@ -91,3 +111,8 @@ mbites_zooEncounter <- function(){
     }
   }
 }
+
+# set methods
+Mosquito_Female$set(which = "public",name = "zooEncounter",
+    value = mbites_zooEncounter, overwrite = TRUE
+)

@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-Survival.R
 \name{mbites_pPPRFlight}
 \alias{mbites_pPPRFlight}
-\title{MBITES-Generic: Probability of Death due to the Blood Meal during the Post Prandial Flight  \code{\link{MosquitoFemale}}}
+\title{MBITES: Probability of Death due to the Blood Meal during the Post Prandial Flight}
 \usage{
 mbites_pPPRFlight()
 }
 \description{
-Incremental mortality as a function of being laden during the post-prandial flight \deqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
+Incremental mortality as a function of being laden during the post-prandial flight \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
 \itemize{
-\item This method is bound to \code{MosquitoFemale$pEnergySurvival()}.
+\item This method is bound to \code{Mosquito$pEnergySurvival}.
 }
 }

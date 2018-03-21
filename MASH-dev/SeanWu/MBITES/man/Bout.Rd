@@ -4,5 +4,5 @@
 \alias{Bout}
 \title{MBITES: Bout}
 \description{
-write about me!
+In MBITES, mosquito behavioral bouts consist of a cycle of events: launch -> try -> land -> rest.
 }

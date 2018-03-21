@@ -2,13 +2,14 @@
 % Please edit documentation in R/MBITES-Energetics.R
 \name{mbites_energetics}
 \alias{mbites_energetics}
-\title{MBITES: Energetics for \code{\link{MosquitoFemale}}}
+\title{MBITES: Energetics}
 \usage{
 mbites_energetics()
 }
 \description{
-Handle energy dependent mortality and sugar bout queueing as function of current mosquito energy levels.
+Calculate energy burned from flight with \code{\link{mbites_flightBurnEnergy}} and potentially queue
+a sugar bout with \code{\link{mbites_queueSugarBout}}.
 \itemize{
-\item This method is bound to \code{MosquitoFemale$sugarEnergetics()}.
+\item This method is bound to \code{Mosquito$energetics}.
 }
 }

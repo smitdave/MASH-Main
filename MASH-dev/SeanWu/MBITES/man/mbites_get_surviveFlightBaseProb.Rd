@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-Survival.R
 \name{mbites_get_surviveFlightBaseProb}
 \alias{mbites_get_surviveFlightBaseProb}
-\title{M-BITES: Get Baseline Survival Probability for \code{\link{MosquitoFemale}}}
+\title{MBITES: Get Baseline Flight Survival Probability}
 \usage{
 mbites_get_surviveFlightBaseProb()
 }
 \description{
 Get baseline survival probability for \code{\link{mbites_surviveFlight}}.
 \itemize{
-\item This method is bound to \code{MosquitoFemale$get_surviveFlightProb()}.
+\item This method is bound to \code{Mosquito$get_surviveFlightProb}.
 }
 }
