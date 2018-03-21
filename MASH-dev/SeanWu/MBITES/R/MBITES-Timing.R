@@ -75,6 +75,7 @@ mbites_checkPostPrandial <- function(){
     ppRest = MBITES:::Parameters$ttEvent_ppRest()
     private$tNext = private$tNow = private$tNow + ppRest
     private$bloodfed = FALSE
+    self$PPRbmSize() # check with DS
   }
 }
 
