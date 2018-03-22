@@ -41,11 +41,13 @@ NULL
 #'  * This method is bound to \code{Mosquito_Female$BloodMeal}.
 #'
 mbites_BloodMeal <- function(){
-  private$bloodfed = TRUE
   private$bmSize = self$rBloodMealSize()
 
   self$Overfeeding()
   self$BloodEnergetics()
+
+  ppRest = MBITES:::Parameters$ttEvent_ppRest()
+  private$tNext = private$tNow = private$tNow + ppRest
 
   # egg production
   self$oogenesis() # MBITES-Oogenesis

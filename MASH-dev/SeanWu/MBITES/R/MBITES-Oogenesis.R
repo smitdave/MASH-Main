@@ -48,7 +48,7 @@ mbites_oogenesis1 <- function(){
   private$eggT = self$rEggMaturationTime()
   #NOTE: the post prandial resting period is in MBITES-Timing.R
   #NOTE: self$checkRefeed() is called in MBITES-Bouts.R :: updateState()
-  # private$bmSize = 0 # check with DS IN mbites_checkPostPrandial
+  private$bmSize = 0
 }
 
 #' MBITES: Oogenesis Model 1 Blood Meal Size Reset
@@ -91,9 +91,9 @@ mbites_oogenesis2 <- function(){
   }
   # egg provision: after we've fed enough then mosquito is gravid
   private$eggP = private$eggP - private$bmSize
-  # private$bmSize = max(0,private$bmSize - private$eggP) # check with DS IN mbites_checkPostPrandial
   if(private$eggP < 0){
-    private$gravid = TRUE
+    private$gravid = TRUE # now mosquito is gravid
+    private$bmSize = max(0,private$bmSize - private$eggP)
   }
 }
 
