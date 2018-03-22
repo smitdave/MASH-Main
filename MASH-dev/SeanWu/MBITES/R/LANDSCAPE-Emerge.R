@@ -159,18 +159,22 @@ push_imago_Emerge <- function(){
   # if there is are cohort(s) of imagos ready to go
   if(!is.na(imagos$female[1])){
 
-    # iterate over those cohorts
+    # iterate over those cohorts (i)
     for(i in 1:length(imagos$imagos)){
-      # female cohort
+      # cohort (i) is female
       if(imagos$female[i]){
+        fState = MBITES:::Parameters$get_female_state()
         for(j in 1:imagos$imagos[i]){
-          mosy = Mosquito_Female$new(tNow,private$SiteP,tile_id)
+          mosy = Mosquito_Female$new(tNow,fState,private$SiteP,tile_id)
           tile$get_mosquitoes()$assign(key=mosy$get_id(),value=mosy)
         }
-      # male cohort
+      # cohort (i) is male
       } else {
-        mosy = Mosquito_Male$new(tNow,private$SiteP,tile_id)
-        tile$get_mosquitoes()$assign(key=mosy$get_id(),value=mosy)
+        mState = MBITES:::Parameters$get_male_state()
+        for(j in 1:imagos$imagos[i]){
+          mosy = Mosquito_Male$new(tNow,mState,private$SiteP,tile_id)
+          tile$get_mosquitoes()$assign(key=mosy$get_id(),value=mosy)
+        }
       }
     } # end loop over cohorts i
 

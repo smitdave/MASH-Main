@@ -7,8 +7,8 @@
 mbites_queueSugarBout()
 }
 \description{
-write me!
+If the mosquito queues a sugar bout (with probability \code{\link{mbites_pSugarBout}}), set \code{starved} flag true.
 \itemize{
-\item This method is bound to \code{Mosquito$queueSugarBout}.
+\item This method is bound to \code{Mosquito$queueSugarBout}
 }
 }

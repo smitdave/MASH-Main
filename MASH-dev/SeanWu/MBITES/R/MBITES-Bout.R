@@ -35,11 +35,11 @@ NULL
 #'  * \code{\link{mbites_boutB}}: blood feeding attempt bout
 #'  * \code{\link{mbites_boutO}}: egg laying attempt bout
 #'  * \code{\link{mbites_boutS}}: sugar feeding attempt bout
-#'  * \code{\link{mbites_boutM}}: mating bout
-#'  * \code{\link{mbites_boutSearch}}: a search bout for any
+#'  * \code{\link{mbites_boutM}}: mating attempt bout
+#'  * \code{\link{mbites_boutSearch}}: search for a new \code{\link{Site}}
 #'
 #' The generic bout runs necessary updates of timing, state, survival, energetics, and queue checks prior to calling the nested
-#' specific bout action, and checks that the mosquito is alive/active before calling the bout. It updates \code{tNext} and \code{stateNew}.
+#' specific bout action, and checks that the mosquito is alive/active before calling the bout. It updates \code{tNext} and \code{state}.
 #'
 #' This corresponds to the following Gillespie-style algorithm:
 #'

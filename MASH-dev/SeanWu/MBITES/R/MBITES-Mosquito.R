@@ -45,8 +45,9 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  public = list(
 
                    # begin constructor
-                   initialize = function(female, bDay, site, tileID){
+                   initialize = function(bDay, state, site, tileID){
 
+                     # set up parameters
                      private$id = MBITES:::Globals$get_mosquito_id()
 
                      private$site = site
@@ -57,10 +58,16 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                      private$tNext = bDay
 
                      private$search = FALSE
+                     private$state = state
+
+                     # set up history
+                     private$tHist[1] = bDay
+                     private$sHist[1] = site$get_id()
+                     private$bHist[1] = state
 
                    } # end constructor
 
-                 ),
+                 ), # end public members
 
                  # private members
                  private = list(
@@ -87,7 +94,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    state          = character(1), # my current behavioral state
                    starved        = logical(1), # am i starved for sugar?
                    # gravid         = logical(1), # am i gravid to oviposit?
-                   boutFail      = integer(1), # counter
+                   boutFail       = integer(1), # counter
 
                    # energetics
                    energy         = numeric(1), # my current energy
@@ -104,10 +111,49 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 
                    # resource ids
                    sugarID        = integer(1), # id of my sugar  source
-                   mateID         = integer(1) # id of my mate
+                   mateID         = integer(1), # id of my mate
 
-                 )
+                   # history
+                   nEvent         = 1L, # number of bouts + emergence (birthday) (increment at the beginning of the trackHistory function)
+                   # history object (maybe should be a closure...not sure)
+                   hist           = list(
+                     tHist          = numeric(20), # history of event times (t)
+                     sHist          = integer(20), # history of sites visited (s)
+                     bHist          = character(20) # history of behavioral states (b)
+                   )
+
+                 ) # end private members
 )
+
+#' MBITES: Track History
+#'
+#' At the end of each bout (\code{\link{mbites_oneBout}}), track the mosquito's history. If the mosquito
+#' is dead, write out the history to a JSON-formatted file
+#'
+#'
+mbites_trackHistory <- function(){
+
+  # increment number of events
+  private$nEvent = private$nEvent + 1L
+
+  # check we have not overran vector
+  if(private$nEvent > lVec){
+    lVec = length(private$hist$tHist)
+    private$hist$tHist = c(private$hist$tHist,numeric(lVec))
+    private$hist$sHist = c(private$hist$sHist,integer(lVec))
+    private$hist$bHist = c(private$hist$bHist,character(lVec))
+  }
+
+  # add to history
+  private$hist$tHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
+  private$hist$sHist[private$nEvent] = private$site$get_id()
+  private$hist$bHist[private$nEvent] = private$state
+
+  if(private$state=="D"){
+    # output!
+    # jsonlite::toJSON()
+  }
+}
 
 # get_id
 
@@ -146,11 +192,9 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  public = list(
 
                    # begin constructor
-                   initialize = function(bDay, site, tileID){
+                   initialize = function(bDay, state, site, tileID){
 
-                     super$initialize(TRUE, bDay,site,tileID) # construct the base-class parts
-
-                     private$state = MBITES:::Parameters$get_female_state()
+                     super$initialize(bDay,state,site,tileID) # construct the base-class parts
 
                      private$energy_preG = MBITES:::Parameters$get_energy_preG()
 

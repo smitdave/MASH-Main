@@ -11,6 +11,6 @@ Add a cohort of emerging imagos based on current value of \eqn{\lambda} by calli
 }
 \details{
 \itemize{
-\item This method is bound to \code{Aqua_Resource_Emerge$one_day()}.
+\item This method is bound to \code{Aqua_Resource_Emerge$one_day}
 }
 }

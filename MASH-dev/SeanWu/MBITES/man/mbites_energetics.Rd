@@ -10,6 +10,6 @@ mbites_energetics()
 Calculate energy burned from flight with \code{\link{mbites_flightBurnEnergy}} and potentially queue
 a sugar bout with \code{\link{mbites_queueSugarBout}}.
 \itemize{
-\item This method is bound to \code{Mosquito$energetics}.
+\item This method is bound to \code{Mosquito$energetics}
 }
 }
