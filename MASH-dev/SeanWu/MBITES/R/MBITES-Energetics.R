@@ -29,7 +29,7 @@ NULL
 #' MBITES: Blood Energetics
 #'
 #' Add energy derived from blood to the mosquito's fuel tank. This method is called from \code{\link{mbites_BloodMeal}}.
-#'  * This method is bound to \code{MosquitoFemale$BloodEnergetics}.
+#'  * This method is bound to \code{MosquitoFemale$BloodEnergetics}
 #'
 mbites_BloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
   topUp = self$energyFromBlood() # energy derived from blood meal is function of meal size
@@ -83,7 +83,7 @@ mbites_chooseSugarSource <- function(){
 #' Add energy derived from sugar to the mosquito's fuel tank, and if the mosquito is immature, subtract energy
 #' derived from this sugar meal from the pre-gonotrophic energy requirement. If the mosquito is mated
 #' and has passed the energy requirement, set \code{mature = TRUE}.
-#'  * This method is bound to \code{Mosquito_Female$sugarMeal}.
+#'  * This method is bound to \code{Mosquito_Female$sugarMeal}
 #'
 mbites_sugarMeal_F <- function(){ # called from MBITES-Bouts.R, boutS
   private$energy = 1 # always top up to full
@@ -99,7 +99,7 @@ mbites_sugarMeal_F <- function(){ # called from MBITES-Bouts.R, boutS
 #'
 #' Calculate energy burned from flight with \code{\link{mbites_flightBurnEnergy}} and potentially queue
 #' a sugar bout with \code{\link{mbites_queueSugarBout}}.
-#'  * This method is bound to \code{Mosquito$energetics}.
+#'  * This method is bound to \code{Mosquito$energetics}
 #'
 mbites_energetics <- function(){
   if(private$state != "D"){
@@ -110,8 +110,8 @@ mbites_energetics <- function(){
 
 #' MBITES: Energy burn from flight
 #'
-#' write me!
-#'  * This method is bound to \code{Mosquito$flightBurnEnergy()}.
+#' Calculate energy in the mosquito's fuel tank after a flight.
+#'  * This method is bound to \code{Mosquito$flightBurnEnergy()}
 #'
 mbites_flightBurnEnergy <- function(){
   private$energy = max(0,private$energy - MBITES:::Parameters$get_S_u())
@@ -119,8 +119,8 @@ mbites_flightBurnEnergy <- function(){
 
 #' MBITES: Queue a sugar bout
 #'
-#' write me!
-#'  * This method is bound to \code{Mosquito$queueSugarBout}.
+#' If the mosquito queues a sugar bout (with probability \code{\link{mbites_pSugarBout}}), set \code{starved} flag true.
+#'  * This method is bound to \code{Mosquito$queueSugarBout}
 #'
 mbites_queueSugarBout <- function(){
   if(runif(1) < self$pSugarBout()){
@@ -132,7 +132,7 @@ mbites_queueSugarBout <- function(){
 #'
 #' Calculate the probability to queue a sugar bout as a function of the mosquito's current energy levels.
 #' The probability is given by \eqn{\frac{2+S_{sb}}{1+S_{sb}} - \frac{e^{S_{sa} \times energy}}{S_{sb}+e^{S_{sa}\times energy}}}
-#'  * This method is bound to \code{Mosquito$pSugarBout}.
+#'  * This method is bound to \code{Mosquito$pSugarBout}
 #'
 mbites_pSugarBout <- function(){
   S_sb = MBITES:::Parameters$get_S_sb()

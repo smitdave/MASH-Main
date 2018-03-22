@@ -14,9 +14,11 @@
 
 #' Map a function over a hash table
 #'
-#' This is an internal function for MBITES that rewrite eapply such that
-#' no memory is allocated for return values. It is only for functions being called
-#' for their side effects.
+#' This is an internal function for MBITES that rewrites eapply such that
+#' no memory is allocated for return values, the function is mapped with optional
+#' arguments across all objects in the hash table.
+#' It is only for functions being called for their side effects.
+#'
 #'
 #' @param X a hashed \code{\link[base]{environment}}
 #' @param FUN a function

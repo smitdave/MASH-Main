@@ -111,8 +111,7 @@ Aqua_Resource_Emerge$set(which = "public",name = "add_egg",
 #'
 #' Add a cohort of emerging imagos based on current value of \eqn{\lambda} by calling \code{add2Q} function of the imago closure object, see \code{\link{make_ImagoQ}}.
 #'
-#'  * This method is bound to \code{Aqua_Resource_Emerge$one_day()}.
-#'
+#'  * This method is bound to \code{Aqua_Resource_Emerge$one_day}
 #'
 one_day_Emerge <- function(){
 
@@ -142,6 +141,13 @@ Aqua_Resource_Emerge$set(which = "public",name = "one_day",
 # get emerging imagos
 ###############################################################################
 
+#' Aquatic Ecology: Emerge - Emerging Imagos
+#'
+#' Take emering imagos (adult mosquitoes) and assign them to the mosquito population
+#' in this \code{\link{Tile}}.
+#'
+#'  * This method is bound to \code{Aqua_Resource_Emerge$push_imago}
+#'
 push_imago_Emerge <- function(){
 
   tNow = MBITES:::Globals$get_tNow() # time now
