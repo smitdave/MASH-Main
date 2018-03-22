@@ -41,15 +41,18 @@ NULL
 #'  * This method is bound to \code{Mosquito_Female$BloodMeal}.
 #'
 mbites_BloodMeal <- function(){
+  # size blood meal
   private$bmSize = self$rBloodMealSize()
 
+  # overfeeding mortality and blood-derived energetics
   self$Overfeeding()
-  self$BloodEnergetics()
+  self$BloodEnergetics() # MBITES-BloodMeal
 
+  # post-prandial rest (digestion)
   ppRest = MBITES:::Parameters$ttEvent_ppRest()
   private$tNext = private$tNow = private$tNow + ppRest
 
-  # egg production
+  # egg production (uses up blood)
   self$oogenesis() # MBITES-Oogenesis
 }
 
@@ -83,11 +86,18 @@ Mosquito_Female$set(which = "public",name = "rBloodMealSize",
 #'
 mbites_Overfeeding <- function(){
   # Overfeeding mortality
-  if(MBITES:::Parameters$get_OVERFEED()){
-    if(runif(1) < self$pOverFeed()){
-      private$state = 'D'
-    }
+  if(runif(1) < self$pOverFeed()){
+    private$state = 'D'
   }
+}
+
+#' MBITES: Null Overfeeding
+#'
+#' If overfeeding mortality turned off, do nothing
+#'  * This method is bound to \code{MosquitoFemale$Overfeeding}.
+#'
+mbites_OverfeedingNull <- function(){
+  # null overfeeding
 }
 
 #' MBITES: Probaility of Overfeeding due to Bloodmeal Size

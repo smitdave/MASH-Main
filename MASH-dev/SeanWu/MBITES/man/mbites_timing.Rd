@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-Timing.R
 \name{mbites_timing}
 \alias{mbites_timing}
-\title{M-BITES: Timing for \code{MosquitoFemale}}
+\title{MBITES: Time to Launch Sampling}
 \usage{
 mbites_timing()
 }
 \description{
 Sample my time of next launch.
 \itemize{
-\item This method is bound to \code{MosquitoFemale$timing()}.
+\item This method is bound to \code{Mosquito$timing}.
 }
 }

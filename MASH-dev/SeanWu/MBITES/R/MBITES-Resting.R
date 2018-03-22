@@ -120,7 +120,7 @@ mbites_enterHouse <- function(){
   } else {
     # mosquito is not inside of house
     self$newSpot()
-    self$surviveFlight()
+    self$surviveFlight() # MBITES-Survival
     # if i decided to go inside again; call recursively
     if(private$rspot == "i"){
       self$enterHouse()

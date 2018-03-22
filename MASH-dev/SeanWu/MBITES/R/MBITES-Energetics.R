@@ -29,9 +29,9 @@ NULL
 #' MBITES: Blood Energetics
 #'
 #' Add energy derived from blood to the mosquito's fuel tank. This method is called from \code{\link{mbites_BloodMeal}}.
-#'  * This method is bound to \code{MosquitoFemale$bloodEnergetics}.
+#'  * This method is bound to \code{MosquitoFemale$BloodEnergetics}.
 #'
-mbites_bloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
+mbites_BloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
   topUp = self$energyFromBlood() # energy derived from blood meal is function of meal size
   private$energy = min(1, private$energy + topUp)
   if(!private$mature){
@@ -52,8 +52,8 @@ mbites_energyFromBlood <- function(){
 }
 
 # set methods
-Mosquito$set(which = "public",name = "bloodEnergetics",
-    value = mbites_bloodEnergetics, overwrite = TRUE
+Mosquito$set(which = "public",name = "BloodEnergetics",
+    value = mbites_BloodEnergetics, overwrite = TRUE
 )
 
 Mosquito$set(which = "public",name = "energyFromBlood",
