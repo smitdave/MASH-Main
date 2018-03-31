@@ -302,7 +302,11 @@ MacroPatch$set(which = "public",name = "accumulate_kappa",
 #'  * This method is bound to \code{MacroPatch$normalize_kappa}
 #'
 normalize_kappa_MacroPatch <- function(){
-  private$kappa = private$kappa / (private$bWeightHuman + private$bWeightZoo + private$bWeightZootox)
+  if ((private$bWeightHuman + private$bWeightZoo + private$bWeightZootox) > 0){
+    private$kappa = private$kappa / (private$bWeightHuman + private$bWeightZoo + private$bWeightZootox)
+  } else {
+    private$kappa = 0
+  }
 }
 
 MacroPatch$set(which = "public",name = "normalize_kappa",
