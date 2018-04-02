@@ -9,4 +9,7 @@ mbites_trackHistory()
 \description{
 At the end of each bout (\code{\link{mbites_oneBout}}), track the mosquito's history. If the mosquito
 is dead, write out the history to a JSON-formatted file
+\itemize{
+\item This method is bound to \code{Mosquito_Female$trackHistory}
+}
 }

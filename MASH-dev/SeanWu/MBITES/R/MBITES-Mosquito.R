@@ -125,35 +125,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  ) # end private members
 )
 
-#' MBITES: Track History
-#'
-#' At the end of each bout (\code{\link{mbites_oneBout}}), track the mosquito's history. If the mosquito
-#' is dead, write out the history to a JSON-formatted file
-#'
-#'
-mbites_trackHistory <- function(){
 
-  # increment number of events
-  private$nEvent = private$nEvent + 1L
-
-  # check we have not overran vector
-  if(private$nEvent > lVec){
-    lVec = length(private$hist$tHist)
-    private$hist$tHist = c(private$hist$tHist,numeric(lVec))
-    private$hist$sHist = c(private$hist$sHist,integer(lVec))
-    private$hist$bHist = c(private$hist$bHist,character(lVec))
-  }
-
-  # add to history
-  private$hist$tHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
-  private$hist$sHist[private$nEvent] = private$site$get_id()
-  private$hist$bHist[private$nEvent] = private$state
-
-  if(private$state=="D"){
-    # output!
-    # jsonlite::toJSON()
-  }
-}
 
 # get_id
 
@@ -205,7 +177,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                      futile.logger::flog.warn("default 'pathogenDynamics' being called for mosquito: ",private$id)
                    }
 
-                 ),
+                 ), # end public members
 
                  # private members
                  private = list(
@@ -229,8 +201,38 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    # host ids
                    hostID         = integer(1) # id of my blood host
 
-                 )
-)
+                 ) # end private members
+) # end class definition
+
+#' MBITES: Track History
+#'
+#' At the end of each bout (\code{\link{mbites_oneBout}}), track the mosquito's history. If the mosquito
+#' is dead, write out the history to a JSON-formatted file
+#'  * This method is bound to \code{Mosquito_Female$trackHistory}
+#'
+mbites_trackHistory <- function(){
+
+  # increment number of events
+  private$nEvent = private$nEvent + 1L
+
+  # check we have not overran vector
+  if(private$nEvent > lVec){
+    lVec = length(private$hist$tHist)
+    private$hist$tHist = c(private$hist$tHist,numeric(lVec))
+    private$hist$sHist = c(private$hist$sHist,integer(lVec))
+    private$hist$bHist = c(private$hist$bHist,character(lVec))
+  }
+
+  # add to history
+  private$hist$tHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
+  private$hist$sHist[private$nEvent] = private$site$get_id()
+  private$hist$bHist[private$nEvent] = private$state
+
+  if(private$state=="D"){
+    # output!
+    # jsonlite::toJSON()
+  }
+}
 
 
 ###############################################################################
