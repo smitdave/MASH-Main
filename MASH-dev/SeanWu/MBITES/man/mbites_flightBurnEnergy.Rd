@@ -7,8 +7,8 @@
 mbites_flightBurnEnergy()
 }
 \description{
-write me!
+Calculate energy in the mosquito's fuel tank after a flight.
 \itemize{
-\item This method is bound to \code{Mosquito$flightBurnEnergy()}.
+\item This method is bound to \code{Mosquito$flightBurnEnergy()}
 }
 }

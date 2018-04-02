@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Parameters.R
 \name{make_ttEvent_Exp}
 \alias{make_ttEvent_Exp}
-\title{Make a Shifted Exponential Time-to-Event Closure}
+\title{MBITES Parameters: Make a Shifted Exponential Time-to-Event Closure}
 \usage{
 make_ttEvent_Exp(rate, tmin)
 }

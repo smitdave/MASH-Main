@@ -14,7 +14,8 @@ hash_apply(X, FUN, ...)
 \item{...}{optional named arguments}
 }
 \description{
-This is an internal function for MBITES that rewrite eapply such that
-no memory is allocated for return values. It is only for functions being called
-for their side effects.
+This is an internal function for MBITES that rewrites eapply such that
+no memory is allocated for return values, the function is mapped with optional
+arguments across all objects in the hash table.
+It is only for functions being called for their side effects.
 }

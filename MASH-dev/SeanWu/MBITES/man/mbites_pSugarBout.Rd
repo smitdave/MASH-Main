@@ -10,6 +10,6 @@ mbites_pSugarBout()
 Calculate the probability to queue a sugar bout as a function of the mosquito's current energy levels.
 The probability is given by \eqn{\frac{2+S_{sb}}{1+S_{sb}} - \frac{e^{S_{sa} \times energy}}{S_{sb}+e^{S_{sa}\times energy}}}
 \itemize{
-\item This method is bound to \code{Mosquito$pSugarBout}.
+\item This method is bound to \code{Mosquito$pSugarBout}
 }
 }

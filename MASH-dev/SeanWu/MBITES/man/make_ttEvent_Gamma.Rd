@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Parameters.R
 \name{make_ttEvent_Gamma}
 \alias{make_ttEvent_Gamma}
-\title{Make a Shifted Gamma Time-to-Event Closure}
+\title{MBITES Parameters: Make a Shifted Gamma Time-to-Event Closure}
 \usage{
 make_ttEvent_Gamma(mean, cv, tmin)
 }
@@ -10,7 +10,7 @@ make_ttEvent_Gamma(mean, cv, tmin)
 Generates a closure that contains the following fields:
 \itemize{
 \item mean: numeric value of mean
-\item cv: numeric value of coefficient of variation
+\item cv: numeric value of coefficient of variation (should be between 0 and 1 for reasonable sampling)
 \item tmin: numeric value of minimum waiting time
 }
 }

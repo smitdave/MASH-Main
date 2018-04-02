@@ -26,16 +26,15 @@ NULL
 # Time to Event Sampling
 ###############################################################################
 
-#' M-BITES: Timing for \code{MosquitoFemale}
+#' MBITES: Time to Launch Sampling
 #'
 #' Sample my time of next launch.
-#'  * This method is bound to \code{MosquitoFemale$timing()}.
+#'  * This method is bound to \code{Mosquito$timing}.
 #'
 mbites_timing <- function(){
 
   if(private$state != 'D'){
     # NOTE :: this updates tNow
-    self$checkPostPrandial()
 
     # sample time to next launch, conditional on search and behavioral state
     if(private$search){
@@ -58,27 +57,17 @@ mbites_timing <- function(){
   }
 }
 
+
 ###############################################################################
-# Event Flags
+# Find Mating Swarms
 ###############################################################################
 
-#' M-BITES: Simulates the post-prandial resting period for \code{MosquitoFemale}
+#' MBITES: Check Mating Event
 #'
-#' Method checks to see if the mosquito has bloodfed and is in a
-#' post prandial state; if so, it resets tNow and tNext to
-#' tNow + ttEvent_ppRest()
+#' If timing of next launch occurs during a period when mating swarms are emerging, go into mating bout
+#' if immature.
+#'  * This method is bound to \code{Mosquito_Female$timing}.
 #'
-#'  * This method is bound to \code{MosquitoFemale$timing()}.
-#'
-mbites_checkPostPrandial <- function(){
-  if(private$bloodfed){
-    ppRest = MBITES:::Parameters$ttEvent_ppRest()
-    private$tNext = private$tNow = private$tNow + ppRest
-    private$bloodfed = FALSE
-    self$PPRbmSize() # check with DS
-  }
-}
-
 mbites_findSwarm <- function(){
   if(!private$mature){
     # tSwarm is a time of day
@@ -94,4 +83,77 @@ mbites_findSwarm <- function(){
       private$tNext = floor(private$tNow) + tSwarm
     }
   }
+}
+
+
+###############################################################################
+# Estivation
+###############################################################################
+
+# estivation model 1: probabilistic entry to 'estivating' state
+
+#' MBITES: Daily Probability of Estivation
+#'
+#' Get the daily probability of entering estivation stage of life cycle.
+#'  * This method is bound to \code{Mosquito$prEstivate}
+#'
+mbites_prEstivate <- function(){
+  pmax(0, cos(2*pi*(MBITES:::Globals$get_tNow()-MBITES:::Parameters$get_Emax())/365) - MBITES:::Parameters$get_Eb())
+}
+
+#' MBITES: Random Wake-up Time
+#'
+#' Randomly sample a time to wake-up from estivation.
+#'  * This method is bound to \code{Mosquito$wakeUpTime}
+#'
+mbites_wakeUpTime <- function(){
+  rnorm(1, MBITES:::Parameters$get_eEndm(), MBITES:::Parameters$get_eEndV())
+}
+
+#' MBITES: Probabilistic Estivation
+#'
+#' Queue estivation based on daily probability to enter estivation stage of the life cycle,
+#' if estivation is queued, the next launch is set to be at random time in the future.
+#'
+#'  * This method is bound to \code{Mosquito$checkEstivation}
+#'
+mbites_checkEstivation1 <- function(){
+  if(runif(1) < self$prEstivate()){ #attempt to estivate; if succeed set a wake up time
+    if(runif(1) < MBITES:::Parameters$get_Ep()){ # survive estivation?
+      private$tNext = wakeUpTime()
+    } else {
+      private$state = "D"
+    }
+  }
+}
+
+# estivation model 2: hard cut-off
+
+#' MBITES: Estivation based on Hard Cut-off
+#'
+#' The number estivationDay is a day of the year. This
+#' method checks to see if tNow < estivationDay < tNext.
+#' If so then, the mosquito estivates, which sets
+#' tNext to a random number in the future, ttEstivate()
+#'
+#'  * This method is bound to \code{Mosquito$checkEstivation}
+#'
+mbites_checkEstivation2 <- function(){
+  #estivationDay is a day of the year, 0 <= estivationDay  <= 365
+  estivationDay = MBITES:::Parameters$get_estivationDay()
+  T1 = private$tNow%%365
+  T2 = private$tNext - private$tNow
+  if(T1<estivationDay & T1+T2 > estivationDay){
+    private$tNext =  private$tNext + MBITES:::Parameters$ttEvent_Estivate()
+  }
+}
+
+# null estivation
+
+#' MBITES: Null Estivation
+#'
+#' If estivation is turned off, do nothing.
+#'  * This method is bound to \code{Mosquito$checkEstivation}
+mbites_checkEstivationNull <- function(){
+  # dont do anything if estivation is off.
 }

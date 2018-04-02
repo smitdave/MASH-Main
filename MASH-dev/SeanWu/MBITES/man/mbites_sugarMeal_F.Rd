@@ -11,6 +11,6 @@ Add energy derived from sugar to the mosquito's fuel tank, and if the mosquito i
 derived from this sugar meal from the pre-gonotrophic energy requirement. If the mosquito is mated
 and has passed the energy requirement, set \code{mature = TRUE}.
 \itemize{
-\item This method is bound to \code{Mosquito_Female$sugarMeal}.
+\item This method is bound to \code{Mosquito_Female$sugarMeal}
 }
 }

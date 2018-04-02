@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Parameters.R
 \name{make_ttEvent_Diurnal}
 \alias{make_ttEvent_Diurnal}
-\title{Make a Shifted Diurnal Time-to-Event Closure}
+\title{MBITES Parameters: Make a Shifted Diurnal Time-to-Event Closure}
 \usage{
 make_ttEvent_Diurnal(peak, tmin)
 }
