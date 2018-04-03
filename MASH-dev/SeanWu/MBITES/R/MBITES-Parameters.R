@@ -52,15 +52,24 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
                    }, # end destructor
 
                    # time to event samplers
-                   ttEvent_BoutB = function(){private$ttEvent$ttEvent_BoutB()},
-                   ttEvent_BoutO = function(){private$ttEvent$ttEvent_BoutO()},
-                   ttEvent_BoutM = function(){private$ttEvent$ttEvent_BoutM()},
-                   ttEvent_BoutS = function(){private$ttEvent$ttEvent_BoutS()},
-                   ttEvent_BoutBs = function(){private$ttEvent$ttEvent_BoutBs()},
-                   ttEvent_BoutOs = function(){private$ttEvent$ttEvent_BoutOs()},
-                   ttEvent_BoutMs = function(){private$ttEvent$ttEvent_BoutMs()},
-                   ttEvent_BoutSs = function(){private$ttEvent$ttEvent_BoutSs()},
-                   ttEvent_Estivate = function(){private$ttEvent$ttEvent_Estivate()}
+                   # 'struct' of function (pointers to functions in c++)
+                   ttEvent              = list(
+                     # time to event closures (must be given implementations before simulation starts)
+                     # attempt bouts
+                     BoutB = function(){stop("BoutB requires a concrete implementation!")},
+                     BoutO = function(){stop("BoutO requires a concrete implementation!")},
+                     BoutM = function(){stop("BoutM requires a concrete implementation!")},
+                     BoutS = function(){stop("BoutS requires a concrete implementation!")},
+                     # search bouts
+                     BoutBs = function(){stop("BoutBs requires a concrete implementation!")},
+                     BoutOs = function(){stop("BoutOs requires a concrete implementation!")},
+                     BoutMs = function(){stop("BoutMs requires a concrete implementation!")},
+                     BoutSs = function(){stop("BoutSs requires a concrete implementation!")},
+                     # estivation
+                     Estivate = function(){stop("Estivate requires a concrete implementation!")},
+                     # post-prandial resting
+                     ppr = function(){stop("ppr requires a concrete implementation!")}
+                   )
 
                  ),
 
@@ -78,19 +87,14 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 
                    # Timing
                    tSwarm               = numeric(1), # mating swarm timing
-                   # 'struct' of function (pointers to functions in c++)
-                   ttEvent              = list(
-                     # time to event closures (must be given implementations before simulation starts)
-                     ttEvent_BoutB = function(){stop("ttEvent_BoutB requires a concrete implementation!")},
-                     ttEvent_BoutO = function(){stop("ttEvent_BoutO requires a concrete implementation!")},
-                     ttEvent_BoutM = function(){stop("ttEvent_BoutM requires a concrete implementation!")},
-                     ttEvent_BoutS = function(){stop("ttEvent_BoutS requires a concrete implementation!")},
-                     ttEvent_BoutBs = function(){stop("ttEvent_BoutBs requires a concrete implementation!")},
-                     ttEvent_BoutOs = function(){stop("ttEvent_BoutOs requires a concrete implementation!")},
-                     ttEvent_BoutMs = function(){stop("ttEvent_BoutMs requires a concrete implementation!")},
-                     ttEvent_BoutSs = function(){stop("ttEvent_BoutSs requires a concrete implementation!")},
-                     ttEvent_Estivate = function(){stop("ttEvent_Estivate requires a concrete implementation!")}
-                   ),
+                   # estivation 1
+                   Emax                 = numeric(1),
+                   Eb                   = numeric(1),
+                   Ep                   = numeric(1),
+                   eEndm                = numeric(1),
+                   eEndSd               = numeric(1),
+                   # estivation 2
+                   estivationDay        = integer(1),
 
                    # Energetics
                    energyPreG           = numeric(1), # pre-gonotrophic energy requirement
@@ -168,6 +172,28 @@ MBITES_Parameters$set(which = "public",name = "get_aqua_model",
 # Timing
 ###############################################################################
 
+#' MBITES Parameters: Make Deterministic Time-to-Event Closure
+#'
+#' Generates a closure that contains the following fields:
+#'  * wait: numeric value of deterministic waiting time
+#'
+#' The closure also contains the following functions:
+#'  * tteDet(t): samples a time to event following shifted exponential distribution
+#'
+#' @export
+make_ttEvent_Det <- function(wait){
+
+  # data for the closure
+  wait  <- wait
+
+  # deterministic tte
+  tteDet <- function(t){
+    t + wait
+  }
+
+  return(tteDet)
+}
+
 #' MBITES Parameters: Make a Shifted Exponential Time-to-Event Closure
 #'
 #' Generates a closure that contains the following fields:
@@ -186,7 +212,7 @@ make_ttEvent_Exp <- function(rate, tmin){
 
   # exponentially-distributed tte
   tteShiftExp <- function(t){
-    tmin + rexp(n=1L,rate=rate)
+    t + tmin + rexp(n=1L,rate=rate)
   }
 
   return(tteShiftExp)
@@ -211,7 +237,7 @@ make_ttEvent_Gamma <- function(mean, cv, tmin){
   tmin <- tmin
 
   tteShiftGamma <- function(t){
-    tmin + rgamma(n=1L, shape=shape, scale = scale)
+    t + tmin + rgamma(n=1L, shape=shape, scale = scale)
   }
 
   return(tteShiftGamma)
@@ -232,9 +258,9 @@ make_ttEvent_Diurnal <- function(peak, tmin){
 
 }
 
-#' MBITES Parameters: Set Time-to-Event Sampling Functions
+#' MBITES Parameters: Set Time-to-Event Sampling for Attempt and Search Bout Launch Intervals
 #'
-#' Sets concrete implementations of time-to-event sampling closures. This method is called from \code{\link{MBITES_Setup}} and should
+#' Sets concrete implementations of time-to-event sampling for attempt and search bout launch intervals. This method is called from \code{\link{MBITES_Setup}} and should
 #' not be called by users, although there is currently no way to prevent this.
 #'
 #' This method is bound to \code{MBITES_Parameters$set_ttEvent}
@@ -242,6 +268,15 @@ make_ttEvent_Diurnal <- function(peak, tmin){
 set_ttEvent_MBITES_Parameters <- function(
   # Timing
   timing_model = 1L,
+  # deterministic
+  wait_b = NULL,
+  wait_o = NULL,
+  wait_m = NULL,
+  wait_s = NULL,
+  wait_bs = NULL,
+  wait_os = NULL,
+  wait_ms = NULL,
+  wait_ss = NULL,
   # exp
   rate_b = NULL,
   tmin_b = NULL,
@@ -279,28 +314,46 @@ set_ttEvent_MBITES_Parameters <- function(
 ){
   switch(timing_model,
     "1" = {
-      private$ttEvent$ttEvent_BoutB <- make_ttEvent_Exp(rate_b,tmin_b)
-      private$ttEvent$ttEvent_BoutO <- make_ttEvent_Exp(rate_o,tmin_o)
-      private$ttEvent$ttEvent_BoutM <- make_ttEvent_Exp(rate_m,tmin_m)
-      private$ttEvent$ttEvent_BoutS <- make_ttEvent_Exp(rate_s,tmin_s)
-
-      private$ttEvent$ttEvent_BoutBs <- make_ttEvent_Exp(rate_bs,tmin_bs)
-      private$ttEvent$ttEvent_BoutOs <- make_ttEvent_Exp(rate_os,tmin_os)
-      private$ttEvent$ttEvent_BoutMs <- make_ttEvent_Exp(rate_ms,tmin_ms)
-      private$ttEvent$ttEvent_BoutSs <- make_ttEvent_Exp(rate_ss,tmin_ss)
+      cat("using deterministic time-to-event functions for attempt and search bouts\n")
+      # attempt bouts
+      self$ttEvent$BoutB <- make_ttEvent_Det(wait_b)
+      self$ttEvent$BoutO <- make_ttEvent_Exp(wait_o)
+      self$ttEvent$BoutM <- make_ttEvent_Exp(wait_m)
+      self$ttEvent$BoutS <- make_ttEvent_Exp(wait_s)
+      # search bouts
+      self$ttEvent$BoutBs <- make_ttEvent_Exp(wait_bs)
+      self$ttEvent$BoutOs <- make_ttEvent_Exp(wait_os)
+      self$ttEvent$BoutMs <- make_ttEvent_Exp(wait_ms)
+      self$ttEvent$BoutSs <- make_ttEvent_Exp(wait_ss)
     },
     "2" = {
-      private$ttEvent$ttEvent_BoutB <- make_ttEvent_Gamma(mean_b,cv_b,tmin_b)
-      private$ttEvent$ttEvent_BoutO <- make_ttEvent_Gamma(mean_o,cv_o,tmin_o)
-      private$ttEvent$ttEvent_BoutM <- make_ttEvent_Gamma(mean_m,cv_m,tmin_m)
-      private$ttEvent$ttEvent_BoutS <- make_ttEvent_Gamma(mean_s,cv_s,tmin_s)
-
-      private$ttEvent$ttEvent_BoutBs <- make_ttEvent_Gamma(mean_bs,cv_bs,tmin_bs)
-      private$ttEvent$ttEvent_BoutOs <- make_ttEvent_Gamma(mean_os,cv_os,tmin_os)
-      private$ttEvent$ttEvent_BoutMs <- make_ttEvent_Gamma(mean_ms,cv_ms,tmin_ms)
-      private$ttEvent$ttEvent_BoutSs <- make_ttEvent_Gamma(mean_ss,cv_ss,tmin_ss)
+      cat("using shifted exponential time-to-event functions for attempt and search bouts\n")
+      # attempt bouts
+      self$ttEvent$BoutB <- make_ttEvent_Exp(rate_b,tmin_b)
+      self$ttEvent$BoutO <- make_ttEvent_Exp(rate_o,tmin_o)
+      self$ttEvent$BoutM <- make_ttEvent_Exp(rate_m,tmin_m)
+      self$ttEvent$BoutS <- make_ttEvent_Exp(rate_s,tmin_s)
+      # search bouts
+      self$ttEvent$BoutBs <- make_ttEvent_Exp(rate_bs,tmin_bs)
+      self$ttEvent$BoutOs <- make_ttEvent_Exp(rate_os,tmin_os)
+      self$ttEvent$BoutMs <- make_ttEvent_Exp(rate_ms,tmin_ms)
+      self$ttEvent$BoutSs <- make_ttEvent_Exp(rate_ss,tmin_ss)
     },
     "3" = {
+      cat("using shifted gamma time-to-event functions for attempt and search bouts\n")
+      # attempt bouts
+      self$ttEvent$BoutB <- make_ttEvent_Gamma(mean_b,cv_b,tmin_b)
+      self$ttEvent$BoutO <- make_ttEvent_Gamma(mean_o,cv_o,tmin_o)
+      self$ttEvent$BoutM <- make_ttEvent_Gamma(mean_m,cv_m,tmin_m)
+      self$ttEvent$BoutS <- make_ttEvent_Gamma(mean_s,cv_s,tmin_s)
+      # search bouts
+      self$ttEvent$BoutBs <- make_ttEvent_Gamma(mean_bs,cv_bs,tmin_bs)
+      self$ttEvent$BoutOs <- make_ttEvent_Gamma(mean_os,cv_os,tmin_os)
+      self$ttEvent$BoutMs <- make_ttEvent_Gamma(mean_ms,cv_ms,tmin_ms)
+      self$ttEvent$BoutSs <- make_ttEvent_Gamma(mean_ss,cv_ss,tmin_ss)
+    },
+    "4" = {
+      cat("using shifted diurnal time-to-event functions for attempt and search bouts\n")
       stop("shifted diurnal time-to-event sampling has not been implemented yet\n")
     },
     {stop("invalid entry for 'timing_model'\n")}
@@ -308,8 +361,45 @@ set_ttEvent_MBITES_Parameters <- function(
 
 }
 
+#' MBITES Parameters: Set Post-prandial Resting Time
+#'
+#' Sets concrete implementations of length of the post-prandial resting bout. This method is called from \code{\link{MBITES_Setup}} and should
+#' not be called by users, although there is currently no way to prevent this.
+#'
+#' This method is bound to \code{MBITES_Parameters$set_ttEvent_ppr}
+#'
+set_ttEvent_ppr_MBITES_Parameters <- function(
+  ppr_model = 1L,
+  # det
+  wait_ppr = NULL,
+  # exp
+  rate_ppr = NULL,
+  tmin_ppr = NULL,
+  # gamma
+  mean_ppr = NULL,
+  cv_ppr = NULL
+){
+  switch(ppr_model,
+    "1" = {
+      self$ttEvent$ppr <- make_ttEvent_Det(wait_ppr)
+    },
+    "2" = {
+      self$ttEvent$ppr <- make_ttEvent_Exp(rate_ppr,tmin_ppr)
+    },
+    "3" = {
+      self$ttEvent$ppr <- make_ttEvent_Gamma(mean_ppr,cv_ppr,tmin_ppr)
+    },
+    {stop("invalid entry for 'ppr_model'\n")}
+  )
+}
+
+# set methods
 MBITES_Parameters$set(which = "public",name = "set_ttEvent",
     value = set_ttEvent_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_ttEvent_ppr",
+    value = set_ttEvent_ppr_MBITES_Parameters, overwrite = TRUE
 )
 
 

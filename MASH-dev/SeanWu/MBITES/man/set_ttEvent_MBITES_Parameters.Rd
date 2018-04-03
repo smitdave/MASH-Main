@@ -2,9 +2,11 @@
 % Please edit documentation in R/MBITES-Parameters.R
 \name{set_ttEvent_MBITES_Parameters}
 \alias{set_ttEvent_MBITES_Parameters}
-\title{MBITES Parameters: Set Time-to-Event Sampling Functions}
+\title{MBITES Parameters: Set Time-to-Event Sampling for Attempt and Search Bout Launch Intervals}
 \usage{
-set_ttEvent_MBITES_Parameters(timing_model = 1L, rate_b = NULL,
+set_ttEvent_MBITES_Parameters(timing_model = 1L, wait_b = NULL,
+  wait_o = NULL, wait_m = NULL, wait_s = NULL, wait_bs = NULL,
+  wait_os = NULL, wait_ms = NULL, wait_ss = NULL, rate_b = NULL,
   tmin_b = NULL, rate_o = NULL, tmin_o = NULL, rate_m = NULL,
   tmin_m = NULL, rate_s = NULL, tmin_s = NULL, rate_bs = NULL,
   tmin_bs = NULL, rate_os = NULL, tmin_os = NULL, rate_ms = NULL,
@@ -15,7 +17,7 @@ set_ttEvent_MBITES_Parameters(timing_model = 1L, rate_b = NULL,
   mean_ss = NULL, cv_ss = NULL)
 }
 \description{
-Sets concrete implementations of time-to-event sampling closures. This method is called from \code{\link{MBITES_Setup}} and should
+Sets concrete implementations of time-to-event sampling for attempt and search bout launch intervals. This method is called from \code{\link{MBITES_Setup}} and should
 not be called by users, although there is currently no way to prevent this.
 }
 \details{
