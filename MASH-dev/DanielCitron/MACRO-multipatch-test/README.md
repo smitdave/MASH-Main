@@ -20,7 +20,7 @@ This analysis was produced using the script `Multipatch-test.R` to generate a sa
 
 ![HumanMove](figures/human_move.jpg)
 
-The goal here is to be able to read off **Parasite Rate** - the fraction of infected individuals - from each patch over time  over time.
+The goal here is to be able to read off **Parasite Rate** - the fraction of infected individuals - from each patch over time.
 
 ### Data Transformation
 
