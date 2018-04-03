@@ -25,7 +25,7 @@
 #'  3. Calculating energetics/maturation from blood (\code{\link{mbites_bloodEnergetics}})
 #'  4. Simulating oogenesis/egg production (\code{\link{oogenesis}})
 #'
-#' @name BloodMeal
+#' @name MBITES-BloodMeal
 NULL
 #> NULL
 
@@ -49,8 +49,7 @@ mbites_BloodMeal <- function(){
   self$BloodEnergetics() # MBITES-BloodMeal
 
   # post-prandial rest (digestion)
-  ppRest = MBITES:::Parameters$ttEvent_ppRest()
-  private$tNext = private$tNow = private$tNow + ppRest
+  private$tNext = MBITES:::Parameters$ttEvent$ppr(private$tNow)
 
   # egg production (uses up blood)
   self$oogenesis() # MBITES-Oogenesis
@@ -110,12 +109,3 @@ mbites_pOverFeed <- function(){
   of_b = MBITES:::Parameters$get_of_b()
   exp(of_a*private$bmSize)/(of_b + exp(of_a*private$bmSize))
 }
-
-# set methods
-Mosquito_Female$set(which = "public",name = "Overfeeding",
-    value = mbites_Overfeeding, overwrite = TRUE
-)
-
-Mosquito_Female$set(which = "public",name = "pOverFeed",
-    value = mbites_pOverFeed, overwrite = TRUE
-)

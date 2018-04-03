@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Oogenesis.R
 \name{mbites_rBatchSizeNorm}
 \alias{mbites_rBatchSizeNorm}
-\title{MBITES: Draw Normally-distributed Egg Batch Size}
+\title{MBITES: Draw Gaussian-distributed Egg Batch Size}
 \usage{
 mbites_rBatchSizeNorm()
 }

@@ -17,7 +17,7 @@
 #'
 #'
 #'
-#' @name Timing
+#' @name MBITES-Timing
 NULL
 #> NULL
 
@@ -39,15 +39,15 @@ mbites_timing <- function(){
     # sample time to next launch, conditional on search and behavioral state
     if(private$search){
       switch(private$state, # time to search bout
-        B = {private$tNext = MBITES:::Parameters$ttEvent_BoutBs(private$tNow)},
-        O = {private$tNext = MBITES:::Parameters$ttEvent_BoutOs(private$tNow)},
-        S = {private$tNext = MBITES:::Parameters$ttEvent_BoutSs(private$tNow)}
+        B = {private$tNext = MBITES:::Parameters$ttEvent$BoutBs(private$tNow)},
+        O = {private$tNext = MBITES:::Parameters$ttEvent$BoutOs(private$tNow)},
+        S = {private$tNext = MBITES:::Parameters$ttEvent$BoutSs(private$tNow)}
       )
     } else {
       switch(private$state, # time to attempt bout
-        B = {private$tNext = MBITES:::Parameters$ttEvent_BoutB(private$tNow)},
-        O = {private$tNext = MBITES:::Parameters$ttEvent_BoutO(private$tNow)},
-        S = {private$tNext = MBITES:::Parameters$ttEvent_BoutS(private$tNow)}
+        B = {private$tNext = MBITES:::Parameters$ttEvent$BoutB(private$tNow)},
+        O = {private$tNext = MBITES:::Parameters$ttEvent$BoutO(private$tNow)},
+        S = {private$tNext = MBITES:::Parameters$ttEvent$BoutS(private$tNow)}
       )
     }
 
@@ -85,6 +85,15 @@ mbites_findSwarm <- function(){
   }
 }
 
+#' MBITES: Null Check Mating Event
+#'
+#' If mating is turned off, do nothing.
+#'  * This method is bound to \code{Mosquito_Female$findSwarm}.
+#'
+mbites_findSwarmNull <- function(){
+  # dont do anything if mating is off
+}
+
 
 ###############################################################################
 # Estivation
@@ -107,7 +116,7 @@ mbites_prEstivate <- function(){
 #'  * This method is bound to \code{Mosquito$wakeUpTime}
 #'
 mbites_wakeUpTime <- function(){
-  rnorm(1, MBITES:::Parameters$get_eEndm(), MBITES:::Parameters$get_eEndV())
+  rnorm(1, MBITES:::Parameters$get_eEndm(), MBITES:::Parameters$get_eEndSd())
 }
 
 #' MBITES: Probabilistic Estivation
@@ -144,7 +153,7 @@ mbites_checkEstivation2 <- function(){
   T1 = private$tNow%%365
   T2 = private$tNext - private$tNow
   if(T1<estivationDay & T1+T2 > estivationDay){
-    private$tNext =  private$tNext + MBITES:::Parameters$ttEvent_Estivate()
+    private$tNext =  private$tNext + MBITES:::Parameters$ttEvent$Estivate()
   }
 }
 

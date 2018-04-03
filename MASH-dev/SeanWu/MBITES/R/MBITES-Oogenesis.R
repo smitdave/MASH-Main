@@ -33,7 +33,7 @@
 #' mosquito is gravid.
 #'
 #'  * This method is bound to \code{Mosquito_Female$oogenesis}.
-#' @name oogenesis
+#' @name MBITES-Oogenesis
 NULL
 #> NULL
 
@@ -42,21 +42,15 @@ NULL
 # Oogenesis Model 1 (set in the MBITES_Setup)
 ###############################################################################
 
-#' @rdname oogenesis
+#' @rdname MBITES-Oogenesis
 mbites_oogenesis1 <- function(){
-  private$batch = self$rBatchSize()
-  private$eggT = self$rEggMaturationTime()
-  #NOTE: the post prandial resting period is in MBITES-Timing.R
-  #NOTE: self$checkRefeed() is called in MBITES-Bouts.R :: updateState()
-  private$bmSize = 0
-}
-
-#' MBITES: Oogenesis Model 1 Blood Meal Size Reset
-#'
-#' In the first model of oogenesis blood meal size is reset to 0 during the
-#' post-prandial rest (\code{\link{mbites_checkPostPrandial}}).
-#'  * This method is bound to \code{Mosquito_Female$PPRbmSize}
-mbites_PPRbmSize1 <- function(){
+  # only make a new batch if i am carrying around eggs
+  if(private$batch <= 0){
+    private$batch = self$rBatchSize()
+    private$eggT = private$tNow + self$rEggMaturationTime()
+    #note: self$checkRefeed() is called in MBITES-Bouts.R :: updateState()
+  }
+  private$gravid = TRUE # needed to trip flag in updateState
   private$bmSize = 0
 }
 
@@ -83,7 +77,7 @@ mbites_rEggMaturationTimeOff <- function(){
 # Oogenesis Model 2 (set in MBITES_Setup)
 ###############################################################################
 
-#' @rdname oogenesis
+#' @rdname MBITES-Oogenesis
 mbites_oogenesis2 <- function(){
   if(private$batch <= 0){
     private$batch = self$rBatchSize()
@@ -93,21 +87,16 @@ mbites_oogenesis2 <- function(){
   private$eggP = private$eggP - private$bmSize
   if(private$eggP < 0){
     private$gravid = TRUE # now mosquito is gravid
+    private$state = "O"
     private$bmSize = max(0,private$bmSize - private$eggP)
   }
 }
 
-#' MBITES: Oogenesis Model 2 Blood Meal Size Reset
-#'
-#' In the second model of oogenesis blood meal size is reduced by an amount equal to
-#' the amount of blood used in the egg provision, or to 0 if that would induce a negative amount.
-#' This occurs during the post-prandial rest (\code{\link{mbites_checkPostPrandial}}).
-#'  * This method is bound to \code{Mosquito_Female$PPRbmSize}
-mbites_PPRbmSize2 <- function(){
-  private$bmSize = max(0,private$bmSize - private$eggP)
-}
+###############################################################################
+# Egg Batch Size
+###############################################################################
 
-#' MBITES: Draw Normally-distributed Egg Batch Size
+#' MBITES: Draw Gaussian-distributed Egg Batch Size
 #'
 #' Draw a egg batch size from Normal(bs_m,bs_sd)
 #'  * This method is bound to \code{MosquitoFemale$rBatchSize}.
@@ -127,7 +116,7 @@ mbites_rBatchSizeBms <- function(){
 
 
 ###############################################################################
-# Refeed (set in MBITES_Setup)
+# Refeed (set in MBITES_Setup; called from updateState)
 ###############################################################################
 
 #' MBITES: Check Refeeding Behavior
@@ -143,8 +132,26 @@ mbites_checkRefeed <- function(){
     private$gravid = FALSE
     private$state = "B" # check with DS
   } else {
+    # check egg maturation (check with DS)
+    self$checkEggMaturation()
+  }
+}
+
+#' MBITES: Null Refeeding Behavior
+#'
+#' This function is called during \code{\link{mbites_checkRefeed}},
+#' it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
+#' if this condition is filled. If the eggs are not mature, go on another blood search.
+#'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
+#'
+mbites_checkEggMaturation <- function(){
+  # check egg maturation
+  if(private$eggT <= private$tNow){
     private$gravid = TRUE
     private$state = "O"
+  } else {
+    private$gravid = FALSE
+    private$state = "B"
   }
 }
 
@@ -166,4 +173,13 @@ mbites_pReFeed <- function(){
   rf_a = MBITES:::Parameters$get_rf_a()
   rf_b = MBITES:::Parameters$get_rf_b()
   (2+rf_b)/(1+rf_b) - exp(rf_a*private$batch)/(rf_b + exp(rf_a*private$batch))
+}
+
+#' MBITES: Null Probability of Refeeding
+#'
+#' Null probability of refeeding (turn the behavior off)
+#'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
+#'
+mbites_pReFeed_null <- function(){
+  0
 }
