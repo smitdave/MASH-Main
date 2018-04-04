@@ -20,7 +20,7 @@ This analysis was produced using the script `Multipatch-test.R` to generate a sa
 
 ![HumanMove](figures/human_move.jpg)
 
-The goal here is to be able to read off **Parasite Rate** - the fraction of infected individuals - from each patch over time  over time.
+The goal here is to be able to read off **Parasite Rate** - the fraction of infected individuals - from each patch over time.
 
 ### Data Transformation
 
@@ -68,7 +68,7 @@ We start by filling in the initial location (`patch_id` at time=0) for each of t
 initLoc = data.table(humanID=unique(newdata$humanID),
                      time = 0.0, location = patch_id)
 tmp2[, location:= as.integer(location)]
-tmp2[time==0]$location <- initLoc$location
+tmp2[time==0]$location <- initLoc$location[tmp2[time==0]$humanID]
 ```
 
 Using the `zoo` package in R, we can now fill in the current location of each human over time.  This fills in all `NA`'s in the `location` column with the last non-`NA` value:
