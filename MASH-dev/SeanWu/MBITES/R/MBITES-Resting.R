@@ -11,21 +11,19 @@
 #
 ###############################################################################
 
-#' MBITES: Resting
+#' MBITES: Post-bout Landing, House Entering, and Resting
 #'
-#' @section Post-bout Landing, House Entering, and Resting:
-#'
-#'  House Entering & Resting Behavior:
-#'  At the end of the search bout, attempt bout, or after egg
-#'  laying a mosquito has entered the area around a feeding
-#'  station and either rested or attempted to rest:
+#' @section House Entering & Resting Behavior:
+#' At the end of a search or attempt bout a mosquito is now inside of a \code{\link{Site}}
+#' and will attempt to rest. The specific resting spot chosen will depend on the type of site the mosquito is at.
+#' The mosquito can choose a resting spot given by the following table:
 #'    * l: Leave the area
 #'    * r: Reattempt Without Resting;
 #'    * v: Rest on vegetation
 #'    * w: Rest on the Outside wall of a structure
 #'    * i: Rest on the Inside wall of a structure
 #'
-#' @name Resting
+#' @name MBITES-Resting
 NULL
 #> NULL
 
@@ -34,7 +32,7 @@ NULL
 # Resting spot
 ###############################################################################
 
-#' M-BITES: Land After Flight \code{MosquitoFemale}
+#' MBITES: Land After Flight \code{MosquitoFemale}
 #'
 #' Mosquito lands after a flight (choose a landing spot), which may cause various events.
 #' This function always calls \code{\link{mbites_newSpot}} and may call \code{\link{mbites_enterHouse}}
@@ -45,7 +43,7 @@ NULL
 #'  * r: 4 reattempt without resting
 #'  * l: 5 leave the area
 #'
-#'  * This method is bound to \code{MosquitoFemale$restingSpot()}.
+#'  * This method is bound to \code{Mosquito$restingSpot}
 #'
 mbites_restingSpot <- function(){
   if(private$state != "D"){ # if mosquito not dead
@@ -62,7 +60,7 @@ mbites_restingSpot <- function(){
   }
 }
 
-#' MBITES: Bout Failure Counter
+#' MBITES: Bout Failure Check
 #'
 #' Before choosing a resting spot, check to see how many times it has failed its bout and potentially initiate
 #' a search bout. Probability of abandoning the current \code{\link{Site}} even if necessary resources
@@ -73,18 +71,26 @@ mbites_restingSpot <- function(){
 #'  * \code{\link{mbites_layEggs_EL4P}}
 #'  * \code{\link{mbites_sugarMeal}}
 #'
-#'  * this method is bound to \code{Mosquito_Female$boutFailCheck}
+#'  * this method is bound to \code{Mosquito$boutFailCheck}
 #'
 mbites_boutFailCheck <- function(){
-  p = dgeom(private$boutFail,MBITES:::Parameters$get_boutFail_p())
-  if(runif(1) < p){
-    return(TRUE)
-  } else {
+  # if no failures, return FALSE
+  if(private$boutFail < 1){
     return(FALSE)
+  # start checking failure distribution
+  } else {
+    # because each time probability to leave is a bernoulli trial, the overall P(leave on kth failure) ~ geometric(p)
+    # success! I leave/
+    if(runif(1) < MBITES:::Parameters$get_boutFail_p()){
+      return(TRUE)
+    # fail! I stay.
+    } else {
+      return(FALSE)
+    }
   }
 }
 
-#' M-BITES: Generate New Landing Spot for \code{MosquitoFemale}
+#' MBITES: Pick a New Landing Spot
 #'
 #' Method for return a new landing spot based on behavioral state of mosquito and weights from \code{\link{mbites_get_WTS}}.
 #' New landing spots generated at the end of the search bout, attempt bout, or after oviposition a mosquito has entered
@@ -95,7 +101,7 @@ mbites_boutFailCheck <- function(){
 #'  * r: reattempt without resting
 #'  * l: leave the area
 #'
-#'  * This method is bound to \code{MosquitoFemale$newSpot()}.
+#'  * This method is bound to \code{Mosquito$newSpot}
 #'
 #' @return character corresponding to new resting spot
 mbites_newSpot <- function(){
@@ -109,10 +115,10 @@ mbites_newSpot <- function(){
   }
 }
 
-#' M-BITES: Attempt to Enter a House for \code{MosquitoFemale}
+#' MBITES: Attempt to Enter a House
 #'
 #' Method to simulate attempted house entry for mosquito, and call appropriate events if the mosquito enters.
-#'  * This method is bound to \code{MosquitoFemale$enterHouse()}.
+#'  * This method is bound to \code{Mosquito$enterHouse}
 #'
 mbites_enterHouse <- function(){
   if(runif(1) < private$feed_res$get_enterP()){

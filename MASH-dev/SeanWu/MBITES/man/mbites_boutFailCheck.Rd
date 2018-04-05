@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Resting.R
 \name{mbites_boutFailCheck}
 \alias{mbites_boutFailCheck}
-\title{MBITES: Bout Failure Counter}
+\title{MBITES: Bout Failure Check}
 \usage{
 mbites_boutFailCheck()
 }
@@ -20,6 +20,6 @@ The \code{boutFail} counter is incremented whenever the mosquito probabilistical
 }
 \details{
 \itemize{
-\item this method is bound to \code{Mosquito_Female$boutFailCheck}
+\item this method is bound to \code{Mosquito$boutFailCheck}
 }
 }

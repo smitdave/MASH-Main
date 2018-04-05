@@ -13,4 +13,7 @@ pushProbe_Human_NULL(m_id, t)
 }
 \description{
 If using the null human and pathogen model this function logs host probing events on this \code{\link{Human_NULL}}.
+\itemize{
+\item This method is bound to \code{Human_NULL$pushProbe}
+}
 }

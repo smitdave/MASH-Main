@@ -23,7 +23,7 @@ MBITES_Setup(timing_model = 1L, wait_b = NULL, wait_o = NULL,
   eggMaturationTime = FALSE, emt_m = NULL, emt_sd = NULL,
   bloodPerEgg = NULL, eggsize_model = 1L, bs_m = NULL, bs_sd = NULL,
   maxBatch = NULL, refeeding = FALSE, rf_a = NULL, rf_b = NULL,
-  blank = NULL)
+  pathogen_model = "null", pathogen_par = NULL, blank = NULL)
 }
 \description{
 See \code{\link{MBITES Setup}} for more details. Note that because of lazy evaluation of function arguments only arguments that are
@@ -174,5 +174,11 @@ Arguments for the setup function are listed below:
 \item rf_a: parameter in \code{\link{mbites_pReFeed}}
 \item rf_b: parameter in \code{\link{mbites_pReFeed}}
 }
+}
+
+\strong{PATHOGEN}: see \code{\link{PathogenGeneric}} for details on what valid pathogen models must implement
+\itemize{
+\item pathogen_model: character in \code{null} (see \code{\link{PathogenNull}}),
+\item pathogen_par: list of named parameters required for model specified by \code{pathogen_model}
 }
 }

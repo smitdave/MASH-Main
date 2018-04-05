@@ -8,4 +8,7 @@ pushFeed_Human_NULL()
 }
 \description{
 If using the null human and pathogen model this function logs host blood feeding events on this \code{\link{Human_NULL}}.
+\itemize{
+\item This method is bound to \code{Human_NULL$pushFeed}
+}
 }

@@ -13,11 +13,12 @@
 
 #' MBITES: Oviposition
 #'
-#' write about me!
+#' During the \code{\link{mbites_updateState}} if the mosquito is gravid and passes refeeding check
+#' (see \code{\link{mbites_checkRefeed}}) the mosquito will enter an oviposition bout (\code{\link{mbites_boutO}}) on the next launch.
+#' During oviposition the mosquito first chooses a aquatic habitat at the site and then lays eggs.
 #'
 #'
-#'
-#' @name Oviposition
+#' @name MBITES-Oviposition
 NULL
 #> NULL
 

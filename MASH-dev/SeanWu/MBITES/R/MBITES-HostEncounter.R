@@ -13,12 +13,19 @@
 
 #' MBITES: Host Encounter
 #'
+#' @section Human and non-human vertebrate host encounters:
 #'
-#' Due to the different design of the R6/C++ OOP version of MASH-MICRO, all
-#' host probing and infection functions are moved to their respective PATHOGEN
-#' method files PATHOGEN-XX-Methods.R
+#' During a blood feeding attempt bout (\code{\link{mbites_boutB}}), if the mosquito successfully locates
+#' a viable human or vertebrate blood host, it initiates a host encounter. A human host encounter (\code{\link{mbites_humanEncounter}})
+#' consists of an attempt to approach, probe, and take a blood meal. A non-human host encounter (\code{\link{mbites_zooEncounter}}) consists
+#' of an attempt to approach and blood feed only.
 #'
-#' @name hostEncounter
+#' If the mosquito is able to blood feed, the series of functions to simulate that process will be called, see \code{\link{MBITES-BloodMeal}}.
+#' During probing and feeding different functions for simulation of mosquito to human and human to mosquito transmission will be
+#' called; see \code{\link{PathogenGeneric}} for what these functions must simulate.
+#'
+#'
+#' @name MBITES-HostEncounter
 NULL
 #> NULL
 
@@ -53,6 +60,8 @@ Mosquito_Female$set(which = "public",name = "chooseHost",
 #'  2. Check if the mosquito is deterred from probing, if undeterred, call pathogen-specific routines \code{probeHost}
 #'  3. Check if the mosquito survived probing to attempt blood feeding
 #'  4. Check if the mosquito is able to successfully begin blood feeding; take a blood meal via \code{\link{mbites_BloodMeal}} and then call pathogen-specific routines \code{feedHost}
+#'
+#' For details on what pathogen modules must implement, see \code{\link{PathogenGeneric}}
 #'
 #'  * This method is bound to \code{Mosquito_Female$humanEncounter}.
 #'

@@ -161,6 +161,14 @@ NULL
 #'
 #'
 #'
+#' **PATHOGEN**: see \code{\link{PathogenGeneric}} for details on what valid pathogen models must implement
+#'  * pathogen_model: character in \code{null} (see \code{\link{PathogenNull}}),
+#'  * pathogen_par: list of named parameters required for model specified by \code{pathogen_model}
+#'
+#'
+#'
+#'
+#'
 #' @export
 MBITES_Setup <- function(
 
@@ -266,6 +274,15 @@ MBITES_Setup <- function(
   refeeding = FALSE,
   rf_a = NULL,
   rf_b = NULL,
+
+
+  ###################
+  # MBITES-PATHOGEN #
+  ###################
+
+  pathogen_model = "null", # character giving model
+  pathogen_par = NULL, # a list of additional pars
+
 
   blank = NULL
 ){

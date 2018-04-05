@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Oogenesis.R
 \name{mbites_checkEggMaturation}
 \alias{mbites_checkEggMaturation}
-\title{MBITES: Null Refeeding Behavior}
+\title{MBITES: Check Egg Maturation}
 \usage{
 mbites_checkEggMaturation()
 }

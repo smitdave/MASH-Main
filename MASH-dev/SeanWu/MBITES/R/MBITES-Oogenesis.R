@@ -13,17 +13,23 @@
 
 #' MBITES: Oogenesis
 #'
+#' @section Oogenesis Model Choice:
+#'
 #' Oogenesis model should be selected in \code{\link{MBITES_Setup}} prior to creating any objects, note
 #' that if using the first model of oogenesis, then \code{\link{mbites_checkRefeed}} should be used
 #' as the refeeding model, if using the second model of oogenesis, refeeding behavior
 #' should be disabled by selecting \code{\link{mbites_checkRefeed_null}} as the refeed function.
-#' Oogenesis occurs during the blood meal, see \code{\link{BloodMeal}}.
+#' Oogenesis occurs during the blood meal, see \code{\link{MBITES-BloodMeal}}.
+#'
+#' @section Oogenesis Model 1:
 #'
 #' In the first model (\code{\link{mbites_oogenesis1}}), egg batch size is proportional to blood
 #' meal size, the egg batch incubation period is equal to the
 #' post-prandial resting period, but the mosquito can refeed
 #' with some probability (depending on egg batch size) with some
 #' probability.
+#'
+#' @section Oogenesis Model 2:
 #'
 #' In the second model (\code{\link{mbites_oogenesis2}}), a batch of eggs (of some size) commits to
 #' development at the first bloodmeal after hatching or laying.
@@ -137,7 +143,7 @@ mbites_checkRefeed <- function(){
   }
 }
 
-#' MBITES: Null Refeeding Behavior
+#' MBITES: Check Egg Maturation
 #'
 #' This function is called during \code{\link{mbites_checkRefeed}},
 #' it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
@@ -162,6 +168,8 @@ mbites_checkEggMaturation <- function(){
 #'
 mbites_checkRefeed_null <- function(){
   # null function
+  private$gravid = TRUE
+  private$state = "O"
 }
 
 #' MBITES: Probability of Refeeding

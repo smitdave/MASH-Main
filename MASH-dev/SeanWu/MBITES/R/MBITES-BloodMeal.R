@@ -13,6 +13,8 @@
 
 #' MBITES: Blood Meal
 #'
+#' @section The Blood Meal Event:
+#'
 #' During a human host encounter (\code{\link{mbites_humanEncounter}}) or a non-human host encounter
 #' (\code{\link{mbites_zooEncounter}}), if the mosquito survives to blood feed, it takes a blood meal.
 #'
@@ -25,6 +27,7 @@
 #'  3. Calculating energetics/maturation from blood (\code{\link{mbites_bloodEnergetics}})
 #'  4. Simulating oogenesis/egg production (\code{\link{oogenesis}})
 #'
+#' @include MBITES-Mosquito.R
 #' @name MBITES-BloodMeal
 NULL
 #> NULL
@@ -43,10 +46,11 @@ NULL
 mbites_BloodMeal <- function(){
   # size blood meal
   private$bmSize = self$rBloodMealSize()
+  private$bloodfed = TRUE
 
   # overfeeding mortality and blood-derived energetics
   self$Overfeeding()
-  self$BloodEnergetics() # MBITES-BloodMeal
+  self$BloodEnergetics() # MBITES-Energetics
 
   # post-prandial rest (digestion)
   private$tNext = MBITES:::Parameters$ttEvent$ppr(private$tNow)

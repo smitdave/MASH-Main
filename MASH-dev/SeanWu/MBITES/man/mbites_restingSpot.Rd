@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Resting.R
 \name{mbites_restingSpot}
 \alias{mbites_restingSpot}
-\title{M-BITES: Land After Flight \code{MosquitoFemale}}
+\title{MBITES: Land After Flight \code{MosquitoFemale}}
 \usage{
 mbites_restingSpot()
 }
@@ -20,6 +20,6 @@ Landing spots include:
 }
 \details{
 \itemize{
-\item This method is bound to \code{MosquitoFemale$restingSpot()}.
+\item This method is bound to \code{Mosquito$restingSpot}
 }
 }
