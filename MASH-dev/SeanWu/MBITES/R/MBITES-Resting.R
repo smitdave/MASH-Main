@@ -80,7 +80,7 @@ mbites_boutFailCheck <- function(){
   # start checking failure distribution
   } else {
     # because each time probability to leave is a bernoulli trial, the overall P(leave on kth failure) ~ geometric(p)
-    # success! I leave/
+    # success! I leave.
     if(runif(1) < MBITES:::Parameters$get_boutFail_p()){
       return(TRUE)
     # fail! I stay.
