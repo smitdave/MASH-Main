@@ -10,3 +10,6 @@ write about me!
 \item female mate seeking behavior
 }
 }
+\details{
+To disable mating, \code{\link{mbites_findSwarmNull}} must be enabled.
+}

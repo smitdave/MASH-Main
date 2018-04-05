@@ -4,10 +4,14 @@
 \alias{MBITES-BloodMeal}
 \title{MBITES: Blood Meal}
 \description{
+MBITES: Blood Meal
+}
+\section{The Blood Meal Event}{
+
+
 During a human host encounter (\code{\link{mbites_humanEncounter}}) or a non-human host encounter
 (\code{\link{mbites_zooEncounter}}), if the mosquito survives to blood feed, it takes a blood meal.
-}
-\details{
+
 The blood meal sets the \code{bloodfed} flag to true, which resets \code{boutFail} flag to 0 at the end of
 \code{\link{mbites_attempt_B}}.
 
@@ -19,3 +23,4 @@ The blood meal consists of:
 \item Simulating oogenesis/egg production (\code{\link{oogenesis}})
 }
 }
+

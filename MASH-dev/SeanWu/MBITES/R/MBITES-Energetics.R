@@ -13,11 +13,14 @@
 
 #' MBITES: Energetics
 #'
-#' write about me!
+#' @section Blood and Sugar Energetics:
 #'
+#' Energetics handles mosquito energetics derived from blood and sugar meals. The main methods implemented are:
+#'  * \code{\link{mbites_BloodEnergetics}} which is called upon taking a successful blood meal
+#'  * \code{\link{mbites_sugarMeal}} which is called upon taking a successful sugar meal
+#'  * \code{\link{mbites_energetics}} which is called during \code{\link{mbites_updateState}} and calculates energy expenditure from flight and potentially queues a sugar feeding bout.
 #'
-#'
-#' @name Energetics
+#' @name MBITES-Energetics
 NULL
 #> NULL
 
@@ -85,7 +88,7 @@ mbites_chooseSugarSource <- function(){
 #' and has passed the energy requirement, set \code{mature = TRUE}.
 #'  * This method is bound to \code{Mosquito_Female$sugarMeal}
 #'
-mbites_sugarMeal_F <- function(){ # called from MBITES-Bouts.R, boutS
+mbites_sugarMeal <- function(){ # called from MBITES-Bouts.R, boutS
   private$energy = 1 # always top up to full
   if(!private$mature){
     private$energyPreG = private$energyPreG - MBITES:::Parameters$get_preGsugar()
@@ -94,6 +97,21 @@ mbites_sugarMeal_F <- function(){ # called from MBITES-Bouts.R, boutS
     }
   }
 }
+
+# set methods
+Mosquito$set(which = "public",name = "chooseSugarSource",
+    value = mbites_chooseSugarSource, overwrite = TRUE
+)
+
+Mosquito_Female$set(which = "public",name = "sugarMeal",
+    value = mbites_sugarMeal, overwrite = TRUE
+)
+
+
+
+###############################################################################
+# Flight Energetics
+###############################################################################
 
 #' MBITES: Energetics
 #'
@@ -139,15 +157,6 @@ mbites_pSugarBout <- function(){
   S_sa = MBITES:::Parameters$get_S_sa()
   (2+S_sb)/(1+S_sb)-exp(S_sa*private$energy)/(S_sb+exp(S_sa*private$energy))
 }
-
-# set methods
-Mosquito$set(which = "public",name = "chooseSugarSource",
-    value = mbites_chooseSugarSource, overwrite = TRUE
-)
-
-Mosquito_Female$set(which = "public",name = "sugarMeal",
-    value = mbites_sugarMeal_F, overwrite = TRUE
-)
 
 Mosquito$set(which = "public",name = "energetics",
     value = mbites_energetics, overwrite = TRUE

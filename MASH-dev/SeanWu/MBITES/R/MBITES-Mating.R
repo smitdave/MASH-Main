@@ -17,6 +17,8 @@
 #'  * male swarming behavior
 #'  * female mate seeking behavior
 #'
+#' To disable mating, \code{\link{mbites_findSwarmNull}} must be enabled.
+#'
 #' @name Mating
 NULL
 #> NULL
@@ -52,7 +54,7 @@ mbites_mating <- function(){
   if(private$energyPreG <= 0){
     private$mature = TRUE
   }
-  # genetics?
+  # genetics here
 }
 
 # set methods

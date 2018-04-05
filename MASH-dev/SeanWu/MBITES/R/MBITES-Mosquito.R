@@ -194,7 +194,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    energy_preG    = numeric(1), # pre-gonotrophic energy requirement
 
                    # bloodfeeding and oogenesis
-                   bloodfed       = logical(1), # have i fed on blood this bout?
+                   bloodfed       = FALSE, # have i fed on blood this bout?
                    batch          = integer(1), # size of my egg batch
                    bm_size        = numeric(1), # size of my blood meal
 

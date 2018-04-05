@@ -17,6 +17,7 @@ The encounter process consists of several stages:
 }
 }
 \details{
+For details on what pathogen modules must implement, see \code{\link{PathogenGeneric}}
 \itemize{
 \item This method is bound to \code{Mosquito_Female$humanEncounter}.
 }

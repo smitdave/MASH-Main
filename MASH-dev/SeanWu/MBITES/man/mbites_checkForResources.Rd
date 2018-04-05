@@ -9,5 +9,9 @@ mbites_checkForResources()
 \description{
 After running a bout, this code checks the mosquito's
 behavioral state agains the local resources to see if a search is
-required
+required. The mosquito may initiate a search even if resources are present with probability 'disperse'
+given in MBITES-Parameters.
+\itemize{
+\item This method is bound to \code{Mosquito_Female$checkForResources}
+}
 }

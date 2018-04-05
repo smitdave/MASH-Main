@@ -13,11 +13,25 @@
 
 #' MBITES: Bout
 #'
-#' In MBITES, mosquito behavioral bouts consist of a cycle of events: launch -> try -> land -> rest.
+#' @section Mosquito Behavioral Bouts:
+#'
+#' In MBITES, mosquito behavioral bouts consist of a cycle of events: launch -> try -> land -> rest. This generic
+#' bout process is simulated through \code{\link{mbites_oneBout}}.
+#'
+#' @section Specific Behaviors:
+#'
+#' There are four discrete behavioral states that can be simulated in MBITES, and an additional search bout, where a mosquito may move between \code{\link{Site}} objects to find resources:
+#'  * \code{\link{mbites_boutB}}: blood feeding attempt bout
+#'  * \code{\link{mbites_boutO}}: oviposition attempt bout
+#'  * \code{\link{mbites_boutM}}: mating attempt bout
+#'  * \code{\link{mbites_boutS}}: sugar feeding attempt bout
+#'  * \code{\link{mbites_attempt_search}}: search attempt bout
+#'
+#' Additionally, there are a variety of supporting modules to simulate specific results or effects from the behavioral states.
 #'
 #'
-#'
-#' @name Bout
+#' @include MBITES-Mosquito.R
+#' @name MBITES-Bout
 NULL
 #> NULL
 
@@ -202,7 +216,9 @@ Mosquito$set(which = "public",name = "updateState",
 #'
 #' After running a bout, this code checks the mosquito's
 #' behavioral state agains the local resources to see if a search is
-#' required
+#' required. The mosquito may initiate a search even if resources are present with probability 'disperse'
+#' given in MBITES-Parameters.
+#'  * This method is bound to \code{Mosquito_Female$checkForResources}
 #'
 mbites_checkForResources <- function(){
     switch(private$state,
@@ -223,6 +239,10 @@ mbites_BloodFeedingSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_feed()){
     private$search = TRUE
+  } else {
+    if(runif(1) < MBITES:::Parameters$get_disperse()){
+      private$search = TRUE
+    }
   }
 }
 
@@ -235,6 +255,10 @@ mbites_OvipositSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_aqua()){
     private$search = TRUE
+  } else {
+    if(runif(1) < MBITES:::Parameters$get_disperse()){
+      private$search = TRUE
+    }
   }
 }
 
@@ -247,6 +271,10 @@ mbites_SugarSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_sugar()){
     private$search = TRUE
+  } else {
+    if(runif(1) < MBITES:::Parameters$get_disperse()){
+      private$search = TRUE
+    }
   }
 }
 
@@ -259,6 +287,10 @@ mbites_MatingSearchCheck <- function(){
   # if no resources here, go search
   if(!private$site$has_mate()){
     private$search = TRUE
+  } else {
+    if(runif(1) < MBITES:::Parameters$get_disperse()){
+      private$search = TRUE
+    }
   }
 }
 
@@ -326,12 +358,13 @@ mbites_attempt_B <- function(){
   }
 
   # bout failure
-  if(!bloodfed){
+  if(!private$bloodfed){
     # if i did not succeed my bout, increment failure counter
     private$boutFail = private$boutFail + 1L
   } else {
     # reset flags
     private$boutFail = 0L
+    private$bloodfed = FALSE
   }
 }
 
@@ -406,7 +439,7 @@ Mosquito$set(which = "public",name = "attempt_O",
 #'
 mbites_attempt_M <- function(){
   # bout success
-  if(runif(1) < MBITES:::Parameters$get_Ms_succeed()){
+  if(runif(1) < MBITES:::Parameters$get_M_succeed()){
     self$chooseMate()
 
     # found a mate

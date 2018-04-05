@@ -77,6 +77,9 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 
                    aqua_model           = "emerge",
 
+                   # Search behavior
+                   disperse             = numeric(1), # P(move) even if resources present when i do checks
+
                    # Post-bout Landing, House Entering, and Resting
                    boutFail_p           = integer(1), # 1/number of failed bouts until mosquito gives up and searches
                    b_wts                = numeric(5), # weights on {i,r,v,w,l}

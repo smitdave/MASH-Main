@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Resting.R
 \name{mbites_newSpot}
 \alias{mbites_newSpot}
-\title{M-BITES: Generate New Landing Spot for \code{MosquitoFemale}}
+\title{MBITES: Pick a New Landing Spot}
 \usage{
 mbites_newSpot()
 }
@@ -23,6 +23,6 @@ the area around a feeding site and either rested or attempted to rest. If the si
 }
 \details{
 \itemize{
-\item This method is bound to \code{MosquitoFemale$newSpot()}.
+\item This method is bound to \code{Mosquito$newSpot}
 }
 }

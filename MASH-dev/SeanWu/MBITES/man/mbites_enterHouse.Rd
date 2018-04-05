@@ -2,13 +2,13 @@
 % Please edit documentation in R/MBITES-Resting.R
 \name{mbites_enterHouse}
 \alias{mbites_enterHouse}
-\title{M-BITES: Attempt to Enter a House for \code{MosquitoFemale}}
+\title{MBITES: Attempt to Enter a House}
 \usage{
 mbites_enterHouse()
 }
 \description{
 Method to simulate attempted house entry for mosquito, and call appropriate events if the mosquito enters.
 \itemize{
-\item This method is bound to \code{MosquitoFemale$enterHouse()}.
+\item This method is bound to \code{Mosquito$enterHouse}
 }
 }
