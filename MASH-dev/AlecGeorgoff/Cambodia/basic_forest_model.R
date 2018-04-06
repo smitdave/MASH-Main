@@ -48,6 +48,7 @@ times = 0:365
 
 require(deSolve)
 FM.ode = function(t,y,parms){with(as.list(c(y,parms)),{
+  # Need to recalculate Z for every iteration
   Z_f = exp(-g_f*n)*Y_f
   Z_v = exp(-g_v*n)*Y_v
   
