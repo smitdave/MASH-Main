@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   HumanV2.h
  * Author: amit
- * 
+ *
  * This Human class pertains to Humans with PF object model
  */
 
@@ -34,19 +34,19 @@ public:
     vector<RXItem*> treatment;
     unsigned a = 1;
     unsigned b = 7;
-    // ------PF Epidemiology------- 
-    // Pf Infection Status 
-    unsigned P = 0; // Infected RBCs 
-    unsigned G = 0; // Mature Gametocytes 
-    double PD = 0; // Drug Kill 
+    // ------PF Epidemiology-------
+    // Pf Infection Status
+    unsigned P = 0; // Infected RBCs
+    unsigned G = 0; // Mature Gametocytes
+    double PD = 0; // Drug Kill
     double G_PD = 1;
     double IG_PD[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
     unsigned MOI = 0; // Number of active clones
     // Immune Counters
-    unsigned dF = 0; // days with continuous Fever 
+    unsigned dF = 0; // days with continuous Fever
     unsigned dI = 0; // cumulative days with Infection (lifetime)
-    unsigned dP = 0; // cumulative days with continuous Infection 
-    unsigned nM = 0; // number of Malaria Fevers 
+    unsigned dP = 0; // cumulative days with continuous Infection
+    unsigned nM = 0; // number of Malaria Fevers
     unsigned thresh = 10000;
     // PF Immunity
     vector<unsigned*> pHist;
@@ -102,4 +102,3 @@ private:
 };
 
 #endif	/* HUMANV2_H */
-

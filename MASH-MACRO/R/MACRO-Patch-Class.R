@@ -45,12 +45,15 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                    # Constructor
                    #################################################
 
-                   initialize = function(patchID, AquaPop, bWeightZoo, bWeightZootox, travelWeight){
+                   initialize = function(patchID, AquaPop, bWeightZoo, bWeightZootox, travelWeight, reservoir = FALSE, resEIR = NULL){
 
                      private$patchID = patchID
                      private$bWeightZoo = bWeightZoo
                      private$bWeightZootox = bWeightZootox
                      private$travelWeight = travelWeight
+
+                     private$reservoir = reservoir
+                     private$resEIR = resEIR
 
                      private$AquaPop = AquaPop
                      private$AquaPop$set_PatchPointer(self)
@@ -76,6 +79,10 @@ MacroPatch <- R6::R6Class(classname = "MacroPatch",
                     bWeightZoo                = numeric(1),
                     bWeightZootox             = numeric(1),
                     kappa                     = numeric(1),
+
+                    # reservoir parameters
+                    reservoir                 = logical(1),
+                    resEIR                    = numeric(1),
 
                     # Pointers
                     TilePointer               = NULL
@@ -295,13 +302,74 @@ MacroPatch$set(which = "public",name = "accumulate_kappa",
 #'  * This method is bound to \code{MacroPatch$normalize_kappa}
 #'
 normalize_kappa_MacroPatch <- function(){
-  private$kappa = private$kappa / (private$bWeightHuman + private$bWeightZoo + private$bWeightZootox)
+  if ((private$bWeightHuman + private$bWeightZoo + private$bWeightZootox) > 0){
+    private$kappa = private$kappa / (private$bWeightHuman + private$bWeightZoo + private$bWeightZootox)
+  } else {
+    private$kappa = 0
+  }
 }
 
 MacroPatch$set(which = "public",name = "normalize_kappa",
   value = normalize_kappa_MacroPatch, overwrite = TRUE
 )
 
+
+###############################################################################
+# Reservoir Patch Parameters
+###############################################################################
+
+#' MacroPatch: Get whether Patch is a Reservoir, with fixed EIR
+#'
+#' Return \code{private$reservoir}
+#'
+get_reservoir_MacroPatch <- function(){
+   return(private$reservoir)
+}
+
+MacroPatch$set(which = "public",name = "get_reservoir",
+  value = get_reservoir_MacroPatch, overwrite = TRUE
+)
+
+#' MacroPatch: Set reservoir status of Patch
+#' If the reservoir status is TRUE, will also need to set the resEIR
+#'
+#' Set \code{private$reservoir}
+#'
+#' @param reservoir logical
+#'
+set_reservoir_MacroPatch <- function(reservoir){
+   private$reservoir = reservoir
+}
+
+MacroPatch$set(which = "public",name = "set_reservoir",
+  value = set_reservoir_MacroPatch, overwrite = TRUE
+)
+
+#' MacroPatch: Return fixed reservoir EIR for a patch
+#'
+#' Return \code{private$resEIR}
+#'
+get_resEIR_MacroPatch <- function(){
+   return(private$resEIR)
+}
+
+MacroPatch$set(which = "public",name = "get_resEIR",
+  value = get_resEIR_MacroPatch, overwrite = TRUE
+)
+
+#' MacroPatch: Set fixed reservoir EIR of Patch
+#'
+#' Set \code{private$reservoir}
+#'
+#' @param reservoir logical
+#'
+set_resEIR_MacroPatch <- function(resEIR){
+   private$reservoir = resEIR
+}
+
+MacroPatch$set(which = "public",name = "set_resEIR",
+  value = set_resEIR_MacroPatch, overwrite = TRUE
+)
 
 ###############################################################################
 # Other Getters

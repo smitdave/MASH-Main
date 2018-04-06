@@ -1,0 +1,54 @@
+Package: MBITES
+Type: Package
+Title: What the Package Does (Title Case)
+Version: 0.1.0
+Author: Who wrote it
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: More about what it does (maybe more than one line)
+    Use four spaces when indenting paragraphs within the Description.
+License: What license is it under?
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.0.1
+Roxygen: list(markdown = TRUE)
+Imports: Rcpp (>= 0.12.14), R6, futile.logger, pryr, jsonlite, spatstat
+LinkingTo: Rcpp
+ByteCompile: true
+Collate: 
+    'Auxiliary.R'
+    'HUMAN-Initialize.R'
+    'HUMAN-Null.R'
+    'Hash-Class.R'
+    'LANDSCAPE-Aqua.R'
+    'LANDSCAPE-EL4P.R'
+    'LANDSCAPE-Emerge.R'
+    'LANDSCAPE-Feeding.R'
+    'LANDSCAPE-Mating.R'
+    'LANDSCAPE-Resource.R'
+    'LANDSCAPE-Site.R'
+    'LANDSCAPE-Sugar.R'
+    'MBITES-Mosquito.R'
+    'MBITES-BloodMeal.R'
+    'MBITES-Bout.R'
+    'MBITES-Energetics.R'
+    'MBITES-Globals.R'
+    'MBITES-HostEncounter.R'
+    'MBITES-Initialize.R'
+    'MBITES-Mating.R'
+    'MBITES-Oogenesis.R'
+    'MBITES-Oviposition.R'
+    'MBITES-Parameters.R'
+    'MBITES-Resting.R'
+    'MBITES-Setup.R'
+    'MBITES-Survival.R'
+    'MBITES-Timing.R'
+    'MBITES.R'
+    'PATHOGEN-Generic-Class.R'
+    'PATHOGEN-Generic-Parameters.R'
+    'PATHOGEN-Generic-Pedigree.R'
+    'PATHOGEN-Generic-SIS.R'
+    'PATHOGEN-Null.R'
+    'SEARCH-Kernel.R'
+    'TILE-Class.R'
+    'TILE-Initialize.R'
+    'zzz.R'

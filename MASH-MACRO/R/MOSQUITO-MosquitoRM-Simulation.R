@@ -28,8 +28,10 @@ oneDay_popDynamics_Mosquito_RM <- function(){
   private$Y = private$p * private$Y
   private$Z = private$p * private$Z
 
-  # number of newly infected mosquitoes
+  # Transmission of
   kappa = private$TilePointer$get_Patches()$apply(tag="get_kappa",returnVal=TRUE)
+  kappa = unlist(kappa[order(as.numeric(names(kappa)))], use.names = FALSE)
+  # number of newly infected mosquitoes
   private$Y0 = private$f * private$Q * unlist(kappa,use.names = FALSE) * (private$M - private$Y)
   if(any(private$Y0<0)){
     private$Y0[which(private$Y0<0)] = 0
@@ -143,8 +145,8 @@ Mosquito_RM$set(which = "public",name = "output",
 reset_Mosquito_RM <- function(MosquitoPar){
   N                     = nrow(MosquitoPar$psi)
   private$M             = MosquitoPar$M
-  private$Y             = rep(MosquitoPar$Y, N)
-  private$Z             = rep(MosquitoPar$Z, N)
+  private$Y             = MosquitoPar$Y #rep(MosquitoPar$Y, N)
+  private$Z             = MosquitoPar$Z #rep(MosquitoPar$Z, N)
   private$ZZ            = matrix(data=MosquitoPar$Z*(1-MosquitoPar$p),nrow= max(MosquitoPar$EIP)+1L, ncol=N)
 }
 

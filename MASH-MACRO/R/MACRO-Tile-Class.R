@@ -71,7 +71,10 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                          {stop("invalid aquatic ecology model selected")}
                        )
 
-                       patch = MacroPatch$new(patchID=i, AquaPop=AquaPop, bWeightZoo=PatchPar[[i]]$bWeightZoo, bWeightZootox=PatchPar[[i]]$bWeightZootox, travelWeight=PatchPar[[i]]$travelWeight)
+                       patch = MacroPatch$new(patchID=i, AquaPop=AquaPop,
+                         bWeightZoo=PatchPar[[i]]$bWeightZoo, bWeightZootox=PatchPar[[i]]$bWeightZootox,
+                         travelWeight=PatchPar[[i]]$travelWeight,
+                         reservoir=PatchPar[[i]]$reservoir, resEIR=PatchPar[[i]]$resEIR)
                        private$Patches$assign(key=as.character(i),value=patch)
                        private$Patches$get(as.character(i))$set_TilePointer(self)
 
@@ -81,7 +84,8 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                      cat("initializing mosquito population\n")
                      switch(MosquitoPar$model,
                        RM = {
-                         private$Mosquito = Mosquito_RM$new(M = MosquitoPar$M, EIP = MosquitoPar$EIP, Y = MosquitoPar$Y, Z = MosquitoPar$Z, p=MosquitoPar$p, f=MosquitoPar$f, Q=MosquitoPar$Q, v=MosquitoPar$v, psi=MosquitoPar$psi)
+                         private$Mosquito = Mosquito_RM$new(M = MosquitoPar$M, EIP = MosquitoPar$EIP, Y = MosquitoPar$Y, Z = MosquitoPar$Z,
+                           p=MosquitoPar$p, f=MosquitoPar$f, Q=MosquitoPar$Q, v=MosquitoPar$v, psi=MosquitoPar$psi)
                        },
                        {stop("invalid mosquito ecology model selected")}
                      )

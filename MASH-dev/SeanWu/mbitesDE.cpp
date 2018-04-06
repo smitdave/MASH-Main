@@ -41,9 +41,9 @@ typedef struct parameters {
   double tau = 21.0;            // time from eggs being laid to adult-mosquito-hood
   arma::Mat<double> M;          // transition probabilities given success
   // constructor
-  parameters(const int &_e, 
-             const double &_PF, const double &_PB, const double &_PR, const double &_PL, const double &_PO, 
-             const double &_sF, const double &_sB, const double &_sR, const double &_sL, const double &_sO, 
+  parameters(const int &_e,
+             const double &_PF, const double &_PB, const double &_PR, const double &_PL, const double &_PO,
+             const double &_sF, const double &_sB, const double &_sR, const double &_sL, const double &_sO,
              const double &_tau) : e(_e), PF(_PF), PB(_PB), PR(_PR), PL(_PL), PO(_PO), sF(_sF), sB(_sB), sR(_sR), sL(_sL), sO(_sO), tau(_tau) {};
   ~parameters(){};
 } parameters;
@@ -55,7 +55,7 @@ inline arma::Mat<double> makeTransitionMatrix(){
     {2,1,1,1,4},
     {1,1,1,1,2},
     {0,0,0,0,1},
-    {1,1,2,1,0} 
+    {1,1,2,1,0}
   };
   arma::colvec rowSums = arma::sum(MM,1);
   for(size_t i=0; i<5; i++){
@@ -74,9 +74,9 @@ inline void free_parameters(parameters* ptr){
 typedef Rcpp::XPtr<parameters, Rcpp::PreserveStorage, free_parameters> parameters_ptr;
 
 // [[Rcpp::export]]
-SEXP make_parameters(const int &e = 5, 
-                     const double &PF = 0.99, const double &PB = 0.99, const double &PR = 0.99, const double &PL = 0.99, const double &PO = 0.99, 
-                     const double &sF = 0.95, const double &sB = 0.98, const double &sR = 0.98, const double &sL = 0.80, const double &sO = 0.98, 
+SEXP make_parameters(const int &e = 5,
+                     const double &PF = 0.99, const double &PB = 0.99, const double &PR = 0.99, const double &PL = 0.99, const double &PO = 0.99,
+                     const double &sF = 0.95, const double &sB = 0.98, const double &sR = 0.98, const double &sL = 0.80, const double &sO = 0.98,
                      const double &tau = 21.0){
   parameters *par = new parameters(e,PF,PB,PR,PL,PO,sF,sB,sR,sL,sO,tau);
   par->M = makeTransitionMatrix();
@@ -165,7 +165,7 @@ inline double aO(const double &t, const parameters* par){
  */
 
 // [[Rcpp::export]]
-Rcpp::NumericVector mbitesDE_cpp(const double &Fo, const double &Fe, 
+Rcpp::NumericVector mbitesDE_cpp(const double &Fo, const double &Fe,
                                  const double &Bo, const double &Be,
                                  const double &R,
                                  const double &Lo, const double &Le,
@@ -176,7 +176,7 @@ Rcpp::NumericVector mbitesDE_cpp(const double &Fo, const double &Fe,
   Rcpp::NumericVector out(9);
 
   Rcpp::XPtr<parameters> par(p);
-  
+
   double tt = (t-1)*dt;
 
   out.at(0) = rO(tt,par)*par->M.at(4,0)*(Oe+Oo) + rB(tt,par)*par->M.at(1,0)*(Be+Bo) + rR(tt,par)*par->M.at(2,0)*R + (rF(tt,par)*par->M.at(0,0)+aF(tt,par))*Fe - dF(tt)*Fo; // Fo
@@ -232,11 +232,11 @@ inline arma::Row<double> mbitesDE_cppInline(const arma::Cube<double> &array, con
 
 // [[Rcpp::export]]
 arma::Cube<double> upwindSolveCPP(const double &dt, const int &tfin, const double &dx, const int &xfin,
-                                  const int &e = 5, 
-                                  const double &PF = 0.99, const double &PB = 0.99, const double &PR = 0.99, const double &PL = 0.99, const double &PO = 0.99, 
-                                  const double &sF = 0.95, const double &sB = 0.98, const double &sR = 0.98, const double &sL = 0.80, const double &sO = 0.98, 
+                                  const int &e = 5,
+                                  const double &PF = 0.99, const double &PB = 0.99, const double &PR = 0.99, const double &PL = 0.99, const double &PO = 0.99,
+                                  const double &sF = 0.95, const double &sB = 0.98, const double &sR = 0.98, const double &sL = 0.80, const double &sO = 0.98,
                                   const double &tau = 21.0){
-  
+
   // make parameters
   parameters *par = new parameters(e,PF,PB,PR,PL,PO,sF,sB,sR,sL,sO,tau);
   par->M = makeTransitionMatrix();
@@ -278,7 +278,7 @@ arma::Cube<double> upwindSolveCPP(const double &dt, const int &tfin, const doubl
         arma::Row<double> rhs = mbitesDE_cppInline(A,i,j,dt,dx,par);
         v(j,k) = w(j,k) + dt*rhs(k);
       }
-      
+
       arma::cube newCube((const double*)v.begin(),1,xtot+1,9); // annoying memory copy...must be a way to avoid this
       A(arma::span(i+1,i+1),arma::span::all,arma::span::all) = newCube;
     }
@@ -309,7 +309,7 @@ arma::Cube<double> upwindSolveCPP(const double &dt, const int &tfin, const doubl
 //   // std::cout << std::endl;
 //   a(arma::span(0,0),arma::span::all,arma::span::all).print();
 //   // corresponds to: x = array(data = 1:(3*4*5),dim = c(3,4,5)); x[1,,]
-//   
+//
 //   arma::Mat<double> MM = {
 //     {5,4,3,2,1},
 //     {6,5,4,3,2},
@@ -318,10 +318,10 @@ arma::Cube<double> upwindSolveCPP(const double &dt, const int &tfin, const doubl
 //   };
 //   // std::cout << "print MM    " << std::endl;
 //   // MM.print();
-//   
+//
 //   arma::cube newCube((const double*)MM.begin(),1,4,5);
 //   // newCube.print();
-//   
+//
 //   a(arma::span(0,0),arma::span::all,arma::span::all) = newCube;
 //   a.print();
 //   return(a);

@@ -1,0 +1,55 @@
+
+1. LAUNCH 
+   
+2. SEARCH or ATTEMPT
+
+3. LAND 
+   restingSpot() 
+     - if "leave" then set "search" 
+
+4. REST 
+   survival()  
+     surviveFlight() 
+     localHazards() 
+
+REST 
+  updateState :: set to "B"  
+    checkGravid()   :: if gravid, set to "O" 
+    checkMaturity() 
+      - if maturation complete, set to "mature"
+      - if not, checkMating() if mating, set to "M" 
+    energetics()    :: decrement sugar  
+      - if site has sugar & if RAN < f1(energy), set to "S"
+      - if site has no sugar & if RAN < f2(energy), set to "S" 
+    estivate()      :: set to "E"
+    checkResource() :: if site lacks resource, set "search" 
+
+  timing
+
+SEARCH 
+  + move 
+  + set "attempt" 
+
+BLOOD_FEED
+  + chooseHost() 
+  + HUMAN (+probeHost) or OTHER 
+  + if bloodmeal
+    - update energy    
+    - behavioral state = "R"
+    - provisionEggs (model1 or model2)   
+ 
+LAY_EGGS
+  + chooseHabitat 
+  + layEggs 
+    -if success, transfer eggs
+  + if eggs > 0, set "search"  (skip oviposition) 
+
+SUGAR 
+  - chooseSugar
+  - success :: set energy=1  
+
+MATING
+  - chooseMate
+  - success :: store maleID  
+  - set "mated" to TRUE
+ 
