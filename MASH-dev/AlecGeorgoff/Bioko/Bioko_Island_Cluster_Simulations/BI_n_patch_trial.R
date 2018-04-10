@@ -4,17 +4,22 @@
 ########################################
 
 rm(list=ls());gc()
+
+dir <- "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations"
+output_dir_single <- paste0(dir, "/BI_n_patch_trial_outputs/Single_trajectory")
+output_dir_ensemble <- paste0(dir, "/BI_n_patch_trial_outputs/Ensemble_trajectories")
+
 library(data.table)
 library(ggplot2)
 library(MASHmacro)
-source("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/Multipatch_data_transform.R")
+source(paste0(dir, "/Multipatch_data_transform.R"))
 set.seed(0)
 
 
 ########################################
 # Data from calibration
 ########################################
-source("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/Bioko_Island_Simulation_Setup.R")
+source(paste0(dir, "/Bioko_Island_Simulation_Setup.R"))
 
 
 ########################################
@@ -114,8 +119,7 @@ humanPar = lapply(X = 1:n_humans,function(i){
 # Create a tile!
 ########################################
 # Where the outputs go
-directory = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_n_patch_trial_outputs/Single_trajectory"
-tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = directory)
+tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = output_dir_single)
 
 
 ########################################
@@ -129,8 +133,8 @@ tile$simMacro(tMax = 750, PfPAR = pfpr)
 # Create a plot of the single simulation
 ########################################
 # Convert results and make a plot
-human.pathogen.path <- paste0(directory, "/HumanPathogen_Run0.csv")
-human.move.path <- paste0(directory, "/HumanMove_Run0.csv")
+human.pathogen.path <- paste0(output_dir_single, "/HumanPathogen_Run0.csv")
+human.move.path <- paste0(output_dir_single, "/HumanMove_Run0.csv")
 t <- SIP.Conversion.Curves(human.pathogen.path, human.move.path, patch.human.populations, 750)
 h <- SIP.FULL(t, n, 750, status.list = c("S", "I", "P"))
 # Add location names, to properly label the output
@@ -165,8 +169,7 @@ pfpr[1:n.clusters]
 # Simulation Ensemble
 ########################################
 # reset the tile, with a new directory
-directory = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_n_patch_trial_outputs/Ensemble_trajectories"
-tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = directory)
+tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = output_dir_ensemble)
 for (i in 1:10){
   set.seed(i + 3)
   tile$simMacro(tMax = 750, PfPAR = pfpr)
@@ -175,8 +178,8 @@ for (i in 1:10){
 
 
 # Assemble matrix of results
-human.movement.outputs <- list.files(directory, pattern = "HumanMove_Run*")
-human.pathogen.outputs <- list.files(directory, pattern = "HumanPathogen_Run*")
+human.movement.outputs <- list.files(output_dir_ensemble, pattern = "HumanMove_Run*")
+human.pathogen.outputs <- list.files(output_dir_ensemble, pattern = "HumanPathogen_Run*")
 m <- matrix(NA, ncol = 10, nrow = 3*n*750)
 for (i in 1:10){
   human.pathogen.path <- paste0(directory, "/", human.pathogen.outputs[i], sep = "")

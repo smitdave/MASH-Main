@@ -20,17 +20,19 @@ library(pscl, lib.loc = "/homes/georgoff/Rlibs/")
 library(boot)
 library(MASS)
 
+dir <- "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations"
+
 ########################################
 # Step 1: Read in all data
 ########################################
 # This is the geographic data listing locations/lat-lon, population at each of the areas
-geo <- data.table(read.csv("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_sim_setup_data/bioko_areas.csv"))
+geo <- data.table(read.csv(paste0(dir, "/BI_sim_setup_data/bioko_areas.csv")))
 # PfPR estimates, from Su's model
-pfprsu <- data.table(read.csv("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_sim_setup_data/data_area.csv"))
+pfprsu <- data.table(read.csv(paste0(dir, "/BI_sim_setup_data/data_area.csv")))
 # All survey data, includes aggregated travel information, from Carlos
-travel <- data.table(read.csv("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_sim_setup_data/summaries.csv"))
+travel <- data.table(read.csv(paste0(dir, "/BI_sim_setup_data/summaries.csv")))
 # Travel times between all areas, from Carlos
-times <- data.table(read.csv("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_sim_setup_data/travel_times.csv"))
+times <- data.table(read.csv(paste0(dir, "/BI_sim_setup_data/travel_times.csv")))
 # rename some of the columns, and reorder
 times <- times[, 5:199]
 colnames(times)[2:195] <- sapply(colnames(times)[2:195], FUN = function(s){
