@@ -7,14 +7,14 @@ rm(list=ls());gc()
 library(data.table)
 library(ggplot2)
 library(MASHmacro)
-source("/Users/dtcitron/Documents/MASH/MACRO-multipatch-test/Multipatch_data_transform.R")
+source("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/Multipatch_data_transform.R")
 set.seed(0)
 
 
 ########################################
 # Data from calibration
 ########################################
-source("/Users/dtcitron/Documents/MASH/Bioko_Macro/Bioko_Island_Simulation_Setup/Bioko_Island_Simulation_Setup.R")
+source("/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/Bioko_Island_Simulation_Setup.R")
 
 
 ########################################
@@ -114,7 +114,7 @@ humanPar = lapply(X = 1:n_humans,function(i){
 # Create a tile!
 ########################################
 # Where the outputs go
-directory = "/Users/dtcitron/Documents/MASH/Bioko_Macro/Bioko_Island_Simulation_Setup/BI_n_patch_trial_outputs/Single_trajectory"
+directory = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_n_patch_trial_outputs/Single_trajectory"
 tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = directory)
 
 
@@ -165,7 +165,7 @@ pfpr[1:n.clusters]
 # Simulation Ensemble
 ########################################
 # reset the tile, with a new directory
-directory = "/Users/dtcitron/Documents/MASH/Bioko_Macro/Bioko_Island_Simulation_Setup/BI_n_patch_trial_outputs/Ensemble_trajectories"
+directory = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_n_patch_trial_outputs/Ensemble_trajectories"
 tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = directory)
 for (i in 1:10){
   set.seed(i + 3)
