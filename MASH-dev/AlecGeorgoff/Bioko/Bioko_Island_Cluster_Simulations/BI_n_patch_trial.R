@@ -182,8 +182,8 @@ human.movement.outputs <- list.files(output_dir_ensemble, pattern = "HumanMove_R
 human.pathogen.outputs <- list.files(output_dir_ensemble, pattern = "HumanPathogen_Run*")
 m <- matrix(NA, ncol = 10, nrow = 3*n*750)
 for (i in 1:10){
-  human.pathogen.path <- paste0(directory, "/", human.pathogen.outputs[i], sep = "")
-  human.move.path <- paste0(directory, "/", human.movement.outputs[i], sep = "")
+  human.pathogen.path <- paste0(output_dir_ensemble, "/", human.pathogen.outputs[i], sep = "")
+  human.move.path <- paste0(output_dir_ensemble, "/", human.movement.outputs[i], sep = "")
   t <- SIP.Conversion.Curves(human.pathogen.path, human.move.path, patch.human.populations, 750)
   h <- SIP.FULL(t, n, 750, status.list = c("S", "I", "P"))
   m[,i] <- h$N
