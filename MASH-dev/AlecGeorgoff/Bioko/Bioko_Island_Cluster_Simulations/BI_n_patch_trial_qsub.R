@@ -36,7 +36,7 @@ PfSI.Setup(
   FeverPf = fever.pf, TreatPf = treat.pf # setting fever/treatment parameters
 )
 SimBitePfSI.Setup()
- 
+
 
 ########################################
 # Define Human parameters
