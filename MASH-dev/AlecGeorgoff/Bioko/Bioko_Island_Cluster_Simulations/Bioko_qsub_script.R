@@ -17,13 +17,13 @@ slots <- 2
 dir <- "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations"
 
 # Shell script to use:
-shell <- 
+shell <- "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/mash_cluster_shell.sh"
 
 # Script to run in each qsub:
 script <- "BI_n_patch_trial_qsub.R"
 
 # Which clusters to use:
-clusters <- c(1,2,3)
+clusters <- c(1)
 
 # Where to store output and error files:
 e_dir <- "/share/temp/sgeoutput/georgoff/errors/"
@@ -40,4 +40,8 @@ for (i in 1:length(clusters)) {
   
   sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -P proj_mmc", " -l mem_free=", mem, "G -hold_jid ", holds, " -o ", o_dir, " -e ", e_dir)
   args <- paste("--args", dir, clusters[i])
+  
+  print(paste(sys.sub, shell, script, args))
+  
+  system(paste(sys.sub, shell, script, args))
 }

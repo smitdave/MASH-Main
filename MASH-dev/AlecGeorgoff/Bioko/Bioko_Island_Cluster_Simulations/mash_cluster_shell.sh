@@ -4,4 +4,4 @@
 
 alias r_mash="/share/local/singularity-2.4.2/bin/singularity exec /share/singularity-images/malaria_modeling/r_mash.img /usr/local/bin/R"
 
-# r_mash < $1 --no-save $@
+r_mash < $1 --no-save $@

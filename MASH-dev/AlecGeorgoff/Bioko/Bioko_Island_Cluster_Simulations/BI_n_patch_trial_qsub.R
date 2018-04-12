@@ -5,9 +5,16 @@
 
 rm(list=ls());gc()
 
-dir <- "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations"
-output_dir_single <- paste0(dir, "/BI_n_patch_trial_outputs/Single_trajectory")
-output_dir_ensemble <- paste0(dir, "/BI_n_patch_trial_outputs/Ensemble_trajectories")
+## Read in arguments after "--args":
+arguments <- commandArgs(trailingOnly = T)
+dir <- arguments[1] # DIRECTORY TO USE
+cluster.ids <- as.integer(arguments[2]) # CLUSTER IDS TO USE
+
+cluster_identifier <- paste(cluster.ids, collapse = '_')
+
+# dir <- "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations"
+output_dir_single <- paste0(dir, "/BI_n_patch_trial_outputs/Single_trajectory_", cluster_identifier)
+output_dir_ensemble <- paste0(dir, "/BI_n_patch_trial_outputs/Ensemble_trajectories_", cluster_identifier)
 
 library(data.table)
 library(ggplot2)
@@ -25,7 +32,7 @@ source(paste0(dir, "/Bioko_Island_Simulation_Setup.R"))
 ########################################
 # List of Clusters used
 ########################################
-cluster.ids <- c(1, 5, 14, 18)
+cluster.ids <- cluster.ids # Redundant, but for clarity!
 n.clusters <- length(cluster.ids)
 
 ########################################
@@ -145,6 +152,7 @@ location.names.table <- data.table(location = c(1:n),
                                    )
 h <- merge(h, location.names.table, by = "location")
 # Make a plot
+pdf(file = paste0(output_dir_single, "/results_pdf_single.pdf", height = 5, width = 5))
 ggplot(data = h) +
   geom_line(mapping = aes(x = time, y = N, color = status)) +
   facet_wrap(~loc.name, ncol = 3) +
@@ -156,6 +164,8 @@ ggplot(data = h) +
                      labels = c("Infected (PR)", "Susceptible", "Protected")) +
   xlim(0,750) + ylim(0,250) +
   xlab("Time") + ylab("N")
+
+dev.off()
 
 # Mean PfPR in the simulation
 h[time > 500 & status == "I"][, mean(N), by = location]$V1[1:n.clusters]/patch.human.populations[1:n.clusters]
@@ -204,6 +214,7 @@ location.names.table <- data.table(location = c(1:n),
 h <- merge(h, location.names.table, by = "location")
 
 # Now we can plot the mean and standard deviations of the ensemble!
+pdf(file = paste0(output_dir_single, "/results_pdf_ensemble.pdf", height = 5, width = 5))
 ggplot(data = h[location %in% c(1:n.clusters, n.clusters+1,n.clusters+4)]) +
   geom_line(mapping = aes(x = time, y = N.means, color = status)) +
   geom_line(mapping = aes(x = time, y = N.means+N.sds, color = status)) +
@@ -217,6 +228,8 @@ ggplot(data = h[location %in% c(1:n.clusters, n.clusters+1,n.clusters+4)]) +
                      labels = c("Infected (PR)", "Susceptible", "Protected")) +
   xlim(0,750) + ylim(0,250) +
   xlab("Time") + ylab("N")
+
+dev.off()
 
 # Means and standard deviations in PfPR
 h[time > 500 & status == "I"][, mean(N.means), by = location]$V1[1:n.clusters]/patch.human.populations[1:n.clusters]
