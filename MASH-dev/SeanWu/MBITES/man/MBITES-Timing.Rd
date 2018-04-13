@@ -4,5 +4,19 @@
 \alias{MBITES-Timing}
 \title{MBITES: Timing}
 \description{
-write about me!
+MBITES: Timing
 }
+\section{Time to Event Sampling}{
+
+In MBITES a distribution of waiting times to the next launch, \code{tNext} (a launch signifies the start of a new attempt or search bout)
+is given by a function in the global parameters object. The function when defined must be given the parameters of the
+distribution and return a closure that takes a single argument \code{t}, the current local time of the mosquito.
+
+\code{\link{mbites_timing}} is used to sample the waiting time distribution during \code{\link{mbites_updateState}} after
+energetics and survival are calculated and new states or searches are potentially queued.
+
+Within the timing function, after a new time to launch is sampled, time-dependent events are potentially checked
+depending on model specification. This includes mating behavior in \code{\link{mbites_findSwarm}} and estivation
+in \code{\link{mbites_checkEstivation1}} or \code{\link{mbites_checkEstivation2}}
+}
+
