@@ -54,9 +54,12 @@ mbites_BloodMeal <- function(){
 
   # post-prandial rest (digestion)
   private$tNext = MBITES:::Parameters$ttEvent$ppr(private$tNow)
-
-  # egg production (uses up blood)
-  self$oogenesis() # MBITES-Oogenesis
+  if(runif(1) < self$pPPRFlight()){
+    private$state = "D"
+  } else {
+    # egg production (uses up blood)
+    self$oogenesis() # MBITES-Oogenesis
+  }
 }
 
 #' MBITES: Draw Bloodmeal Size
@@ -75,6 +78,26 @@ Mosquito_Female$set(which = "public",name = "BloodMeal",
 
 Mosquito_Female$set(which = "public",name = "rBloodMealSize",
     value = mbites_rBloodMealSize, overwrite = TRUE
+)
+
+
+###############################################################################
+# Post-prandial Resting Flight Mortality
+###############################################################################
+
+#' MBITES: Probability of Death due to the Blood Meal during the Post Prandial Flight
+#'
+#' Incremental mortality as a function of being laden during the post-prandial flight \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
+#'  * This method is bound to \code{Mosquito$pEnergySurvival}.
+#'
+mbites_pPPRFlight <- function(){
+  PPR_a = MBITES:::Parameters$get_PPR_a()
+  PPR_b = MBITES:::Parameters$get_PPR_b()
+  exp(PPR_a*private$bmSize)/(PPR_b + exp(PPR_a*private$bmSize))
+}
+
+Mosquito$set(which = "public",name = "pPPRFlight",
+    value = mbites_pPPRFlight, overwrite = TRUE
 )
 
 

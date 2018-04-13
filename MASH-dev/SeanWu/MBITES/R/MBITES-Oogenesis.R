@@ -56,7 +56,6 @@ mbites_oogenesis1 <- function(){
     private$eggT = private$tNow + self$rEggMaturationTime()
     #note: self$checkRefeed() is called in MBITES-Bouts.R :: updateState()
   }
-  private$gravid = TRUE # needed to trip flag in updateState
   private$bmSize = 0
 }
 
@@ -91,7 +90,8 @@ mbites_oogenesis2 <- function(){
   }
   # egg provision: after we've fed enough then mosquito is gravid
   private$eggP = private$eggP - private$bmSize
-  if(private$eggP < 0){
+  if(private$eggP <= 0){
+    private$eggT = 0
     private$gravid = TRUE # now mosquito is gravid
     private$state = "O"
     private$bmSize = max(0,private$bmSize - private$eggP)
@@ -137,9 +137,6 @@ mbites_checkRefeed <- function(){
   if(runif(1) < self$pReFeed()){
     private$gravid = FALSE
     private$state = "B" # check with DS
-  } else {
-    # check egg maturation (check with DS)
-    self$checkEggMaturation()
   }
 }
 
