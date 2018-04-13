@@ -98,7 +98,6 @@ mbites_get_surviveFlightBaseProb <- function(){
 mbites_surviveFlight <- function(){
   if(private$state != "D"){
     p = self$get_surviveFlightBaseProb()
-    p = p * self$pPPRFlight()
     p = p * self$pEnergySurvival()
     p = p * self$pChem()
 
@@ -115,17 +114,6 @@ mbites_surviveFlight <- function(){
       private$state = "D"
     }
   }
-}
-
-#' MBITES: Probability of Death due to the Blood Meal during the Post Prandial Flight
-#'
-#' Incremental mortality as a function of being laden during the post-prandial flight \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
-#'  * This method is bound to \code{Mosquito$pEnergySurvival}.
-#'
-mbites_pPPRFlight <- function(){
-  PPR_a = MBITES:::Parameters$get_PPR_a()
-  PPR_b = MBITES:::Parameters$get_PPR_b()
-  exp(PPR_a*private$bmSize)/(PPR_b + exp(PPR_a*private$bmSize))
 }
 
 #' MBITES: Probability of Death due to Energy Reserves
@@ -148,9 +136,7 @@ Mosquito$set(which = "public",name = "surviveFlight",
     value = mbites_surviveFlight, overwrite = TRUE
 )
 
-Mosquito$set(which = "public",name = "pPPRFlight",
-    value = mbites_pPPRFlight, overwrite = TRUE
-)
+
 
 Mosquito$set(which = "public",name = "pEnergySurvival",
     value = mbites_pEnergySurvival, overwrite = TRUE

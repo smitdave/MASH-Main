@@ -81,8 +81,8 @@ mbites_humanEncounter <- function(){
       } else {
         if(runif(1) < MBITES:::Parameters$get_feedH()){
           # successfully begins blood feeding
-          self$BloodMeal() # MBITES-BloodMeal.R
           self$feedHost() # PATHOGEN-XX.R
+          self$BloodMeal() # MBITES-BloodMeal.R
         }
       }
     }
