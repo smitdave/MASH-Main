@@ -152,7 +152,7 @@ location.names.table <- data.table(location = c(1:n),
                                    )
 h <- merge(h, location.names.table, by = "location")
 # Make a plot
-pdf(file = paste0(output_dir_single, "/results_pdf_single.pdf", height = 5, width = 5))
+pdf(file = paste0(output_dir_single, "/results_pdf_single.pdf"))
 ggplot(data = h) +
   geom_line(mapping = aes(x = time, y = N, color = status)) +
   facet_wrap(~loc.name, ncol = 3) +
@@ -214,7 +214,7 @@ location.names.table <- data.table(location = c(1:n),
 h <- merge(h, location.names.table, by = "location")
 
 # Now we can plot the mean and standard deviations of the ensemble!
-pdf(file = paste0(output_dir_ensemble, "/results_pdf_ensemble.pdf", height = 5, width = 5))
+pdf(file = paste0(output_dir_ensemble, "/results_pdf_ensemble.pdf"))
 ggplot(data = h[location %in% c(1:n.clusters, n.clusters+1,n.clusters+4)]) +
   geom_line(mapping = aes(x = time, y = N.means, color = status)) +
   geom_line(mapping = aes(x = time, y = N.means+N.sds, color = status)) +
