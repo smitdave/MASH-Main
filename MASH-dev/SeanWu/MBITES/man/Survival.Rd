@@ -4,6 +4,20 @@
 \alias{Survival}
 \title{MBITES: Survival}
 \description{
+MBITES: Survival
+}
+\section{Flight Survival and local hazards survival}{
+
+
 Survival from flight and local hazards is calculated after the mosquito chooses
 a resting spot, after the "attempt" part of the bout (called in \code{\link{mbites_updateState}}).
+
+\code{\link{surviveFlight}} is first called which calculates survival from a baseline probability of survival
+which is then modified by current energy levels (exhaustion), chemical damage, physical damage (tattering),
+and senescence.
+
+\code{\link{surviveHazards}} is then called which calculates survival as a function of local hazards at
+the current \code{\link{Site}} the mosquito is at. This probability includes various hazards such as predation
+from spiders and other ill-defined ecological hazards.
 }
+
