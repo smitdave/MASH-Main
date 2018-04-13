@@ -19,6 +19,8 @@
 
  * Rdsm https://cran.r-project.org/web/packages/Rdsm/index.html
  * synchronicity (mutexes for big.matrix objects) https://github.com/kaneplusplus/synchronicity
+  * https://github.com/adamryczkowski/clustertools/blob/87c1e0464bd9dc8475bf05ac137892c466848933/possible_bug_mutexes.R
+  * https://stackoverflow.com/questions/31575585/shared-memory-in-parallel-foreach-in-r/37964291#37964291
 
 # Package Development
 
