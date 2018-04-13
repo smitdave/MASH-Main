@@ -31,6 +31,9 @@ g2 <- c(5:8)
 g3 <- c(9:12)
 clusters <- rbind(g1,g2,g3)
 
+num_groups <- nrow(clusters)
+num_per_group <- ncol(clusters)
+
 # Where to store output and error files:
 e_dir <- "/share/temp/sgeoutput/georgoff/errors/"
 o_dir <- "/share/temp/sgeoutput/georgoff/output/"
@@ -38,14 +41,14 @@ o_dir <- "/share/temp/sgeoutput/georgoff/output/"
 
 ### Loop through clusters and submit qsubs ###
 
-for (i in 1:nrow(clusters)) {
+for (i in 1:num_groups) {
   
   jname <- paste0("BI_patch_trial_cluster_", paste(clusters[i,], collapse = '_'))
   mem <- slots*2
   holds <- "no_holds"
   
   sys.sub <- paste0("qsub -cwd -N ", jname, " -pe multi_slot ", slots, " -P proj_mmc", " -l mem_free=", mem, "G -hold_jid ", holds, " -o ", o_dir, " -e ", e_dir)
-  args <- paste("--args", dir, clusters[i,])
+  args <- paste("--args", dir, num_per_group, paste(clusters[i,], collapse = ' '))
   
   print(paste(sys.sub, shell, script, args))
   

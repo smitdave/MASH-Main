@@ -8,7 +8,12 @@ rm(list=ls());gc()
 ## Read in arguments after "--args":
 arguments <- commandArgs(trailingOnly = T)
 dir <- arguments[1] # DIRECTORY TO USE
-cluster.ids <- as.integer(arguments[2]) # CLUSTER IDS TO USE
+num_per_group <- as.integer(arguments[2]) # NUMBER OF CLUSTERS IN GROUP
+cluster.ids <- rep(0, times = num_per_group)
+for (n in 1:num_per_group) {
+  cluster.ids[n] <- arguments[n+2]
+}
+# cluster.ids <- as.integer(arguments[2]) # CLUSTER IDS TO USE
 
 cluster_identifier <- paste(cluster.ids, collapse = '_')
 
