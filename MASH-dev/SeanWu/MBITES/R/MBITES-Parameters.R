@@ -186,6 +186,11 @@ MBITES_Parameters$set(which = "public",name = "get_aqua_model",
 #' @export
 make_ttEvent_Det <- function(wait){
 
+  # check bad arguments
+  if(any(sapply(as.list(match.call()),is.null))) {
+    stop("please do not pass any NULL arguments")
+  }
+
   # data for the closure
   wait  <- wait
 
@@ -208,6 +213,11 @@ make_ttEvent_Det <- function(wait){
 #'
 #' @export
 make_ttEvent_Exp <- function(rate, tmin){
+
+  # check bad arguments
+  if(any(sapply(as.list(match.call()),is.null))) {
+    stop("please do not pass any NULL arguments")
+  }
 
   # data for the closure
   rate  <- rate
@@ -234,6 +244,11 @@ make_ttEvent_Exp <- function(rate, tmin){
 #' @export
 make_ttEvent_Gamma <- function(mean, cv, tmin){
 
+  # check bad arguments
+  if(any(sapply(as.list(match.call()),is.null))) {
+    stop("please do not pass any NULL arguments")
+  }
+
   # data for the closure
   shape  <- 1/cv
   scale <- mean*cv
@@ -256,6 +271,10 @@ make_ttEvent_Gamma <- function(mean, cv, tmin){
 #'
 #' @export
 make_ttEvent_Diurnal <- function(peak, tmin){
+
+  if(any(sapply(as.list(match.call()),is.null))) {
+    stop("please do not pass any NULL arguments")
+  }
 
   stop("make_ttEvent_Diurnal has not been implemented yet")
 
