@@ -24,7 +24,7 @@
 
 # Package Development
 
-to compile .Rd docs to PDF
+to compile .Rd docs to PDF (and also Dirk's answer on SO: https://stackoverflow.com/questions/23502380/pdf-documentation-of-local-r-package)
 ```
 pack <- "mypackage"
 path <- find.package(pack)
