@@ -12,7 +12,7 @@ PfSI.Setup(
 SimBitePfSI.Setup()
 MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/10, tripDuration = 1)
 
-directory = "/Users/dtcitron/Documents/MASH/MACRO-multipatch-test/data"
+directory = "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/MACRO-multipatch-test/data"
 
 n = 2
 

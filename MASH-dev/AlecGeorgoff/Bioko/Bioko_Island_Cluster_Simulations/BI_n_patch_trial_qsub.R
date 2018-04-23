@@ -11,7 +11,7 @@ dir <- arguments[1] # DIRECTORY TO USE
 num_per_group <- as.integer(arguments[2]) # NUMBER OF CLUSTERS IN GROUP
 cluster.ids <- rep(0, times = num_per_group)
 for (n in 1:num_per_group) {
-  cluster.ids[n] <- arguments[n+2]
+  cluster.ids[n] <- as.integer(arguments[n+2])
 }
 # cluster.ids <- as.integer(arguments[2]) # CLUSTER IDS TO USE
 
@@ -70,6 +70,7 @@ aquaPar = AquaPop_Emerge.Parameters(nPatch = n,lambda = patch.lambda, seasonalit
 
 # Create the movement matrix
 # Needs to have zero diagonals, and all rows normalized
+P.ij
 moveMat <- P.ij[c(cluster.ids, c(42:48)), c(cluster.ids, c(42:48))]
 diag(moveMat)[1:n] <- 0
 moveMat[1:n,] <- moveMat[1:n,]/travel.freq

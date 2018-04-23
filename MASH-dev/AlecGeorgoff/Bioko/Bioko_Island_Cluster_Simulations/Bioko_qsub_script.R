@@ -11,7 +11,7 @@ rm(list = ls())
 ### Define constant parameters ###
 
 # Number of slots to use:
-slots <- 2
+slots <- 4
 
 # Directory where files are stored:
 dir <- "/homes/georgoff/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations"
@@ -26,10 +26,11 @@ script <- "BI_n_patch_trial_qsub.R"
 # clusters <- c(1:41)
 
 # Grouping clusters together:
-g1 <- c(1:4)
-g2 <- c(5:8)
-g3 <- c(9:12)
-clusters <- rbind(g1,g2,g3)
+g1 <- 41
+# g2 <- c(11:20)
+# g3 <- c(21:30)
+# g4 <- c(31:40)
+clusters <- rbind(g1)
 
 num_groups <- nrow(clusters)
 num_per_group <- ncol(clusters)
