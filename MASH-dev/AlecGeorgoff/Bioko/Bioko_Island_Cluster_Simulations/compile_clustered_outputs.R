@@ -104,3 +104,24 @@ for (i in clusters_to_compile) {
 
 compiled_conversion_curves <- compiled_conversion_curves[-1,]
 compiled_full_curves <- compiled_full_curves[-1,]
+
+#######################
+## Aggregate regions
+#######################
+
+# aggregate by time-location-status combinations:
+compiled_conversion_curves <- aggregate(compiled_conversion_curves$N,
+                   by = list(time = compiled_conversion_curves$time,
+                                                           location = compiled_conversion_curves$location,
+                                                           status = compiled_conversion_curves$status),
+                   FUN = sum)
+names(compiled_conversion_curves)[names(compiled_conversion_curves) == "x"] <- "N"
+compiled_conversion_curves <- as.data.table(compiled_conversion_curves)
+
+compiled_full_curves <- aggregate(compiled_full_curves$N,
+                                        by = list(time = compiled_full_curves$time,
+                                                  location = compiled_full_curves$location,
+                                                  status = compiled_full_curves$status),
+                                        FUN = sum)
+names(compiled_full_curves)[names(compiled_full_curves) == "x"] <- "N"
+compiled_full_curves <- as.data.table(compiled_full_curves)
