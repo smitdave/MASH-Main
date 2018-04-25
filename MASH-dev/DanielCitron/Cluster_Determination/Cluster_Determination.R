@@ -2,10 +2,11 @@ library(sp)
 library(rgdal)
 library(data.table)
 library(rootSolve)
+library(xlsx)
 
 # Read in sector-level data from Basupu
 # This is just a trial data set, and can be extended to other similar sector-level data with lat/lon coordinates
-basupuSectors = read.xlsx("datBasupu_sectors.csv")
+basupuSectors = fread("datBasupu_sectors.csv")
 # Extract latitude, longitude, population data by sector
 cntr.lat = basupuSectors$Y
 cntr.long = basupuSectors$X
@@ -48,7 +49,7 @@ krDistance <- function(x.center, y.center, x.other, y.other){
 #        k, x50 are parameters that define the shape of the kernel envelope
 krSmooth = function(i, qty, y.coords, x.coords, k=0.02, x50=250, PAUSE = FALSE){
   if (PAUSE == TRUE) browser()
-  dst = sqrt((lat[i] - lat)^2 + (long[i] - long)^2)
+  dst = sqrt((y.coords[i] - y.coords)^2 + (x.coords[i] - x.coords)^2)
   #q = weighted.mean(qty, kern(dst,k,x50))
   # The weighted mean doesn't really make sense to me, since turning up the mean distance turns down the total number of people included
   q = sum(qty * kern(dst,k,x50)) 
