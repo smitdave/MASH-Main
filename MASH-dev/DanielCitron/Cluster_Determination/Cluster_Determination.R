@@ -163,7 +163,7 @@ m.basupu <- uniroot(m.calibrator, c(0,1000), PR = PR.baseline) # should be ~ 0.3
 v <- min(1., 300/cluster.pop)
 bv <- 0.55*0.5
 # Calculate effect size:
-prv.prc.eir <- multiroot(step2.calibrator, parms = c(m.basupu$root, v, bv), 
+prv.prc.eir <- multiroot(effect.size, parms = c(m.basupu$root, v, bv), 
                          start = c(PR.baseline*v, PR.baseline*(1-v), 0.1), maxiter = 100)$root;
 prv.prc.eir
 # Should find that (PRv, PRc, EIR) are all reduced to 0
