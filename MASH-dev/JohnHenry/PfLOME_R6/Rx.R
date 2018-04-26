@@ -28,3 +28,4 @@ RxRegister[[2]] = list(
 RxRegister[[2]]$PfPDx[[1]] = c(c(4,4,0, rep(0,20))) 
 RxRegister[[2]]$PfPDx[[2]] = c(c(rep(0,3), 1.5*(1-c(1:20)/20)))
 
+

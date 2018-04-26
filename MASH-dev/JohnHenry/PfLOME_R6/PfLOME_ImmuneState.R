@@ -2,7 +2,7 @@ ImmuneState <- R6Class("ImmuneState",
                        
                        public = list(
                          
-                         initialize = function(){
+                         initialize = function(include=T){
                            
                            ## set up Blood State Immune Counters
                            
@@ -29,7 +29,7 @@ ImmuneState <- R6Class("ImmuneState",
                            private$GSImmCounters = list()
                            for(i in 1:private$nGSImmCounters){
                              private$GSImmCounters[[i]] = list(
-                               PAR = self$ImPAR(Gwx=private$Gwx[i], Gwn=private$Gwn[i],P50=6,Ps=5),
+                               PAR = self$ImPAR(wx=private$Gwx[i], wn=private$Gwn[i],P50=6,Ps=5),
                                F = self$dynamicXdt
                              )
                            }
@@ -51,7 +51,12 @@ ImmuneState <- R6Class("ImmuneState",
                            private$dxp = 1
                            private$dtp = 1/100
                            ##### this next line assumes pfpedigree is declared and called pfped - be careful here
-                           private$nptypes = pfped$get_nptypes()
+                           if(include==T){
+                              private$nptypes = pfped$get_nptypes()
+                           }
+                           if(include==F){
+                             private$nptypes=0
+                           }
                            
                          },
                          
@@ -96,7 +101,9 @@ ImmuneState <- R6Class("ImmuneState",
                            
                            ##type specific immunity update
                            
-                           self$update_typeImmunity(t,dt,ptype=NaN)
+                           if(include==T){
+                              self$update_typeImmunity(t,dt,ptype=NaN)
+                           }
                           
                            ##history update
                            self$update_history()
