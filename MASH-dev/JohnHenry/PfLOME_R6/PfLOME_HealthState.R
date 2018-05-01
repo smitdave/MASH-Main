@@ -4,7 +4,7 @@ HealthState <- R6Class("HealthState",
                          
                          initialize = function(){
                            private$Fever = FALSE
-                           private$feverThresh = 8
+                           private$feverThresh = 9
                            private$HRP2 = 0
                            private$RBC = 2.49
                            private$pLDH = 0
@@ -18,6 +18,12 @@ HealthState <- R6Class("HealthState",
                          
                          get_Fever = function(){
                            private$Fever
+                         },
+                         get_feverThresh = function(){
+                           private$feverThresh
+                         },
+                         set_feverThresh = function(feverThresh){
+                           private$feverThresh = feverThresh
                          },
                          set_Fever = function(newFever){
                            private$Fever = newFever

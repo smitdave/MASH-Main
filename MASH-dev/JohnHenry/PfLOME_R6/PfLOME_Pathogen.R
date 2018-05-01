@@ -10,6 +10,7 @@ Pathogen <- R6Class("Pathogen",
                         private$Ptot = NaN
                         private$Gtot = NaN
                         private$history = list()
+                        private$TE = 0
                       },
                       
                       ## add pf during infection
@@ -45,6 +46,7 @@ Pathogen <- R6Class("Pathogen",
                         }
                         self$update_Ptot()
                         self$update_Gtot()
+                        self$update_TE()
                         self$update_history()
                       },
                       
@@ -66,9 +68,26 @@ Pathogen <- R6Class("Pathogen",
                         }
                       },
                       
+                      sigmoid = function(x,a,b,max) { ##defined on R --> [0,1]
+                        ## b is 50th percentile in R
+                        ## a is slope param
+                        max*(x/b)^a/(1+(x/b)^a)
+                      },
+                      
+                      ## update transmission efficiency - sigmoidal conversion from log10 Gametocyte numbers
+                      update_TE = function(){
+                        if(is.na(private$Gtot)){
+                          private$TE = 0
+                        }
+                        if(is.na(private$Gtot)==F){
+                            private$TE = self$sigmoid(private$Gtot,private$teSlope,private$teMed,private$teMax)
+                        }
+                      },
+                      
                       update_history = function(){
                         private$history$Ptot = c(private$history$Ptot,private$Ptot)
                         private$history$Gtot = c(private$history$Gtot,private$Gtot)
+                        private$history$TE = c(private$history$TE,private$TE)
                         private$history$PfMOI = c(private$history$PfMOI,private$PfMOI)
                       },
                       
@@ -100,6 +119,22 @@ Pathogen <- R6Class("Pathogen",
                         private$PfPathogen
                       },
                       
+                      get_TE = function(){
+                        private$TE
+                      },
+                      
+                      set_teMed = function(teMed){
+                        private$teMed = teMed
+                      },
+                      
+                      set_teSlope = function(teSlope){
+                        private$teSlope = teSlope
+                      },
+                      
+                      set_teMax = function(teMax){
+                        private$teMax = teMax
+                      },
+                      
                       get_history = function(){
                         private$history
                       },
@@ -123,6 +158,11 @@ Pathogen <- R6Class("Pathogen",
                       Ptot = NULL,
                       Gtot = NULL,
                       PfMOI = NULL,
+                      ## sigmoidal conversion of Gt to transmission efficiency (te)
+                      TE = NULL,
+                      teSlope = 8,
+                      teMed = 7,
+                      teMax = 1,
                       history = NULL
                     )
                     
@@ -140,8 +180,12 @@ Pf <- R6Class("Pf",
                   private$mac = mac
                   private$mu = .01
                   private$Ptt = rep(NaN,10)
-                  private$gtype = self$getGtype(mic,mac,private$mu,seed)
-                  private$ptype = self$getPtype(private$gtype,pfped$get_nptypes())
+                  private$mnMaxPD = 10.5
+                  private$mnPeakD = 20
+                  private$mnMZ0 = 4.2
+                  private$mnDuration=200
+                  #private$gtype = self$getGtype(mic,mac,private$mu,seed)
+                  #private$ptype = self$getPtype(private$gtype,pfped$get_nptypes())
                 },
                 
                 
@@ -263,6 +307,35 @@ Pf <- R6Class("Pf",
                   private$activeG = newactiveG
                 },
                 
+                ##average values for tent function, if not default
+                set_mnMaxPD = function(mnMaxPD){
+                  private$mnMaxPD = mnMaxPD
+                  private$PAR = self$tentPAR(t=private$PAR$t0,pfid=private$pfid)
+                },
+                
+                set_mnPeakD = function(mnPeakD){
+                  private$mnPeakD = mnPeakD
+                  private$PAR = self$tentPAR(t=private$PAR$t0,pfid=private$pfid)
+                },
+                
+                set_mnMZ0 = function(mnMZ0){
+                  private$mnMZ0 = mnMZ0
+                  private$PAR = self$tentPAR(t=private$PAR$t0,pfid=private$pfid)
+                },
+                
+                set_mnDuration = function(mnDuration){
+                  private$mnDuration = mnDuration
+                  private$PAR = self$tentPAR(t=private$PAR$t0,pfid=private$pfid)
+                },
+                
+                set_gdk = function(gdk){
+                  private$PAR$gdk = log(2)/gdk
+                },
+                
+                set_ggr = function(ggr){
+                  private$PAR$ggr = ggr
+                },
+                
                 
                 ########## update methods ##########
                 
@@ -276,7 +349,7 @@ Pf <- R6Class("Pf",
                 },
                 
                 update_Pt = function(t,PD){
-                  self$set_Pt(self$dPdt_tent(t+i-1,private$Pt,private$PAR,PD))
+                  self$set_Pt(self$dPdt_tent(t,private$Pt,private$PAR,PD))
                   if(is.na(private$Pt)){
                     private$PAR$tEnd = t - private$PAR$t0
                     self$set_activeP(0)
@@ -293,7 +366,7 @@ Pf <- R6Class("Pf",
                     private$Gt = self$GamCyGen(t,private$Ptt[10],private$PAR)
                   }
                   if(!is.na(private$Gt)){
-                    private$Gt = self$log10sum(c(private$Gt - private$gdk, self$GamCyGen(t,private$Ptt[10],private$PAR)))
+                    private$Gt = self$log10sum(c(private$Gt - private$PAR$gdk, self$GamCyGen(t,private$Ptt[10],private$PAR)))
                   }
                 },
                 
@@ -302,44 +375,51 @@ Pf <- R6Class("Pf",
                 },
                 
                 GamCyGen = function(t, P, PAR){
-                  P-2
+                  P+log10(PAR$ggr)
                 },
                 
                 
                 ############### Tent Methods #################
                 
                 
-                Pf.MaxPD = function(N=1, mn=10.5, vr=0.5){
-                  rnorm(N,mn,vr)
+                Pf.MaxPD = function(N=1, mn=private$mnMaxPD, vr=0.5){
+                  #rnorm(N,mn,vr)
+                  mn
                 },
                 
-                Pf.PeakD = function(min=18){
+                Pf.PeakD = function(min=18,mn=private$mnPeakD){
                   #FIX STUB
                   # Day when parasitemia first peaks
-                  ceiling(min+rlnorm(1,log(3),.5))
+                  #ceiling(min+rlnorm(1,log(3),.5))
+                  min+(mn-min)
                 },
                 
-                Pf.MZ0 = function(){
+                Pf.MZ0 = function(mn=private$mnMZ0){
                   #FIX STUB
-                  rnorm(1,4.2,.1)
+                  #rnorm(1,4.2,.1)
+                  mn
                 },
                 
-                Pf.Duration = function(peakD,N=1,mn=200){
+                Pf.Duration = function(peakD,N=1,mn=private$mnDuration){
                   #FIX STUB
                   # Time to last parasitemia
-                  peakD + rgeom(N,1/mn)
+                  #peakD + rgeom(N,1/mn)
+                  peakD + mn
                 },
                 
                 
                 tentPAR = function(t,pfid){
-                  mxPD          = self$Pf.MaxPD()
-                  peakD         = self$Pf.PeakD()
-                  MZ0           = self$Pf.MZ0()
-                  tEnd          = self$Pf.Duration(peakD)
+                  mxPD          = self$Pf.MaxPD(mn=private$mnMaxPD)
+                  peakD         = self$Pf.PeakD(mn=private$mnPeakD)
+                  MZ0           = self$Pf.MZ0(mn=private$mnMZ0)
+                  tEnd          = self$Pf.Duration(peakD,mn=private$mnDuration)
                   
-                  gr 		        = (mxPD-MZ0)/peakD
+                  gr 		        = (mxPD-MZ0)/(peakD)
                   dr            = mxPD/(tEnd-peakD)
                   gtype         = private$gtype
+                  
+                  gdk           = log(2)/6 ##### gametocyte halflife of 6 days
+                  ggr           = .01 ##### about 1% rate of production of Gt per Pt per day
                   
                   list(
                     pfid	        = pfid,
@@ -349,7 +429,9 @@ Pf <- R6Class("Pf",
                     MZ0           = MZ0,
                     peakD         = peakD,
                     mxPD          = mxPD,
-                    tEnd          = tEnd
+                    tEnd          = tEnd,
+                    gdk           = gdk,
+                    ggr           = ggr
                   )
                 },
                 
@@ -416,7 +498,6 @@ Pf <- R6Class("Pf",
                 pfid = NULL,
                 ## tentPars
                 PAR = NULL,
-                gdk = log(2)/6, ## halflife of gametocytes 6 days
                 ## Parasite Densities (Pt = Asexual, Gt = Gametocyte, 
                 ## St = Sporozoite)
                 activeP = NULL,
@@ -431,7 +512,13 @@ Pf <- R6Class("Pf",
                 ## biological parameters
                 gtype = NULL,
                 ptype = NULL,
-                mu = .01
+                mu = .01,
+                
+                ##tent function dist'n pars
+                mnMaxPD = NULL,
+                mnPeakD = NULL,
+                mnMZ0 = NULL,
+                mnDuration = NULL
                 
               )
               

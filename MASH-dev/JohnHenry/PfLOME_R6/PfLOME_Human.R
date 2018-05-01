@@ -8,13 +8,17 @@ Human <- R6Class("Human",
                    
                    ## Initialization of Components
                    
-                   initialize = function(ixH = NA, age = NA, sex = NA, locH = NA){
+                   initialize = function(ixH = NA, age = NA, sex = NA, locH = NA, IncImm=T, IncPfPed = T){
                      private$ixH = ixH
                      private$age = age
                      private$sex = sex
                      private$locH = locH
                      private$pathogen = Pathogen$new()
-                     private$immuneState = ImmuneState$new()
+                     private$IncImm = IncImm
+                     private$IncPfPed = IncPfPed
+                     if(private$IncImm == T){
+                        private$immuneState = ImmuneState$new()
+                     }
                      private$healthState = HealthState$new()
               
                    },
@@ -24,15 +28,32 @@ Human <- R6Class("Human",
                    
                    
                    infectHuman = function(t,pfid){
-                     mic = pfped$get_mic(pfid)
-                     mac = pfped$get_mac(pfid)
-                     gtype = pfped$get_gtype(pfid)
-                     BSImm = private$immuneState$get_BSImm()
-                     #typeImm = private$immuneState$get_typeImm(t,ptype)
-                     private$pathogen$add_Pf(t,pfid,mic,mac,gtype,BSImm)
-                     pfped$set_th(pfid,t)
+                     ##if no pedigree, only need to add a mostly empty pathogen; no recording
+                     if(private$IncPfPed == F){
+                       private$pathogen$add_Pf(t,pfid,NULL,NULL,NULL,0)
+                     }
+                     
+                     ##if pedigree, need to trace and record lineage
+                     if(private$IncPfPed == T){
+                        mic = pfped$get_mic(pfid)
+                        mac = pfped$get_mac(pfid)
+                        gtype = pfped$get_gtype(pfid)
+                        if(private$IncImm == T){ 
+                            BSImm = private$immuneState$get_BSImm()
+                        }
+                        if(private$IncImm == F){
+                          BSImm = 0
+                        }
+                        ##type immunity - currently turned off
+                        #typeImm = private$immuneState$get_typeImm(t,ptype)
+                        private$pathogen$add_Pf(t,pfid,mic,mac,gtype,BSImm)
+                        pfped$set_th(pfid,t)
+                     }
+                     
                    },
+                   
                    ## write method to remove particular infection
+                   ## **not currently used **
                    clearPathogen = function(t, pfid){
                      private$pathogen$PfPathogen[[pfid]] = NULL
                      private$pathogen$set_PfMOI(private$pathogen$get_PfMOI()-1)
@@ -52,10 +73,12 @@ Human <- R6Class("Human",
                    
                    ########## Update Function #########
                    
-                   ## **edit updateHuman to allow for variable update steps **
                    
                    updateHuman = function(t,dt){
-                     private$immuneState$update_immuneState(t,dt,self$get_Ptot(),self$get_Gtot())
+                     ##only update immunity if included
+                     if(private$IncImm == T){
+                        private$immuneState$update_immuneState(t,dt,self$get_Ptot(),self$get_Gtot())
+                     }
                      private$healthState$update_healthState(t,dt,self$get_Ptot(),self$get_history()$RBC)
                      private$pathogen$update_pathogen(t,dt,self$get_PD())
                    },
@@ -97,7 +120,12 @@ Human <- R6Class("Human",
                    },
                    
                    get_immuneState = function(){
-                     private$immuneState
+                     if(private$IncImm == T){
+                        return(private$immuneState)
+                     }
+                     if(private$IncImm == F){
+                       return(private$IncImm)
+                     }
                    },
                    
                    get_healthState = function(){
@@ -145,9 +173,19 @@ Human <- R6Class("Human",
                    },
                    
                    get_history = function(){
-                     c(private$pathogen$get_history(), 
-                       private$healthState$get_history(),
-                       private$immuneState$get_history())
+                     if(private$IncImm==T){
+                        c(private$pathogen$get_history(), 
+                          private$healthState$get_history(),
+                          private$immuneState$get_history())
+                     }
+                     if(private$IncImm==F){
+                        c(private$pathogen$get_history(), 
+                         private$healthState$get_history())
+                     }
+                   },
+                   
+                   get_IncImm = function(){
+                     private$IncImm
                    }
                    
                    
@@ -160,7 +198,9 @@ Human <- R6Class("Human",
                    age = NULL,
                    sex = NULL,
                    locH = NULL,
+                   IncPfPed = NULL,
                    pathogen = NULL,
+                   IncImm = NULL,
                    immuneState = NULL,
                    healthState = NULL
                    

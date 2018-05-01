@@ -8,12 +8,14 @@ Human <- R6Class("Human",
                    
                    ## Initialization of Components
                    
-                   initialize = function(ixH = NA, age = NA, sex = NA, locH = NA){
+                   initialize = function(ixH = NA, age = NA, sex = NA, locH = NA, imm=T){
                      
                      private$ixH = ixH
                      private$pathogen = Pathogen$new()
                      private$healthState = HealthState$new()
-                     private$immuneState = ImmuneState$new()
+                     if(imm = T){
+                        private$immuneState = ImmuneState$new()
+                     }
                      
                    },
                    
