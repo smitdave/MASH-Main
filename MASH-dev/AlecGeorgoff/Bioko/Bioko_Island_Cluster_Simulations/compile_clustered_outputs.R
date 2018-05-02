@@ -16,13 +16,14 @@ root <- paste0("/homes/", user)
 
 sim_output_dir <- paste0(root, "/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_n_patch_trial_outputs")
 compiled_output_dir <- paste0(root, "/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations")
+final_output_dir <- paste0(root, "/MASH-Main/MASH-dev/AlecGeorgoff/Bioko/Bioko_Island_Cluster_Simulations/BI_compiled_data")
 
 #######################
 ## OPTIONS
 #######################
 
-compile_single_trajectories <- F
-compile_ensemble_trajectories <- F
+compile_single_trajectories <- T
+compile_ensemble_trajectories <- T
 
 clusters_to_compile <- c(1:41)
 num_regions <- 8
@@ -184,9 +185,11 @@ if (compile_ensemble_trajectories) {
 
 compiled_conversion_curves_single <- compiled_conversion_curves_single[-1,]
 compiled_full_curves_single <- compiled_full_curves_single[-1,]
+compiled_conversion_curves_ensemble <- compiled_conversion_curves_ensemble[-1,]
+compiled_full_curves_ensemble <- compiled_full_curves_ensemble[-1,]
 
 #######################
-## Aggregate regions
+## Aggregate regions (Single Trajectory)
 #######################
 
 # aggregate by time-location-status combinations:
@@ -205,3 +208,35 @@ compiled_full_curves_single <- aggregate(compiled_full_curves_single$N,
                                         FUN = sum)
 names(compiled_full_curves_single)[names(compiled_full_curves_single) == "x"] <- "N"
 compiled_full_curves_single <- as.data.table(compiled_full_curves_single)
+
+#######################
+## Aggregate regions (Ensemble Trajectory)
+#######################
+
+# aggregate by time-location-status-ens_num combinations:
+compiled_conversion_curves_ensemble <- aggregate(compiled_conversion_curves_ensemble$N,
+                                               by = list(time = compiled_conversion_curves_ensemble$time,
+                                                         location = compiled_conversion_curves_ensemble$location,
+                                                         status = compiled_conversion_curves_ensemble$status,
+                                                         ens_num = compiled_conversion_curves_ensemble$ens_num),
+                                               FUN = sum)
+names(compiled_conversion_curves_ensemble)[names(compiled_conversion_curves_ensemble) == "x"] <- "N"
+compiled_conversion_curves_ensemble <- as.data.table(compiled_conversion_curves_ensemble)
+
+compiled_full_curves_ensemble <- aggregate(compiled_full_curves_ensemble$N,
+                                         by = list(time = compiled_full_curves_ensemble$time,
+                                                   location = compiled_full_curves_ensemble$location,
+                                                   status = compiled_full_curves_ensemble$status,
+                                                   ens_num = compiled_full_curves_ensemble$ens_num),
+                                         FUN = sum)
+names(compiled_full_curves_ensemble)[names(compiled_full_curves_ensemble) == "x"] <- "N"
+compiled_full_curves_ensemble <- as.data.table(compiled_full_curves_ensemble)
+
+#######################
+## Write out results
+#######################
+
+write.csv(compiled_conversion_curves_single, file = paste0(final_output_dir, "/compiled_conversion_curves_single.csv"))
+write.csv(compiled_full_curves_single, file = paste0(final_output_dir, "/compiled_full_curves_single.csv"))
+write.csv(compiled_conversion_curves_ensemble, file = paste0(final_output_dir, "/compiled_conversion_curves_ensemble.csv"))
+write.csv(compiled_full_curves_ensemble, file = paste0(final_output_dir, "/compiled_full_curves_ensemble.csv"))
