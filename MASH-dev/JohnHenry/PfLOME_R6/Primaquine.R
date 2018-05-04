@@ -20,6 +20,7 @@ simPerson = function(person, tfin, dt, p, PQ){
         if(PQ == T){
           person$get_pathogen()$get_Pf()[[1]]$set_Gt(0)
           person$get_pathogen()$get_Pf()[[1]]$set_Gtt(rep(0,10))
+          person$get_pathogen()$update_history(T)
         }
       }
     }
@@ -40,10 +41,11 @@ simPerson2 = function(person, tfin, dt, PQ, Treat,Delay=0){
       person$Treat(TreatTime,1)
     }
     if(PQ == T && t == TreatTime && person$get_Fever()==T){
-      person$get_pathogen()$get_Pf()[[1]]$set_Gt(NaN)
+      person$get_pathogen()$get_Pf()[[1]]$set_Gt(0)
       Ptt = person$get_pathogen()$get_Pf()[[1]]$get_Ptt()
       Ptt[1:5] = rep(0,5)
       person$get_pathogen()$get_Pf()[[1]]$set_Ptt(Ptt)
+      person$get_pathogen()$update_history(T)
     }
     t = t+dt
   }
@@ -185,4 +187,31 @@ TRtest = function(p,SS){
   }
   TR = TR/SS
   return(TR)
+}
+
+PlotTETot = function(person,TPQ){
+  
+  TE = person$get_history()$TE
+  t = seq(1,length(TE))
+  tetot = sum(TE)
+  
+  if(TPQ == 1){
+    plot(t,TE,type="l",xlim=c(0,200),main="Untreated")
+  }
+  if(TPQ == 2){
+    plot(t,TE,type="l",xlim=c(0,200),main="Treated, No Primaquine")
+  }
+  if(TPQ == 3){
+    plot(t,TE,type="l",xlim=c(0,200),main="Treated, With Primaquine")
+  }
+  legend(150,.7,bquote(TE == .(tetot)))
+  polygon(c(t,rev(t)),c(0*TE,rev(TE)),col="blue")
+  
+}
+
+PlotEffectSize = function(ES,ES2,ES3){
+  p = seq(0,1,.01)
+  RES = 1-(ES*(1-p)+ES3*p)/(ES*(1-p)+ES2*p)
+  plot(p,RES,type="l",ylim=c(0,1),xlab="Treatment Coverage Proportion",ylab="Proportional Reduction in TE",main="Relative Reduction in TE Due to PQ")
+  abline(h=1-ES3/ES2,lty=2)
 }

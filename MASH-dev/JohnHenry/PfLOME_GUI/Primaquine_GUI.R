@@ -192,8 +192,10 @@ ui <- fluidPage(
       
       ########################   Simulation Tab   ########################################
       
-      tabPanel("Simulation"
-      
+      tabPanel("Simulation",
+                    
+               plotOutput(outputId = "simPlot")
+                  
       )
    )
 )
@@ -404,12 +406,126 @@ ui <- fluidPage(
     PlotTE(person)
     
     #update fever and treatment parameter csv
-    #feverTEpars = c(input$feverThresh,input$Treat,input$TreatmentDelay,)
+    write.csv(c(input$feverThresh,input$TreatmentDelay),'feverTreatPAR.csv')
     
   })
     
     
     ##########################    Simulation Tab     ################################
+  
+  output$simPlot <- renderPlot({
+      
+      #read and extract tent parameters
+      tp = read.csv('tentPAR.csv')
+      tp = as.matrix(tp)[,2]
+      MZ0 = tp[1]
+      MaxPD = tp[2]
+      PeakD = tp[3]
+      Duration = tp[4]
+      
+      #read and extract gametocyte parameters
+      gp = read.csv('gamPAR.csv')
+      gp = as.matrix(gp)[,2]
+      ggr = gp[1]
+      gdk = gp[2]
+      
+      #read and extract transmission parameters
+      tep = read.csv('tePAR.csv')
+      tep = as.matrix(tep)[,2]
+      xh = tep[1]
+      pow = tep[2]
+      MaxEfficiency = tep[3]
+      
+      #read and extract fever and treatment parameters
+      ftp = read.csv('feverTreatPAR.csv')
+      ftp = as.matrix(ftp)[,2]
+      feverThresh = ftp[1]
+      Delay = ftp[2]
+      
+      
+      #set simulation parameters
+      t = 1
+      dt = 1
+      tFinal = 365
+      
+      #set tent function parameters
+      person = Human$new(1,IncImm=F,IncPfPed=F)
+      person$infectHuman(0,1)
+      person$get_pathogen()$get_Pf()[[1]]$set_mnMZ0(MZ0)
+      person$get_pathogen()$get_Pf()[[1]]$set_Pt(MZ0)
+      person$get_pathogen()$get_Pf()[[1]]$set_mnMaxPD(MaxPD)
+      person$get_pathogen()$get_Pf()[[1]]$set_mnPeakD(PeakD)
+      person$get_pathogen()$get_Pf()[[1]]$set_mnDuration(Duration)
+      
+      person2 = Human$new(1,IncImm=F,IncPfPed=F)
+      person2$infectHuman(0,1)
+      person2$get_pathogen()$get_Pf()[[1]]$set_mnMZ0(MZ0)
+      person2$get_pathogen()$get_Pf()[[1]]$set_Pt(MZ0)
+      person2$get_pathogen()$get_Pf()[[1]]$set_mnMaxPD(MaxPD)
+      person2$get_pathogen()$get_Pf()[[1]]$set_mnPeakD(PeakD)
+      person2$get_pathogen()$get_Pf()[[1]]$set_mnDuration(Duration)
+      
+      person3 = Human$new(1,IncImm=F,IncPfPed=F)
+      person3$infectHuman(0,1)
+      person3$get_pathogen()$get_Pf()[[1]]$set_mnMZ0(MZ0)
+      person3$get_pathogen()$get_Pf()[[1]]$set_Pt(MZ0)
+      person3$get_pathogen()$get_Pf()[[1]]$set_mnMaxPD(MaxPD)
+      person3$get_pathogen()$get_Pf()[[1]]$set_mnPeakD(PeakD)
+      person3$get_pathogen()$get_Pf()[[1]]$set_mnDuration(Duration)
+      
+      #set gametocyte parameters
+      person$get_pathogen()$get_Pf()[[1]]$set_ggr(ggr)
+      person$get_pathogen()$get_Pf()[[1]]$set_gdk(gdk)
+      
+      person2$get_pathogen()$get_Pf()[[1]]$set_ggr(ggr)
+      person2$get_pathogen()$get_Pf()[[1]]$set_gdk(gdk)
+      
+      person3$get_pathogen()$get_Pf()[[1]]$set_ggr(ggr)
+      person3$get_pathogen()$get_Pf()[[1]]$set_gdk(gdk)
+      
+      #set transmission parameters
+      person$get_pathogen()$set_teMed(xh)
+      person$get_pathogen()$set_teSlope(10^pow)
+      person$get_pathogen()$set_teMax(MaxEfficiency)
+      
+      person2$get_pathogen()$set_teMed(xh)
+      person2$get_pathogen()$set_teSlope(10^pow)
+      person2$get_pathogen()$set_teMax(MaxEfficiency)
+      
+      person3$get_pathogen()$set_teMed(xh)
+      person3$get_pathogen()$set_teSlope(10^pow)
+      person3$get_pathogen()$set_teMax(MaxEfficiency)
+      
+      #set fever threshold
+      person$get_healthState()$set_feverThresh(input$feverThresh)
+      
+      person2$get_healthState()$set_feverThresh(input$feverThresh)
+      
+      person3$get_healthState()$set_feverThresh(input$feverThresh)
+      
+      #simulate untreated person
+      simPerson2(person,tFinal,dt,F,F,Delay)
+      
+      #simulate treated person, no PQ
+      simPerson2(person2,tFinal,dt,F,T,Delay)
+      
+      #simulate treated person, include PQ
+      simPerson2(person3,tFinal,dt,T,T,Delay)
+      
+      #plot results
+      layout(matrix(c(1,4,2,4,3,4),3,2,byrow=T))
+      PlotTETot(person,1)
+      PlotTETot(person2,2)
+      PlotTETot(person3,3)
+      
+      TE1 = sum(person$get_history()$TE)
+      TE2 = sum(person2$get_history()$TE)
+      TE3 = sum(person3$get_history()$TE)
+      
+      PlotEffectSize(TE1,TE2,TE3)
+    
+  })
+  
   
 }
 

@@ -84,11 +84,19 @@ Pathogen <- R6Class("Pathogen",
                         }
                       },
                       
-                      update_history = function(){
-                        private$history$Ptot = c(private$history$Ptot,private$Ptot)
-                        private$history$Gtot = c(private$history$Gtot,private$Gtot)
-                        private$history$TE = c(private$history$TE,private$TE)
-                        private$history$PfMOI = c(private$history$PfMOI,private$PfMOI)
+                      update_history = function(overwrite=F){
+                        if(overwrite==F){
+                          private$history$Ptot = c(private$history$Ptot,private$Ptot)
+                          private$history$Gtot = c(private$history$Gtot,private$Gtot)
+                          private$history$TE = c(private$history$TE,private$TE)
+                          private$history$PfMOI = c(private$history$PfMOI,private$PfMOI)
+                        }
+                        if(overwrite==T){
+                          private$history$Ptot[length(private$history$Ptot)] = private$Ptot
+                          private$history$Gtot[length(private$history$Gtot)] = private$Gtot
+                          private$history$TE[length(private$history$TE)] = private$TE
+                          private$history$PfMOI[length(private$history$PfMOI)] = private$PfMOI
+                        }
                       },
                       
                       
