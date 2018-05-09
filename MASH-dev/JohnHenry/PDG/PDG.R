@@ -1,30 +1,33 @@
-Human <- R6Class("PDGHuman",
+PDGHuman <- R6Class("PDGHuman",
                  
                  ## Public Fields, Methods, and Initialization
                  public = list(
                    
                    ## Initialization of Components
                    
-                   initialize = function(ixH = NA, age = NA, sex = NA, locH = NA, IncImm=T, IncPfPed = T){
+                   initialize = function(ixH = NA, age = NA, sex = NA, locH = NA){
                      
                      private$ixH = ixH ## id number
                      private$age = age
                      private$sex = sex
                      private$locH = locH ## location (human)
                      
-                     private$pfAges = 5 ## 5 age categories of infection, for example
-                     private$pf = rep(0,private$pfAges)
-                     private$Pt = 0
-                     private$Gt = 0
+                     private$pfAges = 16 ## 16 age categories of infection, for example
+                     private$Pf = rep(0,private$pfAges)
+                     private$Pt = NaN
+                     private$Gt = NaN
                      private$ggr = .01 ## about .01 Gt produced per Pt
-                     private$gdk = .5 ## about 50 percent of Gt die over 1-2 weeks (halflife around 10 days)
-                     private$pfdr = .05 # 5 percent attrition rate of "old" infections - pf death rate
-                     private$A = self$ageMatrix(5)
-                     private$Ptmu = log(c(6,10,8,6,4)) ## mean of lognormal densities for ages 1:5; must be of length pfAges
-                     private$Ptvar = c(.1,.1,.1,.1,.1) ## var of " "; must be of length pfAges
+                     private$gdk = .7 ## about 70 percent of Gt die over 1-2 weeks (halflife around 10 days)
+                     private$pfdr = .005 # .5 percent attrition rate of "old" infections - pf death rate
+                     private$A = self$ageMatrix(private$pfAges)
+                     private$Ptmu = log(c(0,8,10,12,11.5,11,10.5,10,9.5,9,8.5,8,7.5,7,7,7)) ## mean of lognormal densities for ages 1:pfAges; must be of length pfAges
+                     private$Ptvar = rep(.1,16) ## var of " "; must be of length pfAges
                      
                      private$Imm = 0
-                     private$ImmCounter = 0
+                     private$immCounter = 0
+                     private$immHalf = 4
+                     private$immSlope = 3
+                     private$immThresh = 7.5
                      
                      private$fever = 0
                      private$feverThresh = 8
@@ -37,84 +40,120 @@ Human <- R6Class("PDGHuman",
                    ######## Infection Methods #########
                    
                    
-                   infectHuman = function(){
-                      private$pf[1] = private$pf[1]+1
+                   infect_Human = function(){
+                      private$Pf[1] = private$Pf[1]+1
                     },
                    
-                   clearAllPathogens = function(){
-                      private$pf = rep(0,5)
+                   clear_All_Pathogens = function(){
+                      private$Pf = rep(0,private$pfAges)
+                      private$Pt = 0
+                      private$Gt = 0
                    },
                    
-                   moveHuman = function(newlocH){
-                     self$set_locH(newlocH)
-                   },
                    
-                   Treat = function(t,Drug){
-                     private$healthState$Treat(t,Drug)
-                   },
-                   
-                   ########## Update Function #########
+                   ########## Update Functions #########
                    
                    
-                   updateHuman = function(){
+                   update_Human = function(){
                      
-                     ageInfections()
-                     updatePt()
-                     updateMOI()
-                     updateImm()
-                     updateHist()
+                     ## these use old value of Pt, so must be computed first
+                     self$update_Imm()
+                     self$update_Gt()
+                     
+                     ## these update respectively Pf, Pt, MOI
+                     self$age_Infections()
+                     self$update_Pt()
+                     self$update_MOI()
+                     
+                     self$update_History()
                      
                    },
                    
-                   ageInfections = function(){
+                   age_Infections = function(){
                      
                      ## removes from final category at a particular rate, relatively small
-                     private$pf[5] = private$pf[5] - sum(rbinom(5,1,private$pfdr))
+                     private$Pf[private$pfAges] = max(private$Pf[private$pfAges] - sum(rbinom(private$Pf[private$pfAges],1,private$pfdr)),0)
                      
                      ## shifts to next age group
-                     private$pf = private$A %*% private$pf
+                     private$Pf = private$A %*% private$Pf
                      
                    },
                    
-                   updatePt = function(){
+                   update_Pt = function(){
                      
                      private$Pt = 0
                      
-                     for(i in 1:5){
-                       private$Pt = private$Pt + sum(rlnorm(private$pf[i],private$Ptmu[i],private$Ptvar[i]))
+                     ## pull from all of the age-specific distributions, sum to get total Pt; limit tails of dist'ns
+                     for(i in 1:private$pfAges){
+                       if(private$Pf[i] > 0){
+                          private$Pt = log10(10^private$Pt + sum(10^(min(rlnorm(private$Pf[i],private$Ptmu[i],private$Ptvar[i]),13))))
+                       }
+                     }
+                     
+                     ## don't care about very small numbers of parasites
+                     if(private$Pt < 1){
+                       private$Pt = NaN
+                     }
+                     
+                     ## include immune effect
+                     ## this is a stub; here we just discount Pt by at most 99 percent
+                     private$Pt = log10((1-.99*private$Imm)*10^private$Pt)
+                     
+                     
+                   },
+                   
+                   update_Gt = function(){
+                     
+                     ## multiply previous Pt by the average Gt created per Pt, log scaling
+                     ## sequestration/delay handled by the large (1-2 wk) time steps
+                     if(is.na(private$Pt)==F){
+                        private$Gt = ifelse(is.na(private$Gt), log10(private$ggr*10^private$Pt), log10((1-private$gdk)*10^private$Gt + private$ggr*10^private$Pt))
+                        if(is.na(private$Gt)==F){
+                          if(private$Gt < 3){
+                            private$Gt = NaN
+                          }
+                        }
+                     }
+                     if(is.na(private$Pt)){
+                       private$Gt = log10((1-private$gdk)*10^private$Gt)
+                       if(is.na(private$Gt)==F){
+                         if(private$Gt < 3){
+                           private$Gt = NaN
+                         }
+                       }
                      }
                      
                    },
                    
-                   updateGt = function(){
-                     
-                     ## multiply previous Pt by the average Gt created per Pt, log scaling
-                     ## sequestration/delay handled by the large (1-2 wk) time steps
-                     private$Gt = log10((1-gdk)*10^private$Gt + private$ggr*10^private$Pt)
-                     
-                   }
-                   
-                   updateMOI = function(){
+                   update_MOI = function(){
                      
                      ## add total active infections in each age category
-                     private$MOI = sum(private$pf)
+                     private$MOI = sum(private$Pf)
                      
                    },
                    
-                   updateImm = function(){
+                   update_Imm = function(){
                      
                      ## count up if above threshhold parasite density, down if below
-                     private$ImmCounter = ifelse(Pt > private$PtThresh, private$ImmCounter+1, private$ImmCounter-1)
+                     private$immCounter = ifelse(private$Pt < private$immThresh | is.nan(private$Pt), max(private$immCounter-.1,0), min(private$immCounter+1,10))
+                     ## ensures nonnegative-definiteness of counters
+                     private$immCounter = max(0,private$immCounter)
                      ## sigmoidal conversion of counter to immune effect
-                     private$Imm = self$sigmoid(private$Pt,private$immHalf,private$immSlope)
+                     private$Imm = self$sigmoid(private$immCounter,private$immHalf,private$immSlope)
                      
                    },
                    
-                   updateHist = function(){
+                   update_History = function(){
+                     
                      private$history$MOI = c(private$history$MOI,private$MOI)
                      private$history$Pt = c(private$history$Pt,private$Pt)
                      private$history$Gt = c(private$history$Gt,private$Gt)
-                   }
+                     private$history$Pf = c(private$history$Pf,private$Pf)
+                     private$history$Imm = c(private$history$Imm,private$Imm)
+                     private$history$immCounter = c(private$history$immCounter,private$immCounter)
+                     
+                   },
+                   
                    
                    ########## Accessors ##############
                    
@@ -155,50 +194,36 @@ Human <- R6Class("PDGHuman",
                      private$fever
                    },
                    
-                   get_pathogen = function(){
-                     private$pf
+                   get_Pf = function(){
+                     private$Pf
                    },
                    
                    get_Pt = function(){
-                     sum(private$Pt)
+                     private$Pt
                    },
                    
                    get_Gt = function(){
-                     private$pathogen$get_Gt()
+                     private$Gt
                    },
                    
-                   get_Drug = function(){
-                     private$healthState$get_Drug()
-                   },
-                   
-                   get_RxStart = function(){
-                     private$healthState$get_RxStart()
-                   },
-                   
-                   get_PD = function(){
-                     private$healthState$get_PD()
-                   },
-                   
-                   get_Fever = function(){
-                     private$healthState$get_Fever()
-                   },
-                   
-                   get_PfMOI = function(){
-                     private$pathogen$get_PfMOI()
+                   get_MOI = function(){
+                     private$MOI
                    },
                    
                    get_history = function(){
-                     
+                     private$history
                    },
                    
                    
                    ################# extra functions #################
                    
                    
+                   ## sigmoid function
                    sigmoid = function(x,xhalf,b){
                      (x/xhalf)^b/((x/xhalf)^b+1)
                    },
                    
+                   ## creates tridiagonal matrix, used to create aging matrix
                    tridiag = function(upper, lower, main) {
                      out = matrix(0,length(main),length(main))
                      diag(out) = main
@@ -208,6 +233,8 @@ Human <- R6Class("PDGHuman",
                      return(out)
                    },
                    
+                   ## aging matrix - transitions parasites to next age group,
+                   ## keeps those at end stationary ("oldest" class)
                    ageMatrix = function(size){
                      u = rep(0,size-1)
                      l = rep(1,size-1)
@@ -218,7 +245,10 @@ Human <- R6Class("PDGHuman",
                    
                  ),
                  
+                 
                  ## Private Fields
+                 
+                 
                  private = list(
                    
                    ## human base traits
@@ -228,7 +258,8 @@ Human <- R6Class("PDGHuman",
                    locH = NULL, ## human Location
                    
                    ## Pf
-                   pf = NULL, ## list with number of infections at different age categories
+                   Pf = NULL, ## list with number of infections at different age categories
+                   pfAges = NULL, ## number of age classes
                    pfdr = NULL, ## probability of clearing old infection
                    A = NULL, ## aging matrix (shifts pf)
                    Pt = NULL, ## asexual parasite count
@@ -244,6 +275,7 @@ Human <- R6Class("PDGHuman",
                    immHalf = NULL, ## half maximum immunity, sigmoid param
                    immSlope = NULL, ## slope of immune conversion, sigmoid param
                    immCounter = NULL, ## counts up if Pt > PtThresh, down otherwise
+                   immThresh = NULL, ## immunogenic threshhold, based on Pt
                    
                    ## Health
                    fever = NULL, ## fever, can be binary or graded (if graded, need sigmoid params)
