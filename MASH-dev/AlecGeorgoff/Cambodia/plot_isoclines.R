@@ -43,9 +43,10 @@ Y_f0 = 1000
 Y_v0 = 500
 
 X_f_equilibrium = function(X_f, X_v){
-  result <- ((b*(1-p)*a_v*exp(-g_v*n)*a_v*c*V_v*((1-p)*X_f+X_v))/((H_f*(1-p)+H_v)*(H_f*(1-p)+H_v+a_v*c*((1-p)*X_f+X_v)))+(b*p*a_f*exp(-g_f*n)*a_f*c*V_f*X_f)/(H_f*H_f*(g_f+(a_f*c*X_f/H_f))))*(H_f-X_f) -
+  # dX_f/dt after equilibrium mosquito population is inserted:
+  result <- ((b*(1-p)*a_v*exp(-g_v*n)*a_v*c*V_v*((1-p)*X_f+X_v))/((H_f*(1-p)+H_v)*(g_v*(H_f*(1-p)+H_v)+a_v*c*((1-p)*X_f+X_v)))+(b*p*a_f*exp(-g_f*n)*a_f*c*V_f*X_f)/(H_f*H_f*(g_f+(a_f*c*X_f/H_f))))*(H_f-X_f) -
     r*X_f
-  return(abs(result))
+  return(result)
 }
 
 my_optim_function <- function(x){
@@ -53,17 +54,20 @@ my_optim_function <- function(x){
   fit1 <- optim(
     par = 0,
     fn = X_f_equilibrium,
-    method = "BFGS",
+    method = "L-BFGS-B",
+    lower = 0,
     X_f = x
   )
   
-  out <- fit1$par
+  out <- fit1$value
   return(out)
   
 }
 
-x_vals <- 910:930
+# x_vals <- seq(910,930,0.01)
+x_vals <- 0:1000
 y_vals <- sapply(x_vals, my_optim_function)
 
 df <- as.data.frame(cbind(x_vals, y_vals))
 
+plot(df$x_vals, df$y_vals)

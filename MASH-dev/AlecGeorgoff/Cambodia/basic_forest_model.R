@@ -22,8 +22,8 @@ a_f = 0.88   # Human blood feeding rate in forest
 g_f = 0.1   # Per capita death rate of mosquitoes in forest
 H_f = 1000  # Human population (density?) in forest
 X_f = 0     # Number of infected forest-goers
-p = 0.7     # Proportion of time forest-goers spend in the forest
-V_f = 1000  # Vector population in forest
+p = 0.3     # Proportion of time forest-goers spend in the forest
+V_f = 5000  # Vector population in forest
 Y_f = 0     # Number of infected vectors in forest
 Z_f = exp(-g_f*n)*Y_f # Number of infectious vectors in forest
 
@@ -33,18 +33,18 @@ g_v = 0.1   # Per capita death rate of mosquitoes in village
 H_v = 5000  # Human population (density?) in village
 X_v = 0     # Number of infected villagers
 # 1 - p     # Proportion of time forest-goers spend in the village
-V_v = 5000   # Vector population in village
+V_v = 10   # Vector population in village
 Y_v = 0     # Number of infected vectors in village
 Z_v = exp(-g_v*n)*Y_v # Number of infectious vectors in village
 
 # Initial conditions
-X_f0 = 50
-X_v0 = 50
+X_f0 = 200
+X_v0 = 500
 Y_f0 = 1000
-Y_v0 = 500
+Y_v0 = 10
 
 # Set time scale
-times = 0:365
+times = 0:1000
 
 require(deSolve)
 FM.ode = function(t,y,parms){with(as.list(c(y,parms)),{
@@ -102,3 +102,14 @@ Y_v_plot <- ggplot(out,
 
 Y_v_plot + ggtitle("Number of Infected Vectors in Village") +
   labs(x = "Time Step", y = "Infected Vectors")
+
+
+X_v_SS <- out$X_v[out$time == max(times)]
+X_f_SS <- out$X_f[out$time == max(times)]
+
+S_v <- a_v/g_v
+chi_v <- ((1 - p) * X_f_SS + X_v_SS) / ((1 - p) * H_f + H_v) # prevalence in the village
+
+R_0_v <- (X_v_SS * (1 + S_v * c * chi_v)) / ((H_v - X_v_SS) * chi_v * (1 - p))
+
+print(paste0("R value in village = ", R_0_v))
