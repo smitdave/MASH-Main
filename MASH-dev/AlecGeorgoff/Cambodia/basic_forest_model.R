@@ -33,7 +33,7 @@ g_v = 0.1   # Per capita death rate of mosquitoes in village
 H_v = 5000  # Human population (density?) in village
 X_v = 0     # Number of infected villagers
 # 1 - p     # Proportion of time forest-goers spend in the village
-V_v = 10   # Vector population in village
+V_v = 100   # Vector population in village
 Y_v = 0     # Number of infected vectors in village
 Z_v = exp(-g_v*n)*Y_v # Number of infectious vectors in village
 
