@@ -175,7 +175,7 @@ mbites_updateState <- function(){
     self$energetics()    # MBITES-Energetics.R
     self$survival()      # MBITES-Survival.R
 
-    self$checkEggMaturation()
+    self$checkEggMaturation() # MBITES-Oogenesis.R
 
     # The states in priority order
     if(private$starved){
