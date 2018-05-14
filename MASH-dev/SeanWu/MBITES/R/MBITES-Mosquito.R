@@ -61,9 +61,9 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                      private$state = state
 
                      # set up history
-                     private$tHist[1] = bDay
-                     private$sHist[1] = site$get_id()
-                     private$bHist[1] = state
+                     private$hist$tHist[1] = bDay
+                     private$hist$sHist[1] = site$get_id()
+                     private$hist$bHist[1] = state
 
                    } # end constructor
 
@@ -216,8 +216,8 @@ mbites_trackHistory <- function(){
   private$nEvent = private$nEvent + 1L
 
   # check we have not overran vector
+  lVec = length(private$hist$tHist)
   if(private$nEvent > lVec){
-    lVec = length(private$hist$tHist)
     private$hist$tHist = c(private$hist$tHist,numeric(lVec))
     private$hist$sHist = c(private$hist$sHist,integer(lVec))
     private$hist$bHist = c(private$hist$bHist,character(lVec))
