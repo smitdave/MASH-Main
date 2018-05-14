@@ -140,24 +140,6 @@ mbites_checkRefeed <- function(){
   }
 }
 
-#' MBITES: Check Egg Maturation
-#'
-#' This function is called during \code{\link{mbites_checkRefeed}},
-#' it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
-#' if this condition is filled. If the eggs are not mature, go on another blood search.
-#'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
-#'
-mbites_checkEggMaturation <- function(){
-  # check egg maturation
-  if(private$eggT <= private$tNow){
-    private$gravid = TRUE
-    private$state = "O"
-  } else {
-    private$gravid = FALSE
-    private$state = "B"
-  }
-}
-
 #' MBITES: Null Refeeding Behavior
 #'
 #' If using the second model of oogenesis, refeeding should be disabled by using this stand-in function.
@@ -165,8 +147,8 @@ mbites_checkEggMaturation <- function(){
 #'
 mbites_checkRefeed_null <- function(){
   # null function
-  private$gravid = TRUE
-  private$state = "O"
+  # private$gravid = TRUE (already set in mbites_checkEggMaturation)
+  # private$state = "O" (already set in mbites_checkEggMaturation)
 }
 
 #' MBITES: Probability of Refeeding
@@ -187,4 +169,27 @@ mbites_pReFeed <- function(){
 #'
 mbites_pReFeed_null <- function(){
   0
+}
+
+
+###############################################################################
+# Egg Maturation (transition to oviposition; called from updateState)
+###############################################################################
+
+#' MBITES: Check Egg Maturation
+#'
+#' This function is called during \code{\link{mbites_checkRefeed}},
+#' it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
+#' if this condition is filled. If the eggs are not mature, go on another blood search.
+#'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
+#'
+mbites_checkEggMaturation <- function(){
+  # check egg maturation
+  if(private$eggT <= private$tNow){
+    private$gravid = TRUE
+    private$state = "O"
+  } else {
+    private$gravid = FALSE
+    private$state = "B"
+  }
 }

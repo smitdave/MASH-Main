@@ -1,0 +1,163 @@
+\documentclass[12pt]{article}
+
+% load packages
+\usepackage{pgf}
+\usepackage{tikz}
+\usetikzlibrary{arrows,automata,positioning}
+\usepackage[latin1]{inputenc}
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{lightgray}{gray}{0.9}
+
+% 'inline' style code
+\lstset{
+    showstringspaces=false,
+    basicstyle=\ttfamily,
+    keywordstyle=\color{blue},
+    commentstyle=\color[grey]{0.6},
+    stringstyle=\color[RGB]{255,150,75}
+}
+
+\newcommand{\inlinecode}[2]{\colorbox{lightgray}{\lstinline[language=#1]$#2$}}
+
+% relative node positioning
+\tikzset{
+    position/.style args={#1:#2 from #3}{
+        at=(#3.#1), anchor=#1+180, shift=(#1:#2)
+    }
+}
+
+% open document
+\begin{document}
+
+% set tikz style
+\tikzset{
+    state/.style={
+           rectangle,
+           rounded corners,
+           draw=black, very thick,
+           minimum height=2em,
+           inner sep=2pt,
+           text centered,
+           align = center
+           },
+      control/.style={
+           rectangle,      
+           draw=red, very thick,
+           minimum height=2em,
+           inner sep=2pt,
+           text centered,
+      },
+      decision/.style={
+           circle,
+           fill = red,
+           draw=none,
+           text=white,
+           minimum height=2em,
+           inner sep=2pt,
+           text centered,
+           align = center
+      },
+      dot/.style={
+      	    circle,
+	    fill=black,
+	    draw=none
+      },
+}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% begin oneBout structure
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}
+\begin{tikzpicture}[->,>=stealth',thick]
+
+% begin nodes
+\node[control] (ENTER) {Enter Bout};
+
+\node[state, below of = ENTER, node distance = 2cm] (TIMING) {
+	\textbf{Timing} \\ 
+	launch at the previously scheduled launch time \\
+	\inlinecode{R}{tNow <- tNext}
+};
+
+\node[decision, below of = TIMING, node distance = 3cm] (SEARCH) {
+	Search?
+};
+
+\node[decision, below of = SEARCH, node distance = 5cm] (ATTEMPT) {
+	Attempt?
+};
+
+\node[state, right of = SEARCH, node distance = 5cm] (ATTEMPTSS) {
+	\textbf{Attempt Search} \\
+	\inlinecode{R}{self\$attempt_search()}	
+};
+
+\node[state, position=30:3.5cm from ATTEMPT] (ATTEMPTB) {
+	\textbf{Blood Feeding Attempt} \\
+	\inlinecode{R}{self\$attempt_B()}	
+};
+
+\node[state, position=15:2.25cm from ATTEMPT] (ATTEMPTO) {
+	\textbf{Oviposition Attempt} \\
+	\inlinecode{R}{self\$attempt_O()}	
+};
+
+\node[state, position=0:2.25cm from ATTEMPT] (ATTEMPTM) {
+	\textbf{Mating Attempt} \\
+	\inlinecode{R}{self\$attempt_M()}	
+};
+
+\node[state, position=-15:2.25cm from ATTEMPT] (ATTEMPTS) {
+	\textbf{Sugar Feeding Attempt} \\
+	\inlinecode{R}{self\$attempt_S()}	
+};
+
+\node[dot,position=5:7.5cm from ATTEMPT] (DOT) {};
+
+
+% end nodes
+
+% begin path
+\draw (ENTER) to node [right] {} (TIMING);
+\draw (TIMING) to node [left] {\inlinecode{R}{private\$search = TRUE}} (SEARCH);
+\draw (SEARCH) to node [left] {\inlinecode{R}{private\$search = FALSE}} (ATTEMPT);
+
+\draw (SEARCH) edge (ATTEMPTSS);
+
+\draw (ATTEMPT) edge [bend left=30] (ATTEMPTB);
+\draw (ATTEMPT) edge [bend left=15] (ATTEMPTO);
+\draw (ATTEMPT) edge (ATTEMPTM);
+\draw (ATTEMPT) edge [bend right=15] (ATTEMPTS);
+% end path
+
+\end{tikzpicture}
+\caption{Structure of control flow in oneBout} \label{fig:1}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% end oneBout structure
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% begin updateState structure
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{figure}
+\begin{tikzpicture}[->,>=stealth',thick]
+
+\end{tikzpicture}
+\caption{Structure of control flow in updateState} \label{fig:2}
+\end{figure}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% end updateState structure
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+% close document
+\end{document}

@@ -1,7 +1,7 @@
-/* 
+/*
  * File:   PF.cpp
  * Author: amit
- * 
+ *
  */
 
 #include "PF.h"
@@ -29,10 +29,10 @@ PF::PF(int d) {
 unsigned PF::updateP(double xPKill) {
     P = P + outOfLiver();   // P=0 until parasites come out of the liver when they are seeded by merz
     if (P > 0) {
-        P = P * getGrowthRate(xPKill);    // If P>0, compute the growth rate 
+        P = P * getGrowthRate(xPKill);    // If P>0, compute the growth rate
     }
     if (P < 1) {
-        P = 0; // If P<1, set it to zero 
+        P = 0; // If P<1, set it to zero
     }
     return P;
 }
@@ -41,7 +41,7 @@ unsigned PF::outOfLiver() {
     if (currentDay == startD) {
         return pow(10, merz);
     }
-    else return 0;    
+    else return 0;
 }
 
 double PF::medPFDens(int dd, double pKill) {
@@ -70,16 +70,16 @@ unsigned PF::updateG(double gPD, double iG_PD[], double surv) {
     //Mature Gametocyte Survival PARAMETER
     G = (G * surv + iG[9]) * gPD;
     if (G < 1) G = 0;
-    
-    //Maturation of iGetocytes 
+
+    //Maturation of iGetocytes
     for(int i=9; i>0; i--) {
         iG[i] = iG[i-1];
     }
-    
+
     //iGetocytogenesis
     double convert = 0.001;
     iG[0] = pow(10, P) * convert;
-    
+
     //The Effects of Drugs
     for(int i=0; i<10; i++) {
         iG[i] *= iG_PD[i];
@@ -91,7 +91,7 @@ unsigned PF::updateG(double gPD, double iG_PD[], double surv) {
 }
 
 bool PF::isActive() {
-    if(currentDay>=startD && currentDay<=endD) 
+    if(currentDay>=startD && currentDay<=endD)
         return true;
     else return false;
 }
@@ -105,4 +105,3 @@ PF::PF(const PF& orig) {
 
 PF::~PF() {
 }
-

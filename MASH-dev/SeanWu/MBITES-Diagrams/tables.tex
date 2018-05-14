@@ -1,0 +1,37 @@
+\documentclass{article}
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{lightgray}{gray}{0.9}
+
+\lstset{
+    showstringspaces=false,
+    basicstyle=\ttfamily,
+    keywordstyle=\color{blue},
+    commentstyle=\color[grey]{0.6},
+    stringstyle=\color[RGB]{255,150,75}
+}
+\newcommand{\inlinecode}[2]{\colorbox{lightgray}{\lstinline[language=#1]$#2$}}
+
+\usepackage{siunitx} % Required for alignment
+
+\sisetup{
+  round-mode          = places, % Rounds numbers
+  round-precision     = 2, % to 2 places
+}
+
+\begin{document}
+
+\begin{table}[h!]
+  \begin{center}
+    \caption{M-BITES Parameters}
+    \label{tab:table1}
+    \begin{tabular}{l | l | l | p{5cm}} %{l | c | r}
+      \textbf{Parameter} & \textbf{Identifier} & \textbf{Default Value} & \textbf{Description}\\
+      \hline
+      Search for Blood Feeding & \inlinecode{R}{Bs_succeed} & 0.99 & Probability that a mosquito's next bout will be an attempt \\
+    \end{tabular}
+  \end{center}
+\end{table}
+
+\end{document}

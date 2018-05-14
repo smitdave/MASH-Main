@@ -136,8 +136,6 @@ Mosquito$set(which = "public",name = "surviveFlight",
     value = mbites_surviveFlight, overwrite = TRUE
 )
 
-
-
 Mosquito$set(which = "public",name = "pEnergySurvival",
     value = mbites_pEnergySurvival, overwrite = TRUE
 )
