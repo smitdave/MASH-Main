@@ -86,7 +86,7 @@ mbites_oneBout <- function(){
   }
 
   # land
-  self$restingSpot()
+  self$restingSpot() # MBITES-Resting.R
 
   # rest
   self$updateState()
@@ -172,35 +172,41 @@ mbites_updateState <- function(){
   # only do this if you are alive
   if(private$state!="D"){
 
+    # sample time to next launch based on current state (before it is changed from energetics, survival, egg maturation, or reeding)
+    self$timing() # MBITES-Timing.R
+
     self$energetics()    # MBITES-Energetics.R
     self$survival()      # MBITES-Survival.R
 
-    self$checkEggMaturation() # MBITES-Oogenesis.R
+    # check again for being alive because can be killed in survival; don't want zombie mosquitoes preforming actions
+    if(private$state!="D"){
 
-    # The states in priority order
-    if(private$starved){
-      private$state = "S"
-    } else {
-      if(private$gravid){
-        self$checkRefeed()  # MBITES-Oogenesis.R
+      self$checkEggMaturation() # MBITES-Oogenesis.R
+
+      # The states in priority order
+      if(private$starved){
+        private$state = "S"
       } else {
-        private$state = "B"
+        if(private$gravid){
+          self$checkRefeed()  # MBITES-Oogenesis.R
+        } else {
+          private$state = "B"
+        }
       }
+
+      # check time-dependent events
+      self$findSwarm()
+      self$checkEstivation()
+
+      # if there are no resources of the required type present, set
+      # search = TRUE
+      self$checkForResources()
+
+      # call pathogen dynamics last so that EIP uses the tNext (time of next launch)
+      # to increment its incubation period now. this ensures that at the start of a bout,
+      # the pathogen is referencing the correct day.
+      self$pathogenDynamics() # PATHOGEN-XX.R
     }
-
-
-    # The states in priority order
-    self$timing()  #MBITES-Timing.R
-                   #NOTE: timing() can set state = 'M'
-
-    # if there are no resources of the required type present, set
-    # search = TRUE
-    self$checkForResources()
-
-    # call pathogen dynamics last so that EIP uses the tNext (time of next launch)
-    # to increment its incubation period now. this ensures that at the start of a bout,
-    # the pathogen is referencing the correct day.
-    self$pathogenDynamics()
   }
 }
 

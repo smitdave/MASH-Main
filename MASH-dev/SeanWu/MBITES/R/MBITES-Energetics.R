@@ -90,6 +90,7 @@ mbites_chooseSugarSource <- function(){
 #'
 mbites_sugarMeal <- function(){ # called from MBITES-Bouts.R, boutS
   private$energy = 1 # always top up to full
+  private$starved = FALSE # satiated
   if(!private$mature){
     private$energyPreG = private$energyPreG - MBITES:::Parameters$get_preGsugar()
     if(private$energyPreG <= 0 & private$mated){
