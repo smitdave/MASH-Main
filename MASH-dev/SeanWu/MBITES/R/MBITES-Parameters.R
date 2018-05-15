@@ -81,7 +81,7 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
                    disperse             = numeric(1), # P(move) even if resources present when i do checks
 
                    # Post-bout Landing, House Entering, and Resting
-                   boutFail_p           = integer(1), # 1/number of failed bouts until mosquito gives up and searches
+                   boutFail_p           = numeric(1), # 1/number of failed bouts until mosquito gives up and searches
                    b_wts                = numeric(5), # weights on {i,r,v,w,l}
                    o_wts                = numeric(5),
                    m_wts                = numeric(5),
@@ -455,22 +455,27 @@ get_InAndOut_row_MBITES_Parameters <- function(i){
 
 # set global parameters
 set_parameters_MBITES_Parameters <- function(
-
+  
   aqua_model           = "emerge",
 
   # Search behavior
   disperse             = 0, # P(move) even if resources present when i do checks
 
   # Post-bout Landing, House Entering, and Resting
-  boutFail_p           = integer(1), # 1/number of failed bouts until mosquito gives up and searches
-  b_wts                = numeric(5), # weights on {i,r,v,w,l}
-  o_wts                = numeric(5),
-  m_wts                = numeric(5),
-  s_wts                = numeric(5),
-  InAndOut             = matrix(0L,5,5), # weights on transitioning between resting spots
+  boutFail_p           = 1/3, # 1/number of failed bouts until mosquito gives up and searches
+  b_wts                = rep(1,5), # weights on {i,r,v,w,l}
+  o_wts                = rep(1,5),
+  m_wts                = rep(1,5),
+  s_wts                = rep(1,5),
+  InAndOut             = matrix(data = c(4,2,2,1,6,
+                                         2,1,1,1,4,
+                                         1,1,1,1,2,
+                                         0,0,0,0,1,
+                                         1,1,2,1,0),
+                                         nrow = 5,ncol = 5,byrow = TRUE,dimnames = list(c("i","w","v","r","l"),c("i","w","v","r","l"))), # weights on transitioning between resting spots
 
   # Timing
-  tSwarm               = numeric(1), # mating swarm timing
+  tSwarm               = 18.5/24, # mating swarm timing
   # estivation 1
   Emax                 = numeric(1),
   Eb                   = numeric(1),
@@ -481,152 +486,67 @@ set_parameters_MBITES_Parameters <- function(
   estivationDay        = integer(1),
 
   # Energetics
-  energyPreG           = numeric(1), # pre-gonotrophic energy requirement
-  preGsugar            = numeric(1), # sugar energy that can satisfy pre-gonotrophic energy
-  energyFromBlood_b    = numeric(1), # half-maximum parameter for mbites_energyFromBlood
-  S_u                  = numeric(1), # energy expended during a flight
-  S_sa                 = numeric(1), # pSugarBout
-  S_sb                 = numeric(1), # pSugarBout
+  energyPreG           = 0, # pre-gonotrophic energy requirement
+  preGsugar            = 0, # sugar energy that can satisfy pre-gonotrophic energy
+  energyFromBlood_b    = 0.25, # half-maximum parameter for mbites_energyFromBlood
+  S_u                  = 1/7, # energy expended during a flight
+  S_sa                 = 15, # pSugarBout
+  S_sb                 = 5, # pSugarBout
 
-  # Survival
-  Bs_surv              = numeric(1),
-  Os_surv              = numeric(1),
-  Ms_surv              = numeric(1),
-  Ss_surv              = numeric(1),
+  # Survival (baseline survival, see MBITES-Survival)
+  Bs_surv              = 0.95,
+  Os_surv              = 0.90,
+  Ms_surv              = 0.98,
+  Ss_surv              = 0.98,
 
-  B_surv               = numeric(1),
-  O_surv               = numeric(1),
-  M_surv               = numeric(1),
-  S_surv               = numeric(1),
+  B_surv               = 0.98,
+  O_surv               = 0.98,
+  M_surv               = 0.98,
+  S_surv               = 0.98,
 
-  PPR_a                = numeric(1), # mbites_pPPRFlight
-  PPR_b                = numeric(1), # mbites_pPPRFlight
-  S_a                  = numeric(1), # mbites_pEnergySurvival
-  S_b                  = numeric(1), # mbites_pEnergySurvival
+  PPR_a                = 5, # mbites_pPPRFlight
+  PPR_b                = 1000, # mbites_pPPRFlight
+  S_a                  = 20, # mbites_pEnergySurvival
+  S_b                  = 10, # mbites_pEnergySurvival
 
-  TATTER               = logical(1), # control tattering
-  ttsz_p               = numeric(1), # wing tattering (size of damage)
-  ttsz_a               = numeric(1),
-  ttsz_b               = numeric(1),
+  ttsz_p               = 0.5, # wing tattering (size of damage)
+  ttsz_a               = 5,
+  ttsz_b               = 95,
 
-  ttr_a                = numeric(1), # wing tattering (probability of death)
-  ttr_b                = numeric(1),
+  ttr_a                = 15, # wing tattering (probability of death)
+  ttr_b                = 500,
 
-  chm_a                = numeric(1), # chemical damage to mosquito body
-  chm_b                = numeric(1),
+  chm_a                = 15, # chemical damage to mosquito body
+  chm_b                = 500,
 
-  SENESCE              = logical(1), # control senescence
-  sns_a                = numeric(1), # senescence parameters
-  sns_b                = numeric(1), # senescence parameters
+  sns_a                = 0.085, # senescence parameters
+  sns_b                = 100, # senescence parameters
 
   # BloodMeal
-  bm_a                 = numeric(1), # Beta-distributed bloodmeal size
-  bm_b                 = numeric(1), # Beta-distributed bloodmeal size
+  bm_a                 = 7.5, # Beta-distributed bloodmeal size
+  bm_b                 = 2.5, # Beta-distributed bloodmeal size
 
-  OVERFEED             = logical(1), # control overfeeding
-  of_a                 = numeric(1),
-  of_b                 = numeric(1),
+  # overfeeding
+  of_a                 = 5,
+  of_b                 = 5e3,
 
   # Oogenesis
-  bloodPerEgg          = numeric(1), # egg provision: how much blood does each egg need?
-  bs_m                 = numeric(1), # mean of normally dist. egg batch
-  bs_sd                = numeric(1), # sd of normally dist. egg batch
-  maxBatch             = integer(1), # max batch size
-  emt_m                = numeric(1), # mean of normally dist. maturation time
-  emt_sd               = numeric(1), # sd of normally dist. maturation time
+  bloodPerEgg          = 0.05, # egg provision: how much blood does each egg need?
+  bs_m                 = 30, # mean of normally dist. egg batch
+  bs_sd                = 5, # sd of normally dist. egg batch
+  maxBatch             = 60, # max batch size
+  emt_m                = 3, # mean of normally dist. maturation time
+  emt_sd               = 1, # sd of normally dist. maturation time
 
-  rf_a                 = numeric(1), # refeeding probability
-  rf_b                 = numeric(1)
+  rf_a                 = 60, # refeeding probability
+  rf_b                 = 5e3
 
 ){
 
-  # set timing closures
 
 
 }
 
-
-aqua_model           = "emerge",
-
-# Search behavior
-disperse             = numeric(1), # P(move) even if resources present when i do checks
-
-# Post-bout Landing, House Entering, and Resting
-boutFail_p           = integer(1), # 1/number of failed bouts until mosquito gives up and searches
-b_wts                = numeric(5), # weights on {i,r,v,w,l}
-o_wts                = numeric(5),
-m_wts                = numeric(5),
-s_wts                = numeric(5),
-InAndOut             = matrix(0L,5,5), # weights on transitioning between resting spots
-
-# Timing
-tSwarm               = numeric(1), # mating swarm timing
-# estivation 1
-Emax                 = numeric(1),
-Eb                   = numeric(1),
-Ep                   = numeric(1),
-eEndm                = numeric(1),
-eEndSd               = numeric(1),
-# estivation 2
-estivationDay        = integer(1),
-
-# Energetics
-energyPreG           = numeric(1), # pre-gonotrophic energy requirement
-preGsugar            = numeric(1), # sugar energy that can satisfy pre-gonotrophic energy
-energyFromBlood_b    = numeric(1), # half-maximum parameter for mbites_energyFromBlood
-S_u                  = numeric(1), # energy expended during a flight
-S_sa                 = numeric(1), # pSugarBout
-S_sb                 = numeric(1), # pSugarBout
-
-# Survival
-Bs_surv              = numeric(1),
-Os_surv              = numeric(1),
-Ms_surv              = numeric(1),
-Ss_surv              = numeric(1),
-
-B_surv               = numeric(1),
-O_surv               = numeric(1),
-M_surv               = numeric(1),
-S_surv               = numeric(1),
-
-PPR_a                = numeric(1), # mbites_pPPRFlight
-PPR_b                = numeric(1), # mbites_pPPRFlight
-S_a                  = numeric(1), # mbites_pEnergySurvival
-S_b                  = numeric(1), # mbites_pEnergySurvival
-
-TATTER               = logical(1), # control tattering
-ttsz_p               = numeric(1), # wing tattering (size of damage)
-ttsz_a               = numeric(1),
-ttsz_b               = numeric(1),
-
-ttr_a                = numeric(1), # wing tattering (probability of death)
-ttr_b                = numeric(1),
-
-chm_a                = numeric(1), # chemical damage to mosquito body
-chm_b                = numeric(1),
-
-SENESCE              = logical(1), # control senescence
-sns_a                = numeric(1), # senescence parameters
-sns_b                = numeric(1), # senescence parameters
-
-# BloodMeal
-bm_a                 = numeric(1), # Beta-distributed bloodmeal size
-bm_b                 = numeric(1), # Beta-distributed bloodmeal size
-
-OVERFEED             = logical(1), # control overfeeding
-of_a                 = numeric(1),
-of_b                 = numeric(1),
-
-# Oogenesis
-bloodPerEgg          = numeric(1), # egg provision: how much blood does each egg need?
-bs_m                 = numeric(1), # mean of normally dist. egg batch
-bs_sd                = numeric(1), # sd of normally dist. egg batch
-maxBatch             = integer(1), # max batch size
-emt_m                = numeric(1), # mean of normally dist. maturation time
-emt_sd               = numeric(1), # sd of normally dist. maturation time
-
-rf_a                 = numeric(1), # refeeding probability
-rf_b                 = numeric(1)
 
 
 
