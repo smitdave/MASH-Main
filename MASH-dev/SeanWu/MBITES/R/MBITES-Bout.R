@@ -74,6 +74,7 @@ mbites_oneBout <- function(){
   # launch and try
   if(private$search){
     self$attempt_search() # search
+    private$searchNow = TRUE
   } else {
     # attempt an action
     switch(private$state,
@@ -83,13 +84,14 @@ mbites_oneBout <- function(){
       S = {self$attempt_S()},
       {stop("mosquito ",private$id," calling illegal behavioral state: ",private$state,"\n")}
     )
+    private$searchNow = FALSE
   }
 
   # land
   self$restingSpot() # MBITES-Resting.R
 
   # rest
-  self$updateState()
+  self$updateState() # MBITES-Bout.R
 
   # log history
   self$trackHistory()

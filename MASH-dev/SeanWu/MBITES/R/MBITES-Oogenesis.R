@@ -45,6 +45,80 @@ NULL
 
 
 ###############################################################################
+# Egg Maturation (called from updateState in MBITES-Bout.R)
+###############################################################################
+
+#' MBITES: Check Egg Maturation
+#'
+#' This function is called during \code{\link{mbites_checkRefeed}},
+#' it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
+#' if this condition is filled. If the eggs are not mature, go on another blood search.
+#'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
+#'
+mbites_checkEggMaturation <- function(){
+  # check egg maturation
+  if(private$eggT <= private$tNow){
+    private$gravid = TRUE
+    private$state = "O"
+  } else {
+    private$gravid = FALSE
+    private$state = "B"
+  }
+}
+
+
+###############################################################################
+# Refeed (called from updateState in MBITES-Bout.R)
+###############################################################################
+
+#' MBITES: Check Refeeding Behavior
+#'
+#' During \code{\link{mbites_updateState}}, if the mosquito is gravid, check for refeeding
+#' behavior as a function of the batch size. This function should *only* be used with the
+#' first model of oogenesis.
+#'  * This method is bound to \code{Mosquito_Female$checkRefeed}
+#'
+mbites_checkRefeed <- function(){
+  # check refeed
+  if(runif(1) < self$pReFeed()){
+    private$gravid = FALSE
+    private$state = "B" # check with DS
+  }
+}
+
+#' MBITES: Null Refeeding Behavior
+#'
+#' If using the second model of oogenesis, refeeding should be disabled by using this stand-in function.
+#'  * This method is bound to \code{Mosquito_Female$checkRefeed}
+#'
+mbites_checkRefeed_null <- function(){
+  # null function
+  # private$gravid = TRUE (already set in mbites_checkEggMaturation)
+  # private$state = "O" (already set in mbites_checkEggMaturation)
+}
+
+#' MBITES: Probability of Refeeding
+#'
+#' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times batch}}{rf.b+e^{rf.a\times batch}} }
+#'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
+#'
+mbites_pReFeed <- function(){
+  rf_a = MBITES:::Parameters$get_rf_a()
+  rf_b = MBITES:::Parameters$get_rf_b()
+  (2+rf_b)/(1+rf_b) - exp(rf_a*private$batch)/(rf_b + exp(rf_a*private$batch))
+}
+
+#' MBITES: Null Probability of Refeeding
+#'
+#' Null probability of refeeding (turn the behavior off)
+#'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
+#'
+mbites_pReFeed_null <- function(){
+  0
+}
+
+
+###############################################################################
 # Oogenesis Model 1 (set in the MBITES_Setup)
 ###############################################################################
 
@@ -118,78 +192,4 @@ mbites_rBatchSizeNorm <- function(){
 #'
 mbites_rBatchSizeBms <- function(){
   ceiling(private$bmSize*MBITES:::Parameters$get_maxBatch())
-}
-
-
-###############################################################################
-# Refeed (set in MBITES_Setup; called from updateState)
-###############################################################################
-
-#' MBITES: Check Refeeding Behavior
-#'
-#' During \code{\link{mbites_updateState}}, if the mosquito is gravid, check for refeeding
-#' behavior as a function of the batch size. This function should *only* be used with the
-#' first model of oogenesis.
-#'  * This method is bound to \code{Mosquito_Female$checkRefeed}
-#'
-mbites_checkRefeed <- function(){
-  # check refeed
-  if(runif(1) < self$pReFeed()){
-    private$gravid = FALSE
-    private$state = "B" # check with DS
-  }
-}
-
-#' MBITES: Null Refeeding Behavior
-#'
-#' If using the second model of oogenesis, refeeding should be disabled by using this stand-in function.
-#'  * This method is bound to \code{Mosquito_Female$checkRefeed}
-#'
-mbites_checkRefeed_null <- function(){
-  # null function
-  # private$gravid = TRUE (already set in mbites_checkEggMaturation)
-  # private$state = "O" (already set in mbites_checkEggMaturation)
-}
-
-#' MBITES: Probability of Refeeding
-#'
-#' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times batch}}{rf.b+e^{rf.a\times batch}} }
-#'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
-#'
-mbites_pReFeed <- function(){
-  rf_a = MBITES:::Parameters$get_rf_a()
-  rf_b = MBITES:::Parameters$get_rf_b()
-  (2+rf_b)/(1+rf_b) - exp(rf_a*private$batch)/(rf_b + exp(rf_a*private$batch))
-}
-
-#' MBITES: Null Probability of Refeeding
-#'
-#' Null probability of refeeding (turn the behavior off)
-#'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
-#'
-mbites_pReFeed_null <- function(){
-  0
-}
-
-
-###############################################################################
-# Egg Maturation (transition to oviposition; called from updateState)
-###############################################################################
-
-#' MBITES: Check Egg Maturation
-#'
-#' This function is called during \code{\link{mbites_checkRefeed}},
-#' it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
-#' if this condition is filled. If the eggs are not mature, go on another blood search.
-#'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
-#'
-mbites_checkEggMaturation <- function(){
-  # check egg maturation
-  if(private$eggT <= private$tNow){
-    private$gravid = TRUE
-    private$state = "O"
-  } else {
-    private$gravid = FALSE
-    private$state = "B"
-  }
 }

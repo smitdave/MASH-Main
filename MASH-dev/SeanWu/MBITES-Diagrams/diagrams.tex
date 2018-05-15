@@ -150,6 +150,22 @@
 \begin{figure}
 \begin{tikzpicture}[->,>=stealth',thick]
 
+% nodes
+\node[control] (ENTER) {Enter function control};
+
+\node[state, below of = ENTER, node distance = 2.5cm] (TIMING) {
+	\textbf{Timing} \\ 
+	\parbox{8cm}{
+	\footnotesize
+	Sample time to next launch based on current state, sampling of \inlinecode{R}{tNext} must occur here because timing must reference the mosquito's current
+	state (state will be changed as result of energetics, survival, and egg maturation checks).
+	}
+	\\ \inlinecode{R}{mbites_timing()}
+};
+
+% edges
+\draw (ENTER) edge (TIMING);
+
 \end{tikzpicture}
 \caption{Structure of control flow in updateState} \label{fig:2}
 \end{figure}

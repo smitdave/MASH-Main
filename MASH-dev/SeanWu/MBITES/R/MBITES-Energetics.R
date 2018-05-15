@@ -26,6 +26,70 @@ NULL
 
 
 ###############################################################################
+# Flight Energetics (called from updateState in MBITES-Bout.R)
+###############################################################################
+
+#' MBITES: Energetics
+#'
+#' Calculate energy burned from flight with \code{\link{mbites_flightBurnEnergy}} and potentially queue
+#' a sugar bout with \code{\link{mbites_queueSugarBout}}.
+#'  * This method is bound to \code{Mosquito$energetics}
+#'
+mbites_energetics <- function(){
+  self$flightBurnEnergy()
+  self$queueSugarBout()
+}
+
+#' MBITES: Energy burn from flight
+#'
+#' Calculate energy in the mosquito's fuel tank after a flight.
+#'  * This method is bound to \code{Mosquito$flightBurnEnergy()}
+#'
+mbites_flightBurnEnergy <- function(){
+  private$energy = max(0,private$energy - MBITES:::Parameters$get_S_u())
+}
+
+#' MBITES: Queue a sugar bout
+#'
+#' If the mosquito queues a sugar bout (with probability \code{\link{mbites_pSugarBout}}), set \code{starved} flag true.
+#'  * This method is bound to \code{Mosquito$queueSugarBout}
+#'
+mbites_queueSugarBout <- function(){
+  if(runif(1) < self$pSugarBout()){
+    private$starved = TRUE
+  }
+}
+
+#' MBITES: Probability of a sugar bout
+#'
+#' Calculate the probability to queue a sugar bout as a function of the mosquito's current energy levels.
+#' The probability is given by \eqn{\frac{2+S_{sb}}{1+S_{sb}} - \frac{e^{S_{sa} \times energy}}{S_{sb}+e^{S_{sa}\times energy}}}
+#'  * This method is bound to \code{Mosquito$pSugarBout}
+#'
+mbites_pSugarBout <- function(){
+  S_sb = MBITES:::Parameters$get_S_sb()
+  S_sa = MBITES:::Parameters$get_S_sa()
+  (2+S_sb)/(1+S_sb)-exp(S_sa*private$energy)/(S_sb+exp(S_sa*private$energy))
+}
+
+Mosquito$set(which = "public",name = "energetics",
+    value = mbites_energetics, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "flightBurnEnergy",
+    value = mbites_flightBurnEnergy, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "queueSugarBout",
+    value = mbites_queueSugarBout, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "pSugarBout",
+    value = mbites_pSugarBout, overwrite = TRUE
+)
+
+
+###############################################################################
 # Blood Energetics
 ###############################################################################
 
@@ -106,71 +170,4 @@ Mosquito$set(which = "public",name = "chooseSugarSource",
 
 Mosquito_Female$set(which = "public",name = "sugarMeal",
     value = mbites_sugarMeal, overwrite = TRUE
-)
-
-
-
-###############################################################################
-# Flight Energetics
-###############################################################################
-
-#' MBITES: Energetics
-#'
-#' Calculate energy burned from flight with \code{\link{mbites_flightBurnEnergy}} and potentially queue
-#' a sugar bout with \code{\link{mbites_queueSugarBout}}.
-#'  * This method is bound to \code{Mosquito$energetics}
-#'
-mbites_energetics <- function(){
-  if(private$state != "D"){
-    self$flightBurnEnergy()
-    self$queueSugarBout()
-  }
-}
-
-#' MBITES: Energy burn from flight
-#'
-#' Calculate energy in the mosquito's fuel tank after a flight.
-#'  * This method is bound to \code{Mosquito$flightBurnEnergy()}
-#'
-mbites_flightBurnEnergy <- function(){
-  private$energy = max(0,private$energy - MBITES:::Parameters$get_S_u())
-}
-
-#' MBITES: Queue a sugar bout
-#'
-#' If the mosquito queues a sugar bout (with probability \code{\link{mbites_pSugarBout}}), set \code{starved} flag true.
-#'  * This method is bound to \code{Mosquito$queueSugarBout}
-#'
-mbites_queueSugarBout <- function(){
-  if(runif(1) < self$pSugarBout()){
-    private$starved = TRUE
-  }
-}
-
-#' MBITES: Probability of a sugar bout
-#'
-#' Calculate the probability to queue a sugar bout as a function of the mosquito's current energy levels.
-#' The probability is given by \eqn{\frac{2+S_{sb}}{1+S_{sb}} - \frac{e^{S_{sa} \times energy}}{S_{sb}+e^{S_{sa}\times energy}}}
-#'  * This method is bound to \code{Mosquito$pSugarBout}
-#'
-mbites_pSugarBout <- function(){
-  S_sb = MBITES:::Parameters$get_S_sb()
-  S_sa = MBITES:::Parameters$get_S_sa()
-  (2+S_sb)/(1+S_sb)-exp(S_sa*private$energy)/(S_sb+exp(S_sa*private$energy))
-}
-
-Mosquito$set(which = "public",name = "energetics",
-    value = mbites_energetics, overwrite = TRUE
-)
-
-Mosquito$set(which = "public",name = "flightBurnEnergy",
-    value = mbites_flightBurnEnergy, overwrite = TRUE
-)
-
-Mosquito$set(which = "public",name = "queueSugarBout",
-    value = mbites_queueSugarBout, overwrite = TRUE
-)
-
-Mosquito$set(which = "public",name = "pSugarBout",
-    value = mbites_pSugarBout, overwrite = TRUE
 )

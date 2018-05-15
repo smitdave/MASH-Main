@@ -91,6 +91,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 
                    # behavioral state parameters
                    search         = logical(1), # next launch is for search or attempt bout?
+                   searchNow      = logical(1), # is my current bout a search bout?
                    state          = character(1), # my current behavioral state
                    starved        = logical(1), # am i starved for sugar?
                    # gravid         = logical(1), # am i gravid to oviposit?

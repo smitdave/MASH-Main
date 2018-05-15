@@ -32,7 +32,7 @@ NULL
 
 
 ###############################################################################
-# Per-bout survival
+# Per-bout survival (called from updateState in MBITES-Bout.R)
 ###############################################################################
 
 #' MBITES: Per-bout Survival
@@ -62,8 +62,8 @@ Mosquito$set(which = "public",name = "survival",
 #'
 mbites_get_surviveFlightBaseProb <- function(){
 
-  if(private$search){
-    switch(private$search,
+  if(private$searchNow){
+    switch(private$state,
       B = {return(MBITES:::Parameters$get_Bs_surv())},
       O = {return(MBITES:::Parameters$get_Os_surv())},
       M = {return(MBITES:::Parameters$get_Ms_surv())},
@@ -96,23 +96,22 @@ mbites_get_surviveFlightBaseProb <- function(){
 #'  * This method is bound to \code{Mosquito$surviveFlight}.
 #'
 mbites_surviveFlight <- function(){
-  if(private$state != "D"){
-    p = self$get_surviveFlightBaseProb()
-    p = p * self$pEnergySurvival()
-    p = p * self$pChem()
+  # get baseline death probability, accounting for energy-related death and chemical damage
+  p = self$get_surviveFlightBaseProb()
+  p = p * self$pEnergySurvival()
+  p = p * self$pChem()
 
-    # tattering
-    if(MBITES:::Parameters$get_TATTER()){
-      private$damage_physical = private$damage_physical + self$WingTattering()
-      p = p * self$pTatter()
-    }
-    # senescence
-    if(MBITES:::Parameters$get_SENESCE()){
-      p = p * self$pSenesce()
-    }
-    if(runif(1) < 1-p){
-      private$state = "D"
-    }
+  # tattering
+  if(MBITES:::Parameters$get_TATTER()){
+    private$damage_physical = private$damage_physical + self$WingTattering()
+    p = p * self$pTatter()
+  }
+  # senescence
+  if(MBITES:::Parameters$get_SENESCE()){
+    p = p * self$pSenesce()
+  }
+  if(runif(1) < 1-p){
+    private$state = "D"
   }
 }
 
