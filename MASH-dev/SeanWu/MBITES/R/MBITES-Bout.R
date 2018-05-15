@@ -354,11 +354,11 @@ mbites_attempt_B <- function(){
 
     # specific host encounter routines
     if(private$hostID > 0L){
-      self$humanEncounter()
+      self$humanEncounter() # MBITES-HostEncounter.R
     } else if(private$hostID == -1L){
-      self$zooEncounter()
+      self$zooEncounter() # MBITES-HostEncounter.R
     } else if(private$hostID == -2L){
-      self$bloodtrap()
+      # self$bloodtrap()
     } else if(private$hostID == 0L){
       # an empty risk queue implies a failure to get a blood meal, thus the bout failed
     } else {

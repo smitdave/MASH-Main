@@ -61,9 +61,9 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                      private$state = state
 
                      # set up history
-                     private$hist$tHist[1] = bDay
-                     private$hist$sHist[1] = site$get_id()
-                     private$hist$bHist[1] = state
+                     private$tHist[1] = bDay
+                     private$sHist[1] = site$get_id()
+                     private$bHist[1] = state
 
                    } # end constructor
 
@@ -94,7 +94,6 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    searchNow      = logical(1), # is my current bout a search bout?
                    state          = character(1), # my current behavioral state
                    starved        = logical(1), # am i starved for sugar?
-                   # gravid         = logical(1), # am i gravid to oviposit?
                    boutFail       = integer(1), # counter
 
                    # energetics
@@ -116,13 +115,9 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 
                    # history
                    nEvent         = 1L, # number of bouts + emergence (birthday) (increment at the beginning of the trackHistory function)
-                   # history object (maybe should be a closure...not sure)
-                   hist           = list(
-                     tHist          = numeric(20), # history of event times (t)
-                     sHist          = integer(20), # history of sites visited (s)
-                     bHist          = character(20) # history of behavioral states (b)
-                   )
-
+                   tHist          = numeric(20), # history of event times (t)
+                   sHist          = integer(20), # history of sites visited (s)
+                   bHist          = character(20) # history of behavioral states (b)
                  ) # end private members
 )
 
@@ -197,6 +192,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    # bloodfeeding and oogenesis
                    bloodfed       = FALSE, # have i fed on blood this bout?
                    batch          = integer(1), # size of my egg batch
+                   eggT           = numeric(1), # time my egg batch is ready
                    bm_size        = numeric(1), # size of my blood meal
 
                    # host ids
@@ -219,19 +215,36 @@ mbites_trackHistory <- function(){
   # check we have not overran vector
   lVec = length(private$hist$tHist)
   if(private$nEvent > lVec){
-    private$hist$tHist = c(private$hist$tHist,numeric(lVec))
-    private$hist$sHist = c(private$hist$sHist,integer(lVec))
-    private$hist$bHist = c(private$hist$bHist,character(lVec))
+    private$tHist = c(private$tHist,numeric(lVec))
+    private$sHist = c(private$sHist,integer(lVec))
+    private$bHist = c(private$bHist,character(lVec))
   }
 
   # add to history
-  private$hist$tHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
-  private$hist$sHist[private$nEvent] = private$site$get_id()
-  private$hist$bHist[private$nEvent] = private$state
+  private$tHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
+  private$sHist[private$nEvent] = private$site$get_id()
+  private$bHist[private$nEvent] = private$state
 
+  # write and delete if dead
+  self$exit()
+}
+
+#' MBITES: Export History and Remove Self
+#'
+#' If the mosquito is dead, write out its history to a JSON-formatted file and then delete from the container object (\code{\link{HashMap}}).
+#'  * This method is bound to \code{Mosquito_Female$exit}
+#'
+mbites_exit <- function(){
   if(private$state=="D"){
-    # output!
-    # jsonlite::toJSON()
+    # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
+    cat(jsonlite::toJSON(x = list(
+            id = private$id,
+            time = private$hist$tHist[1:private$nEvent],
+            sites = private$hist$sHist[1:private$nEvent],
+            behavior = private$hist$bHist[1:private$nEvent]
+        ), pretty = TRUE),"\n",sep="",file=mosquito_f_out)
+    # remove this mosquito from the hash table
+    MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
   }
 }
 

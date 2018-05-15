@@ -128,7 +128,6 @@ mbites_oogenesis1 <- function(){
   if(private$batch <= 0){
     private$batch = self$rBatchSize()
     private$eggT = private$tNow + self$rEggMaturationTime()
-    #note: self$checkRefeed() is called in MBITES-Bouts.R :: updateState()
   }
   private$bmSize = 0
 }
