@@ -71,7 +71,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                      # tile globals
                      private$tile_id = 0L
-                     private$tiles = list()
+                     private$tiles = NULL
 
                      invisible(gc())
                    } # end destructor
@@ -83,6 +83,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                    # world-state globals
                    tNow               = 0L, # current simulation time
+                   directory          = character(1), # directory to put things
                    SETUP              = FALSE,
 
                    # mosquito globals
@@ -103,6 +104,34 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 ) # end MBITES_Globals definition
 
 # global assignment to package namespace at end of script
+
+
+###############################################################################
+# Set up output logging
+###############################################################################
+
+#' MBITES Globals: Setup Output Files
+#'
+#' This function sets connection objects in \code{\link{MBITES_Globals}}
+#' to store output.
+#'
+#' @param directory a character string specifying the full directory path where files will be written to
+#' @param runID an integer id that will be appended to output files
+#'
+#'
+set_output_MBITES_Globals <- function(directory,runID){
+  dirFiles = list.files(path = file.path(directory))
+  if(length(dirFiles)>0){
+    cat("warning: ",length(dirFiles)," files found in the output directory; please move files to avoid being overwritten\n",sep="")
+  }
+  private$mosquito_f_out = file(description = file.path(private$directory,"mosquito_F_",runID,".json"),open = "wt")
+  private$mosquito_m_out = file(description = file.path(private$directory,"mosquito_M_",runID,".json"),open = "wt")
+  private$human_out = file(description = file.path(private$directory,"human_",runID,".json"),open = "wt")
+}
+
+MBITES_Globals$set(which = "public",name = "set_output",
+          value = set_output_MBITES_Globals, overwrite = TRUE
+)
 
 
 ###############################################################################

@@ -5,7 +5,7 @@
 #      / /___/ /_/ / / / / /_/ (__  ) /__/ /_/ / /_/ /  __/
 #     /_____/\__,_/_/ /_/\__,_/____/\___/\__,_/ .___/\___/
 #                                            /_/
-#     Landscape-Resource-Aquatic Habitat-Aquatic Population (Emerge) pimpl
+#     Landscape-Resource-Aquatic Habitat-Aquatic Population (Emerge)
 #     MBITES Team
 #     February 2018
 #

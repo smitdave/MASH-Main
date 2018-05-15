@@ -59,13 +59,23 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 
                      private$search = FALSE
                      private$state = state
+                     private$starved = FALSE
 
                      # set up history
                      private$tHist[1] = bDay
                      private$sHist[1] = site$get_id()
                      private$bHist[1] = state
 
-                   } # end constructor
+                     # logging
+                     futile.logger::flog.trace("Mosquito %s being born at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+
+                   }, # end constructor
+
+                   # begin destructor
+                   finalize = function(){
+                     # logging
+                     futile.logger::flog.trace("Mosquito %s being killed at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+                   }
 
                  ), # end public members
 

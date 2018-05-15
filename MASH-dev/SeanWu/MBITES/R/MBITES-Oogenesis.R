@@ -66,6 +66,10 @@ mbites_checkEggMaturation <- function(){
   }
 }
 
+Mosquito_Female$set(which = "public",name = "checkEggMaturation",
+          value = mbites_checkEggMaturation, overwrite = TRUE
+)
+
 
 ###############################################################################
 # Refeed (called from updateState in MBITES-Bout.R)

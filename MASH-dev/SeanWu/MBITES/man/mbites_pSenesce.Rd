@@ -7,7 +7,7 @@
 mbites_pSenesce()
 }
 \description{
-probability of death due to senescence given by \deqn{ \frac{2+sns.b}{1+sns.b} - \frac{e^{sns.a\times age}}{sns.b+e^{sns.a\times age}} }
+Probability of death due to senescence given by \deqn{ \frac{2+sns.b}{1+sns.b} - \frac{e^{sns.a\times age}}{sns.b+e^{sns.a\times age}} }
 \itemize{
 \item This method is bound to \code{Mosquito$pSenesce}.
 }

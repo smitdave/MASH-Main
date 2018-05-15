@@ -37,7 +37,7 @@ NULL
 
 #' MBITES: Per-bout Survival
 #'
-#' Simulate flight survival and survival of local hazards.
+#' Simulate flight survival \code{\link{mbites_surviveFlight}} and survival of local hazards \code{\link{mbites_surviveHazards}}.
 #'  * This method is bound to \code{Mosquito$survival}
 #'
 mbites_survival <- function(){
@@ -102,14 +102,18 @@ mbites_surviveFlight <- function(){
   p = p * self$pChem()
 
   # tattering
-  if(MBITES:::Parameters$get_TATTER()){
-    private$damage_physical = private$damage_physical + self$WingTattering()
-    p = p * self$pTatter()
-  }
+  # if(MBITES:::Parameters$get_TATTER()){
+  #   private$damage_physical = private$damage_physical + self$WingTattering()
+  #   p = p * self$pTatter()
+  # }
+  p = self$WingTattering(p)
+
   # senescence
-  if(MBITES:::Parameters$get_SENESCE()){
-    p = p * self$pSenesce()
-  }
+  # if(MBITES:::Parameters$get_SENESCE()){
+  #   p = p * self$pSenesce()
+  # }
+  p = self$Senescence(p)
+
   if(runif(1) < 1-p){
     private$state = "D"
   }
@@ -141,8 +145,26 @@ Mosquito$set(which = "public",name = "pEnergySurvival",
 
 
 ###############################################################################
-#  Damage (wing tattering, chemical, physical)
+#  Survive Physical Damage
 ###############################################################################
+
+# #' MBITES: Sample Wing Tattering Damage
+# #'
+# #' Draw from a zero-inflated Beta distribution for additive wing damage_physical from tattering.
+# #' Wing damage_physical is given by \deqn{ \left\{\begin{matrix}
+# #' x=0; P(ttsz.p)
+# #' \\
+# #' x\sim Beta(ttsz.a,ttsz.b); P(1-ttsz.p)
+# #' \end{matrix}\right. }
+# #'  * This method is bound to \code{Mosquito$WingTattering}.
+# #'
+# mbites_WingTattering <- function(){
+#   if(runif(1) < MBITES:::Parameters$get_ttsz_p()){
+#     return(0)
+#   } else {
+#     return(rbeta(1,MBITES:::Parameters$get_ttsz_a(),MBITES:::Parameters$get_ttsz_b()))
+#   }
+# }
 
 #' MBITES: Sample Wing Tattering Damage
 #'
@@ -154,23 +176,21 @@ Mosquito$set(which = "public",name = "pEnergySurvival",
 #' \end{matrix}\right. }
 #'  * This method is bound to \code{Mosquito$WingTattering}.
 #'
-mbites_WingTattering <- function(){
-  if(runif(1) < MBITES:::Parameters$get_ttsz_p()){
-    return(0)
-  } else {
-    return(rbeta(1,MBITES:::Parameters$get_ttsz_a(),MBITES:::Parameters$get_ttsz_b()))
+mbites_WingTattering <- function(p){
+  if(runif(1) < 1-MBITES:::Parameters$get_ttsz_p()){
+    private$damage_physical = private$damage_physical + rbeta(1,MBITES:::Parameters$get_ttsz_a(),MBITES:::Parameters$get_ttsz_b())
   }
+  p * self$pTatter()
 }
 
-# set methods
-Mosquito$set(which = "public",name = "WingTattering",
-    value = mbites_WingTattering, overwrite = TRUE
-)
-
-
-###############################################################################
-# Survive Physical Damage
-###############################################################################
+#' MBITES: Null wing tattering
+#'
+#' If wing tattering is not being simulated do not modify \code{damage_physical} attribute of the mosquito and return the unmodified probabiltiy.
+#' The non-null version is \code{\link{mbites_WingTattering}}.
+#'  * This method is bound to \code{Mosquito$WingTattering}
+mbites_WingTattering_null <- function(p){
+  p
+}
 
 #' MBITES: Probability of Death due to Wing Tattering
 #'
@@ -217,7 +237,23 @@ Mosquito$set(which = "public",name = "pChem",
 
 #' MBITES: Probability of Death due to Senescence
 #'
-#' probability of death due to senescence given by \deqn{ \frac{2+sns.b}{1+sns.b} - \frac{e^{sns.a\times age}}{sns.b+e^{sns.a\times age}} }
+#' To simulate senescence-dependent mortality, call \code{\link{mbites_pSenesce}} to modify the passed in probability of survival.
+#'  * This method is bound to \code{Mosquito$Senescence}
+mbites_Senescence <- function(p){
+  p = p * self$pSenesce()
+}
+
+#' MBITES: Null Senescence
+#'
+#' The non-null version is \code{\link{Senescence}}
+#'  * This method is bound to \code{Mosquito$Senescence}
+mbites_Senescence_null <- function(p){
+  p
+}
+
+#' MBITES: Probability of Death due to Senescence
+#'
+#' Probability of death due to senescence given by \deqn{ \frac{2+sns.b}{1+sns.b} - \frac{e^{sns.a\times age}}{sns.b+e^{sns.a\times age}} }
 #'  * This method is bound to \code{Mosquito$pSenesce}.
 #'
 mbites_pSenesce <- function(){

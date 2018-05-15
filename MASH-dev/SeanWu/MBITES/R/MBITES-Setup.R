@@ -119,7 +119,7 @@ NULL
 #'    * of_a: parameter in \code{\link{mbites_pOverFeed}} (probability of death from blood meal size)
 #'    * of_b: parameter in \code{\link{mbites_pOverFeed}} (probability of death from blood meal size)
 #'
-#' **MBITES-Oogenesis**: see\code{\link{MBITES-Oogenesis}}
+#' **MBITES-Oogenesis**: see \code{\link{MBITES-Oogenesis}}
 #'  * oogenesis_model: integer flag for model of oogenesis (egg production & development)
 #'    * 1: egg batch size proportional to blood meal size (see help file for \code{MBITES-Oogenesis})
 #'      * eggMaturationTime: logical flag, if \code{TRUE} use \code{\link{mbites_rEggMaturationTimeNorm}} to sample egg maturation times, otherwise use the null filler \code{\link{mbites_rEggMaturationTimeOff}}
@@ -137,17 +137,17 @@ NULL
 #'    * rf_a: parameter in \code{\link{mbites_pReFeed}}
 #'    * rf_b: parameter in \code{\link{mbites_pReFeed}}
 #'
+#'  **MBITES-Energetics**: see \code{\link{MBITES-Energetics}}
+#'    * sugar: boolean flag to turn sugar feeding behavior on or off (please note if sugar feeding is off, other parameters should be adjusted to compensate for increased death rate as a result of no energy intake from sugar)
 #'
+#'  **MBITES-Oviposition**: see \code{\link{MBITES-Oviposition}}
+#'    * aqua_model: integer flag for model of aquatic ecology
+#'      * 1: emerge: use the emerge model of aquatic ecology
+#'      * 2: EL4P: use the EL4P (eggs, larvae, pupae) model of aquatic ecology
 #'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
+#'  **MBITES-Survival**: see \code{\link{MBITES-Survival}}
+#'    * tattering: boolean flag to turn wing tattering derived contribution to mortality on or off
+#'    * senescence: boolean flag to turn senescence derived contribution to mortality on or off
 #'
 #'
 #'
@@ -275,10 +275,28 @@ MBITES_Setup <- function(
   rf_a = NULL,
   rf_b = NULL,
 
+  #####################
+  # MBITES-Energetics #
+  #####################
+
+  sugar = TRUE,
+
+  ######################
+  # MBITES-Oviposition #
+  ######################
+
+  aqua_model = 1L,
 
   ###################
-  # MBITES-PATHOGEN #
+  # MBITES-Survival #
   ###################
+
+  tattering = FALSE,
+  senescence = FALSE,
+
+  ###############
+  # PATHOGEN-XX #
+  ###############
 
   pathogen_model = "null", # character giving model
   pathogen_par = NULL, # a list of additional pars
@@ -287,12 +305,16 @@ MBITES_Setup <- function(
   blank = NULL
 ){
 
+  ###############################################################################
+  # function body
+  ###############################################################################
+
   # set flag
   MBITES:::Globals$set_SETUP(TRUE)
 
-  #################
-  # MBITES-Timing #
-  #################
+  ###############################################################################
+  # MBITES-Timing
+  ###############################################################################
 
   # attempt & search bout tte
   MBITES:::Parameters$set_ttEvent(
@@ -402,9 +424,9 @@ MBITES_Setup <- function(
     )
   }
 
-  ####################
-  # MBITES-BloodMeal #
-  ####################
+  ###############################################################################
+  # MBITES-BloodMeal
+  ###############################################################################
 
   if(overfeeding){
     # set methods
@@ -420,9 +442,9 @@ MBITES_Setup <- function(
     )
   }
 
-  ####################
-  # MBITES-Oogenesis #
-  ####################
+  ###############################################################################
+  # MBITES-Oogenesis
+  ###############################################################################
 
   # rBatchSize
   switch(eggsize_model,
@@ -462,21 +484,18 @@ MBITES_Setup <- function(
       }
 
       # refeeding
-      Mosquito_Female$set(which = "public",name = "checkRefeed",
-                value = mbites_checkRefeed, overwrite = TRUE
-      )
-
-      Mosquito_Female$set(which = "public",name = "checkEggMaturation",
-                value = mbites_checkEggMaturation, overwrite = TRUE
-      )
-
       if(refeeding){
+        Mosquito_Female$set(which = "public",name = "checkRefeed",
+                  value = mbites_checkRefeed, overwrite = TRUE
+        )
+
         Mosquito_Female$set(which = "public",name = "pReFeed",
                   value = mbites_pReFeed, overwrite = TRUE
         )
+
       } else {
-        Mosquito_Female$set(which = "public",name = "pReFeed",
-                  value = mbites_pReFeed_null, overwrite = TRUE
+        Mosquito_Female$set(which = "public",name = "checkRefeed",
+                  value = mbites_checkRefeed_null, overwrite = TRUE
         )
       }
     },
@@ -488,6 +507,7 @@ MBITES_Setup <- function(
       Mosquito_Female$set(which = "public",name = "oogenesis",
                 value = mbites_oogenesis2, overwrite = TRUE
       )
+
       # egg provision field
       Mosquito_Female$set(which = "private",name = "eggP",
                 value = numeric(1), overwrite = TRUE
@@ -502,4 +522,87 @@ MBITES_Setup <- function(
     {stop("invalid entry for 'oogenesis_model'\n")}
   )
 
-}
+  ###############################################################################
+  # MBITES-Energetics
+  ###############################################################################
+
+  # queue sugar bout?
+  if(sugar){
+    Mosquito_Female$set(which = "public",name = "queueSugarBout",
+              value = mbites_queueSugarBout, overwrite = TRUE
+    )
+  } else {
+    Mosquito_Female$set(which = "public",name = "queueSugarBout",
+              value = mbites_queueSugarBout_null, overwrite = TRUE
+    )
+  }
+
+  ###############################################################################
+  # MBITES-Oviposition
+  ###############################################################################
+
+  switch(aqua_model,
+    "1" = {
+      Mosquito_Female$set(which = "public",name = "layEggs",
+                value = mbites_layEggs_Emerge, overwrite = TRUE
+      )
+    },
+    "2" = {
+      Mosquito_Female$set(which = "public",name = "layEggs",
+                value = mbites_layEggs_EL4P, overwrite = TRUE
+      )
+    },
+    {stop("invalid entry for 'aqua_model\n'")}
+  )
+
+  ###############################################################################
+  # MBITES-Survival
+  ###############################################################################
+
+  # wing tattering
+  if(tattering){
+    Mosquito$set(which = "public",name = "WingTattering",
+        value = mbites_WingTattering, overwrite = TRUE
+    )
+  } else {
+    Mosquito$set(which = "public",name = "WingTattering",
+        value = mbites_WingTattering_null, overwrite = TRUE
+    )
+  }
+
+  # senescence
+  if(senescence){
+    Mosquito$set(which = "public",name = "Senescence",
+        value = mbites_Senescence, overwrite = TRUE
+    )
+  } else {
+    Mosquito$set(which = "public",name = "Senescence",
+        value = mbites_Senescence_null, overwrite = TRUE
+    )
+  }
+
+  ###############################################################################
+  # PATHOGEN-XX
+  ###############################################################################
+
+  switch(pathogen_model,
+
+    # NULL pathogen model
+    null = {
+      Mosquito_Female$set(which = "public",name = "probeHost",
+          value = probeHost_NULL, overwrite = TRUE
+      )
+
+      Mosquito_Female$set(which = "public",name = "feedHost",
+          value = feedHost_NULL, overwrite = TRUE
+      )
+
+      Mosquito_Female$set(which = "public",name = "pathogenDynamics",
+          value = pathogenDynamics_NULL, overwrite = TRUE
+      )
+    },
+
+    {stop("invalid entry for 'pathogen_model'\n")}
+  )
+
+} # exit function scope

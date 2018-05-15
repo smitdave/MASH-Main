@@ -60,6 +60,15 @@ mbites_queueSugarBout <- function(){
   }
 }
 
+#' MBITES: Null sugar bout
+#'
+#' Null version of \code{\link{mbites_queueSugarBout}} if sugar feeding behavior is to be turned off.
+#'  * This method is bound to \code{Mosquito$queueSugarBout}
+#'
+mbites_queueSugarBout_null <- function(){
+  # dont do anything
+}
+
 #' MBITES: Probability of a sugar bout
 #'
 #' Calculate the probability to queue a sugar bout as a function of the mosquito's current energy levels.
@@ -78,10 +87,6 @@ Mosquito$set(which = "public",name = "energetics",
 
 Mosquito$set(which = "public",name = "flightBurnEnergy",
     value = mbites_flightBurnEnergy, overwrite = TRUE
-)
-
-Mosquito$set(which = "public",name = "queueSugarBout",
-    value = mbites_queueSugarBout, overwrite = TRUE
 )
 
 Mosquito$set(which = "public",name = "pSugarBout",
@@ -111,7 +116,7 @@ mbites_BloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
 
 #' MBITES: Energy derived from blood
 #'
-#' write me!
+#' Energy derived from the blood meal is a type 2 function of blood meal size with half-maximum parameter \code{energyFromBlood_b}.
 #'  * This method is bound to \code{Mosquito_Female$energyFromBlood}.
 #'
 mbites_energyFromBlood <- function(){
