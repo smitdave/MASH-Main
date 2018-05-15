@@ -59,7 +59,7 @@ mbites_layEggs_Emerge <- function(){
     private$eggT = 2e16
     private$gravid = FALSE
     private$batch = 0
-    private$stateNew = "F"
+    private$state = "B"
   }
 }
 
@@ -79,6 +79,6 @@ mbites_layEggs_EL4P <- function(){
     private$gravid = FALSE
     private$aqua_res$EggQ$add2Q(private$batch,private$tNow)
     private$batch = 0
-    private$stateNew = "F"
+    private$state = "B"
   }
 }

@@ -45,84 +45,30 @@ NULL
 
 
 ###############################################################################
-# Oogenesis Model 1 (set in the MBITES_Setup)
+# Egg Maturation (called from updateState in MBITES-Bout.R)
 ###############################################################################
 
-#' @rdname MBITES-Oogenesis
-mbites_oogenesis1 <- function(){
-  # only make a new batch if i am carrying around eggs
-  if(private$batch <= 0){
-    private$batch = self$rBatchSize()
-    private$eggT = private$tNow + self$rEggMaturationTime()
-    #note: self$checkRefeed() is called in MBITES-Bouts.R :: updateState()
-  }
-  private$bmSize = 0
-}
-
-#' MBITES: Normally-distributed Egg Maturation Time
+#' MBITES: Check Egg Maturation
 #'
-#' Draw an egg maturation time from Normal(emt_m,emt_sd)
-#'  * This method is bound to \code{Mosquito_Female$rEggMaturationTime}.
+#' This function is called during \code{\link{mbites_checkRefeed}},
+#' it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
+#' if this condition is filled. If the eggs are not mature, go on another blood search.
+#'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
 #'
-mbites_rEggMaturationTimeNorm <- function(){
-  max(0,rnorm(1, MBITES:::Parameters$get_emt_m(), MBITES:::Parameters$get_emt_sd()))
-}
-
-#' MBITES: No Egg Maturation Time
-#'
-#' Instant egg maturation.
-#'  * This method is bound to \code{Mosquito_Female$rEggMaturationTime}.
-#'
-mbites_rEggMaturationTimeOff <- function(){
-  0
-}
-
-
-###############################################################################
-# Oogenesis Model 2 (set in MBITES_Setup)
-###############################################################################
-
-#' @rdname MBITES-Oogenesis
-mbites_oogenesis2 <- function(){
-  if(private$batch <= 0){
-    private$batch = self$rBatchSize()
-    private$eggP = MBITES:::Parameters$get_bloodPerEgg()*private$batch
-  }
-  # egg provision: after we've fed enough then mosquito is gravid
-  private$eggP = private$eggP - private$bmSize
-  if(private$eggP <= 0){
-    private$eggT = 0
-    private$gravid = TRUE # now mosquito is gravid
+mbites_checkEggMaturation <- function(){
+  # check egg maturation
+  if(private$eggT <= private$tNow){
+    private$gravid = TRUE
     private$state = "O"
-    private$bmSize = max(0,private$bmSize - private$eggP)
+  } else {
+    private$gravid = FALSE
+    private$state = "B"
   }
 }
 
-###############################################################################
-# Egg Batch Size
-###############################################################################
-
-#' MBITES: Draw Gaussian-distributed Egg Batch Size
-#'
-#' Draw a egg batch size from Normal(bs_m,bs_sd)
-#'  * This method is bound to \code{MosquitoFemale$rBatchSize}.
-#'
-mbites_rBatchSizeNorm <- function(){
-  ceiling(rnorm(1,MBITES:::Parameters$get_bs_m(),MBITES:::Parameters$get_bs_sd()))
-}
-
-#' MBITES: Bloodmeal dependent Egg Batch Size
-#'
-#' Give an egg batch size given by \eqn{ bmSize\times maxBatch }
-#'  * This method is bound to \code{MosquitoFemale$rBatchSize}.
-#'
-mbites_rBatchSizeBms <- function(){
-  ceiling(private$bmSize*MBITES:::Parameters$get_maxBatch())
-}
-
 
 ###############################################################################
-# Refeed (set in MBITES_Setup; called from updateState)
+# Refeed (called from updateState in MBITES-Bout.R)
 ###############################################################################
 
 #' MBITES: Check Refeeding Behavior
@@ -173,23 +119,78 @@ mbites_pReFeed_null <- function(){
 
 
 ###############################################################################
-# Egg Maturation (transition to oviposition; called from updateState)
+# Oogenesis Model 1 (set in the MBITES_Setup)
 ###############################################################################
 
-#' MBITES: Check Egg Maturation
-#'
-#' This function is called during \code{\link{mbites_checkRefeed}},
-#' it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
-#' if this condition is filled. If the eggs are not mature, go on another blood search.
-#'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
-#'
-mbites_checkEggMaturation <- function(){
-  # check egg maturation
-  if(private$eggT <= private$tNow){
-    private$gravid = TRUE
-    private$state = "O"
-  } else {
-    private$gravid = FALSE
-    private$state = "B"
+#' @rdname MBITES-Oogenesis
+mbites_oogenesis1 <- function(){
+  # dont make a new batch if i am carrying around eggs
+  if(private$batch <= 0){
+    private$batch = self$rBatchSize()
+    private$eggT = private$tNow + self$rEggMaturationTime()
   }
+  private$bmSize = 0
+}
+
+#' MBITES: Normally-distributed Egg Maturation Time
+#'
+#' Draw an egg maturation time from Normal(emt_m,emt_sd)
+#'  * This method is bound to \code{Mosquito_Female$rEggMaturationTime}.
+#'
+mbites_rEggMaturationTimeNorm <- function(){
+  max(0,rnorm(1, MBITES:::Parameters$get_emt_m(), MBITES:::Parameters$get_emt_sd()))
+}
+
+#' MBITES: No Egg Maturation Time
+#'
+#' Instant egg maturation.
+#'  * This method is bound to \code{Mosquito_Female$rEggMaturationTime}.
+#'
+mbites_rEggMaturationTimeOff <- function(){
+  0
+}
+
+
+###############################################################################
+# Oogenesis Model 2 (set in MBITES_Setup)
+###############################################################################
+
+#' @rdname MBITES-Oogenesis
+mbites_oogenesis2 <- function(){
+  # dont make a new batch if i am carrying around eggs
+  if(private$batch <= 0){
+    private$batch = self$rBatchSize()
+    private$eggP = MBITES:::Parameters$get_bloodPerEgg()*private$batch
+  }
+  # egg provision: after we've fed enough then mosquito is gravid
+  private$eggP = private$eggP - private$bmSize
+  # if the egg provision is fulfilled we can go ahead and get ready for oviposition
+  if(private$eggP <= 0){
+    private$eggT = 0
+    private$gravid = TRUE # now mosquito is gravid
+    private$state = "O"
+    private$bmSize = max(0,private$bmSize - private$eggP)
+  }
+}
+
+###############################################################################
+# Egg Batch Size
+###############################################################################
+
+#' MBITES: Draw Gaussian-distributed Egg Batch Size
+#'
+#' Draw a egg batch size from Normal(bs_m,bs_sd)
+#'  * This method is bound to \code{MosquitoFemale$rBatchSize}.
+#'
+mbites_rBatchSizeNorm <- function(){
+  ceiling(rnorm(1,MBITES:::Parameters$get_bs_m(),MBITES:::Parameters$get_bs_sd()))
+}
+
+#' MBITES: Bloodmeal dependent Egg Batch Size
+#'
+#' Give an egg batch size given by \eqn{ bmSize\times maxBatch }
+#'  * This method is bound to \code{MosquitoFemale$rBatchSize}.
+#'
+mbites_rBatchSizeBms <- function(){
+  ceiling(private$bmSize*MBITES:::Parameters$get_maxBatch())
 }

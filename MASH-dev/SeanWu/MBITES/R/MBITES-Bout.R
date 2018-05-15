@@ -74,6 +74,7 @@ mbites_oneBout <- function(){
   # launch and try
   if(private$search){
     self$attempt_search() # search
+    private$searchNow = TRUE
   } else {
     # attempt an action
     switch(private$state,
@@ -83,13 +84,14 @@ mbites_oneBout <- function(){
       S = {self$attempt_S()},
       {stop("mosquito ",private$id," calling illegal behavioral state: ",private$state,"\n")}
     )
+    private$searchNow = FALSE
   }
 
   # land
   self$restingSpot() # MBITES-Resting.R
 
   # rest
-  self$updateState()
+  self$updateState() # MBITES-Bout.R
 
   # log history
   self$trackHistory()
@@ -352,11 +354,11 @@ mbites_attempt_B <- function(){
 
     # specific host encounter routines
     if(private$hostID > 0L){
-      self$humanEncounter()
+      self$humanEncounter() # MBITES-HostEncounter.R
     } else if(private$hostID == -1L){
-      self$zooEncounter()
+      self$zooEncounter() # MBITES-HostEncounter.R
     } else if(private$hostID == -2L){
-      self$bloodtrap()
+      # self$bloodtrap()
     } else if(private$hostID == 0L){
       # an empty risk queue implies a failure to get a blood meal, thus the bout failed
     } else {
@@ -408,7 +410,7 @@ mbites_attempt_O <- function(){
     if(private$habitatID > 0L){
       self$layEggs() # MBITES-Oviposition.R
     } else if(private$habitatID == -1L){
-      self$ovitrap()
+      # self$ovitrap()
     } else {
       stop("illegal habitatID value")
     }
@@ -448,11 +450,11 @@ Mosquito$set(which = "public",name = "attempt_O",
 mbites_attempt_M <- function(){
   # bout success
   if(runif(1) < MBITES:::Parameters$get_M_succeed()){
-    self$chooseMate()
+    self$chooseMate() # MBITES-Mating.R
 
     # found a mate
     if(private$mateID > 0L){
-      self$mating()
+      self$mating() # MBITES-Mating.R
     # empty queue
     } else if(private$mateID == 0L){
       # nothing yet.

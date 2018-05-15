@@ -41,30 +41,21 @@ NULL
 #'
 mbites_timing <- function(){
 
-  if(private$state != 'D'){
-
-    # # sample time to next launch, conditional on search and behavioral state
-    # if(private$search){
-    #   switch(private$state, # time to search bout
-    #     B = {private$tNext = MBITES:::Parameters$ttEvent$BoutBs(private$tNow)},
-    #     O = {private$tNext = MBITES:::Parameters$ttEvent$BoutOs(private$tNow)},
-    #     S = {private$tNext = MBITES:::Parameters$ttEvent$BoutSs(private$tNow)}
-    #   )
-    # } else {
-    #   switch(private$state, # time to attempt bout
-    #     B = {private$tNext = MBITES:::Parameters$ttEvent$BoutB(private$tNow)},
-    #     O = {private$tNext = MBITES:::Parameters$ttEvent$BoutO(private$tNow)},
-    #     S = {private$tNext = MBITES:::Parameters$ttEvent$BoutS(private$tNow)}
-    #   )
-    # }
-
-    # irrelevant to check if search or not because we update timing on what the mosy did in the current bout
-    switch(private$state, # time to attempt bout
+  # sample time to next launch, conditional on search and behavioral state
+  if(private$searchNow){
+    switch(private$state, # time i spent in these search bouts
+      B = {private$tNext = MBITES:::Parameters$ttEvent$BoutBs(private$tNow)},
+      O = {private$tNext = MBITES:::Parameters$ttEvent$BoutOs(private$tNow)},
+      S = {private$tNext = MBITES:::Parameters$ttEvent$BoutSs(private$tNow)}
+    )
+  } else {
+    switch(private$state, # time i spent in these attempt bouts
       B = {private$tNext = MBITES:::Parameters$ttEvent$BoutB(private$tNow)},
       O = {private$tNext = MBITES:::Parameters$ttEvent$BoutO(private$tNow)},
       S = {private$tNext = MBITES:::Parameters$ttEvent$BoutS(private$tNow)}
     )
   }
+
 }
 
 
