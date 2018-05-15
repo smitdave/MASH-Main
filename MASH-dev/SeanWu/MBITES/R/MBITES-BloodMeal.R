@@ -44,21 +44,20 @@ NULL
 #'  * This method is bound to \code{Mosquito_Female$BloodMeal}.
 #'
 mbites_BloodMeal <- function(){
-  # size blood meal
+
   private$bmSize = self$rBloodMealSize()
   private$bloodfed = TRUE
 
   # overfeeding mortality and blood-derived energetics
   self$Overfeeding()
-  self$BloodEnergetics() # MBITES-Energetics
+  self$BloodEnergetics() # MBITES-Energetics.R
 
   # post-prandial rest (digestion)
-  private$tNext = MBITES:::Parameters$ttEvent$ppr(private$tNow)
+  private$tNow = private$tNow + MBITES:::Parameters$ttEvent$ppr()
   if(runif(1) < self$pPPRFlight()){
     private$state = "D"
   } else {
-    # egg production (uses up blood)
-    self$oogenesis() # MBITES-Oogenesis
+    self$oogenesis() # MBITES-Oogenesis.R
   }
 }
 

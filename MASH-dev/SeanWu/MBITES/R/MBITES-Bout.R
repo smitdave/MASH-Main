@@ -410,7 +410,7 @@ mbites_attempt_O <- function(){
     if(private$habitatID > 0L){
       self$layEggs() # MBITES-Oviposition.R
     } else if(private$habitatID == -1L){
-      self$ovitrap()
+      # self$ovitrap()
     } else {
       stop("illegal habitatID value")
     }
@@ -450,11 +450,11 @@ Mosquito$set(which = "public",name = "attempt_O",
 mbites_attempt_M <- function(){
   # bout success
   if(runif(1) < MBITES:::Parameters$get_M_succeed()){
-    self$chooseMate()
+    self$chooseMate() # MBITES-Mating.R
 
     # found a mate
     if(private$mateID > 0L){
-      self$mating()
+      self$mating() # MBITES-Mating.R
     # empty queue
     } else if(private$mateID == 0L){
       # nothing yet.

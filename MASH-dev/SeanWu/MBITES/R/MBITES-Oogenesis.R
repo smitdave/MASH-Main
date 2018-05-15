@@ -124,7 +124,7 @@ mbites_pReFeed_null <- function(){
 
 #' @rdname MBITES-Oogenesis
 mbites_oogenesis1 <- function(){
-  # only make a new batch if i am carrying around eggs
+  # dont make a new batch if i am carrying around eggs
   if(private$batch <= 0){
     private$batch = self$rBatchSize()
     private$eggT = private$tNow + self$rEggMaturationTime()
@@ -157,12 +157,14 @@ mbites_rEggMaturationTimeOff <- function(){
 
 #' @rdname MBITES-Oogenesis
 mbites_oogenesis2 <- function(){
+  # dont make a new batch if i am carrying around eggs
   if(private$batch <= 0){
     private$batch = self$rBatchSize()
     private$eggP = MBITES:::Parameters$get_bloodPerEgg()*private$batch
   }
   # egg provision: after we've fed enough then mosquito is gravid
   private$eggP = private$eggP - private$bmSize
+  # if the egg provision is fulfilled we can go ahead and get ready for oviposition
   if(private$eggP <= 0){
     private$eggT = 0
     private$gravid = TRUE # now mosquito is gravid

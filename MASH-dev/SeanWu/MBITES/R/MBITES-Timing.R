@@ -40,7 +40,7 @@ NULL
 #'  * This method is bound to \code{Mosquito$timing}.
 #'
 mbites_timing <- function(){
-  
+
   # sample time to next launch, conditional on search and behavioral state
   if(private$searchNow){
     switch(private$state, # time i spent in these search bouts
