@@ -18,12 +18,12 @@ c = 0.15   # Proportion of mosquitoes infected after biting infectious human
 n = 12     # Time for sporogonic cycle
 
 # Define forest-specific parameters
-a_f = 0.88   # Human blood feeding rate in forest
+a_f = 0.4   # Human blood feeding rate in forest
 g_f = 0.1   # Per capita death rate of mosquitoes in forest
-H_f = 1000  # Human population (density?) in forest
+H_f = 2000  # Human population (density?) in forest
 X_f = 0     # Number of infected forest-goers
-p = 0.3     # Proportion of time forest-goers spend in the forest
-V_f = 5000  # Vector population in forest
+p = 0.1     # Proportion of time forest-goers spend in the forest
+V_f = 500  # Vector population in forest
 Y_f = 0     # Number of infected vectors in forest
 Z_f = exp(-g_f*n)*Y_f # Number of infectious vectors in forest
 
@@ -37,14 +37,20 @@ V_v = 100   # Vector population in village
 Y_v = 0     # Number of infected vectors in village
 Z_v = exp(-g_v*n)*Y_v # Number of infectious vectors in village
 
-# Initial conditions
-X_f0 = 200
-X_v0 = 500
-Y_f0 = 1000
-Y_v0 = 10
+# Initial conditions (SET AS PREVALENCE)
+X_f0 = 0.1
+X_v0 = 0.1
+Y_f0 = 0.2
+Y_v0 = 0.1
+
+# Initial conditions (scale to population sizes)
+X_f0 = X_f0 * H_f
+X_v0 = X_v0 * H_v
+Y_f0 = Y_f0 * V_f
+Y_v0 = Y_v0 * V_v
 
 # Set time scale
-times = 0:1000
+times = 0:3000
 
 require(deSolve)
 FM.ode = function(t,y,parms){with(as.list(c(y,parms)),{
@@ -75,34 +81,37 @@ inits = c(X_f=X_f0, X_v=X_v0, Y_f=Y_f0, Y_v=Y_v0)
 
 out = data.frame(lsoda(inits, times, FM.ode, parms))
 
-X_f_plot <- ggplot(out,
-                   aes(x = time, y = X_f)) +
-  geom_point()
-
-X_f_plot + ggtitle("Number of Infected Forest Goers") +
-  labs(x = "Time Step", y = "Infected Forest Goers")
-
-X_v_plot <- ggplot(out,
-                   aes(x = time, y = X_v)) +
-  geom_point()
-
-X_v_plot + ggtitle("Number of Infected Villagers") +
-  labs(x = "Time Step", y = "Infected Villagers")
-
 Y_f_plot <- ggplot(out,
                    aes(x = time, y = Y_f)) +
-  geom_point()
+  geom_point() +
+  scale_y_continuous(limits = c(0, NA))
 
 Y_f_plot + ggtitle("Number of Infected Vectors in Forest") +
   labs(x = "Time Step", y = "Infected Vectors")
 
 Y_v_plot <- ggplot(out,
                    aes(x = time, y = Y_v)) +
-  geom_point()
+  geom_point() +
+  scale_y_continuous(limits = c(0, NA))
 
 Y_v_plot + ggtitle("Number of Infected Vectors in Village") +
   labs(x = "Time Step", y = "Infected Vectors")
 
+X_f_plot <- ggplot(out,
+                   aes(x = time, y = X_f)) +
+  geom_point() +
+  scale_y_continuous(limits = c(0, NA))
+
+X_f_plot + ggtitle("Number of Infected Forest Goers") +
+  labs(x = "Time Step", y = "Infected Forest Goers")
+
+X_v_plot <- ggplot(out,
+                   aes(x = time, y = X_v)) +
+  geom_point() +
+  scale_y_continuous(limits = c(0, NA))
+
+X_v_plot + ggtitle("Number of Infected Villagers") +
+  labs(x = "Time Step", y = "Infected Villagers")
 
 X_v_SS <- out$X_v[out$time == max(times)]
 X_f_SS <- out$X_f[out$time == max(times)]
@@ -110,6 +119,14 @@ X_f_SS <- out$X_f[out$time == max(times)]
 S_v <- a_v/g_v
 chi_v <- ((1 - p) * X_f_SS + X_v_SS) / ((1 - p) * H_f + H_v) # prevalence in the village
 
+S_f <- a_f/g_f
+chi_f <- X_f_SS / H_f # prevalence in the forest
+
 R_0_v <- (X_v_SS * (1 + S_v * c * chi_v)) / ((H_v - X_v_SS) * chi_v * (1 - p))
 
-print(paste0("R value in village = ", R_0_v))
+R_0_f <- ((1 + S_f * c * chi_f) / (p * chi_f))*((chi_f / (1 - chi_f)) - R_0_v * (1 - p) * (chi_v / (1 + S_v * c * chi_v)))
+
+print(paste0("R_0 value in village (at beginning of outbreak) = ", R_0_v))
+print(paste0("R_0 value in forest (at beginning of outbreak) = ", R_0_f))
+print(paste0("Prevalence in village = ", chi_v))
+print(paste0("Prevalence in forest = ", chi_f))
