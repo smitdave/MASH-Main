@@ -13,7 +13,7 @@ This document describes the spatial dynamics of malaria in the Ross-Macdonald mo
 
 * From a vector descring PfPR in populations, human populations, and a TaR matrix, estimate EIR and $R_C$.
 
-## The Spatial Ross-Macdonald Model 
+## The Spatial Ross-Macdonald Model, Parameter and Variable Names
 
 We define the following notation:
 
@@ -37,6 +37,7 @@ We define the following notation:
 
 * Let $R_C = bc \frac{M}{H} \frac{a^2 e^{-gn}}{gr}$ denote the local reproductive numbers. 
 
+## The Spatial Ross-Macdonald Model, Equations
 
 The Ross-Macdonald equations in space are the following: 
 $$
@@ -173,7 +174,7 @@ plot(odeout$tm/365, odeout$y[,1], type = "l", col = "red", xlab = "Time (Years)"
 lines(odeout$tm/365, odeout$y[,2], col = "blue")
 ```
 
-#### Exposure and Infection in the Ross-Macdonald Model
+#### The Ross-Macdonald Model, Exposure and Infection
 
 Note that the equation describing human infection dynamics has the steady state solution, and that the computation is slightly easier if we use the odds of being infected, rather than the prevalence. 
 $$
@@ -194,23 +195,11 @@ EIR_est = computeEIR(odeout$xbar,H,Psi,RMpar)
 print(cbind(EIR_est$aEIR, odeout$aEIR))
 ```
 
-#### Transmission to Mosquitoes Modified by Time at Risk
+#### Mosquito Mobility :: A Kluge
 
-This formula does not, however, fully acknowledge the impact of mobility on transmission. Parasites also move when infectious people spending time here infect mosquitoes. Here, we derive the formulas as if mosquitoes don't move, and then make a correction about parasite dispersal in moving mosquitoes. A fully worked out model with mosquito movement will come later. 
-
-Let $\vec \kappa$ denote the vector denoting the proportion of mosquitoes that become infected after feeding on a person here. In the Ross-Macdonald model, $\vec \kappa = c {\vec x_{(\Psi)}}$, where  ${\vec x_{(\Psi)}}$ is the total number of infected people at risk divided by the total population at risk, or 
+Not to complicate things too much, but mosquitoes do move around, from emergence to infection, and between the time they become infected and the time they become infectious. So really we need a model that fully tracks movement. For now, we will stop short of that and introduce, instead, a kernel describing dispersal of bites by infectious mosquitoes, $\Theta$, but as a post-infection approximation without fully modeling mosquito movement: 
 $$
-{\vec x_{(\Psi)}} = \frac{\Psi^T \times \vec X}{\Psi^T \times \vec H} = \frac{{\vec X_{(\Psi)}}}{{\vec H_{(\Psi)}}}
-$$
-
-Let $\vec M$, $\vec Y$, and $\vec Z$ denote the population density of mosquitoes, infected mosquitoes, and infectious mosquitoes, respectively. Similarly, let $\vec y = \vec Y/\vec M$ and $\vec z= \vec Z/\vec M$ denote the proportion of infectious mosquitoes. 
-
-Let $a$ denote the human feeding rate. We model mosquito infection using the equation:
-
-
-Not to complicate things too much, but mosquitoes do move around, from emergence to infection, and between the time they become infected and the time they become infectious. So really we need a model that fully tracks movement. For now, we will stop short of that and introduce, instead, a kernel describing dispersal of bites by infectious mosquitoes, $\Theta$, as a function of the formulas as computed above: 
-$$
-{\vec E_{(\Psi)}} =  \Theta \vec V \cdot \frac{\vec H}{\vec H_{(\Psi)}} \cdot  \frac{{c \vec x_{(\Psi)}}}{ \left(1+cS{\vec x_{(\Psi)}}\right)}
+{\vec E_{(\Psi)}} =  a \Theta \times \frac{{\vec Y}}{\vec H_{(\Psi)}}
 $$
 
 
