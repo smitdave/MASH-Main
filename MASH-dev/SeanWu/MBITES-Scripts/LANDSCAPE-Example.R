@@ -40,7 +40,6 @@ points.clustered = function(n, meanParents = 10, clusteredness = .25, ...){
   return(ps)
 }
 
-
 # assign resources to sites
 ix_feed = 1:nFeed
 w_feed = rgamma(n=nFeed,shape=1,rate=1)
@@ -140,3 +139,10 @@ for(i in 1:nAqua){
     landscape[[ix_aqua[i]]]$aqua[[length(landscape[[ix_aqua[i]]]$aqua)+1]] = res_aqua
   }
 }
+
+
+###############################################################################
+# Run MBITES
+###############################################################################
+
+library(MBITES)
