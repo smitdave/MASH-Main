@@ -40,8 +40,8 @@ PDGHuman <- R6Class("PDGHuman",
                    ######## Infection Methods #########
                    
                    
-                   infect_Human = function(){
-                      private$Pf[1] = private$Pf[1]+1
+                   infect_Human = function(nInfections=1){
+                      private$Pf[1] = private$Pf[1]+nInfections
                     },
                    
                    clear_All_Pathogens = function(){
@@ -192,6 +192,10 @@ PDGHuman <- R6Class("PDGHuman",
                    
                    get_fever = function(){
                      private$fever
+                   },
+                   
+                   set_fever = function(newFever){
+                     private$fever = newFever
                    },
                    
                    get_Pf = function(){

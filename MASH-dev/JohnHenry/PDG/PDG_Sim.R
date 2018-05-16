@@ -4,7 +4,7 @@ human = PDGHuman$new()
 human$infect_Human()
 
 
-Nweeks = 100
+Nweeks = 50
 for(t in seq(1:Nweeks)){
   human$update_Human()
 #  if(rbinom(1,1,.01)==1){
