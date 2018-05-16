@@ -1,0 +1,254 @@
+---
+title: "Spatial Dynamics in the Ross-Macdonald Model"
+author: "David L Smith"
+date: "4/24/2018"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+This document describes the spatial dynamics of malaria in the Ross-Macdonald model, and in a simple but generalized form of the Ross-Macdonald model:
+
+* From a vector describing PfPR, human population density, and a time-at-risk (TaR) matrix, $\Psi$, estimate EIR, and $R_C$.
+
+* From a vector descring PfPR in populations, human populations, and a TaR matrix, estimate EIR and $R_C$.
+
+## The Spatial Ross-Macdonald Model 
+
+We define the following notation:
+
+* $\Psi$ is a Time-at-Risk (TaR); the element $\psi_{i,j}\in\Psi$ describes time spent by a person from $i$ in patch $j$, weighted by mosquito activity patterns. 
+
+* Let $\vec H$ denote  population density of humans, and $\vec X$ the population density of infected humans. 
+
+* Let $r$ denote the rate that human parasite infections clear. 
+
+* Note that the population in patch $i$ is not $H_i$, but $\sum_j H_j \psi_{j,i}$. The population density at risk is $H_{(\Psi)} = \Psi^T \vec H$.
+
+* Let $\vec x = \vec X/\vec H$ denote the prevalence of malaria infection in the population here.  Note that for purposes of transmission, prevalence is weighed by time at risk: $\vec x_{(\Psi)} = \Psi^T \vec X / \Psi^T \vec H$.
+
+* Let $\vec M$ denote the population density of mosquitoes, and $\vec Y$ the population density of infected mosquitoes. All these are assumed to represent the values of the parameters under present levels of sustained control. The ratio of mosquitoes to humans is $\vec m=\vec M/\vec H$, but scaled for time at risk, it is $\vec m_{(\Psi)} = \vec M/\vec H_{(\Psi)}$
+
+* Let $a$ denote human blood feeding; $g$ the mosquito death rate, and $n$ the extrinsic incubation period (in days). All these are assumed to represent the values of the parameters under present levels of sustained control. 
+
+* Let $E = e^{-gn}\vec Y/\vec H$ denote the EIR as it would be computed. Let $E_{(\Psi)} = a e^{-gn}\vec Y/H_{(\Psi)}$ is the TaR-rescaled EIR. Note that $\vec E = \vec E_{(\Psi)} \vec H / \vec H_{(\Psi)}$. 
+
+* Let $b$ denote the fraction of infectious bites that infect a human, and let $c$ denot the fraction of bites on infected humans that infect a mosquito. 
+
+* Let $R_C = bc \frac{M}{H} \frac{a^2 e^{-gn}}{gr}$ denote the local reproductive numbers. 
+
+
+The Ross-Macdonald equations in space are the following: 
+$$
+\frac{d {\vec X}}{dt}  = 
+a b e^{-gn} \left( \Psi \times {\frac{\vec Y}{\vec H_{(\Psi)}}} \right) \cdot \left(\vec H - \vec X\right) - r \vec X 
+$$
+or equivalently
+$$
+\frac{d {\vec X}}{dt} = b \left( \Psi \times {\vec E_{(\Psi)}} \right) \cdot \left(\vec H - \vec X\right) - r \vec X 
+$$
+$$
+\frac{d \vec Y}{dt} = a c {\vec x_{(\Psi)}} \cdot (\vec M-\vec Y)- g \vec Y 
+$$ 
+
+The delay differential equation for infectious mosquitoes is:
+$$
+\frac{d \vec Z}{dt} = a c {\vec x_{(\Psi),t-n}} \left(\vec M_{t-n}-\vec Y_{t-n}\right)- g \vec Z
+$$
+
+At the steady state $\vec Z= e^{-gn} \vec Y = e^{-gn} \vec y \vec M$, so we solve the equations in $\vec y$. Letting $S=a/g$,
+$$
+\vec y = \frac{ca{\vec x_{(\Psi)}} }{\vec g+ca{\vec x_{(\Psi)}}}= \frac{cS{\vec x_{(\Psi)}}}{\vec 1+cS{\vec x_{(\Psi)}}}
+$$
+So we can now write down the equation for the steady state EIR: 
+$$ 
+{\vec E_{(\Psi)}} = a \frac {\vec Z}{{\vec H_{(\Psi)}}}=ae^{-gn}(\vec m \cdot \frac{\vec H}{{\vec H_{(\Psi)}}} \cdot \vec y)  = \vec V \cdot \frac{\vec H}{{\vec H_{(\Psi)}}} \cdot  \frac{{c \vec x_{(\Psi)}}}{ \left(\vec 1+cS{\vec x_{(\Psi)}}\right)}
+$$
+
+
+### The Spatial Ross-Macdonald Model, R-code 
+
+```{r, echo=TRUE}
+
+require(deSolve)
+require(rootSolve)
+############################################################
+# The Spatial Ross-Macdonald Model
+# H = Population density of humans
+# X = Population density of infected humans
+# M = Population density of mosquitoes
+# Y = Population density of infected mosquitoes
+# a = human blood feeding rate
+# g = mosquito death rate
+# n = extrinsic incubation period (EIP)
+# b = proportion of infectious bites causing human infection
+# c = proportion of infectious bites causing mosquito infection
+# r = rate parasite infections clear
+############################################################
+RMspatial.ode = function(t,XY,P,H,H_Psi,Psi){with(as.list(c(P)),{
+  X = XY[1:L]
+  Y = XY[L+1:L]
+  M = P[1:L]
+  EIR = a*exp(-g*n)*Y/H_Psi
+  dX = b*(Psi%*%EIR)*(H-X) - r*X
+  kappa = (t(Psi)%*%X)/H_Psi
+  dY = a*c*kappa*(M-Y) - g*Y
+  list(c(dX,dY))
+})}
+
+RMspatial.solve = function(
+  R0, Psi, H, par, 
+  x0 = .1, 
+  tm = 0:7300
+){with(par,{
+  L = length(H)
+  M = as.vector(H)*g*r*R0/(a^2*b*c*exp(-g*n))
+  params = c(M=M,a=a,b=b,r=r,c=c,g=g,n=n,L=L)
+  xx = x0*H
+  yy = M*a*c*xx/(g+a*c*xx)
+  inits = c(xx,yy)
+  odeout = lsoda(inits,tm,RMspatial.ode,params,H=H,H_Psi=as.vector(t(Psi)%*%H),Psi=Psi)
+  X=odeout[,c(1+1:L)]
+  x = X%*%diag(1/as.vector(H))
+  xbar = x[length(tm),]
+  Y=odeout[,c(1+L+1:L)]
+  y = Y%*%diag(1/as.vector(M))
+  dEIR = a*exp(-g*n)*Y[length(tm),]/H
+  list(par=par,M=M, R0=R0,Psi=Psi,H=H,tm=odeout[,1],X=X,Y=Y,x=x,y=y,dEIR=dEIR,aEIR=dEIR*365, xbar=xbar)
+})}
+
+RMspatial.roots = function(
+  R0, Psi, H, par, 
+  x0 = .1
+){with(par,{
+  L = length(H)
+  M = as.vector(H)*g*r*R0/(a^2*b*c*exp(-g*n))
+  params = c(M=M,a=a,b=b,r=r,c=c,g=g,n=n,L=L)
+  inits = c(x0*H,M*a*c*x0/(g+a*c*x0))
+  roots=steady(inits,time=c(0,Inf),RMspatial.ode,params,H=H,H_Psi=as.vector(t(Psi)%*%H),Psi=Psi, method="runsteady")$y
+  xbar=roots[c(1:L)]/as.vector(H)
+  Y=roots[L+c(1:L)]
+  dEIR = a*exp(-g*n)*Y/as.vector(H)
+  list(par=par,M=M, R0=R0,Psi=Psi,H=H,xbar=xbar, dEIR=dEIR, aEIR=dEIR*365)
+})} 
+
+fRMpar = function(
+  # Bionomics 
+  a = 0.3, g = 1/10, n = 10,
+  # Transmission Efficiency 
+  b = 0.55, c = 0.1, 
+  # Pf Infection 
+  r = 1/200
+){list(a=a,g=g,n=n,b=b,c=c,r=r,S=a/g)}
+
+RMpar=fRMpar()
+
+H = matrix(c(950,50),2,1)
+R0 = c(0.5,3)
+Psi = t(matrix(c(c(.95, .005), c(0.045,.95)), 2,2))
+
+#Psi=diag(1,2)
+
+xbar_f = function(R0, RMpar){with(RMpar,{
+  pmax(0,(R0-1)/(R0+c*S)) 
+})}
+
+#check for errors
+odeout=RMspatial.solve(R0, Psi, H, RMpar, x0=xbar_f(R0,RMpar))
+roots=RMspatial.roots(R0, Psi, H, RMpar, x0=xbar_f(R0,RMpar))
+print(cbind(roots$xbar, odeout$xbar)) 
+print(cbind(roots$aEIR, odeout$aEIR))
+
+```
+
+
+
+```{r, fig=TRUE}
+plot(odeout$tm/365, odeout$x[,1], type = "l", col = "red", xlab = "Time (Years)", ylab = "PfPR", ylim = range(odeout$x,0)) 
+lines(odeout$tm/365, odeout$x[,2], col = "blue")
+```
+
+```{r}
+plot(odeout$tm/365, odeout$y[,1], type = "l", col = "red", xlab = "Time (Years)", ylab = "PfSR", ylim = range(odeout$y,0))
+lines(odeout$tm/365, odeout$y[,2], col = "blue")
+```
+
+#### Exposure and Infection in the Ross-Macdonald Model
+
+Note that the equation describing human infection dynamics has the steady state solution, and that the computation is slightly easier if we use the odds of being infected, rather than the prevalence. 
+$$
+\frac{b}{r} \left( \Psi \times {\vec E_{(\Psi)}} \right) = \frac{\vec X}{\vec H-\vec X}
+$$
+Already, this is a useful formula for computing malaria cases imported by people as they move around, given some local estimate of the EIR. Usually, however, we have an estimate of prevalence, so we are usually estimating the EIR under some modeled time at risk. If we know the prevalence of infection and time at risk, then $\vec E$ can be computed by solving a linear system of equations.
+
+```{r, echo=TRUE}
+computeEIR = function(x, H, Psi,RMpar){with(RMpar,{
+  Hs = as.vector(t(Psi)%*%as.matrix(H))
+  s = Hs/as.vector(H)
+  dEIR_Psi = solve(b/r*Psi, x/(1-x))
+  dEIR=dEIR_Psi*s
+  return(list(dEIR=dEIR,dEIR_Psi=dEIR_Psi,aEIR=dEIR*365, aEIR_Psi=dEIR_Psi*365))
+})}
+
+EIR_est = computeEIR(odeout$xbar,H,Psi,RMpar)
+print(cbind(EIR_est$aEIR, odeout$aEIR))
+```
+
+#### Transmission to Mosquitoes Modified by Time at Risk
+
+This formula does not, however, fully acknowledge the impact of mobility on transmission. Parasites also move when infectious people spending time here infect mosquitoes. Here, we derive the formulas as if mosquitoes don't move, and then make a correction about parasite dispersal in moving mosquitoes. A fully worked out model with mosquito movement will come later. 
+
+Let $\vec \kappa$ denote the vector denoting the proportion of mosquitoes that become infected after feeding on a person here. In the Ross-Macdonald model, $\vec \kappa = c {\vec x_{(\Psi)}}$, where  ${\vec x_{(\Psi)}}$ is the total number of infected people at risk divided by the total population at risk, or 
+$$
+{\vec x_{(\Psi)}} = \frac{\Psi^T \times \vec X}{\Psi^T \times \vec H} = \frac{{\vec X_{(\Psi)}}}{{\vec H_{(\Psi)}}}
+$$
+
+Let $\vec M$, $\vec Y$, and $\vec Z$ denote the population density of mosquitoes, infected mosquitoes, and infectious mosquitoes, respectively. Similarly, let $\vec y = \vec Y/\vec M$ and $\vec z= \vec Z/\vec M$ denote the proportion of infectious mosquitoes. 
+
+Let $a$ denote the human feeding rate. We model mosquito infection using the equation:
+
+
+Not to complicate things too much, but mosquitoes do move around, from emergence to infection, and between the time they become infected and the time they become infectious. So really we need a model that fully tracks movement. For now, we will stop short of that and introduce, instead, a kernel describing dispersal of bites by infectious mosquitoes, $\Theta$, as a function of the formulas as computed above: 
+$$
+{\vec E_{(\Psi)}} =  \Theta \vec V \cdot \frac{\vec H}{\vec H_{(\Psi)}} \cdot  \frac{{c \vec x_{(\Psi)}}}{ \left(1+cS{\vec x_{(\Psi)}}\right)}
+$$
+
+
+#### Reproductive Numbers 
+
+We substitute this in the formula for the odds of being infected to get: 
+$$
+\frac{b}{r} {\vec E_{(\Psi)}} =   \frac{b}{r} \Psi \times \left( \Theta  \vec V \cdot \frac{\vec H}{\vec H_{(\Psi)}} \cdot  \frac{{c \vec x_{(\Psi)}}}{ 1+cS{\vec x_{(\Psi)}}} \right) =  \left( \Psi \odot \left( \Theta \odot \frac{{\vec x_{(\Psi)}}}{ 1+cS{\vec x_{(\Psi)}}} \right) \right) \times \vec R = \frac{\vec X}{\vec H- \vec X}
+$$ 
+
+Where $\vec R$ is the vector of local reproductive numbers (either basic or adjusted, depending on the values of the parameters).
+
+This is a dead useful formula because it allows us to solve for $R$, given $\Psi$, $\Theta$, $H$, and a matrix describing prevalence $x = X/H$: 
+```{r, echo=TRUE}
+computeR = function(x, H, Psi,Theta,RMpar){with(RMpar,{
+  Hs = as.vector(t(Psi)%*%as.matrix(H))
+  s = Hs/as.vector(H)
+  kappa = as.vector(t(Psi)%*%(x*H))/Hs
+  Yish = diag(kappa/(1+c*S*kappa))
+  #s*solve(Psi%*%(Theta%*%Yish), x/(1-x))
+  solve(Psi%*%(Theta%*%Yish)%*%diag(1/s), x/(1-x))
+})}
+
+
+Theta = diag(1,2) 
+R0_est=computeR(odeout$xbar,H,Psi,Theta,RMpar)
+print(cbind(R0,R0_est)) 
+
+
+```
+```{r, echo=TRUE}
+p=0.005
+Theta = matrix(c(1-p, p, p, 1-p),2,2) 
+computeR(odeout$xbar,H,Psi,Theta,RMpar)
+```
+
+
+
+
+
+
