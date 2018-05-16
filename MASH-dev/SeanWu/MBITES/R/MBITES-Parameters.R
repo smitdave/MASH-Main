@@ -453,9 +453,71 @@ get_InAndOut_row_MBITES_Parameters <- function(i){
 # Set Parameters
 ###############################################################################
 
-# set global parameters
+#' MBITES Parameters: Set Parameters
+#'
+#' Parameter descriptions below.
+#'
+#' @param defaultState_F character of behavioral state that female mosquito has when it emerges
+#' @param defaultState_M character of behavioral state that male mosquito has when it emerges
+#' @param aqua_model character in \code{emerge,EL4P}
+#' @param disperse probability for mosquito to initiate a search bout even if resources are present, called from \code{\link{mbites_checkForResources}}
+#' @param boutFail_p geometric probability to give up and initiate a search after a failed bout, called from \code{\link{mbites_boutFailCheck}}
+#' @param b_wts behavior-specific landing spot weights, caled from \code{\link{mbites_newSpot}}
+#' @param o_wts behavior-specific landing spot weights, caled from \code{\link{mbites_newSpot}}
+#' @param m_wts behavior-specific landing spot weights, caled from \code{\link{mbites_newSpot}}
+#' @param s_wts behavior-specific landing spot weights, caled from \code{\link{mbites_newSpot}}
+#' @param InAndOut named transition matrix between landing spots, called from \code{\link{mbites_newSpot}}
+#' @param tSwarm time of day to start swarming behavior, called from \code{\link{mbites_findSwarm}}
+#' @param Emax related to daily estivation probability, called from \code{\link{mbites_prEstivate}}
+#' @param Eb related to daily estivation probability, called from \code{\link{mbites_prEstivate}}
+#' @param Ep probability to survive estivation, called from \code{\link{mbites_checkEstivation1}}
+#' @param eEndm mean day of year to wakeup from estivation, called from \code{\link{mbites_wakeUpTime}}
+#' @param eEndSd sd of day of year to wakeup from estivation, called from \code{\link{mbites_wakeUpTime}}
+#' @param estivationDay day of the year to deterministically initiate estivation, called from \code{\link{mbites_checkEstivation2}}
+#' @param energyPreG pre-gonotrophic energy requirement, called from \code{\link{mbites_BloodEnergetics}} and \code{\link{mbites_sugarMeal}}
+#' @param preGsugar amount of energy a sugar meal contributes to the pre-gonotrophic energy requirement, called from \code{\link{mbites_sugarMeal}}
+#' @param energyFromBlood_b amount of energy derived per unit of blood, called from \code{\link{mbites_energyFromBlood}}
+#' @param S_u amount of energy burned by a mosquito during a bout, called from \code{\link{mbites_flightBurnEnergy}}
+#' @param S_sa parameter for probability to queue a sugar bout as function of a mosquito's energy, called from \code{\link{mbites_pSugarBout}}
+#' @param S_sb parameter for probability to queue a sugar bout as function of a mosquito's energy, called from \code{\link{mbites_pSugarBout}}
+#' @param Bs_surv blood feeding search bout baseline survival probability, called from \code{\link{surviveFlight}}
+#' @param Os_surv oviposition search bout baseline survival probability, called from \code{\link{surviveFlight}}
+#' @param Ms_surv mating search bout baseline survival probability, called from \code{\link{surviveFlight}}
+#' @param Ss_surv sugar feeding search bout baseline survival probability, called from \code{\link{surviveFlight}}
+#' @param B_surv blood feeding bout baseline survival probability, called from \code{\link{surviveFlight}}
+#' @param O_surv oviposition bout baseline survival probability, called from \code{\link{surviveFlight}}
+#' @param M_surv mating bout baseline survival probability, called from \code{\link{surviveFlight}}
+#' @param S_surv sugar feeding bout baseline survival probability, called from \code{\link{surviveFlight}}
+#' @param PPR_a parameter for probability of death during post-prandial resting as function of blood meal size, called from \code{\link{mbites_pPPRFlight}}
+#' @param PPR_b parameter for probability of death during post-prandial resting as function of blood meal size, called from \code{\link{mbites_pPPRFlight}}
+#' @param S_a parameter for probability of death due to energy reserves, called from \code{\link{mbites_pEnergySurvival}}
+#' @param S_b parameter for probability of death due to energy reserves, called from \code{\link{mbites_pEnergySurvival}}
+#' @param ttsz_p zero-inflation for wing damage, called from \code{\link{mbites_WingTattering}}
+#' @param ttsz_a alpha parameter for beta distributed wing damage, called from \code{\link{mbites_WingTattering}}
+#' @param ttsz_b beta parameter for beta distributed wing damage, called from \code{\link{mbites_WingTattering}}
+#' @param ttr_a parameter for probability of death due to wing tattering, called from \code{\link{mbites_pTatter}}
+#' @param ttr_b parameter for probability of death due to wing tattering, called from \code{\link{mbites_pTatter}}
+#' @param chm_a parameter for probability of death due to chemical damage, called from \code{\link{mbites_pChem}}
+#' @param chm_b parameter for probability of death due to chemical damage, called from \code{\link{mbites_pChem}}
+#' @param sns_a parameter for probability of death due to senescence, called from \code{\link{mbites_pSenesce}}
+#' @param sns_b parameter for probability of death due to senescence, called from \code{\link{mbites_pSenesce}}
+#' @param bm_a alpha parameter for beta distributed blood meal size, called from \code{\link{mbites_rBloodMealSize}}
+#' @param bm_b beta parameter for beta distributed blood meal size, called from \code{\link{mbites_rBloodMealSize}}
+#' @param of_a parameter for probability of death due to overfeeding, called from \code{\link{mbites_pOverFeed}}
+#' @param of_b parameter for probability of death due to overfeeding, called from \code{\link{mbites_pOverFeed}}
+#' @param bloodPerEgg units of blood required for each egg to develop, called from \code{\link{mbites_oogenesis2}}
+#' @param bs_m mean of normally distributed egg batch size, called from \code{\link{mbites_rBatchSizeNorm}}
+#' @param bs_sd standard deviation of normally distributed egg batch size, called from \code{\link{mbites_rBatchSizeNorm}}
+#' @param maxBatch maximum allowable egg batch size, called from \code{\link{mbites_rBatchSizeBms}}
+#' @param emt_m mean of normally distributed egg maturation time, called from \code{\link{mbites_rEggMaturationTimeNorm}}
+#' @param emt_sd standard deviation of normally distributed egg maturation time, called from \code{\link{mbites_rEggMaturationTimeNorm}}
+#' @param rf_a parameter for probably of refeeding as function of blood meal size, called from \code{\link{mbites_pReFeed}}
+#' @param rf_b parameter for probably of refeeding as function of blood meal size, called from \code{\link{mbites_pReFeed}}
+#'
 set_parameters_MBITES_Parameters <- function(
-  
+
+  defaultState_F       = "B",
+  defaultState_M       = "S",
   aqua_model           = "emerge",
 
   # Search behavior
@@ -543,10 +605,68 @@ set_parameters_MBITES_Parameters <- function(
 
 ){
 
-
+  private$defaultState_F       = defaultState_F
+  private$defaultState_M       = defaultState_M
+  private$aqua_model           = aqua_model
+  private$disperse             = disperse
+  private$boutFail_p           = boutFail_p
+  private$b_wts                = b_wts
+  private$o_wts                = o_wts
+  private$m_wts                = m_wts
+  private$s_wts                = s_wts
+  private$InAndOut             = InAndOut
+  private$tSwarm               = tSwarm
+  private$Emax                 = Emax
+  private$Eb                   = Eb
+  private$Ep                   = Ep
+  private$eEndm                = eEndm
+  private$eEndSd               = eEndsd
+  private$estivationDay        = estivationDay
+  private$energyPreG           = energyPreG
+  private$preGsugar            = preGsugar
+  private$energyFromBlood_b    = energyFromBlood_b
+  private$S_u                  = S_u
+  private$S_sa                 = S_sa
+  private$S_sb                 = S_sb
+  private$Bs_surv              = Bs_surv
+  private$Os_surv              = Os_surv
+  private$Ms_surv              = Ms_surv
+  private$Ss_surv              = Ss_surv
+  private$B_surv               = B_surv
+  private$O_surv               = O_surv
+  private$M_surv               = M_surv
+  private$S_surv               = S_surv
+  private$PPR_a                = PPR_a
+  private$PPR_b                = PPR_b
+  private$S_a                  = S_a
+  private$S_b                  = S_b
+  private$ttsz_p               = ttsz_p
+  private$ttsz_a               = ttsz_a
+  private$ttsz_b               = ttsz_b
+  private$ttr_a                = ttr_a
+  private$ttr_b                = ttr_b
+  private$chm_a                = chm_a
+  private$chm_b                = chm_b
+  private$sns_a                = sns_a
+  private$sns_b                = sns_b
+  private$bm_a                 = bm_a
+  private$bm_b                 = bm_b
+  private$of_a                 = of_a
+  private$of_b                 = of_b
+  private$bloodPerEgg          = bloodPerEgg
+  private$bs_m                 = bs_m
+  private$bs_sd                = bs_sd
+  private$maxBatch             = maxBatch
+  private$emt_m                = emt_m
+  private$emt_sd               = emt_sd
+  private$rf_a                 = rf_a
+  private$rf_b                 = rf_b
 
 }
 
+MBITES_Parameters$set(which = "public",name = "set_parameters",
+    value = set_parameters_MBITES_Parameters, overwrite = TRUE
+)
 
 
 

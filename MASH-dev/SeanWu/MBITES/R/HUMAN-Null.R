@@ -114,7 +114,19 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
 # Human methods for logging bites
 ###############################################################################
 
-#' Push Host Probing Event to History
+#' Null Human: Daily Event Queue Simulation
+#'
+#' For the null human model, the daily time step does nothing.
+#'
+oneDay_EventQ_Human_NULL <- function(){}
+
+#' Null Human: Daily Activity Space Simulation
+#'
+#' For the null human model, the daily time step does nothing.
+#'
+oneDay_ActivitySpace_Human_NULL <- function(){}
+
+#' Null Human: Push Host Probing Event to History
 #'
 #' If using the null human and pathogen model this function logs host probing events on this \code{\link{Human_NULL}}.
 #'  * This method is bound to \code{Human_NULL$pushProbe}
@@ -135,13 +147,22 @@ pushProbe_Human_NULL <- function(m_id,t){
   }
 }
 
-#' Push Host Blood feeding Event to History
+#' Null Human: Push Host Blood feeding Event to History
 #'
 #' If using the null human and pathogen model this function logs host blood feeding events on this \code{\link{Human_NULL}}.
 #'  * This method is bound to \code{Human_NULL$pushFeed}
 pushFeed_Human_NULL <- function(){
   private$bloodFeed[length(private$bloodFeed)] = TRUE
 }
+
+# set methods
+Human_NULL$set(which = "public",name = "oneDay_EventQ",
+    value = oneDay_EventQ_Human_NULL, overwrite = TRUE
+)
+
+Human_NULL$set(which = "public",name = "oneDay_ActivitySpace",
+    value = oneDay_ActivitySpace_Human_NULL, overwrite = TRUE
+)
 
 Human_NULL$set(which = "public",name = "pushProbe",
     value = pushProbe_Human_NULL, overwrite = TRUE

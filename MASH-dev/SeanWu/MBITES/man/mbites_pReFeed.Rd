@@ -7,7 +7,7 @@
 mbites_pReFeed()
 }
 \description{
-Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times batch}}{rf.b+e^{rf.a\times batch}} }
+Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times bmSize}}{rf.b+e^{rf.a\times bmSize}} }
 \itemize{
 \item This method is bound to \code{MosquitoFemale$pReFeed()}.
 }

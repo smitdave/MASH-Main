@@ -103,13 +103,13 @@ mbites_checkRefeed_null <- function(){
 
 #' MBITES: Probability of Refeeding
 #'
-#' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times batch}}{rf.b+e^{rf.a\times batch}} }
+#' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times bmSize}}{rf.b+e^{rf.a\times bmSize}} }
 #'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
 #'
 mbites_pReFeed <- function(){
   rf_a = MBITES:::Parameters$get_rf_a()
   rf_b = MBITES:::Parameters$get_rf_b()
-  (2+rf_b)/(1+rf_b) - exp(rf_a*private$batch)/(rf_b + exp(rf_a*private$batch))
+  (2+rf_b)/(1+rf_b) - exp(rf_a*private$bmSize)/(rf_b + exp(rf_a*private$bmSize))
 }
 
 #' MBITES: Null Probability of Refeeding

@@ -116,11 +116,11 @@ mbites_BloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
 
 #' MBITES: Energy derived from blood
 #'
-#' Energy derived from the blood meal is a type 2 function of blood meal size with half-maximum parameter \code{energyFromBlood_b}.
+#' Energy derived from the blood meal is a linear function of blood meal size with half-maximum parameter \code{energyFromBlood_b}.
 #'  * This method is bound to \code{Mosquito_Female$energyFromBlood}.
 #'
 mbites_energyFromBlood <- function(){
-  bmSize / (MBITES:::Parameters$get_energyFromBlood_b() + bmSize)
+  bmSize * MBITES:::Parameters$get_energyFromBlood_b()
 }
 
 # set methods

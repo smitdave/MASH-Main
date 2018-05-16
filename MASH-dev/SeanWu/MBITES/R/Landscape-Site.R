@@ -103,6 +103,32 @@ Site <- R6::R6Class(classname = "Site",
 
 
 ###############################################################################
+# Aquatic Ecology: needed in Tile-Simulation
+###############################################################################
+
+#' Site: One Day of Aquatic Ecology Dynamics
+#'
+#' If this site has \code{\link{Aqua_Resource}} (aquatic habitats) present, run the daily \code{one_day} and
+#' \code{push_imago} functions that all aquatic habitat resource objects must implement.
+#'  * binding: \code{Site$oneDay_AquaticEcology}
+#'
+oneDay_AquaticEcology_Site <- function(){
+  # if this site has aquatic habitats
+  n = length(private$res_aqua)
+  if(n > 0){
+    for(i in 1:n){
+      private$res_aqua[[i]]$one_day()
+      private$res_aqua[[i]]$push_imago()
+    }
+  }
+}
+
+Site$set(which = "public",name = "oneDay_AquaticEcology",
+    value = oneDay_AquaticEcology_Site, overwrite = TRUE
+)
+
+
+###############################################################################
 # movement; when a mosquito calls 'search' return a new site it moves to
 ###############################################################################
 

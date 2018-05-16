@@ -2,7 +2,7 @@
 % Please edit documentation in R/HUMAN-Null.R
 \name{pushFeed_Human_NULL}
 \alias{pushFeed_Human_NULL}
-\title{Push Host Blood feeding Event to History}
+\title{Null Human: Push Host Blood feeding Event to History}
 \usage{
 pushFeed_Human_NULL()
 }

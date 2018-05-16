@@ -170,9 +170,9 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  public = list(
 
                    # begin constructor
-                   initialize = function(bDay, state, site, tileID){
+                   initialize = function(bDay, site, tileID){
 
-                     super$initialize(bDay,state,site,tileID) # construct the base-class parts
+                     super$initialize(bDay,MBITES:::Parameters$get_defaultState_F(),site,tileID) # construct the base-class parts
 
                      private$energy_preG = MBITES:::Parameters$get_energy_preG()
 
@@ -211,6 +211,10 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  ) # end private members
 ) # end class definition
 
+###############################################################################
+# Female Mosquito: Logging
+###############################################################################
+
 #' MBITES: Track History
 #'
 #' At the end of each bout (\code{\link{mbites_oneBout}}), track the mosquito's history. If the mosquito
@@ -234,9 +238,7 @@ mbites_trackHistory <- function(){
   private$tHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
   private$sHist[private$nEvent] = private$site$get_id()
   private$bHist[private$nEvent] = private$state
-
-  # write and delete if dead
-  self$exit()
+  
 }
 
 #' MBITES: Export History and Remove Self
@@ -295,7 +297,7 @@ Mosquito_Male <- R6::R6Class(classname = "Mosquito_Male",
                    # begin constructor
                    initialize = function(bDay, site, tileID){
 
-                     super$initialize(FALSE,bDay,site,tileID) # construct the base-class parts
+                     super$initialize(bDay,MBITES:::Parameters$get_defaultState_M(),site,tileID) # construct the base-class parts
 
 
                    } # end constructor

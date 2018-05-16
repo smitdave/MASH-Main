@@ -7,7 +7,7 @@
 mbites_energyFromBlood()
 }
 \description{
-Energy derived from the blood meal is a type 2 function of blood meal size with half-maximum parameter \code{energyFromBlood_b}.
+Energy derived from the blood meal is a linear function of blood meal size with half-maximum parameter \code{energyFromBlood_b}.
 \itemize{
 \item This method is bound to \code{Mosquito_Female$energyFromBlood}.
 }

@@ -7,3 +7,4 @@
   * `PPR_a`, `PPR_b`: literally just made them up and looked at what the function does.
   * `chm_a`, `chm_b`: ditto
   * `bloodPerEgg`: cant even make up because i literally have no idea
+  * check how `InAndOut` is being used; make sure that when i get to a new site there is no weird dependency on the last landing spot i was at, at a different site.
