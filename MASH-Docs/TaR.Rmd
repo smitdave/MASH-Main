@@ -1,0 +1,140 @@
+---
+title: "TaR"
+author: "David L Smith"
+output: pdf_document
+---
+## Time at Risk (TaR)
+
+In malaria, exposure has a definition that is commonly measured, properly motivated, and sensible: it is the entomological inoculation rate (EIR), the number of bites by infectious mosquitoes per person per day. Here, we develop the concepts as if there were no seasonality in either exposure or mobility, but the methods are extensible. 
+
+In places where malaria is transmitted, mosquito biting activity is not evenly distributed throughout the day. We will, therefore, discriminate between two kinds of matrices: **time spent**, and **time at risk**. We are more interested in the latter, though we will build our intuition on the former. 
+
+Let $\tau_i(t)$ describe time (in hours) spent: $\tau_i(t)=1$ if present at location $i$ and zero otherwise. Let $\phi_i(t)$ denote the blood feeding rates of vector mosquitoes througout the day.  Time at risk is related to time spent by the formula: 
+$$\psi_i(t) = \frac{ \int_0^{24} \tau_i(t) \phi_i(t) dt }{ \int_0^{24} \phi_i(t) dt}$$ 
+Note that if there is more than one vector species with different biting times, then $\phi_i(t)$ must be weighted differently by species in some appropriate way.By normalizing time at risk, we might be tempted to believe we have constrained total time at risk for a population to be less than or equal to one, but this would only be guaranteed under a narrow set of constraints: 
+$$
+\forall i,j : \; \phi_i(t) = \phi_j(t) \Rightarrow \sum_i \phi_i (t) \leq 1.
+$$  
+We can imagine situations in which a person spends nights at home where the dominant vectors peak biting times are at night, and days working in agriculture where the dominant vectors peak biting times are during the day. We leave these problems to be solved and interpreted correctly when they are encountered.
+
+For malaria exposure, we start from the convention of modeling human populations under the assumption that each human has a permanent reference *position* in space corresponding to home, the place where they sleep most nights. For most people, most time is spent at home or nearby. On occasion, people travel, which we define by the proportion of nights spent away from home as well as the location of the travel. In essence, this is equivalent to assuming that people don't change their location, but they are exposed to risks occurring elsewhere. Since the incubation times for parasites in mosquitoes is around 10-20 days (or more or less, depending on the vector species and temperature), and the minimal incubation time for parasites in humans is 16-20 days, modeling time at risk is likely most accurate for trips lasting less than several weeks. For most people in most places, trips longer than a few weeks represent a small (but perhaps important) fraction of all movement.  
+
+For people who have a home, most exposure occurs near home and the history of exposure around home matters. If we modeled fluxes rather than time at risk and exposure in population models, they by moving, a person would become an anonymous member of another population. In the flux model, it is as if individuals are taking a random walk around a landscape and thus changing their position, which would result in the loss of information about their history of exposure where they came from. Flux models would seem to be more appropriate for mosquito populations, human migration, or nomadic human populations. For populations who have a home base, the bookkeeping is both easier and less prone to logical errors if we model exposure and time at risk for populations with fixed locations, rather than modeling the flows of people. This basic typology covers most movement by most people.
+
+We recognize that other typologies may not be well-approximated by the time at risk approach taken above, including long-trips, true nomadism, labor-related migration (i.e. moving from farms to cities or fishing villages between growing seasons),  permanent change of home, and crisis related migration. These sorts of movement can be hugely important at some places and in some times, but it is either unpredictable or idiosyncratic.  For locations where it is appropriate, we will seek to improve upon the methods for describing time at risk using locally calibrated models, as needed. In the base case, we will assume hegemony of the basic typology, recognizing they will be 1st order approximating models that are sometimes locally wrong. 
+
+Since there are so many data sources and so many problems computing time at risk, we will adopt a modeling approach that 1) attempts to synthesize data from multiple data sources; and 2) that allows us to carefully weigh and propagate uncertainty. In particular, we will always convert a flux matrix into a time at risk matrix using an assumption about the length of stay, for the purposes described above. In places where alternative movement typologies predominate, it may be appropriate to devise complicated typologies, simulate individuals, and track positions without losing any information. Indeed, individual-based simulation models with complex activity space algorithms provide one alternative way of checking simple time at risk matrices against more complicated activity space models of mobility. 
+
+Finally, we note that the problem of defining "locations" is not trivial for malaria, as a location should have something to do with both exposure risk and transmission. If we carve up the world into areas that are too small, we must contend with computational problems arising from having too many patches. Other problems arise if the patches are too large, not least of which is spatial heterogeneity in transmission risk within a patch. The problem of defining a *population*  will be taken up later.
+
+### The Time at Risk (TaR) Matrix, $\Psi$
+
+We assume that the world has been tesselated into a set of patches, and we let $\Psi$ denote the **time at risk** (TaR) matrix; the elmement $\psi_{i,j} \in \Psi$ describes the average proportion of time at risk people from patch $i$ spend in patch $j$. By time at risk, we mean time spent weighted by mosquito biting activity.  The TaR matrix holds everything together.
+
+TaR rescales local human population density for purposes of malaria exposure and transmission. Let $\vec H$ denote a vector describing number of people living in each patch. We say *here* as a shorthand describing local phenomena, in a reference patch denoted $i$; e.g. the population here, which would mean $H_i$. An interesting observation is that local transmission of the pathogen is not determined by the population density of people who live here, but the populations from everywhere including here weighted by their TaR spent here. The matrix describing TaR spent by people from $i$ in $j$ is $$\psi \odot \vec H$$ The average population density here is found by summing over the columns of that matrix, which is: 
+$$
+{\vec H_{(\Psi)}} = \Psi^T \times \vec H
+$$ 
+The TaR rescaled population vector, ${\vec H_{(\Psi)}}$, is called the human population density at risk. 
+
+
+
+### Modeling Time At Risk, $\Psi$ 
+
+We need a generalized modeling framework for modeling time at risk. We will use the best data we have at the highest spatial resolution it is available, but this will typically involve modeling at a higher granularity and aggregating up.The problem is that data describing how people move around all come with some flaws including:
+
+* The data or fitted models have a spatial resolution that is to coarse to address relevant questions at a fine grain. 
+
+* The data are a convenience sample of locations, most likely with bias. 
+
+* The data have a limited geographical range, especially near borders
+
+* The data are not informative everywhere. 
+
+* The data are subject to recall bias. 
+
+* The data describe some part of the process, but not all of it.  
+
+We need an algorithm that works at every spatial scale, but that fits the available data. 
+
+#### A Time At Risk Algorithm
+
+The following is a prototype model for human mobility that can easily be modified and that will work at any spatial grain. Here, we formulate a version of the model that works on gridded human population density data. 
+
+Given a set of patches, a vector of human population densities, $\vec H$, and a distance matrix, $D$, we can model time at risk $\Psi_{i,j} = f(H_i, H_j, D_{i,j}, \ldots)$.  
+
+We first consider three main modes of travel. Time at home, time near home, and time traveling. Let $P_T$ denote the fraction of nights a person is traveling (i.e. they sleep away from home), and let $P_H$ denote the fraction of time at risk spent exactly at home. It follows that $(1-P_T-P_H)$ of a person's time at risk is spent around but not exactly at home. We consider these parameters to describe individuals and to have a well-behaved average in a population. 
+
+The idea here is to put weights on the human populations as a function of their distance away from home.  
+```{r, fig=TRUE}
+sgm = function(x,d50,s){1-x^s/(d50^s+x^s)}
+xx = 10^seq(1,6.5, length.out=200)
+y1 = sgm(xx, 5*10^3, 1.5)
+y2 = sgm(xx, 5*10^5, 2)
+y3 = sgm(xx, 5*10^5, 2)-sgm(xx, 10^4, 2)
+
+plot(xx,y1, type = "l", log="x", xaxt = "n", xlab = "log (Distance)", ylab = "Weight")
+lines(xx,y2, col = "blue")
+lines(xx,y3, col = "purple")
+axis (1, 10^c(2, 4, 6), c("100m", "10km", "1,000km"))
+
+```
+
+These kernels are not describing a probability mass function on a lattice. Instead, they are used to weight destinations by distance. These weights, combined with the human population density maps, are used to derive the PMF.
+
+The following function accepts these weighting functions, $P_T$, and $P_H$ and uses them to derive a PMF for time at risk. The output is the matrix $\Psi$: 
+```{r, echo=TRUE}
+
+
+makePsi = function(Ph,Pt,H,D,d50H,sH,d50T,sT,gH=1,gT=1){
+  l = length(H)
+  ################################################
+  # Distance weights on human mobility
+  # d50 is the distance that returns 0.5 
+  # s is the shape parameter
+  ################################################
+  wts.h = sgm(D,d50H,sH)%*%(diag(H)^gH)
+  diag(wts.h)=0
+  ################################################
+  # Distance weights on travel
+  ################################################
+  wts.t = (sgm(D,d50T,sT)-sgm(D,d50H,sH))%*%(diag(H)^gT)
+  diag(wts.t)=0
+  ################################################
+  # Adjust weights on mobility vs. travel
+  ################################################
+  W1 = rowSums(wts.h)
+  W2 = rowSums(wts.t)
+
+  # Time at Home
+  mobility = wts.h/W1
+  travel = wts.t/W2
+  list(Psi=diag(Ph,l) + mobility*(1-Ph-Pt) + travel*Pt, W1=log10(W1), W2=log10(W2))  
+}
+```
+
+These functions just don't work in the abstract, so we have to use a real population density surface. The following uses data from Bioko Isand. In these plots, the blue dot and cross is a focal ``area'', a 1 $km^2$ unit defined by BIMEP. The grey dots are all the areas. The red shows how time away from home is proportionally allocated in the model:
+
+```{r, fig=TRUE, fig.width=5, fig.height=6}
+bioko = read.csv("BiokoAreas/BiokoAreas.csv")
+D = as.matrix(dist(cbind(bioko$x, bioko$y), diag=TRUE, upper=TRUE))
+
+par(mfrow = c(1,1))
+bioko.Psi=makePsi(.9,.03,bioko$H, D, 2*10^3, 2, 5*10^5, 1.4, gH=1, gT=.8)$Psi
+bPsi = bioko.Psi
+diag(bPsi) = 0
+i = 10 
+plot(bioko$x, bioko$y, pch = 15, col = grey(0.5), cex = .2)
+points(bioko$x, bioko$y, pch = 15, cex = bPsi[i,]*100, col = "red")
+points(bioko$x[i],bioko$y[i], pch=4, col = "blue")
+points(bioko$x[i],bioko$y[i], pch=21, col = "blue")
+```
+```{r, fig=TRUE, fig.width=5, fig.height=6}
+i = 180
+plot(bioko$x, bioko$y, pch = 15, col = grey(0.5), cex = .2)
+points(bioko$x, bioko$y, pch = 15, cex = bPsi[i,]*100, col = "red")
+points(bioko$x[i],bioko$y[i], pch=4, col = "blue")
+points(bioko$x[i],bioko$y[i], pch=21, col = "blue")
+```
+
+
