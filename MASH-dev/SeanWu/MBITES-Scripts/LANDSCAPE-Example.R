@@ -11,10 +11,16 @@
 #
 ###############################################################################
 
+# load libraries
 rm(list=ls());gc()
 library(spatstat)
 library(truncdist)
 library(viridis)
+
+
+###############################################################################
+# Set up points
+###############################################################################
 
 # number of sites
 nSite = 20
@@ -51,7 +57,7 @@ lambda = lapply(K,function(x){x*(1+sin(2*pi*(1:365)/365))})
 xy_plane = owin(xrange = c(0,1),yrange = c(0,1))
 
 # poisson scatter, matérn clustering, overdispersed
-points = points.clustered(n = nSite,meanParents = 5, clusteredness = 0.05, win = xy_plane)
+points = points.clustered(n = nSite,meanParents = 5, clusteredness = 0.25, win = xy_plane)
 xy_points = cbind(points$x,points$y)
 
 # sample search weights
@@ -76,27 +82,40 @@ dist <- as.matrix(dist(xy_points,diag = TRUE,upper = TRUE))
 movement <- apply(X = dist,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = 1/exp_kern)})
 movement <- movement/rowSums(movement)
 
+
+###############################################################################
+# Plot landscape
+###############################################################################
+
 movement_quantile = cut(as.vector(movement),breaks=quantile(as.vector(movement),probs=seq(0, 1, 0.2)),include.lowest = TRUE,labels = FALSE)
 movement_color <- matrix(data = plasma(n = length(unique(movement_quantile)),alpha=0.5)[movement_quantile],nrow = nrow(movement),ncol = ncol(movement))
+
 par(bg = grey(0.15))
-plot(xy_points,pch=21,cex=2.15,bg=grey(level = 0.9,alpha = 0.8),col="white")
+plot.new()
 for(i in 1:ncol(movement)){
   for(j in 1:nrow(movement)){
     segments(x0 = xy_points[i,1],y0 = xy_points[i,2],
              x1 = xy_points[j,1],y1 = xy_points[j,2],
-             col = movement_color[i,j],lty = 1,lwd = 1.15)
+             col = movement_color[i,j],lty = 1.15,lwd = 1.15)
   }
 }
+points(xy_points,pch=21,cex=5,bg=grey(level = 0.95,alpha = 0.85),col="white")
+text(xy_points,labels=as.character(1:20),col="black")
 par(bg = "white")
 
-# make landscape
+
+###############################################################################
+# Make object to initialize a Tile
+###############################################################################
+
 for(i in 1:nSite){
   # site characteristics
   landscape[[i]]$id = i
-  landscape[[i]]$xy = xy_overdisp[i,]
+  landscape[[i]]$xy = xy_points[i,]
   landscape[[i]]$type = 1L
-  landscape[[i]]$move = move_overdisp[i,-i]
-  landscape[[i]]$move_id = as.integer(names(move_overdisp[i,-i]))
+  landscape[[i]]$tileID = 1L
+  landscape[[i]]$move = movement[i,-i]
+  landscape[[i]]$move_id = as.integer(names(movement[i,-i]))
   # null resources
   landscape[[i]]$feed = NULL
   landscape[[i]]$aqua = NULL
@@ -105,39 +124,19 @@ for(i in 1:nSite){
 # assign feeding resources
 for(i in 1:nFeed){
   res_feed = list(w=w_feed[i],enterP=1)
-  if(is.null(landscape_overdisp[[ix_feed[i]]]$feed)){
-    landscape_overdisp[[ix_feed[i]]]$feed[[1]] = res_feed
+  if(is.null(landscape[[ix_feed[i]]]$feed)){
+    landscape[[ix_feed[i]]]$feed[[1]] = res_feed
   } else {
-    landscape_overdisp[[ix_feed[i]]]$feed[[length(landscape_overdisp[[ix_feed[i]]]$feed)+1]] = res_feed
+    landscape[[ix_feed[i]]]$feed[[length(landscape[[ix_feed[i]]]$feed)+1]] = res_feed
   }
 }
 
 # assign aquatic resources
 for(i in 1:nAqua){
   res_aqua = list(w=w_aqua[i],lambda=lambda[[i]])
-  if(is.null(landscape_overdisp[[ix_aqua[i]]]$aqua)){
-    landscape_overdisp[[ix_aqua[i]]]$aqua[[1]] = res_aqua
+  if(is.null(landscape[[ix_aqua[i]]]$aqua)){
+    landscape[[ix_aqua[i]]]$aqua[[1]] = res_aqua
   } else {
-    landscape_overdisp[[ix_aqua[i]]]$aqua[[length(landscape_overdisp[[ix_aqua[i]]]$aqua)+1]] = res_aqua
-  }
-}
-
-# assign sugar resources
-for(i in 1:nSugar){
-  res_sugar = list(w=w_sugar[i])
-  if(is.null(landscape_overdisp[[ix_sugar[i]]]$sugar)){
-    landscape_overdisp[[ix_sugar[i]]]$sugar[[1]] = res_sugar
-  } else {
-    landscape_overdisp[[ix_sugar[i]]]$sugar[[length(landscape_overdisp[[ix_sugar[i]]]$sugar)+1]] = res_sugar
-  }
-}
-
-# assign mating resources
-for(i in 1:nMate){
-  res_mate = list(w=w_mate[i])
-  if(is.null(landscape_overdisp[[ix_mate[i]]]$mate)){
-    landscape_overdisp[[ix_mate[i]]]$mate[[1]] = res_mate
-  } else {
-    landscape_overdisp[[ix_mate[i]]]$mate[[length(landscape_overdisp[[ix_mate[i]]]$mate)+1]] = res_mate
+    landscape[[ix_aqua[i]]]$aqua[[length(landscape[[ix_aqua[i]]]$aqua)+1]] = res_aqua
   }
 }

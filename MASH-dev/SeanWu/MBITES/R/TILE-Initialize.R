@@ -92,12 +92,17 @@ Tile_Initialize <- function(landscape){
   tile = Tile$new() # make a new tile and register it with MBITES:::Globals
   tileID = tile$get_id() # id of the new tile
 
+  # tiles need to be initialized in order (eg; from 1,... increasing)
+  if(tileID != landscape[[1]]$tileID){
+    stop("MBITES Globals registered a new tile with ID: ",tileID," but site has tile ID: ",landscape[[1]]$tileID,", please fix discrepancy\n")
+  }
+
   for(s in 1:n){
 
     site_p = landscape[[s]] # parameters for this site
 
     # make the site
-    site = Site$new(id=site_p$id,xy=site_p$xy,tileID=tileID,type=site_p$type,move=site_p$move,move_id=site_p$move_id,haz=site_p$haz)
+    site = Site$new(id=site_p$id,xy=site_p$xy,tileID=site_p$tileID,type=site_p$type,move=site_p$move,move_id=site_p$move_id,haz=site_p$haz)
 
     # add resources (if present)
     if(!is.null(site_p$sugar)){
