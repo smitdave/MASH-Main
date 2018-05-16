@@ -23,7 +23,7 @@
 #' @param mosy_init a \code{\link{data.frame}} object where each row corresponds to a mosquito
 #'
 #' @details
-#'
+#' write some details
 #'
 #'
 #' @export

@@ -7,5 +7,5 @@
 oneDay_ActivitySpace_Human_NULL()
 }
 \description{
-For the null human model, the daily time step does nothing.
+Always add 100% of my risk to my home site.
 }

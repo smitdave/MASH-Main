@@ -104,7 +104,7 @@ par(bg = "white")
 
 
 ###############################################################################
-# Make object to initialize a Tile
+# Make landscape initialization object
 ###############################################################################
 
 for(i in 1:nSite){
@@ -142,7 +142,62 @@ for(i in 1:nAqua){
 
 
 ###############################################################################
+# Make human initialization object
+###############################################################################
+
+nHumans = 100
+
+humans = data.frame(
+  tileID = rep(1,nHumans),
+  siteID = sample(x = 1:nFeed,size = nHumans,replace=TRUE),
+  feedingID = rep(1,nHumans),
+  w = rep(1,nHumans)
+)
+
+
+###############################################################################
+# Make mosquito initialization object
+###############################################################################
+
+nMosquitos = 200
+
+mosquitos = data.frame(
+  tileID = rep(1,nMosquitos),
+  siteID = sample(x = ix_aqua,size=nMosquitos,replace=TRUE),
+  female = rep(T,nMosquitos)
+)
+
+
+###############################################################################
 # Run MBITES
 ###############################################################################
 
 library(MBITES)
+
+# initialize methods
+MBITES_Setup_Timing(timing_model = 1,
+                    wait_b = 1,wait_o = 1,wait_m = 1,wait_s = 1,
+                    wait_bs = 1,wait_os = 1,wait_ms = 1,wait_ss = 1,
+                    ppr_model = 1,wait_ppr = 0.5/24)
+
+MBITES_Setup_BloodMeal(overfeeding = FALSE)
+
+MBITES_Setup_Oogenesis(oogenesis_model = 1,eggMaturationTime = FALSE,eggsize_model = 2,refeeding = FALSE)
+
+MBITES_Setup_Energetics(sugar = FALSE)
+
+MBITES_Setup_Oviposition(aqua_model = 1)
+
+MBITES_Setup_Survival(tattering = FALSE,senescence = FALSE)
+
+PATHOGEN_Setup(pathogen_model = "null")
+
+# set parameters
+MBITES:::Parameters$set_parameters()
+
+# initialize a tile
+Tile_Initialize(landscape)
+
+Human_NULL_Initialize(humans)
+
+MBITES_Initialize(mosquitos)

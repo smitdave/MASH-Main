@@ -206,9 +206,10 @@ make_RiskQ <- function(){
 
   # clearQ: set elements of queue to NULL
   clearQ <- function(){
-    id <<- NULL
-    weight <<- NULL
-    time <<- NULL
+    id <<- integer(1)
+    weight <<- numeric(1)
+    time <<- numeric(1)
+    NEW <<- TRUE
   } # end clearQ
 
   # sampleQ: sample a host id from the queue

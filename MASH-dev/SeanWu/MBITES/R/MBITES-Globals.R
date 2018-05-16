@@ -83,7 +83,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                    # world-state globals
                    tNow               = 0L, # current simulation time
-                   SETUP              = FALSE,
+                   SETUP              = c(timing=FALSE,bloodmeal=FALSE,oogenesis=FALSE,energetics=FALSE,oviposition=FALSE,survival=FALSE,pathogen=FALSE),
 
                    # mosquito globals
                    mosquito_id        = 0L, # global counter of IDs
@@ -211,14 +211,11 @@ increment_tNow_MBITES_Globals <- function(){
 }
 
 get_SETUP_MBITES_Globals <- function(){
-  return(private$SETUP)
+  return(all(private$SETUP))
 }
 
-set_SETUP_MBITES_Globals <- function(bool){
-  if(!is.logical(bool)){
-    stop("setup flag in MBITES_Globals must be a logical\n")
-  }
-  private$SETUP = bool
+set_SETUP_MBITES_Globals <- function(which){
+  private$SETUP[[which]] = TRUE
 }
 
 MBITES_Globals$set(which = "public",name = "increment_tNow",

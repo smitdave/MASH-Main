@@ -77,8 +77,6 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
                      private$siteID = siteID
                      private$tileID = tileID
 
-                     # add my risk to my home site
-                     MBITES:::Globals$get_tile(tileID)$get_sites()$get(siteID)$get_feed(feedingID)$RiskQ$add2Q(id,w,1)
                    }, # end constructor
 
                    # begin destructor
@@ -145,9 +143,12 @@ oneDay_EventQ_Human_NULL <- function(){}
 
 #' Null Human: Daily Activity Space Simulation
 #'
-#' For the null human model, the daily time step does nothing.
+#' Always add 100% of my risk to my home site.
 #'
-oneDay_ActivitySpace_Human_NULL <- function(){}
+oneDay_ActivitySpace_Human_NULL <- function(){
+  # add all my risk to my home site
+  MBITES:::Globals$get_tile(tileID)$get_sites()$get(siteID)$get_feed(feedingID)$RiskQ$add2Q(id,w,1)
+}
 
 # set methods
 Human_NULL$set(which = "public",name = "oneDay_EventQ",
