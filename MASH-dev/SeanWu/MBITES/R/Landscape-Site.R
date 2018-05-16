@@ -103,6 +103,27 @@ Site <- R6::R6Class(classname = "Site",
 
 
 ###############################################################################
+# Activity Space: needed in Tile-Simulation
+###############################################################################
+
+#' clear activity space between days
+clear_ActivitySpace_Site <- function(){
+  # if this site has blood feeding sites
+  n = length(private$res_feed)
+  if(n > 0){
+    for(i in 1:n){
+      private$res_feed[[i]]$RiskQ$clearQ()
+    }
+  }
+}
+
+# set methods
+Site$set(which = "public",name = "clear_ActivitySpace",
+    value = clear_ActivitySpace_Site, overwrite = TRUE
+)
+
+
+###############################################################################
 # Aquatic Ecology: needed in Tile-Simulation
 ###############################################################################
 
@@ -151,6 +172,7 @@ reset_Site <- function(){
   }
 }
 
+# set methods
 Site$set(which = "public",name = "oneDay_AquaticEcology",
     value = oneDay_AquaticEcology_Site, overwrite = TRUE
 )
@@ -158,7 +180,6 @@ Site$set(which = "public",name = "oneDay_AquaticEcology",
 Site$set(which = "public",name = "reset",
     value = reset_Site, overwrite = TRUE
 )
-
 
 
 ###############################################################################

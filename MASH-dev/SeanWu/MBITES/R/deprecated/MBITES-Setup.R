@@ -17,43 +17,27 @@
 #' The setup function is responsible for assigning concrete methods to proper interfaces in the \code{\link{Mosquito}}, \code{\link{Mosquito_Female}}, and \code{\link{Mosquito_Male}}
 #' classes as well as setting up the time-to-event closures in the global \code{\link{MBITES_Parameters}} object needed to sample waiting times to next launch.
 #'
-#' @section MBITES-Timing:
-#' See \code{\link{MBITES_Setup_Timing}} to initialize time-to-event methods.
 #'
-#' @section MBITES-BloodMeal:
-#' See \code{\link{MBITES_Setup_BloodMeal}} to initialize blood meal methods.
 #'
-#' @section MBITES-Oogenesis:
-#' See \code{\link{MBITES_Setup_Oogenesis}} to initialize oogenesis (egg production) methods.
 #'
-#' @section MBITES-Energetics:
-#' See \code{\link{MBITES_Setup_Energetics}} to initialize energetics methods.
 #'
-#' @section MBITES-Oviposition:
-#' See \code{\link{MBITES_Setup_Oviposition}} to initialize oviposition methods.
 #'
-#' @section MBITES-Survival:
-#' See \code{\link{MBITES_Setup_Survival}} to initialize survival methods.
 #'
-#' @section PATHOGEN:
-#' See \code{\link{Pathogen}} for details on how to initialize a pathogen model before making objects.
+#'
+#'
+#'
 #'
 #' @name MBITES-Setup
 NULL
 #> NULL
 
-
 ###############################################################################
-# MBITES-Timing
+# Setup MBITES model
 ###############################################################################
 
-#' MBITES: Setup Timing
+#' MBITES: Setup Model
 #'
-#' This function sets up items related to timing for MBITES. It sets the closures used to sample time to event for next launch
-#' (see \code{\link{MBITES-Timing}} for more details) in the global parameters object as well as sets public methods in the
-#' female mosquito class to select estivation and mating behavior.
-#'
-#' See \code{\link{MBITES-Setup}} for more details. Note that because of lazy evaluation of function arguments only arguments that are
+#' See \code{\link{MBITES Setup}} for more details. Note that because of lazy evaluation of function arguments only arguments that are
 #' needed for the specific models chosen need to be provided as input by the user.
 #'
 #' @details
@@ -128,8 +112,70 @@ NULL
 #'  * mating: boolean flag for mating behavior
 #'    * tSwarm: time of day of mating swarm formation (bounded by [0,1], eg; noon is 12/24)
 #'
+#' **MBITES-BloodMeal**: see \code{\link{MBITES-BloodMeal}}
+#'  * bm_a: alpha parameter of beta-distributed blood meal size
+#'  * bm_b: beta parameter of beta-distributed blood meal size
+#'  * overfeeding: logical flag for overfeeding behavior (increased mortality from blood feeding)
+#'    * of_a: parameter in \code{\link{mbites_pOverFeed}} (probability of death from blood meal size)
+#'    * of_b: parameter in \code{\link{mbites_pOverFeed}} (probability of death from blood meal size)
+#'
+#' **MBITES-Oogenesis**: see \code{\link{MBITES-Oogenesis}}
+#'  * oogenesis_model: integer flag for model of oogenesis (egg production & development)
+#'    * 1: egg batch size proportional to blood meal size (see help file for \code{MBITES-Oogenesis})
+#'      * eggMaturationTime: logical flag, if \code{TRUE} use \code{\link{mbites_rEggMaturationTimeNorm}} to sample egg maturation times, otherwise use the null filler \code{\link{mbites_rEggMaturationTimeOff}}
+#'        * emt_m: mean of Gaussian distributed egg maturation time
+#'        * emt_sd: standard deviation of Gaussian distributed egg maturation time
+#'    * 2: egg batch size commits to development (see help file for \code{MBITES-Oogenesis})
+#'        * bloodPerEgg: amount of blood needed per egg
+#'  * eggsize_model: integer flag for model of egg batch size
+#'    * 1: sample Gaussian-distributed egg batch size (see \code{\link{mbites_rBatchSizeNorm}})
+#'        * bs_m: mean of Gaussian distribution
+#'        * bs_sd: standard deviation of Gaussian distribution
+#'    * 2: egg batch size is function of blood meal size (see \code{\link{mbites_rBatchSizeBms}})
+#'        * maxBatch: maximum possible size of an egg batch
+#'  * refeeding: logical flag for refeeding behavior (this should only be used with the first model of oogenesis, see \code{\link{mbites_checkRefeed}} for details)
+#'    * rf_a: parameter in \code{\link{mbites_pReFeed}}
+#'    * rf_b: parameter in \code{\link{mbites_pReFeed}}
+#'
+#'  **MBITES-Energetics**: see \code{\link{MBITES-Energetics}}
+#'    * sugar: boolean flag to turn sugar feeding behavior on or off (please note if sugar feeding is off, other parameters should be adjusted to compensate for increased death rate as a result of no energy intake from sugar)
+#'
+#'  **MBITES-Oviposition**: see \code{\link{MBITES-Oviposition}}
+#'    * aqua_model: integer flag for model of aquatic ecology
+#'      * 1: emerge: use the emerge model of aquatic ecology
+#'      * 2: EL4P: use the EL4P (eggs, larvae, pupae) model of aquatic ecology
+#'
+#'  **MBITES-Survival**: see \code{\link{MBITES-Survival}}
+#'    * tattering: boolean flag to turn wing tattering derived contribution to mortality on or off
+#'    * senescence: boolean flag to turn senescence derived contribution to mortality on or off
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#'
+#' **PATHOGEN**: see \code{\link{PathogenGeneric}} for details on what valid pathogen models must implement
+#'  * pathogen_model: character in \code{null} (see \code{\link{PathogenNull}}),
+#'  * pathogen_par: list of named parameters required for model specified by \code{pathogen_model}
+#'
+#'
+#'
+#'
+#'
 #' @export
-MBITES_Setup_Timing <- function(
+MBITES_Setup <- function(
+
+  #################
+  # MBITES-Timing #
+  #################
+
   # attempt & search bout tte
   timing_model = 1L,
   # deterministic
@@ -179,21 +225,95 @@ MBITES_Setup_Timing <- function(
   # ppr tte
   ppr_model = 1L,
   # det
-  wait_ppr = NULL,
+  wait = NULL,
   # exp
   rate_ppr = NULL,
   tmin_ppr = NULL,
   # gamma
   mean_ppr = NULL,
   cv_ppr = NULL,
+
   # Estivation model
   estivation_model = 1L,
+  Emax = NULL,
+  Eb = NULL,
+  Ep = NULL,
+  eEndm = NULL,
+  eEndSd = NULL,
+  estivationDay = NULL,
+
   # swarming
-  mating = FALSE
+  mating = FALSE,
+  tSwarm = NULL,
+
+  ####################
+  # MBITES-BloodMeal #
+  ####################
+
+  # blood meal size
+  bm_a = NULL,
+  bm_b = NULL,
+
+  # overfeeding
+  overfeeding = FALSE,
+  of_a = NULL,
+  of_b = NULL,
+
+  ####################
+  # MBITES-Oogenesis #
+  ####################
+  oogenesis_model = 1L,
+  eggMaturationTime = FALSE,
+  emt_m = NULL,
+  emt_sd = NULL,
+  bloodPerEgg = NULL,
+  eggsize_model = 1L,
+  bs_m = NULL,
+  bs_sd = NULL,
+  maxBatch = NULL,
+  refeeding = FALSE,
+  rf_a = NULL,
+  rf_b = NULL,
+
+  #####################
+  # MBITES-Energetics #
+  #####################
+
+  sugar = TRUE,
+
+  ######################
+  # MBITES-Oviposition #
+  ######################
+
+  aqua_model = 1L,
+
+  ###################
+  # MBITES-Survival #
+  ###################
+
+  tattering = FALSE,
+  senescence = FALSE,
+
+  ###############
+  # PATHOGEN-XX #
+  ###############
+
+  pathogen_model = "null", # character giving model
+  pathogen_par = NULL, # a list of additional pars
+
+
+  blank = NULL
 ){
 
   ###############################################################################
-  # Set time-to-event closures in MBITES_Parameters object
+  # function body
+  ###############################################################################
+
+  # set flag
+  MBITES:::Globals$set_SETUP(TRUE)
+
+  ###############################################################################
+  # MBITES-Timing
   ###############################################################################
 
   # attempt & search bout tte
@@ -228,22 +348,29 @@ MBITES_Setup_Timing <- function(
     # gamma
     mean_b,
     cv_b,
+    tmin_b,
     mean_o,
     cv_o,
+    tmin_o,
     mean_m,
     cv_m,
+    tmin_m,
     mean_s,
     cv_s,
+    tmin_s,
     mean_bs,
     cv_bs,
+    tmin_bs,
     mean_os,
     cv_os,
+    tmin_os,
     mean_ms,
     cv_ms,
+    tmin_ms,
     mean_ss,
-    cv_ss
+    cv_ss,
+    tmin_ss
   )
-
   # ppr tte
   MBITES:::Parameters$set_ttEvent_ppr(
     ppr_model,
@@ -253,10 +380,6 @@ MBITES_Setup_Timing <- function(
     mean_ppr,
     cv_ppr
   )
-
-  ###############################################################################
-  # Set methods in Mosquito_Female object
-  ###############################################################################
 
   # Estivation
   switch(estivation_model,
@@ -274,7 +397,7 @@ MBITES_Setup_Timing <- function(
                 value = mbites_wakeUpTime, overwrite = TRUE
       )
     },
-    # daily probability of estivation
+    # probabilistic estivation
     "2" = {
       Mosquito_Female$set(which = "public",name = "checkEstivation",
                 value = mbites_checkEstivation1, overwrite = TRUE
@@ -301,34 +424,9 @@ MBITES_Setup_Timing <- function(
     )
   }
 
-  MBITES:::Globals$set_SETUP("timing")
-}
-
-
-###############################################################################
-# MBITES-BloodMeal
-###############################################################################
-
-#' MBITES: Setup BloodMeal
-#'
-#' This function sets up items related to the blood meal for MBITES (see \code{\link{MBITES-BloodMeal}} for more details).
-#' It enables or disables overfeeding behavior (mortality due to the blood meal).
-#'
-#' See \code{\link{MBITES-Setup}} for more details. Note that because of lazy evaluation of function arguments only arguments that are
-#' needed for the specific models chosen need to be provided as input by the user.
-#'
-#' @details
-#' Arguments for the setup function are listed below:
-#'
-#' **MBITES-BloodMeal**: see \code{\link{MBITES-BloodMeal}}
-#'  * bm_a: alpha parameter of beta-distributed blood meal size
-#'  * bm_b: beta parameter of beta-distributed blood meal size
-#'  * overfeeding: logical flag for overfeeding behavior (increased mortality from blood feeding)
-#'    * of_a: parameter in \code{\link{mbites_pOverFeed}} (probability of death from blood meal size)
-#'    * of_b: parameter in \code{\link{mbites_pOverFeed}} (probability of death from blood meal size)
-#'
-#' @export
-MBITES_Setup_BloodMeal <- function(overfeeding){
+  ###############################################################################
+  # MBITES-BloodMeal
+  ###############################################################################
 
   if(overfeeding){
     # set methods
@@ -344,43 +442,9 @@ MBITES_Setup_BloodMeal <- function(overfeeding){
     )
   }
 
-  MBITES:::Globals$set_SETUP("bloodmeal")
-}
-
-
-###############################################################################
-# MBITES-Oogenesis
-###############################################################################
-
-#' MBITES: Setup Oogenesis
-#'
-#' This function sets up items related to oogenesis for MBITES (see \code{\link{MBITES-Oogenesis}} for more details).
-#'
-#' See \code{\link{MBITES-Setup}} for more details. Note that because of lazy evaluation of function arguments only arguments that are
-#' needed for the specific models chosen need to be provided as input by the user.
-#'
-#' @details
-#' Arguments for the setup function are listed below:
-#'
-#' **MBITES-Oogenesis**: see \code{\link{MBITES-Oogenesis}}
-#'  * oogenesis_model: integer flag for model of oogenesis (egg production & development)
-#'    * 1: egg batch size proportional to blood meal size (see help file for \code{MBITES-Oogenesis})
-#'      * eggMaturationTime: logical flag, if \code{TRUE} use \code{\link{mbites_rEggMaturationTimeNorm}} to sample egg maturation times, if \code{FALSE} use the null filler \code{\link{mbites_rEggMaturationTimeOff}}
-#'        * emt_m: mean of Gaussian distributed egg maturation time
-#'        * emt_sd: standard deviation of Gaussian distributed egg maturation time
-#'    * 2: egg batch size commits to development (see help file for \code{MBITES-Oogenesis})
-#'        * bloodPerEgg: amount of blood needed per egg
-#'  * eggsize_model: integer flag for model of egg batch size
-#'    * 1: sample Gaussian-distributed egg batch size (see \code{\link{mbites_rBatchSizeNorm}})
-#'        * bs_m: mean of Gaussian distribution
-#'        * bs_sd: standard deviation of Gaussian distribution
-#'    * 2: egg batch size is function of blood meal size (see \code{\link{mbites_rBatchSizeBms}})
-#'        * maxBatch: maximum possible size of an egg batch
-#'  * refeeding: logical flag for refeeding behavior (this should only be used with the first model of oogenesis, see \code{\link{mbites_checkRefeed}} for details)
-#'    * rf_a: parameter in \code{\link{mbites_pReFeed}}
-#'    * rf_b: parameter in \code{\link{mbites_pReFeed}}
-#' @export
-MBITES_Setup_Oogenesis <- function(oogenesis_model, eggMaturationTime, eggsize_model, refeeding){
+  ###############################################################################
+  # MBITES-Oogenesis
+  ###############################################################################
 
   # rBatchSize
   switch(eggsize_model,
@@ -458,28 +522,10 @@ MBITES_Setup_Oogenesis <- function(oogenesis_model, eggMaturationTime, eggsize_m
     {stop("invalid entry for 'oogenesis_model'\n")}
   )
 
-  MBITES:::Globals$set_SETUP("oogenesis")
-}
+  ###############################################################################
+  # MBITES-Energetics
+  ###############################################################################
 
-
-###############################################################################
-# MBITES-Energetics
-###############################################################################
-
-#' MBITES: Setup Energetics
-#'
-#' This function sets up items related to energetics for MBITES (see \code{\link{MBITES-Energetics}} for more details).
-#'
-#' See \code{\link{MBITES-Setup}} for more details. Note that because of lazy evaluation of function arguments only arguments that are
-#' needed for the specific models chosen need to be provided as input by the user.
-#'
-#' @details
-#' Arguments for the setup function are listed below:
-#'
-#'  **MBITES-Energetics**: see \code{\link{MBITES-Energetics}}
-#'    * sugar: boolean flag to turn sugar feeding behavior on or off (please note if sugar feeding is off, other parameters should be adjusted to compensate for increased death rate as a result of no energy intake from sugar)
-#' @export
-MBITES_Setup_Energetics <- function(sugar){
   # queue sugar bout?
   if(sugar){
     Mosquito_Female$set(which = "public",name = "queueSugarBout",
@@ -491,30 +537,10 @@ MBITES_Setup_Energetics <- function(sugar){
     )
   }
 
-  MBITES:::Globals$set_SETUP("energetics")
-}
+  ###############################################################################
+  # MBITES-Oviposition
+  ###############################################################################
 
-
-###############################################################################
-# MBITES-Oviposition
-###############################################################################
-
-#' MBITES: Setup Oviposition
-#'
-#' This function sets up items related to oviposition for MBITES (see \code{\link{MBITES-Oviposition}} for more details).
-#'
-#' See \code{\link{MBITES-Setup}} for more details. Note that because of lazy evaluation of function arguments only arguments that are
-#' needed for the specific models chosen need to be provided as input by the user.
-#'
-#' @details
-#' Arguments for the setup function are listed below:
-#'
-#'  **MBITES-Oviposition**: see \code{\link{MBITES-Oviposition}}
-#'    * aqua_model: integer flag for model of aquatic ecology
-#'      * 1: emerge: use the emerge model of aquatic ecology
-#'      * 2: EL4P: use the EL4P (eggs, larvae, pupae) model of aquatic ecology
-#' @export
-MBITES_Setup_Oviposition <- function(aqua_model){
   switch(aqua_model,
     "1" = {
       Mosquito_Female$set(which = "public",name = "layEggs",
@@ -529,29 +555,10 @@ MBITES_Setup_Oviposition <- function(aqua_model){
     {stop("invalid entry for 'aqua_model\n'")}
   )
 
-  MBITES:::Globals$set_SETUP("oviposition")
-}
+  ###############################################################################
+  # MBITES-Survival
+  ###############################################################################
 
-
-###############################################################################
-# MBITES-Survival
-###############################################################################
-
-#' MBITES: Setup Survival
-#'
-#' This function sets up items related to survival for MBITES (see \code{\link{MBITES-Survival}} for more details).
-#'
-#' See \code{\link{MBITES-Setup}} for more details. Note that because of lazy evaluation of function arguments only arguments that are
-#' needed for the specific models chosen need to be provided as input by the user.
-#'
-#' @details
-#' Arguments for the setup function are listed below:
-#'
-#'  **MBITES-Survival**: see \code{\link{MBITES-Survival}}
-#'    * tattering: boolean flag to turn wing tattering derived contribution to mortality on or off
-#'    * senescence: boolean flag to turn senescence derived contribution to mortality on or off
-#' @export
-MBITES_Setup_Survival <- function(tattering, senescence){
   # wing tattering
   if(tattering){
     Mosquito$set(which = "public",name = "WingTattering",
@@ -574,5 +581,28 @@ MBITES_Setup_Survival <- function(tattering, senescence){
     )
   }
 
-  MBITES:::Globals$set_SETUP("survival")
-}
+  ###############################################################################
+  # PATHOGEN-XX
+  ###############################################################################
+
+  switch(pathogen_model,
+
+    # NULL pathogen model
+    null = {
+      Mosquito_Female$set(which = "public",name = "probeHost",
+          value = probeHost_NULL, overwrite = TRUE
+      )
+
+      Mosquito_Female$set(which = "public",name = "feedHost",
+          value = feedHost_NULL, overwrite = TRUE
+      )
+
+      Mosquito_Female$set(which = "public",name = "pathogenDynamics",
+          value = pathogenDynamics_NULL, overwrite = TRUE
+      )
+    },
+
+    {stop("invalid entry for 'pathogen_model'\n")}
+  )
+
+} # exit function scope

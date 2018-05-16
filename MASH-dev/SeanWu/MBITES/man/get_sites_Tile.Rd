@@ -7,5 +7,5 @@
 get_sites_Tile()
 }
 \description{
-Return the reference to a given \code{\link{Site}} object by id.
+get the hashmap that stores all the sites
 }

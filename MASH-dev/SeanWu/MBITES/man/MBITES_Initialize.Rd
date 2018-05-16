@@ -12,3 +12,6 @@ MBITES_Initialize(mosy_init)
 \description{
 Initialize mosquito populations
 }
+\details{
+write some details
+}

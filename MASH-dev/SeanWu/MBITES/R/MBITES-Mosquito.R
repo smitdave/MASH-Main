@@ -131,9 +131,13 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                  ) # end private members
 )
 
+get_id_Mosquito <- function(){
+  return(private$id)
+}
 
-
-# get_id
+Mosquito$set(which = "public",name = "get_id",
+    value = get_id_Mosquito, overwrite = TRUE
+)
 
 
 ###############################################################################
@@ -174,7 +178,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
 
                      super$initialize(bDay,MBITES:::Parameters$get_defaultState_F(),site,tileID) # construct the base-class parts
 
-                     private$energy_preG = MBITES:::Parameters$get_energy_preG()
+                     private$energy_preG = MBITES:::Parameters$get_energyPreG()
 
                    }, # end constructor
 

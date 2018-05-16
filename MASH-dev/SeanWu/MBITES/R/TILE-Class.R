@@ -114,10 +114,16 @@ get_human_Tile <- function(id){
 
 #' Tile: Return a Site Reference
 #'
-#' Return the reference to a given \code{\link{Site}} object by id.
+#' get the hashmap that stores all the sites
 #'
 get_sites_Tile <- function(){
   return(private$Sites)
+}
+
+#' get a site by id
+#'
+get_site_Tile <- function(id){
+  return(private$Sites$get(id))
 }
 
 Tile$set(which = "public",name = "get_id",
@@ -142,4 +148,8 @@ Tile$set(which = "public",name = "get_human",
 
 Tile$set(which = "public",name = "get_sites",
     value = get_sites_Tile, overwrite = TRUE
+)
+
+Tile$set(which = "public",name = "get_site",
+    value = get_site_Tile, overwrite = TRUE
 )

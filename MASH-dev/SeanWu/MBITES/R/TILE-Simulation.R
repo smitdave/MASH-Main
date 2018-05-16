@@ -21,6 +21,9 @@
 #'
 oneDay_Tile <- function(){
 
+  # clear activity space
+  private$Sites$apply(tag="clear_ActivitySpace")
+
   # human activity space simulation
   private$Humans$apply(tag="oneDay_ActivitySpace")
 

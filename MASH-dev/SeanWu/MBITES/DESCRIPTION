@@ -48,7 +48,7 @@ Collate:
     'PATHOGEN-Generic-Pedigree.R'
     'PATHOGEN-Generic-SIS.R'
     'PATHOGEN-Null.R'
-    'SEARCH-Kernel.R'
+    'PATHOGEN-Setup.R'
     'TILE-Class.R'
     'TILE-Initialize.R'
     'TILE-Simulation.R'

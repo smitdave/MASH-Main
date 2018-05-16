@@ -2,10 +2,19 @@
 % Please edit documentation in R/MBITES-Globals.R
 \name{reset_MBITES_Globals}
 \alias{reset_MBITES_Globals}
-\title{reset things between simulations (only for after the first one has run)}
+\title{MBITES Globals: Reset Tiles and logging}
 \usage{
 reset_MBITES_Globals(directory, runID)
 }
+\arguments{
+\item{directory}{a character string specifying the full directory path where files will be written to (should end in the OS-specific path seperator)}
+
+\item{runID}{an integer id that will be appended to output files}
+}
 \description{
-reset things between simulations (only for after the first one has run)
+Between runs (ie; after a run has finished but prior to re-initializing mosquitoes and humans for the next)
+this method can be called to clear old logging connections, reopen new connections, and reset all tiles.
+\itemize{
+\item This method is bound to \code{MBITES_Globals$reset}
+}
 }

@@ -10,17 +10,16 @@ set_parameters_MBITES_Parameters(defaultState_F = "B", defaultState_M = "S",
   InAndOut = matrix(data = c(4, 2, 2, 1, 6, 2, 1, 1, 1, 4, 1, 1, 1, 1, 2, 0,
   0, 0, 0, 1, 1, 1, 2, 1, 0), nrow = 5, ncol = 5, byrow = TRUE, dimnames =
   list(c("i", "w", "v", "r", "l"), c("i", "w", "v", "r", "l"))),
-  tSwarm = 18.5/24, Emax = numeric(1), Eb = numeric(1), Ep = numeric(1),
-  eEndm = numeric(1), eEndSd = numeric(1), estivationDay = integer(1),
-  energyPreG = 0, preGsugar = 0, energyFromBlood_b = 0.25, S_u = 1/7,
-  S_sa = 15, S_sb = 5, Bs_surv = 0.95, Os_surv = 0.9, Ms_surv = 0.98,
-  Ss_surv = 0.98, B_surv = 0.98, O_surv = 0.98, M_surv = 0.98,
-  S_surv = 0.98, PPR_a = 5, PPR_b = 1000, S_a = 20, S_b = 10,
-  ttsz_p = 0.5, ttsz_a = 5, ttsz_b = 95, ttr_a = 15, ttr_b = 500,
-  chm_a = 15, chm_b = 500, sns_a = 0.085, sns_b = 100, bm_a = 7.5,
-  bm_b = 2.5, of_a = 5, of_b = 5000, bloodPerEgg = 0.05, bs_m = 30,
-  bs_sd = 5, maxBatch = 60, emt_m = 3, emt_sd = 1, rf_a = 60,
-  rf_b = 5000)
+  tSwarm = 18.5/24, Emax = NaN, Eb = NaN, Ep = NaN, eEndm = NaN,
+  eEndSd = NaN, estivationDay = NaN, energyPreG = 0, preGsugar = 0,
+  energyFromBlood_b = 0.25, S_u = 1/7, S_sa = 15, S_sb = 5,
+  Bs_surv = 0.95, Os_surv = 0.9, Ms_surv = 0.98, Ss_surv = 0.98,
+  B_surv = 0.98, O_surv = 0.98, M_surv = 0.98, S_surv = 0.98,
+  PPR_a = 5, PPR_b = 1000, S_a = 20, S_b = 10, ttsz_p = 0.5,
+  ttsz_a = 5, ttsz_b = 95, ttr_a = 15, ttr_b = 500, chm_a = 15,
+  chm_b = 500, sns_a = 0.085, sns_b = 100, bm_a = 7.5, bm_b = 2.5,
+  of_a = 5, of_b = 5000, bloodPerEgg = 0.05, bs_m = 30, bs_sd = 5,
+  maxBatch = 60, emt_m = 3, emt_sd = 1, rf_a = 60, rf_b = 5000)
 }
 \arguments{
 \item{defaultState_F}{character of behavioral state that female mosquito has when it emerges}
