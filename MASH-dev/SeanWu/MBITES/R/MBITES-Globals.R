@@ -106,7 +106,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
 
 ###############################################################################
-# simulation
+# Simulation
 ###############################################################################
 
 #' simulation
@@ -118,6 +118,7 @@ simulate_MBITES_Globals <- function(tMax){
     # advance day by one
     private$tNow <- private$tNow + 1L
 
+    # run daily simulation for all tiles
     for(i in 1:length(private$tiles)){
       private$tiles[[i]]$oneDay()
     }
@@ -146,6 +147,7 @@ MBITES_Globals$set(which = "public",name = "simulate",
 #' This function sets connection objects in \code{\link{MBITES_Globals}}
 #' to store output. This should be run the first time prior to calling \code{\link{simulate_MBITES_Globals}},
 #' afterwards, use \code{\link{reset_MBITES_Globals}} in conjunction with the human and mosquito initialization functions to reset simulation objects between runs.
+#'    * This method is bound to \code{MBITES_Globals$set_output}
 #'
 #' @param directory a character string specifying the full directory path where files will be written to (should end in the OS-specific path seperator)
 #' @param runID an integer id that will be appended to output files
@@ -161,7 +163,15 @@ set_output_MBITES_Globals <- function(directory,runID){
   private$human_out = file(description = paste0(dirOut,"/human_",runID,".json"),open = "wt")
 }
 
-#' reset things between simulations (only for after the first one has run)
+#' MBITES Globals: Reset Tiles and logging
+#'
+#' Between runs (ie; after a run has finished but prior to re-initializing mosquitoes and humans for the next)
+#' this method can be called to clear old logging connections, reopen new connections, and reset all tiles.
+#'    * This method is bound to \code{MBITES_Globals$reset}
+#'
+#' @param directory a character string specifying the full directory path where files will be written to (should end in the OS-specific path seperator)
+#' @param runID an integer id that will be appended to output files
+#'
 reset_MBITES_Globals <- function(directory,runID){
 
   # close old connections
@@ -178,8 +188,13 @@ reset_MBITES_Globals <- function(directory,runID){
   }
 }
 
+# set methods
 MBITES_Globals$set(which = "public",name = "set_output",
           value = set_output_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "reset",
+          value = reset_MBITES_Globals, overwrite = TRUE
 )
 
 

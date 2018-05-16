@@ -15,4 +15,7 @@ set_output_MBITES_Globals(directory, runID)
 This function sets connection objects in \code{\link{MBITES_Globals}}
 to store output. This should be run the first time prior to calling \code{\link{simulate_MBITES_Globals}},
 afterwards, use \code{\link{reset_MBITES_Globals}} in conjunction with the human and mosquito initialization functions to reset simulation objects between runs.
+\itemize{
+\item This method is bound to \code{MBITES_Globals$set_output}
+}
 }
