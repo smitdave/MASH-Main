@@ -37,3 +37,13 @@ oneDay_Tile <- function(){
 Tile$set(which = "public",name = "oneDay",
     value = oneDay_Tile, overwrite = TRUE
 )
+
+#' reset all the landscape things on the tile between runs
+reset_Tile <- function(){
+  # reset all sites
+  private$Sites$apply(tag="reset")
+}
+
+Tile$set(which = "public",name = "reset",
+    value = reset_Tile, overwrite = TRUE
+)

@@ -7,11 +7,12 @@
 set_output_MBITES_Globals(directory, runID)
 }
 \arguments{
-\item{directory}{a character string specifying the full directory path where files will be written to}
+\item{directory}{a character string specifying the full directory path where files will be written to (should end in the OS-specific path seperator)}
 
 \item{runID}{an integer id that will be appended to output files}
 }
 \description{
 This function sets connection objects in \code{\link{MBITES_Globals}}
-to store output.
+to store output. This should be run the first time prior to calling \code{\link{simulate_MBITES_Globals}},
+afterwards, use \code{\link{reset_MBITES_Globals}} in conjunction with the human and mosquito initialization functions to reset simulation objects between runs.
 }

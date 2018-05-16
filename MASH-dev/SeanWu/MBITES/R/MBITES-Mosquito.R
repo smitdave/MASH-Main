@@ -238,7 +238,7 @@ mbites_trackHistory <- function(){
   private$tHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
   private$sHist[private$nEvent] = private$site$get_id()
   private$bHist[private$nEvent] = private$state
-  
+
 }
 
 #' MBITES: Export History and Remove Self
@@ -246,11 +246,14 @@ mbites_trackHistory <- function(){
 #' If the mosquito is dead, write out its history to a JSON-formatted file and then delete from the container object (\code{\link{HashMap}}).
 #'  * This method is bound to \code{Mosquito_Female$exit}
 #'
-mbites_exit <- function(){
-  if(private$state=="D"){
+#' @param force if \code{TRUE} the mosquito will write out history and be removed from the container even if still alive
+#'
+mbites_exit <- function(force = FALSE){
+  if(private$state=="D" | force){
     # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
     cat(jsonlite::toJSON(x = list(
             id = private$id,
+            tile = private$tileID,
             time = private$hist$tHist[1:private$nEvent],
             sites = private$hist$sHist[1:private$nEvent],
             behavior = private$hist$bHist[1:private$nEvent]

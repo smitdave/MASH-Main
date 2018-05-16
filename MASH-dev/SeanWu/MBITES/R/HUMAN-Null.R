@@ -111,7 +111,30 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
 
 
 ###############################################################################
-# Human methods for logging bites
+# export history and remove self.
+###############################################################################
+
+#' export history and remove self.
+exit_Human_NULL <- function(){
+  cat(jsonlite::toJSON(x = list(
+          id = private$id,
+          tile = private$tileID,
+          site = private$siteID,
+          bite_id = private$mosquito_id,
+          bite_times = private$mosquito_t,
+          bloodfeed_bool = private$bloodFeed
+      ), pretty = TRUE),"\n",sep="",file=mosquito_f_out)
+  # remove the human
+  MBITES:::Globals$get_tile(private$tileID)$get_humans()$rm(private$id)
+}
+
+Human_NULL$set(which = "public",name = "exit",
+    value = exit_Human_NULL, overwrite = TRUE
+)
+
+
+###############################################################################
+# Interface with Tile-Simulation
 ###############################################################################
 
 #' Null Human: Daily Event Queue Simulation
@@ -125,6 +148,20 @@ oneDay_EventQ_Human_NULL <- function(){}
 #' For the null human model, the daily time step does nothing.
 #'
 oneDay_ActivitySpace_Human_NULL <- function(){}
+
+# set methods
+Human_NULL$set(which = "public",name = "oneDay_EventQ",
+    value = oneDay_EventQ_Human_NULL, overwrite = TRUE
+)
+
+Human_NULL$set(which = "public",name = "oneDay_ActivitySpace",
+    value = oneDay_ActivitySpace_Human_NULL, overwrite = TRUE
+)
+
+
+###############################################################################
+# Interface with Pathogen-NULL
+###############################################################################
 
 #' Null Human: Push Host Probing Event to History
 #'
@@ -156,14 +193,6 @@ pushFeed_Human_NULL <- function(){
 }
 
 # set methods
-Human_NULL$set(which = "public",name = "oneDay_EventQ",
-    value = oneDay_EventQ_Human_NULL, overwrite = TRUE
-)
-
-Human_NULL$set(which = "public",name = "oneDay_ActivitySpace",
-    value = oneDay_ActivitySpace_Human_NULL, overwrite = TRUE
-)
-
 Human_NULL$set(which = "public",name = "pushProbe",
     value = pushProbe_Human_NULL, overwrite = TRUE
 )

@@ -30,9 +30,7 @@
 #'  * argument: im an agument!
 #'
 #' @section **Methods**:
-#'  * add_egg: function that must take an egg batch and add it to the \code{EggQ}
-#'  * one_day: function that updates daily aquatic population dynamics
-#'  * push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
+#'  * reset: function that resets the mating site between simulation runs
 #'
 #' @section **Fields**:
 #'  * MatingQ: a closure of male swarms (see \code{\link{make_MatingQ}}
@@ -59,7 +57,7 @@ Mating_Resource <- R6::R6Class(classname = "Mating_Resource",
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Mating_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     futile.logger::flog.trace("Mating_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      self$MatingQ = NULL
                    }, # end destructor
@@ -77,6 +75,21 @@ Mating_Resource <- R6::R6Class(classname = "Mating_Resource",
                  )
 
 ) # end Mating_Resource class definition
+
+
+###############################################################################
+# Mating Resource Methods
+###############################################################################
+
+#' reset between runs
+reset_Mating_Resource <- function(){
+  self$MatingQ <- NULL # wipe it out
+  self$MatingQ <- make_MatingQ() # make it again
+}
+
+Mating_Resource$set(which = "public",name = "reset",
+          value = reset_Mating_Resource, overwrite = TRUE
+)
 
 
 ###############################################################################

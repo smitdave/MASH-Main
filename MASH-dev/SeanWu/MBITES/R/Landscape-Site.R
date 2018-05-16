@@ -123,9 +123,42 @@ oneDay_AquaticEcology_Site <- function(){
   }
 }
 
+#' reset between runs
+reset_Site <- function(){
+  n_aqua <- length(private$res_aqua)
+  n_feed <- length(private$res_feed)
+  n_mate <- length(private$res_mate)
+
+  # reset aquatic habitats
+  if(n_aqua>0){
+    for(i in 1:n_aqua){
+      private$res_aqua[[i]]$reset()
+    }
+  }
+
+  # reset blood feeding sites
+  if(n_feed>0){
+    for(i in 1:n_feed){
+      private$res_feed[[i]]$reset()
+    }
+  }
+
+  # reset mating sites
+  if(n_mate>0){
+    for(i in 1:n_mate){
+      private$res_mate[[i]]$reset()
+    }
+  }
+}
+
 Site$set(which = "public",name = "oneDay_AquaticEcology",
     value = oneDay_AquaticEcology_Site, overwrite = TRUE
 )
+
+Site$set(which = "public",name = "reset",
+    value = reset_Site, overwrite = TRUE
+)
+
 
 
 ###############################################################################
