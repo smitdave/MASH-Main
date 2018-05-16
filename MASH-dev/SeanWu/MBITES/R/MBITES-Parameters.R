@@ -643,6 +643,14 @@ MBITES_Parameters$set(which = "public",name = "set_parameters",
 # Accessors
 ###############################################################################
 
+get_defaultState_F_MBITES_Parameters <- function(){
+  return(private$defaultState_F)
+}
+
+get_defaultState_M_MBITES_Parameters <- function(){
+  return(private$defaultState_M)
+}
+
 #' get the string telling you what aquatic ecology model is being used
 get_aqua_model_MBITES_Parameters <- function(){
   return(private$aqua_model)
@@ -862,6 +870,14 @@ get_rf_b_MBITES_Parameters <- function(){
 }
 
 # set methods
+MBITES_Parameters$set(which = "public",name = "get_defaultState_F",
+    value = get_defaultState_F_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_defaultState_M",
+    value = get_defaultState_M_MBITES_Parameters, overwrite = TRUE
+)
+
 MBITES_Parameters$set(which = "public",name = "get_aqua_model",
     value = get_aqua_model_MBITES_Parameters, overwrite = TRUE
 )
