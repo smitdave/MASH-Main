@@ -57,7 +57,7 @@ Sugar_Resource <- R6::R6Class(classname = "Sugar_Resource",
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Sugar_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     futile.logger::flog.trace("Sugar_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
                    } # end destructor
 
                  ), # end public members

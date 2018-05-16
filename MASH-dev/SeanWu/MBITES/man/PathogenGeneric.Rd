@@ -6,6 +6,8 @@
 \description{
 All pathogen objects need to be able to communicate with a pathogen pedigree, which
 links all clonal variants together through a \code{id} and \code{parentID} field.
+Pathogen models link human and mosquito contacts which occur during feeding, see \code{\link{MBITES-HostEncounter}}
+for more details on the "host encounter" process.
 }
 \details{
 All pathogen modules need to implement the following methods in humans:
@@ -16,11 +18,12 @@ All pathogen modules need to implement the following methods in humans:
 All pathogen modules need to implement the following methods in mosquitoes:
 \itemize{
 \item pathogenDynamics
+\item probeHost
+\item feedHost
 }
 
 All pathogen modules need to implement the following methods in pathogens:
 \itemize{
 \item oneDay_human
-\item onBout_mosquito
 }
 }

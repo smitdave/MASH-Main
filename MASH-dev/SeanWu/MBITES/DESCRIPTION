@@ -51,4 +51,5 @@ Collate:
     'SEARCH-Kernel.R'
     'TILE-Class.R'
     'TILE-Initialize.R'
+    'TILE-Simulation.R'
     'zzz.R'

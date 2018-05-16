@@ -3,5 +3,8 @@
 ## MBITES
 
 ### Issues & Work
-  * `checkForResources`: need to have a version that makes dispersal probability inversely proportional to the sum of the resource search weights at the site.
-  * Need to figure out how to properly handle the 1st model of oogenesis: ie; if eggs are not mature yet, the mosquito will go back to blood feeding, it should probably not produce any more eggs, but we need to set the `gravid=TRUE` flag anyway to ensure that `checkRefeed` gets called in `updateState` so that the checks for egg maturation get called and potentially a oviposition bout queued up. Check all this with DS.
+  * MBITES-Resting can set `search=TRUE` if the mosquito has failed a lot of bouts at one site, but this probably gets overwritten or not accounted for properly in `updateState`; need to go through with a flowchart and examine in detail all the places that set `search` field to something and see if it makes sense.
+  * `PPR_a`, `PPR_b`: literally just made them up and looked at what the function does.
+  * `chm_a`, `chm_b`: ditto
+  * `bloodPerEgg`: cant even make up because i literally have no idea
+  * check how `InAndOut` is being used; make sure that when i get to a new site there is no weird dependency on the last landing spot i was at, at a different site.

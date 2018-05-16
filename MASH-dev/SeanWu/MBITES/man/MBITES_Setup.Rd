@@ -23,6 +23,7 @@ MBITES_Setup(timing_model = 1L, wait_b = NULL, wait_o = NULL,
   eggMaturationTime = FALSE, emt_m = NULL, emt_sd = NULL,
   bloodPerEgg = NULL, eggsize_model = 1L, bs_m = NULL, bs_sd = NULL,
   maxBatch = NULL, refeeding = FALSE, rf_a = NULL, rf_b = NULL,
+  sugar = TRUE, aqua_model = 1L, tattering = FALSE, senescence = FALSE,
   pathogen_model = "null", pathogen_par = NULL, blank = NULL)
 }
 \description{
@@ -140,7 +141,7 @@ Arguments for the setup function are listed below:
 }
 }
 
-\strong{MBITES-Oogenesis}: see\code{\link{MBITES-Oogenesis}}
+\strong{MBITES-Oogenesis}: see \code{\link{MBITES-Oogenesis}}
 \itemize{
 \item oogenesis_model: integer flag for model of oogenesis (egg production & development)
 \itemize{
@@ -174,6 +175,26 @@ Arguments for the setup function are listed below:
 \item rf_a: parameter in \code{\link{mbites_pReFeed}}
 \item rf_b: parameter in \code{\link{mbites_pReFeed}}
 }
+}
+
+\strong{MBITES-Energetics}: see \code{\link{MBITES-Energetics}}
+\itemize{
+\item sugar: boolean flag to turn sugar feeding behavior on or off (please note if sugar feeding is off, other parameters should be adjusted to compensate for increased death rate as a result of no energy intake from sugar)
+}
+
+\strong{MBITES-Oviposition}: see \code{\link{MBITES-Oviposition}}
+\itemize{
+\item aqua_model: integer flag for model of aquatic ecology
+\itemize{
+\item 1: emerge: use the emerge model of aquatic ecology
+\item 2: EL4P: use the EL4P (eggs, larvae, pupae) model of aquatic ecology
+}
+}
+
+\strong{MBITES-Survival}: see \code{\link{MBITES-Survival}}
+\itemize{
+\item tattering: boolean flag to turn wing tattering derived contribution to mortality on or off
+\item senescence: boolean flag to turn senescence derived contribution to mortality on or off
 }
 
 \strong{PATHOGEN}: see \code{\link{PathogenGeneric}} for details on what valid pathogen models must implement

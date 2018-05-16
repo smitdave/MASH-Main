@@ -228,6 +228,12 @@ Mosquito$set(which = "public",name = "updateState",
 #' behavioral state agains the local resources to see if a search is
 #' required. The mosquito may initiate a search even if resources are present with probability 'disperse'
 #' given in MBITES-Parameters.
+#' This may call:
+#'  * \code{\link{mbites_BloodFeedingSearchCheck}}
+#'  * \code{\link{mbites_OvipositSearchCheck}}
+#'  * \code{\link{mbites_SugarSearchCheck}}
+#'  * \code{\link{mbites_MatingSearchCheck}}
+#'
 #'  * This method is bound to \code{Mosquito_Female$checkForResources}
 #'
 mbites_checkForResources <- function(){
@@ -436,7 +442,7 @@ Mosquito$set(which = "public",name = "attempt_O",
 # Attempt Bout: Mating
 ###############################################################################
 
-#' M-BITES: Mating Bout (M) \code{MosquitoFemale}
+#' MBITES: Mating Attempt Bout
 #'
 #' A mosquito performs mating bout.
 #'
@@ -526,3 +532,27 @@ mbites_attempt_S <- function(){
 Mosquito$set(which = "public",name = "attempt_S",
     value = mbites_attempt_S, overwrite = TRUE
 )
+
+
+###############################################################################
+# MBITES Simulation
+###############################################################################
+
+#' MBITES: Run Simulation for one Mosquito
+#'
+#' Run the MBITES simulation by repeatedly calling \code{\link{mbites_oneBout}} for this mosquito while it is alive and has not overrun
+#' the global time.
+#'  * This method is bound to \code{MosquitoFemale$MBITES}
+#'
+mbites_MBITES <- function(){
+
+  # simulation fires while mosy is alive and has not overrun its simulation
+  while(private$tNext < MBITES:::Globals$get_tNow() & private$state != "D"){
+    self$oneBout()
+  }
+
+  # if mosy died then output its history and cleanup
+  if(private$state == "D"){
+    self$exit()
+  }
+}

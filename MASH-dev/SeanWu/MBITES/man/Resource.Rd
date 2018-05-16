@@ -21,7 +21,7 @@ All resources inherit from the \code{Resource} abstract base class object.
 \section{\strong{Methods}}{
 
 \itemize{
-\item method: im a method!
+\item reset: all resources classes inheriting from this base object must implement a method to reset between simulation runs
 }
 }
 

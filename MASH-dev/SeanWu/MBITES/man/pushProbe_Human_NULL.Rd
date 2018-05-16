@@ -2,7 +2,7 @@
 % Please edit documentation in R/HUMAN-Null.R
 \name{pushProbe_Human_NULL}
 \alias{pushProbe_Human_NULL}
-\title{Push Host Probing Event to History}
+\title{Null Human: Push Host Probing Event to History}
 \usage{
 pushProbe_Human_NULL(m_id, t)
 }

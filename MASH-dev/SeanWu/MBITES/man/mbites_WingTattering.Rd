@@ -4,7 +4,7 @@
 \alias{mbites_WingTattering}
 \title{MBITES: Sample Wing Tattering Damage}
 \usage{
-mbites_WingTattering()
+mbites_WingTattering(p)
 }
 \description{
 Draw from a zero-inflated Beta distribution for additive wing damage_physical from tattering.

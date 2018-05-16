@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBITES-Bout.R
 \name{mbites_attempt_M}
 \alias{mbites_attempt_M}
-\title{M-BITES: Mating Bout (M) \code{MosquitoFemale}}
+\title{MBITES: Mating Attempt Bout}
 \usage{
 mbites_attempt_M()
 }

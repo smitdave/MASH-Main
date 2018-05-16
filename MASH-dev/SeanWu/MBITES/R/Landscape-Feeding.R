@@ -30,7 +30,7 @@
 #'  * argument: im an agument!
 #'
 #' @section **Methods**:
-#'  * method: im a method!
+#'  * reset: function that resets the blood feeding site between simulation runs
 #'
 #' @section **Fields**:
 #'  * field: im a field!
@@ -82,6 +82,12 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 # Feeding Resource Methods
 ###############################################################################
 
+#' reset between runs
+reset_Feeding_Resource <- function(){
+  self$RiskQ <- NULL # wipe it out
+  self$RiskQ <- makeRiskQ() # make it again
+}
+
 #' Blood Feeding Resource: Get House Entry Probability
 #'
 #' Get the probability of a mosquito successfully enters this house.
@@ -90,6 +96,10 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 get_enterP_Feeding_Resource <- function(){
   return(private$enterP)
 }
+
+Feeding_Resource$set(which = "public",name = "reset",
+          value = reset_Feeding_Resource, overwrite = TRUE
+)
 
 Feeding_Resource$set(which = "public",name = "get_enter_p",
           value = get_enterP_Feeding_Resource, overwrite = TRUE

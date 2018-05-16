@@ -71,7 +71,7 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 
                      # tile globals
                      private$tile_id = 0L
-                     private$tiles = list()
+                     private$tiles = NULL
 
                      invisible(gc())
                    } # end destructor
@@ -103,6 +103,84 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 ) # end MBITES_Globals definition
 
 # global assignment to package namespace at end of script
+
+
+###############################################################################
+# simulation
+###############################################################################
+
+#' simulation
+simulate_MBITES_Globals <- function(tMax){
+
+  # run simulation
+  pb <- txtProgressBar(min = 0, max = tMax, initial = 0)
+  while(private$tNow < tMax){
+    # advance day by one
+    private$tNow <- private$tNow + 1L
+
+    for(i in 1:length(private$tiles)){
+      private$tiles[[i]]$oneDay()
+    }
+
+    setTxtProgressBar(pb,private$tNow)
+  }
+
+  # write out all agent histories and clear containers
+  for(i in 1:length(private$tiles)){
+    private$tiles[[i]]$get_mosquitoes()$apply(tag="exit",force=TRUE)
+    private$tiles[[i]]$get_humans()$apply(tag="exit")
+  }
+}
+
+MBITES_Globals$set(which = "public",name = "simulate",
+  value = simulate_MBITES_Globals, overwrite = TRUE
+)
+
+
+###############################################################################
+# Set up output logging
+###############################################################################
+
+#' MBITES Globals: Setup Output Files
+#'
+#' This function sets connection objects in \code{\link{MBITES_Globals}}
+#' to store output. This should be run the first time prior to calling \code{\link{simulate_MBITES_Globals}},
+#' afterwards, use \code{\link{reset_MBITES_Globals}} in conjunction with the human and mosquito initialization functions to reset simulation objects between runs.
+#'
+#' @param directory a character string specifying the full directory path where files will be written to (should end in the OS-specific path seperator)
+#' @param runID an integer id that will be appended to output files
+#'
+set_output_MBITES_Globals <- function(directory,runID){
+  dirOut = paste0(directory,"run",runID)
+  if(dir.exists(dirOut)){
+    stop("you are trying to write into a directory that already exists; choose a new directory or runID\n")
+  }
+  dir.create(dirOut)
+  private$mosquito_f_out = file(description = paste0(dirOut,"/mosquito_F_",runID,".json"),open = "wt")
+  private$mosquito_m_out = file(description = paste0(dirOut,"/mosquito_M_",runID,".json"),open = "wt")
+  private$human_out = file(description = paste0(dirOut,"/human_",runID,".json"),open = "wt")
+}
+
+#' reset things between simulations (only for after the first one has run)
+reset_MBITES_Globals <- function(directory,runID){
+
+  # close old connections
+  close(private$mosquito_f_out)
+  close(private$mosquito_m_out)
+  close(private$human_out)
+
+  # open new connections
+  self$set_output(directory,runID)
+
+  # reset all the tiles
+  for(i in 1:length(private$tiles)){
+    private$tiles[[i]]$reset()
+  }
+}
+
+MBITES_Globals$set(which = "public",name = "set_output",
+          value = set_output_MBITES_Globals, overwrite = TRUE
+)
 
 
 ###############################################################################
@@ -143,7 +221,6 @@ MBITES_Globals$set(which = "public",name = "get_SETUP",
 MBITES_Globals$set(which = "public",name = "set_SETUP",
   value = set_SETUP_MBITES_Globals, overwrite = TRUE
 )
-
 
 
 ###############################################################################

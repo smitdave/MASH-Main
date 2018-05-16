@@ -66,7 +66,7 @@ Mosquito_Female$set(which = "public",name = "chooseHost",
 #'  * This method is bound to \code{Mosquito_Female$humanEncounter}.
 #'
 mbites_humanEncounter <- function(){
-  if(runif(1) < 1-MBITES:::Parameters$get_surviveH()){
+  if(runif(1) < 1 - MBITES:::Parameters$get_surviveH()){
     # does not survive to probe
     private$state = "D"
   # survives to probe

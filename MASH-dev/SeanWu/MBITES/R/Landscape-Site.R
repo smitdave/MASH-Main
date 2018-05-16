@@ -103,6 +103,65 @@ Site <- R6::R6Class(classname = "Site",
 
 
 ###############################################################################
+# Aquatic Ecology: needed in Tile-Simulation
+###############################################################################
+
+#' Site: One Day of Aquatic Ecology Dynamics
+#'
+#' If this site has \code{\link{Aqua_Resource}} (aquatic habitats) present, run the daily \code{one_day} and
+#' \code{push_imago} functions that all aquatic habitat resource objects must implement.
+#'  * binding: \code{Site$oneDay_AquaticEcology}
+#'
+oneDay_AquaticEcology_Site <- function(){
+  # if this site has aquatic habitats
+  n = length(private$res_aqua)
+  if(n > 0){
+    for(i in 1:n){
+      private$res_aqua[[i]]$one_day()
+      private$res_aqua[[i]]$push_imago()
+    }
+  }
+}
+
+#' reset between runs
+reset_Site <- function(){
+  n_aqua <- length(private$res_aqua)
+  n_feed <- length(private$res_feed)
+  n_mate <- length(private$res_mate)
+
+  # reset aquatic habitats
+  if(n_aqua>0){
+    for(i in 1:n_aqua){
+      private$res_aqua[[i]]$reset()
+    }
+  }
+
+  # reset blood feeding sites
+  if(n_feed>0){
+    for(i in 1:n_feed){
+      private$res_feed[[i]]$reset()
+    }
+  }
+
+  # reset mating sites
+  if(n_mate>0){
+    for(i in 1:n_mate){
+      private$res_mate[[i]]$reset()
+    }
+  }
+}
+
+Site$set(which = "public",name = "oneDay_AquaticEcology",
+    value = oneDay_AquaticEcology_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "reset",
+    value = reset_Site, overwrite = TRUE
+)
+
+
+
+###############################################################################
 # movement; when a mosquito calls 'search' return a new site it moves to
 ###############################################################################
 

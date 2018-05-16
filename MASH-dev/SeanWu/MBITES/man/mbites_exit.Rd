@@ -4,7 +4,10 @@
 \alias{mbites_exit}
 \title{MBITES: Export History and Remove Self}
 \usage{
-mbites_exit()
+mbites_exit(force = FALSE)
+}
+\arguments{
+\item{force}{if \code{TRUE} the mosquito will write out history and be removed from the container even if still alive}
 }
 \description{
 If the mosquito is dead, write out its history to a JSON-formatted file and then delete from the container object (\code{\link{HashMap}}).

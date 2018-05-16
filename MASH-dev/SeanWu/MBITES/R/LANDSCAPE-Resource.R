@@ -24,14 +24,14 @@
 #'  * argument: im an agument!
 #'
 #' @section **Methods**:
-#'  * method: im a method!
+#'  * reset: all resources classes inheriting from this base object must implement a method to reset between simulation runs
 #'
 #' @section **Fields**:
 #'  * id: integer id (obtained from \code{\link{MBITES_Globals}})
 #'  * field: im a field!
 #'
 #' @export
-Resource <- R6::R6Class(classname = "Mosquito",
+Resource <- R6::R6Class(classname = "Resource",
                  portable = TRUE,
                  cloneable = FALSE,
                  lock_class = FALSE,
@@ -51,8 +51,11 @@ Resource <- R6::R6Class(classname = "Mosquito",
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
-                   }
+                     futile.logger::flog.trace("Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
+                   },
+
+                   # reset
+                   reset = function(){}
 
                  ),
 

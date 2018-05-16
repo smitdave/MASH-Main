@@ -15,16 +15,20 @@
 #'
 #' All pathogen objects need to be able to communicate with a pathogen pedigree, which
 #' links all clonal variants together through a \code{id} and \code{parentID} field.
+#' Pathogen models link human and mosquito contacts which occur during feeding, see \code{\link{MBITES-HostEncounter}}
+#' for more details on the "host encounter" process.
 #'
 #' All pathogen modules need to implement the following methods in humans:
 #'  * add_pathogen(pathogen): during successful mosquito -> human transmission
 #'
 #' All pathogen modules need to implement the following methods in mosquitoes:
 #'  * pathogenDynamics
+#'  * probeHost
+#'  * feedHost
 #'
 #' All pathogen modules need to implement the following methods in pathogens:
 #'  * oneDay_human
-#'  * onBout_mosquito
+#'
 #'
 #'
 #' @name PathogenGeneric

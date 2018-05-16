@@ -27,6 +27,7 @@ must inherit from to generate concrete implementations of the interface methods.
 \item add_egg: function that must take an egg batch and add it to the \code{EggQ}
 \item one_day: function that updates daily aquatic population dynamics
 \item push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
+\item reset: function that resets the aquatic habitat between simulation runs
 }
 }
 

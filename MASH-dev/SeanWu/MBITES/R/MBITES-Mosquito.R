@@ -59,13 +59,23 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 
                      private$search = FALSE
                      private$state = state
+                     private$starved = FALSE
 
                      # set up history
                      private$tHist[1] = bDay
                      private$sHist[1] = site$get_id()
                      private$bHist[1] = state
 
-                   } # end constructor
+                     # logging
+                     futile.logger::flog.trace("Mosquito %s being born at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+
+                   }, # end constructor
+
+                   # begin destructor
+                   finalize = function(){
+                     # logging
+                     futile.logger::flog.trace("Mosquito %s being killed at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+                   }
 
                  ), # end public members
 
@@ -160,9 +170,9 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  public = list(
 
                    # begin constructor
-                   initialize = function(bDay, state, site, tileID){
+                   initialize = function(bDay, site, tileID){
 
-                     super$initialize(bDay,state,site,tileID) # construct the base-class parts
+                     super$initialize(bDay,MBITES:::Parameters$get_defaultState_F(),site,tileID) # construct the base-class parts
 
                      private$energy_preG = MBITES:::Parameters$get_energy_preG()
 
@@ -201,6 +211,10 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  ) # end private members
 ) # end class definition
 
+###############################################################################
+# Female Mosquito: Logging
+###############################################################################
+
 #' MBITES: Track History
 #'
 #' At the end of each bout (\code{\link{mbites_oneBout}}), track the mosquito's history. If the mosquito
@@ -225,8 +239,6 @@ mbites_trackHistory <- function(){
   private$sHist[private$nEvent] = private$site$get_id()
   private$bHist[private$nEvent] = private$state
 
-  # write and delete if dead
-  self$exit()
 }
 
 #' MBITES: Export History and Remove Self
@@ -234,11 +246,14 @@ mbites_trackHistory <- function(){
 #' If the mosquito is dead, write out its history to a JSON-formatted file and then delete from the container object (\code{\link{HashMap}}).
 #'  * This method is bound to \code{Mosquito_Female$exit}
 #'
-mbites_exit <- function(){
-  if(private$state=="D"){
+#' @param force if \code{TRUE} the mosquito will write out history and be removed from the container even if still alive
+#'
+mbites_exit <- function(force = FALSE){
+  if(private$state=="D" | force){
     # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
     cat(jsonlite::toJSON(x = list(
             id = private$id,
+            tile = private$tileID,
             time = private$hist$tHist[1:private$nEvent],
             sites = private$hist$sHist[1:private$nEvent],
             behavior = private$hist$bHist[1:private$nEvent]
@@ -285,7 +300,7 @@ Mosquito_Male <- R6::R6Class(classname = "Mosquito_Male",
                    # begin constructor
                    initialize = function(bDay, site, tileID){
 
-                     super$initialize(FALSE,bDay,site,tileID) # construct the base-class parts
+                     super$initialize(bDay,MBITES:::Parameters$get_defaultState_M(),site,tileID) # construct the base-class parts
 
 
                    } # end constructor

@@ -5,7 +5,7 @@
 #      / /___/ /_/ / / / / /_/ (__  ) /__/ /_/ / /_/ /  __/
 #     /_____/\__,_/_/ /_/\__,_/____/\___/\__,_/ .___/\___/
 #                                            /_/
-#     Landscape-Resource-Aquatic Habitat-Aquatic Population (Emerge) pimpl
+#     Landscape-Resource-Aquatic Habitat-Aquatic Population (Emerge)
 #     MBITES Team
 #     February 2018
 #
@@ -163,16 +163,14 @@ push_imago_Emerge <- function(){
     for(i in 1:length(imagos$imagos)){
       # cohort (i) is female
       if(imagos$female[i]){
-        fState = MBITES:::Parameters$get_female_state()
         for(j in 1:imagos$imagos[i]){
-          mosy = Mosquito_Female$new(tNow,fState,private$SiteP,tile_id)
+          mosy = Mosquito_Female$new(tNow,private$SiteP,tile_id)
           tile$get_mosquitoes()$assign(key=mosy$get_id(),value=mosy)
         }
       # cohort (i) is male
       } else {
-        mState = MBITES:::Parameters$get_male_state()
         for(j in 1:imagos$imagos[i]){
-          mosy = Mosquito_Male$new(tNow,mState,private$SiteP,tile_id)
+          mosy = Mosquito_Male$new(tNow,private$SiteP,tile_id)
           tile$get_mosquitoes()$assign(key=mosy$get_id(),value=mosy)
         }
       }

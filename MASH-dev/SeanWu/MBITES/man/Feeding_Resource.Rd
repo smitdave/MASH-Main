@@ -22,7 +22,7 @@ human or other vertebrate hosts when seeking a blood meal.
 \section{\strong{Methods}}{
 
 \itemize{
-\item method: im a method!
+\item reset: function that resets the blood feeding site between simulation runs
 }
 }
 

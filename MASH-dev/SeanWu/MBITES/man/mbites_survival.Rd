@@ -7,7 +7,7 @@
 mbites_survival()
 }
 \description{
-Simulate flight survival and survival of local hazards.
+Simulate flight survival \code{\link{mbites_surviveFlight}} and survival of local hazards \code{\link{mbites_surviveHazards}}.
 \itemize{
 \item This method is bound to \code{Mosquito$survival}
 }

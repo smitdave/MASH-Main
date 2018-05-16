@@ -111,10 +111,59 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
 
 
 ###############################################################################
-# Human methods for logging bites
+# export history and remove self.
 ###############################################################################
 
-#' Push Host Probing Event to History
+#' export history and remove self.
+exit_Human_NULL <- function(){
+  cat(jsonlite::toJSON(x = list(
+          id = private$id,
+          tile = private$tileID,
+          site = private$siteID,
+          bite_id = private$mosquito_id,
+          bite_times = private$mosquito_t,
+          bloodfeed_bool = private$bloodFeed
+      ), pretty = TRUE),"\n",sep="",file=mosquito_f_out)
+  # remove the human
+  MBITES:::Globals$get_tile(private$tileID)$get_humans()$rm(private$id)
+}
+
+Human_NULL$set(which = "public",name = "exit",
+    value = exit_Human_NULL, overwrite = TRUE
+)
+
+
+###############################################################################
+# Interface with Tile-Simulation
+###############################################################################
+
+#' Null Human: Daily Event Queue Simulation
+#'
+#' For the null human model, the daily time step does nothing.
+#'
+oneDay_EventQ_Human_NULL <- function(){}
+
+#' Null Human: Daily Activity Space Simulation
+#'
+#' For the null human model, the daily time step does nothing.
+#'
+oneDay_ActivitySpace_Human_NULL <- function(){}
+
+# set methods
+Human_NULL$set(which = "public",name = "oneDay_EventQ",
+    value = oneDay_EventQ_Human_NULL, overwrite = TRUE
+)
+
+Human_NULL$set(which = "public",name = "oneDay_ActivitySpace",
+    value = oneDay_ActivitySpace_Human_NULL, overwrite = TRUE
+)
+
+
+###############################################################################
+# Interface with Pathogen-NULL
+###############################################################################
+
+#' Null Human: Push Host Probing Event to History
 #'
 #' If using the null human and pathogen model this function logs host probing events on this \code{\link{Human_NULL}}.
 #'  * This method is bound to \code{Human_NULL$pushProbe}
@@ -135,7 +184,7 @@ pushProbe_Human_NULL <- function(m_id,t){
   }
 }
 
-#' Push Host Blood feeding Event to History
+#' Null Human: Push Host Blood feeding Event to History
 #'
 #' If using the null human and pathogen model this function logs host blood feeding events on this \code{\link{Human_NULL}}.
 #'  * This method is bound to \code{Human_NULL$pushFeed}
@@ -143,6 +192,7 @@ pushFeed_Human_NULL <- function(){
   private$bloodFeed[length(private$bloodFeed)] = TRUE
 }
 
+# set methods
 Human_NULL$set(which = "public",name = "pushProbe",
     value = pushProbe_Human_NULL, overwrite = TRUE
 )
