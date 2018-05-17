@@ -137,10 +137,41 @@ MBITES_Globals$set(which = "public",name = "simulate",
   value = simulate_MBITES_Globals, overwrite = TRUE
 )
 
+#' user-facing simulation function
+#' @export
+simulation <- function(tMax){
+  MBITES:::Globals$simulate(tMax)
+}
+
 
 ###############################################################################
 # Set up output logging
 ###############################################################################
+
+# accessors for streams
+get_mosquito_f_out_MBITES_Globals <- function(){
+  return(private$mosquito_f_out)
+}
+
+get_mosquito_m_out_MBITES_Globals <- function(){
+  return(private$mosquito_m_out)
+}
+
+get_human_out_MBITES_Globals <- function(){
+  return(private$human_out)
+}
+
+MBITES_Globals$set(which = "public",name = "get_mosquito_f_out",
+          value = get_mosquito_f_out_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_mosquito_m_out",
+          value = get_mosquito_m_out_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_human_out",
+          value = get_human_out_MBITES_Globals, overwrite = TRUE
+)
 
 #' MBITES Globals: Setup Output Files
 #'
@@ -153,10 +184,10 @@ MBITES_Globals$set(which = "public",name = "simulate",
 #' @param runID an integer id that will be appended to output files
 #'
 set_output_MBITES_Globals <- function(directory,runID){
-  dirOut = paste0(directory,"run",runID)
-  if(dir.exists(dirOut)){
-    stop("you are trying to write into a directory that already exists; choose a new directory or runID\n")
+  if(!dir.exists(directory)){
+    dir.create(directory)
   }
+  dirOut = paste0(directory,"run",runID)
   dir.create(dirOut)
   private$mosquito_f_out = file(description = paste0(dirOut,"/mosquito_F_",runID,".json"),open = "wt")
   private$mosquito_m_out = file(description = paste0(dirOut,"/mosquito_M_",runID,".json"),open = "wt")
@@ -175,9 +206,9 @@ set_output_MBITES_Globals <- function(directory,runID){
 reset_MBITES_Globals <- function(directory,runID){
 
   # close old connections
-  close(private$mosquito_f_out)
-  close(private$mosquito_m_out)
-  close(private$human_out)
+  if(!is.null(private$mosquito_f_out)){close(private$mosquito_f_out)}
+  if(!is.null(private$mosquito_m_out)){close(private$mosquito_m_out)}
+  if(!is.null(private$human_out)){close(private$human_out)}
 
   # open new connections
   self$set_output(directory,runID)
@@ -196,6 +227,12 @@ MBITES_Globals$set(which = "public",name = "set_output",
 MBITES_Globals$set(which = "public",name = "reset",
           value = reset_MBITES_Globals, overwrite = TRUE
 )
+
+#' user-facing reset function
+#' @export
+reset <- function(directory,runID){
+  MBITES:::Globals$reset(directory,runID)
+}
 
 
 ###############################################################################

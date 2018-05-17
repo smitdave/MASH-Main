@@ -67,7 +67,7 @@ NULL
 #'
 #' @include MBITES-Mosquito.R
 mbites_oneBout <- function(){
-
+  # browser()
   # launch at the previously scheduled launch time
   private$tNow = private$tNext
 
@@ -149,8 +149,8 @@ Mosquito$set(which = "public",name = "attempt_search",
     value = mbites_attempt_search, overwrite = TRUE
 )
 
-Mosquito$set(which = "public",name = "move_mosquito",
-    value = move_mosquito_Site, overwrite = TRUE
+Mosquito$set(which = "public",name = "move",
+    value = mbites_move, overwrite = TRUE
 )
 
 
@@ -556,3 +556,8 @@ mbites_MBITES <- function(){
     self$exit()
   }
 }
+
+# set methods
+Mosquito$set(which = "public",name = "MBITES",
+    value = mbites_MBITES, overwrite = TRUE
+)

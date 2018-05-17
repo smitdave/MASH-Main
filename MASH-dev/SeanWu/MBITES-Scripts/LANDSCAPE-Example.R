@@ -115,6 +115,7 @@ for(i in 1:nSite){
   landscape[[i]]$tileID = 1L
   landscape[[i]]$move = movement[i,-i]
   landscape[[i]]$move_id = as.integer(names(movement[i,-i]))
+  landscape[[i]]$haz = 0.001
   # null resources
   landscape[[i]]$feed = NULL
   landscape[[i]]$aqua = NULL
@@ -145,7 +146,7 @@ for(i in 1:nAqua){
 # Make human initialization object
 ###############################################################################
 
-nHumans = 100
+nHumans = 80
 
 humans = data.frame(
   tileID = rep(1,nHumans),
@@ -159,7 +160,7 @@ humans = data.frame(
 # Make mosquito initialization object
 ###############################################################################
 
-nMosquitos = 200
+nMosquitos = 50
 
 mosquitos = data.frame(
   tileID = rep(1,nMosquitos),
@@ -201,3 +202,7 @@ Tile_Initialize(landscape)
 Human_NULL_Initialize(humans)
 
 MBITES_Initialize(mosquitos)
+
+# run simulation
+reset(directory = "/Users/slwu89/Desktop/mbites/",runID = 1)
+simulation(tMax = 500)

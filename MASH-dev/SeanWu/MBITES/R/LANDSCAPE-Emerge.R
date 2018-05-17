@@ -127,7 +127,7 @@ one_day_Emerge <- function(){
 
   # if emerging mosquitoes, send them to the population
   if(lambda_t>0){
-    self$ImagoQ$add2Q(N=lambda_t,time_e=tNow)
+    self$ImagoQ$add2Q(lambda_t,tNow,T)
   }
 
 } # end one_day
@@ -157,7 +157,7 @@ push_imago_Emerge <- function(){
   imagos = self$ImagoQ$popQ(time_e=tNow) # emerging imagos
 
   # if there is are cohort(s) of imagos ready to go
-  if(!is.na(imagos$female[1])){
+  if(!is.na(imagos$female[1]) & (imagos$imagos>0)){
 
     # iterate over those cohorts (i)
     for(i in 1:length(imagos$imagos)){

@@ -46,17 +46,24 @@ mbites_timing <- function(){
     switch(private$state, # time i spent in these search bouts
       B = {private$tNext = MBITES:::Parameters$ttEvent$BoutBs(private$tNow)},
       O = {private$tNext = MBITES:::Parameters$ttEvent$BoutOs(private$tNow)},
+      M = {private$tNext = MBITES:::Parameters$ttEvent$BoutMs(private$tNow)},
       S = {private$tNext = MBITES:::Parameters$ttEvent$BoutSs(private$tNow)}
     )
   } else {
     switch(private$state, # time i spent in these attempt bouts
       B = {private$tNext = MBITES:::Parameters$ttEvent$BoutB(private$tNow)},
       O = {private$tNext = MBITES:::Parameters$ttEvent$BoutO(private$tNow)},
+      M = {private$tNext = MBITES:::Parameters$ttEvent$BoutM(private$tNow)},
       S = {private$tNext = MBITES:::Parameters$ttEvent$BoutS(private$tNow)}
     )
   }
 
 }
+
+# set methods
+Mosquito$set(which = "public",name = "timing",
+    value = mbites_timing, overwrite = TRUE
+)
 
 
 ###############################################################################

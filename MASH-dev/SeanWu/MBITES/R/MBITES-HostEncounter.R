@@ -74,7 +74,7 @@ mbites_humanEncounter <- function(){
     if(runif(1) < MBITES:::Parameters$get_probeH()){
       # undeterred, probes the host
       self$probeHost() # PATHOGEN-XX.R (mosy -> host transmission)
-      if(runif(1) < MBITES:::Parameters$get_surviveProbeH()){
+      if(runif(1) < MBITES:::Parameters$get_surviveprobeH()){
         # does not survive to blood feed
         private$state = "D"
       # survives to blood feed

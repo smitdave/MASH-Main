@@ -61,12 +61,8 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
                    # begin destructor
                    finalize = function(){
                      futile.logger::flog.trace("Feeding_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
-
                      self$RiskQ = NULL
-                   }, # end destructor
-
-                   # closure fields
-                   RiskQ = NULL
+                   } # end destructor
 
                  ), # end public members
 
@@ -85,7 +81,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 #' reset between runs
 reset_Feeding_Resource <- function(){
   self$RiskQ <- NULL # wipe it out
-  self$RiskQ <- makeRiskQ() # make it again
+  self$RiskQ <- make_RiskQ() # make it again
 }
 
 #' Blood Feeding Resource: Get House Entry Probability
@@ -101,7 +97,7 @@ Feeding_Resource$set(which = "public",name = "reset",
           value = reset_Feeding_Resource, overwrite = TRUE
 )
 
-Feeding_Resource$set(which = "public",name = "get_enter_p",
+Feeding_Resource$set(which = "public",name = "get_enterP",
           value = get_enterP_Feeding_Resource, overwrite = TRUE
 )
 
