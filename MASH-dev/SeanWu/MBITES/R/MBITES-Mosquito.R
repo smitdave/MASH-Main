@@ -57,7 +57,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                      private$tNow = bDay
                      private$tNext = bDay
 
-                     private$search = FALSE
+                     private$search = TRUE
                      private$state = state
                      private$starved = FALSE
 
@@ -88,7 +88,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    # location
                    tileID         = integer(1), # id of the tile i am in
                    site           = NULL, # reference to my current site
-                   rspot          = character(1), # my current resting spot
+                   rspot          = "v", # my current resting spot
 
                    # resources
                    sugar_res      = NULL, # reference to my current sugar resource
@@ -103,21 +103,16 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    search         = logical(1), # next launch is for search or attempt bout?
                    searchNow      = logical(1), # is my current bout a search bout?
                    state          = character(1), # my current behavioral state
-                   starved        = logical(1), # am i starved for sugar?
-                   boutFail       = integer(1), # counter
+                   starved        = FALSE, # am i starved for sugar?
+                   boutFail       = 0L, # counter
 
                    # energetics
-                   energy         = numeric(1), # my current energy
-                   # energy_preG    = numeric(1), # pre-gonotrophic energy requirement
-                   mature         = logical(1), # am i mature?
+                   energy         = 1, # my current energy
+                   mature         = FALSE, # am i mature?
 
-                   # survival
-                   damage_physical = numeric(1), # physical damage
-                   damage_chemical = numeric(1), # chemical damage
-
-                   # bloodfeeding and oogenesis
-                   # batch          = integer(1), # size of my egg batch
-                   # bm_size        = numeric(1), # size of my blood meal
+                   # survival (mosquitoes start out at full life)
+                   damage_physical = 0, # physical damage
+                   damage_chemical = 0, # chemical damage
 
                    # resource ids
                    sugarID        = integer(1), # id of my sugar  source
@@ -261,11 +256,19 @@ mbites_exit <- function(force = FALSE){
             time = private$hist$tHist[1:private$nEvent],
             sites = private$hist$sHist[1:private$nEvent],
             behavior = private$hist$bHist[1:private$nEvent]
-        ), pretty = TRUE),"\n",sep="",file=mosquito_f_out)
+        ), pretty = TRUE),"\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
     # remove this mosquito from the hash table
     MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
   }
 }
+
+Mosquito_Female$set(which = "public",name = "trackHistory",
+          value = mbites_trackHistory, overwrite = TRUE
+)
+
+Mosquito_Female$set(which = "public",name = "exit",
+          value = mbites_exit, overwrite = TRUE
+)
 
 
 ###############################################################################

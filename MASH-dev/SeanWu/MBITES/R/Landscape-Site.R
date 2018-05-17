@@ -211,7 +211,7 @@ Site$set(which = "public",name = "move_mosquito",
 #'  * binding: \code{Site$sample_feed}
 #'
 sample_feed_Site <- function(){
-  MBITES::sample(x=private$res_feed,size=1L,replace=FALSE,prob=private$res_feed_w)
+  MBITES::sample(x=private$res_feed,size=1L,replace=FALSE,prob=private$res_feed_w)[[1]]
 }
 
 #' Site: Sample Aquatic Habitat Resources
@@ -220,7 +220,7 @@ sample_feed_Site <- function(){
 #'  * binding: \code{Site$sample_aqua}
 #'
 sample_aqua_Site <- function(){
-  MBITES::sample(x=private$res_aqua,size=1L,replace=FALSE,prob=private$res_aqua_w)
+  MBITES::sample(x=private$res_aqua,size=1L,replace=FALSE,prob=private$res_aqua_w)[[1]]
 }
 
 #' Site: Sample Sugar Feeding Resources
@@ -229,7 +229,7 @@ sample_aqua_Site <- function(){
 #'  * binding: \code{Site$sample_sugar}
 #'
 sample_sugar_Site <- function(){
-  MBITES::sample(x=private$res_sugar,size=1L,replace=FALSE,prob=private$res_sugar_w)
+  MBITES::sample(x=private$res_sugar,size=1L,replace=FALSE,prob=private$res_sugar_w)[[1]]
 }
 
 #' Site: Sample Mating Swarm Resources
@@ -238,7 +238,7 @@ sample_sugar_Site <- function(){
 #'  * binding: \code{Site$sample_mate}
 #'
 sample_mate_Site <- function(){
-  MBITES::sample(x=private$res_mate,size=1L,replace=FALSE,prob=private$res_mate_w)
+  MBITES::sample(x=private$res_mate,size=1L,replace=FALSE,prob=private$res_mate_w)[[1]]
 }
 
 Site$set(which = "public",name = "sample_feed",

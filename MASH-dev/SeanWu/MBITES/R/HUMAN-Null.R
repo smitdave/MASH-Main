@@ -121,7 +121,7 @@ exit_Human_NULL <- function(){
           bite_id = private$mosquito_id,
           bite_times = private$mosquito_t,
           bloodfeed_bool = private$bloodFeed
-      ), pretty = TRUE),"\n",sep="",file=mosquito_f_out)
+      ), pretty = TRUE),"\n",sep="",file=MBITES:::Globals$get_human_out())
   # remove the human
   MBITES:::Globals$get_tile(private$tileID)$get_humans()$rm(private$id)
 }

@@ -222,7 +222,7 @@ Mosquito$set(which = "public",name = "pTatter",
 mbites_pChem<- function(){
   chm_a = MBITES:::Parameters$get_chm_a()
   chm_b = MBITES:::Parameters$get_chm_b()
-  (2+chm_b)/(1+chm_b) - exp(private$damage_chemicall*chm_a)/(chm_b + exp(private$damage_chemicall*chm_a))
+  (2+chm_b)/(1+chm_b) - exp(private$damage_chemical*chm_a)/(chm_b + exp(private$damage_chemical*chm_a))
 }
 
 # set methods

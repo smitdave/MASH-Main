@@ -148,6 +148,31 @@ simulation <- function(tMax){
 # Set up output logging
 ###############################################################################
 
+# accessors for streams
+get_mosquito_f_out_MBITES_Globals <- function(){
+  return(private$mosquito_f_out)
+}
+
+get_mosquito_m_out_MBITES_Globals <- function(){
+  return(private$mosquito_m_out)
+}
+
+get_human_out_MBITES_Globals <- function(){
+  return(private$human_out)
+}
+
+MBITES_Globals$set(which = "public",name = "get_mosquito_f_out",
+          value = get_mosquito_f_out_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_mosquito_m_out",
+          value = get_mosquito_m_out_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_human_out",
+          value = get_human_out_MBITES_Globals, overwrite = TRUE
+)
+
 #' MBITES Globals: Setup Output Files
 #'
 #' This function sets connection objects in \code{\link{MBITES_Globals}}

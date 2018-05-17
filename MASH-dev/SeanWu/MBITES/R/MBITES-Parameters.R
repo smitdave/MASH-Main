@@ -127,6 +127,14 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
                    M_succeed            = numeric(1),
                    S_succeed            = numeric(1),
 
+                   # Host Encounter
+                   surviveH                = numeric(1), # survival probability for initial encounter (survive to probe)
+                   probeH                  = numeric(1), # probability that undeterred during probing
+                   surviveprobeH           = numeric(1), # survival probability for host probing
+                   feedH                   = numeric(1), # probability to successfully feed
+                   surviveZ                = numeric(1), # survival probability for initial encounter (survive to feed)
+                   feedZ                   = numeric(1), # probability to successfully feed
+
                    PPR_a                = numeric(1), # mbites_pPPRFlight
                    PPR_b                = numeric(1), # mbites_pPPRFlight
                    S_a                  = numeric(1), # mbites_pEnergySurvival
@@ -466,6 +474,20 @@ MBITES_Parameters$set(which = "public",name = "set_ttEvent_ppr",
 #' @param O_surv oviposition bout baseline survival probability, called from \code{\link{surviveFlight}}
 #' @param M_surv mating bout baseline survival probability, called from \code{\link{surviveFlight}}
 #' @param S_surv sugar feeding bout baseline survival probability, called from \code{\link{surviveFlight}}
+#' @param Bs_succeed
+#' @param Os_succeed
+#' @param Ms_succeed
+#' @param Ss_succeed
+#' @param B_succeed
+#' @param O_succeed
+#' @param M_succeed
+#' @param S_succeed
+#' @param surviveH survival probability for initial encounter (survive to probe)
+#' @param probeH probability that undeterred during probing
+#' @param surviveprobeH survival probability for host probing
+#' @param feedH probability to successfully feed
+#' @param surviveZ survival probability for initial encounter (survive to feed)
+#' @param feedZ probability to successfully feed
 #' @param PPR_a parameter for probability of death during post-prandial resting as function of blood meal size, called from \code{\link{mbites_pPPRFlight}}
 #' @param PPR_b parameter for probability of death during post-prandial resting as function of blood meal size, called from \code{\link{mbites_pPPRFlight}}
 #' @param S_a parameter for probability of death due to energy reserves, called from \code{\link{mbites_pEnergySurvival}}
@@ -545,14 +567,21 @@ set_parameters_MBITES_Parameters <- function(
   S_surv               = 0.98,
 
   # success
-  Bs_succeed               = 0.99,
-  Os_succeed               = 0.99,
-  Ms_succeed               = 0.99,
-  Ss_succeed               = 0.99,
+  Bs_succeed              = 0.99,
+  Os_succeed              = 0.99,
+  Ms_succeed              = 0.99,
+  Ss_succeed              = 0.99,
   B_succeed               = 0.95,
   O_succeed               = 0.95,
   M_succeed               = 0.99,
   S_succeed               = 0.99,
+
+  surviveH                = 1,
+  probeH                  = 1,
+  surviveprobeH           = 1,
+  feedH                   = 1,
+  surviveZ                = 1,
+  feedZ                   = 1,
 
   PPR_a                = 5, # mbites_pPPRFlight
   PPR_b                = 1000, # mbites_pPPRFlight
@@ -632,6 +661,12 @@ set_parameters_MBITES_Parameters <- function(
   private$O_succeed            = O_succeed
   private$M_succeed            = M_succeed
   private$S_succeed            = S_succeed
+  private$surviveH             = surviveH
+  private$probeH               = probeH
+  private$surviveprobeH        = surviveprobeH
+  private$feedH                = feedH
+  private$surviveZ             = surviveZ
+  private$feedZ                = feedZ
   private$PPR_a                = PPR_a
   private$PPR_b                = PPR_b
   private$S_a                  = S_a
@@ -698,11 +733,11 @@ get_boutFail_p_MBITES_Parameters <- function(){
 #' Return the specific weights for different resting spots associated with mosquito behavioral states.
 #'
 get_wts_MBITES_Parameters <- function(state){
-  switch(private$state,
-    b = {private$b_wts},
-    o = {private$o_wts},
-    m = {private$m_wts},
-    s = {private$s_wts},
+  switch(state,
+    B = {private$b_wts},
+    O = {private$o_wts},
+    M = {private$m_wts},
+    S = {private$s_wts},
     {stop("illegal behavioral state entered from call to get_wts_MBITES_Parameters")}
   )
 }
@@ -826,6 +861,30 @@ get_M_succeed_MBITES_Parameters <- function(){
 
 get_S_succeed_MBITES_Parameters <- function(){
   return(private$S_succeed)
+}
+
+get_surviveH_MBITES_Parameters <- function(){
+  return(private$surviveH)
+}
+
+get_probeH_MBITES_Parameters <- function(){
+  return(private$probeH)
+}
+
+get_surviveprobeH_MBITES_Parameters <- function(){
+  return(private$surviveprobeH)
+}
+
+get_feedH_MBITES_Parameters <- function(){
+  return(private$feedH)
+}
+
+get_surviveZ_MBITES_Parameters <- function(){
+  return(private$surviveZ)
+}
+
+get_feedZ_MBITES_Parameters <- function(){
+  return(private$feedZ)
 }
 
 get_PPR_a_MBITES_Parameters <- function(){
@@ -1073,6 +1132,31 @@ MBITES_Parameters$set(which = "public",name = "get_S_succeed",
     value = get_S_succeed_MBITES_Parameters, overwrite = TRUE
 )
 
+MBITES_Parameters$set(which = "public",name = "get_surviveH",
+    value = get_surviveH_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_probeH",
+    value = get_probeH_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_surviveprobeH",
+    value = get_surviveprobeH_MBITES_Parameters, overwrite = TRUE
+)
+
+
+MBITES_Parameters$set(which = "public",name = "get_feedH",
+    value = get_feedH_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_surviveZ",
+    value = get_surviveZ_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_feedZ",
+    value = get_feedZ_MBITES_Parameters, overwrite = TRUE
+)
+
 MBITES_Parameters$set(which = "public",name = "get_PPR_a",
     value = get_PPR_a_MBITES_Parameters, overwrite = TRUE
 )
@@ -1179,3 +1263,4 @@ MBITES_Parameters$set(which = "public",name = "get_rf_b",
 ###############################################################################
 
 Parameters <- MBITES_Parameters$new()
+rspot <- c("i","w","v","r","l")
