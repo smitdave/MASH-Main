@@ -194,7 +194,7 @@ MBITES_Setup_Survival(tattering = FALSE,senescence = FALSE)
 PATHOGEN_Setup(pathogen_model = "null")
 
 # set parameters
-MBITES:::Parameters$set_parameters()
+MBITES:::Parameters$set_parameters(disperse = 0.05)
 
 # initialize a tile
 Tile_Initialize(landscape)
