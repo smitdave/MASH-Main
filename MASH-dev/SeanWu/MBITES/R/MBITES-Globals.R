@@ -131,6 +131,16 @@ simulate_MBITES_Globals <- function(tMax){
     private$tiles[[i]]$get_mosquitoes()$apply(tag="exit",force=TRUE)
     private$tiles[[i]]$get_humans()$apply(tag="exit")
   }
+
+  # end valid JSON output
+  cat("{}]",sep="",file=private$mosquito_f_out)
+  cat("{}]",sep="",file=private$mosquito_m_out)
+  cat("{}]",sep="",file=private$human_out)
+
+  # close old connections
+  if(!is.null(private$mosquito_f_out)){close(private$mosquito_f_out)}
+  if(!is.null(private$mosquito_m_out)){close(private$mosquito_m_out)}
+  if(!is.null(private$human_out)){close(private$human_out)}
 }
 
 MBITES_Globals$set(which = "public",name = "simulate",
@@ -145,33 +155,8 @@ simulation <- function(tMax){
 
 
 ###############################################################################
-# Set up output logging
+# Logging and Resets
 ###############################################################################
-
-# accessors for streams
-get_mosquito_f_out_MBITES_Globals <- function(){
-  return(private$mosquito_f_out)
-}
-
-get_mosquito_m_out_MBITES_Globals <- function(){
-  return(private$mosquito_m_out)
-}
-
-get_human_out_MBITES_Globals <- function(){
-  return(private$human_out)
-}
-
-MBITES_Globals$set(which = "public",name = "get_mosquito_f_out",
-          value = get_mosquito_f_out_MBITES_Globals, overwrite = TRUE
-)
-
-MBITES_Globals$set(which = "public",name = "get_mosquito_m_out",
-          value = get_mosquito_m_out_MBITES_Globals, overwrite = TRUE
-)
-
-MBITES_Globals$set(which = "public",name = "get_human_out",
-          value = get_human_out_MBITES_Globals, overwrite = TRUE
-)
 
 #' MBITES Globals: Setup Output Files
 #'
@@ -184,31 +169,35 @@ MBITES_Globals$set(which = "public",name = "get_human_out",
 #' @param runID an integer id that will be appended to output files
 #'
 set_output_MBITES_Globals <- function(directory,runID){
+
+  # create directory(s) if they dont exist
   if(!dir.exists(directory)){
     dir.create(directory)
   }
   dirOut = paste0(directory,"run",runID)
   dir.create(dirOut)
+
+  # setup connection objects
   private$mosquito_f_out = file(description = paste0(dirOut,"/mosquito_F_",runID,".json"),open = "wt")
   private$mosquito_m_out = file(description = paste0(dirOut,"/mosquito_M_",runID,".json"),open = "wt")
   private$human_out = file(description = paste0(dirOut,"/human_",runID,".json"),open = "wt")
+
+  # begin valid JSON output
+  cat("[",sep="",file=private$mosquito_f_out)
+  cat("[",sep="",file=private$mosquito_m_out)
+  cat("[",sep="",file=private$human_out)
 }
 
 #' MBITES Globals: Reset Tiles and logging
 #'
 #' Between runs (ie; after a run has finished but prior to re-initializing mosquitoes and humans for the next)
-#' this method can be called to clear old logging connections, reopen new connections, and reset all tiles.
+#' this method can be called to clear old logging connections, reopen new connections, and reset all tiles (see \code{\link{reset_Tile}}).
 #'    * This method is bound to \code{MBITES_Globals$reset}
 #'
 #' @param directory a character string specifying the full directory path where files will be written to (should end in the OS-specific path seperator)
 #' @param runID an integer id that will be appended to output files
 #'
 reset_MBITES_Globals <- function(directory,runID){
-
-  # close old connections
-  if(!is.null(private$mosquito_f_out)){close(private$mosquito_f_out)}
-  if(!is.null(private$mosquito_m_out)){close(private$mosquito_m_out)}
-  if(!is.null(private$human_out)){close(private$human_out)}
 
   # open new connections
   self$set_output(directory,runID)
@@ -217,6 +206,14 @@ reset_MBITES_Globals <- function(directory,runID){
   for(i in 1:length(private$tiles)){
     private$tiles[[i]]$reset()
   }
+
+  # reset global variables
+  private$tNow = 0L
+  private$mosquito_id = 0L
+  private$human_id = 0L
+
+  # clean up memory
+  invisible(gc())
 }
 
 # set methods
@@ -228,6 +225,12 @@ MBITES_Globals$set(which = "public",name = "reset",
           value = reset_MBITES_Globals, overwrite = TRUE
 )
 
+#' user-facing set output dir function
+#' @export
+set_output <- function(directory,runID){
+  MBITES:::Globals$set_output(directory,runID)
+}
+
 #' user-facing reset function
 #' @export
 reset <- function(directory,runID){
@@ -236,9 +239,10 @@ reset <- function(directory,runID){
 
 
 ###############################################################################
-# World-state global methods
+# Accessors for other bits of the simulation
 ###############################################################################
 
+# general accesors
 get_tNow_MBITES_Globals <- function(){
   return(private$tNow)
 }
@@ -255,6 +259,20 @@ set_SETUP_MBITES_Globals <- function(which){
   private$SETUP[[which]] = TRUE
 }
 
+# accessors for streams
+get_mosquito_f_out_MBITES_Globals <- function(){
+  return(private$mosquito_f_out)
+}
+
+get_mosquito_m_out_MBITES_Globals <- function(){
+  return(private$mosquito_m_out)
+}
+
+get_human_out_MBITES_Globals <- function(){
+  return(private$human_out)
+}
+
+# set methods: general accesors
 MBITES_Globals$set(which = "public",name = "increment_tNow",
   value = increment_tNow_MBITES_Globals, overwrite = TRUE
 )
@@ -269,6 +287,19 @@ MBITES_Globals$set(which = "public",name = "get_SETUP",
 
 MBITES_Globals$set(which = "public",name = "set_SETUP",
   value = set_SETUP_MBITES_Globals, overwrite = TRUE
+)
+
+# set methods: logging streams
+MBITES_Globals$set(which = "public",name = "get_mosquito_f_out",
+          value = get_mosquito_f_out_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_mosquito_m_out",
+          value = get_mosquito_m_out_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_human_out",
+          value = get_human_out_MBITES_Globals, overwrite = TRUE
 )
 
 

@@ -290,14 +290,24 @@ MBITES_Setup_Timing <- function(
     {stop("invalid entry for 'estivation_model'")}
   )
 
-  # Swarming
+  # Mating behavior ON
   if(mating){
     Mosquito_Female$set(which = "public",name = "findSwarm",
               value = mbites_findSwarm, overwrite = TRUE
     )
+
+    Mosquito_Female$set(which = "private",name = "mated",
+              value = FALSE, overwrite = TRUE
+    )
+
+  # Mating behavior OFF
   } else {
     Mosquito_Female$set(which = "public",name = "findSwarm",
               value = mbites_findSwarmNull, overwrite = TRUE
+    )
+
+    Mosquito_Female$set(which = "private",name = "mated",
+              value = TRUE, overwrite = TRUE
     )
   }
 

@@ -13,7 +13,7 @@ reset_MBITES_Globals(directory, runID)
 }
 \description{
 Between runs (ie; after a run has finished but prior to re-initializing mosquitoes and humans for the next)
-this method can be called to clear old logging connections, reopen new connections, and reset all tiles.
+this method can be called to clear old logging connections, reopen new connections, and reset all tiles (see \code{\link{reset_Tile}}).
 \itemize{
 \item This method is bound to \code{MBITES_Globals$reset}
 }

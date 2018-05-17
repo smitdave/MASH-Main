@@ -62,9 +62,10 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                      private$starved = FALSE
 
                      # set up history
-                     private$tHist[1] = bDay
-                     private$sHist[1] = site$get_id()
-                     private$bHist[1] = state
+                     private$timeHist[1] = bDay
+                     private$siteHist[1] = site$get_id()
+                     private$stateHist[1] = state
+                     private$searchHist[1] = TRUE
 
                      # logging
                      futile.logger::flog.trace("Mosquito %s being born at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
@@ -120,9 +121,10 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 
                    # history
                    nEvent         = 1L, # number of bouts + emergence (birthday) (increment at the beginning of the trackHistory function)
-                   tHist          = numeric(20), # history of event times (t)
-                   sHist          = integer(20), # history of sites visited (s)
-                   bHist          = character(20) # history of behavioral states (b)
+                   timeHist       = numeric(20), # history of event times (t)
+                   siteHist       = integer(20), # history of sites visited (s)
+                   searchHist     = logical(20), # history of searching?
+                   stateHist      = character(20) # history of behavioral states (b)
                  ) # end private members
 )
 
@@ -132,6 +134,69 @@ get_id_Mosquito <- function(){
 
 Mosquito$set(which = "public",name = "get_id",
     value = get_id_Mosquito, overwrite = TRUE
+)
+
+###############################################################################
+# Mosquito Base Class History Logging
+###############################################################################
+
+#' MBITES: Track History
+#'
+#' At the end of each bout (\code{\link{mbites_oneBout}}), track the mosquito's history. If the mosquito
+#' is dead, write out the history to a JSON-formatted file
+#'  * This method is bound to \code{Mosquito_Female$trackHistory}
+#'
+mbites_trackHistory <- function(){
+
+  # increment number of events
+  private$nEvent = private$nEvent + 1L
+
+  # check we have not overran vector
+  lVec = length(private$timeHist)
+  if(private$nEvent > lVec){
+    private$timeHist = c(private$timeHist,numeric(lVec))
+    private$siteHist = c(private$siteHist,integer(lVec))
+    private$searchHist = c(private$searchHist,logical(lVec))
+    private$stateHist = c(private$stateHist,character(lVec))
+  }
+
+  # add to history
+  private$timeHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
+  private$siteHist[private$nEvent] = private$site$get_id()
+  private$searchHist[private$nEvent] = private$search
+  private$stateHist[private$nEvent] = private$state
+
+}
+
+#' MBITES: Export History and Remove Self
+#'
+#' If the mosquito is dead, write out its history to a JSON-formatted file and then delete from the container object (\code{\link{HashMap}}).
+#'  * This method is bound to \code{Mosquito_Female$exit}
+#'
+#' @param force if \code{TRUE} the mosquito will write out history and be removed from the container even if still alive
+#'
+mbites_exit <- function(force = FALSE){
+  if(private$state=="D" | force){
+    # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
+    cat(jsonlite::toJSON(x = list(
+            id = private$id,
+            tile = private$tileID,
+            time = private$timeHist[1:private$nEvent],
+            sites = private$siteHist[1:private$nEvent],
+            search = private$searchHist[1:private$nEvent],
+            behavior = private$stateHist[1:private$nEvent]
+        ), pretty = TRUE),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
+    # remove this mosquito from the hash table
+    MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
+  }
+}
+
+Mosquito$set(which = "public",name = "trackHistory",
+          value = mbites_trackHistory, overwrite = TRUE
+)
+
+Mosquito$set(which = "public",name = "exit",
+          value = mbites_exit, overwrite = TRUE
 )
 
 
@@ -173,7 +238,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
 
                      super$initialize(bDay,MBITES:::Parameters$get_defaultState_F(),site,tileID) # construct the base-class parts
 
-                     private$energy_preG = MBITES:::Parameters$get_energyPreG()
+                     private$energyPreG = MBITES:::Parameters$get_energyPreG()
 
                    }, # end constructor
 
@@ -196,7 +261,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    gravid         = logical(1), # am i gravid to oviposit?
 
                    # energetics
-                   energy_preG    = numeric(1), # pre-gonotrophic energy requirement
+                   energyPreG    = numeric(1), # pre-gonotrophic energy requirement
 
                    # bloodfeeding and oogenesis
                    bloodfed       = FALSE, # have i fed on blood this bout?
@@ -209,66 +274,6 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
 
                  ) # end private members
 ) # end class definition
-
-###############################################################################
-# Female Mosquito: Logging
-###############################################################################
-
-#' MBITES: Track History
-#'
-#' At the end of each bout (\code{\link{mbites_oneBout}}), track the mosquito's history. If the mosquito
-#' is dead, write out the history to a JSON-formatted file
-#'  * This method is bound to \code{Mosquito_Female$trackHistory}
-#'
-mbites_trackHistory <- function(){
-
-  # increment number of events
-  private$nEvent = private$nEvent + 1L
-
-  # check we have not overran vector
-  lVec = length(private$hist$tHist)
-  if(private$nEvent > lVec){
-    private$tHist = c(private$tHist,numeric(lVec))
-    private$sHist = c(private$sHist,integer(lVec))
-    private$bHist = c(private$bHist,character(lVec))
-  }
-
-  # add to history
-  private$tHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
-  private$sHist[private$nEvent] = private$site$get_id()
-  private$bHist[private$nEvent] = private$state
-
-}
-
-#' MBITES: Export History and Remove Self
-#'
-#' If the mosquito is dead, write out its history to a JSON-formatted file and then delete from the container object (\code{\link{HashMap}}).
-#'  * This method is bound to \code{Mosquito_Female$exit}
-#'
-#' @param force if \code{TRUE} the mosquito will write out history and be removed from the container even if still alive
-#'
-mbites_exit <- function(force = FALSE){
-  if(private$state=="D" | force){
-    # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
-    cat(jsonlite::toJSON(x = list(
-            id = private$id,
-            tile = private$tileID,
-            time = private$hist$tHist[1:private$nEvent],
-            sites = private$hist$sHist[1:private$nEvent],
-            behavior = private$hist$bHist[1:private$nEvent]
-        ), pretty = TRUE),"\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
-    # remove this mosquito from the hash table
-    MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
-  }
-}
-
-Mosquito_Female$set(which = "public",name = "trackHistory",
-          value = mbites_trackHistory, overwrite = TRUE
-)
-
-Mosquito_Female$set(which = "public",name = "exit",
-          value = mbites_exit, overwrite = TRUE
-)
 
 
 ###############################################################################

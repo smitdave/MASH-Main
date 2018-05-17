@@ -120,7 +120,7 @@ mbites_BloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
 #'  * This method is bound to \code{Mosquito_Female$energyFromBlood}.
 #'
 mbites_energyFromBlood <- function(){
-  bmSize * MBITES:::Parameters$get_energyFromBlood_b()
+  private$bmSize * MBITES:::Parameters$get_energyFromBlood_b()
 }
 
 # set methods

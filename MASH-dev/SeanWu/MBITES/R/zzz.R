@@ -16,14 +16,12 @@
     file.remove(file)
   }
 
-  futile.logger::flog.threshold(futile.logger::TRACE) # FOR DEBUGGING
+  futile.logger::flog.threshold(futile.logger::INFO) # FOR DEBUGGING use TRACE
   futile.logger::flog.appender(futile.logger::appender.tee('mbites.log'))
   futile.logger::flog.trace("MBITES logging being initiated")
 
   rm(dir)
   rm(file)
-
-  # MBITES:::Globals$init_lock()
 }
 
 .onUnload <- function(libpath) {

@@ -57,6 +57,8 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                    initialize = function(w, site){
                      futile.logger::flog.trace("Aqua_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
+                     private$habitatID = 1L # all habitats are normal ones for now
+
                      super$initialize(w,site) # construct the base-class parts
 
                      # set local closures
@@ -89,7 +91,8 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
 
                    # closure fields
                    EggQ = NULL, # closure of egg batches
-                   ImagoQ = NULL # closure of imago cohorts
+                   ImagoQ = NULL, # closure of imago cohorts
+                   habitatID = integer(1) # type of habitat
 
                  ),
 
@@ -97,6 +100,15 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                  private = list()
 
 ) # end Aqua_Resource class definition
+
+# accessors
+get_habitatID_Aqua_Resource <- function(){
+  return(private$habitatID)
+}
+
+Aqua_Resource$set(which = "public",name = "get_habitatID",
+    value = get_habitatID_Aqua_Resource, overwrite = TRUE
+)
 
 
 ###############################################################################
