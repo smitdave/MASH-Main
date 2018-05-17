@@ -15,11 +15,14 @@ set_parameters_MBITES_Parameters(defaultState_F = "B", defaultState_M = "S",
   energyFromBlood_b = 0.25, S_u = 1/7, S_sa = 15, S_sb = 5,
   Bs_surv = 0.95, Os_surv = 0.9, Ms_surv = 0.98, Ss_surv = 0.98,
   B_surv = 0.98, O_surv = 0.98, M_surv = 0.98, S_surv = 0.98,
-  PPR_a = 5, PPR_b = 1000, S_a = 20, S_b = 10, ttsz_p = 0.5,
-  ttsz_a = 5, ttsz_b = 95, ttr_a = 15, ttr_b = 500, chm_a = 15,
-  chm_b = 500, sns_a = 0.085, sns_b = 100, bm_a = 7.5, bm_b = 2.5,
-  of_a = 5, of_b = 5000, bloodPerEgg = 0.05, bs_m = 30, bs_sd = 5,
-  maxBatch = 60, emt_m = 3, emt_sd = 1, rf_a = 60, rf_b = 5000)
+  Bs_succeed = 0.99, Os_succeed = 0.99, Ms_succeed = 0.99,
+  Ss_succeed = 0.99, B_succeed = 0.95, O_succeed = 0.95,
+  M_succeed = 0.99, S_succeed = 0.99, PPR_a = 5, PPR_b = 1000,
+  S_a = 20, S_b = 10, ttsz_p = 0.5, ttsz_a = 5, ttsz_b = 95,
+  ttr_a = 15, ttr_b = 500, chm_a = 15, chm_b = 500, sns_a = 0.085,
+  sns_b = 100, bm_a = 7.5, bm_b = 2.5, of_a = 5, of_b = 5000,
+  bloodPerEgg = 0.05, bs_m = 30, bs_sd = 5, maxBatch = 60, emt_m = 3,
+  emt_sd = 1, rf_a = 60, rf_b = 5000)
 }
 \arguments{
 \item{defaultState_F}{character of behavioral state that female mosquito has when it emerges}

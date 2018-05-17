@@ -147,7 +147,7 @@ oneDay_EventQ_Human_NULL <- function(){}
 #'
 oneDay_ActivitySpace_Human_NULL <- function(){
   # add all my risk to my home site
-  MBITES:::Globals$get_tile(tileID)$get_sites()$get(siteID)$get_feed(feedingID)$RiskQ$add2Q(id,w,1)
+  MBITES:::Globals$get_tile(private$tileID)$get_sites()$get(private$siteID)$get_feed(private$feedingID)$RiskQ$add2Q(private$id,private$w,1)
 }
 
 # set methods

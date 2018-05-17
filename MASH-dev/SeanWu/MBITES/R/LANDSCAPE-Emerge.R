@@ -127,7 +127,7 @@ one_day_Emerge <- function(){
 
   # if emerging mosquitoes, send them to the population
   if(lambda_t>0){
-    self$ImagoQ$add2Q(N=lambda_t,time_e=tNow)
+    self$ImagoQ$add2Q(lambda_t,tNow,T)
   }
 
 } # end one_day

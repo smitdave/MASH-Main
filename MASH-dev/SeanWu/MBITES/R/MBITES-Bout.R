@@ -556,3 +556,8 @@ mbites_MBITES <- function(){
     self$exit()
   }
 }
+
+# set methods
+Mosquito$set(which = "public",name = "MBITES",
+    value = mbites_MBITES, overwrite = TRUE
+)

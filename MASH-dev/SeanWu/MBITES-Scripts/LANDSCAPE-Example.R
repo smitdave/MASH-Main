@@ -201,3 +201,7 @@ Tile_Initialize(landscape)
 Human_NULL_Initialize(humans)
 
 MBITES_Initialize(mosquitos)
+
+# run simulation
+reset(directory = "/Users/slwu89/Desktop/mbites/",runID = 1)
+simulation(tMax = 500)

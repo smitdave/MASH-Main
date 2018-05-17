@@ -53,7 +53,7 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 
                    # time to event samplers
                    # 'struct' of function (pointers to functions in c++)
-                   ttEvent              = list(
+                   ttEvent = list(
                      # time to event closures (must be given implementations before simulation starts)
                      # attempt bouts
                      BoutB = function(){stop("BoutB requires a concrete implementation!")},
@@ -112,11 +112,20 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
                    Os_surv              = numeric(1),
                    Ms_surv              = numeric(1),
                    Ss_surv              = numeric(1),
-
                    B_surv               = numeric(1),
                    O_surv               = numeric(1),
                    M_surv               = numeric(1),
                    S_surv               = numeric(1),
+
+                   # Bout success
+                   Bs_succeed           = numeric(1),
+                   Os_succeed           = numeric(1),
+                   Ms_succeed           = numeric(1),
+                   Ss_succeed           = numeric(1),
+                   B_succeed            = numeric(1),
+                   O_succeed            = numeric(1),
+                   M_succeed            = numeric(1),
+                   S_succeed            = numeric(1),
 
                    PPR_a                = numeric(1), # mbites_pPPRFlight
                    PPR_b                = numeric(1), # mbites_pPPRFlight
@@ -535,6 +544,16 @@ set_parameters_MBITES_Parameters <- function(
   M_surv               = 0.98,
   S_surv               = 0.98,
 
+  # success
+  Bs_succeed               = 0.99,
+  Os_succeed               = 0.99,
+  Ms_succeed               = 0.99,
+  Ss_succeed               = 0.99,
+  B_succeed               = 0.95,
+  O_succeed               = 0.95,
+  M_succeed               = 0.99,
+  S_succeed               = 0.99,
+
   PPR_a                = 5, # mbites_pPPRFlight
   PPR_b                = 1000, # mbites_pPPRFlight
   S_a                  = 20, # mbites_pEnergySurvival
@@ -605,6 +624,14 @@ set_parameters_MBITES_Parameters <- function(
   private$O_surv               = O_surv
   private$M_surv               = M_surv
   private$S_surv               = S_surv
+  private$Bs_succeed           = Bs_succeed
+  private$Os_succeed           = Os_succeed
+  private$Ms_succeed           = Ms_succeed
+  private$Ss_succeed           = Ss_succeed
+  private$B_succeed            = B_succeed
+  private$O_succeed            = O_succeed
+  private$M_succeed            = M_succeed
+  private$S_succeed            = S_succeed
   private$PPR_a                = PPR_a
   private$PPR_b                = PPR_b
   private$S_a                  = S_a
@@ -767,6 +794,38 @@ get_M_surv_MBITES_Parameters <- function(){
 
 get_S_surv_MBITES_Parameters <- function(){
   return(private$S_surv)
+}
+
+get_Bs_succeed_MBITES_Parameters <- function(){
+  return(private$Bs_succeed)
+}
+
+get_Os_succeed_MBITES_Parameters <- function(){
+  return(private$Os_succeed)
+}
+
+get_Ms_succeed_MBITES_Parameters <- function(){
+  return(private$Ms_succeed)
+}
+
+get_Ss_succeed_MBITES_Parameters <- function(){
+  return(private$Ss_succeed)
+}
+
+get_B_succeed_MBITES_Parameters <- function(){
+  return(private$B_succeed)
+}
+
+get_O_succeed_MBITES_Parameters <- function(){
+  return(private$O_succeed)
+}
+
+get_M_succeed_MBITES_Parameters <- function(){
+  return(private$M_succeed)
+}
+
+get_S_succeed_MBITES_Parameters <- function(){
+  return(private$S_succeed)
 }
 
 get_PPR_a_MBITES_Parameters <- function(){
@@ -980,6 +1039,38 @@ MBITES_Parameters$set(which = "public",name = "get_M_surv",
 
 MBITES_Parameters$set(which = "public",name = "get_S_surv",
     value = get_S_surv_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_Bs_succeed",
+    value = get_Bs_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_Os_succeed",
+    value = get_Os_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_Ms_succeed",
+    value = get_Ms_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_Ss_succeed",
+    value = get_Ss_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_B_succeed",
+    value = get_B_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_O_succeed",
+    value = get_O_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_M_succeed",
+    value = get_M_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_S_succeed",
+    value = get_S_succeed_MBITES_Parameters, overwrite = TRUE
 )
 
 MBITES_Parameters$set(which = "public",name = "get_PPR_a",
