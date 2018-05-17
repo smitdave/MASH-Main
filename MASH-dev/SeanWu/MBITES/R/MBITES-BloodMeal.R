@@ -53,7 +53,7 @@ mbites_BloodMeal <- function(){
   self$BloodEnergetics() # MBITES-Energetics.R
 
   # post-prandial rest (digestion)
-  private$tNow = private$tNow + MBITES:::Parameters$ttEvent$ppr()
+  private$tNow =  MBITES:::Parameters$ttEvent$ppr(private$tNow)
   if(runif(1) < self$pPPRFlight()){
     private$state = "D"
   } else {
@@ -67,7 +67,7 @@ mbites_BloodMeal <- function(){
 #'  * This method is bound to \code{Mosquito_Female$rBloodMealSize}.
 #'
 mbites_rBloodMealSize <- function(){
-  rbeta(n=1,MBITES:::Parameters$get_bm_a(),MBITES::Parameters$get_bm_b())
+  rbeta(n=1,MBITES:::Parameters$get_bm_a(),MBITES:::Parameters$get_bm_b())
 }
 
 # set methods

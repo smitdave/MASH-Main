@@ -45,6 +45,10 @@ Tile$set(which = "public",name = "oneDay",
 reset_Tile <- function(){
   # reset all sites
   private$Sites$apply(tag="reset")
+  # reset humans
+  private$Humans$rm_all()
+  # reset mosquitoes
+  private$Mosquitoes$rm_all()
 }
 
 Tile$set(which = "public",name = "reset",

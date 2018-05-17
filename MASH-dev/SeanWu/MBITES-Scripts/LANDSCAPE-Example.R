@@ -27,7 +27,7 @@ nSite = 20
 
 # number of resources
 nFeed = 15
-nAqua = 10
+nAqua = 15
 
 # source: https://github.com/slwu89/PlosCompBio_2013/blob/master/fig2/code/functionsModel.R
 points.clustered = function(n, meanParents = 10, clusteredness = .25, ...){
@@ -204,5 +204,10 @@ Human_NULL_Initialize(humans)
 MBITES_Initialize(mosquitos)
 
 # run simulation
-reset(directory = "/Users/slwu89/Desktop/mbites/",runID = 1)
+set_output(directory = "/Users/slwu89/Desktop/mbites/",runID = 1)
+simulation(tMax = 500)
+
+reset(directory = "/Users/slwu89/Desktop/mbites/",runID = 2)
+Human_NULL_Initialize(humans)
+MBITES_Initialize(mosquitos)
 simulation(tMax = 500)
