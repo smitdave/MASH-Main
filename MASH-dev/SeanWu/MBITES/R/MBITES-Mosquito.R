@@ -65,8 +65,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                      private$timeHist[1] = bDay
                      private$siteHist[1] = site$get_id()
                      private$stateHist[1] = state
-
-                     self$trackHistory()
+                     private$searchHist[1] = TRUE
 
                      # logging
                      futile.logger::flog.trace("Mosquito %s being born at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
@@ -186,7 +185,7 @@ mbites_exit <- function(force = FALSE){
             sites = private$siteHist[1:private$nEvent],
             search = private$searchHist[1:private$nEvent],
             behavior = private$stateHist[1:private$nEvent]
-        ), pretty = TRUE),"\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
+        ), pretty = TRUE),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
     # remove this mosquito from the hash table
     MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
   }

@@ -132,6 +132,11 @@ simulate_MBITES_Globals <- function(tMax){
     private$tiles[[i]]$get_humans()$apply(tag="exit")
   }
 
+  # end valid JSON output
+  cat("{}]",sep="",file=private$mosquito_f_out)
+  cat("{}]",sep="",file=private$mosquito_m_out)
+  cat("{}]",sep="",file=private$human_out)
+
   # close old connections
   if(!is.null(private$mosquito_f_out)){close(private$mosquito_f_out)}
   if(!is.null(private$mosquito_m_out)){close(private$mosquito_m_out)}
@@ -164,14 +169,23 @@ simulation <- function(tMax){
 #' @param runID an integer id that will be appended to output files
 #'
 set_output_MBITES_Globals <- function(directory,runID){
+
+  # create directory(s) if they dont exist
   if(!dir.exists(directory)){
     dir.create(directory)
   }
   dirOut = paste0(directory,"run",runID)
   dir.create(dirOut)
+
+  # setup connection objects
   private$mosquito_f_out = file(description = paste0(dirOut,"/mosquito_F_",runID,".json"),open = "wt")
   private$mosquito_m_out = file(description = paste0(dirOut,"/mosquito_M_",runID,".json"),open = "wt")
   private$human_out = file(description = paste0(dirOut,"/human_",runID,".json"),open = "wt")
+
+  # begin valid JSON output
+  cat("[",sep="",file=private$mosquito_f_out)
+  cat("[",sep="",file=private$mosquito_m_out)
+  cat("[",sep="",file=private$human_out)
 }
 
 #' MBITES Globals: Reset Tiles and logging
