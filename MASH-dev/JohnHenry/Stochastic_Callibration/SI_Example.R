@@ -25,13 +25,8 @@ Det_SI = function(lambda,dt,N,Tfin){
 
 N = 100
 dt = .01
-Tfin = 100
+Tfin = 150
 lambda = .0005
-
-t = seq(0,Tfin,dt)
-SI = Stoch_SI(lambda,N,dt,Tfin)
-lines(t,SI[,1],type="l",col="blue")
-lines(t,SI[,2],type="l",col="red")
 
 ##fake data generation
 dt = .1
@@ -39,3 +34,10 @@ t = seq(0,Tfin,dt)
 SI = Det_SI(lambda,dt,N,Tfin)
 plot(t,SI[,1],type="l",ylim=c(0,100))
 lines(t,SI[,2])
+
+for(i in 1:50){
+  t = seq(0,Tfin,dt)
+  SI = Stoch_SI(lambda,N,dt,Tfin)
+  lines(t,SI[,1],type="l",col="blue")
+  lines(t,SI[,2],type="l",col="red")
+}
