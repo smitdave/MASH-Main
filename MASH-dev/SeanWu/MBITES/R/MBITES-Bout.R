@@ -155,7 +155,8 @@ Mosquito$set(which = "public",name = "move",
 
 
 #################################################################
-# Resting
+# Timing, Energetics, Survival, Egg maturation, time-dependent events,
+# check for resources, and pathogen dynamics
 #################################################################
 
 #' MBITES: Update the Behavioral State at the End of a Bout for \code{\link{MosquitoFemale}}

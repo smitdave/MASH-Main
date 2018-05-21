@@ -205,9 +205,9 @@ MBITES_Initialize(mosquitos)
 
 # run simulation
 set_output(directory = "/Users/slwu89/Desktop/mbites/",runID = 1)
-simulation(tMax = 500)
+simulation(tMax = 365)
 
 reset(directory = "/Users/slwu89/Desktop/mbites/",runID = 2)
 Human_NULL_Initialize(humans)
 MBITES_Initialize(mosquitos)
-simulation(tMax = 500)
+simulation(tMax = 365)
