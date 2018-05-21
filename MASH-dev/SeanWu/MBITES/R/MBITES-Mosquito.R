@@ -92,8 +92,8 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    rspot          = "v", # my current resting spot
 
                    # resources
-                   sugar_res      = NULL, # reference to my current sugar resource
-                   mate_res       = NULL, # reference to my current mating swarm resource
+                   sugar_resource      = NULL, # reference to my current sugar resource
+                   mating_resource       = NULL, # reference to my current mating swarm resource
 
                    # timing
                    bDay          = numeric(1), # the day i emerged
@@ -253,8 +253,8 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  private = list(
 
                    # resources
-                   aqua_res       = NULL, # reference to my current aquatic habitat resource
-                   feed_res       = NULL, # reference to my current blood feeding resource
+                   aqua_resource       = NULL, # reference to my current aquatic habitat resource
+                   feeding_resource       = NULL, # reference to my current blood feeding resource
 
                    # behavioral state parameters
                    mated          = FALSE, # have i mated yet?

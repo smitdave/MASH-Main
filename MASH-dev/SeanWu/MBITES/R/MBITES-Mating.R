@@ -36,8 +36,8 @@ NULL
 #'  * This method is bound to \code{Mosquito_Female$chooseMate}.
 #'
 mbites_chooseMate <- function(){
-  private$mate_res = private$site$sample_mate() # sample resources
-  private$mateID = private$mate_res$MatingQ$sampleQ()
+  private$mating_resource = private$site$sample_mate() # sample resources
+  private$mateID = private$mating_resource$MatingQ$sampleQ()
 }
 
 #' MBITES: Mating

@@ -61,10 +61,10 @@ Site <- R6::R6Class(classname = "Site",
                    finalize = function(){
                      futile.logger::flog.trace("Site %i being killed at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
 
-                     private$res_feed = NULL
-                     private$res_aqua = NULL
-                     private$res_sugar = NULL
-                     private$res_mate = NULL
+                     private$resource_feeding = NULL
+                     private$resource_aquatic = NULL
+                     private$resource_sugar = NULL
+                     private$resource_mating = NULL
                      invisible(gc())
                    } # end destructor
 
@@ -89,14 +89,14 @@ Site <- R6::R6Class(classname = "Site",
                    has_sugar_b    = FALSE,
                    has_mate_b     = FALSE,
                    # references and weights
-                   res_feed       = list(), # list of references to 'feeding'-type resources
-                   res_feed_w     = NULL, # weights of 'feeding'-type resources
-                   res_aqua       = list(), # list of references to 'aqua'-type resources
-                   res_aqua_w     = NULL, # weights of 'aqua'-type resources
-                   res_sugar      = list(), # list of references to 'sugar'-type resources
-                   res_sugar_w    = NULL, # weights of 'sugar'-type resources
-                   res_mate       = list(), # list of references to 'mate'-type resources
-                   res_mate_w     = NULL # weights of 'mate'-type resources
+                   resource_feeding       = list(), # list of references to 'feeding'-type resources
+                   resource_feeding_w     = NULL, # weights of 'feeding'-type resources
+                   resource_aquatic       = list(), # list of references to 'aqua'-type resources
+                   resource_aquatic_w     = NULL, # weights of 'aqua'-type resources
+                   resource_sugar      = list(), # list of references to 'sugar'-type resources
+                   resource_sugar_w    = NULL, # weights of 'sugar'-type resources
+                   resource_mating       = list(), # list of references to 'mate'-type resources
+                   resource_mating_w     = NULL # weights of 'mate'-type resources
 
                  ) # end private members
 ) # end Site class definition
@@ -109,10 +109,10 @@ Site <- R6::R6Class(classname = "Site",
 #' clear activity space between days
 clear_ActivitySpace_Site <- function(){
   # if this site has blood feeding sites
-  n = length(private$res_feed)
+  n = length(private$resource_feeding)
   if(n > 0){
     for(i in 1:n){
-      private$res_feed[[i]]$RiskQ$clearQ()
+      private$resource_feeding[[i]]$RiskQ$clearQ()
     }
   }
 }
@@ -135,39 +135,39 @@ Site$set(which = "public",name = "clear_ActivitySpace",
 #'
 oneDay_AquaticEcology_Site <- function(){
   # if this site has aquatic habitats
-  n = length(private$res_aqua)
+  n = length(private$resource_aquatic)
   if(n > 0){
     for(i in 1:n){
-      private$res_aqua[[i]]$one_day()
-      private$res_aqua[[i]]$push_imago()
+      private$resource_aquatic[[i]]$one_day()
+      private$resource_aquatic[[i]]$push_imago()
     }
   }
 }
 
 #' reset between runs
 reset_Site <- function(){
-  n_aqua <- length(private$res_aqua)
-  n_feed <- length(private$res_feed)
-  n_mate <- length(private$res_mate)
+  n_aqua <- length(private$resource_aquatic)
+  n_feed <- length(private$resource_feeding)
+  n_mate <- length(private$resource_mating)
 
   # reset aquatic habitats
   if(n_aqua>0){
     for(i in 1:n_aqua){
-      private$res_aqua[[i]]$reset()
+      private$resource_aquatic[[i]]$reset()
     }
   }
 
   # reset blood feeding sites
   if(n_feed>0){
     for(i in 1:n_feed){
-      private$res_feed[[i]]$reset()
+      private$resource_feeding[[i]]$reset()
     }
   }
 
   # reset mating sites
   if(n_mate>0){
     for(i in 1:n_mate){
-      private$res_mate[[i]]$reset()
+      private$resource_mating[[i]]$reset()
     }
   }
 }
@@ -211,7 +211,7 @@ Site$set(which = "public",name = "move_mosquito",
 #'  * binding: \code{Site$sample_feed}
 #'
 sample_feed_Site <- function(){
-  MBITES::sample(x=private$res_feed,size=1L,replace=FALSE,prob=private$res_feed_w)[[1]]
+  MBITES::sample(x=private$resource_feeding,size=1L,replace=FALSE,prob=private$resource_feeding_w)[[1]]
 }
 
 #' Site: Sample Aquatic Habitat Resources
@@ -220,7 +220,7 @@ sample_feed_Site <- function(){
 #'  * binding: \code{Site$sample_aqua}
 #'
 sample_aqua_Site <- function(){
-  MBITES::sample(x=private$res_aqua,size=1L,replace=FALSE,prob=private$res_aqua_w)[[1]]
+  MBITES::sample(x=private$resource_aquatic,size=1L,replace=FALSE,prob=private$resource_aquatic_w)[[1]]
 }
 
 #' Site: Sample Sugar Feeding Resources
@@ -229,7 +229,7 @@ sample_aqua_Site <- function(){
 #'  * binding: \code{Site$sample_sugar}
 #'
 sample_sugar_Site <- function(){
-  MBITES::sample(x=private$res_sugar,size=1L,replace=FALSE,prob=private$res_sugar_w)[[1]]
+  MBITES::sample(x=private$resource_sugar,size=1L,replace=FALSE,prob=private$resource_sugar_w)[[1]]
 }
 
 #' Site: Sample Mating Swarm Resources
@@ -238,7 +238,7 @@ sample_sugar_Site <- function(){
 #'  * binding: \code{Site$sample_mate}
 #'
 sample_mate_Site <- function(){
-  MBITES::sample(x=private$res_mate,size=1L,replace=FALSE,prob=private$res_mate_w)[[1]]
+  MBITES::sample(x=private$resource_mating,size=1L,replace=FALSE,prob=private$resource_mating_w)[[1]]
 }
 
 Site$set(which = "public",name = "sample_feed",
@@ -328,8 +328,8 @@ Site$set(which = "public",name = "has_mate",
 #'
 add_feed_Site <- function(Feeding_Resource){
   private$has_feed_b = TRUE
-  private$res_feed = append(private$res_feed,Feeding_Resource)
-  private$res_feed_w = append(private$res_feed_w,Feeding_Resource$get_w())
+  private$resource_feeding = append(private$resource_feeding,Feeding_Resource)
+  private$resource_feeding_w = append(private$resource_feeding_w,Feeding_Resource$get_w())
 }
 
 #' Site: Add a Aquatic Habitat Resource
@@ -341,8 +341,8 @@ add_feed_Site <- function(Feeding_Resource){
 #'
 add_aqua_Site <- function(Aqua_Resource){
   private$has_aqua_b = TRUE
-  private$res_aqua = append(private$res_aqua,Aqua_Resource)
-  private$res_aqua_w = append(private$res_aqua_w,Aqua_Resource$get_w())
+  private$resource_aquatic = append(private$resource_aquatic,Aqua_Resource)
+  private$resource_aquatic_w = append(private$resource_aquatic_w,Aqua_Resource$get_w())
 }
 
 #' Site: Add a Sugar Feeding Resource
@@ -354,8 +354,8 @@ add_aqua_Site <- function(Aqua_Resource){
 #'
 add_sugar_Site <- function(Sugar_Resource){
   private$has_sugar_b = TRUE
-  private$res_sugar = append(private$res_sugar,Sugar_Resource)
-  private$res_sugar_w = append(private$res_sugar_w,Sugar_Resource$get_w())
+  private$resource_sugar = append(private$resource_sugar,Sugar_Resource)
+  private$resource_sugar_w = append(private$resource_sugar_w,Sugar_Resource$get_w())
 }
 
 #' Site: Add a Mating Resource
@@ -367,8 +367,8 @@ add_sugar_Site <- function(Sugar_Resource){
 #'
 add_mate_Site <- function(Mating_Resource){
   private$has_mate_b = TRUE
-  private$res_mate = append(private$res_mate,Mating_Resource)
-  private$res_mate_w = append(private$res_mate_w,Mating_Resource$get_w())
+  private$resource_mating = append(private$resource_mating,Mating_Resource)
+  private$resource_mating_w = append(private$resource_mating_w,Mating_Resource$get_w())
 }
 
 Site$set(which = "public",name = "add_feed",
@@ -456,7 +456,7 @@ Site$set(which = "public",name = "get_haz",
 #' @param i integer index of resource to return
 #'
 get_feed_Site <- function(i){
-  return(private$res_feed[[i]])
+  return(private$resource_feeding[[i]])
 }
 
 #' Site: Return Blood Feeding Resource Weights
@@ -465,7 +465,7 @@ get_feed_Site <- function(i){
 #'  * binding: \code{Site$get_feed_w}
 #'
 get_feed_w_Site <- function(){
-  return(private$res_feed_w)
+  return(private$resource_feeding_w)
 }
 
 Site$set(which = "public",name = "get_feed",

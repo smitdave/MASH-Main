@@ -145,7 +145,7 @@ Mosquito$set(which = "public",name = "energyFromBlood",
 #'
 mbites_chooseSugarSource <- function(){
   # when atsb, etc exist, do the checks here
-  private$sugar_res = private$site$sample_sugar() # sample resources
+  private$sugar_resource = private$site$sample_sugar() # sample resources
   private$sugarID = 1L # normal sugar source
 
 }
