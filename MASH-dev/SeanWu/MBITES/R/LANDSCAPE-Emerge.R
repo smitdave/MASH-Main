@@ -26,7 +26,6 @@
 #'  * site: a reference to a \code{\link{Site}} object
 #'
 #' @section **Methods**:
-#'  * add_egg: function that must take an EggQ (a \code{list} object) and add egg batches to the population; it should return a modified EggQ with those elements corresponding to 'processed' egg batches zeroed out
 #'  * one_day: function with void return that runs one day of the specific aquatic population simulation implementation
 #'  * get_imago: function that returns an ImagoQ (a \code{list} object) for imagos (adult mosquitoes) ready to emerge on that day
 #'
@@ -78,29 +77,6 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
                    constant          = logical(1) # boolean indicating constant emergence or lambda vector
                  ) # end private
 ) # end Aqua_Resource_Emerge
-
-
-###############################################################################
-# add egg batches to aquatic population
-###############################################################################
-
-#' Aquatic Ecology: Emerge - Add Eggs
-#'
-#' Add an egg batch from a successful oviposition attempt to this \code{\link{Aqua_Resource_Emerge}}.
-#'
-#'  * This method is bound to \code{Aqua_Resource_Emerge$add_egg()}.
-#'
-#' @param EggQ egg batch
-#'
-add_egg_Emerge <- function(EggQ){
-  # if(MBITES:::MBITES_Pars$get_log_egg()){
-  #   # log eggs
-  # }
-}
-
-Aqua_Resource_Emerge$set(which = "public",name = "add_egg",
-          value = add_egg_Emerge, overwrite = TRUE
-)
 
 
 ###############################################################################

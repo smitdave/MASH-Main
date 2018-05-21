@@ -356,7 +356,7 @@ mbites_attempt_B <- function(){
   if(runif(1) < MBITES:::Parameters$get_B_succeed()){
 
     # sample resources and hosts
-    private$feed_res = private$site$sample_feed() # sample feeding resources
+    private$feeding_resource = private$site$sample_feed() # sample feeding resources
     self$chooseHost() # MBITES-HostEncounter.R
 
     # specific host encounter routines

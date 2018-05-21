@@ -121,7 +121,7 @@ mbites_newSpot <- function(){
 #'  * This method is bound to \code{Mosquito$enterHouse}
 #'
 mbites_enterHouse <- function(){
-  if(runif(1) < private$feed_res$get_enterP()){
+  if(runif(1) < private$feeding_resource$get_enterP()){
     # mosquito is inside of the house
   } else {
     # mosquito is not inside of house

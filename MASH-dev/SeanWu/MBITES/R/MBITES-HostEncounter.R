@@ -39,7 +39,7 @@ NULL
 #'  * This method is bound to \code{Mosquito_Female$chooseHost}.
 #'
 mbites_chooseHost <- function(){
-  private$hostID = private$feed_res$RiskQ$sampleQ()
+  private$hostID = private$feeding_resource$RiskQ$sampleQ()
 }
 
 # set methods

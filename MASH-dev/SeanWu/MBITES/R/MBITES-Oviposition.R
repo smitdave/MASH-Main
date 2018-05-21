@@ -35,8 +35,8 @@ NULL
 #'
 mbites_chooseHabitat <- function(){
   # when ovitraps, etc exist, do the checks here
-  private$aqua_res = private$site$sample_aqua() # sample resources
-  private$habitatID = private$aqua_res$get_habitatID()
+  private$aqua_resource = private$site$sample_aqua() # sample resources
+  private$habitatID = private$aqua_resource$get_habitatID()
 }
 
 # set methods
@@ -77,7 +77,7 @@ mbites_layEggs_EL4P <- function(){
   if(runif(1) < MBITES:::Parameters$get_O_succeed()){
     private$eggT = 2e16
     private$gravid = FALSE
-    private$aqua_res$EggQ$add2Q(private$batch,private$tNow)
+    private$aqua_resource$EggQ$add2Q(private$batch,private$tNow)
     private$batch = 0
     private$state = "B"
   }
