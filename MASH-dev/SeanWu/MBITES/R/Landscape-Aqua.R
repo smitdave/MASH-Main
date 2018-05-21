@@ -33,7 +33,6 @@
 #'  * site: a reference to a \code{\link{Site}} object
 #'
 #' @section **Methods**:
-#'  * add_egg: function that must take an egg batch and add it to the \code{EggQ}
 #'  * one_day: function that updates daily aquatic population dynamics
 #'  * push_imago: function that takes emerging imagos from the \code{ImagoQ} and pushes them to the adult mosquito population
 #'  * reset: function that resets the aquatic habitat between simulation runs
@@ -74,10 +73,6 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
                      self$EggQ = NULL
                      self$ImagoQ = NULL
                    }, # end destructor
-
-                   add_egg = function(){
-                     stop("add_egg should never be called from abstract base class 'Aqua_Resource'!")
-                   },
 
                    # one day of aquatic population
                    one_day = function(){

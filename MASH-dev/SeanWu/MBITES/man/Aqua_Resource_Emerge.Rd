@@ -22,7 +22,6 @@ Class that implements the 'Emerge' model of aquatic ecology, inheriting the inte
 \section{\strong{Methods}}{
 
 \itemize{
-\item add_egg: function that must take an EggQ (a \code{list} object) and add egg batches to the population; it should return a modified EggQ with those elements corresponding to 'processed' egg batches zeroed out
 \item one_day: function with void return that runs one day of the specific aquatic population simulation implementation
 \item get_imago: function that returns an ImagoQ (a \code{list} object) for imagos (adult mosquitoes) ready to emerge on that day
 }
