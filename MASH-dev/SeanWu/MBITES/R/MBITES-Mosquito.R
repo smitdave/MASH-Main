@@ -50,6 +50,8 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                      # set up parameters
                      private$id = MBITES:::Globals$get_mosquito_id()
 
+                     private$alive = TRUE
+
                      private$site = site
                      private$tileID = tileID
 
@@ -85,6 +87,7 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 
                    # basic parameters
                    id             = integer(1), # character id
+                   alive          = logical(1), # am i alive?
 
                    # location
                    tileID         = integer(1), # id of the tile i am in
@@ -121,10 +124,10 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
 
                    # history
                    nEvent         = 1L, # number of bouts + emergence (birthday) (increment at the beginning of the trackHistory function)
-                   timeHist       = numeric(20), # history of event times (t)
-                   siteHist       = integer(20), # history of sites visited (s)
-                   searchHist     = logical(20), # history of searching?
-                   stateHist      = character(20) # history of behavioral states (b)
+                   timeHist       = numeric(30), # history of event times (t)
+                   siteHist       = integer(30), # history of sites visited (s)
+                   searchHist     = logical(30), # history of searching?
+                   stateHist      = character(30) # history of behavioral states (b)
                  ) # end private members
 )
 
@@ -176,7 +179,7 @@ mbites_trackHistory <- function(){
 #' @param force if \code{TRUE} the mosquito will write out history and be removed from the container even if still alive
 #'
 mbites_exit <- function(force = FALSE){
-  if(private$state=="D" | force){
+  if(!private$alive | force){
     # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
     cat(jsonlite::toJSON(x = list(
             id = private$id,

@@ -173,7 +173,7 @@ Mosquito$set(which = "public",name = "move",
 #'
 mbites_updateState <- function(){
   # only do this if you are alive
-  if(private$state!="D"){
+  if(private$alive){
 
     # sample time to next launch based on current state (before it is changed from energetics, survival, egg maturation, or reeding)
     self$timing() # MBITES-Timing.R
@@ -182,7 +182,7 @@ mbites_updateState <- function(){
     self$survival()      # MBITES-Survival.R
 
     # check again for being alive because can be killed in survival; don't want zombie mosquitoes preforming actions
-    if(private$state!="D"){
+    if(private$alive){
 
       self$checkEggMaturation() # MBITES-Oogenesis.R
 
@@ -550,12 +550,12 @@ Mosquito$set(which = "public",name = "attempt_S",
 mbites_MBITES <- function(){
 
   # simulation fires while mosy is alive and has not overrun its simulation
-  while(private$tNext < MBITES:::Globals$get_tNow() & private$state != "D"){
+  while(private$tNext < MBITES:::Globals$get_tNow() & private$alive){
     self$oneBout()
   }
 
   # if mosy died then output its history and cleanup
-  if(private$state == "D"){
+  if(!private$alive){
     self$exit()
   }
 }

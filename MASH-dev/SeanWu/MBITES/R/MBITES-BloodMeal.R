@@ -53,9 +53,9 @@ mbites_BloodMeal <- function(){
   self$BloodEnergetics() # MBITES-Energetics.R
 
   # post-prandial rest (digestion)
-  private$tNow =  MBITES:::Parameters$ttEvent$ppr(private$tNow)
+  private$tNow = MBITES:::Parameters$ttEvent$ppr(private$tNow)
   if(runif(1) < self$pPPRFlight()){
-    private$state = "D"
+    private$alive = FALSE
   } else {
     self$oogenesis() # MBITES-Oogenesis.R
   }

@@ -139,7 +139,7 @@ mbites_checkEstivation1 <- function(){
     if(runif(1) < MBITES:::Parameters$get_Ep()){ # survive estivation?
       private$tNext = wakeUpTime()
     } else {
-      private$state = "D"
+      private$alive = FALSE
     }
   }
 }
