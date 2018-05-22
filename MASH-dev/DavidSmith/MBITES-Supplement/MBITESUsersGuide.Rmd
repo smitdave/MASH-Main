@@ -1,0 +1,382 @@
+---
+title: "A User’s Guide to MBITES"
+subtitle: "Version 1.0"
+author: MBITES Development Team\footnote{MBITES was designed and implemented by David L Smith, Sean Wu, and Hector Sanchez. MBITES extends previous modeling efforts developed by David L Smith, Amit Verma and Arnaud Le Menach. The GUI for MBITES was designed and implemented by Qian Zhang, Hector Sanchez, and David L Smith. MBDETES, the partial differential equation simulation model developed as a bridging model for MBITES, was developed by John Henry, Sean Wu, and David L Smith. Anne Wilson and Steve Lindsay were the primary consultants for Anopheles and Tom Scott for Aedes. Important contributions were made by Daniel Citron, Alec Georgoff, and John Marshall. The code for MBITES is being developed for public release, when it will be published in a permanent archive. A GUI is available for configuring MBITES. It is distributed as part of the standard MBITES package.  Version 1.0 of the code and accompanying documentation were primarily written by Sean Wu. Other documents describing MBITES include a manuscript for peer review.}
+date: "5/22/2018"
+output:
+  pdf_document: default
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+This document is designed to give a non-technical oveview and introduction to MBITES (Mosquito Bout-based and Individual-based Transmission Ecology Simulator). The best source of technical documentation for developers is the code itself, which can be called from Help within R. The following sections introduce the software and some of the biological concepts motivating development of this software. The following section, **Quick Start** offers a bare-bones minimum guide to getting started. A longer introduction to MBITES follows in a section called **MASH: A Modular Simulation Platform.** More background on how to run the software in the next section: **Getting Started.** 
+
+### Quick Start
+
+MBITES models a mosquito flight **bout**, which counts from launch to launch: launch - try - land - rest - launch....  This sequence is repeated from emergence as an adult through its death. The mosquito's behavioral state defines the "try." The three types of behavioral states  described herein are: 1) blood feeding; 2) egg laying; and 3) sugar feeding. The fourth behavioral state considered by MBITES is mating, which is planned for a future release of MBITES. Each behavioral state has two types of bouts: a mosquito is either on a **search** for resources or an **attempt** to use those resources. Success in an attempt usually means a mosquito changes its behavioral state after landing from a try, before the next launch. Searching occurs on a **landscape** comprised of sites, each of which has at least some resources.    
+
+#### Installing MBITES
+
+
+#### Configuring MBITES
+
+The following options are configured within the MBITES GUI: 
+
+* Behavioral Options
+    - Bouts: basic properties of each attempt bout and each search bout
+    - Timing functions: the time elapsed from the moment just after landing to end one bout to the moment of landing to initiate another bout, including how long a mosquito rests before making its next launch attempt and how much time is elapsed during the try
+    - Blood meal and oogenesis: options that determine how blood is provisioned into eggs
+    - Energetics: options for tracking energy use, energy consumption, and consequences
+    - Oviposition: options for egg laying
+    - Survival: configration options for senescence and the mosquito's physical and phsiological condition
+    - Pathogen: configuration options for mosquito infection 
+    
+* Landscape
+    - Locations of blood feeding sites
+    - Locations of egg laying sites and their productivity (i.e. emergence rate of adults)
+    - Locations of sugar sources
+    - Resting behavior at microsites
+    - Mosquito dispersion during a search
+
+For a longer explanation, read on. 
+
+#### Running MBITES
+
+# MASH: A Modular Simulation Platform 
+
+#### What is MBITES
+
+MBITES is a software package for simulating adult mosquito ecology and behavior. The purpose is to advance the science and analysis for problems related to mosquito-borne pathogen transmission and vector control. Conceptually, MBITES has several parts:
+
+* A **landscape** describing resources used by adult mosquitoes; 
+
+* Algorithms describing adult behavior as a sequence of **flight bouts**; 
+
+* A set of configurable **behavioral options** for simulating other aspects of mosquito life-history and behavior; 
+
+* Related components describing **aquatic ecology**;  
+
+* Options for implementing various types of **vector control**
+
+* Structures and options for simulating **pathogen transmission** among hosts. 
+
+The following sections describe various features of MBITES. Each section begins with a brief summary of the natural history, a description of the heuristic followed by implementation notes, relevant details, and a guide to the code.
+
+#### What is MASH
+
+**NOTE:** *The following section gives some background on the basic concepts and design principles of MASH. We recommend reading it at some point, but feel free to skip it if you want to get on with learning MBITES.* 
+
+MASH is a framework for simulating human health events and related phenomena (e.g. pathogen transmission by mosquito populations). MBITES is a flexible module that runs the adult mosquito component of MASH. The terms *component* and *module* and *flexible* all have a specific meaning in MASH. The following section explains the terminology used in MBITES and MASH and the rationale for developing it.
+
+MASH is a simulation modeling framework, not a simulation model. To put it another way, the problem MASH was trying to solve was how to build a plug-and-play simulator for human health, not how to simulate human health. The core design problem for MASH was how to build an API (application program interface) defining how various components of a model interact. The philosophy of MASH was that every component should have at least two modules: one would be highly realistic and simulate the relevant phenomena in exquisite detail. Another would be dead simple. 
+
+The first disease to be implemented within MASH was malaria. The collection of all mechanistic models of human malaria have the same basic structural parts: a model of human malaria infection and immunity; a model of mosquito populations, including infection and development of malaria parasites; and some model of immature mosquito  populations in their aquatic habitats. In MASH, each one of these parts is called a COMPONENT. Four distinct biological processes determine how these three components interact: malaria parasites can be passed from mosquitoes to infect humans when mosquitoes probe in anticipation of taking a blood meal; parasites infecting humans can be passed in the blood meal, infecting mosquitoes; adult mosquitoes lay eggs in aquatic habitats; and the eggs hatch, develop through four larval instars, then pupate and emerge as imago (the mature form) from the aquatic habitats to begin their lives as volant adults. A structure allowing MASH components to interact is called a QUEUE. In its most general form, transmission describes the events when pathogens are transmitted, either from mosquitoes to humans or *vice versa*, but it also the dispersion of pathogens, the distances traveled by the pathogens between infection events. The LANDSCAPE is the part of the model that determines how dispersion is defined. 
+
+To be truly plug-and-play, it must be possible to run a component in standalone mode, by passing the inputs from other components trivially as parameters. This is what we have done here. 
+
+MBITES is the exquisitely detailed module for simulating the blood feeding behavior of adult mosquito populations. This document also describes how MBITES is coupled to the component describing the aquatic ecology. We describe how MBITES can be used to simulate pathogen transmission among populations of humans and mosquitoes; here we describe how that would happen without actually simulating transmission. This document describes how to run MBITES in standalone mode. 
+
+The structure of MASH is summarized in the following way:
+
+* A population of **HUMANS** and their health states and health events is the core of MASH. 
+
+* A **COMPONENT** is a basic functional part of any human health model. 
+
+* A **LANDSCAPE** defines the spatial scaffold for interactions. 
+
+* A **QUEUE** is a component level structure allowing two distinct components to interact. 
+
+* A **Module** is a specific set of algorithms that instantiates a component. A module could be flexible in the sense that the same process could be represented by one of many different functional forms. 
+
+* A **Synthetic Population** is the fully configured set of initial conditions for the populations in a model.  
+
+MASH is a framework for building models that is modular and flexible. This gives rise to a complementary vocaublary to describe the models that arise. Borrowing from Linnaeus, we consider MBITES to be a CLASS of models:
+
+* Two models belong to the same ORDER if they belong to the same CLASS and share the same state space. 
+
+* Two models belong to the same FAMILY if they belong to the same ORDER and use the same functional forms.
+
+* Two models belong to the same GENUS if they belong to the same FAMILY and share the same parameters.
+
+* Two models belong to the same SPECIES if they belong to the same GENUS and share the same synthetic population.
+
+* An individual model is an individual member of a SPECIES defined by its random number seed. 
+
+Species-level similarity is the default meaning of **model** in MASH. Without some explicit way of mapping the state space, it is difficult to compare two models belonging to a different order. This hierarchical nomenclature system makes it possible to talk about models defined by some other level of similarity (e.g. model families).
+
+#### What do I do with so many parameters
+
+MASH and MBITES were designed as tools that could be used for all sorts of analysis, including cross-model validation to evaluate the robustness of conclusions made by another models. For this reason, it was necessary to develop an individual-based model that was capable of virtually unlimited capacity. 
+
+Individual-based models have been criticized for many reasons. Most of these critiques are valid. William of Occam basically got it right, at least when it comes to problems related to statistical inference. Among many possible explanations, the simplest ones tend to be correct. With many parameters, you should be able to fit anything, and therefore know nothing! (There is even an old saying, attributed to various people: *Give me four parameters and I'll draw an elephant. Give me five and I'll make it wag it's tail.*)  While this is a valid criticism of fitting individual based models to data, other problems arise when considering the future.
+
+The past and the future are fundamentally different: there was one past, but there are many possible futures.  If the only thing you would ever wanted to do was predict the future, then your best bet would probably be to take the parsimonious model and run it forward. You probably won't get a better prediction, on average, from any single model. There are, however, other things you want to do, and other ways you migh use models to get a better prediction. For example, you might want to evaluate a policy, and here's where the old paradigm breaks down. Are the conclusions of your model robust to all the sources of heterogeneity the parsimonious model averaged over?
+
+Consider a thought experiment. What if you could wave a wand and invent a model with an arbitrary degree of heterogeneity blindly fixing most of the parameters but leaving as many free parameters for fitting as you would have in an abstract and parametrically simple model. The rules of evidence would suggest the fits of these  models would be directly comparable. What gives any *a priori* weight to any particular model? There isn't any simple anser to that question, but none of the answers point automatically to the class of abstract and parametrically simple models most often used. A problem for science is that there are so many heterogeneous models, and they are very hard to specify. 
+
+The problem of evaluating the robustness of some policy boils down to figuring out some way of waving a wand and fitting the very large set of heterogeneous models to the data in some systematic way, and then turning each model around to predict the future. The prediction made from the ensemble of all those fitted heterogeneous models should be more robust than the simple one. MBITES is an honest stab at doing *that*. 
+
+How far can we get if we just ignore heterogeneity? The cheeky answer is that we can do everything and be assured we will never find a better answer, so long as we never go looking for one. If we're honest about the peformance of predictive models for infectious diseases, we'd have to admit we haven't been very successful. When the problem comes to giving advice, we don't know if we're doing any better.  Obviously, we don't have a sound basis for ignoring heterogeneity, however inconvenient it might be. That is, in part, why MBITES exists. 
+
+Since we can't wave our wands, we need a way of dealing with the daunting problem of heterogeneity, besides the easily accepted answer; ignore it. MBITES has taken a different approach. The flexibility built into MBITES makes it comparatively easy to configure a landscape with any degree of heterogeneity, but it creates a new problem of how to systematically explore heterogeneity.  Our approach is to start from the same point as others -- we begin by anchoring the simulation model to the case that most closely resembles the homogenous approximation, and then we steadily add heterogeneity. There is a logical progression: 
+
+* If it's not necessary, turn it off. 
+
+* If it's on, set everything to a constant value. 
+
+* If a constant value won't do, try a line. 
+
+* If the value isn't the same everywhere, see have far you can get with the simplest way of incorporating noise.
+
+* If there's a pattern, base it on a case study.  
+
+* Insofar as it is possible, anchor the results of complex models to theory.
+
+To put it another way, we honor William of Occam by preferring simple answers, in part, so we can say whether something we've observed can be explained with a simpler model. Our question, though, is not to explain the past but to know with some confidence that we are making robust policy recommendtions for the future. With these principles in mind, we've developed a set of functions and utilities to set up landscapes that roughly follow these rules. 
+
+# Getting Started 
+
+MBITES is a framework developed for individual-based simulation of adult female mosquito behavior. It was built for the purpose of understanding mosquito-borne pathogen dynamics and control, but it was developed around the flight bout as the irreducible or ``atomic'' unit of mosquito behavior. The name says what it is: a **M**osquito flight **B**out-based and **I**ndividual-based **T**ransmission **E**cology **S**imulator (MBITES). 
+
+MBITES is a platform for building models: it does not describe a particular model. MBITES was developed with **MODULARITY** and **FLEXIBILITY**. For our purposes, modularity describes a framework for building in functionality, while flexibility describes the options that can be configured within a module. (The distinction is useful but somewhat arbitrary, as described above, so it might not be so important for most end users.) With modularity and flexibility, there are many different options availble for building spatially explicit and highly realistic individual-based simulation models of mosquito behavior. Through MASH, these are linked to an equally large number of options for building models of human behavior and pathogen transmission dynamics. The built-in modularity and flexibility makes it possible to expand the number of options, if the end user so desires. To build a model and simulate mosquito populations, it is necessary to configure the functions and parameters so that it looks like the specific mosquito species in its ecological context. This requires learning something about mosquitoes as well as something about models.
+
+#### The Natural History of Mosquitoes :: A Very Brief Introduction
+
+MBITES is highly *mimetic* and *realistic*. It was designed to imitate real mosquito behavior, such that there is a close correspondence between what mosquitoes do in the model and descriptions taken from peer-reviewed literature. Female mosquito behavioral bouts are based on a basic description of adult female behavior. A newly emerged female mosquito imago is pre-gonotrophic; she must mate before she can produce eggs. Maturation could also require one or two blood or sugar meals. Sperm is stored in an organ called a spermatheca, so mating only needs to happen once, but depending on the species, it could occur repeatedly throughout life.  
+
+After maturation, an adult female begins a cycle of blood feeding and egg laying. After a search to find a potential blood meal host, she approaches a host in an attempt to blood feed. After the bloodmeal, the mosquito typically rests to shed some of the water weight. Blood is provisioned into eggs that require some time to mature. Once mature, she initiates a search to find aquatic habitat and then lays eggs. Sugar feeding can provide energy for flight, metabolism, and other activities.
+
+Each activity -- mating, searching, blood feeding, egg laying, or sugar feeding -- requires one or more flight bouts. In the model, the intent in each one of these flight bouts follows a logical sequence, albeit probabilistically, through eight distinct *behavioral* states (see below). MBITES represents each kind of female mosquito behavioral flight bout explicitly, and the structure of each bout type is different, and it is possible to describe what happens during each bout in virtually unlimited detail. 
+ 
+The progression through these states is partly determined by variables describing a mosquito's state (e.g. eggs must be mature before egg-laying occurs), but features of the mosquito biology constrain the sequence, and progression through the states can be somewhat random and dependent on available cues and resources. Transition probabilities for behavioral states can be configured to match site-specific features or species-specific behaviors. MBITES can also simulate male mosquitoes, which mate and blood feed.  
+
+What is also important for MBITES is that all of these activities must occur where resources are available on a landscape. The landscape is a formal structure in MBITES, a set of points where resources are available. MBITES is a simulation framework, but it has utilities for visualizing and analyzing the resulting population dynamic processes.
+
+#### A Starting Point
+
+The philosophy of MBITES is that the process of building a simulation is as important as the output of the simulation. It's important for the MBITES jockey (i.e. any user) to understand the to understand how a model will be used and its limitations. Just because a model looks to us like reality doesn't mean it is. We encourage all MBITES users to cultivate a healthy skepticism about any claim made. In fact, MBITES was developed to destroy dogma as much as to mimic reality.  Please use it with caution. 
+
+We recognize at least two broadly different kinds of activities: academic projects and policy analysis. Academic projects are designed to build on the knowledge base, while policy analysis is generally designed to address a specific question about what to do that has arisn in some  particular context. Regardless of the purpose, MBITES is a complex bit of software. The point of this user's guide is to help the MBITES jockey understand how to use it. 
+
+To learn MBITES, a simulation called **DEMO**; has been configured to illustrate the features of the model. DEMO is run as the first option within the MBITES-GUI. The MBITES-GUI also has some built-in functionality to set up a simulation model; by default, it starts with a set of configured options for **BASEMOD**, a model that makes the simplest assumptions for each section. 
+
+This document is structured around DEMO and BASEMOD. The following sub-sections describe the way MBITES represents a mosquito and some notes about the basic structure of a **bout**. The next section describes the spatial template for simulation, called the **LANDSCAPE**. In the sections that follow, there is a brief discussion of the natural history of a phenomenon as a process, and a discussion of the algorithm for simulating that process. This is followed by a discussion of the built-in options for each algorithm, including the way it was implemented in DEMO; and BASEMOD. Implementation notes sometimes follow, which take a deeper dive into the code, but code documentation is (by and large) built into the code. In some cases, the options discuss planned modifications to MBITES that have not been fully implemented in the current version.  
+
+#### Mosquitoes in Silico 
+
+The main tasks for MBITES were 1) how to represent a mosquito in a simulation model that could accurately mimic what mosquitoes do in real life; 2) how to link this code to a generalized pathogen simulation framework; and 3) how to build bridging models to elucidate the underlying processes relevant for pathogen transmission and mosquito fitness. To do all this in a computer, a mosquito must be abstracted down to a set of  of variables representing its state, including quantitative or categorial variables that track where a mosquito is, its physiological status, behavioral intent, and etc. The list of built-in variables that could be tracked by MBITES is the following: 
+
+* A unique identifier for each mosquito, used for bookkeeping, pedigrees and inheritance.
+
+* Behavioral state.
+    - Does the mosquito intend to blood feed [B], lay eggs [O], mate [M], or sugar feed [S].
+    - Is the mosquito making an attempt, or is it searching for resources? NOTE: A single letter name usually refers to the attempt, and two letters indicate a search (e.g. Ms = searching for a mating site, and Ss is searching for sugar). In MBDETES, we also use the single letters for blood feeding search [F=Bs] and the egg laying search [L=Os].
+    - While not explicitly recognized as states, there is a significant resting period that follows the blood meal, called the post-prandial resting period.  Estivation can also occur in the model, but it is (usually) a seasonally induced, but very long resting period.   
+
+* Location. 
+
+    - Where is the mosquito in space? (i.e. at what site) 
+    - Resting microsite. On what kind of surface  is the mosquito resting (e.g. inside wall)?
+    
+* Variables describing a mosquito's condition or status
+    - Energy reserve levels. How much sugar does a mosquito have in reserve? 
+    - Physical condition. How much physical damage has a mosquito sustained? 
+    - Physiological condition. How much physiological damage has a mosquito sustained?
+    - Infectious status. Is a mosquito infected or infectious with a pathogen? 
+    - Sexual maturity. Has a mosquito mated? 
+
+* Variables describing a mosquito's age
+    - Chronological age. How old is a mosquito? MBITES keeps track of the birth moment. 
+    - Reproductive age. How many egg batches has a mosquito laid (i.e. parity)? 
+
+* Type
+    - What is a mosquito's genotype / phenotype for insecticide resistance, genetic modification, and for dealing with evolutionary problems?
+    - What is the type of the male mosquitoes with which a female has mated?
+
+These states change as a mosquito ages and goes through its activities. 
+
+#### Behavioral States and Flight Bouts
+
+A crude description of a mosquito's activities would be that a mosquito's life is a sequence of flight bouts, and that each bout is an intentive flights to accomplish something. The behavioral states and state transitions are the key to understanding MBITES. A mosquito's intent determines what a mosquito does, and the intent changes as a mosquito accomplishes one thing and then moves to the next. MBITES mimics these intentive flight bouts, tracking a  mosquito from its launch to initiate one bout up to the point when it launches itself to initiate the next bout. Conceptually, the structure of a bout (generically denoted **[X]**) is:  **Launch** - **Try** - **Land**  - **Rest**}. MBITES has  eight types of behavioral bouts: 
+
+* [F] :: Blood feeding search  to find a place where blood feeding can occur
+
+* [B] :: Blood feeding attempt to approach a host for a blood meal and to blood feed
+
+* [L] :: Egg laying habitat search to find a place where egg laying can occur
+
+* [O] :: Attempt to lay eggs / oviposit 
+
+* [N] :: Sugar feeding search bout (Optional)
+
+* [S] :: Sugar feeding attempt (Optional)
+
+* [M] :: Mating search bout (Optional)
+
+* [W] :: Mating attempt bout (Optional)
+
+The final state of a mosquito is [D], or ``dead." The **Try** part (i.e. the intentive flight) of each bout type  is different -- what happens between launching and landing is elaborated upon in each bout. The intentive flight is assumed to be of comparatively short duration and (if successful) to lead to a state transition. 
+
+\subsection{Landing, Resting, and Survival}
+
+Aside from all the specific activities that occur during each bout, each bout executes a set of algorithms to simulate a set of common tasks to simulate changes to a mosquito's behavioral, physical and physiological states: 
+
+* During a flight bout, a mosquito might change location. If a mosquito is searching for resources, the function **rMove** is called to determine where a mosquito ended up (see Search and Dispersion, below).
+
+* Determine the microsite where a mosquito landed. After each bout, a mosquito lands at a particular microsite in each place on the landscape, determined by the site type and called by the function **restingSpot**.
+
+* Determine energy usage. The mosquito's energetic state is then updated, with **energetics**, which calls another function to determine whether the energy has been depleted to a point that the mosquito requires sugar. If so, then **starved=TRUE** is set. (described in the Section *Energetics of Flight, Blood Feeding, and Sugar Feeding*, below) 
+
+* Determine whether a mosquito survived the flight and the subsequent resting period. Even if a mosquito encountered the specific hazards associated with the bout, other mortality can occur as a result of flight stress with the function **surviveFlight**. There is also the possibility of predation or other site specific hazards while resting, called with the function **surviveResting**. (described in the Section *Survival*, below)
+
+* A function **updateState** is called to determine a mosquito's next behavioral state. A function called **oogenesis** is called to see whether a mosquito is gravid. The functions above set various switches to determine if a mosquito is alive, starved, gravid, or randy. If alive, a mosquito will go in search of blood, but this can be superceded by another uone of these other urges. If a mosquito is starved (meaning it has determined there is a need to seek a sugar meal), it will go in search of sugar regardless. If it is gravid, it will tend to change state, though a function can be configured for refeeding by mosquitoes, even if they are gravid (see the blood feeding discussion, below).  
+
+* Finally, the resting period determines the waiting time to launch the next bout, depending on its new behavioral state. Here, two conditions are checked: one for mating, and the other for estivation. Mating is triggered by the time of day (if a mosquito is not starved), and estivation is triggered by the time of the year. If mating is triggered as a behavioral state, a mosquito's behavioral state is changed to [M]; or [W]. The waiting time is determined by a generic function **timing** that calls the function for that bout type (described in the Section  *Resting Times*, below).
+
+These events can be different for each flight bout, depending on where a mosquito rests and what happened during the previous bout. The details of these activities matter for some kinds of malaria control.  There are, of course, other hazards that can be encountered that collectively make up vector control. 
+
+Every mosquito event can be logged so it is possible to study mosquitoes using  **historyTrack**, which outputs a mosquito's state at the end of each bout. Output is formatted as a JSON file, and most of the analysis is done post-processing. 
+
+## Configuring MBITES Behavioral Options
+
+#### Search Bouts
+
+The outcome of any search bout is either death, success, or failure. 
+
+* A `success' is defined as surviving, arriving in a site, setting **searchNow=FALSE** so the mosquito's next bout would be an 'attempt,' and calling **restingSpot()**. Note that **restingSpot()** could also reset **searchNow=TRUE**. 
+
+* A `failure' is defined as surviving, arriving in a site, but leaving **searchNow=TRUE** so the mosquito's next bout would be an 'search,' and calling **restingSpot()**.
+
+* For each search bout, one parameter determines whether a mosquito survived the search flight, and a second parameter determines whether the mosquito was successful. 
+
+#### The Blood Feeding Attempt Bout
+
+#### The Ovipositing Attempt Bout
+
+#### The Sugar Feeding Bout 
+
+#### Timing
+
+#### The Blood Meal & Oogenesis
+
+* Blood meal size is scaled relative to *full*, so it is a number in the interval $[0,1]$. 
+
+* The maximum number of eggs per blood meal is $\nu$. (NOTE: the number of female eggs per female is $\nu/2$.) The default is $\nu = 20.$ 
+
+* 
+
+#### Flight Energetics
+
+#### Oviposition
+
+#### Survival 
+
+Each mosquito has a baseline probability of surviving, per bout, $p_{base}.$
+
+##### Senescence
+
+Senescence is defined as age-specific increase in mortality. In MBITES, senescence is implemented as a reduced probability of survival, per bout. That is, if survival per bout at baseline is $p_{base}$, then with senescence, survival per bout is $p_{base} p_{Senesce}(A).$ The function is found in MBITES-Survival.R. 
+
+```{r}
+pSenesce = function(x,sns_a=0.085,sns_b=100){
+  (2+sns_b)/(1+sns_b) - exp(x*sns_a)/(sns_b+exp(x*sns_a))
+}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,30,length.out=100)
+plot(x, pSenesce(x),type = "l", col ="blue", 
+     xlab= "Age (days)", 
+     ylab = "Marginal Survival, per Bout", 
+     main = "Senescence")
+```
+
+##### Physical Damage (e.g. Wing Tattering)
+
+```{r, fig=TRUE}
+siggyUp=function(x,a=20,b=1.1){
+  (2+b^a)/(1+b^a) - exp((1-x)*a)/(b^a+exp((1-x)*a))
+}
+
+siggyDown=function(x,a=20,b=1.1){
+  (2+b^a)/(1+b^a) - exp(x*a)/(b^a+exp(x*a))
+}
+
+siggyUp=function(x,a=20,b=1.1){
+  (2+b)/(1+b) - exp((1-x)*a)/(b+exp((1-x)*a))
+}
+
+siggyDown=function(x,a=20,b=1.1){
+  (2+b)/(1+b) - exp(x*a)/(b+exp(x*a))
+}
+
+x=seq(0,1,length.out=100)
+plot(x, siggyUp(x),type = "l", col ="blue")
+lines(x, siggyDown(x, a=2, b=.4), lty =2, col = "red")
+lines(x, siggyDown(x),col="red")
+```
+
+
+
+##### Physiological Damage (e.g. Exposure to Insecticides)
+
+#### Pathogens 
+
+## Configuring MBITES Landscape Options 
+
+### Blood Feeding Sites
+
+* Choose
+    - Human
+    - Other Blood Host
+    - A Trap 
+    - FAIL
+    
+* Human 
+    - Approach, FAIL / DIE 
+    - Approach, Probe, FAIL / DIE
+    - Approach, Probe, Blood Feed
+
+* Other Blood Host
+    - Blood Feed
+    - FAIL / DIE
+    
+* Trap
+    - FAIL / DIE
+
+
+#### Egg Laying Sites & Aquatic Habitats 
+
+* Choose
+    - Habitat
+    - Ovitrap
+    - FAIL
+
+#### Sugar Sources
+
+* Choose
+    - Sugar Source
+    - ATSB
+    - FAIL
+
+#### Resting Spots
+
+* Simple [0]
+    - Stay
+    - Leave
+* Homestead [1]
+    - Rest on interior wall
+    - Rest on exterior wall 
+    - Rest on vegetation
+    - Frustrated landing attempt, retry
+    - Leave
+
+#### Mosquito dispersion during a search
+
+Kernel-based Weights
