@@ -68,7 +68,7 @@ Mosquito_Female$set(which = "public",name = "chooseHost",
 mbites_humanEncounter <- function(){
   if(runif(1) < 1 - MBITES:::Parameters$get_surviveH()){
     # does not survive to probe
-    private$state = "D"
+    private$alive = FALSE
   # survives to probe
   } else {
     if(runif(1) < MBITES:::Parameters$get_probeH()){
@@ -76,7 +76,7 @@ mbites_humanEncounter <- function(){
       self$probeHost() # PATHOGEN-XX.R (mosy -> host transmission)
       if(runif(1) < 1 - MBITES:::Parameters$get_surviveprobeH()){
         # does not survive to blood feed
-        private$state = "D"
+        private$alive = FALSE
       # survives to blood feed
       } else {
         if(runif(1) < MBITES:::Parameters$get_feedH()){
@@ -111,7 +111,7 @@ Mosquito_Female$set(which = "public",name = "humanEncounter",
 mbites_zooEncounter <- function(){
   if(runif(1) < 1-MBITES:::Parameters$get_surviveZ()){
     # does not survive to feed
-    private$state = "D"
+    private$alive = FALSE
   # survives to feed
   } else {
     if(runif(1) < MBITES:::Parameters$get_feedZ()){

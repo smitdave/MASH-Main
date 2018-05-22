@@ -46,17 +46,7 @@ PATHOGEN_Setup <- function(pathogen_model){
 
     # NULL pathogen model
     null = {
-      Mosquito_Female$set(which = "public",name = "probeHost",
-          value = probeHost_NULL, overwrite = TRUE
-      )
-
-      Mosquito_Female$set(which = "public",name = "feedHost",
-          value = feedHost_NULL, overwrite = TRUE
-      )
-
-      Mosquito_Female$set(which = "public",name = "pathogenDynamics",
-          value = pathogenDynamics_NULL, overwrite = TRUE
-      )
+      PathogenNull_SETUP()
     },
 
     {stop("invalid entry for 'pathogen_model'\n")}

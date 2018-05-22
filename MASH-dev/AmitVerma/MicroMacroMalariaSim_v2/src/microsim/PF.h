@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   PF.h
  * Author: amit
  *
@@ -23,9 +23,9 @@ private:
     unsigned P;
     unsigned G;
     unsigned iG[10] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    double pDdef  = 0;   
+    double pDdef  = 0;
     double pDlt   = 0;  
-    //double pKill  = 0; // #Book keeping variable. Decline in densities over what was expected. (Probably cumulative). Tells about the cumulative effects.   
+    //double pKill  = 0; // #Book keeping variable. Decline in densities over what was expected. (Probably cumulative). Tells about the cumulative effects.
     //double gKill  = 1; //#Proportional reduction, 1 means no effect
     //double iGkill[10] = {1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
 public:
@@ -45,4 +45,3 @@ private:
 };
 
 #endif	/* PF_H */
-

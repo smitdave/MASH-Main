@@ -115,7 +115,7 @@ mbites_surviveFlight <- function(){
   p = self$Senescence(p)
 
   if(runif(1) < 1-p){
-    private$state = "D"
+    private$alive = FALSE
   }
 }
 
@@ -279,9 +279,9 @@ Mosquito$set(which = "public",name = "pSenesce",
 #'  * This method is bound to \code{Mosquito$surviveHazards}
 #'
 mbites_surviveHazards <- function(){
-  if(private$state != "D"){
+  if(private$alive){
     if(runif(1) < private$site$get_haz()){
-      private$state = "D"
+      private$alive = FALSE
     }
   }
 }

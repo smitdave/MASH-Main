@@ -155,7 +155,8 @@ Mosquito$set(which = "public",name = "move",
 
 
 #################################################################
-# Resting
+# Timing, Energetics, Survival, Egg maturation, time-dependent events,
+# check for resources, and pathogen dynamics
 #################################################################
 
 #' MBITES: Update the Behavioral State at the End of a Bout for \code{\link{MosquitoFemale}}
@@ -172,16 +173,13 @@ Mosquito$set(which = "public",name = "move",
 #'
 mbites_updateState <- function(){
   # only do this if you are alive
-  if(private$state!="D"){
-
-    # sample time to next launch based on current state (before it is changed from energetics, survival, egg maturation, or reeding)
-    self$timing() # MBITES-Timing.R
+  if(private$alive){
 
     self$energetics()    # MBITES-Energetics.R
     self$survival()      # MBITES-Survival.R
 
     # check again for being alive because can be killed in survival; don't want zombie mosquitoes preforming actions
-    if(private$state!="D"){
+    if(private$alive){
 
       self$checkEggMaturation() # MBITES-Oogenesis.R
 
@@ -196,13 +194,16 @@ mbites_updateState <- function(){
         }
       }
 
-      # check time-dependent events
-      self$findSwarm()
-      self$checkEstivation()
-
       # if there are no resources of the required type present, set
       # search = TRUE
       self$checkForResources()
+
+      # sample time to next launch based on current state (before it is changed from energetics, survival, egg maturation, or reeding)
+      self$timing() # MBITES-Timing.R
+
+      # check time-dependent events
+      self$findSwarm()
+      self$checkEstivation()
 
       # call pathogen dynamics last so that EIP uses the tNext (time of next launch)
       # to increment its incubation period now. this ensures that at the start of a bout,
@@ -549,12 +550,12 @@ Mosquito$set(which = "public",name = "attempt_S",
 mbites_MBITES <- function(){
 
   # simulation fires while mosy is alive and has not overrun its simulation
-  while(private$tNext < MBITES:::Globals$get_tNow() & private$state != "D"){
+  while(private$tNext < MBITES:::Globals$get_tNow() & private$alive){
     self$oneBout()
   }
 
   # if mosy died then output its history and cleanup
-  if(private$state == "D"){
+  if(!private$alive){
     self$exit()
   }
 }

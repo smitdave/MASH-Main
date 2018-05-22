@@ -49,22 +49,22 @@ pathogenDynamics_NULL <- function(){
 }
 
 
-# ###############################################################################
-# # Mosquito methods for probeHost and feedHost
-# # normally, the functions below would go in the PATHOGEN-XX-XX.R file
+###############################################################################
+# Mosquito methods for probeHost and feedHost
+# normally, the functions below would go in the PATHOGEN-XX-XX.R file
 # #' @include MBITES-Mosquito.R
-# ###############################################################################
-#
-#
-#
-# Mosquito_Female$set(which = "public",name = "probeHost",
-#     value = probeHost_NULL, overwrite = TRUE
-# )
-#
-# Mosquito_Female$set(which = "public",name = "feedHost",
-#     value = feedHost_NULL, overwrite = TRUE
-# )
-#
-# Mosquito_Female$set(which = "public",name = "pathogenDynamics",
-#     value = pathogenDynamics_NULL, overwrite = TRUE
-# )
+###############################################################################
+
+PathogenNull_SETUP <- function(){
+  Mosquito_Female$set(which = "public",name = "probeHost",
+      value = probeHost_NULL, overwrite = TRUE
+  )
+
+  Mosquito_Female$set(which = "public",name = "feedHost",
+      value = feedHost_NULL, overwrite = TRUE
+  )
+
+  Mosquito_Female$set(which = "public",name = "pathogenDynamics",
+      value = pathogenDynamics_NULL, overwrite = TRUE
+  )
+}
