@@ -273,18 +273,92 @@ The outcome of any search bout is either death, success, or failure.
 
 #### Flight Energetics
 
+Each mosquito burns some of its energy reserves on each launch, which may incite the mosquito to enter a starved state where it will queue a sugar feeding bout.
+
+##### Queue Sugar Bout
+
+A mosquito may enter a starved state as a function of how much energy it has (eg; how much is in its fuel tank).
+
+```{r}
+pSugarBout <- function(x,S_sa=15,S_sb=5){
+  (2+S_sb)/(1+S_sb)-exp(S_sa*x)/(S_sb+exp(S_sa*x))
+}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,1,length.out=100)
+plot(x, pSugarBout(x),type = "l", col ="blue", 
+     xlab= "Energy", 
+     ylab = "Probability to enter starved state", 
+     main = "Starvation")
+```
+
 #### Oviposition
 
 #### Survival 
-
+ 
 Each mosquito has a baseline probability of surviving, per bout, $p_{base}.$
+
+##### Exhaustion
+
+Exhaustion is a multiplicative decrease in the probability of survival as a function of how much energy the mosquito has. That is, if survival per bout at baseline is $p_{base}$, then with exhaustion, survival per bout is $p_{base} p_{Exhaustion}(E).$ The function `mbites_pEnergySurvival` is found in MBITES-Survival.R
+
+```{r}
+pEnergySurvival <- function(x,S_a=20,S_b=10){
+  exp(S_a*x)/(S_b + exp(S_a*x))
+}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,1,length.out=100)
+plot(x, pEnergySurvival(x),type = "l", col ="blue", 
+     xlab= "Energy", 
+     ylab = "Marginal Survival", 
+     main = "Exhaustion")
+```
+
+##### Physical Damage (Wing Tattering)
+
+Tattering is a multiplicative decrease in the probability of survival as a function of how much physical damage the mosquito has accrued over its lifespan. That is, if survival per bout at baseline is $p_{base}$, then with phyiscal damage, survival per bout is $p_{base} p_{Physical\,Damage}(D).$ The function `mbites_pTatter` is found in MBITES-Survival.R
+
+```{r}
+pTatter <- function(x,ttr_a=15,ttr_b=500){
+  (2+ttr_b)/(1+ttr_b) - exp(x*ttr_a)/(ttr_b + exp(x*ttr_a))
+}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,1,length.out=100)
+plot(x, pTatter(x),type = "l", col ="blue", 
+     xlab= "Physical Damage", 
+     ylab = "Marginal Survival, per Bout", 
+     main = "Physical Damage (Wing tattering)")
+```
+
+##### Chemical Damage (Insecticide)
+
+Chemical damage is a multiplicative decrease in the probability of survival as a function of how much chemical damage the mosquito has accrued over its lifespan. That is, if survival per bout at baseline is $p_{base}$, then with chemical damage, survival per bout is $p_{base} p_{Chemical\,Damage}(D).$ The function `mbites_pChem` is found in MBITES-Survival.R
+
+```{r}
+pChem <- function(x,chm_a=15,chm_b=500){
+  (2+chm_b)/(1+chm_b) - exp(x*chm_a)/(chm_b + exp(x*chm_a))
+}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,1,length.out=100)
+plot(x, pTatter(x),type = "l", col ="blue", 
+     xlab= "Chemical Damage", 
+     ylab = "Marginal Survival, per Bout", 
+     main = "Chemical Damage (insecticide)")
+```
 
 ##### Senescence
 
-Senescence is defined as age-specific increase in mortality. In MBITES, senescence is implemented as a reduced probability of survival, per bout. That is, if survival per bout at baseline is $p_{base}$, then with senescence, survival per bout is $p_{base} p_{Senesce}(A).$ The function is found in MBITES-Survival.R. 
+Senescence is defined as age-specific increase in mortality. In MBITES, senescence is implemented as a reduced probability of survival, per bout. That is, if survival per bout at baseline is $p_{base}$, then with senescence, survival per bout is $p_{base} p_{Senesce}(A).$ The function `mbites_pSenesce` is found in MBITES-Survival.R. 
 
 ```{r}
-pSenesce = function(x,sns_a=0.085,sns_b=100){
+pSenesce <- function(x,sns_a=0.085,sns_b=100){
   (2+sns_b)/(1+sns_b) - exp(x*sns_a)/(sns_b+exp(x*sns_a))
 }
 ```
@@ -299,7 +373,7 @@ plot(x, pSenesce(x),type = "l", col ="blue",
 
 ##### Physical Damage (e.g. Wing Tattering)
 
-```{r, fig=TRUE}
+```{r, fig=FALSE,echo=FALSE}
 siggyUp=function(x,a=20,b=1.1){
   (2+b^a)/(1+b^a) - exp((1-x)*a)/(b^a+exp((1-x)*a))
 }
