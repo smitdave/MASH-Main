@@ -46,7 +46,7 @@ NULL
 #'  * This method is bound to \code{Mosquito$restingSpot}
 #'
 mbites_restingSpot <- function(){
-  if(private$state != "D"){ # if mosquito not dead
+  if(private$alive){ # if mosquito not dead
     if(self$boutFailCheck()){ # check if they will just leave
       private$rspot = "l"
       private$search = TRUE

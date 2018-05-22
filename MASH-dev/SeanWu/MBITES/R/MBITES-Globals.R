@@ -216,6 +216,38 @@ reset_MBITES_Globals <- function(directory,runID){
   invisible(gc())
 }
 
+#' MBITES Globals: Hard Reset
+#'
+#' If there is a severe error, preform a hard reset (erase all tiles, reset all world-state globals, and clear logging connections).
+#' This can be accessed by users via \code{\link{hardreset}}
+#'    * This method is bound to \code{MBITES_Globals$hardreset}
+#'
+hardreset_MBITES_Globals <- function(){
+
+  # world state globals
+  private$tNow = 0L
+
+  # mosquito globals
+  private$mosquito_id = 0L
+  if(!is.null(private$mosquito_f_out)){
+   close(private$mosquito_f_out)
+  }
+  if(!is.null(private$mosquito_m_out)){
+   close(private$mosquito_m_out)
+  }
+
+  # human globals
+  private$human_id = 0L
+  if(!is.null(private$human_out)){
+   close(private$human_out)
+  }
+
+  # tile globals
+  private$tile_id = 0L
+  private$tiles = list()
+
+}
+
 # set methods
 MBITES_Globals$set(which = "public",name = "set_output",
           value = set_output_MBITES_Globals, overwrite = TRUE
@@ -235,6 +267,13 @@ set_output <- function(directory,runID){
 #' @export
 reset <- function(directory,runID){
   MBITES:::Globals$reset(directory,runID)
+}
+
+#' user-facing hard reset function
+#' @export
+hardreset <- function(){
+  cat("after running hard-reset remember to use initialization functions again and use 'set_output' to create output connections\n")
+  MBITES:::Globals$hardreset()
 }
 
 
