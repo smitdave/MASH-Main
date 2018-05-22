@@ -18,7 +18,7 @@ c = 0.15   # Proportion of mosquitoes infected after biting infectious human
 n = 12     # Time for sporogonic cycle
 
 # Define forest-specific parameters
-a_f = 0.4   # Human blood feeding rate in forest
+a_f = 0.88   # Human blood feeding rate in forest
 g_f = 0.1   # Per capita death rate of mosquitoes in forest
 H_f = 2000  # Human population (density?) in forest
 X_f = 0     # Number of infected forest-goers
@@ -50,7 +50,7 @@ Y_f0 = Y_f0 * V_f
 Y_v0 = Y_v0 * V_v
 
 # Set time scale
-times = 0:3000
+times = 0:10000
 
 require(deSolve)
 FM.ode = function(t,y,parms){with(as.list(c(y,parms)),{
