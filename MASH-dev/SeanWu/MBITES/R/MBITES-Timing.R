@@ -42,7 +42,7 @@ NULL
 mbites_timing <- function(){
 
   # sample time to next launch, conditional on search and behavioral state
-  if(private$searchNow){
+  if(private$search){
     switch(private$state, # time i spent in these search bouts
       B = {private$tNext = MBITES:::Parameters$ttEvent$BoutBs(private$tNow)},
       O = {private$tNext = MBITES:::Parameters$ttEvent$BoutOs(private$tNow)},

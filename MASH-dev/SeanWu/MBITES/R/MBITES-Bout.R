@@ -175,9 +175,6 @@ mbites_updateState <- function(){
   # only do this if you are alive
   if(private$alive){
 
-    # sample time to next launch based on current state (before it is changed from energetics, survival, egg maturation, or reeding)
-    self$timing() # MBITES-Timing.R
-
     self$energetics()    # MBITES-Energetics.R
     self$survival()      # MBITES-Survival.R
 
@@ -197,13 +194,16 @@ mbites_updateState <- function(){
         }
       }
 
-      # check time-dependent events
-      self$findSwarm()
-      self$checkEstivation()
-
       # if there are no resources of the required type present, set
       # search = TRUE
       self$checkForResources()
+
+      # sample time to next launch based on current state (before it is changed from energetics, survival, egg maturation, or reeding)
+      self$timing() # MBITES-Timing.R
+
+      # check time-dependent events
+      self$findSwarm()
+      self$checkEstivation()
 
       # call pathogen dynamics last so that EIP uses the tNext (time of next launch)
       # to increment its incubation period now. this ensures that at the start of a bout,

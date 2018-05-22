@@ -278,6 +278,90 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  ) # end private members
 ) # end class definition
 
+# ###############################################################################
+# # Female Mosquito Detailed BloodFeeding Logging
+# ###############################################################################
+#
+# #' track probing
+# trackProbe_Mosquito_Female <- function(){
+#   # check we have not overran vector
+#   lVec = length(private$feedTime)
+#   if(private$nFeed > lVec){
+#     private$feedTime = c(private$feedTime,numeric(lVec))
+#     private$hostHist = c(private$hostHist,integer(lVec))
+#     private$probeAndFeed = c(private$probeAndFeed,logical(lVec))
+#   }
+#
+#   private$feedTime[private$nFeed] = private$tNow
+#   private$hostHist[private$nFeed] = private$hostID
+#
+#   private$nFeed = private$nFeed + 1L
+# }
+#
+# #' track feeding
+# trackFeed_Mosquito_Female <- function(){
+#   private$probeAndFeed[private$nFeed] = TRUE
+# }
+#
+# # need to overwrite default exit function
+# TrackFeeding_mbites_exit <- function(force = FALSE){
+#   if(!private$alive | force){
+#     # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
+#     cat(jsonlite::toJSON(x = list(
+#             # basic history
+#             id = private$id,
+#             tile = private$tileID,
+#             time = private$timeHist[1:private$nEvent],
+#             sites = private$siteHist[1:private$nEvent],
+#             search = private$searchHist[1:private$nEvent],
+#             behavior = private$stateHist[1:private$nEvent],
+#             # blood feeding history
+#             bloodHosts = private$hostHist[1:private$nFeed],
+#             timeFeed = private$feedTime[1:private$nFeed],
+#             probeAndFeed = private$probeAndFeed[1:private$nFeed]
+#             # write out
+#         ), pretty = TRUE),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
+#     # remove this mosquito from the hash table
+#     MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
+#   }
+# }
+#
+# #' detailed logging of blood feeding events
+# TrackFeeding_Mosquito_Female <- function(){
+#
+#   # private fields for logging events
+#   Mosquito_Female$set(which = "private",name = "nFeed",
+#             value = 1L, overwrite = TRUE
+#   )
+#
+#   Mosquito_Female$set(which = "private",name = "feedTime",
+#             value = numeric(10), overwrite = TRUE
+#   )
+#
+#   Mosquito_Female$set(which = "private",name = "hostHist",
+#             value = integer(10), overwrite = TRUE
+#   )
+#
+#   Mosquito_Female$set(which = "private",name = "probeAndFeed",
+#             value = logical(10), overwrite = TRUE
+#   )
+#
+#   # public method for tracking
+#   Mosquito_Female$set(which = "public",name = "trackProbe",
+#             value = trackProbe_Mosquito_Female, overwrite = TRUE
+#   )
+#
+#   Mosquito_Female$set(which = "public",name = "trackFeed",
+#             value = trackFeed_Mosquito_Female, overwrite = TRUE
+#   )
+#
+#   Mosquito_Female$set(which = "public",name = "exit",
+#             value = TrackFeeding_mbites_exit, overwrite = TRUE
+#   )
+#
+#   # overwrite
+# }
+
 
 ###############################################################################
 # Male Mosquito
