@@ -257,6 +257,24 @@ The outcome of any search bout is either death, success, or failure.
 
 #### The Blood Feeding Attempt Bout
 
+Post-prandial resting mortality.
+
+Incremental mortality as a function of being laden during the post-prandial flight $\frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}}$.
+
+```{r}
+pPPRFlight <- function(x,PPR_a=5,PPR_b=1e3){
+  exp(PPR_a*x)/(PPR_b + exp(PPR_a*x))
+}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,1,length.out=100)
+plot(x, pPPRFlight(x),type = "l", col ="blue", 
+     xlab= "Size of blood meal", 
+     ylab = "Mortality",
+     main = "PPR Mortality")
+```
+
 #### The Ovipositing Attempt Bout
 
 #### The Sugar Feeding Bout 
@@ -270,6 +288,22 @@ The outcome of any search bout is either death, success, or failure.
 * The maximum number of eggs per blood meal is $\nu$. (NOTE: the number of female eggs per female is $\nu/2$.) The default is $\nu = 20.$ 
 
 * 
+
+Oogenesis model 1 has the option to include refeeding behavior. This causes the mosquito to abort an oviposition bout and instead start a blood feeding bout. Probability to refeed is given as ...
+
+```{r}
+pReFeed <- function(x,rf_a=15,rf_b=5){
+  (2+rf_b)/(1+rf_b) - exp(rf_a*x)/(rf_b + exp(rf_a*x))
+}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,1,length.out=100)
+plot(x, pReFeed(x),type = "l", col ="blue", 
+     xlab= "Size of blood meal", 
+     ylab = "Probability to refeed",
+     main = "Refeeding")
+```
 
 #### Flight Energetics
 
