@@ -112,7 +112,7 @@ Mosquito$set(which = "public",name = "pPPRFlight",
 mbites_Overfeeding <- function(){
   # Overfeeding mortality
   if(runif(1) < self$pOverFeed()){
-    private$state = 'D'
+    private$alive = FALSE
   }
 }
 
