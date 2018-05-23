@@ -13,4 +13,5 @@ pointsPoisson(n, owin)
 }
 \description{
 This function is a low-level utility which calls \code{\link[spatstat]{rpoispp}} to generate a realization of a homogeneous Poisson point process.
+From: \url{https://github.com/TAlexPerkins/PlosCompBio_2013}
 }

@@ -22,7 +22,7 @@ set_parameters_MBITES_Parameters(defaultState_F = "B", defaultState_M = "S",
   PPR_b = 1000, S_a = 20, S_b = 10, ttsz_p = 0.5, ttsz_a = 5,
   ttsz_b = 95, ttr_a = 15, ttr_b = 500, chm_a = 15, chm_b = 500,
   sns_a = 0.085, sns_b = 100, bm_a = 7.5, bm_b = 2.5, of_a = 5,
-  of_b = 5000, bloodPerEgg = 0.05, bs_m = 30, bs_sd = 5,
+  of_b = 5000, bloodPerEgg = 0.05, bs_m = 50, bs_sd = 5,
   maxBatch = 60, emt_m = 3, emt_sd = 1, rf_a = 60, rf_b = 5000)
 }
 \arguments{

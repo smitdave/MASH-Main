@@ -17,4 +17,5 @@ pointsClustered(n, meanParents = 10, clusteredness = 0.25, owin)
 }
 \description{
 This function is a low-level utility which calls \code{\link[spatstat]{rMatClust}} to generate a realization of a homogeneous Matérn cluster process.
+From: \url{https://github.com/TAlexPerkins/PlosCompBio_2013}
 }
