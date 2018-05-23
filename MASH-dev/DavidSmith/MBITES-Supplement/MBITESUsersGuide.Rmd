@@ -352,7 +352,6 @@ plot(x, pSenesce(x),type = "l", col ="blue",
 
 
 ### The Bouts
-
 Each bout has the following structure: 
 
 * Check and Update Current Time
@@ -372,7 +371,6 @@ Each bout has the following structure:
     - Resting Period: **timing()** 
     - Pathogen Dynamics
     
-
 #### Search Bouts
 
 Search bouts are all similar. The outcome of any search bout is either death, success, or failure. 
@@ -387,6 +385,11 @@ Search bouts are all similar. The outcome of any search bout is either death, su
 
 **OVERVIEW** The following describes the structure of the blood feeding attempt:
 
+* For each search bout, one parameter determines whether a mosquito survived the search flight, and a second parameter determines whether the mosquito was successful. 
+
+#### The Blood Feeding Attempt Bout
+
+**OVERVIEW** The following describes the structure of the blood feeding attempt: 
 * Choose
     - Human
     - Other Blood Host
@@ -405,7 +408,6 @@ Search bouts are all similar. The outcome of any search bout is either death, su
 * Trap
     - FAIL / DIE
     
-
 Incremental mortality as a function of being laden during the post-prandial flight $\frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}}$.
 
 #### The Ovipositing Attempt Bout
@@ -425,6 +427,7 @@ Incremental mortality as a function of being laden during the post-prandial flig
 
 **OVERVIEW**
 
+**OVERVIEW**
 * Choose
     - Sugar Source
     - ATSB
