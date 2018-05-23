@@ -166,7 +166,7 @@ mbites_trackHistory <- function(){
   # add to history
   private$timeHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
   private$siteHist[private$nEvent] = private$site$get_id()
-  private$searchHist[private$nEvent] = private$search
+  private$searchHist[private$nEvent] = private$searchNow
   private$stateHist[private$nEvent] = private$state
 
 }
