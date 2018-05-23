@@ -21,7 +21,7 @@
 #' should be disabled by selecting \code{\link{mbites_checkRefeed_null}} as the refeed function.
 #' Oogenesis occurs during the blood meal, see \code{\link{MBITES-BloodMeal}}.
 #'
-#' @section Oogenesis Model 1:
+#' @section Oogenesis Model 1 (Enter gravid state after egg maturation time has passed):
 #'
 #' In the first model (\code{\link{mbites_oogenesis1}}), egg batch size is proportional to blood
 #' meal size, the egg batch incubation period is equal to the
@@ -29,7 +29,7 @@
 #' with some probability (depending on egg batch size) with some
 #' probability.
 #'
-#' @section Oogenesis Model 2:
+#' @section Oogenesis Model 2 (Enter gravid state after egg provision is fulfilled):
 #'
 #' In the second model (\code{\link{mbites_oogenesis2}}), a batch of eggs (of some size) commits to
 #' development at the first bloodmeal after hatching or laying.
