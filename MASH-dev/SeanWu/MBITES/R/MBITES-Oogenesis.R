@@ -66,6 +66,7 @@ mbites_checkEggMaturation <- function(){
   }
 }
 
+# set methods
 Mosquito_Female$set(which = "public",name = "checkEggMaturation",
           value = mbites_checkEggMaturation, overwrite = TRUE
 )
@@ -103,13 +104,15 @@ mbites_checkRefeed_null <- function(){
 
 #' MBITES: Probability of Refeeding
 #'
-#' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf.b}{1+rf.b}-\frac{e^{rf.a\times bmSize}}{rf.b+e^{rf.a\times bmSize}} }
+#' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf_{b}}{1+rf_{b}}-\frac{e^{rf_{a}\times \frac{batch}{batch_{max}}}}{rf_{b}+e^{rf_{a}\times \frac{batch}{batch_{max}}}} }
+#' This models mosquito propensity to take more blood if the egg batch is too small.
 #'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
 #'
 mbites_pReFeed <- function(){
   rf_a = MBITES:::Parameters$get_rf_a()
   rf_b = MBITES:::Parameters$get_rf_b()
-  (2+rf_b)/(1+rf_b) - exp(rf_a*private$bmSize)/(rf_b + exp(rf_a*private$bmSize))
+  batchP = private$batch / MBITES:::Parameters$get_maxBatch()
+  (2+rf_b)/(1+rf_b) - exp(rf_a*batchP)/(rf_b + exp(rf_a*batchP))
 }
 
 #' MBITES: Null Probability of Refeeding
@@ -128,12 +131,16 @@ mbites_pReFeed_null <- function(){
 
 #' @rdname MBITES-Oogenesis
 mbites_oogenesis1 <- function(){
-  # dont make a new batch if i am carrying around eggs
-  if(private$batch <= 0){
-    private$batch = self$rBatchSize()
-    private$eggT = private$tNow + self$rEggMaturationTime()
+  if(private$alive){
+
+    # dont make a new batch if i am carrying around eggs
+    if(private$batch <= 0){
+      private$batch = self$rBatchSize()
+      private$eggT = private$tNow + self$rEggMaturationTime()
+    }
+    private$bmSize = 0
+
   }
-  private$bmSize = 0
 }
 
 #' MBITES: Normally-distributed Egg Maturation Time
@@ -161,19 +168,23 @@ mbites_rEggMaturationTimeOff <- function(){
 
 #' @rdname MBITES-Oogenesis
 mbites_oogenesis2 <- function(){
-  # dont make a new batch if i am carrying around eggs
-  if(private$batch <= 0){
-    private$batch = self$rBatchSize()
-    private$eggP = MBITES:::Parameters$get_bloodPerEgg()*private$batch
-  }
-  # egg provision: after we've fed enough then mosquito is gravid
-  private$eggP = private$eggP - private$bmSize
-  # if the egg provision is fulfilled we can go ahead and get ready for oviposition
-  if(private$eggP <= 0){
-    private$eggT = 0
-    private$gravid = TRUE # now mosquito is gravid
-    private$state = "O"
-    private$bmSize = max(0,private$bmSize - private$eggP)
+  if(private$alive){
+
+    # dont make a new batch if i am carrying around eggs
+    if(private$batch <= 0){
+      private$batch = self$rBatchSize()
+      private$eggP = MBITES:::Parameters$get_bloodPerEgg()*private$batch
+    }
+    # egg provision: after we've fed enough then mosquito is gravid
+    private$eggP = private$eggP - private$bmSize
+    # if the egg provision is fulfilled we can go ahead and get ready for oviposition
+    if(private$eggP <= 0){
+      private$eggT = 0
+      private$gravid = TRUE # now mosquito is gravid
+      private$state = "O"
+      private$bmSize = max(0,private$bmSize - private$eggP)
+    }
+
   }
 }
 
@@ -187,7 +198,7 @@ mbites_oogenesis2 <- function(){
 #'  * This method is bound to \code{MosquitoFemale$rBatchSize}.
 #'
 mbites_rBatchSizeNorm <- function(){
-  ceiling(rnorm(1,MBITES:::Parameters$get_bs_m(),MBITES:::Parameters$get_bs_sd()))
+  min(ceiling(rnorm(1,MBITES:::Parameters$get_bs_m(),MBITES:::Parameters$get_bs_sd())),MBITES:::Parameters$get_maxBatch())
 }
 
 #' MBITES: Bloodmeal dependent Egg Batch Size

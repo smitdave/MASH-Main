@@ -9,6 +9,6 @@ mbites_pPPRFlight()
 \description{
 Incremental mortality as a function of being laden during the post-prandial flight \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
 \itemize{
-\item This method is bound to \code{Mosquito$pEnergySurvival}.
+\item This method is bound to \code{Mosquito_Female$pPPRFlight}.
 }
 }

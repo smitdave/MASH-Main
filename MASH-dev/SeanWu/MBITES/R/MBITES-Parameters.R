@@ -611,7 +611,7 @@ set_parameters_MBITES_Parameters <- function(
 
   # Oogenesis
   bloodPerEgg          = 0.05, # egg provision: how much blood does each egg need?
-  bs_m                 = 30, # mean of normally dist. egg batch
+  bs_m                 = 50, # mean of normally dist. egg batch
   bs_sd                = 5, # sd of normally dist. egg batch
   maxBatch             = 60, # max batch size
   emt_m                = 3, # mean of normally dist. maturation time

@@ -414,7 +414,7 @@ MBITES_Setup_Oogenesis <- function(oogenesis_model, eggMaturationTime, eggsize_m
     "1" = {
 
       # model
-      Mosquito_Female$set(which = "public",name = "oogenesis",
+      Mosquito_Female$set(which = "public",name = "Oogenesis",
                 value = mbites_oogenesis1, overwrite = TRUE
       )
 
@@ -450,7 +450,7 @@ MBITES_Setup_Oogenesis <- function(oogenesis_model, eggMaturationTime, eggsize_m
     ###########
     "2" = {
       # model
-      Mosquito_Female$set(which = "public",name = "oogenesis",
+      Mosquito_Female$set(which = "public",name = "Oogenesis",
                 value = mbites_oogenesis2, overwrite = TRUE
       )
 

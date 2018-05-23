@@ -49,16 +49,12 @@ mbites_BloodMeal <- function(){
   private$bloodfed = TRUE
 
   # overfeeding mortality and blood-derived energetics
-  self$Overfeeding()
+  self$Overfeeding() # MBITES-BloodMeal.R
   self$BloodEnergetics() # MBITES-Energetics.R
 
   # post-prandial rest (digestion)
-  private$tNow = MBITES:::Parameters$ttEvent$ppr(private$tNow)
-  if(runif(1) < self$pPPRFlight()){
-    private$alive = FALSE
-  } else {
-    self$oogenesis() # MBITES-Oogenesis.R
-  }
+  self$PPRFlight() # MBITES-BloodMeal.R
+  self$Oogenesis() # MBITES-Oogenesis.R
 }
 
 #' MBITES: Draw Bloodmeal Size
@@ -87,7 +83,7 @@ Mosquito_Female$set(which = "public",name = "rBloodMealSize",
 #' MBITES: Probability of Death due to the Blood Meal during the Post Prandial Flight
 #'
 #' Incremental mortality as a function of being laden during the post-prandial flight \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
-#'  * This method is bound to \code{Mosquito$pEnergySurvival}.
+#'  * This method is bound to \code{Mosquito_Female$pPPRFlight}.
 #'
 mbites_pPPRFlight <- function(){
   PPR_a = MBITES:::Parameters$get_PPR_a()
@@ -95,8 +91,27 @@ mbites_pPPRFlight <- function(){
   exp(PPR_a*private$bmSize)/(PPR_b + exp(PPR_a*private$bmSize))
 }
 
-Mosquito$set(which = "public",name = "pPPRFlight",
+#' MBITES: Post Prandial Flight and Rest
+#'
+#' If the mosquito did not die from overfeeding, update time according to the time needed by PPR (see \code{\link{set_ttEvent_ppr_MBITES_Parameters}}).
+#' Mosquito dies as a result of the post-prandial flight with probability given by \code{\link{mbites_pPPRFlight}}.
+#'  * This method is bound to \code{Mosquito_Female$PPRFlight}.
+#'
+mbites_PPRFlight <- function(){
+  if(private$alive){
+    private$tNow = MBITES:::Parameters$ttEvent$ppr(private$tNow)
+    if(runif(1) < self$pPPRFlight()){
+      private$alive = FALSE
+    }
+  }
+}
+
+Mosquito_Female$set(which = "public",name = "pPPRFlight",
     value = mbites_pPPRFlight, overwrite = TRUE
+)
+
+Mosquito_Female$set(which = "public",name = "PPRFlight",
+    value = mbites_PPRFlight, overwrite = TRUE
 )
 
 
