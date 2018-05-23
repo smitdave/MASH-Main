@@ -11,6 +11,7 @@
 rm(list = ls())
 
 library(rootSolve, lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs/")
+library(data.table)
 
 ###################################
 #
@@ -101,3 +102,48 @@ find_roots <- function(R_0_v, R_0_f,
 # NEXT STEPS:
   # loop thru a bunch of R values and store results in a data frame
   # graph that shit
+R_0_v_values <- seq(0.1, 10, 0.1)
+R_0_f_values <- seq(0.1, 10, 0.1)
+
+results <- data.table(R_0_v = rep(0, times = length(R_0_f_values) * length(R_0_v_values)),
+                      R_0_f = 0, chi_v = 0, chi_f = 0)
+
+i <- 1
+
+for (v in R_0_v_values) {
+  for (f in R_0_f_values) {
+    results[i, R_0_v := v]
+    results[i, R_0_f := f]
+    results[i, chi_v := find_roots(v, f)[1]]
+    results[i, chi_f := find_roots(v, f)[2]]
+    
+    i <- i + 1
+  }
+}
+
+library(plotly, lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs/")
+
+p <- plot_ly(x = results$R_0_v,
+             y = results$R_0_f,
+             z = results$chi_v,
+             type = "heatmap") %>%
+  layout(title = "Equilibrium Prevalence in Village as a Function of R_0 in Village and Forest",
+         xaxis = list(title = "R_0 Value, Village"),
+         yaxis = list(title = "R_0 Value, Forest"))
+
+p
+
+p2 <- plot_ly(x = results$R_0_v,
+              y = results$R_0_f,
+              z = results$chi_v,
+              type = "scatter3d") %>%
+  layout(
+    title = "Malaria Prevalence in the Village as a Function of R_0",
+    scene = list(
+      xaxis = list(title = "R_0, Village"),
+      yaxis = list(title = "R_0, Forest"),
+      zaxis = list(title = "Village Malaria Prevalence")
+    )
+  )
+
+p2
