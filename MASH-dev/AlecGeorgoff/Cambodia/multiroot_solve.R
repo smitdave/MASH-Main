@@ -99,11 +99,8 @@ find_roots <- function(R_0_v, R_0_f,
   return(c(chi_v_SS, chi_f_SS))
 }
 
-# NEXT STEPS:
-  # loop thru a bunch of R values and store results in a data frame
-  # graph that shit
-R_0_v_values <- seq(0.1, 10, 0.1)
-R_0_f_values <- seq(0.1, 10, 0.1)
+R_0_v_values <- seq(0.1, 3, 0.01)
+R_0_f_values <- seq(0.1, 3, 0.01)
 
 results <- data.table(R_0_v = rep(0, times = length(R_0_f_values) * length(R_0_v_values)),
                       R_0_f = 0, chi_v = 0, chi_f = 0)
