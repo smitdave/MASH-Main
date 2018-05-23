@@ -245,99 +245,25 @@ Every mosquito event can be logged so it is possible to study mosquitoes using  
 
 ## Configuring MBITES Behavioral Options
 
-#### Search Bouts
-
-The outcome of any search bout is either death, success, or failure. 
-
-* A `success' is defined as surviving, arriving in a site, setting **searchNow=FALSE** so the mosquito's next bout would be an 'attempt,' and calling **restingSpot()**. Note that **restingSpot()** could also reset **searchNow=TRUE**. 
-
-* A `failure' is defined as surviving, arriving in a site, but leaving **searchNow=TRUE** so the mosquito's next bout would be an 'search,' and calling **restingSpot()**.
-
-* For each search bout, one parameter determines whether a mosquito survived the search flight, and a second parameter determines whether the mosquito was successful. 
-
-#### The Blood Feeding Attempt Bout
-
-Post-prandial resting mortality.
-
-Incremental mortality as a function of being laden during the post-prandial flight $\frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}}$.
-
-```{r}
-pPPRFlight <- function(x,PPR_a=5,PPR_b=1e3){
-  exp(PPR_a*x)/(PPR_b + exp(PPR_a*x))
-}
-```
-
-```{r, fig=TRUE, echo=FALSE}
-x=seq(0,1,length.out=100)
-plot(x, pPPRFlight(x),type = "l", col ="blue", 
-     xlab= "Size of blood meal", 
-     ylab = "Mortality",
-     main = "PPR Mortality")
-```
-
-#### The Ovipositing Attempt Bout
-
-#### The Sugar Feeding Bout 
-
-#### Timing
-
-#### The Blood Meal & Oogenesis
-
-* Blood meal size is scaled relative to *full*, so it is a number in the interval $[0,1]$. 
-
-* The maximum number of eggs per blood meal is $\nu$. (NOTE: the number of female eggs per female is $\nu/2$.) The default is $\nu = 20.$ 
-
-* 
-
-Oogenesis model 1 has the option to include refeeding behavior. This causes the mosquito to abort an oviposition bout and instead start a blood feeding bout. Probability to refeed is given as ...
-
-```{r}
-pReFeed <- function(x,rf_a=15,rf_b=5){
-  (2+rf_b)/(1+rf_b) - exp(rf_a*x)/(rf_b + exp(rf_a*x))
-}
-```
-
-```{r, fig=TRUE, echo=FALSE}
-x=seq(0,1,length.out=100)
-plot(x, pReFeed(x),type = "l", col ="blue", 
-     xlab= "Size of blood meal", 
-     ylab = "Probability to refeed",
-     main = "Refeeding")
-```
-
-#### Flight Energetics
-
-Each mosquito burns some of its energy reserves on each launch, which may incite the mosquito to enter a starved state where it will queue a sugar feeding bout.
-
-##### Queue Sugar Bout
-
-A mosquito may enter a starved state as a function of how much energy it has (eg; how much is in its fuel tank). The function has two required arguments: the sugar reserve, $x$, and the total search weight of sugar in the area, $\omega$. The more sugar is around, the more likely a mosquito is to initiate a sugar bout (if $\omega=0$, then a search bout will be necessary): 
-
-```{r}
-pSugarBout <- function(x,omega,S_sa=25,S_sb=20,S_w=5,S_p=2){
-  exp(S_sa)/(S_sb*(1+(omega*S_w)^S_p)+exp(S_sa))-exp(S_sa*x)/(S_sb*(1+(omega*S_w)^S_p)+exp(S_sa*x))
-}
-```
-
-```{r, fig=TRUE, echo=FALSE}
-
-x=seq(0,1,length.out=100)
-plot(x, pSugarBout(x,0),type = "l", col ="blue", ylim = c(0,1), 
-     xlab= "Energy", 
-     ylab = "Probability to enter starved state", 
-     main = "Starvation")
-lines(x, pSugarBout(x,1), col = "purple")
-```
-
-#### Oviposition
-
 #### Survival 
- 
-Each mosquito has a baseline probability of surviving, per bout, $p_{base}.$
+
+Survival is modeled per-flight bout as the product of many individual survival probabilities: to survive, a mosquito must survive each $p = \prod_i p_i$. There are three generic options for modeling survival, and there are also several 
+
+* Each mosquito has a baseline probability of surviving a bout, $p_X = X_{surv},$ where $X$ denotes the bout type. 
+* Each site can be configured to have an additional hazard associated with the bout (e.g. from predation).
+* Exhuastion: Survival can decline as a function of available energy (see **Exhaustion** below).
+* Physical Damage: Survival can decline as a function of a mosquito's physical condition (see **Physical Damage** below).
+* Chemical Damage: Survival can decline as a function of a mosquito's physiological condition, mainly from exposure to insecticides (see **Chemical Damage** below).
+* Senescence: Survival can decline as a function of a mosquito's chronological age (see **Senescence** below). 
+* Blood Feeding: Survival can be affected by the blood meal in two ways (see **Blood Meal & Oogenesis** below)
+    - Surviving the post-prandial resting flight is a function of the blood meal size;
+    - Overfeeding: physiological stress associated with the blood meal, such that survival is a function of the blood meal size.
+* Each mode of vector control can affect survival (planned for future MBITES releases). 
+
 
 ##### Exhaustion
 
-Exhaustion is a multiplicative decrease in the probability of survival as a function of how much energy the mosquito has. That is, if survival per bout at baseline is $p_{base}$, then with exhaustion, survival per bout is $p_{base} p_{Exhaustion}(E).$ The function `mbites_pEnergySurvival` is found in MBITES-Survival.R
+Exhaustion is a multiplicative decrease in the probability of survival as a function of how much energy the mosquito has (see **Flight Energetics**, below). That is, if survival per bout at baseline is $p_{base}$, then with exhaustion, survival per bout is $p_{base} p_{Exhaustion}(E).$ The function `mbites_pEnergySurvival` is found in MBITES-Survival.R: 
 
 ```{r}
 pEnergySurvival <- function(x,S_a=50,S_b=10){
@@ -409,12 +335,38 @@ plot(x, pSenesce(x),type = "l", col ="blue",
      main = "Senescence")
 ```
 
-#### Pathogens 
 
-## Configuring MBITES Landscape Options 
+### The Bouts
 
-### Blood Feeding Sites
+Each bout has the following structure: 
+* Check and Update Current Time
+* Search or Attempt (i.e. Launch and Try)
+    - Blood Feeding
+    - Egg Laying
+    - Sugar Feeding
+* Land: call **restingSpot()** 
+* Rest and Update State
+    - Update energetic status: **energetics()**
+    - Survival: **survival()**
+    - Check for gravidity: **checkEggMaturation()** 
+    - Behavioral State Update, with the general hierarchy: dead $>$ starved $>$ lay eggs $>$ blood feed
+    - Resting Period: **timing()** 
+    - Pathogen Dynamics
+    
 
+#### Search Bouts
+
+Search bouts are all similar. The outcome of any search bout is either death, success, or failure. 
+
+* A `success' is defined as surviving, arriving in a site, setting **searchNow=FALSE** so the mosquito's next bout would be an 'attempt,' and calling **restingSpot()**. Note that **restingSpot()** could also reset **searchNow=TRUE**. 
+
+* A `failure' is defined as surviving, arriving in a site, but leaving **searchNow=TRUE** so the mosquito's next bout would be an 'search,' and calling **restingSpot()**.
+
+* For each search bout, one parameter determines whether a mosquito survived the search flight, and a second parameter determines whether the mosquito was successful. 
+
+#### The Blood Feeding Attempt Bout
+
+**OVERVIEW** The following describes the structure of the blood feeding attempt: 
 * Choose
     - Human
     - Other Blood Host
@@ -432,21 +384,193 @@ plot(x, pSenesce(x),type = "l", col ="blue",
     
 * Trap
     - FAIL / DIE
+    
 
+Incremental mortality as a function of being laden during the post-prandial flight $\frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}}$.
 
-#### Egg Laying Sites & Aquatic Habitats 
+#### The Ovipositing Attempt Bout
+
+**OVERVIEW**
 
 * Choose
     - Habitat
     - Ovitrap
     - FAIL
 
-#### Sugar Sources
+* Approach
+    - Lay
+    - FAIL / DIE
+    
+#### The Sugar Feeding Bout 
 
+**OVERVIEW**
 * Choose
     - Sugar Source
     - ATSB
     - FAIL
+
+* Approach
+    - Sugar Feed
+    - FAIL / DIE
+
+#### Timing
+
+Timing functions, must be configured for each behavioral state and for the post-prandial resting period: 
+
+* $ttEvent_{boutF}$: The waiting time to launch a blood feeding search bout. 
+* $ttEvent_{boutB}$: The waiting time to launch a blood feeding attempt bout. 
+* $ttEvent_{ppr}$: The post-prandial resting period
+* $ttEvent_{boutL}$: The waiting time to launch a egg laying search bout. 
+* $ttEvent_{boutO}$: The waiting time to launch a egg laying attempt bout. 
+* $ttEvent_{boutN}$: The waiting time to launch a sugar feeding search bout. 
+* $ttEvent_{boutS}$: The waiting time to launch a sugar feeding attempt bout.
+
+Each family of functions available for modeling time to events takes two arguments: the current time, $t$, and a named list of parameters; 
+$$F_i = f(t, P)$$
+Timing functions are implemented as function closures: at setup, the $ttEvent_x$ is assigned to one of the available function families with specific parameter values, $P_x$, so that the resulting object is a function of only time:  
+$$ttEvent_x = F_i(t,P_x) = f(t)$$.  
+
+The functional families available (i.e. $F_i$) are the following: 
+
+* A constant interval, $tte_x$;
+
+* The exponential family of functions, the parameter $tte_x$ is the expected waiting time to the event $rexp \left( rate = 1/tte_x \right).$
+
+* A generalized exponential family of functions that includes a fixed delay. The parameter $tte_x$ is the expected waiting time to the event, and $dlay_x < tte_x$ is the fixed delay. The waiting time is the random variate $$dlay_x + rexp \left(\frac{1}{rate = tte_x - dlay_x}\right) $$. 
+
+* The gamma family of functions, $rgamma(tte_x, tte_v)$, where $tte_x$ is the expected waiting time to the event and $tte_v$ is the variance in the waiting time to the next event.
+
+* A function computing the waiting time when mosquito activity has a sinusoidally forced diurnal function, $tte_diurnal(t,peak,\lambda_x)$,  
+
+#### Flight Energetics
+
+Each mosquito burns some of its energy reserves on each launch, which may incite the mosquito to enter a starved state where it will queue a sugar feeding bout.
+
+
+#### The Blood Meal & Oogenesis
+
+**OVERVIEW** 
+
+After a bloodmeal, MBITES determines the following quantities: 
+
+* The size of the blood meal: $rBloodMealSize(bm_a, bm_b)$. Blood meal size is scaled relative to *full*, so it is a number in the interval $[0,1]$.
+
+* After a blood meal, mosquitoes are heavy. The probability of surviving the post-prandial flight to rest is a function of the blood meal size: $pPPRFlight(PPR_a, PPR_b)$. 
+
+* After a blood meal, the stress of digesting a mosquito can kill it: $pOverFeed()$. 
+
+* The mosquito tends to rest after a blood meal. The length of this post-prandial resting period is one of the timing functions (see the section on **Timing**, above).
+
+* The maximum number of eggs per blood meal is $maxBatch$. (NOTE: the number of female eggs per female is $maxBatch/2$.) The default is $maxBatch = 120.$ 
+
+A model of oogenesis determines the egg batch size and when the eggs will mature. There are two models of oogenesis: 
+
+* Oogenesis 1: Each blood meal produces an egg batch that is mature at the end of the post-prandial resting period.
+    - The size of the egg batch is a function of the blood meal size. 
+    - The egg batch is mature at the end of the post-prandial resting period.
+    - The probability of refeeding to "top up" the egg batch size is a function of the egg batch. 
+    - If a mosquito tops up, new eggs are added to the total batch. 
+
+* Oogenesis 2: At the first blood meal post-emergence, or after laying a batch of eggs, a new batch of egg buds commit to maturation.
+    - The size of the egg batch is fixed. 
+    - Maturation requires a total amount of blood -- after a mosquito has taken the required amount of blood, the eggs are mature.
+
+**Blood Meal Size** 
+```{r}
+rBloodMealSize = function(bm_a=7.5, bm_b=2.5){rbeta(1,bm_a,bm_b)}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+hist(replicate(10000, rBloodMealSize()), 20, main = "Blood Meal Size", xlab = "Proportion of Full", probability=TRUE)
+```
+
+**Post-Prandial Resting Flight** 
+```{r}
+# This function computes the probability 
+# of surviving the post-prandial resting flight
+pPPRFlight <- function(x,PPR_a=15,PPR_b=300){
+  exp(PPR_a*x)/(exp(PPR_b) + exp(PPR_a*x))
+}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,1,length.out=100)
+plot(x, pPPRFlight(x),type = "l", col ="blue", 
+     xlab= "Size of blood meal", 
+     ylab = "Mortality",
+     main = "PPR Mortality")
+```
+
+
+
+
+
+##### Oogenesis Model 1 
+
+Oogenesis model 1 has the option to include refeeding behavior. This causes the mosquito to abort an oviposition bout and instead start a blood feeding bout. Probability to refeed is given as ...
+
+```{r}
+# The probability of refeeding as a 
+# function of the bloodmeal size
+pReFeed <- function(x,rf_a=10,rf_b=4){
+  1 - exp(rf_a*x)/(exp(rf_b)+ exp(rf_a*x))
+}
+```
+
+
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,1,length.out=100)
+plot(x, pReFeed(x),type = "l", col ="blue", 
+     xlab= "Size of blood meal", 
+     ylab = "Probability to refeed",
+     main = "Refeeding")
+```
+##### Oogenesis Model 2 
+
+
+
+##### Queue Sugar Bout
+
+A mosquito may enter a starved state as a function of how much energy it has (eg; how much is in its fuel tank). The function has two required arguments: the sugar reserve, $x$, and the total search weight of sugar in the area, $\omega$. The more sugar is around, the more likely a mosquito is to initiate a sugar bout (if $\omega=0$, then a search bout will be necessary): 
+
+```{r}
+pSugarBout <- function(x,omega,S_sa=25,S_sb=20,S_w=5,S_p=2){
+  exp(S_sa)/(S_sb*(1+(omega*S_w)^S_p)+exp(S_sa))-exp(S_sa*x)/(S_sb*(1+(omega*S_w)^S_p)+exp(S_sa*x))
+}
+```
+
+```{r, fig=TRUE, echo=FALSE}
+
+x=seq(0,1,length.out=100)
+plot(x, pSugarBout(x,0),type = "l", col ="blue", ylim = c(0,1), 
+     xlab= "Energy", 
+     ylab = "Probability to enter starved state", 
+     main = "Starvation")
+lines(x, pSugarBout(x,1), col = "purple")
+```
+
+#### Oviposition
+
+
+
+
+#### Pathogens 
+
+## Configuring MBITES Landscape Options 
+
+Each site has a required set of inputs. 
+
+### Blood Feeding Sites
+
+
+
+#### Egg Laying Sites & Aquatic Habitats 
+
+
+
+#### Sugar Sources
+
+
 
 #### Resting Spots
 
