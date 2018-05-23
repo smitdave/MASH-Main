@@ -15,18 +15,21 @@ knitr::opts_chunk$set(echo = TRUE)
 
 # Introduction
 
-This document is designed to give a non-technical oveview and introduction to MBITES (Mosquito Bout-based and Individual-based Transmission Ecology Simulator). The best source of technical documentation for developers is the code itself, which can be called from Help within R. The following sections introduce the software and some of the biological concepts motivating development of this software. The following section, **Quick Start** offers a bare-bones minimum guide to getting started. A longer introduction to MBITES follows in a section called **MASH: A Modular Simulation Platform.** More background on how to run the software in the next section: **Getting Started.** 
+This document is designed to give a non-technical oveview and introduction to MBITES (Mosquito Bout-based and Individual-based Transmission Ecology Simulator). The best source of technical documentation for developers is the code itself, which can be called from Help within R. 
+
+The following sections introduce the software and the biological concepts motivating development of this software. The next sub-section, **Quick Start**, offers a bare-bones minimum guide to getting started. A longer introduction to MBITES follows in a section called **MASH: A Modular Simulation Platform.** More background on how to run the software in the next section: **Getting Started.** 
 
 ### Quick Start
 
-MBITES models a mosquito flight **bout**, which counts from launch to launch: launch - try - land - rest - launch....  This sequence is repeated from emergence as an adult through its death. The mosquito's behavioral state defines the "try." The three types of behavioral states  described herein are: 1) blood feeding; 2) egg laying; and 3) sugar feeding. The fourth behavioral state considered by MBITES is mating, which is planned for a future release of MBITES. Each behavioral state has two types of bouts: a mosquito is either on a **search** for resources or an **attempt** to use those resources. Success in an attempt usually means a mosquito changes its behavioral state after landing from a try, before the next launch. Searching occurs on a **landscape** comprised of sites, each of which has at least some resources.    
+MBITES models a mosquito flight **bout**, and all the events counting from launch to launch: launch - try - land - rest - launch....  This sequence is repeated from emergence as an adult through its death. A mosquito's behavioral state defines the "try." The three types of behavioral states modeled in MBITES are: 1) blood feeding; 2) egg laying; and 3) sugar feeding. The fourth behavioral state considered by MBITES is mating, which is planned for a future release of MBITES. Each behavioral state has two types of bouts: a mosquito is either on a **search** to bring it in the neighborhood of the required resources or is makes an **attempt** to use those resources. Searching occurs on a **landscape** comprised of sites, each of which has at least some resources. Success in an attempt usually means a mosquito changes its behavioral state after landing from a try, before the next launch. 
 
 #### Installing MBITES
 
+**WRITE ME** 
 
 #### Configuring MBITES
 
-The following options are configured within the MBITES GUI: 
+MBITES is designed to model mosquito behavior in exquisite detail and on an explicit landscape, which means a user has to supply parameter values describing many different processes. Since these are not always intuitive and can sometimes have large effects, MBITES comes with a GUI to visualize the results during the setup. 
 
 * Behavioral Options
     - Bouts: basic properties of each attempt bout and each search bout
@@ -44,9 +47,15 @@ The following options are configured within the MBITES GUI:
     - Resting behavior at microsites
     - Mosquito dispersion during a search
 
-For a longer explanation, read on. 
+For a longer explanation, read the appropriate sections below. Otherwise, the GUI provides the best way of getting started.  
 
 #### Running MBITES
+
+**WRITE ME** 
+
+#### Plotting MBITES Outpu
+
+**WRITE ME** 
 
 # MASH: A Modular Simulation Platform 
 
@@ -136,7 +145,7 @@ Since we can't wave our wands, we need a way of dealing with the daunting proble
 
 * If there's a pattern, base it on a case study.  
 
-* Insofar as it is possible, anchor the results of complex models to theory.
+* Insofar as it is possible, complex models should be anchored to theory.
 
 To put it another way, we honor William of Occam by preferring simple answers, in part, so we can say whether something we've observed can be explained with a simpler model. Our question, though, is not to explain the past but to know with some confidence that we are making robust policy recommendtions for the future. With these principles in mind, we've developed a set of functions and utilities to set up landscapes that roughly follow these rules. 
 
@@ -144,7 +153,7 @@ To put it another way, we honor William of Occam by preferring simple answers, i
 
 MBITES is a framework developed for individual-based simulation of adult female mosquito behavior. It was built for the purpose of understanding mosquito-borne pathogen dynamics and control, but it was developed around the flight bout as the irreducible or ``atomic'' unit of mosquito behavior. The name says what it is: a **M**osquito flight **B**out-based and **I**ndividual-based **T**ransmission **E**cology **S**imulator (MBITES). 
 
-MBITES is a platform for building models: it does not describe a particular model. MBITES was developed with **MODULARITY** and **FLEXIBILITY**. For our purposes, modularity describes a framework for building in functionality, while flexibility describes the options that can be configured within a module. (The distinction is useful but somewhat arbitrary, as described above, so it might not be so important for most end users.) With modularity and flexibility, there are many different options availble for building spatially explicit and highly realistic individual-based simulation models of mosquito behavior. Through MASH, these are linked to an equally large number of options for building models of human behavior and pathogen transmission dynamics. The built-in modularity and flexibility makes it possible to expand the number of options, if the end user so desires. To build a model and simulate mosquito populations, it is necessary to configure the functions and parameters so that it looks like the specific mosquito species in its ecological context. This requires learning something about mosquitoes as well as something about models.
+MBITES is a framework for building models for simulation: no particular model encapsulates the full range of what MBITES can do. MBITES was developed with **MODULARITY** and **FLEXIBILITY**. For our purposes, modularity describes a framework for building in functionality, while flexibility describes the options that can be configured within a module. (The distinction is useful but somewhat arbitrary, as described above, so it might not be so important for most end users.) With modularity and flexibility, there are many different options availble for building spatially explicit and highly realistic individual-based simulation models of mosquito behavior. Through MASH, these are linked to an equally large number of options for building models of human behavior and pathogen transmission dynamics. The built-in modularity and flexibility makes it possible to expand the number of options, if the end user so desires. To build a model and simulate mosquito populations, it is necessary to configure the functions and parameters so that it looks like the specific mosquito species in its ecological context. This requires learning something about mosquitoes as well as something about models.
 
 #### The Natural History of Mosquitoes :: A Very Brief Introduction
 
@@ -162,7 +171,7 @@ What is also important for MBITES is that all of these activities must occur whe
 
 The philosophy of MBITES is that the process of building a simulation is as important as the output of the simulation. It's important for the MBITES jockey (i.e. any user) to understand the to understand how a model will be used and its limitations. Just because a model looks to us like reality doesn't mean it is. We encourage all MBITES users to cultivate a healthy skepticism about any claim made. In fact, MBITES was developed to destroy dogma as much as to mimic reality.  Please use it with caution. 
 
-We recognize at least two broadly different kinds of activities: academic projects and policy analysis. Academic projects are designed to build on the knowledge base, while policy analysis is generally designed to address a specific question about what to do that has arisn in some  particular context. Regardless of the purpose, MBITES is a complex bit of software. The point of this user's guide is to help the MBITES jockey understand how to use it. 
+We recognize at least two broadly different kinds of activities: academic projects and policy analysis. Academic projects are designed to build on the knowledge base, while policy analysis is generally designed to address a specific question about what to do in some particular context and from specific user. Regardless of the purpose, MBITES is a complex bit of software. The point of this user's guide is to help the MBITES jockey understand how to use it. 
 
 To learn MBITES, a simulation called **DEMO**; has been configured to illustrate the features of the model. DEMO is run as the first option within the MBITES-GUI. The MBITES-GUI also has some built-in functionality to set up a simulation model; by default, it starts with a set of configured options for **BASEMOD**, a model that makes the simplest assumptions for each section. 
 
@@ -175,14 +184,12 @@ The main tasks for MBITES were 1) how to represent a mosquito in a simulation mo
 * A unique identifier for each mosquito, used for bookkeeping, pedigrees and inheritance.
 
 * Behavioral state.
-    - Does the mosquito intend to blood feed [B], lay eggs [O], mate [M], or sugar feed [S].
-    - Is the mosquito making an attempt, or is it searching for resources? NOTE: A single letter name usually refers to the attempt, and two letters indicate a search (e.g. Ms = searching for a mating site, and Ss is searching for sugar). In MBDETES, we also use the single letters for blood feeding search [F=Bs] and the egg laying search [L=Os].
-    - While not explicitly recognized as states, there is a significant resting period that follows the blood meal, called the post-prandial resting period.  Estivation can also occur in the model, but it is (usually) a seasonally induced, but very long resting period.   
+    - What does the mosquito intend to do? 
+    - Will the mosquito make a search or an attempt? 
 
 * Location. 
-
     - Where is the mosquito in space? (i.e. at what site) 
-    - Resting microsite. On what kind of surface  is the mosquito resting (e.g. inside wall)?
+    - On what microsite type is the mosquito resting? (e.g. interior wall or outdoors on vegetation)
     
 * Variables describing a mosquito's condition or status
     - Energy reserve levels. How much sugar does a mosquito have in reserve? 
@@ -223,19 +230,27 @@ A crude description of a mosquito's activities would be that a mosquito's life i
 
 The final state of a mosquito is [D], or ``dead." The **Try** part (i.e. the intentive flight) of each bout type  is different -- what happens between launching and landing is elaborated upon in each bout. The intentive flight is assumed to be of comparatively short duration and (if successful) to lead to a state transition. 
 
+While not explicitly recognized as a behavioral state with its own bout, there is a significant resting period that follows the blood meal, called the post-prandial resting period. In MBDETES, this state is denoted with the single letter [R].
+
+Estivation can also occur in the model, but it is (usually) a seasonally induced, but very long resting period.   
+
 \subsection{Landing, Resting, and Survival}
 
 Aside from all the specific activities that occur during each bout, each bout executes a set of algorithms to simulate a set of common tasks to simulate changes to a mosquito's behavioral, physical and physiological states: 
 
-* During a flight bout, a mosquito might change location. If a mosquito is searching for resources, the function **rMove** is called to determine where a mosquito ended up (see Search and Dispersion, below).
+* During a flight bout to search, a mosquito might change location. If a mosquito is searching for resources, the function **rMove()** is called to determine where a mosquito ended up (see Search and Dispersion, below).
 
-* Determine the microsite where a mosquito landed. After each bout, a mosquito lands at a particular microsite in each place on the landscape, determined by the site type and called by the function **restingSpot**.
+* Determine the microsite where a mosquito landed. After each bout, a mosquito lands at a particular microsite in each place on the landscape, determined by the site type and called by the function **restingSpot()**.
 
-* Determine energy usage. The mosquito's energetic state is then updated, with **energetics**, which calls another function to determine whether the energy has been depleted to a point that the mosquito requires sugar. If so, then **starved=TRUE** is set. (described in the Section *Energetics of Flight, Blood Feeding, and Sugar Feeding*, below) 
+* A function **updateState()** is called to determine a mosquito's next behavioral state, which includes checking on energetics, survival, and egg maturation (see the next few bullet items). After these have been checked, the mosquito's behavioral state is updated. 
+
+* Determine energy usage. The mosquito's energetic state is then updated, with **energetics()**, which calls another function to determine whether the energy has been depleted to a point that the mosquito requires sugar. If so, then **starved=TRUE** is set. (described in the Section *Energetics of Flight, Blood Feeding, and Sugar Feeding*, below) 
 
 * Determine whether a mosquito survived the flight and the subsequent resting period. Even if a mosquito encountered the specific hazards associated with the bout, other mortality can occur as a result of flight stress with the function **surviveFlight**. There is also the possibility of predation or other site specific hazards while resting, called with the function **surviveResting**. (described in the Section *Survival*, below)
 
-* A function **updateState** is called to determine a mosquito's next behavioral state. A function called **oogenesis** is called to see whether a mosquito is gravid. The functions above set various switches to determine if a mosquito is alive, starved, gravid, or randy. If alive, a mosquito will go in search of blood, but this can be superceded by another uone of these other urges. If a mosquito is starved (meaning it has determined there is a need to seek a sugar meal), it will go in search of sugar regardless. If it is gravid, it will tend to change state, though a function can be configured for refeeding by mosquitoes, even if they are gravid (see the blood feeding discussion, below).  
+* A function is called to check on the eggs, which depends on a submodel for  **oogenesis** is called to see whether a mosquito is gravid. The functions above set various switches to determine if a mosquito is alive, starved, gravid, or randy. If alive, a mosquito will go in search of blood, but this can be superceded by another uone of these other urges. If a mosquito is starved (meaning it has determined there is a need to seek a sugar meal), it will go in search of sugar regardless. If it is gravid, it will tend to change state, though a function can be configured for refeeding by mosquitoes, even if they are gravid (see the blood feeding discussion, below).
+
+* The new state follows a hierarch of needs. A dead mosquito can't be revived. Starvation supercedes other needs. Otherwise a mosquito will tend to lay eggs if it is gravid. 
 
 * Finally, the resting period determines the waiting time to launch the next bout, depending on its new behavioral state. Here, two conditions are checked: one for mating, and the other for estivation. Mating is triggered by the time of day (if a mosquito is not starved), and estivation is triggered by the time of the year. If mating is triggered as a behavioral state, a mosquito's behavioral state is changed to [M]; or [W]. The waiting time is determined by a generic function **timing** that calls the function for that bout type (described in the Section  *Resting Times*, below).
 
@@ -337,14 +352,17 @@ plot(x, pSenesce(x),type = "l", col ="blue",
 
 
 ### The Bouts
-
 Each bout has the following structure: 
+
 * Check and Update Current Time
+
 * Search or Attempt (i.e. Launch and Try)
     - Blood Feeding
     - Egg Laying
     - Sugar Feeding
+
 * Land: call **restingSpot()** 
+
 * Rest and Update State
     - Update energetic status: **energetics()**
     - Survival: **survival()**
@@ -353,7 +371,6 @@ Each bout has the following structure:
     - Resting Period: **timing()** 
     - Pathogen Dynamics
     
-
 #### Search Bouts
 
 Search bouts are all similar. The outcome of any search bout is either death, success, or failure. 
@@ -361,6 +378,12 @@ Search bouts are all similar. The outcome of any search bout is either death, su
 * A `success' is defined as surviving, arriving in a site, setting **searchNow=FALSE** so the mosquito's next bout would be an 'attempt,' and calling **restingSpot()**. Note that **restingSpot()** could also reset **searchNow=TRUE**. 
 
 * A `failure' is defined as surviving, arriving in a site, but leaving **searchNow=TRUE** so the mosquito's next bout would be an 'search,' and calling **restingSpot()**.
+
+* For each search bout, one parameter determines whether a mosquito survived the search flight, and a second parameter determines whether the mosquito was successful. 
+
+#### The Blood Feeding Attempt Bout
+
+**OVERVIEW** The following describes the structure of the blood feeding attempt:
 
 * For each search bout, one parameter determines whether a mosquito survived the search flight, and a second parameter determines whether the mosquito was successful. 
 
@@ -385,7 +408,6 @@ Search bouts are all similar. The outcome of any search bout is either death, su
 * Trap
     - FAIL / DIE
     
-
 Incremental mortality as a function of being laden during the post-prandial flight $\frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}}$.
 
 #### The Ovipositing Attempt Bout
@@ -402,6 +424,8 @@ Incremental mortality as a function of being laden during the post-prandial flig
     - FAIL / DIE
     
 #### The Sugar Feeding Bout 
+
+**OVERVIEW**
 
 **OVERVIEW**
 * Choose
@@ -436,7 +460,7 @@ The functional families available (i.e. $F_i$) are the following:
 
 * The exponential family of functions, the parameter $tte_x$ is the expected waiting time to the event $rexp \left( rate = 1/tte_x \right).$
 
-* A generalized exponential family of functions that includes a fixed delay. The parameter $tte_x$ is the expected waiting time to the event, and $dlay_x < tte_x$ is the fixed delay. The waiting time is the random variate $$dlay_x + rexp \left(\frac{1}{rate = tte_x - dlay_x}\right) $$. 
+* A family of shifted exponential distributions, where the time to event is exponential after a fixed delay. The parameter $tte_x$ is the expected waiting time to the event, and $dlay_x < tte_x$ is the fixed delay. The waiting time is the random variate $$dlay_x + rexp \left(\frac{1}{rate = tte_x - dlay_x}\right) $$. 
 
 * The gamma family of functions, $rgamma(tte_x, tte_v)$, where $tte_x$ is the expected waiting time to the event and $tte_v$ is the variance in the waiting time to the next event.
 
@@ -445,7 +469,6 @@ The functional families available (i.e. $F_i$) are the following:
 #### Flight Energetics
 
 Each mosquito burns some of its energy reserves on each launch, which may incite the mosquito to enter a starved state where it will queue a sugar feeding bout.
-
 
 #### The Blood Meal & Oogenesis
 
