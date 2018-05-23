@@ -15,4 +15,5 @@ pointsOverdispersed(n, inhibitionFactor = 1, owin)
 }
 \description{
 This function is a low-level utility which calls \code{\link[spatstat]{rSSI}} to generate a realization of a homogeneous hard-core spatial inhibition process.
+From: \url{https://github.com/TAlexPerkins/PlosCompBio_2013}
 }

@@ -36,6 +36,7 @@ sample <- function(x, ...){
 #' Generate Poisson Point Pattern for Landscape Sites
 #'
 #' This function is a low-level utility which calls \code{\link[spatstat]{rpoispp}} to generate a realization of a homogeneous Poisson point process.
+#' From: \url{https://github.com/TAlexPerkins/PlosCompBio_2013}
 #'
 #' @param n number of points to generate
 #' @param owin a sampling plane (object of class \code{\link[spatstat]{owin}})
@@ -52,6 +53,7 @@ pointsPoisson <- function(n, owin){
 #' Generate Matérn Clustering Point Pattern for Landscape Sites
 #'
 #' This function is a low-level utility which calls \code{\link[spatstat]{rMatClust}} to generate a realization of a homogeneous Matérn cluster process.
+#' From: \url{https://github.com/TAlexPerkins/PlosCompBio_2013}
 #'
 #' @param n number of points to generate
 #' @param meanParents intensity of Poisson process for cluster centers
@@ -74,6 +76,7 @@ pointsClustered <- function(n, meanParents = 10, clusteredness = .25, owin){
 #' Generate Overdispersed (SSI) Point Pattern for Landscape Sites
 #'
 #' This function is a low-level utility which calls \code{\link[spatstat]{rSSI}} to generate a realization of a homogeneous hard-core spatial inhibition process.
+#' From: \url{https://github.com/TAlexPerkins/PlosCompBio_2013}
 #'
 #' @param n number of points to generate
 #' @param inhibitionFactor controls level of overdispersion (higher values correspond to a more overdispersed spatial point process)

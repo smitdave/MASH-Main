@@ -104,12 +104,15 @@ Mosquito$set(which = "public",name = "pSugarBout",
 #'  * This method is bound to \code{MosquitoFemale$BloodEnergetics}
 #'
 mbites_BloodEnergetics <- function(){ # called from MBITES-Bloodmeal.R
-  topUp = self$energyFromBlood() # energy derived from blood meal is function of meal size
-  private$energy = min(1, private$energy + topUp)
-  if(!private$mature){
-    private$energyPreG = private$energyPreG - topUp
-    if(private$energyPreG <= 0 & private$mated){
-      private$mature = TRUE
+  # overfeeding could have killed us
+  if(private$alive){
+    topUp = self$energyFromBlood() # energy derived from blood meal is function of meal size
+    private$energy = min(1, private$energy + topUp)
+    if(!private$mature){
+      private$energyPreG = private$energyPreG - topUp
+      if(private$energyPreG <= 0 & private$mated){
+        private$mature = TRUE
+      }
     }
   }
 }

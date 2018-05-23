@@ -67,7 +67,7 @@ NULL
 #'
 #' @include MBITES-Mosquito.R
 mbites_oneBout <- function(){
-  # browser()
+
   # launch at the previously scheduled launch time
   private$tNow = private$tNext
 
@@ -352,7 +352,7 @@ Mosquito$set(which = "public",name = "MatingSearchCheck",
 #'       bloodtrap() is found in ...
 #'
 mbites_attempt_B <- function(){
-  # browser()
+
   # bout success
   if(runif(1) < MBITES:::Parameters$get_B_succeed()){
 
