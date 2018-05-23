@@ -129,6 +129,7 @@ make_RiskQ <- function(){
 
   # data for the closure
   # human blood hosts
+  n_h <- 0L
   id <- integer(1)
   weight <- numeric(1)
   time <- numeric(1)
@@ -143,6 +144,7 @@ make_RiskQ <- function(){
   add2Q <- function(id_n,weight_n,time_n){
     # new RiskQ
     if(NEW){
+      n_h <<- 1L
       id <<- id_n
       weight <<- weight_n
       time <<- time_n
@@ -156,6 +158,7 @@ make_RiskQ <- function(){
         time[ix] <<- time_n
       # new person to be added to the risk queue
       } else {
+        n_h <<- n_h + 1L
         id <<- append(id,id_n)
         weight <<- append(weight,weight_n)
         time <<- append(time,time_n)
@@ -223,7 +226,7 @@ make_RiskQ <- function(){
     # no zoo hosts present
     } else {
       # check for empty queue
-      if(length(id)==0L){
+      if(n_h==0L){
         return(0L)
       # sample human hosts
       } else {

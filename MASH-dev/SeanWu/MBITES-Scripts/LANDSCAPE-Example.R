@@ -193,6 +193,9 @@ MBITES_Setup_Survival(tattering = FALSE,senescence = FALSE)
 
 PATHOGEN_Setup(pathogen_model = "null")
 
+# we want detailed output of blood hosts from the mosquito
+trackBloodHost()
+
 # set parameters
 MBITES:::Parameters$set_parameters(disperse = 0.05)
 
