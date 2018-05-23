@@ -128,7 +128,8 @@ simulate_MBITES_Globals <- function(tMax){
 
   # write out all agent histories and clear containers
   for(i in 1:length(private$tiles)){
-    private$tiles[[i]]$get_mosquitoes()$apply(tag="exit",force=TRUE)
+    private$tiles[[i]]$get_mosquitoes()$apply(tag="exit")
+    # private$tiles[[i]]$get_mosquitoes()$apply(tag="exit",force=TRUE)
     private$tiles[[i]]$get_humans()$apply(tag="exit")
   }
 
@@ -256,6 +257,11 @@ MBITES_Globals$set(which = "public",name = "set_output",
 MBITES_Globals$set(which = "public",name = "reset",
           value = reset_MBITES_Globals, overwrite = TRUE
 )
+
+MBITES_Globals$set(which = "public",name = "hardreset",
+          value = hardreset_MBITES_Globals, overwrite = TRUE
+)
+
 
 #' user-facing set output dir function
 #' @export

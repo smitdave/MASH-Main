@@ -166,7 +166,7 @@ mbites_trackHistory <- function(){
   # add to history
   private$timeHist[private$nEvent] = private$tNext # set to tNext because that's everything that could have happened up to that next launch
   private$siteHist[private$nEvent] = private$site$get_id()
-  private$searchHist[private$nEvent] = private$searchNow
+  private$searchHist[private$nEvent] = private$search
   private$stateHist[private$nEvent] = private$state
 
 }
@@ -178,21 +178,35 @@ mbites_trackHistory <- function(){
 #'
 #' @param force if \code{TRUE} the mosquito will write out history and be removed from the container even if still alive
 #'
-mbites_exit <- function(force = FALSE){
-  if(!private$alive | force){
-    # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
-    cat(jsonlite::toJSON(x = list(
-            id = private$id,
-            tile = private$tileID,
-            time = private$timeHist[1:private$nEvent],
-            sites = private$siteHist[1:private$nEvent],
-            search = private$searchHist[1:private$nEvent],
-            behavior = private$stateHist[1:private$nEvent]
-        ), pretty = TRUE),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
-    # remove this mosquito from the hash table
-    MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
-  }
+mbites_exit <- function(){
+  self$trackHistory()
+  # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
+  cat(jsonlite::toJSON(x = list(
+          id = private$id,
+          tile = private$tileID,
+          time = private$timeHist[1:private$nEvent],
+          sites = private$siteHist[1:private$nEvent],
+          search = private$searchHist[1:private$nEvent],
+          behavior = private$stateHist[1:private$nEvent]
+      ), pretty = TRUE),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
+  # remove this mosquito from the hash table
+  MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
 }
+# mbites_exit <- function(force = FALSE){
+#   if(!private$alive | force){
+#     # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
+#     cat(jsonlite::toJSON(x = list(
+#             id = private$id,
+#             tile = private$tileID,
+#             time = private$timeHist[1:private$nEvent],
+#             sites = private$siteHist[1:private$nEvent],
+#             search = private$searchHist[1:private$nEvent],
+#             behavior = private$stateHist[1:private$nEvent]
+#         ), pretty = TRUE),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
+#     # remove this mosquito from the hash table
+#     MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
+#   }
+# }
 
 Mosquito$set(which = "public",name = "trackHistory",
           value = mbites_trackHistory, overwrite = TRUE
@@ -269,8 +283,9 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                    # bloodfeeding and oogenesis
                    bloodfed       = FALSE, # have i fed on blood this bout?
                    batch          = integer(1), # size of my egg batch
-                   eggT           = numeric(1), # time my egg batch is ready
-                   bm_size        = numeric(1), # size of my blood meal
+                   eggT           = 2e16, # time my egg batch is ready
+                   eggP           = numeric(1),
+                   bmSize         = numeric(1), # size of my blood meal
 
                    # host ids
                    hostID         = integer(1) # id of my blood host

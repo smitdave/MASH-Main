@@ -352,7 +352,7 @@ Mosquito$set(which = "public",name = "MatingSearchCheck",
 #'       bloodtrap() is found in ...
 #'
 mbites_attempt_B <- function(){
-  
+
   # bout success
   if(runif(1) < MBITES:::Parameters$get_B_succeed()){
 
