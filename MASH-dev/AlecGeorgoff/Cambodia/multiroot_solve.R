@@ -13,25 +13,55 @@ rm(list = ls())
 library(rootSolve, lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs/")
 library(data.table)
 
+
+
 ###################################
 #
-# Define constant parameters
+# Define parameters
 #
 ###################################
 
+# Define general parameters
+b = 0.55  # Proportion of bites by infectious mosquitoes that cause an infection
+r = 1/200 # Rate that humans recover from an infection
+c = 0.15   # Proportion of mosquitoes infected after biting infectious human
+n = 12     # Time for sporogonic cycle
+
+# Define forest-specific parameters
+a_f = 0.88   # Human blood feeding rate in forest
+g_f = 0.1   # Per capita death rate of mosquitoes in forest
+H_f = 2000  # Human population (density?) in forest
+X_f = 0     # Number of infected forest-goers
+p = 0.1     # Proportion of time forest-goers spend in the forest
+V_f = 500  # Vector population in forest
+Y_f = 0     # Number of infected vectors in forest
+Z_f = exp(-g_f*n)*Y_f # Number of infectious vectors in forest
+
+# Define village-specific parameters
+a_v = 0.88   # Human blood feeding rate in village
+g_v = 0.1   # Per capita death rate of mosquitoes in village
+H_v = 5000  # Human population (density?) in village
+X_v = 0     # Number of infected villagers
+# 1 - p     # Proportion of time forest-goers spend in the village
+V_v = 100   # Vector population in village
+Y_v = 0     # Number of infected vectors in village
+Z_v = exp(-g_v*n)*Y_v # Number of infectious vectors in village
 c <- 0.15
 p <- 0.3
 
-S_v <- 8.8
-S_f <- 8.8
-
-# number of humans:
-H_v <- 5000
-H_f <- 2000
+# set up function to calculate R values:
+calculate_R <- function(V, a, b, c, g, n, H, r) {
+  R = (V * a^2 * b * c * exp(-g * n)) / (H * g * r)
+  return(R)
+}
 
 # R_0 values:
-R_0_v <- 4
-R_0_f <- 4
+R_0_v <- calculate_R(V = V_v, a = a_v, b = b, c = c, g = g_v, n = n, H = H_v, r = r)
+R_0_f <- calculate_R(V = V_f, a = a_f, b = b, c = c, g = g_f, n = n, H = H_f, r = r)
+
+# S values:
+S_v <- a_v / g_v
+S_f <- a_f / g_f
 
 # choose "starting point" for solver to look for roots:
 chi_v_start <- 0.9
@@ -40,6 +70,8 @@ chi_f_start <- 0.1
 # convert to number of humans:
 X_v_start <- chi_v_start * H_v
 X_f_start <- chi_f_start * H_f
+
+
 
 ###################################
 #
@@ -62,35 +94,27 @@ model <- function(X, R_0_v, R_0_f, H_v, H_f, S_v, S_f, c_val, p_val) {
   return(c(equation_village, equation_forest))
 }
 
+
+
 ###################################
 #
 # Solve for roots
 #
 ###################################
 
-# ss <- multiroot(f = model, start = c(X_v_start, X_f_start))
-# 
-# chi_v_SS <- ss$root[1] / H_v
-# chi_f_SS <- ss$root[2] / H_f
-# 
-# print(paste0("Starting village prevalence = ", chi_v_start))
-# print(paste0("Equilibrium village prevalence = ", chi_v_SS))
-# print(paste0("Starting forest prevalence = ", chi_f_start))
-# print(paste0("Equilibrium forest prevalence = ", chi_f_SS))
-
 find_roots <- function(R_0_v, R_0_f,
-                       H_v = 5000, H_f = 2000,
-                       S_v = 8.8, S_f = 8.8,
-                       c_val = 0.15, p_val = 0.3,
-                       chi_v_start = 0.5, chi_f_start = 0.5) {
+                       H_v. = H_v, H_f. = H_f,
+                       S_v. = S_v, S_f. = S_f,
+                       c_val = c, p_val = p,
+                       chi_v_start. = chi_v_start, chi_f_start. = chi_f_start) {
   
-  X_v_start <- chi_v_start * H_v
-  X_f_start <- chi_f_start * H_f
+  X_v_start <- chi_v_start. * H_v
+  X_f_start <- chi_f_start. * H_f
   
   ss <- multiroot(f = model, start = c(X_v_start, X_f_start),
                   R_0_v = R_0_v, R_0_f = R_0_f,
-                  H_v = H_v, H_f = H_f,
-                  S_v = S_v, S_f = S_f,
+                  H_v = H_v., H_f = H_f.,
+                  S_v = S_v., S_f = S_f.,
                   c_val = c_val, p_val = p_val)
   
   chi_v_SS <- ss$root[1] / H_v
@@ -99,8 +123,8 @@ find_roots <- function(R_0_v, R_0_f,
   return(c(chi_v_SS, chi_f_SS))
 }
 
-R_0_v_values <- seq(0.1, 3, 0.01)
-R_0_f_values <- seq(0.1, 3, 0.01)
+R_0_v_values <- seq(0, 10, 0.1)
+R_0_f_values <- seq(0, 10, 0.1)
 
 results <- data.table(R_0_v = rep(0, times = length(R_0_f_values) * length(R_0_v_values)),
                       R_0_f = 0, chi_v = 0, chi_f = 0)
@@ -113,6 +137,9 @@ for (v in R_0_v_values) {
     results[i, R_0_f := f]
     results[i, chi_v := find_roots(v, f)[1]]
     results[i, chi_f := find_roots(v, f)[2]]
+    
+    cat("R_0_v =", v, ", R_0_f =", f, " \r", file = "", sep = " ")
+    flush.console()
     
     i <- i + 1
   }
