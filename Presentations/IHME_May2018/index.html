@@ -1,0 +1,381 @@
+<!doctype html>
+<html>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<head>
+
+	<!-- MASH Fonts -->
+	<style>
+	/* @import url(https://fonts.googleapis.com/css?family=Droid+Serif);
+	@import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz); */
+	</style>
+	<!-- MASH Fonts -->
+	<style>
+	div.img_holder img
+		{
+				float: left;
+				padding: 50px;
+		}
+	</style>
+
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+	<link rel="stylesheet" href="css/reveal.css">
+	<link rel="stylesheet" href="css/theme/ucsf.css">
+	<link rel="stylesheet" href="lib/css/codeHighlighter.css">
+	<title>M-BITES (IHME)</title>
+	<!-- Printing and PDF exports -->
+	<script>
+		var link = document.createElement( 'link' );
+		link.rel = 'stylesheet';
+		link.type = 'text/css';
+		link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+		document.getElementsByTagName( 'head' )[0].appendChild( link );
+	</script>
+	<script src="./lib/w3.js"></script>
+</head>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<body>
+	<div class="reveal">
+		<!--<img src="./images/logos.png" alt="ITESM" height="50px"  style="border-radius: 5px; position: fixed; left: 25px;bottom: 25px; z-index: 10;   border-radius:5px; border-color:#000; border-width: 0px; border-style: solid" >-->
+		<div class="slides">
+			<section data-background="./images/NetworkBackground.png">
+
+
+				<!-- TITLE SPLASH BEGIN -->
+				<section style="border-width:10px;">
+					<br><sectionTitleStyle style="font-size:45px">Consider a spherical mosquito...</sectionTitleStyle><br>
+					<p>M-BITES (Mosquito flight Bout-based and Individual-based Transmission Ecology Simulator)</p>
+					<iframe src="./images/MASH_transmissionChain.html" width="800px" height="325px" class="foo" scrolling="no"></iframe>
+					<br>
+
+					<ol style="font-size:21px; color:#052049;">
+					   <li> University of California, Berkeley
+					         <ul style="font-size:17px; color:#555;">Sean Wu, Biyonka Liang, Héctor M. Sánchez C.</ul>
+					   </li><!-- close list item containing nested list -->
+
+						 <li> Institute for Health Metrics and Evaluation, Seattle
+								<ul style="font-size:17px; color:#555;">Daniel Citron, Qian Zhang, John Michael Henry, David L. Smith</ul>
+						 </li><!-- close list item containing nested list -->
+					</ol>
+
+				</section>
+				<!-- TITLE SPLASH END -->
+
+				<!-- AGENDA SLIDE BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Agenda</sectionTitleStyle><br>
+					<p3>1. Theory of Mosquito-borne Pathogen Transmission</p3><br>
+					<p3>2. Simulating Mosquitoes</p3><br>
+					<p3>3. M-BITES Software</p3><br>
+					<p3>4. Simulating Ecology</p3><br>
+					<p3>5. Pathogen Transmission</p3><br>
+					<p3>6. Related Projects</p3><br>
+				</section>
+				<!-- AGENDA SLIDE END -->
+
+				<!-- THEORY SLIDES: 1 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Theory of Mosquito-borne Pathogens</sectionTitleStyle><br>
+					<p4 style="color: #555; font-size:30px;">Classical models are based on the Ross-Macdonald framework</p4>
+					<br>
+					<img src="./images/rm_ode.gif">
+					<br>
+					<img src="./images/heterogeneity.png" style="width:30%;">
+					<p style="font-size:15px; color:#555;">
+						Image from: <a style="font-size:15px;" href="http://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003327">Heterogeneity, Mixing, and the Spatial Scales of Mosquito-Borne Pathogen Transmission, https://doi.org/10.1371/journal.pcbi.1003327</a><br>
+					</p>
+
+				</section>
+				<!-- END -->
+
+				<!-- THEORY SLIDES: 2 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Theory of Mosquito-borne Pathogens</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;">Under a restricted set of assumptions, a set of quantities describes transmission:</p4>
+					<br>
+					<img src="./images/transmission_quantities.gif">
+					<br>
+					<p4 style="color: #555; font-size:22.5px;">Because reality is not a set of coupled ODEs, M-BITES builds upon these simple models while being amenable to mathematical analysis in restricted cases.</p4>
+
+				</section>
+				<!-- END -->
+
+				<!-- MOSQUITO -->
+
+				<!-- MOSQUITO SLIDES: 1 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Simulating Mosquitoes</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;">
+						We describe mosquito behavior as a sequence of flight bouts to accomplish a biological imperative.
+						<br>
+						This description provides a specification for continuous time discrete event simulation.
+						<!--
+							it does so beacuse we know the average duration of sojurn time in any state (launch to launch),
+							and we specify the probabilities of state transition based on the mosquito's individual characteristics
+							(eg; if it is exhausted it will try to take a sugar meal, if it is gravid it will try to ovipoisit, etc)
+					 	-->
+					</p4>
+
+					<img src="./images/lifeCycle.png" style="width:30%;">
+
+				</section>
+				<!-- END -->
+
+				<!-- MOSQUITO SLIDES: 2 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Simulating Mosquitoes</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;"></p4>
+
+					<iframe src="https://slwu89.shinyapps.io/DHM-Basic/" width="850px" height="500px" class="foo" scrolling="yes"></iframe>
+
+					<!--
+						Talk about going from ABMs back to the primary quantities that describe intensity of transmission or the capability of the environment
+						to support transmission (VC,EIR,R0) from summary statistics (mosquito bionomics) that can be calculated for specific environments (parameterizing the landscape).
+					-->
+
+				</section>
+				<!-- END -->
+
+				<!-- MOSQUITO SLIDES: 3 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Simulating Mosquitoes</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;"></p4>
+
+					<img src="./images/MASH_animation.gif" style="width:40%; border-radius:5px;">
+
+				</section>
+				<!-- END -->
+
+				<!-- MOSQUITO SLIDES: 4 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Simulating Mosquitoes</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;">Approximating deterministic ODE and PDE models have been developed to describe mean behavior of the system under restricting assumptions.</p4>
+
+					<img src="./images/MBITES_approx.png" style="width:75%;">
+
+					<!--
+						If all holding times follow an exponential distribution then we can reformulate the continuous time Markov process as a set of coupled ODEs (integrating with respect to mosquito age),
+						or a set of coupled PDEs (integrating with respect to mosquito age and time, to take into account seasonal variation in the numbers of adults being born).
+				  -->
+				</section>
+				<!-- END -->
+
+				<!-- SOFTWARE -->
+
+				<!-- SOFTWARE SLIDES: 1 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>M-BITES Software</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;">
+						Agents communicate with each other through the landscape.
+					</p4>
+
+					<img src="./images/MBITES_classes.png" style="width:50%;">
+
+				</section>
+				<!-- END -->
+
+				<!-- SOFTWARE SLIDES: 2 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>M-BITES Software</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;">
+						Mosquitoes simulate a series of behavioral bouts, each to accomplish a specific task, from launching to landing <br>
+						Survival, including mortality from exhaustion, wing tattering, and other factors is also simulated <br>
+						Activity consumes energy, replenished by sugar or blood feeding, and low-energy mosquitoes may seek sugar
+					</p4>
+
+					<img src="./images/MBITES_bout.png" style="width:80%;">
+
+					<!--
+						Mosquitoes
+					-->
+
+				</section>
+				<!-- END -->
+
+
+				<!-- ECOLOGY -->
+
+				<!-- ECOLOGY SLIDES: 1 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Simulating Ecology</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;">Spatial distribution of resources structures mosquito movement.</p4>
+
+					<img src="./images/spp_movement.png" style="width:50%;">
+
+					<!--
+						Where mosquitoes tend to aggregate in space depends on the spatial distribution of resources in an environment.
+						In simulation terms, movement between sites is specified by the attractiveness of the site (number and quality of resources present),
+						locations of the sites, and mosquito flight (a kernel function).
+				 	-->
+
+				</section>
+				<!-- END -->
+
+				<!-- ECOLOGY SLIDES: 2 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Simulating Ecology</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;">The spatial point pattern of resources is itself structured by various processes.</p4><br>
+
+					<img src="./images/spp_habitats.png" style="width:25%;">
+					<img src="./images/spp_houses.png" style="width:25%;">
+
+					<!--
+						We generated our pointsets by first assuming a parametric mean intensity function (in practice, this could be a linear combination of environmental and social covariates, for example),
+						and then simulating a realized intensity function from a log-Gaussian process with our assumed mean function and Gaussian covariance.
+						This realized intensity was used as the first-order trend to simulate houses, where interaction followed a hard-core process (to account for the fact people tend to value privacy between dwellings).
+						Mosquito habitats were simulated according to an inhomogeneous Poisson process according to the realized intensity function.
+					-->
+
+				</section>
+				<!-- END -->
+
+				<!-- ECOLOGY SLIDES: 3 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Simulating Ecology</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;">Both of these processes, as well as human distribution of time-at-risk, determine how mosquitoes use a landscape.</p4><br>
+
+					<img src="./images/MBITES_spatialMove.png" style="width:50%;">
+
+					<!--
+						We show a single cohort of mosquitoes moving through a landscape using resources until none survive.
+				 	-->
+
+				</section>
+				<!-- END -->
+
+				<!-- PATHOGEN TRANSMISSION -->
+
+				<!-- TRANSMISSION SLIDES: 1 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Pathogen Transmission</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:22.5px;">M-BITES will support a suite of <i>Pf</i> models (and other pathogens to come).</p4>
+					<br>
+
+					<li>
+						<p4 style="font-size:20px">PfSI: Enhanced SIS Model</p54><br>
+							<!-- Why 'enhanced'? Also includes fevers, which can queue health-seeking behavior -->
+						<img src="./images/MASH_PfSI.jpg" style="width:20%;">
+					</li>
+					<li>
+						<p4 style="font-size:20px">PfMOI: Multiplicity of Infection Model</p54><br>
+						<img src="./images/MASH_PfMOI.jpg" style="width:35%;">
+					</li>
+					<li>
+						<p4 style="font-size:20px">PfLOME: Lifetime Ontogeny of Malaria Epidemiology</p54><br>
+					</li>
+
+				</section>
+				<!-- END -->
+
+				<!-- TRANSMISSION SLIDES: 2 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Pathogen Transmission</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:21px;">Transmission simulation can help provide synthetic data to test algorithms for transmission chain reconstruction, for example.</p4>
+					<br>
+					<img src="./images/MASH_StaticNetwork.png" style="width:35%;">
+
+					<!--
+						The idea here is to have a good model of the data generating process that is underlying collected data, from which our data is a noisy observation of.
+						Practically speaking, this is relevant to work being done to characterize the genetic structure malaria parasites, which is useful for identification
+						of local vs. imported transmission.
+					-->
+
+				</section>
+				<!-- END -->
+
+
+				<!-- RELATED PROJECTS: 1 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Related Projects</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:19px;">Investigation of optimal combinations of interventions for Malaria Elimination Initiative (UCSF)</p4>
+					<br>
+					<video data-autoplay width=60% controls><source src="./images/InterventionOptim.mov"></video>
+
+				</section>
+				<!-- END -->
+
+				<!-- RELATED PROJECTS: 2 -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Related Projects</sectionTitleStyle><br>
+
+					<p4 style="color: #555; font-size:19px;">MGDrivE, developed at Marshall Lab (UC Berkeley) by Héctor M. Sánchez C., Sean Wu, Jared Bennett, and John M. Marshall</p4>
+					<br>
+					<br>
+
+					<iframe width="560" height="315" src="https://www.youtube.com/embed/xNpVog_X8aY" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+				</section>
+				<!-- END -->
+
+				<!-- Why do we do this? -->
+
+				<!-- ACKNOWLEDGMENTS -->
+				<section style="border-width:10px;"><br>
+					<img src="./images/berkeley.jpg" style="width:30%; border-radius: 5px;">
+					<img src="./images/ihme.png" style="width:25%; border-radius: 5px;"> <br>
+					<!-- <img src="./images/gates.png" style="width:30%; border-radius: 5px;"> -->
+					<!-- <img src="./images/DARPA.jpg" style="width:20%; border-radius: 5px;"> -->
+				</section>
+				<!-- ACKNOWLEDGMENTS -->
+
+				<!-- EXTRA BITS 1 BEGIN -->
+				<section style="border-width:10px;">
+					<sectionTitleStyle>Statics & Dynamics of <i>P.f</i> Transmission Systems</sectionTitleStyle><br>
+
+					<iframe src="https://slwu89.shinyapps.io/StaticsDynamics/" width="1000px" height="600px" class="foo" scrolling="yes"></iframe>
+
+				</section>
+				<!-- EXTRA BITS 1 END -->
+
+			</section>
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+			<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+		</div>
+	</div>
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+<!--.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.-.--->
+	<script src="lib/js/head.min.js"></script>
+	<script src="js/reveal.js"></script>
+	<script>w3.includeHTML();</script>
+	<script>
+	// More info https://github.com/hakimel/reveal.js#configuration
+	Reveal.initialize({
+		controls: false,
+		progress: false,
+		history: true,
+		center: true,
+		transition: 'slide', // none/fade/slide/convex/concave/zoom
+		// More info https://github.com/hakimel/reveal.js#dependencies
+		dependencies: [
+			{src:'lib/js/classList.js', condition: function() { return !document.body.classList;}},
+			{src:'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' );}},
+			{src:'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' );}},
+			{src:'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad();}},
+			{src:'plugin/zoom-js/zoom.js', async: true},
+			{src:'plugin/notes/notes.js', async: true}
+		]
+	});
+	</script>
+</body>
+</html>
