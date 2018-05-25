@@ -73,6 +73,8 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                      private$tile_id = 0L
                      private$tiles = NULL
 
+                     self$pretty = logical(1)
+
                      invisible(gc())
                    } # end destructor
 
@@ -110,7 +112,16 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
 ###############################################################################
 
 #' simulation
-simulate_MBITES_Globals <- function(tMax){
+simulate_MBITES_Globals <- function(tMax,pretty=TRUE){
+
+  self$pretty = pretty
+
+  # begin valid JSON output
+  if(pretty){
+    cat("[",sep="",file=private$mosquito_f_out)
+    cat("[",sep="",file=private$mosquito_m_out)
+    cat("[",sep="",file=private$human_out)
+  }
 
   # run simulation
   pb <- txtProgressBar(min = 0, max = tMax, initial = 0)
@@ -128,15 +139,20 @@ simulate_MBITES_Globals <- function(tMax){
 
   # write out all agent histories and clear containers
   for(i in 1:length(private$tiles)){
-    private$tiles[[i]]$get_mosquitoes()$apply(tag="exit")
-    # private$tiles[[i]]$get_mosquitoes()$apply(tag="exit",force=TRUE)
-    private$tiles[[i]]$get_humans()$apply(tag="exit")
+    private$tiles[[i]]$get_mosquitoes()$apply(tag="exit",pretty)
+    private$tiles[[i]]$get_humans()$apply(tag="exit",pretty)
   }
 
   # end valid JSON output
-  cat("{}]",sep="",file=private$mosquito_f_out)
-  cat("{}]",sep="",file=private$mosquito_m_out)
-  cat("{}]",sep="",file=private$human_out)
+  if(pretty){
+    cat("{}]",sep="",file=private$mosquito_f_out)
+    cat("{}]",sep="",file=private$mosquito_m_out)
+    cat("{}]",sep="",file=private$human_out)
+  } else {
+    cat("{}",sep="",file=private$mosquito_f_out)
+    cat("{}",sep="",file=private$mosquito_m_out)
+    cat("{}",sep="",file=private$human_out)
+  }
 
   # close old connections
   if(!is.null(private$mosquito_f_out)){close(private$mosquito_f_out)}
@@ -150,8 +166,8 @@ MBITES_Globals$set(which = "public",name = "simulate",
 
 #' user-facing simulation function
 #' @export
-simulation <- function(tMax){
-  MBITES:::Globals$simulate(tMax)
+simulation <- function(tMax,pretty=TRUE){
+  MBITES:::Globals$simulate(tMax,pretty)
 }
 
 
@@ -183,10 +199,6 @@ set_output_MBITES_Globals <- function(directory,runID){
   private$mosquito_m_out = file(description = paste0(dirOut,"/mosquito_M_",runID,".json"),open = "wt")
   private$human_out = file(description = paste0(dirOut,"/human_",runID,".json"),open = "wt")
 
-  # begin valid JSON output
-  cat("[",sep="",file=private$mosquito_f_out)
-  cat("[",sep="",file=private$mosquito_m_out)
-  cat("[",sep="",file=private$human_out)
 }
 
 #' MBITES Globals: Reset Tiles and logging

@@ -4,7 +4,7 @@
 \alias{simulate_MBITES_Globals}
 \title{simulation}
 \usage{
-simulate_MBITES_Globals(tMax)
+simulate_MBITES_Globals(tMax, pretty = TRUE)
 }
 \description{
 simulation
