@@ -720,7 +720,604 @@ MBITES_Parameters$set(which = "public",name = "set_parameters",
 # Set Parameters
 ###############################################################################
 
+set_defaultState_F_MBITES_Parameters <- function(defaultState_F){
+  if(!is.character(defaultState_F)){stop("'defaultState_F' must be a character\n")}
+  private$defaultState_F = defaultState_F
+}
 
+set_defaultState_M_MBITES_Parameters <- function(defaultState_M){
+  if(!is.character(defaultState_M)){stop("'defaultState_M' must be a character\n")}
+  private$defaultState_M = defaultState_M
+}
+
+#' set the string telling you what aquatic ecology model is being used
+set_aqua_model_MBITES_Parameters <- function(aqua_model){
+  if(!is.character(aqua_model)){stop("'aqua_model' must be a character\n")}
+  private$aqua_model = aqua_model
+}
+
+#' set dispersal (parameter to move even if resources are present)
+set_disperse_MBITES_Parameters <- function(disperse){
+  if(!is.numeric(disperse) & (disperse > 1 | disperse < 0)){stop("'disperse' must be between [0,1]\n")}
+  private$disperse = disperse
+}
+
+#' set 1/number of failed bouts until mosquito gives up and searches
+set_boutFail_p_MBITES_Parameters <- function(boutFail_p){
+  private$boutFail_p = boutFail_p
+}
+
+set_b_wts_MBITES_Parameters <- function(b_wts){
+  if(length(b_wts)!=5){stop("'b_wts' must be length 5\n")}
+  private$b_wts = b_wts
+}
+
+set_o_wts_MBITES_Parameters <- function(o_wts){
+  if(length(o_wts)!=5){stop("'o_wts' must be length 5\n")}
+  private$o_wts = o_wts
+}
+
+set_m_wts_MBITES_Parameters <- function(m_wts){
+  if(length(m_wts)!=5){stop("'m_wts' must be length 5\n")}
+  private$m_wts = m_wts
+}
+
+set_s_wts_MBITES_Parameters <- function(s_wts){
+  if(length(s_wts)!=5){stop("'s_wts' must be length 5\n")}
+  private$s_wts = s_wts
+}
+
+#' should be a named matrix because indexing is going to be on dimension names.
+set_InAndOut_MBITES_Parameters <- function(InAndOut){
+  if(!is.matrix(InAndOut)){stop("'InAndOut' must be a 5x5 matrix\n")}
+  private$InAndOut = InAndOut
+}
+
+set_tSwarm_MBITES_Parameters <- function(tSwarm){
+  private$tSwarm = tSwarm
+}
+
+set_Emax_MBITES_Parameters <- function(Emax){
+  private$Emax = Emax
+}
+
+set_Eb_MBITES_Parameters <- function(Eb){
+  private$Eb = Eb
+}
+
+set_Ep_MBITES_Parameters <- function(Ep){
+  private$Ep = Ep
+}
+
+set_eEndm_MBITES_Parameters <- function(eEndm){
+  private$eEndm = eEndm
+}
+
+set_eEndSd_MBITES_Parameters <- function(eEndSd){
+  private$eEndSd = eEndSd
+}
+
+set_estivationDay_MBITES_Parameters <- function(estivationDay){
+  private$estivationDay = estivationDay
+}
+
+set_energyPreG_MBITES_Parameters <- function(energyPreG){
+  private$energyPreG = energyPreG
+}
+
+set_preGsugar_MBITES_Parameters <- function(preGsugar){
+  private$preGsugar = preGsugar
+}
+
+set_energyFromBlood_b_MBITES_Parameters <- function(energyFromBlood_b){
+  private$energyFromBlood_b = energyFromBlood_b
+}
+
+set_S_u_MBITES_Parameters <- function(S_u){
+  private$S_u = S_u
+}
+
+set_omega_MBITES_Parameters <- function(omega){
+  private$omega = omega
+}
+
+set_S_sa_MBITES_Parameters <- function(S_sa){
+  private$S_sa = S_sa
+}
+
+set_S_sb_MBITES_Parameters <- function(S_sb){
+  private$S_sb = S_sb
+}
+
+set_S_w_MBITES_Parameters <- function(S_w){
+  private$S_w = S_w
+}
+
+set_S_p_MBITES_Parameters <- function(S_p){
+  private$S_p = S_p
+}
+
+set_Bs_surv_MBITES_Parameters <- function(Bs_surv){
+  private$Bs_surv = Bs_surv
+}
+
+set_Os_surv_MBITES_Parameters <- function(Os_surv){
+  private$Os_surv = Os_surv
+}
+
+set_Ms_surv_MBITES_Parameters <- function(Ms_surv){
+  private$Ms_surv = Ms_surv
+}
+
+set_Ss_surv_MBITES_Parameters <- function(Ss_surv){
+  private$Ss_surv = Ss_surv
+}
+
+set_B_surv_MBITES_Parameters <- function(B_surv){
+  private$B_surv = B_surv
+}
+
+set_O_surv_MBITES_Parameters <- function(O_surv){
+  private$O_surv = O_surv
+}
+
+set_M_surv_MBITES_Parameters <- function(M_surv){
+  private$M_surv = M_surv
+}
+
+set_S_surv_MBITES_Parameters <- function(S_surv){
+  private$S_surv = S_surv
+}
+
+set_Bs_succeed_MBITES_Parameters <- function(Bs_succeed){
+  private$Bs_succeed = Bs_succeed
+}
+
+set_Os_succeed_MBITES_Parameters <- function(Os_succeed){
+  private$Os_succeed = Os_succeed
+}
+
+set_Ms_succeed_MBITES_Parameters <- function(Ms_succeed){
+  private$Ms_succeed = Ms_succeed
+}
+
+set_Ss_succeed_MBITES_Parameters <- function(Ss_succeed){
+  private$Ss_succeed = Ss_succeed
+}
+
+set_B_succeed_MBITES_Parameters <- function(B_succeed){
+  private$B_succeed = B_succeed
+}
+
+set_O_succeed_MBITES_Parameters <- function(O_succeed){
+  private$O_succeed = O_succeed
+}
+
+set_M_succeed_MBITES_Parameters <- function(M_succeed){
+  private$M_succeed = M_succeed
+}
+
+set_S_succeed_MBITES_Parameters <- function(S_succeed){
+  private$S_succeed = S_succeed
+}
+
+set_surviveH_MBITES_Parameters <- function(surviveH){
+  private$surviveH = surviveH
+}
+
+set_probeH_MBITES_Parameters <- function(probeH){
+  private$probeH = probeH
+}
+
+set_surviveprobeH_MBITES_Parameters <- function(surviveprobeH){
+  private$surviveprobeH = surviveprobeH
+}
+
+set_feedH_MBITES_Parameters <- function(feedH){
+  private$feedH = feedH
+}
+
+set_surviveZ_MBITES_Parameters <- function(surviveZ){
+  private$surviveZ = surviveZ
+}
+
+set_feedZ_MBITES_Parameters <- function(feedZ){
+  private$feedZ = feedZ
+}
+
+set_PPR_a_MBITES_Parameters <- function(PPR_a){
+  private$PPR_a = PPR_a
+}
+
+set_PPR_b_MBITES_Parameters <- function(PPR_b){
+  private$PPR_b = PPR_b
+}
+
+set_S_a_MBITES_Parameters <- function(S_a){
+  private$S_a = S_a
+}
+
+set_S_b_MBITES_Parameters <- function(S_b){
+  private$S_b = S_b
+}
+
+set_ttsz_p_MBITES_Parameters <- function(ttsz_p){
+  private$ttsz_p = ttsz_p
+}
+
+set_ttsz_a_MBITES_Parameters <- function(ttsz_a){
+  private$ttsz_a = ttsz_a
+}
+
+set_ttsz_b_MBITES_Parameters <- function(ttsz_b){
+  private$ttsz_b = ttsz_b
+}
+
+set_ttr_a_MBITES_Parameters <- function(ttr_a){
+  private$ttr_a = ttr_a
+}
+
+set_ttr_b_MBITES_Parameters <- function(ttr_b){
+  private$ttr_b = ttr_b
+}
+
+set_chm_a_MBITES_Parameters <- function(chm_a){
+  private$chm_a = chm_a
+}
+
+set_chm_b_MBITES_Parameters <- function(chm_b){
+  private$chm_b = chm_b
+}
+
+set_sns_a_MBITES_Parameters <- function(sns_a){
+  private$sns_a = sns_a
+}
+
+set_sns_b_MBITES_Parameters <- function(sns_b){
+  private$sns_b = sns_b
+}
+
+set_bm_a_MBITES_Parameters <- function(bm_a){
+  private$bm_a = bm_a
+}
+
+set_bm_b_MBITES_Parameters <- function(bm_b){
+  private$bm_b = bm_b
+}
+
+set_of_a_MBITES_Parameters <- function(of_a){
+  private$of_a = of_a
+}
+
+set_of_b_MBITES_Parameters <- function(of_b){
+  private$of_b = of_b
+}
+
+set_bloodPerEgg_MBITES_Parameters <- function(bloodPerEgg){
+  private$bloodPerEgg = bloodPerEgg
+}
+
+set_bs_m_MBITES_Parameters <- function(bs_m){
+  private$bs_m = bs_m
+}
+
+set_bs_sd_MBITES_Parameters <- function(bs_sd){
+  private$bs_sd = bs_sd
+}
+
+set_maxBatch_MBITES_Parameters <- function(maxBatch){
+  private$maxBatch = maxBatch
+}
+
+set_emt_m_MBITES_Parameters <- function(emt_m){
+  private$emt_m = emt_m
+}
+
+set_emt_sd_MBITES_Parameters <- function(emt_sd){
+  private$emt_sd = emt_sd
+}
+
+set_rf_a_MBITES_Parameters <- function(rf_a){
+  private$rf_a = rf_a
+}
+
+set_rf_b_MBITES_Parameters <- function(rf_b){
+  private$rf_b = rf_b
+}
+
+# set methods
+MBITES_Parameters$set(which = "public",name = "set_defaultState_F",
+    value = set_defaultState_F_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_defaultState_M",
+    value = set_defaultState_M_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_aqua_model",
+    value = set_aqua_model_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_disperse",
+    value = set_disperse_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_boutFail_p",
+    value = set_boutFail_p_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_b_wts",
+    value = set_b_wts_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_o_wts",
+    value = set_o_wts_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_m_wts",
+    value = set_m_wts_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_s_wts",
+    value = set_s_wts_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_InAndOut",
+    value = set_InAndOut_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_tSwarm",
+    value = set_tSwarm_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Emax",
+    value = set_Emax_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Eb",
+    value = set_Eb_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Ep",
+    value = set_Ep_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_eEndm",
+    value = set_eEndm_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_eEndSd",
+    value = set_eEndSd_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_estivationDay",
+    value = set_estivationDay_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_energyPreG",
+    value = set_energyPreG_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_preGsugar",
+    value = set_preGsugar_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_energyFromBlood_b",
+    value = set_energyFromBlood_b_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_S_u",
+    value = set_S_u_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_omega",
+    value = set_omega_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_S_sa",
+    value = set_S_sa_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_S_sb",
+    value = set_S_sb_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_S_w",
+    value = set_S_w_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_S_p",
+    value = set_S_p_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Bs_surv",
+    value = set_Bs_surv_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Os_surv",
+    value = set_Os_surv_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Ms_surv",
+    value = set_Ms_surv_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Ss_surv",
+    value = set_Ss_surv_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_B_surv",
+    value = set_B_surv_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_O_surv",
+    value = set_O_surv_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_M_surv",
+    value = set_M_surv_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_S_surv",
+    value = set_S_surv_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Bs_succeed",
+    value = set_Bs_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Os_succeed",
+    value = set_Os_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Ms_succeed",
+    value = set_Ms_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_Ss_succeed",
+    value = set_Ss_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_B_succeed",
+    value = set_B_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_O_succeed",
+    value = set_O_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_M_succeed",
+    value = set_M_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_S_succeed",
+    value = set_S_succeed_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_surviveH",
+    value = set_surviveH_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_probeH",
+    value = set_probeH_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_surviveprobeH",
+    value = set_surviveprobeH_MBITES_Parameters, overwrite = TRUE
+)
+
+
+MBITES_Parameters$set(which = "public",name = "set_feedH",
+    value = set_feedH_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_surviveZ",
+    value = set_surviveZ_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_feedZ",
+    value = set_feedZ_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_PPR_a",
+    value = set_PPR_a_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_PPR_b",
+    value = set_PPR_b_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_S_a",
+    value = set_S_a_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_S_b",
+    value = set_S_b_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_ttsz_p",
+    value = set_ttsz_p_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_ttsz_a",
+    value = set_ttsz_a_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_ttsz_b",
+    value = set_ttsz_b_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_ttr_a",
+    value = set_ttr_a_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_ttr_b",
+    value = set_ttr_b_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_chm_a",
+    value = set_chm_a_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_chm_b",
+    value = set_chm_b_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_sns_a",
+    value = set_sns_a_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_sns_b",
+    value = set_sns_b_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_bm_a",
+    value = set_bm_a_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_bm_b",
+    value = set_bm_b_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_of_a",
+    value = set_of_a_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_of_b",
+    value = set_of_b_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_bloodPerEgg",
+    value = set_bloodPerEgg_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_bs_m",
+    value = set_bs_m_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_bs_sd",
+    value = set_bs_sd_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_maxBatch",
+    value = set_maxBatch_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_emt_m",
+    value = set_emt_m_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_emt_sd",
+    value = set_emt_sd_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_rf_a",
+    value = set_rf_a_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "set_rf_b",
+    value = set_rf_b_MBITES_Parameters, overwrite = TRUE
+)
 
 
 ###############################################################################
