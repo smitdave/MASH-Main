@@ -104,8 +104,12 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
                    preGsugar            = numeric(1), # sugar energy that can satisfy pre-gonotrophic energy
                    energyFromBlood_b    = numeric(1), # half-maximum parameter for mbites_energyFromBlood
                    S_u                  = numeric(1), # energy expended during a flight
+
+                   omega                = numeric(1),
                    S_sa                 = numeric(1), # pSugarBout
                    S_sb                 = numeric(1), # pSugarBout
+                   S_w                  = numeric(1),
+                   S_p                  = numeric(1),
 
                    # Survival
                    Bs_surv              = numeric(1),
@@ -464,8 +468,11 @@ MBITES_Parameters$set(which = "public",name = "set_ttEvent_ppr",
 #' @param preGsugar amount of energy a sugar meal contributes to the pre-gonotrophic energy requirement, called from \code{\link{mbites_sugarMeal}}
 #' @param energyFromBlood_b amount of energy derived per unit of blood, called from \code{\link{mbites_energyFromBlood}}
 #' @param S_u amount of energy burned by a mosquito during a bout, called from \code{\link{mbites_flightBurnEnergy}}
+#' @param omega
 #' @param S_sa parameter for probability to queue a sugar bout as function of a mosquito's energy, called from \code{\link{mbites_pSugarBout}}
 #' @param S_sb parameter for probability to queue a sugar bout as function of a mosquito's energy, called from \code{\link{mbites_pSugarBout}}
+#' @param S_w
+#' @param S_p
 #' @param Bs_surv blood feeding search bout baseline survival probability, called from \code{\link{surviveFlight}}
 #' @param Os_surv oviposition search bout baseline survival probability, called from \code{\link{surviveFlight}}
 #' @param Ms_surv mating search bout baseline survival probability, called from \code{\link{surviveFlight}}
@@ -492,7 +499,7 @@ MBITES_Parameters$set(which = "public",name = "set_ttEvent_ppr",
 #' @param PPR_b parameter for probability of death during post-prandial resting as function of blood meal size, called from \code{\link{mbites_pPPRFlight}}
 #' @param S_a parameter for probability of death due to energy reserves, called from \code{\link{mbites_pEnergySurvival}}
 #' @param S_b parameter for probability of death due to energy reserves, called from \code{\link{mbites_pEnergySurvival}}
-#' @param ttsz_p zero-inflation for wing damage, called from \code{\link{mbites_WingTattering}}
+#' @param ttsz_p zero-inflation for wing damage (probability of zero damage incurred), called from \code{\link{mbites_WingTattering}}
 #' @param ttsz_a alpha parameter for beta distributed wing damage, called from \code{\link{mbites_WingTattering}}
 #' @param ttsz_b beta parameter for beta distributed wing damage, called from \code{\link{mbites_WingTattering}}
 #' @param ttr_a parameter for probability of death due to wing tattering, called from \code{\link{mbites_pTatter}}
@@ -552,8 +559,13 @@ set_parameters_MBITES_Parameters <- function(
   preGsugar            = 0, # sugar energy that can satisfy pre-gonotrophic energy
   energyFromBlood_b    = 0.25, # half-maximum parameter for mbites_energyFromBlood
   S_u                  = 1/7, # energy expended during a flight
-  S_sa                 = 15, # pSugarBout
-  S_sb                 = 5, # pSugarBout
+
+  # pSugarBout
+  omega                = 0,
+  S_sa                 = 25,
+  S_sb                 = 20,
+  S_w                  = 5,
+  S_p                  = 2,
 
   # Survival (baseline survival, see MBITES-Survival)
   Bs_surv              = 0.95,
@@ -583,8 +595,8 @@ set_parameters_MBITES_Parameters <- function(
   surviveZ                = 1,
   feedZ                   = 1,
 
-  PPR_a                = 5, # mbites_pPPRFlight
-  PPR_b                = 1000, # mbites_pPPRFlight
+  PPR_a                = 15, # mbites_pPPRFlight
+  PPR_b                = 300, # mbites_pPPRFlight
   S_a                  = 20, # mbites_pEnergySurvival
   S_b                  = 10, # mbites_pEnergySurvival
 
@@ -595,7 +607,7 @@ set_parameters_MBITES_Parameters <- function(
   ttr_a                = 15, # wing tattering (probability of death)
   ttr_b                = 500,
 
-  chm_a                = 15, # chemical damage to mosquito body
+  chm_a                = 7.5, # chemical damage to mosquito body
   chm_b                = 500,
 
   sns_a                = 0.085, # senescence parameters
@@ -617,8 +629,8 @@ set_parameters_MBITES_Parameters <- function(
   emt_m                = 3, # mean of normally dist. maturation time
   emt_sd               = 1, # sd of normally dist. maturation time
 
-  rf_a                 = 60, # refeeding probability
-  rf_b                 = 5e3
+  rf_a                 = 10, # refeeding probability
+  rf_b                 = 3
 
 ){
 
@@ -643,8 +655,11 @@ set_parameters_MBITES_Parameters <- function(
   private$preGsugar            = preGsugar
   private$energyFromBlood_b    = energyFromBlood_b
   private$S_u                  = S_u
-  private$S_sa                 = S_sa
+  private$omega                = omega
   private$S_sb                 = S_sb
+  private$S_sa                 = S_sa
+  private$S_w                  = S_w
+  private$S_p                  = S_p
   private$Bs_surv              = Bs_surv
   private$Os_surv              = Os_surv
   private$Ms_surv              = Ms_surv
@@ -791,12 +806,24 @@ get_S_u_MBITES_Parameters <- function(){
   return(private$S_u)
 }
 
+get_omega_MBITES_Parameters <- function(){
+  return(private$omega)
+}
+
 get_S_sa_MBITES_Parameters <- function(){
   return(private$S_sa)
 }
 
 get_S_sb_MBITES_Parameters <- function(){
   return(private$S_sb)
+}
+
+get_S_w_MBITES_Parameters <- function(){
+  return(private$S_w)
+}
+
+get_S_p_MBITES_Parameters <- function(){
+  return(private$S_p)
 }
 
 get_Bs_surv_MBITES_Parameters <- function(){
@@ -1060,12 +1087,24 @@ MBITES_Parameters$set(which = "public",name = "get_S_u",
     value = get_S_u_MBITES_Parameters, overwrite = TRUE
 )
 
+MBITES_Parameters$set(which = "public",name = "get_omega",
+    value = get_omega_MBITES_Parameters, overwrite = TRUE
+)
+
 MBITES_Parameters$set(which = "public",name = "get_S_sa",
     value = get_S_sa_MBITES_Parameters, overwrite = TRUE
 )
 
 MBITES_Parameters$set(which = "public",name = "get_S_sb",
     value = get_S_sb_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_S_w",
+    value = get_S_w_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_S_p",
+    value = get_S_p_MBITES_Parameters, overwrite = TRUE
 )
 
 MBITES_Parameters$set(which = "public",name = "get_Bs_surv",

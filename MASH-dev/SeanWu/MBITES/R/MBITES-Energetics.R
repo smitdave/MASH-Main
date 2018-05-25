@@ -76,10 +76,19 @@ mbites_queueSugarBout_null <- function(){
 #'  * This method is bound to \code{Mosquito$pSugarBout}
 #'
 mbites_pSugarBout <- function(){
+  omega = MBITES:::Parameters$get_omega()
   S_sb = MBITES:::Parameters$get_S_sb()
   S_sa = MBITES:::Parameters$get_S_sa()
-  (2+S_sb)/(1+S_sb)-exp(S_sa*private$energy)/(S_sb+exp(S_sa*private$energy))
+  S_w = MBITES:::Parameters$get_S_w()
+  S_p = MBITES:::Parameters$get_S_p()
+  exp(S_sa)/(S_sb*(1+(omega*S_w)^S_p)+exp(S_sa)) - exp(S_sa*private$energy)/(S_sb*(1+(omega*S_w)^S_p) + exp(S_sa*private$energy))
 }
+
+# mbites_pSugarBout <- function(){
+#   S_sb = MBITES:::Parameters$get_S_sb()
+#   S_sa = MBITES:::Parameters$get_S_sa()
+#   (2+S_sb)/(1+S_sb)-exp(S_sa*private$energy)/(S_sb+exp(S_sa*private$energy))
+# }
 
 Mosquito$set(which = "public",name = "energetics",
     value = mbites_energetics, overwrite = TRUE
