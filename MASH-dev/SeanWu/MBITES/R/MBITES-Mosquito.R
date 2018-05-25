@@ -176,7 +176,7 @@ mbites_trackHistory <- function(){
 #' If the mosquito is dead, write out its history to a JSON-formatted file and then delete from the container object (\code{\link{HashMap}}).
 #'  * This method is bound to \code{Mosquito_Female$exit}
 #'
-#' @param force if \code{TRUE} the mosquito will write out history and be removed from the container even if still alive
+#' @param pretty prettify JSON output
 #'
 mbites_exit <- function(){
   self$trackHistory()
@@ -188,25 +188,10 @@ mbites_exit <- function(){
           sites = private$siteHist[1:private$nEvent],
           search = private$searchHist[1:private$nEvent],
           behavior = private$stateHist[1:private$nEvent]
-      ), pretty = TRUE),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
+      ), pretty = MBITES:::Globals$pretty),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
   # remove this mosquito from the hash table
   MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
 }
-# mbites_exit <- function(force = FALSE){
-#   if(!private$alive | force){
-#     # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
-#     cat(jsonlite::toJSON(x = list(
-#             id = private$id,
-#             tile = private$tileID,
-#             time = private$timeHist[1:private$nEvent],
-#             sites = private$siteHist[1:private$nEvent],
-#             search = private$searchHist[1:private$nEvent],
-#             behavior = private$stateHist[1:private$nEvent]
-#         ), pretty = TRUE),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
-#     # remove this mosquito from the hash table
-#     MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
-#   }
-# }
 
 Mosquito$set(which = "public",name = "trackHistory",
           value = mbites_trackHistory, overwrite = TRUE
@@ -336,7 +321,7 @@ trackFeed_Mosquito_Female <- function(){
 }
 
 # need to overwrite default exit function
-mbites_exit_Mosquito_Female <- function(force = FALSE){
+mbites_exit_Mosquito_Female <- function(){
   self$trackHistory()
   # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
   cat(jsonlite::toJSON(x = list(
@@ -352,7 +337,7 @@ mbites_exit_Mosquito_Female <- function(force = FALSE){
           timeFeed = private$feedTime[1:(private$nFeed-1L)],
           probeAndFeed = private$probeAndFeed[1:(private$nFeed-1L)]
           # write out
-      ), pretty = TRUE),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
+      ), pretty = MBITES:::Globals$pretty),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
   # remove this mosquito from the hash table
   MBITES:::Globals$get_tile(private$tileID)$get_mosquitoes()$rm(private$id)
 }

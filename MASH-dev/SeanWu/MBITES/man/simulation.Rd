@@ -4,7 +4,7 @@
 \alias{simulation}
 \title{user-facing simulation function}
 \usage{
-simulation(tMax)
+simulation(tMax, pretty = TRUE)
 }
 \description{
 user-facing simulation function
