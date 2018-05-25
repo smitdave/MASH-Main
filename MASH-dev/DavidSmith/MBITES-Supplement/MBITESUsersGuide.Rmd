@@ -297,6 +297,30 @@ plot(x, pEnergySurvival(x),type = "l", col ="blue",
 
 ##### Physical Damage (Wing Tattering)
 
+Wing tattering is a form of phyiscal damage to the mosquito incurred from flight stress between launching to landing. Per-bout physical damage is modelled as a random variate following a zero-inflated Beta distribution.
+
+```{r}
+dWingTatter <- function(x,ttsz_p,ttsz_a,ttsz_b){
+  if(abs(x - 0) < .Machine$double.eps){
+    ttsz_p
+  } else {
+    dbeta(x,ttsz_a,ttsz_b)
+  }
+}
+dWingTatter <- Vectorize(dWingTatter,"x")
+```
+
+```{r, fig=TRUE, echo=FALSE}
+
+x=seq(0,1,length.out=100)
+x_out = dWingTatter(x,ttsz_p = 0.5,ttsz_a = 5,ttsz_b = 95)
+x_out[-1] = x_out[-1]*(1-0.5) / sum(x_out[-1])
+plot(x, x_out,type = "l", col ="blue", 
+     xlab= "Physical Damage", 
+     ylab = "Density", 
+     main = "Physical Damage (Wing tattering)")
+```
+
 Tattering is a multiplicative decrease in the probability of survival as a function of how much physical damage the mosquito has accrued over its lifespan. That is, if survival per bout at baseline is $p_{base}$, then with phyiscal damage, survival per bout is $p_{base} p_{Physical\,Damage}(D).$ The function `mbites_pTatter` is found in MBITES-Survival.R
 
 ```{r}
@@ -524,8 +548,21 @@ plot(x, pPPRFlight(x),type = "l", col ="blue",
      main = "PPR Mortality")
 ```
 
+**Overfeeding** 
+```{r}
+# This function computes the probability of death due to overfeeding
+pOverFeed <- function(x,of_a=5,of_b=5e3){
+  exp(of_a*x)/(of_b + exp(of_a*x))
+}
+```
 
-
+```{r, fig=TRUE, echo=FALSE}
+x=seq(0,1,length.out=100)
+plot(x, pOverFeed(x),type = "l", col ="blue", 
+     xlab= "Size of blood meal", 
+     ylab = "Mortality",
+     main = "Overfeeding Mortality")
+```
 
 
 ##### Oogenesis Model 1 
@@ -535,7 +572,7 @@ Oogenesis model 1 has the option to include refeeding behavior. This causes the 
 ```{r}
 # The probability of refeeding as a 
 # function of the bloodmeal size
-pReFeed <- function(x,rf_a=10,rf_b=4){
+pReFeed <- function(x,rf_a=10,rf_b=3){
   1 - exp(rf_a*x)/(exp(rf_b)+ exp(rf_a*x))
 }
 ```
