@@ -80,8 +80,9 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 
 #' reset between runs
 reset_Feeding_Resource <- function(){
-  self$RiskQ <- NULL # wipe it out
-  self$RiskQ <- make_RiskQ() # make it again
+  self$RiskQ$clearQ()
+  # self$RiskQ <- NULL # wipe it out
+  # self$RiskQ <- make_RiskQ() # make it again
 }
 
 #' Blood Feeding Resource: Get House Entry Probability
