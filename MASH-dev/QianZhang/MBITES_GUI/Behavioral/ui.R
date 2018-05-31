@@ -35,8 +35,11 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
 			##################### Overview ##############################################
             tabPanel("Get Started", value = 'start',
             	navlistPanel(widths = c(3,9),
-            		tabPanel("Overview"),
-		            ##################### project #######################################
+            		tabPanel("Overview",
+            			includeMarkdown("instructions.md"),
+            			img(src='structure.png',align="center",width="100%", height= "150%")
+            			),
+		            ##################### load project #######################################
 					tabPanel("Launch a project",
 						h2("Welcome to MBITES!"),
 						hr(),
@@ -44,42 +47,67 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
 						radioButtons("project", "",
 							c("First time user (Run our demo project)" = "demo",
 								"Start a new project" = "new",
-								"Work on an existing project" = "exist"))
-						))),
+								"Work on an existing project" = "exist")),
+						conditionalPanel(condition = "input.project == 'demo'",
+							wellPanel(
+								radioButtons("whichDemo", label = "Start with:",
+									choices = c("Default Demo" = "default_demo","Customized Demo(.rds)" = "cust_demo")),
+								conditionalPanel(condition = "input.whichDemo == 'cust_demo'",
+									fileInput("load_demo", "Choose your .rds file", accept = ".rds")
+									)
+								),
+							actionButton("createDemoFolder", "Run Demo")
+							),
+						conditionalPanel(condition = "input.project == 'new'",
+							textInput("new_proj_name", "Name your project/folder", "new_project"),
+							actionButton("createNewFolder", "Create")
+							),
+						conditionalPanel(condition = "input.project == 'exist'",
+							radioButtons("exist_file", label = "select your file format:",
+								choices = c(".rds" = "rds",".csv" = "csv"), selected = "rds"),
+							conditionalPanel(condition = "input.exist_file == 'csv'",
+								fileInput('file_project', 'Choose .csv File',
+									accept=c('text/csv','text/comma-separated-values,text/plain','.csv'))),
+							conditionalPanel(condition = "input.exist_file == 'rds'",
+								fileInput('exist_rds', "choose your .rds file", accept = ".rds")
+								),
+							hr(),
+							actionButton("launchgo", "Go!")
+						)))),
 
 			###################### timing  ############################################
 			tabPanel(title = "Timing",value = "timing",
-				uiOutput("panel_timing") 
+				uiOutput("panel_timing")
 				),
 			##################### bloodmeal #############################################
 			tabPanel(title = "Blood Meal",value = "bloodmeal",
-				uiOutput("panel_bloodmeal") 
+				uiOutput("panel_bloodmeal")
 				),
 			##################### oogenesis #############################################
 			tabPanel(title = "Oogenesis",value = "oogenesis",
-				uiOutput("panel_oogenesis") 
+				uiOutput("panel_oogenesis")
 				),
 			##################### energetics ###########################################
 			tabPanel(title = "Energetics",value = "energetics",
-				uiOutput("panel_energetics") 
+				uiOutput("panel_energetics")
 				),
 			##################### oviposition ############################################
 			tabPanel(title = "Oviposition",value = "oviposition",
-				uiOutput("panel_oviposition") 
+				uiOutput("panel_oviposition")
 				),
 			##################### survival ###############################################
 			tabPanel(title = "Survival",value = "survival",
-				uiOutput("panel_survival") 
+				uiOutput("panel_survival")
 				),
 			##################### pathogen ###############################################
 			tabPanel(title = "Pathogen",value = "pathogen",
-				uiOutput("panel_pathogen") 
+				uiOutput("panel_pathogen")
 				),
 			##################### About ##############################################
 			tabPanel(title = "About",value = "about",
-				uiOutput("panel_about") 
+				uiOutput("panel_about")
 				)
 
 
-			))
-)
+			)
+))
