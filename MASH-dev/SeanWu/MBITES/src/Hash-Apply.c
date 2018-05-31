@@ -28,7 +28,7 @@ SEXP hash_apply_c(SEXP call, SEXP rho){
   /* get environment (2nd element) and advance to 3rd element */
   SEXP envSymbol = install("X");
   args = CDR(args);
-
+  
   /* get function (3rd element) and advance to 4th element */
   SEXP funSymbol = install("FUN");
   args = CDR(args);

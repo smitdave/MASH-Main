@@ -98,7 +98,7 @@ HashMap <- R6::R6Class(classname="HashMap",
 #'
 #' Remove a value from \code{private$storage} given a key.
 #'
-#' @param key a integer key; remove that value from the storage hash table.
+#' @param key a integer key (will be coerced to character); remove that value from the storage hash table.
 #'
 rm_HashMap <- function(key){
   rm(list = as.character(key),envir = private$storage,inherits = FALSE)
@@ -166,7 +166,7 @@ HashMap$set(which = "public",name = "assign",
 #'
 #' Assign a key-value pair to \code{private$storage}.
 #'
-#' @param key character key
+#' @param key key value (usually integer, will be coerced to character)
 #' @param value a value to be assigned
 #'
 get_HashMap <- function(key){

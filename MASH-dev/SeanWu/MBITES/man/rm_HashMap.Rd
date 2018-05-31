@@ -7,7 +7,7 @@
 rm_HashMap(key)
 }
 \arguments{
-\item{key}{a integer key; remove that value from the storage hash table.}
+\item{key}{a integer key (will be coerced to character); remove that value from the storage hash table.}
 }
 \description{
 Remove a value from \code{private$storage} given a key.
