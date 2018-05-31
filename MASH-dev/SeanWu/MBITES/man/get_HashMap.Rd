@@ -7,7 +7,7 @@
 get_HashMap(key)
 }
 \arguments{
-\item{key}{character key}
+\item{key}{key value (usually integer, will be coerced to character)}
 
 \item{value}{a value to be assigned}
 }
