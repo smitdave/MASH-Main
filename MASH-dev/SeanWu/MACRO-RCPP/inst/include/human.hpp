@@ -24,6 +24,7 @@
 
 #include <tuple>        // for address tuple
 #include <functional>   // std::invoke
+#include <memory>
 #include <vector>       // for event queue
 
 #include <Rcpp.h>
@@ -56,6 +57,10 @@ typedef struct event {
   event(std::string _tag, double _tEvent, std::function<void()> _eventF):
     tag(_tag),tEvent(_tEvent),eventF(_eventF) {};
   ~event(){};
+
+  friend bool operator< ( event const& a, event const& b){
+    return a.tEvent< b.tEvent;
+  };
 } event;
 
 

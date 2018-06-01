@@ -194,10 +194,11 @@ MBITES_Setup_Survival(tattering = FALSE,senescence = FALSE)
 PATHOGEN_Setup(pathogen_model = "null")
 
 # we want detailed output of blood hosts from the mosquito
-trackBloodHost()
+# trackBloodHost()
 
 # set parameters
-MBITES:::Parameters$set_parameters(disperse = 0.05)
+MBITES:::Parameters$set_parameters(disperse = 0.01,Bs_surv = 0.98,Os_surv = 0.98,B_surv = 0.98,O_surv = 0.98,
+                                   Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.99,O_succeed = 0.99)
 
 # initialize a tile
 Tile_Initialize(landscape)
@@ -208,7 +209,7 @@ MBITES_Initialize(mosquitos)
 
 # run simulation
 set_output(directory = "/Users/slwu89/Desktop/mbites/",runID = 1)
-simulation(tMax = 365,pretty = FALSE)
+simulation(tMax = 365,pretty = TRUE)
 
 reset(directory = "/Users/slwu89/Desktop/mbites/",runID = 2)
 Human_NULL_Initialize(humans)
