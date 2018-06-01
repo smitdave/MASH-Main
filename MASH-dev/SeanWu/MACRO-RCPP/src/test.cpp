@@ -22,11 +22,11 @@ void testHumanPop(const Rcpp::IntegerVector pop){
 //'@export
 // [[Rcpp::export]]
 void testEventQueue(){
-  
-  std::vector<event> eventQ; 
+
+  std::vector<event> eventQ;
   event anEvent = event("hi",100,std::bind(f,5));
   eventQ.push_back(anEvent);
-  
+
   eventQ[0].eventF();
 };
 
@@ -41,7 +41,7 @@ void testHuman(){
   h->add2Q_set_stateTest(1.00,"state2");
   h->fireEventTest();
   std::cout << "human 1 state: " << h->get_state() << std::endl;
-  
+
   human* h1 = new human(2);
   std::cout << "human 2 id: " << h1->get_id() << std::endl;
   h1->set_state("state53");
@@ -50,7 +50,7 @@ void testHuman(){
   h1->fireEventTest();
   std::cout << "human 2 state: " << h1->get_state() << std::endl;
   std::cout << "human 1 state: " << h->get_state() << std::endl;
-  
+
   delete h;
   delete h1;
 }
@@ -58,27 +58,26 @@ void testHuman(){
 //'@export
 // [[Rcpp::export]]
 void testHumanQ(){
-  
+
   human* h1 = new human(1);
   human* h2 = new human(2);
-  
+
   std::cout << "human 1 state: " << h1->get_state() << std::endl;
   h1->add2Q_set_state(1.0,"blah");
   h1->add2Q_set_state(3.34,"MEOOOOW!!!!");
   h1->printEventQ();
-  
+
   h1->fireEvent();
   std::cout << "human 1 state: " << h1->get_state() << std::endl;
-  
+
   std::cout << "human 2 state: " << h2->get_state() << std::endl;
   h2->add2Q_set_state(10.34234,"!!!!MMMMMEOWWWW");
   h2->printEventQ();
   h2->fireEvent();
-  
+
   std::cout << "human 1 state: " << h1->get_state() << std::endl;
   std::cout << "human 2 state: " << h2->get_state() << std::endl;
-  
+
   delete h1;
   delete h2;
 }
-

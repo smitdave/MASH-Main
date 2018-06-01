@@ -31,7 +31,7 @@ human::human(const int &id_new) : immune(immune_base::make_immune("PfSI")) {
 
     immune->my_human = this;
     pathogen_ptr = nullptr; // change to smart pointer later
-    
+
     #ifdef DEBUG_INFSIM
     std::cout << "human " << id << " being born at memory location: " << this << std::endl;;
     #endif
@@ -154,11 +154,11 @@ void human::set_pathogen(pathogen* p){
 */
 
 // inline definition need to sort the queue
-inline bool compare_tEvent(const event& eventA, const event& eventB) { return eventA.tEvent < eventB.tEvent; }
+// inline bool compare_tEvent(const event& eventA, const event& eventB) { return eventA.tEvent < eventB.tEvent; }
 
 void human::addEvent2Q(const event &e){
     eventQ.push_back(e);
-    std::sort(eventQ.begin(),eventQ.end(),compare_tEvent);
+    std::sort(eventQ.begin(),eventQ.end());
 };
 
 void human::rmTagFromQ(const std::string &tag){
@@ -184,9 +184,7 @@ void human::printEventQ(){
 };
 
 void human::add2Q_set_state(const double &tEvent, std::string s){
-  this->addEvent2Q(
-    event("setState",tEvent,std::bind(&human::set_state,this,s))
-  );
+  addEvent2Q(event("setState",tEvent,std::bind(&human::set_state,this,s)));
 };
 
 
