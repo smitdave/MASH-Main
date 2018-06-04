@@ -76,32 +76,8 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
 						)))),
 
 			###################### timing  ############################################
-			tabPanel(title = "Timing",value = "timing",
-				uiOutput("panel_timing")
-				),
-			##################### bloodmeal #############################################
-			tabPanel(title = "Blood Meal",value = "bloodmeal",
-				uiOutput("panel_bloodmeal")
-				),
-			##################### oogenesis #############################################
-			tabPanel(title = "Oogenesis",value = "oogenesis",
-				uiOutput("panel_oogenesis")
-				),
-			##################### energetics ###########################################
-			tabPanel(title = "Energetics",value = "energetics",
-				uiOutput("panel_energetics")
-				),
-			##################### oviposition ############################################
-			tabPanel(title = "Oviposition",value = "oviposition",
-				uiOutput("panel_oviposition")
-				),
-			##################### survival ###############################################
-			tabPanel(title = "Survival",value = "survival",
-				uiOutput("panel_survival")
-				),
-			##################### pathogen ###############################################
-			tabPanel(title = "Pathogen",value = "pathogen",
-				uiOutput("panel_pathogen")
+			tabPanel(title = "Initialization",value = "initial",
+				uiOutput("panel_initial")
 				),
 			##################### About ##############################################
 			tabPanel(title = "About",value = "about",

@@ -55,54 +55,55 @@ server <- function(input, output, session){
 	})
 	
   ############ TabPanel Output ################################################
-	############## timing output ########################
-	output$panel_timing <- renderUI({
+	############## Initial output ##############################
+	output$panel_initial <- renderUI({
 		fluidPage(
-			helpText("setup parameters for timing")
+			helpText("Welcome to MBITES! Let's set up all parameters step by step."),
+			navlistPanel(widths = c(2,10),
+
+				######## Timing #########################
+				tabPanel("Timing",
+					helpText("test timing")
+					),
+
+				######## Blood Meal #####################
+				tabPanel("Blood Meal",
+					helpText("test Blood Meal")
+					),
+
+				######## Oogenesis ######################
+				tabPanel("Oogenesis",
+					helpText("test Oogenesis")
+					),
+
+				######## Energetics #####################
+				tabPanel("Energetics",
+					helpText("test Energetics")
+					),
+
+				#######  Oviposition ###################
+				tabPanel("Oviposition",
+					helpText("test Oviposition")
+					),
+
+				#######  Survival ######################
+				tabPanel("Survival",
+					helpText("test survival")
+					),
+
+				####### Pathogen #######################
+				tabPanel("Pathogen",
+					helpText("test pathgen")
+					)
+
+
+
+
+				)
 			)
 	}) 
 
-	############## bloodmeal output #######################
-	output$panel_bloodmeal <- renderUI({
-		fluidPage(
-			helpText("setup parameters for bloodmeal")
-			)
-	}) 
-
-	############## oogenesis output ########################
-	output$panel_oogenesis <- renderUI({
-		fluidPage(
-			helpText("setup parameters for oogenesis")
-			)
-	})
-
-	############## energetics output #######################
-	output$panel_energetics <- renderUI({
-		fluidPage(
-			helpText("setup parameters for energetics")
-			)
-	})
-
-	############## oviposition output ######################
-	output$panel_oviposition <- renderUI({
-		fluidPage(
-			helpText("setup parameters for oviposition")
-			)
-	})
-
-	############## survival output ########################
-	output$panel_survival <- renderUI({
-		fluidPage(
-			helpText("setup parameters for survival")
-			)
-	})
-
-	############## pathogen output ########################
-	output$panel_pathogen <- renderUI({
-		fluidPage(
-			helpText("setup parameters for pathogen")
-			)
-	})
+	
 
 	############## about output ############################
 	output$panel_about <- renderUI({
