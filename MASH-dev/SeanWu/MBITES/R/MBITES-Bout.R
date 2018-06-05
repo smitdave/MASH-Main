@@ -181,6 +181,10 @@ mbites_updateState <- function(){
     # check again for being alive because can be killed in survival; don't want zombie mosquitoes preforming actions
     if(private$alive){
 
+      if(private$bloodfed){
+        self$Oogenesis() # MBITES-Oogenesis.R
+        private$bloodfed = FALSE
+      }
       self$checkEggMaturation() # MBITES-Oogenesis.R
 
       # The states in priority order
@@ -382,7 +386,7 @@ mbites_attempt_B <- function(){
   } else {
     # reset flags
     private$boutFail = 0L
-    private$bloodfed = FALSE
+    # private$bloodfed = FALSE
   }
 }
 
