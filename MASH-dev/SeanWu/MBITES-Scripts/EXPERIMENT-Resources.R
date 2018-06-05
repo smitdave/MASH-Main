@@ -193,3 +193,110 @@ for(i in 1:n){
 
 saveRDS(object = landscapes,file = paste0(dir_dev,"DavidSmith/MBITES-Demo/periDomesticLandscapes.rds"))
 saveRDS(object = xy_sites,file = paste0(dir_dev,"DavidSmith/MBITES-Demo/periDomesticRaw.rds"))
+
+
+# try to make kernels
+library(KernSmooth)
+library(parallel)
+
+numDiff <- function(x, y){
+  sapply(3 : (length(x) - 2), function(ii)
+    (-y[ii + 2] + 8 * y[ii + 1] - 8 * y[ii - 1] + y[ii - 2]) / (12 * (x[2] - x[1])))
+}
+
+normalize = function(x){
+  return(x / sum(x))
+} # end function normalize definition
+
+
+
+# get a movement and distance matrix 
+
+# dist_i <- as.matrix(dist(xy_sites[[i]]$sites[,c("x","y")],diag = TRUE,upper = TRUE))
+# mvmt_i <- xy_sites[[i]]$movement
+dist_i <- as.matrix(dist(cbind(runif(n = 20,min = 0,max = 10),runif(n = 20,min = 0,max = 10)),diag=T,upper=T))
+half_d <- max(dist_i)/2
+exp_kern <- exp_fit(d = half_d,q = 0.95)
+mvmt_i <- apply(X = dist_i,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = 1/exp_kern)})
+mvmt_i <- mvmt_i/rowSums(mvmt_i)
+
+
+dist_v <- as.vector(dist_i)
+self <- which(dplyr::near(dist_v,0))
+
+mvmt_v <- as.vector(mvmt_i)[-self]
+dist_v <- dist_v[-self]
+dist_bins <- unique(dist_v[order(dist_v)])
+
+mvmt_v <- mvmt_v[order(dist_v)]
+dist_v <- dist_v[order(dist_v)]
+
+# empirical "pdf"; actually a pmf
+# mvmt_pdf_emp <- normalize(sapply(dist_bins, function(dd){
+#   sum(mvmt_v[which(dplyr::near(dist_v,dd))])
+# }))
+
+pmf_v <- function(dd,mvmt_v,dist_v){
+  sum(mvmt_v[which(dplyr::near(dist_v,dd))])
+}
+pmf_v <- Vectorize(pmf_v,"dd")
+
+mvmt_pdf_emp <- normalize(pvec(dist_bins,pmf_v,mvmt_v=mvmt_v,dist_v=dist_v))
+
+cdf_v <- function(dd,mvmt_v,dist_v){
+  sum(mvmt_v[which(dist_v <= dd)])
+}
+cdf_v <- Vectorize(cdf_v,"dd")
+
+# mvmt_cdf_emp <- sapply(dist_bins,function(dd){
+#   sum(mvmt_v[which(dist_v <= dd)])
+# })
+mvmt_cdf_emp <- pvec(dist_bins,cdf_v,mvmt_v=mvmt_v,dist_v=dist_v)
+
+mvmt_cdf_emp <- mvmt_cdf_emp / max(mvmt_cdf_emp)
+
+# smooth the empirical "cdf" (actually a cmf) into a cdf
+# mvmt_cdf_sth <- ksmooth(dist_bins[2:length(dist_bins)],mvmt_cdf_emp[2:length(dist_bins)],kernel = "normal",bandwidth = dpill(dist_bins,mvmt_cdf_emp))
+
+mvmt_cdf_sth1 <- loess(mvmt_cdf_emp~dist_bins)
+
+# differentiate the smoothed cdf to obtain a smoothed pdf
+mvmt_pdf_sth = list(x = mvmt_cdf_sth$x[3 : (length(mvmt_cdf_sth$x) - 2)],
+                 y = normalize(numDiff(mvmt_cdf_sth$x, mvmt_cdf_sth$y)))
+
+# redefine the smoothed cdf to be exactly consistent with the smoothed pdf
+mvmt_cdf_sth$x = mvmt_pdf_sth$x
+mvmt_cdf_sth$y = cumsum(mvmt_pdf_sth$y)
+
+# # vectorize the matrix
+# Q_vec = as.vector(Q)
+# 
+# # make bins according to unique distances
+# bins = unique(as.vector(dist.F))
+# 
+# # empirical pdf and cdf
+# Q_pdf.emp = normalize(sapply(bins, function(dd) sum(Q_vec[which(distVec.F == dd)])))
+# Q_cdf.emp = sapply(bins, function(dd) sum(Q_vec[which(distVec.F <= dd)]))
+# Q_cdf.emp = Q_cdf.emp / max(Q_cdf.emp)
+# 
+# # smoothed cdf
+# Q_cdf.sth = ksmooth(bins[2 : length(bins)], Q_cdf.emp[2 : length(bins)], kernel = 'normal', bandwidth = 5 * dpill(bins, Q_cdf.emp))
+# 
+# # differentiate the smoothed cdf to obtain a smoothed pdf
+# Q_pdf.sth = list(x = Q_cdf.sth$x[3 : (length(Q_cdf.sth$x) - 2)],
+#                  y = normalize(numDiff(Q_cdf.sth$x, Q_cdf.sth$y)))
+
+# # redefine the smoothed cdf to be exactly consistent with the smoothed pdf
+# Q_cdf.sth$x = Q_pdf.sth$x
+# Q_cdf.sth$y = cumsum(Q_pdf.sth$y)
+
+plot(numDiff(mvmt_cdf_sth$x, mvmt_cdf_sth$y),type="l",main="centered finite difference approximation")
+
+#find the average x between 2 points
+avex<-mvmt_cdf_sth$x[-1]-diff(mvmt_cdf_sth$x)/2
+#find the numerical approximation
+#delta-y/delta-x
+dydx<-diff(mvmt_cdf_sth$y)/diff(mvmt_cdf_sth$x)
+
+#plot numeric approxiamtion
+plot(x=avex, dydx,type="l")
