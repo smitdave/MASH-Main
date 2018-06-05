@@ -17,7 +17,7 @@ server <- function(input, output, session) {
     ggplot(data, aes_string(xvar, yvar)) + geom_point()
   })
 
-  #################### Loading parameter json file #####################################
+  #################### Loading parameter rds/csv file #####################################
 
 ParList <- reactive({
   if(input$project == 'demo'){
@@ -43,52 +43,69 @@ ParList <- reactive({
 })
 
 
-  #################### Option Output #####################################################
+  #################### Initialize Output #####################################################
   output$panel_initial <- renderUI({
-                           fluidPage(
+                            fluidPage(
                              helpText("Welcome to MBITES! Please set parameters here:"),
                              navlistPanel(widths = c(2,10),
                                           
-                                          #########################################################################
+                                          ######### Timing #######################
                                           tabPanel("Timing",
-                                                   helpText("test Timing")
-                                          ),
+                                            helpText("Timing model for for attempt & search bout inter-launch time-to-event sampling distribution."),
+                                            column(4,
+                                                   selectInput("timing_model", label = "Timing Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
+                                                   conditionalPanel(condition = "input.timing_model == 1",
+                                                    wellPanel(
+                                                      h4("For attempt bouts:"),
+                                                      sliderInput(inputId = "wait_b", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "wait_o", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "wait_m", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "wait_s", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                      ),
+                                                    wellPanel(
+                                                      h4("For search bouts:"),
+                                                      sliderInput(inputId = "wait_bs", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "wait_os", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "wait_ms", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "wait_ss", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                      )
+                                                    ),
+                                                   conditionalPanel(condition = "input.timing_model == 1"
+                                                    ),
+                                                   conditionalPanel(condition = "input.timing_model == 1"
+                                                    )
+                                          )),
                                           ######## Blood Meal #####################
-        tabPanel("Blood Meal",
-          helpText("test Blood Meal")
+                                          tabPanel("Blood Meal",
+                                            helpText("test Blood Meal")
+                                            ),
 
-          
-          ),
+                                          ######## Oogenesis ######################
+                                          tabPanel("Oogenesis",
+                                            helpText("test Oogenesis")
+                                            ),
 
-        ######## Oogenesis ######################
-        tabPanel("Oogenesis",
-          helpText("test Oogenesis")
-          ),
+                                          ######## Energetics #####################
+                                          tabPanel("Energetics",
+                                            helpText("test Energetics")
+                                            ),
 
-        ######## Energetics #####################
-        tabPanel("Energetics",
-          helpText("test Energetics")
-          ),
+                                          #######  Oviposition ###################
+                                          tabPanel("Oviposition",
+                                            helpText("test Oviposition")
+                                            ),
 
-        #######  Oviposition ###################
-        tabPanel("Oviposition",
-          helpText("test Oviposition")
-          ),
+                                          #######  Survival ######################
+                                          tabPanel("Survival",
+                                            helpText("test survival")
+                                            ),
 
-        #######  Survival ######################
-        tabPanel("Survival",
-          helpText("test survival")
-          ),
-
-        ####### Pathogen #######################
-        tabPanel("Pathogen",
-          helpText("test pathgen")
-          )
-                                          
-                             )
-                             
-                             )
-  })
+                                          ####### Pathogen #######################
+                                          tabPanel("Pathogen",
+                                            helpText("test pathgen")
+                                            )
+                                      ))
+                                    })
 
 
   
@@ -97,25 +114,25 @@ ParList <- reactive({
 
   #####################Simualtion output ########################################################
   output$sim_panel <- renderUI({
-    if(input$project == 'demo'){
-      sidebarLayout(position = "right",
-                    sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
-                                 h4("Interested in more parameters in parameter tuning?"),
-                                 actionButton("JumpToMore", label = "Check it now!")
-                    ),
-                    mainPanel(
-                      helpText("insert plot here")
+                          if(input$project == 'demo'){
+                            sidebarLayout(position = "right",
+                                          sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                                                       h4("Interested in more parameters in parameter tuning?"),
+                                                       actionButton("JumpToMore", label = "Check it now!")
+                                          ),
+                                          mainPanel(
+                                            helpText("insert plot here")
 
-                    ))
-    }else{
-      sidebarLayout(position = "right",
-                    sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
-                                 h4("not for demo")
-                    ),
-                    mainPanel(
-                      helpText("not for demo")
-                    ))
-    }
+                                          ))
+                          }else{
+                            sidebarLayout(position = "right",
+                                          sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
+                                                       h4("not for demo")
+                                          ),
+                                          mainPanel(
+                                            helpText("not for demo")
+                                          ))
+                          }
   })
   
 
@@ -128,11 +145,7 @@ ParList <- reactive({
 
   
 
-  
-  ################################################################################################################
-  # 
-  # make plots
-  # 
+
   ################################################################################################################
   
   
