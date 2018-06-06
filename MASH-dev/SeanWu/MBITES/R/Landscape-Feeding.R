@@ -237,6 +237,17 @@ make_RiskQ <- function(){
 
   } # end sampleQ
 
+  # typewtsQ: return named numeric vector of weights for each type of host
+  typewtsQ <- function(){
+
+    # return object
+    out <- c("H"=0,"Z"=0,"T"=0)
+    out[["H"]] <- sum(weight)
+    out[["Z"]] <- sum(weight_o)
+
+    return(out)
+  }
+
   # printQ: print the queue
   printQ <- function(){
     cat("printing a risk queue ... printing human hosts ... \n")
@@ -248,5 +259,7 @@ make_RiskQ <- function(){
     print(weight_o)
   } # end printQ
 
- list(add2Q = add2Q, add2Q_zoo = add2Q_zoo, rmFromQ = rmFromQ,clearQ = clearQ,sampleQ = sampleQ,printQ = printQ)
+ list(add2Q = add2Q, add2Q_zoo = add2Q_zoo, rmFromQ = rmFromQ,
+      clearQ = clearQ,sampleQ = sampleQ,typewtsQ = typewtsQ,
+      printQ = printQ)
 }
