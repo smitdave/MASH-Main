@@ -1,4 +1,13 @@
 
+state = list(
+  fever = 0,   # Fever
+  severe = 0,  # Severe Malaria 
+  P = 0,
+  MOI = seq(0,10), 
+  iG = -1, 
+  G = na,
+  C = seq(0,2)
+) 
 
 now = 0
 newInfections = rep(0,5)

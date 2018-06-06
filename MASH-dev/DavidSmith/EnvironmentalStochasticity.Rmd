@@ -1,0 +1,28 @@
+---
+title: "Modeling Environmental Stochasticity"
+output: html_notebook
+---
+
+The Poisson distribution is used to measure counts when the expected value, $\mu$ is a constant:
+```{r}
+mu = 10
+N=10^5
+hist(rpois(N, mu))
+```
+For a mixture process, $\mu$ has a distribution. For example, if we let $\mu ~ \Gamma(k, \mu/k)$, as a mixture process, we get the negative binomial distribution: 
+```{r}
+mu = 10
+k = .1
+mux = rgamma(N,shape=k, scale=mu/k)
+mean(mux)
+```
+```{r}
+hist(rpois(N, mux))
+hist(rnbinom(N, mu=mu, size=k), add=TRUE, border="red")
+```
+To make this as general as possible, we can take any probability distribution function, $E$, to create a mixture process. If we constrain it such that the mean of $E=1$, then we free ourselves up to simulate noise with any form. One way to do this for the negative binomial is to let $E~\mu^{-1} rgamma(shape=k, scale=\mu/k).$ This also allows us to isolate, as a multiplicative factor, the "noise."
+```{r}
+EE = function(N,mu,k){rgamma(N, shape=k, scale=mu/k)/mu}
+env=EE(N,mu,k)
+hist(log10(env))
+```
