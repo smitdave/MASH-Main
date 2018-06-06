@@ -94,7 +94,29 @@ ParList <- reactive({
                                                       sliderInput(inputId = "tmin_ss", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
                                                       )
                                                     ),
-                                                   conditionalPanel(condition = "input.timing_model == 3"
+                                                   conditionalPanel(condition = "input.timing_model == 3",
+                                                    wellPanel(
+                                                      h4("For attempt bouts:"),
+                                                      sliderInput(inputId = "mean_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "cv_b", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "mean_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "cv_o", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "mean_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "cv_m", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "mean_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "cv_s", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                      ), 
+                                                    wellPanel(
+                                                      h4("For search bouts:"),
+                                                      sliderInput(inputId = "mean_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "cv_bs", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "mean_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "cv_os", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "mean_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "cv_ms", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "mean_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                      sliderInput(inputId = "cv_ss", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                      )
                                                     )
                                           )),
                                           ######## Blood Meal #####################
