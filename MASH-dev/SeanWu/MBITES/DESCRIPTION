@@ -27,6 +27,7 @@ Collate:
     'LANDSCAPE-Resource.R'
     'LANDSCAPE-Site.R'
     'LANDSCAPE-Sugar.R'
+    'MBDETES-Auxiliary.R'
     'MBITES-Mosquito.R'
     'MBITES-BloodMeal.R'
     'MBITES-Bout.R'

@@ -386,9 +386,10 @@ MBITES_Setup_BloodMeal <- function(overfeeding){
 #'        * bs_sd: standard deviation of Gaussian distribution
 #'    * 2: egg batch size is function of blood meal size (see \code{\link{mbites_rBatchSizeBms}})
 #'        * maxBatch: maximum possible size of an egg batch
-#'  * refeeding: logical flag for refeeding behavior (this should only be used with the first model of oogenesis, see \code{\link{mbites_checkRefeed}} for details)
-#'    * rf_a: parameter in \code{\link{mbites_pReFeed}}
-#'    * rf_b: parameter in \code{\link{mbites_pReFeed}}
+#'  * refeeding: integer flag for model of refeeding behavior (this should only be used with the first model of oogenesis, see \code{\link{mbites_checkRefeed}} for details)
+#'    * 1: probability to refeed is a function of egg batch size (see \code{\link{mbites_pReFeed_batch}})
+#'    * 2: probability to refeed is a function of blood meal size (see \code{\link{mbites_pReFeed_bm}})
+#'    * 3: turn refeeding behavior off
 #' @export
 MBITES_Setup_Oogenesis <- function(oogenesis_model, eggMaturationTime, eggsize_model, refeeding){
 
@@ -430,20 +431,33 @@ MBITES_Setup_Oogenesis <- function(oogenesis_model, eggMaturationTime, eggsize_m
       }
 
       # refeeding
-      if(refeeding){
-        Mosquito_Female$set(which = "public",name = "checkRefeed",
-                  value = mbites_checkRefeed, overwrite = TRUE
-        )
+      switch(refeeding,
+        # egg batch size
+        "1" = {
+          Mosquito_Female$set(which = "public",name = "checkRefeed",
+                    value = mbites_checkRefeed, overwrite = TRUE
+          )
 
-        Mosquito_Female$set(which = "public",name = "pReFeed",
-                  value = mbites_pReFeed, overwrite = TRUE
-        )
+          Mosquito_Female$set(which = "public",name = "pReFeed",
+                    value = mbites_pReFeed_batch, overwrite = TRUE
+          )
+        },
+        "2" = {
+          Mosquito_Female$set(which = "public",name = "checkRefeed",
+                    value = mbites_checkRefeed, overwrite = TRUE
+          )
 
-      } else {
-        Mosquito_Female$set(which = "public",name = "checkRefeed",
-                  value = mbites_checkRefeed_null, overwrite = TRUE
-        )
-      }
+          Mosquito_Female$set(which = "public",name = "pReFeed",
+                    value = mbites_pReFeed_bm, overwrite = TRUE
+          )
+        },
+        "3" = {
+          Mosquito_Female$set(which = "public",name = "checkRefeed",
+                    value = mbites_checkRefeed_null, overwrite = TRUE
+          )
+        }
+      )
+
     },
     ###########
     # model 2 #
