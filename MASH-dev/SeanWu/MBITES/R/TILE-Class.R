@@ -120,6 +120,10 @@ get_sites_Tile <- function(){
   return(private$Sites)
 }
 
+get_n_sites_Tile <- function(){
+  
+}
+
 #' get a site by id
 #'
 get_site_Tile <- function(id){

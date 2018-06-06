@@ -32,6 +32,17 @@ hash_apply <- function(X,FUN,...){
   .Call(hash_apply_c,call,environment())
 }
 
+#' Get size of hash table
+#'
+#' Return the total number of objects stored in the hash table.
+#'
+#' @param rho a hashed \code{\link[base]{environment}}
+#'
+#' @name hash_size
+#' @useDynLib MBITES hash_size_c
+hash_size <- function(rho){
+  .Call(hash_size_c,rho)
+}
 
 ###############################################################################
 # HashMap: Class Definition
