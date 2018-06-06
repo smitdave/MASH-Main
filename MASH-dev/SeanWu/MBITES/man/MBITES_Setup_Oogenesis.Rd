@@ -45,10 +45,11 @@ Arguments for the setup function are listed below:
 \item maxBatch: maximum possible size of an egg batch
 }
 }
-\item refeeding: logical flag for refeeding behavior (this should only be used with the first model of oogenesis, see \code{\link{mbites_checkRefeed}} for details)
+\item refeeding: integer flag for model of refeeding behavior (this should only be used with the first model of oogenesis, see \code{\link{mbites_checkRefeed}} for details)
 \itemize{
-\item rf_a: parameter in \code{\link{mbites_pReFeed}}
-\item rf_b: parameter in \code{\link{mbites_pReFeed}}
+\item 1: probability to refeed is a function of egg batch size (see \code{\link{mbites_pReFeed_batch}})
+\item 2: probability to refeed is a function of blood meal size (see \code{\link{mbites_pReFeed_bm}})
+\item 3: turn refeeding behavior off
 }
 }
 }

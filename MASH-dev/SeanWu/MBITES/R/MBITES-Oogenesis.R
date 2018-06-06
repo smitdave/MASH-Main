@@ -102,26 +102,29 @@ mbites_checkRefeed_null <- function(){
   # private$state = "O" (already set in mbites_checkEggMaturation)
 }
 
-#' MBITES: Probability of Refeeding
+#' MBITES: Probability of Refeeding as Function of Egg Batch Size
 #'
 #' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf_{b}}{1+rf_{b}}-\frac{e^{rf_{a}\times \frac{batch}{batch_{max}}}}{rf_{b}+e^{rf_{a}\times \frac{batch}{batch_{max}}}} }
 #' This models mosquito propensity to take more blood if the egg batch is too small.
-#'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
+#'  * This method is bound to \code{MosquitoFemale$pReFeed()}
 #'
-mbites_pReFeed <- function(){
+mbites_pReFeed_batch <- function(){
   rf_a = MBITES:::Parameters$get_rf_a()
   rf_b = MBITES:::Parameters$get_rf_b()
   batchP = private$batch / MBITES:::Parameters$get_maxBatch()
   (2+rf_b)/(1+rf_b) - exp(rf_a*batchP)/(rf_b + exp(rf_a*batchP))
 }
 
-#' MBITES: Null Probability of Refeeding
+#' MBITES: Probability of Refeeding as Function of Blood Meal Size
 #'
-#' Null probability of refeeding (turn the behavior off)
-#'  * This method is bound to \code{MosquitoFemale$pReFeed()}.
+#' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf_{b}}{1+rf_{b}}-\frac{e^{rf_{a}\times bmSize}}{rf_{b}+e^{rf_{a}\times bmSize}} }
+#' This models mosquito propensity to take more blood if the previous blood meal was too small.
+#'  * This method is bound to \code{MosquitoFemale$pReFeed()}
 #'
-mbites_pReFeed_null <- function(){
-  0
+mbites_pReFeed_bm <- function(){
+  rf_a = MBITES:::Parameters$get_rf_a()
+  rf_b = MBITES:::Parameters$get_rf_b()
+  (2+rf_b)/(1+rf_b) - exp(rf_a*private$bmSize)/(rf_b + exp(rf_a*private$bmSize))
 }
 
 
