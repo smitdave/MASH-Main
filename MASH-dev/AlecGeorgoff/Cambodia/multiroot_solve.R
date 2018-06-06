@@ -75,7 +75,7 @@ X_f_start <- chi_f_start * H_f
 
 ###################################
 #
-# Set up the model as a function
+# Set up the equations as a function
 #
 ###################################
 
@@ -83,6 +83,7 @@ model <- function(X, R_0_v, R_0_f, H_v, H_f, S_v, S_f, c_val, p_val) {
   # X[1] = X_f
   # X[2] = X_v
   
+  # convert to prevalence:
   chi_f = X[1] / H_f
   chi_v = ((1 - p_val) * X[1] + X[2]) / ((1 - p_val) * H_f + H_v)
   
@@ -108,24 +109,35 @@ find_roots <- function(R_0_v, R_0_f,
                        c_val = c, p_val = p,
                        chi_v_start. = chi_v_start, chi_f_start. = chi_f_start) {
   
+  # convert start point from prevalence to # of humans:
   X_v_start <- chi_v_start. * H_v
   X_f_start <- chi_f_start. * H_f
   
+  # use multiroot solver to find roots:
   ss <- multiroot(f = model, start = c(X_v_start, X_f_start),
                   R_0_v = R_0_v, R_0_f = R_0_f,
                   H_v = H_v., H_f = H_f.,
                   S_v = S_v., S_f = S_f.,
                   c_val = c_val, p_val = p_val)
   
+  # convert results to prevalence:
   chi_v_SS <- ss$root[1] / H_v
   chi_f_SS <- ss$root[2] / H_f
   
   return(c(chi_v_SS, chi_f_SS))
 }
 
-R_0_v_values <- seq(0, 10, 0.1)
-R_0_f_values <- seq(0, 10, 0.1)
+###################################
+#
+# Cycle through R values
+#
+###################################
 
+# set R values to cycle through:
+R_0_v_values <- seq(0, 10, 3/8)
+R_0_f_values <- seq(0, 10, 3/8)
+
+# create data table to store results:
 results <- data.table(R_0_v = rep(0, times = length(R_0_f_values) * length(R_0_v_values)),
                       R_0_f = 0, chi_v = 0, chi_f = 0)
 
@@ -133,11 +145,14 @@ i <- 1
 
 for (v in R_0_v_values) {
   for (f in R_0_f_values) {
+    # record current R values:
     results[i, R_0_v := v]
     results[i, R_0_f := f]
+    # solve for roots at those R values:
     results[i, chi_v := find_roots(v, f)[1]]
     results[i, chi_f := find_roots(v, f)[2]]
     
+    # print progress:
     cat("R_0_v =", v, ", R_0_f =", f, " \r", file = "", sep = " ")
     flush.console()
     
@@ -150,10 +165,14 @@ library(plotly, lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs/")
 p <- plot_ly(x = results$R_0_v,
              y = results$R_0_f,
              z = results$chi_v,
-             type = "heatmap") %>%
+             type = "heatmap",
+             height = 800, width = 960) %>%
   layout(title = "Equilibrium Prevalence in Village as a Function of R_0 in Village and Forest",
-         xaxis = list(title = "R_0 Value, Village"),
-         yaxis = list(title = "R_0 Value, Forest"))
+         titlefont = list(size = 16),
+         xaxis = list(title = "R_0 Value, Village",
+                      titlefont = list(size = 20)),
+         yaxis = list(title = "R_0 Value, Forest",
+                      titlefont = list(size = 20)))
 
 p
 
