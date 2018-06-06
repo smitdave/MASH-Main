@@ -51,73 +51,109 @@ ParList <- reactive({
                                           
                                           ######### Timing #######################
                                           tabPanel("Timing",
-                                            helpText("Timing model for for attempt & search bout inter-launch time-to-event sampling distribution."),
+                                            tabsetPanel(
+                                              tabPanel("Timing Model",
+                                                helpText("Timing model for for attempt & search bout inter-launch time-to-event sampling distribution."),
+                                                column(4,
+                                                       selectInput("timing_model", label = "Timing Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
+                                                       conditionalPanel(condition = "input.timing_model == 1",
+                                                        wellPanel(
+                                                          h4("For attempt bouts:"),
+                                                          sliderInput(inputId = "wait_b", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_o", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_m", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_s", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          ),
+                                                        wellPanel(
+                                                          h4("For search bouts:"),
+                                                          sliderInput(inputId = "wait_bs", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_os", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_ms", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_ss", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          )
+                                                        ),
+                                                       conditionalPanel(condition = "input.timing_model == 2",
+                                                        wellPanel(
+                                                          h4("For attempt bouts:"),
+                                                          sliderInput(inputId = "rate_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_b", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_o", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_m", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_s", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          ), 
+                                                        wellPanel(
+                                                          h4("For search bouts:"),
+                                                          sliderInput(inputId = "rate_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_bs", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_os", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_ms", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_ss", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          )
+                                                        ),
+                                                       conditionalPanel(condition = "input.timing_model == 3",
+                                                        wellPanel(
+                                                          h4("For attempt bouts:"),
+                                                          sliderInput(inputId = "mean_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_b", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_o", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_m", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_s", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          ), 
+                                                        wellPanel(
+                                                          h4("For search bouts:"),
+                                                          sliderInput(inputId = "mean_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_bs", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_os", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_ms", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_ss", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          )
+                                                        )
+                                          )),
+
+                                          tabPanel("PPR model",
+                                            helpText("Post-prandial resting length sampling distribution:"),
                                             column(4,
-                                                   selectInput("timing_model", label = "Timing Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
-                                                   conditionalPanel(condition = "input.timing_model == 1",
-                                                    wellPanel(
-                                                      h4("For attempt bouts:"),
-                                                      sliderInput(inputId = "wait_b", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_o", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_m", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_s", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      ),
-                                                    wellPanel(
-                                                      h4("For search bouts:"),
-                                                      sliderInput(inputId = "wait_bs", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_os", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_ms", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_ss", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      )
-                                                    ),
-                                                   conditionalPanel(condition = "input.timing_model == 2",
-                                                    wellPanel(
-                                                      h4("For attempt bouts:"),
-                                                      sliderInput(inputId = "rate_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_b", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_o", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_m", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_s", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      ), 
-                                                    wellPanel(
-                                                      h4("For search bouts:"),
-                                                      sliderInput(inputId = "rate_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_bs", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_os", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_ms", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_ss", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      )
-                                                    ),
-                                                   conditionalPanel(condition = "input.timing_model == 3",
-                                                    wellPanel(
-                                                      h4("For attempt bouts:"),
-                                                      sliderInput(inputId = "mean_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "cv_b", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "mean_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "cv_o", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "mean_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "cv_m", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "mean_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "cv_s", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      ), 
-                                                    wellPanel(
-                                                      h4("For search bouts:"),
-                                                      sliderInput(inputId = "mean_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "cv_bs", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "mean_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "cv_os", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "mean_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "cv_ms", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "mean_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "cv_ss", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      )
-                                                    )
+                                            selectInput("ppr_model", label = "PPR Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
+                                            conditionalPanel(condition = "input.ppr_model == 1",
+                                              wellPanel(
+                                                sliderInput(inputId = "wait_ppr", label = "Deterministic length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                )
+                                              ),
+
+
+                                            conditionalPanel(condition = "input.ppr_model == 2",
+                                              wellPanel(
+                                                sliderInput(inputId = "rate_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                sliderInput(inputId = "tmin_ppr", label = "Minimum time of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                )
+                                              ),
+
+                                            conditionalPanel(condition = "input.ppr_model == 3",
+                                              wellPanel(
+                                                sliderInput(inputId = "mean_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                sliderInput(inputId = "cv_ppr", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                )
+                                              )
+
+                                            )),
+                                          tabPanel("Estivation model"
+
+
+
+
+                                            )
                                           )),
                                           ######## Blood Meal #####################
                                           tabPanel("Blood Meal",
