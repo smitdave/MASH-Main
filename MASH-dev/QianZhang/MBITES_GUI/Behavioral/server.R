@@ -125,57 +125,69 @@ ParList <- reactive({
                                           tabPanel("PPR model",
                                             helpText("Post-prandial resting length sampling distribution:"),
                                             column(4,
-                                            selectInput("ppr_model", label = "PPR Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
-                                            conditionalPanel(condition = "input.ppr_model == 1",
-                                              wellPanel(
-                                                sliderInput(inputId = "wait_ppr", label = "Deterministic length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                )
-                                              ),
+                                                selectInput("ppr_model", label = "PPR Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
+                                                conditionalPanel(condition = "input.ppr_model == 1",
+                                                  wellPanel(
+                                                    sliderInput(inputId = "wait_ppr", label = "Deterministic length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                    )
+                                                  ),
 
 
-                                            conditionalPanel(condition = "input.ppr_model == 2",
-                                              wellPanel(
-                                                sliderInput(inputId = "rate_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                sliderInput(inputId = "tmin_ppr", label = "Minimum time of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                )
-                                              ),
+                                                conditionalPanel(condition = "input.ppr_model == 2",
+                                                  wellPanel(
+                                                    sliderInput(inputId = "rate_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                    sliderInput(inputId = "tmin_ppr", label = "Minimum time of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                    )
+                                                  ),
 
-                                            conditionalPanel(condition = "input.ppr_model == 3",
-                                              wellPanel(
-                                                sliderInput(inputId = "mean_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                sliderInput(inputId = "cv_ppr", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                )
-                                              )
+                                                conditionalPanel(condition = "input.ppr_model == 3",
+                                                  wellPanel(
+                                                    sliderInput(inputId = "mean_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                    sliderInput(inputId = "cv_ppr", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                    )
+                                                  )
 
                                             )),
                                           tabPanel("Estivation model",
                                             column(4,
-                                            selectInput("estivation_model", label = "Estivation Model", choice = list('Off' = 1, "Probabilistic" = 2, "Hard cut-off" = 3),selected = 'Off'),
-                                            conditionalPanel(condition = "input.estivation_model == 2",
-                                              wellPanel(
-                                              sliderInput(inputId = "Emax", label = "Onset of dry season/period of estivation:", value = 90 , min = 0, max = 100, step = 1),
-                                              sliderInput(inputId = "Eb", label = "Scaling parameter for estivation probabilty:", value = 0.9 , min = 0, max = 1, step = 0.1),
-                                              sliderInput(inputId = "Ep", label = "Probability to survive estivation:", value = 0.5 , min = 0, max = 1, step = 0.1),
-                                              sliderInput(inputId = "eEndm", label = "Mean wake up day:", value = 100 , min = 0, max = 200, step = 1),
-                                              sliderInput(inputId = "eEndSd", label = "Standard deviation of wake up day:", value = 30 , min = 0, max = 200, step = 1)
-                                              )),
-                                            conditionalPanel(condition = "input.estivation_model == 3",
-                                              wellPanel(
-                                              sliderInput(inputId = "estivationDay", label = "A calendar day to start estivation:", value = 1 , min = 1, max = 365, step = 1)
-                                              ))
+                                                selectInput("estivation_model", label = "Estivation Model", choice = list('Off' = 1, "Probabilistic" = 2, "Hard cut-off" = 3),selected = 'Off'),
+                                                conditionalPanel(condition = "input.estivation_model == 2",
+                                                  wellPanel(
+                                                  sliderInput(inputId = "Emax", label = "Onset of dry season/period of estivation:", value = 90 , min = 0, max = 100, step = 1),
+                                                  sliderInput(inputId = "Eb", label = "Scaling parameter for estivation probabilty:", value = 0.9 , min = 0, max = 1, step = 0.1),
+                                                  sliderInput(inputId = "Ep", label = "Probability to survive estivation:", value = 0.5 , min = 0, max = 1, step = 0.1),
+                                                  sliderInput(inputId = "eEndm", label = "Mean wake up day:", value = 100 , min = 0, max = 200, step = 1),
+                                                  sliderInput(inputId = "eEndSd", label = "Standard deviation of wake up day:", value = 30 , min = 0, max = 200, step = 1)
+                                                  )),
+                                                conditionalPanel(condition = "input.estivation_model == 3",
+                                                  wellPanel(
+                                                  sliderInput(inputId = "estivationDay", label = "A calendar day to start estivation:", value = 1 , min = 1, max = 365, step = 1)
+                                                  ))
                                             )),
                                           tabPanel("Mating",
                                             column(4,
-                                            checkboxInput(inputId = "mating", label = "Mating", value = 0),
-                                            conditionalPanel(condition = "input.mating == 1",
-                                              wellPanel(
-                                              sliderInput(inputId = "tSwarm", label = "Time of day of mating swarm formation (eg; noon is 12/24):", value = 0.5 , min = 0, max = 1, step = 1/24)
-                                              ))
-                                            ))
+                                                checkboxInput(inputId = "mating", label = "Mating", value = 0),
+                                                conditionalPanel(condition = "input.mating == 1",
+                                                  wellPanel(
+                                                  sliderInput(inputId = "tSwarm", label = "Time of day of mating swarm formation (eg; noon is 12/24):", value = ParList()$tSwarm, min = 0, max = 1, step = 1/24, round = -3)
+                                                  ))
+                                                ))
                                           )),
                                           ######## Blood Meal #####################
                                           tabPanel("Blood Meal",
-                                            helpText("test Blood Meal")
+                                            column(4,
+                                              helpText("Setup Blood Meal: "),
+                                              wellPanel(
+                                                sliderInput(inputId = "bm_a", label = "Alpha parameter of beta-distributed blood meal size:", value = ParList()$bm_a, min = 0, max = 10, step = 0.5),
+                                                sliderInput(inputId = "bm_b", label = "Beta parameter of beta-distributed blood meal size:", value = ParList()$bm_b, min = 0, max = 10, step = 0.5),
+                                                checkboxInput(inputId = "overfeeding", label = "Overfeeding", value = 1),
+                                                conditionalPanel(condition = "input.overfeeding == 1",
+                                                  sliderInput(inputId = "of_a", label = "Parameter a for probability of death from blood meal size:", value = ParList()$of_a, min = 0, max = 10, step = 0.5),
+                                                  sliderInput(inputId = "of_b", label = "Parameter b for probability of death from blood meal size:", value = ParList()$of_b, min = 0, max = 10000, step = 100)
+                                                  )
+                                                )
+
+                                              )
                                             ),
 
                                           ######## Oogenesis ######################
