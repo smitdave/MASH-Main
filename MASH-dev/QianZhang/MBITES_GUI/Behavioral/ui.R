@@ -104,6 +104,12 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                   tabPanel(title = "Simulation", value = "simulation",
                                            uiOutput("sim_panel")
                                   ),
+
+                                  #################################################################################
+                                  # tabPanel(title = "Review", value = "review",
+                                  #          tableOutput('show_inputs')
+                                  # ),
+
                                   #################################################################################
                                   tabPanel("About",
                                            tabsetPanel(selected = "The Project",

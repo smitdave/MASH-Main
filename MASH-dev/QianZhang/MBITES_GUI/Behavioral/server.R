@@ -250,7 +250,18 @@ ParList <- reactive({
 
   ################ Simulation ############################################################
 
+############################### show all input #################################################################
+  # AllInputs <- reactive({
+  #   x <- reactiveValuesToList(input)
+  #   data.frame(
+  #     names = names(x),
+  #     values = unlist(x, use.names = FALSE)
+  #   )
+  # })
 
+  # output$show_inputs <- renderTable({
+  #   AllInputs()
+  # })
 
 
   
