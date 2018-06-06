@@ -52,7 +52,7 @@ ParList <- reactive({
                                           ######### Timing #######################
                                           tabPanel("Timing",
                                             tabsetPanel(
-                                              tabPanel("Timing Model",
+                                              tabPanel("Timing model",
                                                 helpText("Timing model for for attempt & search bout inter-launch time-to-event sampling distribution."),
                                                 column(4,
                                                        selectInput("timing_model", label = "Timing Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
@@ -148,12 +148,30 @@ ParList <- reactive({
                                               )
 
                                             )),
-                                          tabPanel("Estivation model"
-
-
-
-
-                                            )
+                                          tabPanel("Estivation model",
+                                            column(4,
+                                            selectInput("estivation_model", label = "Estivation Model", choice = list('Off' = 1, "Probabilistic" = 2, "Hard cut-off" = 3),selected = 'Off'),
+                                            conditionalPanel(condition = "input.estivation_model == 2",
+                                              wellPanel(
+                                              sliderInput(inputId = "Emax", label = "Onset of dry season/period of estivation:", value = 90 , min = 0, max = 100, step = 1),
+                                              sliderInput(inputId = "Eb", label = "Scaling parameter for estivation probabilty:", value = 0.9 , min = 0, max = 1, step = 0.1),
+                                              sliderInput(inputId = "Ep", label = "Probability to survive estivation:", value = 0.5 , min = 0, max = 1, step = 0.1),
+                                              sliderInput(inputId = "eEndm", label = "Mean wake up day:", value = 100 , min = 0, max = 200, step = 1),
+                                              sliderInput(inputId = "eEndSd", label = "Standard deviation of wake up day:", value = 30 , min = 0, max = 200, step = 1)
+                                              )),
+                                            conditionalPanel(condition = "input.estivation_model == 3",
+                                              wellPanel(
+                                              sliderInput(inputId = "estivationDay", label = "A calendar day to start estivation:", value = 1 , min = 1, max = 365, step = 1)
+                                              ))
+                                            )),
+                                          tabPanel("Mating",
+                                            column(4,
+                                            checkboxInput(inputId = "mating", label = "Mating", value = 0),
+                                            conditionalPanel(condition = "input.mating == 1",
+                                              wellPanel(
+                                              sliderInput(inputId = "tSwarm", label = "Time of day of mating swarm formation (eg; noon is 12/24):", value = 0.5 , min = 0, max = 1, step = 1/24)
+                                              ))
+                                            ))
                                           )),
                                           ######## Blood Meal #####################
                                           tabPanel("Blood Meal",
