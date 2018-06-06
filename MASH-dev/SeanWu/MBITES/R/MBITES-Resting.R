@@ -53,6 +53,9 @@ mbites_restingSpot <- function(){
     } else {
       old_spot = private$rspot
       self$newSpot()
+      if(private$bloodfed){
+        self$PPRFlight() # MBITES-BloodMeal.R
+      }
       if(old_spot != "i" & private$rspot == "i"){
         self$enterHouse()
       }
