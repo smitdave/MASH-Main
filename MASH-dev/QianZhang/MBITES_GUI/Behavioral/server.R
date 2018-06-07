@@ -43,88 +43,209 @@ ParList <- reactive({
 })
 
 
-  #################### Initialize Output #####################################################
+  #################### Parameters Output #####################################################
   output$panel_initial <- renderUI({
                             fluidPage(
                              helpText("Welcome to MBITES! Please set parameters here:"),
                              navlistPanel(widths = c(2,10),
-                                          
+                                          ######### Timing #######################
+                                          tabPanel("Bouts"
+
+
+
+                                            ),
                                           ######### Timing #######################
                                           tabPanel("Timing",
-                                            helpText("Timing model for for attempt & search bout inter-launch time-to-event sampling distribution."),
+                                            tabsetPanel(
+                                              tabPanel("Timing model",
+                                                helpText("Timing model for for attempt & search bout inter-launch time-to-event sampling distribution."),
+                                                column(4,
+                                                       selectInput("timing_model", label = "Timing Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
+                                                       conditionalPanel(condition = "input.timing_model == 1",
+                                                        wellPanel(
+                                                          h4("For attempt bouts:"),
+                                                          sliderInput(inputId = "wait_b", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_o", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_m", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_s", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          ),
+                                                        wellPanel(
+                                                          h4("For search bouts:"),
+                                                          sliderInput(inputId = "wait_bs", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_os", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_ms", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "wait_ss", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          )
+                                                        ),
+                                                       conditionalPanel(condition = "input.timing_model == 2",
+                                                        wellPanel(
+                                                          h4("For attempt bouts:"),
+                                                          sliderInput(inputId = "rate_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_b", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_o", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_m", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_s", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          ), 
+                                                        wellPanel(
+                                                          h4("For search bouts:"),
+                                                          sliderInput(inputId = "rate_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_bs", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_os", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_ms", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "rate_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "tmin_ss", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          )
+                                                        ),
+                                                       conditionalPanel(condition = "input.timing_model == 3",
+                                                        wellPanel(
+                                                          h4("For attempt bouts:"),
+                                                          sliderInput(inputId = "mean_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_b", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_o", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_m", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_s", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          ), 
+                                                        wellPanel(
+                                                          h4("For search bouts:"),
+                                                          sliderInput(inputId = "mean_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_bs", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_os", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_ms", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "mean_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                          sliderInput(inputId = "cv_ss", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                          )
+                                                        )
+                                          )),
+
+                                          tabPanel("PPR model",
+                                            helpText("Post-prandial resting length sampling distribution:"),
                                             column(4,
-                                                   selectInput("timing_model", label = "Timing Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
-                                                   conditionalPanel(condition = "input.timing_model == 1",
-                                                    wellPanel(
-                                                      h4("For attempt bouts:"),
-                                                      sliderInput(inputId = "wait_b", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_o", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_m", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_s", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      ),
-                                                    wellPanel(
-                                                      h4("For search bouts:"),
-                                                      sliderInput(inputId = "wait_bs", label = "Waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_os", label = "Waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_ms", label = "Waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "wait_ss", label = "Waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      )
-                                                    ),
-                                                   conditionalPanel(condition = "input.timing_model == 2",
-                                                    wellPanel(
-                                                      h4("For attempt bouts:"),
-                                                      sliderInput(inputId = "rate_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_b", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_o", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_m", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_s", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      ), 
-                                                    wellPanel(
-                                                      h4("For search bouts:"),
-                                                      sliderInput(inputId = "rate_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_bs", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_os", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_ms", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "rate_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                      sliderInput(inputId = "tmin_ss", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                      )
-                                                    ),
-                                                   conditionalPanel(condition = "input.timing_model == 3"
+                                                selectInput("ppr_model", label = "PPR Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
+                                                conditionalPanel(condition = "input.ppr_model == 1",
+                                                  wellPanel(
+                                                    sliderInput(inputId = "wait_ppr", label = "Deterministic length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
                                                     )
+                                                  ),
+
+
+                                                conditionalPanel(condition = "input.ppr_model == 2",
+                                                  wellPanel(
+                                                    sliderInput(inputId = "rate_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                    sliderInput(inputId = "tmin_ppr", label = "Minimum time of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                    )
+                                                  ),
+
+                                                conditionalPanel(condition = "input.ppr_model == 3",
+                                                  wellPanel(
+                                                    sliderInput(inputId = "mean_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                    sliderInput(inputId = "cv_ppr", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                    )
+                                                  )
+
+                                            )),
+                                          tabPanel("Estivation model",
+                                            column(4,
+                                                selectInput("estivation_model", label = "Estivation Model", choice = list('Off' = 1, "Probabilistic" = 2, "Hard cut-off" = 3),selected = 'Off'),
+                                                conditionalPanel(condition = "input.estivation_model == 2",
+                                                  wellPanel(
+                                                  sliderInput(inputId = "Emax", label = "Onset of dry season/period of estivation:", value = 90 , min = 0, max = 100, step = 1),
+                                                  sliderInput(inputId = "Eb", label = "Scaling parameter for estivation probabilty:", value = 0.9 , min = 0, max = 1, step = 0.1),
+                                                  sliderInput(inputId = "Ep", label = "Probability to survive estivation:", value = 0.5 , min = 0, max = 1, step = 0.1),
+                                                  sliderInput(inputId = "eEndm", label = "Mean wake up day:", value = 100 , min = 0, max = 200, step = 1),
+                                                  sliderInput(inputId = "eEndSd", label = "Standard deviation of wake up day:", value = 30 , min = 0, max = 200, step = 1)
+                                                  )),
+                                                conditionalPanel(condition = "input.estivation_model == 3",
+                                                  wellPanel(
+                                                  sliderInput(inputId = "estivationDay", label = "A calendar day to start estivation:", value = 1 , min = 1, max = 365, step = 1)
+                                                  ))
+                                            )),
+                                          tabPanel("Mating",
+                                            column(4,
+                                                checkboxInput(inputId = "mating", label = "Mating", value = 0),
+                                                conditionalPanel(condition = "input.mating == 1",
+                                                  wellPanel(
+                                                  sliderInput(inputId = "tSwarm", label = "Time of day of mating swarm formation (eg; noon is 12/24):", value = ParList()$tSwarm, min = 0, max = 1, step = 1/24, round = -3)
+                                                  ))
+                                                ))
                                           )),
                                           ######## Blood Meal #####################
                                           tabPanel("Blood Meal",
-                                            helpText("test Blood Meal")
+                                            column(4,
+                                              helpText("Setup Blood Meal: "),
+                                              wellPanel(
+                                                sliderInput(inputId = "bm_a", label = "Alpha parameter of beta-distributed blood meal size:", value = ParList()$bm_a, min = 0, max = 10, step = 0.5),
+                                                sliderInput(inputId = "bm_b", label = "Beta parameter of beta-distributed blood meal size:", value = ParList()$bm_b, min = 0, max = 10, step = 0.5),
+                                                checkboxInput(inputId = "overfeeding", label = "Overfeeding", value = 1),
+                                                conditionalPanel(condition = "input.overfeeding == 1",
+                                                  sliderInput(inputId = "of_a", label = "Parameter a for probability of death from blood meal size:", value = ParList()$of_a, min = 0, max = 10, step = 0.5),
+                                                  sliderInput(inputId = "of_b", label = "Parameter b for probability of death from blood meal size:", value = ParList()$of_b, min = 0, max = 10000, step = 100)
+                                                  )
+                                                )
+
+                                              )
                                             ),
 
                                           ######## Oogenesis ######################
                                           tabPanel("Oogenesis",
-                                            helpText("test Oogenesis")
+                                            column(4,
+                                                selectInput("oogenesis_model", label = "Oogenesis Model", choice = list('Option 1' = 1, "Option 2" = 2),selected = 'Option 1'),
+                                                conditionalPanel(condition = "input.oogenesis_model == 1",
+                                                  h4("Egg batch size proportional to blood meal size"),
+                                                    sliderInput(inputId = "emt_m", label = "Mean of Gaussian distributed egg maturation time:", value = ParList()$emt_m, min = 0, max = 10, step = 1),
+                                                    sliderInput(inputId = "emt_sd", label = "Standard deviation of Gaussian distributed egg maturation time:", value = ParList()$emt_sd, min = 0, max = 10, step = 1),
+                                                    checkboxInput(inputId = "refeeding", label = "Refeeding behavior", value = 1),
+                                                    conditionalPanel(condition = "input.refeeding == 1",
+                                                      sliderInput(inputId = "rf_a", label = "Parameter a for refeeding probability:", value = ParList()$rf_a, min = 0, max = 20, step = 1),
+                                                      sliderInput(inputId = "rf_b", label = "Parameter b for refeeding probability:", value = ParList()$rf_b, min = 0, max = 10, step = 1)
+                                                      )
+                                                    ),
+                                                  conditionalPanel(condition = "input.oogenesis_model == 2",
+                                                    h4("Egg batch size commits to development"),
+                                                    sliderInput(inputId = "bloodPerEgg", label = "Amount of blood needed per egg", value = ParList()$bloodPerEgg, min = 0, max = 0.5, step = 0.05)
+                                                  ),
+                                                hr(),
+                                                selectInput("eggsize_model", label = "Egg size Model", choice = list('Option 1' = 1, "Option 2" = 2),selected = 'Option 1'),
+                                                conditionalPanel(condition = "input.eggsize_model == 1",
+                                                  h4("sample Gaussian-distributed egg batch size"),
+                                                  sliderInput(inputId = "bs_m", label = "Mean of Gaussian distribution:", value = ParList()$bs_m, min = 0, max = 50, step = 1),
+                                                  sliderInput(inputId = "bs_sd", label = "Standard deviation of Gaussian distributed:", value = ParList()$bs_sd, min = 0, max = 50, step = 1)
+                                                  ),
+                                                conditionalPanel(condition = "input.eggsize_model == 2",
+                                                  h4("Egg batch size is function of blood meal size"),
+                                                  sliderInput(inputId = "maxBatch", label = "Maximum possible size of an egg batch", value = ParList()$maxBatch, min = 0, max = 100, step = 1)
+                                                  )
+                                                )
                                             ),
 
                                           ######## Energetics #####################
                                           tabPanel("Energetics",
-                                            helpText("test Energetics")
+                                            checkboxInput(inputId = "sugar", label = "Sugar feeding behavior", value = 1)
                                             ),
 
                                           #######  Oviposition ###################
                                           tabPanel("Oviposition",
-                                            helpText("test Oviposition")
+                                            selectInput("aqua_model", label = "Aqua Model", choice = list('Emerge' = 'emerge', "EL4P" = 'EL4P'),selected = ParList()$aqua_model)
                                             ),
 
                                           #######  Survival ######################
                                           tabPanel("Survival",
-                                            helpText("test survival")
+                                            checkboxInput(inputId = "tattering", label = "Wing tattering derived contribution to mortality", value = FALSE),
+                                            checkboxInput(inputId = "senescence", label = "Senescence derived contribution to mortality", value = FALSE)
                                             ),
 
                                           ####### Pathogen #######################
                                           tabPanel("Pathogen",
-                                            helpText("test pathgen")
+                                            helpText("Coming soon!")
                                             )
                                       ))
                                     })
@@ -139,7 +260,7 @@ ParList <- reactive({
                           if(input$project == 'demo'){
                             sidebarLayout(position = "right",
                                           sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
-                                                       h4("Interested in more parameters in parameter tuning?"),
+                                                       h4("Interested in parameters?"),
                                                        actionButton("JumpToMore", label = "Check it now!")
                                           ),
                                           mainPanel(
@@ -162,7 +283,18 @@ ParList <- reactive({
 
   ################ Simulation ############################################################
 
+############################### show all input #################################################################
+  # AllInputs <- reactive({
+  #   x <- reactiveValuesToList(input)
+  #   data.frame(
+  #     names = names(x),
+  #     values = unlist(x, use.names = FALSE)
+  #   )
+  # })
 
+  # output$show_inputs <- renderTable({
+  #   AllInputs()
+  # })
 
 
   
@@ -181,7 +313,7 @@ ParList <- reactive({
   
   observe({
     if (input$project == 'exist' && input$launchgo > 0) {
-      session$sendCustomMessage('activeNavs', 'Initialize')
+      session$sendCustomMessage('activeNavs', 'Parameters')
       session$sendCustomMessage('activeNavs', 'Simulation')
       session$sendCustomMessage('activeNavs', 'Pathogen')
     }
@@ -199,7 +331,7 @@ ParList <- reactive({
   })
   observe({
     if (input$project == 'new' && input$createNewFolder > 0) {
-      session$sendCustomMessage('activeNavs', 'Initialize')
+      session$sendCustomMessage('activeNavs', 'Paramters')
       session$sendCustomMessage('activeNavs', 'Simulation')
       session$sendCustomMessage('activeNavs', 'Pathogen')
     }
@@ -211,7 +343,7 @@ ParList <- reactive({
   })
   
   observeEvent(input$JumpToMore,{
-    session$sendCustomMessage('activeNavs', 'Initialize')
+    session$sendCustomMessage('activeNavs', 'Parameters')
     session$sendCustomMessage('activeNavs', 'Pathogen')
     updateTabsetPanel(session, "nav", selected = "initial")
   })

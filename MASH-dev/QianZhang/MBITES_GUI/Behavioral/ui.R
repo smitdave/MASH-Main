@@ -31,7 +31,7 @@ THEME = "flatly"#themeSource="https://bootswatch.com/flatly/"
 ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                        tags$head(tags$script("
                                              window.onload = function() {
-                                             $('#nav a:contains(\"Initialize\")').parent().addClass('hide');
+                                             $('#nav a:contains(\"Parameters\")').parent().addClass('hide');
                                              $('#nav a:contains(\"Simulation\")').parent().addClass('hide');
                                              $('#nav a:contains(\"Ecology\")').parent().addClass('hide');
                                              $('#nav a:contains(\"Pathogen\")').parent().addClass('hide');
@@ -95,7 +95,7 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                   ),
                                   
                                   #################################################################################
-                                  tabPanel(title = "Initialize", value = 'initial',
+                                  tabPanel(title = "Parameters", value = 'initial',
                                            uiOutput("panel_initial")
                                   ),
 
@@ -104,6 +104,12 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                   tabPanel(title = "Simulation", value = "simulation",
                                            uiOutput("sim_panel")
                                   ),
+
+                                  #################################################################################
+                                  # tabPanel(title = "Review", value = "review",
+                                  #          tableOutput('show_inputs')
+                                  # ),
+
                                   #################################################################################
                                   tabPanel("About",
                                            tabsetPanel(selected = "The Project",
