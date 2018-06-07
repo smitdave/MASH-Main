@@ -224,7 +224,7 @@ ParList <- reactive({
 
                                           ######## Energetics #####################
                                           tabPanel("Energetics",
-                                            helpText("test Energetics")
+                                            checkboxInput(inputId = "sugar", label = "Sugar feeding behavior", value = 1)
                                             ),
 
                                           #######  Oviposition ###################
