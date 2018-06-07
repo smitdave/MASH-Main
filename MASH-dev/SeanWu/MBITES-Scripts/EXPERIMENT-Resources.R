@@ -96,6 +96,7 @@ for(i in 1:n){
   dist <- as.matrix(dist(xy_sites[[i]]$sites[,c("x","y")],diag = TRUE,upper = TRUE))
   half_d <- max(dist)/2
   exp_kern <- exp_fit(d = half_d,q = 0.95)
+  xy_sites[[i]]$distance <- dist
   xy_sites[[i]]$movement <- apply(X = dist,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = 1/exp_kern)})
   xy_sites[[i]]$movement <- xy_sites[[i]]$movement/rowSums(xy_sites[[i]]$movement)
   setTxtProgressBar(pb,i)
@@ -194,91 +195,103 @@ for(i in 1:n){
 saveRDS(object = landscapes,file = paste0(dir_dev,"DavidSmith/MBITES-Demo/periDomesticLandscapes.rds"))
 saveRDS(object = xy_sites,file = paste0(dir_dev,"DavidSmith/MBITES-Demo/periDomesticRaw.rds"))
 
+path <- paste0(dir_dev,"DavidSmith/MBITES-Demo/")
 
-# try to make kernels
-library(KernSmooth)
-library(parallel)
-
-numDiff <- function(x, y){
-  sapply(3 : (length(x) - 2), function(ii)
-    (-y[ii + 2] + 8 * y[ii + 1] - 8 * y[ii - 1] + y[ii - 2]) / (12 * (x[2] - x[1])))
-}
-
-normalize <- function(x){
-  return(x / sum(x))
-}
-
-# get a movement and distance matrix
 i=5
-dist_i <- as.matrix(dist(xy_sites[[i]]$sites[,c("x","y")],diag = TRUE,upper = TRUE))
-mvmt_i <- xy_sites[[i]]$movement
 
-# dist_i <- as.matrix(dist(cbind(runif(n = 20,min = 0,max = 10),runif(n = 20,min = 0,max = 10)),diag=T,upper=T))
-# half_d <- max(dist_i)/2
-# exp_kern <- exp_fit(d = half_d,q = 0.95)
-# mvmt_i <- apply(X = dist_i,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = 1/exp_kern)})
-# mvmt_i <- mvmt_i/rowSums(mvmt_i)
+write.table(x = xy_sites[[i]]$sites[,c("x","y")],file = paste0(path,"lscape_xy_",i,".csv"),sep = ",",
+            row.names = FALSE,col.names = TRUE)
 
+write.table(x = xy_sites[[i]]$distance,file = paste0(path,"lscape_dist_",i,".csv"),sep = ",",
+            row.names = FALSE,col.names = FALSE)
 
-dist_v <- as.vector(dist_i)
-self <- which(dplyr::near(dist_v,0))
+write.table(x = xy_sites[[i]]$movement,file = paste0(path,"lscape_kernel_",i,".csv"),sep = ",",
+            row.names = FALSE,col.names = FALSE)
 
-mvmt_v <- as.vector(mvmt_i)[-self]
-dist_v <- dist_v[-self]
-dist_bins <- unique(dist_v[order(dist_v)])
-
-mvmt_v <- mvmt_v[order(dist_v)]
-dist_v <- dist_v[order(dist_v)]
-
-# empirical "pdf"; actually a pmf
-pmf_v <- function(dd,mvmt_v,dist_v){
-  sum(mvmt_v[which(dplyr::near(dist_v,dd))])
-}
-pmf_v <- Vectorize(pmf_v,"dd")
-
-mvmt_pdf_emp <- normalize(pvec(dist_bins,pmf_v,mvmt_v=mvmt_v,dist_v=dist_v))
-
-cdf_v <- function(dd,mvmt_v,dist_v){
-  sum(mvmt_v[which(dist_v <= dd)])
-}
-cdf_v <- Vectorize(cdf_v,"dd")
-
-mvmt_cdf_emp <- pvec(dist_bins,cdf_v,mvmt_v=mvmt_v,dist_v=dist_v)
-
-mvmt_cdf_emp <- mvmt_cdf_emp / max(mvmt_cdf_emp)
-
-# smooth the empirical "cdf" (actually a cmf) into a cdf
-mvmt_cdf_sth <- loess(mvmt_cdf_emp~dist_bins)
-
-# differentiate the smoothed cdf to obtain a smoothed pdf
-mvmt_pdf_sth = list(x = mvmt_cdf_sth$x[3 : (nrow(mvmt_cdf_sth$x) - 2),1],
-                 y = normalize(numDiff(mvmt_cdf_sth$x[,1], mvmt_cdf_sth$y)))
-
-# redefine the smoothed cdf to be exactly consistent with the smoothed pdf
-mvmt_cdf_sth$x = mvmt_pdf_sth$x
-mvmt_cdf_sth$y = cumsum(mvmt_pdf_sth$y)
-
-
-plot(-1,
-     xlim = range(dist_bins), ylim = c(0, (max(mvmt_pdf_emp) +  max(mvmt_pdf_emp)*0.1)),
-     xlab = '', ylab = '',
-     axes = T)
-maxM = max(mvmt_pdf_emp) - max(mvmt_pdf_emp) %% 0.01
-meanDM = sum(mvmt_pdf_emp * dist_bins)
-mvmt_pdf_emp[which.max(mvmt_pdf_emp)] = .03
-segments(dist_bins, rep(0, length(dist_bins)), dist_bins, mvmt_pdf_emp, lwd = 3, col = 'gray')
-lines(mvmt_pdf_sth$x, mvmt_pdf_sth$y, lwd = 3)
-segments(meanDM, 0, meanDM, 0.03, col = 1, lty = 2, lwd = 3)
-
-# axis(1, seq(0, 1, .2))
-# axis(2, seq(0, .03, .01), labels = c('0.0', '0.01', '0.02', as.character(maxM)))
-# axis.break(2, .028, style = 'slash', brw = .03)
-# mtext('(c)', side = 3, adj = 0, line = -.3, cex = 1)
-# mtext('Distance', side = 1, adj = 0, line = 2.75, at = 1.01)
-# par(las = 0)
-# mtext('Kernel density', side = 2, adj = 0, line = 2.75, at = .42, outer = TRUE)
-# par(las = 1)
-# text(x = meanDM + .01, y = .0285, pos = 4,
-#      labels = paste('E{    } =', as.character(meanDM - meanDM %% 0.01)))
-# text(x = meanDM + .01 + .08, y = .0282, pos = 4,
-#      labels = expression(delta[Z]))
+# # try to make kernels
+# library(KernSmooth)
+# library(parallel)
+# 
+# numDiff <- function(x, y){
+#   sapply(3 : (length(x) - 2), function(ii)
+#     (-y[ii + 2] + 8 * y[ii + 1] - 8 * y[ii - 1] + y[ii - 2]) / (12 * (x[2] - x[1])))
+# }
+# 
+# normalize <- function(x){
+#   return(x / sum(x))
+# }
+# 
+# # get a movement and distance matrix
+# i=5
+# dist_i <- as.matrix(dist(xy_sites[[i]]$sites[,c("x","y")],diag = TRUE,upper = TRUE))
+# mvmt_i <- xy_sites[[i]]$movement
+# 
+# # dist_i <- as.matrix(dist(cbind(runif(n = 20,min = 0,max = 10),runif(n = 20,min = 0,max = 10)),diag=T,upper=T))
+# # half_d <- max(dist_i)/2
+# # exp_kern <- exp_fit(d = half_d,q = 0.95)
+# # mvmt_i <- apply(X = dist_i,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = 1/exp_kern)})
+# # mvmt_i <- mvmt_i/rowSums(mvmt_i)
+# 
+# 
+# dist_v <- as.vector(dist_i)
+# self <- which(dplyr::near(dist_v,0))
+# 
+# mvmt_v <- as.vector(mvmt_i)[-self]
+# dist_v <- dist_v[-self]
+# dist_bins <- unique(dist_v[order(dist_v)])
+# 
+# mvmt_v <- mvmt_v[order(dist_v)]
+# dist_v <- dist_v[order(dist_v)]
+# 
+# # empirical "pdf"; actually a pmf
+# pmf_v <- function(dd,mvmt_v,dist_v){
+#   sum(mvmt_v[which(dplyr::near(dist_v,dd))])
+# }
+# pmf_v <- Vectorize(pmf_v,"dd")
+# 
+# mvmt_pdf_emp <- normalize(pvec(dist_bins,pmf_v,mvmt_v=mvmt_v,dist_v=dist_v))
+# 
+# cdf_v <- function(dd,mvmt_v,dist_v){
+#   sum(mvmt_v[which(dist_v <= dd)])
+# }
+# cdf_v <- Vectorize(cdf_v,"dd")
+# 
+# mvmt_cdf_emp <- pvec(dist_bins,cdf_v,mvmt_v=mvmt_v,dist_v=dist_v)
+# 
+# mvmt_cdf_emp <- mvmt_cdf_emp / max(mvmt_cdf_emp)
+# 
+# # smooth the empirical "cdf" (actually a cmf) into a cdf
+# mvmt_cdf_sth <- loess(mvmt_cdf_emp~dist_bins)
+# 
+# # differentiate the smoothed cdf to obtain a smoothed pdf
+# mvmt_pdf_sth = list(x = mvmt_cdf_sth$x[3 : (nrow(mvmt_cdf_sth$x) - 2),1],
+#                  y = normalize(numDiff(mvmt_cdf_sth$x[,1], mvmt_cdf_sth$y)))
+# 
+# # redefine the smoothed cdf to be exactly consistent with the smoothed pdf
+# mvmt_cdf_sth$x = mvmt_pdf_sth$x
+# mvmt_cdf_sth$y = cumsum(mvmt_pdf_sth$y)
+# 
+# 
+# plot(-1,
+#      xlim = range(dist_bins), ylim = c(0, (max(mvmt_pdf_emp) +  max(mvmt_pdf_emp)*0.1)),
+#      xlab = '', ylab = '',
+#      axes = T)
+# maxM = max(mvmt_pdf_emp) - max(mvmt_pdf_emp) %% 0.01
+# meanDM = sum(mvmt_pdf_emp * dist_bins)
+# mvmt_pdf_emp[which.max(mvmt_pdf_emp)] = .03
+# segments(dist_bins, rep(0, length(dist_bins)), dist_bins, mvmt_pdf_emp, lwd = 3, col = 'gray')
+# lines(mvmt_pdf_sth$x, mvmt_pdf_sth$y, lwd = 3)
+# segments(meanDM, 0, meanDM, 0.03, col = 1, lty = 2, lwd = 3)
+# 
+# # axis(1, seq(0, 1, .2))
+# # axis(2, seq(0, .03, .01), labels = c('0.0', '0.01', '0.02', as.character(maxM)))
+# # axis.break(2, .028, style = 'slash', brw = .03)
+# # mtext('(c)', side = 3, adj = 0, line = -.3, cex = 1)
+# # mtext('Distance', side = 1, adj = 0, line = 2.75, at = 1.01)
+# # par(las = 0)
+# # mtext('Kernel density', side = 2, adj = 0, line = 2.75, at = .42, outer = TRUE)
+# # par(las = 1)
+# # text(x = meanDM + .01, y = .0285, pos = 4,
+# #      labels = paste('E{    } =', as.character(meanDM - meanDM %% 0.01)))
+# # text(x = meanDM + .01 + .08, y = .0282, pos = 4,
+# #      labels = expression(delta[Z]))
