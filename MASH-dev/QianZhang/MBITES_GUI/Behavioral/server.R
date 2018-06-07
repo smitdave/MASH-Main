@@ -239,8 +239,8 @@ ParList <- reactive({
 
                                           #######  Survival ######################
                                           tabPanel("Survival",
-                                            checkboxInput(inputId = "tattering", label = "Wing tattering derived contribution to mortality", value = 1),
-                                            checkboxInput(inputId = "senescence", label = "Senescence derived contribution to mortality", value = 1)
+                                            checkboxInput(inputId = "tattering", label = "Wing tattering derived contribution to mortality", value = FALSE),
+                                            checkboxInput(inputId = "senescence", label = "Senescence derived contribution to mortality", value = FALSE)
                                             ),
 
                                           ####### Pathogen #######################
