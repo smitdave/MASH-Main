@@ -192,7 +192,33 @@ ParList <- reactive({
 
                                           ######## Oogenesis ######################
                                           tabPanel("Oogenesis",
-                                            helpText("test Oogenesis")
+                                            column(4,
+                                                selectInput("oogenesis_model", label = "Oogenesis Model", choice = list('Option 1' = 1, "Option 2" = 2),selected = 'Option 1'),
+                                                conditionalPanel(condition = "input.oogenesis_model == 1",
+                                                  h4("Egg batch size proportional to blood meal size"),
+                                                  
+                                                  conditionalPanel(condition = "input.eggMaturationTime == 1",
+                                                    sliderInput(inputId = "emt_m", label = "Mean of Gaussian distributed egg maturation time:", value = ParList()$emt_m, min = 0, max = 10, step = 1),
+                                                    sliderInput(inputId = "emt_sd", label = "Standard deviation of Gaussian distributed egg maturation time:", value = ParList()$emt_sd, min = 0, max = 10, step = 1)
+                                                    ),
+                                                  conditionalPanel(condition = "input.oogenesis_model == 2",
+                                                    h4("Egg batch size commits to development"),
+                                                    sliderInput(inputId = "bloodPerEgg", label = "Amount of blood needed per egg", value = ParList()$bloodPerEgg, min = 0, max = 0.5, step = 0.05)
+                                                    )
+                                                  ),
+                                                hr(),
+                                                selectInput("eggsize_model", label = "Egg size Model", choice = list('Option 1' = 1, "Option 2" = 2),selected = 'Option 1'),
+                                                conditionalPanel(condition = "input.eggsize_model == 1",
+                                                  h4("sample Gaussian-distributed egg batch size"),
+                                                  sliderInput(inputId = "bs_m", label = "Mean of Gaussian distribution:", value = ParList()$bs_m, min = 0, max = 50, step = 1),
+                                                  sliderInput(inputId = "bs_sd", label = "Standard deviation of Gaussian distributed:", value = ParList()$bs_sd, min = 0, max = 50, step = 1)
+
+                                                  )
+
+
+
+
+                                                )
                                             ),
 
                                           ######## Energetics #####################
