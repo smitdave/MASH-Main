@@ -43,12 +43,17 @@ ParList <- reactive({
 })
 
 
-  #################### Initialize Output #####################################################
+  #################### Parameters Output #####################################################
   output$panel_initial <- renderUI({
                             fluidPage(
                              helpText("Welcome to MBITES! Please set parameters here:"),
                              navlistPanel(widths = c(2,10),
-                                          
+                                          ######### Timing #######################
+                                          tabPanel("Bouts"
+
+
+
+                                            ),
                                           ######### Timing #######################
                                           tabPanel("Timing",
                                             tabsetPanel(
@@ -229,17 +234,18 @@ ParList <- reactive({
 
                                           #######  Oviposition ###################
                                           tabPanel("Oviposition",
-                                            helpText("test Oviposition")
+                                            selectInput("aqua_model", label = "Aqua Model", choice = list('Emerge' = 'emerge', "EL4P" = 'EL4P'),selected = ParList()$aqua_model)
                                             ),
 
                                           #######  Survival ######################
                                           tabPanel("Survival",
-                                            helpText("test survival")
+                                            checkboxInput(inputId = "tattering", label = "Wing tattering derived contribution to mortality", value = 1),
+                                            checkboxInput(inputId = "senescence", label = "Senescence derived contribution to mortality", value = 1)
                                             ),
 
                                           ####### Pathogen #######################
                                           tabPanel("Pathogen",
-                                            helpText("test pathgen")
+                                            helpText("Coming soon!")
                                             )
                                       ))
                                     })
@@ -307,7 +313,7 @@ ParList <- reactive({
   
   observe({
     if (input$project == 'exist' && input$launchgo > 0) {
-      session$sendCustomMessage('activeNavs', 'Initialize')
+      session$sendCustomMessage('activeNavs', 'Parameters')
       session$sendCustomMessage('activeNavs', 'Simulation')
       session$sendCustomMessage('activeNavs', 'Pathogen')
     }
@@ -325,7 +331,7 @@ ParList <- reactive({
   })
   observe({
     if (input$project == 'new' && input$createNewFolder > 0) {
-      session$sendCustomMessage('activeNavs', 'Initialize')
+      session$sendCustomMessage('activeNavs', 'Paramters')
       session$sendCustomMessage('activeNavs', 'Simulation')
       session$sendCustomMessage('activeNavs', 'Pathogen')
     }
@@ -337,7 +343,7 @@ ParList <- reactive({
   })
   
   observeEvent(input$JumpToMore,{
-    session$sendCustomMessage('activeNavs', 'Initialize')
+    session$sendCustomMessage('activeNavs', 'Parameters')
     session$sendCustomMessage('activeNavs', 'Pathogen')
     updateTabsetPanel(session, "nav", selected = "initial")
   })
