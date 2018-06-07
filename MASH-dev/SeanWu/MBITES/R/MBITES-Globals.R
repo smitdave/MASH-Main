@@ -446,9 +446,9 @@ get_tile_MBITES_Globals <- function(id){
 #'
 #' Return the total number of tiles created.
 #'
-#'  * This method is bound to \code{MBITES_Globals$get_n_tile}.
+#'  * This method is bound to \code{MBITES_Globals$get_n_tiles}.
 #'
-get_n_tile_MBITES_Globals <- function(){
+get_n_tiles_MBITES_Globals <- function(){
   return(length(private$tiles))
 }
 
@@ -464,8 +464,8 @@ MBITES_Globals$set(which = "public",name = "get_tile",
           value = get_tile_MBITES_Globals, overwrite = TRUE
 )
 
-MBITES_Globals$set(which = "public",name = "get_n_tile",
-          value = get_n_tile_MBITES_Globals, overwrite = TRUE
+MBITES_Globals$set(which = "public",name = "get_n_tiles",
+          value = get_n_tiles_MBITES_Globals, overwrite = TRUE
 )
 
 

@@ -188,6 +188,18 @@ HashMap$set(which = "public",name = "get",
   value = get_HashMap, overwrite = TRUE
 )
 
+#' HashMap: Get Size of the Hash Table
+#'
+#' Get the number of objects in the hash table
+#'
+size_HashMap <- function(key){
+  MBITES:::hash_size(private$storage)
+}
+
+HashMap$set(which = "public",name = "size",
+  value = size_HashMap, overwrite = TRUE
+)
+
 
 ###############################################################################
 # HashMap: Apply Method Over Environment
