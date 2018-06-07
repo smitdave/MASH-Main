@@ -197,7 +197,12 @@ ParList <- reactive({
                                                 conditionalPanel(condition = "input.oogenesis_model == 1",
                                                   h4("Egg batch size proportional to blood meal size"),
                                                     sliderInput(inputId = "emt_m", label = "Mean of Gaussian distributed egg maturation time:", value = ParList()$emt_m, min = 0, max = 10, step = 1),
-                                                    sliderInput(inputId = "emt_sd", label = "Standard deviation of Gaussian distributed egg maturation time:", value = ParList()$emt_sd, min = 0, max = 10, step = 1)
+                                                    sliderInput(inputId = "emt_sd", label = "Standard deviation of Gaussian distributed egg maturation time:", value = ParList()$emt_sd, min = 0, max = 10, step = 1),
+                                                    checkboxInput(inputId = "refeeding", label = "Refeeding behavior", value = 1),
+                                                    conditionalPanel(condition = "input.refeeding == 1",
+                                                      sliderInput(inputId = "rf_a", label = "Parameter a for refeeding probability:", value = ParList()$rf_a, min = 0, max = 20, step = 1),
+                                                      sliderInput(inputId = "rf_b", label = "Parameter b for refeeding probability:", value = ParList()$rf_b, min = 0, max = 10, step = 1)
+                                                      )
                                                     ),
                                                   conditionalPanel(condition = "input.oogenesis_model == 2",
                                                     h4("Egg batch size commits to development"),
@@ -214,10 +219,6 @@ ParList <- reactive({
                                                   h4("Egg batch size is function of blood meal size"),
                                                   sliderInput(inputId = "maxBatch", label = "Maximum possible size of an egg batch", value = ParList()$maxBatch, min = 0, max = 100, step = 1)
                                                   )
-
-
-
-
                                                 )
                                             ),
 
@@ -253,7 +254,7 @@ ParList <- reactive({
                           if(input$project == 'demo'){
                             sidebarLayout(position = "right",
                                           sidebarPanel(style = "overflow-y:scroll; max-height: 600px",
-                                                       h4("Interested in more parameters in parameter tuning?"),
+                                                       h4("Interested in parameters?"),
                                                        actionButton("JumpToMore", label = "Check it now!")
                                           ),
                                           mainPanel(
