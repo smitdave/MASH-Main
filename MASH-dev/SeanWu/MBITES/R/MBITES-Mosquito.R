@@ -306,12 +306,15 @@ trackProbe_Mosquito_Female <- function(){
   lVec = length(private$feedTime)
   if(private$nFeed > lVec){
     private$feedTime = c(private$feedTime,numeric(lVec))
+    private$feedSite = c(private$feedSite,integer(lVec))
     private$hostHist = c(private$hostHist,integer(lVec))
     private$probeAndFeed = c(private$probeAndFeed,logical(lVec))
   }
 
   private$feedTime[private$nFeed] = private$tNow
+  private$feedSite[private$nFeed] = private$siteHist[private$nEvent]
   private$hostHist[private$nFeed] = private$hostID
+  private$probeAndFeed[private$nFeed] = private$probeAndFeed
 
   private$nFeed = private$nFeed + 1L
 }
@@ -337,6 +340,7 @@ mbites_exit_Mosquito_Female <- function(){
           # blood feeding history
           bloodHosts = private$hostHist[1:(private$nFeed-1L)],
           timeFeed = private$feedTime[1:(private$nFeed-1L)],
+          siteFeed = private$feedSite[1:(private$nFeed-1L)],
           probeAndFeed = private$probeAndFeed[1:(private$nFeed-1L)]
           # write out
       ), pretty = MBITES:::Globals$pretty),",\n",sep="",file=MBITES:::Globals$get_mosquito_f_out())
@@ -354,6 +358,10 @@ trackBloodHost <- function(){
   )
 
   Mosquito_Female$set(which = "private",name = "feedTime",
+            value = numeric(10), overwrite = TRUE
+  )
+
+  Mosquito_Female$set(which = "private",name = "feedSite",
             value = numeric(10), overwrite = TRUE
   )
 
