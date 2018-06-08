@@ -50,7 +50,7 @@ MBDETES_Approx <- function(tileID){
 
 
 ###############################################################################
-# Scalar proabilities
+# BloodMeal and Oogenesis probabilities (inc. PPRFlight survival)
 ###############################################################################
 
 #' MBDETES: Refeeding Probability
@@ -61,6 +61,7 @@ MBDETES_Approx <- function(tileID){
 #' of that size.
 #'  * MBITES functions can be found in MBITES-Oogenesis.R
 #'
+#' @export
 MBDETES_getPrRefeed <- function(){
   rf_a = MBITES:::Parameters$get_rf_a()
   rf_b = MBITES:::Parameters$get_rf_b()
@@ -81,7 +82,8 @@ MBDETES_getPrRefeed <- function(){
 #' of that size.
 #'  * MBITES functions can be found in MBITES-BloodMeal.R
 #'
-MBDETES_getPrOverfeed = function(){
+#' @export
+MBDETES_getPrOverfeed <- function(){
   of_a = MBITES:::Parameters$get_of_a()
   of_b = MBITES:::Parameters$get_of_b()
   bm_a = MBITES:::Parameters$get_bm_a()
@@ -93,71 +95,76 @@ MBDETES_getPrOverfeed = function(){
   integrate(FF, 0, 1)
 }
 
-# #' MBDETES: Prob of Surviving the post-prandial flight
-# #'
-# #'
-# MBDETES_getSurvLaden =function(){
-#   lrl = MBDETES_getRestingParam()
-#   land = lrl[1]; retry = lrl[2]; leave = lrl[3]
-#   PPR_a = MBITES:::Parameters$get_PPR_a()
-#   PPR_b = MBITES:::Parameters$get_PPR_b()
-#   bm_a = MBITES:::Parameters$get_bm_a()
-#   bm_b = MBITES:::Parameters$get_bm_b()
-#   FF = function(X){
-#      p = dbeta(X,bm_a,bm_b)*exp(PPR_a*X)/(PPR_b + exp(PPR_a*X))
-#      p*(land+leave)/(1-retry)
-#   }
-#   integrate(FF, 0, 1)
-# }
-#
-# #' MBDETES: Prob of Leaving, post prandially
-# #'
-# #'
-# MBDETES_getLeaveLaden=function(){
-#   lrl = MBDETES_getRestingParam()
-#   land = lrl[1]; retry = lrl[2]; leave = lrl[3]
-#   PPR_a = MBITES:::Parameters$get_PPR_a()
-#   PPR_b = MBITES:::Parameters$get_PPR_b()
-#   bm_a = MBITES:::Parameters$get_bm_a()
-#   bm_b = MBITES:::Parameters$get_bm_b()
-#   FF = function(X){
-#      p = dbeta(x,bm_a,bm_b)*exp(PPR_a*private$bmSize)/(PPR_b + exp(PPR_a*private$bmSize))
-#      p*leave/(1-retry)
-#   }
-#   integrate(FF, 0, 1)
-# }
-#
-# #' MBDETES: Prob of surviving landing
-# #'
-# #'
-# MBDETES_getSurvUnladen =function(){
-#   lrl = MBDETES_getRestingParam()
-#   land = lrl[1]; retry = lrl[2]; leave = lrl[3]
-#   (land+leave)/(1-retry)
-# }
-#
-# #' MBDETES: Prob of Surviving the post-prandial flight
-# #'
-# #'
-# MBDETES_getLeaveUnladen =function(){
-#   lrl = MBDETES_getRestingParam()
-#   land = lrl[1]; retry = lrl[2]; leave = lrl[3]
-#   leave/(1-retry)
-# }
+#' MBDETES: Probability of Surviving the post-prandial flight (laden mosquito)
+#'
+#'
+#' @export
+MBDETES_getSurvLaden <- function(){
+  lrl = MBDETES_getRestingParam()
+  land = lrl[1]; retry = lrl[2]; leave = lrl[3]
+  PPR_a = MBITES:::Parameters$get_PPR_a()
+  PPR_b = MBITES:::Parameters$get_PPR_b()
+  bm_a = MBITES:::Parameters$get_bm_a()
+  bm_b = MBITES:::Parameters$get_bm_b()
+  FF = function(X){
+     p = dbeta(X,bm_a,bm_b)*exp(PPR_a*X)/(PPR_b + exp(PPR_a*X))
+     p*(land+leave)/(1-retry)
+  }
+  integrate(FF, 0, 1)
+}
 
+#' MBDETES: Probability of Leaving, post prandially (laden mosquito)
+#'
+#'
+#' @export
+MBDETES_getLeaveLaden <- function(){
+  lrl = MBDETES_getRestingParam()
+  land = lrl[1]; retry = lrl[2]; leave = lrl[3]
+  PPR_a = MBITES:::Parameters$get_PPR_a()
+  PPR_b = MBITES:::Parameters$get_PPR_b()
+  bm_a = MBITES:::Parameters$get_bm_a()
+  bm_b = MBITES:::Parameters$get_bm_b()
+  FF = function(X){
+     p = dbeta(x,bm_a,bm_b)*exp(PPR_a*private$bmSize)/(PPR_b + exp(PPR_a*private$bmSize))
+     p*leave/(1-retry)
+  }
+  integrate(FF, 0, 1)
+}
+
+#' MBDETES: Probability of Surviving the post-prandial flight (unladen mosquito)
+#'
+#'
+#' @export
+MBDETES_getSurvUnladen <- function(){
+  lrl = MBDETES_getRestingParam()
+  land = lrl[1]; retry = lrl[2]; leave = lrl[3]
+  (land+leave)/(1-retry)
+}
+
+#' MBDETES: Probability of Leaving, post prandially (unladen mosquito)
+#'
+#'
+#' @export
+MBDETES_getLeaveUnladen <- function(){
+  lrl = MBDETES_getRestingParam()
+  land = lrl[1]; retry = lrl[2]; leave = lrl[3]
+  leave/(1-retry)
+}
 
 #' MBDETES: Resting spot probabilities
 #'
-#' Calculate resting spot probabilities
+#' Calculate resting spot probabilities according to a mixture distribution with
+#' equal weights given to the 3 main behavioral states (B,O,S).
 #'
+#' @export
 MBDETES_getRestingParam <- function(){
   # if(private$site$get_type()==1L){
     # use "l" because that is the rspot when a mosquito arrives at a new site
-    mixture_weights = rep(1,3)/3
-    l_inandout = MBITES:::Parameters$get_InAndOut_row("l")
-    probs = mixture_weights[1]*(l_inandout* MBITES:::Parameters$get_wts("B")) +
-            mixture_weights[2]*(l_inandout* MBITES:::Parameters$get_wts("O")) +
-            mixture_weights[3]*(l_inandout* MBITES:::Parameters$get_wts("S"))
+    mix_wts = rep(1,3)/3
+    inandout = MBITES:::Parameters$get_InAndOut_row("l")
+    probs = mix_wts[1]*(inandout* MBITES:::Parameters$get_wts("B")) +
+            mix_wts[2]*(inandout* MBITES:::Parameters$get_wts("O")) +
+            mix_wts[3]*(inandout* MBITES:::Parameters$get_wts("S"))
 
      # probs = MBITES:::Parameters$get_InAndOut_row("l") * MBITES:::Parameters$get_wts("l")
      land = sum(probs[1:3])
@@ -208,7 +215,11 @@ MBDETES_BstateTransitions <- function(site){
   survive = MBITES:::Parameters$get_B_surv()
 
   # check the function
-  host = site$RiskQ$typewtsQ()
+  if(site$has_feed()){
+    host = site$get_feed()$RiskQ$typewtsQ()
+  } else {
+    host = rep(0,4)
+  }
 
   # probability of taking a human bloodmeal | human chosen
   h1 = MBITES:::Parameters$get_probeH()
@@ -333,10 +344,10 @@ MBDETES_OstateTransitions <- function(site){
 #' @export
 MBDETES_StateTransitions <- function(site){
   FBRLOD = matrix(0,nrow=6,ncol=6,dimnames=list(c("F","B","R","L","O","D"),c("F","B","R","L","O","D")))
-  FBRLOD[1,] = FstateTransitions(site)
-  FBRLOD[2,] = BstateTransitions(site)
-  FBRLOD[3,] = RstateTransitions(site)
-  FBRLOD[4,] = LstateTransitions(site)
-  FBRLOD[5,] = OstateTransitions(site)
+  FBRLOD[1,] = MBDETES_FstateTransitions(site)
+  FBRLOD[2,] = MBDETES_BstateTransitions(site)
+  FBRLOD[3,] = MBDETES_RstateTransitions(site)
+  FBRLOD[4,] = MBDETES_LstateTransitions(site)
+  FBRLOD[5,] = MBDETES_OstateTransitions(site)
   return(FBRLOD)
 }

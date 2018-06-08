@@ -241,6 +241,43 @@ sample_mate_Site <- function(){
   MBITES::sample(x=private$resource_mating,size=1L,replace=FALSE,prob=private$resource_mating_w)[[1]]
 }
 
+#' Site: Return Blood Feeding Resource
+#'
+#' Returns a reference to the first \code{\link{Feeding_Resource}} object at this site.
+#'  * binding: \code{Site$get_feed}
+#'
+get_feed_Site <- function(){
+  private$resource_feeding[[1]]
+}
+
+#' Site: Return Aquatic Habitat Resource
+#'
+#' Returns a reference to the first \code{\link{Aqua_Resource}} object at this site.
+#'  * binding: \code{Site$get_aqua}
+#'
+get_aqua_Site <- function(){
+  private$resource_aquatic[[1]]
+}
+
+#' Site: Return Sugar Feeding Resource
+#'
+#' Returns a reference to the first \code{\link{Sugar_Resource}} object at this site.
+#'  * binding: \code{Site$get_sugar}
+#'
+get_sugar_Site <- function(){
+  private$resource_sugar[[1]]
+}
+
+#' Site: Return Mating Swarm Resource
+#'
+#' Returns a reference to the first \code{\link{Mating_Resource}} object at this site.
+#'  * binding: \code{Site$get_mate}
+#'
+get_mate_Site <- function(){
+  private$resource_mating[[1]]
+}
+
+# sample
 Site$set(which = "public",name = "sample_feed",
     value = sample_feed_Site, overwrite = TRUE
 )
@@ -255,6 +292,23 @@ Site$set(which = "public",name = "sample_sugar",
 
 Site$set(which = "public",name = "sample_mate",
     value = sample_mate_Site, overwrite = TRUE
+)
+
+# get first element
+Site$set(which = "public",name = "get_feed",
+    value = get_feed_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "get_aqua",
+    value = get_aqua_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "get_sugar",
+    value = get_sugar_Site, overwrite = TRUE
+)
+
+Site$set(which = "public",name = "get_mate",
+    value = get_mate_Site, overwrite = TRUE
 )
 
 
