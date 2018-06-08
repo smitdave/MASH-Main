@@ -14,11 +14,11 @@
 ###
 # Example function call:
 #
-# mosquito.biting.data <- fromJSON(file("/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/run1/mosquito_F_1.json"))
-# rows <- nrow(mosquito.biting.data)-1
-# EIP = 2
-# bionomics.data <- rbindlist(lapply(X=1:rows, vector.bionomics.processor,
-#                             mosquito.biting.data=mosquito.biting.data, EIP=EIP))
+# bionomics.data <- combine.bionomics.data(filename, EIP=2) # read JSON data into data.table format
+# 
+# VC.distn <- vc.distribution.data(bionomics.data) # Calculate Vectorial Capacity
+# hist(VC.distn, breaks = c(0:(ceiling(max(VC.distn))+1))-.5)
+# 
 ###
 
 require(data.table)
@@ -48,8 +48,8 @@ preprocess.vector.data <- function(row.number, mosquito.biting.data = mosquito.b
     death.time = event.times[length(event.times)] # last behavior should always be "D" for death
   )
   blood.feeding <- data.table(timeFeed = unlist(mos.dat.row$timeFeed),
-                              #siteFeed = unlist(mos.dat.row.ex1$siteFeed), #### FIX ME
-                              siteFeed = unlist(mos.dat.row$sites)[1:length(unlist(mos.dat.row$timeFeed))],
+                              siteFeed = unlist(mos.dat.row$siteFeed),
+                              #siteFeed = unlist(mos.dat.row$sites)[1:length(unlist(mos.dat.row$timeFeed))], # the kluge we were using before
                               bloodHost = unlist(mos.dat.row$bloodHosts),
                               probeAndFeed = unlist(mos.dat.row$probeAndFeed)
   )
