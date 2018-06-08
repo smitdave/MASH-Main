@@ -243,29 +243,29 @@ sample_mate_Site <- function(){
 
 #' Site: Return Blood Feeding Resource
 #'
-#' Returns a reference to the first \code{\link{Feeding_Resource}} object at this site.
+#' Returns a reference to a \code{\link{Feeding_Resource}} object at this site.
 #'  * binding: \code{Site$get_feed}
 #'
-get_feed_Site <- function(){
-  private$resource_feeding[[1]]
+get_feed_Site <- function(i){
+  private$resource_feeding[[i]]
 }
 
 #' Site: Return Aquatic Habitat Resource
 #'
-#' Returns a reference to the first \code{\link{Aqua_Resource}} object at this site.
+#' Returns a reference to a \code{\link{Aqua_Resource}} object at this site.
 #'  * binding: \code{Site$get_aqua}
 #'
-get_aqua_Site <- function(){
-  private$resource_aquatic[[1]]
+get_aqua_Site <- function(i){
+  private$resource_aquatic[[i]]
 }
 
 #' Site: Return Sugar Feeding Resource
 #'
-#' Returns a reference to the first \code{\link{Sugar_Resource}} object at this site.
+#' Returns a reference to a first \code{\link{Sugar_Resource}} object at this site.
 #'  * binding: \code{Site$get_sugar}
 #'
-get_sugar_Site <- function(){
-  private$resource_sugar[[1]]
+get_sugar_Site <- function(i){
+  private$resource_sugar[[i]]
 }
 
 #' Site: Return Mating Swarm Resource
@@ -273,8 +273,8 @@ get_sugar_Site <- function(){
 #' Returns a reference to the first \code{\link{Mating_Resource}} object at this site.
 #'  * binding: \code{Site$get_mate}
 #'
-get_mate_Site <- function(){
-  private$resource_mating[[1]]
+get_mate_Site <- function(i){
+  private$resource_mating[[i]]
 }
 
 # sample
@@ -498,34 +498,4 @@ Site$set(which = "public",name = "get_type",
 
 Site$set(which = "public",name = "get_haz",
     value = get_haz_Site, overwrite = TRUE
-)
-
-# Feeding Resource accessors
-
-#' Site: Return Blood Feeding Resource Reference
-#'
-#' Return a reference to the i'th \code{\link{Feeding_Resource}}
-#'  * binding: \code{Site$get_feed}
-#'
-#' @param i integer index of resource to return
-#'
-get_feed_Site <- function(i){
-  return(private$resource_feeding[[i]])
-}
-
-#' Site: Return Blood Feeding Resource Weights
-#'
-#' Return a numeric vector of \code{\link{Feeding_Resource}} weights at this site.
-#'  * binding: \code{Site$get_feed_w}
-#'
-get_feed_w_Site <- function(){
-  return(private$resource_feeding_w)
-}
-
-Site$set(which = "public",name = "get_feed",
-    value = get_feed_Site, overwrite = TRUE
-)
-
-Site$set(which = "public",name = "get_feed_w",
-    value = get_feed_w_Site, overwrite = TRUE
 )

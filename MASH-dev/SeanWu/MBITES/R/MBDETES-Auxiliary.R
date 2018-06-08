@@ -34,6 +34,9 @@ MBDETES_Approx <- function(tileID){
   tile = MBITES:::Globals$get_tile(tileID)
   n = tile$get_sites()$size()
 
+  tile$get_sites()$apply(tag="clear_ActivitySpace")
+  tile$get_humans()$apply(tag="oneDay_ActivitySpace")
+
   # calculate transitions for each site
   out = vector(mode="list",length=n)
   pb = txtProgressBar(min = 0,max = n)
@@ -44,6 +47,8 @@ MBDETES_Approx <- function(tileID){
 
     setTxtProgressBar(pb,i)
   }
+
+  tile$get_sites()$apply(tag="clear_ActivitySpace")
 
   return(out)
 }
@@ -71,7 +76,7 @@ MBDETES_getPrRefeed <- function(){
   FF = function(X){
     dbeta(X,bm_a,bm_b)*(2+rf_b)/(1+rf_b) - exp(rf_a*X)/(rf_b + exp(rf_a*X))
   }
-  integrate(FF, 0, 1)
+  integrate(FF, 0, 1)$value
 }
 
 #' MBDETES: Overfeeding Probability
@@ -92,7 +97,20 @@ MBDETES_getPrOverfeed <- function(){
   FF = function(X){
     dbeta(X,bm_a,bm_b)*exp(of_a*X)/(of_b + exp(of_a*X))
   }
-  integrate(FF, 0, 1)
+  integrate(FF, 0, 1)$value
+}
+
+# probability to die from post-prandial period (1 - pPPR = survival prob)
+MBDETES_getPrPPRFlight <- function(){
+  PPR_a = MBITES:::Parameters$get_PPR_a()
+  PPR_b = MBITES:::Parameters$get_PPR_b()
+  bm_a = MBITES:::Parameters$get_bm_a()
+  bm_b = MBITES:::Parameters$get_bm_b()
+
+  FF = function(X){
+    dbeta(X,bm_a,bm_b)*exp(PPR_a*X)/(PPR_b + exp(PPR_a*X))
+  }
+  integrate(FF, 0, 1)$value
 }
 
 #' MBDETES: Probability of Surviving the post-prandial flight (laden mosquito)
@@ -110,7 +128,7 @@ MBDETES_getSurvLaden <- function(){
      p = dbeta(X,bm_a,bm_b)*exp(PPR_a*X)/(PPR_b + exp(PPR_a*X))
      p*(land+leave)/(1-retry)
   }
-  integrate(FF, 0, 1)
+  integrate(FF, 0, 1)$value
 }
 
 #' MBDETES: Probability of Leaving, post prandially (laden mosquito)
@@ -125,10 +143,10 @@ MBDETES_getLeaveLaden <- function(){
   bm_a = MBITES:::Parameters$get_bm_a()
   bm_b = MBITES:::Parameters$get_bm_b()
   FF = function(X){
-     p = dbeta(x,bm_a,bm_b)*exp(PPR_a*private$bmSize)/(PPR_b + exp(PPR_a*private$bmSize))
+     p = dbeta(X,bm_a,bm_b)*exp(PPR_a*X)/(PPR_b + exp(PPR_a*X))
      p*leave/(1-retry)
   }
-  integrate(FF, 0, 1)
+  integrate(FF, 0, 1)$value
 }
 
 #' MBDETES: Probability of Surviving the post-prandial flight (unladen mosquito)
@@ -174,7 +192,8 @@ MBDETES_getRestingParam <- function(){
   # } else {
   #    return("v")
   # }
-  c(land, retry, leave)
+  out = unname(c(land, retry, leave))
+  return(out/sum(out))
 }
 
 
@@ -216,7 +235,7 @@ MBDETES_BstateTransitions <- function(site){
 
   # check the function
   if(site$has_feed()){
-    host = site$get_feed()$RiskQ$typewtsQ()
+    host = site$get_feed(1L)$RiskQ$typewtsQ()
   } else {
     host = rep(0,4)
   }
@@ -274,7 +293,7 @@ MBDETES_RperiodTransitions <- function(site){
   refeed = MBDETES_getPrRefeed()
 
   # stay, after a laden flight
-  stayLaden = mbites2MBDETES_getLeaveLaden()
+  stayLaden = MBDETES_getLeaveLaden()
 
   # aquatic habitat present
   aquatic = site$has_aqua()
@@ -283,7 +302,7 @@ MBDETES_RperiodTransitions <- function(site){
   blood = site$has_feed()
 
   # survive the post-prandial resting period
-  surviveRest = NaN # FIX ME !!!
+  surviveRest = 1 - MBDETES_getPrPPRFlight() # FIX ME !!!
 
   R2B = blood*refeed*surviveRest
   R2F = (1-blood)*refeed*surviveRest
@@ -346,7 +365,7 @@ MBDETES_StateTransitions <- function(site){
   FBRLOD = matrix(0,nrow=6,ncol=6,dimnames=list(c("F","B","R","L","O","D"),c("F","B","R","L","O","D")))
   FBRLOD[1,] = MBDETES_FstateTransitions(site)
   FBRLOD[2,] = MBDETES_BstateTransitions(site)
-  FBRLOD[3,] = MBDETES_RstateTransitions(site)
+  FBRLOD[3,] = MBDETES_RperiodTransitions(site)
   FBRLOD[4,] = MBDETES_LstateTransitions(site)
   FBRLOD[5,] = MBDETES_OstateTransitions(site)
   return(FBRLOD)
