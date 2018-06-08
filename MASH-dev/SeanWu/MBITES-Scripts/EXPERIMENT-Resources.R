@@ -96,6 +96,7 @@ for(i in 1:n){
   dist <- as.matrix(dist(xy_sites[[i]]$sites[,c("x","y")],diag = TRUE,upper = TRUE))
   half_d <- max(dist)/2
   exp_kern <- exp_fit(d = half_d,q = 0.95)
+  xy_sites[[i]]$distance <- dist
   xy_sites[[i]]$movement <- apply(X = dist,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = 1/exp_kern)})
   xy_sites[[i]]$movement <- xy_sites[[i]]$movement/rowSums(xy_sites[[i]]$movement)
   setTxtProgressBar(pb,i)
@@ -194,6 +195,18 @@ for(i in 1:n){
 saveRDS(object = landscapes,file = paste0(dir_dev,"DavidSmith/MBITES-Demo/periDomesticLandscapes.rds"))
 saveRDS(object = xy_sites,file = paste0(dir_dev,"DavidSmith/MBITES-Demo/periDomesticRaw.rds"))
 
+path <- paste0(dir_dev,"DavidSmith/MBITES-Demo/")
+
+i=5
+
+write.table(x = xy_sites[[i]]$sites[,c("x","y")],file = paste0(path,"lscape_xy_",i,".csv"),sep = ",",
+            row.names = FALSE,col.names = TRUE)
+
+write.table(x = xy_sites[[i]]$distance,file = paste0(path,"lscape_dist_",i,".csv"),sep = ",",
+            row.names = FALSE,col.names = FALSE)
+
+write.table(x = xy_sites[[i]]$movement,file = paste0(path,"lscape_kernel_",i,".csv"),sep = ",",
+            row.names = FALSE,col.names = FALSE)
 
 # try to make kernels
 library(KernSmooth)

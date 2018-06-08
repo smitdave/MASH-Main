@@ -181,6 +181,7 @@ mbites_trackHistory <- function(){
 mbites_exit <- function(){
   self$trackHistory()
   # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
+  private$stateHist[private$nEvent] = "D"
   cat(jsonlite::toJSON(x = list(
           id = private$id,
           tile = private$tileID,
@@ -324,6 +325,7 @@ trackFeed_Mosquito_Female <- function(){
 mbites_exit_Mosquito_Female <- function(){
   self$trackHistory()
   # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
+  private$stateHist[private$nEvent] = "D"
   cat(jsonlite::toJSON(x = list(
           # basic history
           id = private$id,
