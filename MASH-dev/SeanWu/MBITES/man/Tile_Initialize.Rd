@@ -43,6 +43,8 @@ A description of the parameter format this function expects is given below:
 \itemize{
 \item \code{w}: numeric weight; used by mosquitoes to select blood feeding resources if there are more than 1.
 \item \code{enterP}: numeric probability for mosquito to successfully enter the house
+\item \code{zoo_id}: integer id of zoo host (can be \code{NULL})
+\item \code{zoo_w}: numeric weight of zoo host (can be \code{NULL})
 }
 
 \strong{Aquatic Habitat resources:}

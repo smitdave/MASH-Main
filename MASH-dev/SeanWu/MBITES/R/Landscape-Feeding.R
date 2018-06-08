@@ -240,8 +240,8 @@ make_RiskQ <- function(){
   # typewtsQ: return named numeric vector of weights for each type of host
   typewtsQ <- function(){
 
-    # return object
-    out <- c("H"=0,"Z"=0,"T"=0)
+    # return object (Humans,Zoo,Trap,Other)
+    out <- c("H"=0,"Z"=0,"T"=0,"O"=0)
     out[["H"]] <- sum(weight)
     out[["Z"]] <- sum(weight_o)
 
