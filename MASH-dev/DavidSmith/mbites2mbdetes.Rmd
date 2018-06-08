@@ -1,5 +1,5 @@
 ---
-title: "MBITES 2 MBDETES"
+title: "MBITES / MBDETES formulas for the Length of the Feeding Cycle and Survival through one Feeding Cycle"
 author: "David L Smith"
 date: "6/8/2018"
 output:
@@ -15,7 +15,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 Under some restricted conditions on waiting times, MBITES is what we would get if we translated MBDETES into a stochastic model, under the Gillespie algorithm. We can, therefore, use MBDETES to compute expectations for MBITES under these same contitions. 
 
-The interval between leaving the post-prandial resting state, $R$ can be computed from the state transition probabilities. Let $P_{X,Y}$ denote the probability of making a transition from state $X$ to state $Y$, and $t_{X}$ the average time spent in $X$. 
+The utility **mbites2mbdetes** outputs state transitions, with outputs denoted as described in the following. The interval between leaving the post-prandial resting state, $R$ can be computed from the state transition probabilities. Let $P_{X,Y}$ denote the probability of making a transition from state $X$ to state $Y$, and $t_{X}$ the average time spent in $X$. 
 
 ### Without Search 
 
