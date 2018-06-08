@@ -324,8 +324,8 @@ MBDETES_LstateTransitions <- function(site){
   success = MBITES:::Parameters$get_Os_succeed()
   survive = MBITES:::Parameters$get_Os_surv()
 
-  L2O = succeed*survive
-  L2L = (1-succeed)*survive
+  L2O = success*survive
+  L2L = (1-success)*survive
   L2D = 1-L2O-L2L
 
   return(c(0, 0, 0, L2L, L2O, L2D))
@@ -343,13 +343,13 @@ MBDETES_OstateTransitions <- function(site){
   success = MBITES:::Parameters$get_O_succeed()
   survive = MBITES:::Parameters$get_O_surv()
   blood   = site$has_feed()
-  stay    = 1-getLeaveUnladen()
+  stay    = 1-MBDETES_getLeaveUnladen()
 
-  O2F = succeed*survive*(1-blood)
-  O2B = succeed*survive*blood
-  O2O = (1-succeed)*survive*stay
-  O2L = (1-succeed)*survive*(1-stay)
-  O2D = 1-O2F-O2B-O2O-O2L-O2D
+  O2F = success*survive*(1-blood)
+  O2B = success*survive*blood
+  O2O = (1-success)*survive*stay
+  O2L = (1-success)*survive*(1-stay)
+  O2D = 1-O2F-O2B-O2O-O2L
   return(c(O2F, O2B, 0, O2L, O2O, O2D))
 }
 
