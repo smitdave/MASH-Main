@@ -2,15 +2,12 @@
 % Please edit documentation in R/LANDSCAPE-Site.R
 \name{get_feed_Site}
 \alias{get_feed_Site}
-\title{Site: Return Blood Feeding Resource Reference}
+\title{Site: Return Blood Feeding Resource}
 \usage{
 get_feed_Site(i)
 }
-\arguments{
-\item{i}{integer index of resource to return}
-}
 \description{
-Return a reference to the i'th \code{\link{Feeding_Resource}}
+Returns a reference to a \code{\link{Feeding_Resource}} object at this site.
 \itemize{
 \item binding: \code{Site$get_feed}
 }

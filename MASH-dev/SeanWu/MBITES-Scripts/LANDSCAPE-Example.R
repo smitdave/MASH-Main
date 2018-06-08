@@ -146,7 +146,7 @@ for(i in 1:nAqua){
 # Make human initialization object
 ###############################################################################
 
-nHumans = 80
+nHumans = 200
 
 humans = data.frame(
   tileID = rep(1,nHumans),
