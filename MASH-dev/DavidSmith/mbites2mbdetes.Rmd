@@ -31,9 +31,10 @@ $$\hat P_{O,B} = \frac{P_{O,B}}{1-P_{O,O}},$$
 with expected waiting time: $$T_{O,B} = \frac{t_O}{1-P_{O,O}}.$$
 
 So the overall waiting time from $R$ back to $R$ is:
-$$\hat P_{R,R} = P_{R,B} \hat P_{B,R} T_{R,B} + P_{R,O} \hat P_{O,B} T_{O,B} \hat P_{B,R} T_{R,B}$$
+$$\hat P_{R,R} = P_{R,B} \hat P_{B,R} T_{R,B} + P_{R,O} \hat P_{O,B} \hat P_{B,R} \left(T_{O,B} + T_{R,B}\right)$$
 
-$$\hat P_{R,R} = P_{R,B}  \left( \frac{P_{B,R}}{1-P_{B,B}} \frac{t_B}{1-P_{B,B}} \right)+ P_{R,O} \left( \frac{t_O}{1-P_{O,O}} + \frac{P_{O,B}}{1-P_{O,O}} \frac{P_{B,R}}{1-P_{B,B}} \frac{t_B}{1-P_{B,B}}\right).$$  
+$$\hat P_{R,R} = 
+\frac{P_{R,B}  \left( \frac{P_{R,B}}{1-P_{B,B}} \frac{t_B}{1-P_{B,B}} \right)+ P_{R,O}\frac{P_{O,B}}{1-P_{O,O}} \frac{P_{B,R}}{1-P_{B,B}} \left( \frac{t_O}{1-P_{O,O}} +  \frac{t_B}{1-P_{B,B}}\right)}{P_{R,B}+P_{R,O}}.$$  
 
 ### With Search
 
@@ -54,7 +55,7 @@ $$\hat P_{B,R} = P_{B,R} + \left(P_{B,B} + P_{B,F} \hat P_{F,B} \right) \hat P_{
 $$ \hat P_{B,R} = \frac{P_{B,R}}{1-P_{B,B} - P_{B,F} \hat P_{F,B}} = \frac{P_{B,R}}{1-P_{B,B} - \frac{P_{B,F} P_{F,B}}{1-P_{F,F}}} $$
 
 and: 
-$$ T_{B,R} = P_{B,R} t_B + P_{B,B} T_{B,R} + P_{B,F} \hat P_{B,F} \left(T_{B,F} +  T_{B,R} \right) \\ = \frac{P_{B,R}  t_B + P_{B,F} \hat P_{B,F} T_{B,F}}{1-P_{B,B} - P_{B,F} \hat P_{B,F}} 
+$$ T_{B,R} = P_{B,R} t_B + P_{B,B} T_{B,R} + P_{B,F} \hat P_{B,F} \left(T_{B,F} +  T_{B,R} \right) \\ = \frac{P_{B,R}  t_B + P_{B,F} \hat P_{B,F} \left(T_{B,F} +  T_{B,R} \right)}{1-P_{B,B} - P_{B,F} \hat P_{B,F}} 
 $$
 
 ```{r}
