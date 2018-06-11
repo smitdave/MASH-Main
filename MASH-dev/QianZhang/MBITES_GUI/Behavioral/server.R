@@ -56,7 +56,7 @@ ParList <- reactive({
                                             column(6,
                                               checkboxGroupButtons(inputId = "Attempt_bout", label = "Attempt:", choices = c("B", "O", "M", "S"), status = "success",
                                                 selected = c("B", "O"), checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon")))),
-                                            tabsetPanel(
+                                            tabsetPanel(id = "boutbar",
                                               tabPanel("B",
                                                 helpText("test B"),
                                                 column(6,
@@ -440,11 +440,48 @@ ParList <- reactive({
 
 
   ##################### Observe Bouts ###########################################################
-  
+  observeEvent(input$Search_bout, {
+    if("B" %in% input$Search_bout){
+      updateTabsetPanel(session, "boutbar",selected = "B")
+    }
+  })
+  observeEvent(input$Search_bout, {
+    if("O" %in% input$Search_bout){
+      updateTabsetPanel(session, "boutbar",selected = "O")
+    }
+  })
 
+  observeEvent(input$Search_bout, {
+    if("M" %in% input$Search_bout){
+      updateTabsetPanel(session, "boutbar",selected = "M")
+    }
+  })
+  observeEvent(input$Search_bout, {
+    if("S" %in% input$Search_bout){
+      updateTabsetPanel(session, "boutbar",selected = "S")
+    }
+  })
+  observeEvent(input$Attempt_bout, {
+    if("B" %in% input$Attempt_bout){
+      updateTabsetPanel(session, "boutbar",selected = "B")
+    }
+  })
+  observeEvent(input$Attempt_bout, {
+    if("O" %in% input$Attempt_bout){
+      updateTabsetPanel(session, "boutbar",selected = "O")
+    }
+  })
 
-  
-  
+  observeEvent(input$Attempt_bout, {
+    if("M" %in% input$Attempt_bout){
+      updateTabsetPanel(session, "boutbar",selected = "M")
+    }
+  })
+  observeEvent(input$Attempt_bout, {
+    if("S" %in% input$Attempt_bout){
+      updateTabsetPanel(session, "boutbar",selected = "S")
+    }
+  })
   
   ##########################################################################################
   
