@@ -55,7 +55,7 @@ ParList <- reactive({
                                               tabPanel("B"),
                                               tabPanel("L"),
                                               tabPanel("O"),
-                                              tabPanel("Optinal",
+                                              tabPanel("Optional",
                                                 column(6, 
                                                 checkboxInput("showN", "N: Sugar feeding search bout", value = 0), 
                                                 checkboxInput("showS", "S: Sugar feeding attempt", value = 0)),

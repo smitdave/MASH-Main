@@ -96,7 +96,8 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                   
                                   #################################################################################
                                   tabPanel(title = "Parameters", value = 'initial',
-                                           uiOutput("panel_initial")
+                                          useShinyjs(),
+                                          uiOutput("panel_initial")
                                   ),
 
                               
