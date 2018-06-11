@@ -13,7 +13,7 @@
 
 
 # check and load library
-list_of_packages <- c("shiny", "shinythemes", "shinyjs", "shinydashboard", "miniUI", "ggplot2", "plotly", "markdown", "igraph", "shinyFiles", "stringr", "chorddiag","markovchain", "circlize", "gridExtra", "gridExtra", "reshape2", "RColorBrewer")
+list_of_packages <- c("shiny", "shinythemes", "shinyjs", "shinydashboard", "miniUI", "ggplot2", "plotly", "markdown", "shinyWidgets", "igraph", "shinyFiles", "stringr", "chorddiag","markovchain", "circlize", "gridExtra", "gridExtra", "reshape2", "RColorBrewer")
 new_packages <- list_of_packages[!(list_of_packages %in% installed.packages()[,"Package"])]
 if(length(new_packages)){
   install.packages(new_packages)

@@ -50,26 +50,54 @@ ParList <- reactive({
                              navlistPanel(widths = c(2,10),
                                           ######### Timing #######################
                                           tabPanel("Bouts",
+                                            column(6,
+                                              checkboxGroupButtons(inputId = "Search_bout", label = "Search:", choices = c("B", "O", "M", "S"), status = "success", 
+                                                selected = c("B", "O"), checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon")))),
+                                            column(6,
+                                              checkboxGroupButtons(inputId = "Attempt_bout", label = "Attempt:", choices = c("B", "O", "M", "S"), status = "success",
+                                                selected = c("B", "O"), checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon")))),
                                             tabsetPanel(
-                                              tabPanel("F"),
-                                              tabPanel("B"),
-                                              tabPanel("L"),
-                                              tabPanel("O"),
-                                              tabPanel("Optional",
-                                                column(6, 
-                                                checkboxInput("showN", "N: Sugar feeding search bout", value = 0), 
-                                                checkboxInput("showS", "S: Sugar feeding attempt", value = 0)),
+                                              tabPanel("B",
+                                                helpText("test B"),
                                                 column(6,
-                                                checkboxInput("showM", "M: Mating search bout", value = 0),
-                                                checkboxInput("showW", "W: Mating attempt bout", value = 0)),
-                                                tabsetPanel(id = "boutbar",
-                                                  tabPanel(title = "N", value = "bout_n", uiOutput('panel_n')), 
-                                                  tabPanel(title = "S", value = "bout_s", uiOutput('panel_s')),
-                                                  tabPanel(title = "M", value = "bout_m", uiOutput('panel_m')),
-                                                  tabPanel(title = "W", value = "bout_w", uiOutput('panel_w'))
-                                                  )
+                                                conditionalPanel(condition = "input.Search_bout.includes('B')", 
+                                                  wellPanel(
+                                                    h4("test BS"))),
+                                                conditionalPanel(condition = "input.Attempt_bout.includes('B')", 
+                                                  wellPanel(
+                                                    h4("test B"))))
+                                                ),
+                                              tabPanel("O",
+                                                helpText("test O"),
+                                                column(6,
+                                                conditionalPanel(condition = "input.Search_bout.includes('O')", 
+                                                  wellPanel(
+                                                    h4("test OS"))),
+                                                conditionalPanel(condition = "input.Attempt_bout.includes('O')", 
+                                                  wellPanel(
+                                                    h4("test O"))))
+                                                ),
+                                              tabPanel("M",
+                                                helpText("test M"),
+                                                column(6,
+                                                conditionalPanel(condition = "input.Search_bout.includes('M')", 
+                                                  wellPanel(
+                                                    h4("test MS"))),
+                                                conditionalPanel(condition = "input.Attempt_bout.includes('M')", 
+                                                  wellPanel(
+                                                    h4("test M"))))
+                                                ),
+                                              tabPanel("S",
+                                                helpText("test S"),
+                                                column(6,
+                                                conditionalPanel(condition = "input.Search_bout.includes('S')", 
+                                                  wellPanel(
+                                                    h4("test SS"))),
+                                                conditionalPanel(condition = "input.Attempt_bout.includes('S')", 
+                                                  wellPanel(
+                                                    h4("test S"))))
                                                 )
-                                              )
+                                                )
                                             ),
                                           ######### Timing #######################
                                           tabPanel("Timing",
@@ -270,35 +298,6 @@ ParList <- reactive({
 
 ##################### Output here ##########################################################################################
 
-####################### Bouts Output ###########################################################
-
-output$panel_n <- renderUI({
-    if (input$showN)
-      column(4,
-        wellPanel(
-          h4("Test N")
-          ))})
-
-output$panel_s <- renderUI({
-    if (input$showS)
-      column(4,
-        wellPanel(
-          h4("Test S")
-          ))})
-
-output$panel_m <- renderUI({
-    if (input$showM)
-      column(4,
-        wellPanel(
-          h4("Test M")
-          ))})
-
-output$panel_w <- renderUI({
-    if (input$showW)
-      column(4,
-        wellPanel(
-          h4("Test W")
-          ))})
 
   #####################Simualtion output ########################################################
   output$sim_panel <- renderUI({
@@ -441,42 +440,9 @@ output$panel_w <- renderUI({
 
 
   ##################### Observe Bouts ###########################################################
-  observe({
-    toggle(condition = input$showN, selector = "#boutbar li a[data-value=bout_n]")
-  })
-  observe({
-    toggle(condition = input$showS, selector = "#boutbar li a[data-value=bout_s]")
-  })
-  observe({
-    toggle(condition = input$showM, selector = "#boutbar li a[data-value=bout_m]")
-  })
-  observe({
-    toggle(condition = input$showW, selector = "#boutbar li a[data-value=bout_w]")
-  })
-
-  observeEvent(input$showN, {
-    if(input$showN){
-      updateTabsetPanel(session, "boutbar",selected = "bout_n")
-    }
-  })
   
-  observeEvent(input$showS, {
-    if(input$showS){
-      updateTabsetPanel(session, "boutbar",selected = "bout_s")
-    }
-  })
 
-  observeEvent(input$showM, {
-    if(input$showM){
-      updateTabsetPanel(session, "boutbar",selected = "bout_m")
-    }
-  })
-  
-  observeEvent(input$showW, {
-    if(input$showW){
-      updateTabsetPanel(session, "boutbar",selected = "bout_w")
-    }
-  })
+
   
   
   
