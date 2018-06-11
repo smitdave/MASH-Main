@@ -49,10 +49,25 @@ ParList <- reactive({
                              helpText("Welcome to MBITES! Please set parameters here:"),
                              navlistPanel(widths = c(2,10),
                                           ######### Timing #######################
-                                          tabPanel("Bouts"
-
-
-
+                                          tabPanel("Bouts",
+                                            tabsetPanel(
+                                              tabPanel("F"),
+                                              tabPanel("B"),
+                                              tabPanel("L"),
+                                              tabPanel("O"),
+                                              tabPanel("Optinal",
+                                                checkboxInput("showN", "N: Sugar feeding search bout", value = 1), 
+                                                checkboxInput("showS", "S: Sugar feeding attempt", value = 1),
+                                                checkboxInput("showM", "M: Mating search bout", value = 1),
+                                                checkboxInput("showW", "W: Mating attempt bout", value = 1),
+                                                tabsetPanel(
+                                                  tabPanel(title = "N", value = "bout_n", uiOutput('panel_n')), 
+                                                  tabPanel(title = "S", value = "bout_s", uiOutput('panel_s')),
+                                                  tabPanel(title = "M", value = "bout_m", uiOutput('panel_m')),
+                                                  tabPanel(title = "W", value = "bout_w", uiOutput('panel_w'))
+                                                  )
+                                                )
+                                              )
                                             ),
                                           ######### Timing #######################
                                           tabPanel("Timing",
