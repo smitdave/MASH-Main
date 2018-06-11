@@ -56,11 +56,13 @@ ParList <- reactive({
                                               tabPanel("L"),
                                               tabPanel("O"),
                                               tabPanel("Optinal",
-                                                checkboxInput("showN", "N: Sugar feeding search bout", value = 1), 
-                                                checkboxInput("showS", "S: Sugar feeding attempt", value = 1),
-                                                checkboxInput("showM", "M: Mating search bout", value = 1),
-                                                checkboxInput("showW", "W: Mating attempt bout", value = 1),
-                                                tabsetPanel(
+                                                column(6, 
+                                                checkboxInput("showN", "N: Sugar feeding search bout", value = 0), 
+                                                checkboxInput("showS", "S: Sugar feeding attempt", value = 0)),
+                                                column(6,
+                                                checkboxInput("showM", "M: Mating search bout", value = 0),
+                                                checkboxInput("showW", "W: Mating attempt bout", value = 0)),
+                                                tabsetPanel(id = "boutbar",
                                                   tabPanel(title = "N", value = "bout_n", uiOutput('panel_n')), 
                                                   tabPanel(title = "S", value = "bout_s", uiOutput('panel_s')),
                                                   tabPanel(title = "M", value = "bout_m", uiOutput('panel_m')),
@@ -266,9 +268,37 @@ ParList <- reactive({
                                     })
 
 
-  
-  
-  
+##################### Output here ##########################################################################################
+
+####################### Bouts Output ###########################################################
+
+output$panel_n <- renderUI({
+    if (input$showN)
+      column(4,
+        wellPanel(
+          h4("Test N")
+          ))})
+
+output$panel_s <- renderUI({
+    if (input$showS)
+      column(4,
+        wellPanel(
+          h4("Test S")
+          ))})
+
+output$panel_m <- renderUI({
+    if (input$showM)
+      column(4,
+        wellPanel(
+          h4("Test M")
+          ))})
+
+output$panel_w <- renderUI({
+    if (input$showW)
+      column(4,
+        wellPanel(
+          h4("Test W")
+          ))})
 
   #####################Simualtion output ########################################################
   output$sim_panel <- renderUI({
@@ -315,8 +345,9 @@ ParList <- reactive({
   
 
 
-  ################################################################################################################
+##################################     Observe Event   #######################################################
   
+  ############################ Pipeline ###############################################
   
   observe({
     if (input$project == 'demo' && input$createDemoFolder > 0) {
@@ -406,6 +437,46 @@ ParList <- reactive({
   })
   
   
+
+
+
+  ##################### Observe Bouts ###########################################################
+  observe({
+    toggle(condition = input$showN, selector = "#boutbar li a[data-value=bout_n]")
+  })
+  observe({
+    toggle(condition = input$showS, selector = "#boutbar li a[data-value=bout_s]")
+  })
+  observe({
+    toggle(condition = input$showM, selector = "#boutbar li a[data-value=bout_m]")
+  })
+  observe({
+    toggle(condition = input$showW, selector = "#boutbar li a[data-value=bout_w]")
+  })
+
+  observeEvent(input$showN, {
+    if(input$showN){
+      updateTabsetPanel(session, "boutbar",selected = "bout_n")
+    }
+  })
+  
+  observeEvent(input$showS, {
+    if(input$showS){
+      updateTabsetPanel(session, "boutbar",selected = "bout_s")
+    }
+  })
+
+  observeEvent(input$showM, {
+    if(input$showM){
+      updateTabsetPanel(session, "boutbar",selected = "bout_m")
+    }
+  })
+  
+  observeEvent(input$showW, {
+    if(input$showW){
+      updateTabsetPanel(session, "boutbar",selected = "bout_w")
+    }
+  })
   
   
   
