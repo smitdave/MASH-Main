@@ -100,7 +100,10 @@ MBDETES_getPrOverfeed <- function(){
   integrate(FF, 0, 1)$value
 }
 
-# probability to die from post-prandial period (1 - pPPR = survival prob)
+#' MBDETES: Probability to Die from post-prandial period (1 - pPPR = survival prob)
+#'
+#'
+#' @export
 MBDETES_getPrPPRFlight <- function(){
   PPR_a = MBITES:::Parameters$get_PPR_a()
   PPR_b = MBITES:::Parameters$get_PPR_b()
@@ -236,6 +239,7 @@ MBDETES_BstateTransitions <- function(site){
   # check the function
   if(site$has_feed()){
     host = site$get_feed(1L)$RiskQ$typewtsQ()
+    host = host/sum(host)
   } else {
     host = rep(0,4)
   }

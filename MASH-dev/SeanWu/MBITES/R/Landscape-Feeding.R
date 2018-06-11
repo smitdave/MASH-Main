@@ -241,9 +241,12 @@ make_RiskQ <- function(){
   typewtsQ <- function(){
 
     # return object (Humans,Zoo,Trap,Other)
-    out <- c("H"=0,"Z"=0,"T"=0,"O"=0)
-    out[["H"]] <- sum(weight)
-    out[["Z"]] <- sum(weight_o)
+    # out <- c("H"=0,"Z"=0,"T"=0,"O"=0)
+    out <- rep(0,4)
+    # out[["H"]] <- sum(weight)
+    # out[["Z"]] <- sum(weight_o)
+    out[1] <- sum(weight)
+    out[2] <- sum(weight_o)
 
     return(out)
   }
