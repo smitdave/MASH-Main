@@ -64,6 +64,8 @@ ui <- fluidPage(
 )
 ```
 
+![example](https://shiny.rstudio.com/tutorial/written-tutorial/lesson2/images/sidebar-layout1.png)
+
 `sidebarLayout` always takes two arguments:
 * `sidebarPanel` function output
 * `mainPanel` function output
@@ -117,6 +119,8 @@ ui <- fluidPage(
 )
 ```
 
+![example](https://shiny.rstudio.com/tutorial/written-tutorial/lesson2/images/headers.png)
+
 #### Formatting Text
 _Example:_
 ```R
@@ -141,6 +145,8 @@ ui <- fluidPage(
 )
 ```
 
+![example](https://shiny.rstudio.com/tutorial/written-tutorial/lesson2/images/formatting.png)
+
 #### Images
 ```R
 img(src = "my_image.png", height = 72, width = 72)
@@ -160,6 +166,8 @@ ui <- fluidPage(
   )
 )
 ```
+
+![example](https://shiny.rstudio.com/tutorial/written-tutorial/lesson2/images/image-in-app.png)
 
 #### Other Tags
 * [Customize your UI with HTML](https://shiny.rstudio.com/articles/html-tags.html)
