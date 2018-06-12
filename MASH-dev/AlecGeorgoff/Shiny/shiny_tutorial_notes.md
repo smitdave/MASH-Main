@@ -365,3 +365,113 @@ ui <- fluidPage(
 ```
 
 Notice that `textOutput` takes an argument, the character string `"selected_var"`. Each of the `*Output` functions require a single argument: a character string that Shiny will use as the name of your reactive element. Your users will not see this name, but you will use it later.
+
+#### Step 2: Provide R code to build the object
+`ui` --> where to display your object<br>
+`server` --> how to build your object
+
+You can create an entry by defining a new element for `output` within the `server` function. The element name should match the name of the reactive element that you created in `ui`.
+
+_Example:_
+```R
+server <- function(input, output) {
+
+  output$selected_var <- renderText({
+    "You have selected this"
+  })
+
+}
+```
+
+Each entry to `output` should contain the output of one of Shiny's `render*` functions.
+
+| Render Function | Creates |
+| :--: | :--: |
+|`renderDataTable`   | DataTable  |
+|`renderImage`   | images<br>(saved as a link to a source file)  |
+|`renderPlot`   | plots  |
+|`renderPrint`   | any printed output  |
+|`renderTable`   | data frame, matrix,<br>other table like structures  |
+|`renderText`   | character strings  |
+|`renderUI`   | a Shiny tag object or HTML  |
+
+Each `render*` function takes a single argument: an R expression surrounded by braces, `{}`
+
+Think of R expression as instructions - Shiny will run the instructions when you first launch the app, and then re-run them every time it needs to update your object
+
+Your expression should return the object you have you mind
+
+#### Use Widget Values
+`input` is a list of current values of all the widgets in your app
+
+Shiny will automatically make an object reactive if the object uses an `input` value
+
+_Example:_
+```R
+server <- function(input, output) {
+
+  output$selected_var <- renderText({
+    paste("You have selected", input$var)
+  })
+
+}
+```
+
+_Full Example:_
+```R
+library(shiny)
+
+# Define UI ----
+ui <- fluidPage(
+  titlePanel("censusVis"),
+
+  sidebarLayout(
+    sidebarPanel(
+      helpText("Create demographic maps with
+               information from the 2010 US Census."),
+
+      selectInput("var",
+                  label = "Choose a variable to display",
+                  choices = c("Percent White",
+                              "Percent Black",
+                              "Percent Hispanic",
+                              "Percent Asian"),
+                  selected = "Percent White"),
+
+      sliderInput("range",
+                  label = "Range of interest:",
+                  min = 0, max = 100, value = c(0, 100))
+    ),
+
+    mainPanel(
+      textOutput("selected_var"),
+      textOutput("min_max")
+    )
+  )
+)
+
+# Define server logic ----
+server <- function(input, output) {
+
+  output$selected_var <- renderText({
+    paste("You have selected", input$var)
+  })
+  output$min_max <- renderText({
+    paste("You have chosen a range that goes from", input$range[1], "to", input$range[2])
+  })
+
+}
+
+# Run the app ----
+shinyApp(ui = ui, server = server)
+```
+
+![example](https://shiny.rstudio.com/tutorial/written-tutorial/lesson4/images/censusviz-showcase.png)
+
+#### Recap
+You learned to:
+* use an `*Output` function in the `ui` to place reactive objects in your Shiny app
+* use a `render*` function in the `server` to tell Shiny how to build your objects
+* surround R expressions by curly braces, `{}`, in each `render*` function
+* save your `render*` expressions in the `output` list, with one entry for each reactive object in your app
+* create reactivity by including an `input` value in a `render*` expression
