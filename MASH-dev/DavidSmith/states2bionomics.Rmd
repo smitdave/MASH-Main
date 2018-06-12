@@ -1,5 +1,5 @@
 ---
-title: "MBITES/MBDETES :: Surivival through / Length of the Feeding Cycle"
+title: "From State Transitions and Waiting Times to Bionomics"
 author: "David L Smith"
 date: "6/8/2018"
 output:
@@ -132,10 +132,10 @@ TO2B = function(tF,tO,O2B,O2O,O2F,F2O,F2F){
 
 ### The Length of a Feeding Cycle
 
-We thus have: 
-$$T_{R,R} = \sum_{X \in \left\{F,B,L,O\right\}} P_{R,X} \hat P_{X,R} T_{X,R} $$
-and survival through a full feeding cycle is: 
-$$\hat P_{R,R} = \sum_{X \in \left\{F,B,L,O\right\}} P_{R,X} \hat P_{X,R}$$
+The following formulas make the translation from these formulas to the basic bionomic parameters. Let $1/f$ denote the average duration of a feeding cycle:
+$$1/f= T_{R,R} = \sum_{X \in \left\{F,B,L,O\right\}} P_{R,X} \hat P_{X,R} T_{X,R} $$
+Survival through a full feeding cycle is: 
+$$e^{-g/f} = \hat P_{R,R} = \sum_{X \in \left\{F,B,L,O\right\}} P_{R,X} \hat P_{X,R}$$
 
 ```{r}
 
