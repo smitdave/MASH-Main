@@ -10,10 +10,9 @@
 
 rm(list = ls())
 
-library(rootSolve, lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs/")
-library(data.table)
-
-
+require(rootSolve, lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs/")
+require(data.table)
+require(plotly, lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs/")
 
 ###################################
 #
@@ -134,8 +133,8 @@ find_roots <- function(R_0_v, R_0_f,
 ###################################
 
 # set R values to cycle through:
-R_0_v_values <- seq(0, 10, 3/8)
-R_0_f_values <- seq(0, 10, 3/8)
+R_0_v_values <- seq(0, 10, 1)
+R_0_f_values <- seq(0, 10, 1)
 
 # create data table to store results:
 results <- data.table(R_0_v = rep(0, times = length(R_0_f_values) * length(R_0_v_values)),
@@ -159,8 +158,6 @@ for (v in R_0_v_values) {
     i <- i + 1
   }
 }
-
-library(plotly, lib.loc = "/ihme/malaria_modeling/georgoff/Rlibs/")
 
 p <- plot_ly(x = results$R_0_v,
              y = results$R_0_f,
