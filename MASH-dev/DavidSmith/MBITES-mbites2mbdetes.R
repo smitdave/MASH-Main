@@ -36,7 +36,11 @@ mbites2mbdetes_getPrOverfeed = function(){
   bm_a = MBITES:::Parameters$get_bm_a()
   bm_b = MBITES:::Parameters$get_bm_b()
 
+<<<<<<< Updated upstream
   FF = function(X){
+=======
+  FF = function(X){ 
+>>>>>>> Stashed changes
     dbeta(X,bm_a,bm_b)*exp(of_a*X)/(of_b + exp(of_a*X))
   }
   integrate(FF, 0, 1)
@@ -179,6 +183,7 @@ mbites2mbdetes_BstateTransitions = function(){
   # fail the approach
   # note :: check hfeed and zfeed above for more fails
   ##########################################################
+<<<<<<< Updated upstream
   failApproach = host[1]*hfail+host[2]*zfail+host[3]*tfail+host[4]
   bFeed = host[1]*hfeed+host[2]*zfeed
 
@@ -189,6 +194,24 @@ mbites2mbdetes_BstateTransitions = function(){
   B2F = B2F1 + B2F2
   B2D = 1-B2R-B2B-B2F
   return(c(B2F, B2B, B2R, 0, 0, B2D))
+=======
+  notFeed = host[1]*hfail+host[2]*zfail+host[3]*tfail+host[4]
+  feed = host[1]*hfeed+host[2]*zfeed
+
+  B2R = approach*feed*survLandLaden*survLocal
+
+  B2B1 = (1-approach)*survLocal*stay    
+  B2F1 = (1-approach)*survLocal*(1-stay) 
+
+  B2B2 = approach*notFeed*survLocal*stay    
+  B2F2 = approach*notFeed*survLocal*(1-stay) 
+
+  B2B = B2B1 + B2B2 
+  B2F = B2F1 + B2F2 
+
+  B2D = 1-B2R-B2B-B2F  
+  return(c(B2F, B2B, B2R, 0, 0, B2D)) 
+>>>>>>> Stashed changes
 }
 
 #' MBITES: Resting Period State Transitions
