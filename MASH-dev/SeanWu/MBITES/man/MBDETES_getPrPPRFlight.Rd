@@ -2,10 +2,10 @@
 % Please edit documentation in R/MBDETES-Auxiliary.R
 \name{MBDETES_getPrPPRFlight}
 \alias{MBDETES_getPrPPRFlight}
-\title{MBDETES: Probability to Die from post-prandial period (1 - pPPR = survival prob)}
+\title{MBDETES: Probability to Survive Post-prandial Resting Flight}
 \usage{
 MBDETES_getPrPPRFlight()
 }
 \description{
-MBDETES: Probability to Die from post-prandial period (1 - pPPR = survival prob)
+MBDETES: Probability to Survive Post-prandial Resting Flight
 }
