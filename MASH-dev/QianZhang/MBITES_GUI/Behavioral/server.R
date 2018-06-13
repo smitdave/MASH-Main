@@ -181,12 +181,12 @@ ParList <- reactive({
                                                         )),
                                                        ######################### Timing model 2 ##################################################################
                                                        conditionalPanel(condition = "input.timing_model == 2",
-                                                        helpText("Define 'the inverse of average waiting time' and 'the minimum waiting time prior to next launch':"),
+                                                        helpText("Define 'the Average waiting time' and 'the minimum waiting time prior to next launch':"),
                                                          tabsetPanel(id = "timing_model_2",
                                                           tabPanel("B",
                                                             conditionalPanel(condition = "input.Search_bout.includes('B')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "rate_bs", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "avg_bs", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25), #1/rate_bs
                                                               sliderInput(inputId = "tmin_bs", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('B')",
@@ -195,7 +195,7 @@ ParList <- reactive({
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('B')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "rate_b", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "avg_b", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "tmin_b", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('B')",
@@ -206,7 +206,7 @@ ParList <- reactive({
                                                           tabPanel("O",
                                                             conditionalPanel(condition = "input.Search_bout.includes('O')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "rate_os", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "avg_os", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "tmin_os", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('O')",
@@ -215,7 +215,7 @@ ParList <- reactive({
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('O')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "rate_o", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "avg_o", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "tmin_o", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('O')",
@@ -225,7 +225,7 @@ ParList <- reactive({
                                                           tabPanel("M",
                                                             conditionalPanel(condition = "input.Search_bout.includes('M')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "rate_ms", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "avg_ms", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "tmin_ms", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('M')",
@@ -234,7 +234,7 @@ ParList <- reactive({
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('M')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "rate_m", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "avg_m", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "tmin_m", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('M')",
@@ -244,7 +244,7 @@ ParList <- reactive({
                                                           tabPanel("S",
                                                             conditionalPanel(condition = "input.Search_bout.includes('S')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "rate_ss", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "avg_ss", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "tmin_ss", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('S')",
@@ -253,7 +253,7 @@ ParList <- reactive({
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('S')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "rate_s", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "avg_s", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "tmin_s", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('S')",
@@ -266,12 +266,12 @@ ParList <- reactive({
                                                         ######################### Timing model 3 ##################################################################
 
                                                        conditionalPanel(condition = "input.timing_model == 3",
-                                                        helpText("Define 'the inverse of average waiting time' and 'Coefficient of variation between mean and variance of waiting time':"),
+                                                        helpText("Define 'the average waiting time' and 'Coefficient of variation between mean and variance of waiting time':"),
                                                         tabsetPanel(id = "timing_model_3",
                                                           tabPanel("B",
                                                             conditionalPanel(condition = "input.Search_bout.includes('B')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "mean_bs", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "ivs_mean_bs", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "cv_bs", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('B')",
@@ -280,7 +280,7 @@ ParList <- reactive({
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('B')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "mean_b", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "ivs_mean_b", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "cv_b", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('B')",
@@ -291,7 +291,7 @@ ParList <- reactive({
                                                           tabPanel("O",
                                                             conditionalPanel(condition = "input.Search_bout.includes('O')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "mean_os", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "ivs_mean_os", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "cv_os", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('O')",
@@ -300,7 +300,7 @@ ParList <- reactive({
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('O')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "mean_o", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "ivs_mean_o", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "cv_o", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('O')",
@@ -310,7 +310,7 @@ ParList <- reactive({
                                                           tabPanel("M",
                                                             conditionalPanel(condition = "input.Search_bout.includes('M')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "mean_ms", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "ivs_mean_ms", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "cv_ms", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('M')",
@@ -319,7 +319,7 @@ ParList <- reactive({
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('M')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "mean_m", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "ivs_mean_m", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "cv_m", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('M')",
@@ -329,7 +329,7 @@ ParList <- reactive({
                                                           tabPanel("S",
                                                             conditionalPanel(condition = "input.Search_bout.includes('S')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "mean_ss", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "ivs_mean_ss", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "cv_ss", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('S')",
@@ -338,7 +338,7 @@ ParList <- reactive({
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('S')",
                                                               wellPanel(
-                                                              sliderInput(inputId = "mean_s", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "ivs_mean_s", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
                                                               sliderInput(inputId = "cv_s", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('S')",
@@ -347,31 +347,6 @@ ParList <- reactive({
                                                             )
                                                           )
 
-
-
-
-                                                        # wellPanel(
-                                                        #   h4("For attempt bouts:"),
-                                                        #   sliderInput(inputId = "mean_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "cv_b", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "mean_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "cv_o", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "mean_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "cv_m", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "mean_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "cv_s", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                        #   ), 
-                                                        # wellPanel(
-                                                        #   h4("For search bouts:"),
-                                                        #   sliderInput(inputId = "mean_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "cv_bs", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "mean_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "cv_os", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "mean_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "cv_ms", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "mean_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                        #   sliderInput(inputId = "cv_ss", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                        #   )
                                                         )
                                           )),
 
