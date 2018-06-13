@@ -406,14 +406,14 @@ ParList <- reactive({
                                           ######## Blood Meal #####################
                                           tabPanel("Blood Meal",
                                             column(4,
-                                              helpText("Setup Blood Meal: "),
+                                              helpText("Setup the beta-distributed Blood Meal: "),
                                               wellPanel(
-                                                sliderInput(inputId = "bm_a", label = "Alpha parameter of beta-distributed blood meal size:", value = ParList()$bm_a, min = 0, max = 10, step = 0.5),
-                                                sliderInput(inputId = "bm_b", label = "Beta parameter of beta-distributed blood meal size:", value = ParList()$bm_b, min = 0, max = 10, step = 0.5),
+                                                sliderInput(inputId = "bm_u", label = "Mean of blood meal size:", value = ParList()$bm_a/(ParList()$bm_a + ParList()$bm_b) , min = 0, max = 1, step = 0.05), #bm_a = uv
+                                                sliderInput(inputId = "bm_v", label = "Sample size of blood meal size:", value = (ParList()$bm_a + ParList()$bm_b), min = 0, max = 20, step = 0.5), #bm_b = (1-u)v
                                                 checkboxInput(inputId = "overfeeding", label = "Overfeeding", value = 1),
                                                 conditionalPanel(condition = "input.overfeeding == 1",
-                                                  sliderInput(inputId = "of_a", label = "Parameter a for probability of death from blood meal size:", value = ParList()$of_a, min = 0, max = 10, step = 0.5),
-                                                  sliderInput(inputId = "of_b", label = "Parameter b for probability of death from blood meal size:", value = ParList()$of_b, min = 0, max = 10000, step = 100)
+                                                  sliderInput(inputId = "of_u", label = "Mean of death:", value = ParList()$of_a/(ParList()$of_a + ParList()$of_b), min = 0, max = 0.1, step = 0.001),
+                                                  sliderInput(inputId = "of_v", label = "Sample size of death:", value = (ParList()$of_a + ParList()$of_b), min = 0, max = 10000, step = 100)
                                                   )
                                                 )
 
