@@ -557,3 +557,5 @@ server <- function(input, output) {
 # Run the app ----
 shinyApp(ui = ui, server = server)
 ```
+
+Note: `switch` is a useful companion to multiple choice Shiny widgets. Use `switch` to change the values of a widget into R expressions.
