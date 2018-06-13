@@ -53,8 +53,8 @@ mbites_BloodMeal <- function(){
   self$BloodEnergetics() # MBITES-Energetics.R
 
   # # post-prandial rest (digestion)
-  # self$PPRFlight() # MBITES-BloodMeal.R
-  # self$Oogenesis() # MBITES-Oogenesis.R
+  # self$PPRFlight() # moved to restingSpot: MBITES-BloodMeal.R
+  # self$Oogenesis() # moved to updateState: MBITES-Oogenesis.R
 }
 
 #' MBITES: Draw Bloodmeal Size

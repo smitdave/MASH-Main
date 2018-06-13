@@ -183,7 +183,7 @@ MBITES_Setup_Timing(timing_model = 1,
 
 MBITES_Setup_BloodMeal(overfeeding = FALSE)
 
-MBITES_Setup_Oogenesis(oogenesis_model = 1,eggMaturationTime = FALSE,eggsize_model = 2,refeeding = FALSE)
+MBITES_Setup_Oogenesis(oogenesis_model = 1,eggMaturationTime = FALSE,eggsize_model = 2,refeeding = 3)
 
 MBITES_Setup_Energetics(sugar = FALSE)
 

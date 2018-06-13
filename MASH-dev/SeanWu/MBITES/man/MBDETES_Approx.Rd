@@ -9,6 +9,11 @@ MBDETES_Approx(tileID)
 \arguments{
 \item{tileID}{an integer ID of a tile (must have already called \code{\link{Tile_Initialize}} and the appropriate \code{Human_XX_Initialize} routines)}
 }
+\value{
+a list of length equal to number of sites in the tile \code{tileID} where
+each element is a named matrix giving transition probabilities between MBDETES
+states {F,B,R,L,O,D}
+}
 \description{
 For each \code{\link{Site}} in a landscape, calculate approximate
 state transitions matrix by calling \code{\link{MBDETES_StateTransitions}}.
