@@ -101,17 +101,10 @@ mbites_surviveFlight <- function(){
   p = p * self$pEnergySurvival()
   p = p * self$pChem()
 
-  # tattering
-  # if(MBITES:::Parameters$get_TATTER()){
-  #   private$damage_physical = private$damage_physical + self$WingTattering()
-  #   p = p * self$pTatter()
-  # }
+  # tattering (configurable)
   p = self$WingTattering(p)
 
-  # senescence
-  # if(MBITES:::Parameters$get_SENESCE()){
-  #   p = p * self$pSenesce()
-  # }
+  # senescence (configurable)
   p = self$Senescence(p)
 
   if(runif(1) < 1-p){

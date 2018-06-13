@@ -22,6 +22,9 @@
 #' state transitions matrix by calling \code{\link{MBDETES_StateTransitions}}.
 #'
 #' @param tileID an integer ID of a tile (must have already called \code{\link{Tile_Initialize}} and the appropriate \code{Human_XX_Initialize} routines)
+#' @return a list of length equal to number of sites in the tile \code{tileID} where
+#'         each element is a named matrix giving transition probabilities between MBDETES
+#'         states {F,B,R,L,O,D}
 #' @export
 MBDETES_Approx <- function(tileID){
 
@@ -180,12 +183,14 @@ MBDETES_getLeaveUnladen <- function(){
 #' @export
 MBDETES_getRestingParam <- function(){
 
-  mix_wts = rep(1,3)/3
   inandout = MBITES:::Parameters$get_InAndOut()
-  inandout_stationary = eigen(t(inandout))$vectors[,1]/sum(eigen(t(inandout))$vectors[,1])
+  inandout = inandout/rowSums(inandout)
+  inandout_eigen = eigen(t(inandout))
+  inandout_stationary = inandout_eigen$vectors[,1]/sum(inandout_eigen$vectors[,1])
+
+  mix_wts = rep(1,2)/2
   probs = mix_wts[1]*(inandout_stationary* MBITES:::Parameters$get_wts("B")) +
-          mix_wts[2]*(inandout_stationary* MBITES:::Parameters$get_wts("O")) +
-          mix_wts[3]*(inandout_stationary* MBITES:::Parameters$get_wts("S"))
+          mix_wts[2]*(inandout_stationary* MBITES:::Parameters$get_wts("O"))
 
   land = sum(probs[1:3])
   retry = probs[4]
@@ -368,5 +373,6 @@ MBDETES_StateTransitions <- function(site){
   FBRLOD[3,] = MBDETES_RperiodTransitions(site)
   FBRLOD[4,] = MBDETES_LstateTransitions(site)
   FBRLOD[5,] = MBDETES_OstateTransitions(site)
+  FBRLOD[6,6] = 1 # death is absorbing
   return(FBRLOD)
 }
