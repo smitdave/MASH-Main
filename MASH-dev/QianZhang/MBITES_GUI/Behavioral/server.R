@@ -58,44 +58,97 @@ ParList <- reactive({
                                                 selected = c("B", "O"), checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon")))),
                                             tabsetPanel(id = "boutbar",
                                               tabPanel("B",
-                                                helpText("test B"),
                                                 column(6,
-                                                conditionalPanel(condition = "input.Search_bout.includes('B')", 
-                                                  wellPanel(
-                                                    h4("test BS"))),
-                                                conditionalPanel(condition = "input.Attempt_bout.includes('B')", 
-                                                  wellPanel(
-                                                    h4("test B"))))
+                                                  conditionalPanel(condition = "input.Search_bout.includes('B') || input.Attempt_bout.includes('B')",
+                                                    wellPanel(
+                                                      helpText("B: Blood Feeding: Enter a vector (comma delimited) here"),
+                                                      textInput("o_wts", "Landing Spot Weights:", value = paste(ParList()$b_wts, collapse = ",")))
+                                                    ),
+                                                  conditionalPanel(condition = "input.Search_bout.includes('B')", 
+                                                    wellPanel(
+                                                      sliderInput(inputId = "Bs_succeed", label ="Probability of Success", value = ParList()$Bs_succeed, min = 0.8, max = 1, step = 0.01),                #
+                                                      sliderInput(inputId = "Bs_surv", label ="Baseline Probability of Survival",value = ParList()$Bs_surv, min = 0.9, max = 1, step = 0.01)
+                                                      )),
+                                                  conditionalPanel(condition = "input.Attempt_bout.includes('B')", 
+                                                    wellPanel(
+                                                      sliderInput(inputId = "B_succeed", label ="Probability of Success", value = ParList()$B_succeed, min = 0.8, max = 1, step = 0.01),                #
+                                                      sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",value = ParList()$B_surv, min = 0.9, max = 1, step = 0.01)
+                                                      )),
+                                                  conditionalPanel(condition = "!(input.Search_bout.includes('B') || input.Attempt_bout.includes('B'))",
+                                                    wellPanel(
+                                                      helpText("Blood Feeding is turned off"))
+                                                    )
+                                                )
                                                 ),
                                               tabPanel("O",
-                                                helpText("test O"),
                                                 column(6,
-                                                conditionalPanel(condition = "input.Search_bout.includes('O')", 
-                                                  wellPanel(
-                                                    h4("test OS"))),
-                                                conditionalPanel(condition = "input.Attempt_bout.includes('O')", 
-                                                  wellPanel(
-                                                    h4("test O"))))
+                                                  conditionalPanel(condition = "input.Search_bout.includes('O') || input.Attempt_bout.includes('O')",
+                                                    wellPanel(
+                                                      helpText("O: Oviposition: Enter a vector (comma delimited) here"),
+                                                      textInput("o_wts", "Landing Spot Weights:", value = paste(ParList()$o_wts, collapse = ",")))
+                                                  ),
+                                                  conditionalPanel(condition = "input.Search_bout.includes('O')", 
+                                                    wellPanel(
+                                                      sliderInput(inputId = "Os_succeed", label ="Probability of Success", value = ParList()$Os_succeed, min = 0.8, max = 1, step = 0.01),                #
+                                                      sliderInput(inputId = "Os_surv", label ="Baseline Probability of Survival",value = ParList()$Os_surv, min = 0.9, max = 1, step = 0.01)
+                                                      )
+                                                    ),
+                                                  conditionalPanel(condition = "input.Attempt_bout.includes('O')", 
+                                                    wellPanel(
+                                                      sliderInput(inputId = "O_succeed", label ="Probability of Success", value = ParList()$O_succeed, min = 0.8, max = 1, step = 0.01),                #
+                                                      sliderInput(inputId = "O_surv", label ="Baseline Probability of Survival",value = ParList()$O_surv, min = 0.9, max = 1, step = 0.01)
+                                                      )
+                                                    ),
+                                                  conditionalPanel(condition = "!(input.Search_bout.includes('O') || input.Attempt_bout.includes('O'))",
+                                                    wellPanel(
+                                                      helpText("Oviposition is turned off"))
+                                                    )
+                                                  )
                                                 ),
                                               tabPanel("M",
-                                                helpText("test M"),
                                                 column(6,
-                                                conditionalPanel(condition = "input.Search_bout.includes('M')", 
-                                                  wellPanel(
-                                                    h4("test MS"))),
-                                                conditionalPanel(condition = "input.Attempt_bout.includes('M')", 
-                                                  wellPanel(
-                                                    h4("test M"))))
-                                                ),
+                                                  conditionalPanel(condition = "input.Search_bout.includes('M') || input.Attempt_bout.includes('M')",
+                                                    wellPanel(
+                                                      helpText("M: Mating: Enter a vector (comma delimited) here"),
+                                                      textInput("m_wts", "Landing Spot Weights:", value = paste(ParList()$m_wts, collapse = ",")))
+                                                  ),
+                                                  conditionalPanel(condition = "input.Search_bout.includes('M')", 
+                                                    wellPanel(
+                                                      sliderInput(inputId = "Ms_succeed", label ="Probability of Success", value = ParList()$Ms_succeed, min = 0.8, max = 1, step = 0.01),                #
+                                                      sliderInput(inputId = "Ms_surv", label ="Baseline Probability of Survival",value = ParList()$Ms_surv, min = 0.9, max = 1, step = 0.01)
+                                                      )),
+                                                  conditionalPanel(condition = "input.Attempt_bout.includes('M')", 
+                                                    wellPanel(
+                                                      sliderInput(inputId = "M_succeed", label ="Probability of Success", value = ParList()$M_succeed, min = 0.8, max = 1, step = 0.01),                #
+                                                      sliderInput(inputId = "M_surv", label ="Baseline Probability of Survival",value = ParList()$M_surv, min = 0.9, max = 1, step = 0.01)
+                                                    )),
+                                                  conditionalPanel(condition = "!(input.Search_bout.includes('M') || input.Attempt_bout.includes('M'))",
+                                                    wellPanel(
+                                                      helpText("Mating is turned off"))
+                                                    )
+                                                )),
                                               tabPanel("S",
-                                                helpText("test S"),
                                                 column(6,
+                                                  conditionalPanel(condition = "input.Search_bout.includes('S') || input.Attempt_bout.includes('S')",
+                                                    wellPanel(
+                                                      helpText("S: Sugar Feeding: Enter a vector (comma delimited) here"),
+                                                      textInput("s_wts", "Landing Spot Weights:", value = paste(ParList()$s_wts, collapse = ",")))
+                                                  ),
                                                 conditionalPanel(condition = "input.Search_bout.includes('S')", 
                                                   wellPanel(
-                                                    h4("test SS"))),
+                                                      sliderInput(inputId = "Ss_succeed", label ="Probability of Success", value = ParList()$Ss_succeed, min = 0.8, max = 1, step = 0.01),                #
+                                                      sliderInput(inputId = "Ss_surv", label ="Baseline Probability of Survival",value = ParList()$Ss_surv, min = 0.9, max = 1, step = 0.01)
+                                                    )),
                                                 conditionalPanel(condition = "input.Attempt_bout.includes('S')", 
                                                   wellPanel(
-                                                    h4("test S"))))
+                                                      sliderInput(inputId = "S_succeed", label ="Probability of Success", value = ParList()$S_succeed, min = 0.8, max = 1, step = 0.01),                #
+                                                      sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",value = ParList()$S_surv, min = 0.9, max = 1, step = 0.01)
+                                                    )),
+                                                conditionalPanel(condition = "!(input.Search_bout.includes('S') || input.Attempt_bout.includes('S'))",
+                                                    wellPanel(
+                                                      helpText("Mating is turned off"))
+                                                    )
+                                                )
                                                 )
                                                 )
                                             ),
@@ -619,7 +672,7 @@ ParList <- reactive({
 
 
 
-  ##################### Observe Bouts ###########################################################
+  ##################### Observe Bouts ########################################################### need debug
   observeEvent(input$Search_bout, {
     if("B" %in% input$Search_bout){
       updateTabsetPanel(session, "boutbar",selected = "B")
