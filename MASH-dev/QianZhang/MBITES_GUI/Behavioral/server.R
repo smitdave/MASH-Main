@@ -110,89 +110,157 @@ ParList <- reactive({
                                                         tabsetPanel(id = "timing_model_1",
                                                           tabPanel("B",
                                                             conditionalPanel(condition = "input.Search_bout.includes('B')",
+                                                              wellPanel(
                                                               sliderInput(inputId = "wait_bs", label = "Blood feeding search:", value = 12 , min = 0, max = 24, step = 0.25)
-                                                              ),
+                                                              )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('B')",
                                                               helpText("Blood Feeding Search Bout is turned off")
                                                               ),
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('B')",
+                                                              wellPanel(
                                                               sliderInput(inputId = "wait_b", label = "Blood feeding attempt:", value = 12 , min = 0, max = 24, step = 0.25)
-                                                              ),
+                                                              )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('B')",
                                                               helpText("Blood Feeding Attempt Bout is turned off")
                                                               )
                                                             ),
                                                           tabPanel("O",
                                                             conditionalPanel(condition = "input.Search_bout.includes('O')",
+                                                              wellPanel(
                                                               sliderInput(inputId = "wait_os", label = "Oviposition search:", value = 12 , min = 0, max = 24, step = 0.25)
-                                                              ),
+                                                              )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('O')",
                                                               helpText("Oviposition Search Bout is turned off")
                                                               ),
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('O')",
+                                                              wellPanel(
                                                               sliderInput(inputId = "wait_o", label = "Oviposition attempt:", value = 12 , min = 0, max = 24, step = 0.25)
-                                                              ),
+                                                              )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('O')",
                                                               helpText("Oviposition Attempt Bout is turned off")
                                                               )
                                                             ),
                                                           tabPanel("M",
                                                             conditionalPanel(condition = "input.Search_bout.includes('M')",
+                                                              wellPanel(
                                                               sliderInput(inputId = "wait_ms", label = "Mating search:", value = 12 , min = 0, max = 24, step = 0.25)
-                                                              ),
+                                                              )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('M')",
                                                               helpText("Mating Search Bout is turned off")
                                                               ),
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('M')",
+                                                              wellPanel(
                                                               sliderInput(inputId = "wait_m", label = "Mating attempt:", value = 12 , min = 0, max = 24, step = 0.25)
-                                                              ),
+                                                              )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('M')",
                                                               helpText("Mating Attempt Bout is turned off")
                                                               )
                                                             ),
                                                           tabPanel("S",
                                                             conditionalPanel(condition = "input.Search_bout.includes('S')",
+                                                              wellPanel(
                                                               sliderInput(inputId = "wait_ss", label = "Sugar feeding search:", value = 12 , min = 0, max = 24, step = 0.25)
-                                                              ),
+                                                              )),
                                                             conditionalPanel(condition = "!input.Search_bout.includes('S')",
-                                                              helpText("Sugar feeding Search Bout is turned off")
+                                                              helpText("Sugar Feeding Search Bout is turned off")
                                                               ),
                                                             hr(),
                                                             conditionalPanel(condition = "input.Attempt_bout.includes('S')",
+                                                              wellPanel(
                                                               sliderInput(inputId = "wait_s", label = "Sugar feeding attempt:", value = 12 , min = 0, max = 24, step = 0.25)
-                                                              ),
+                                                              )),
                                                             conditionalPanel(condition = "!input.Attempt_bout.includes('S')",
-                                                              helpText("Sugar feeding Attempt Bout is turned off")
+                                                              helpText("Sugar Feeding Attempt Bout is turned off")
                                                               )
                                                             )
                                                         )),
                                                        conditionalPanel(condition = "input.timing_model == 2",
-                                                        wellPanel(
-                                                          h4("For attempt bouts:"),
-                                                          sliderInput(inputId = "rate_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "tmin_b", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "rate_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "tmin_o", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "rate_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "tmin_m", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "rate_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "tmin_s", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                          ), 
-                                                        wellPanel(
-                                                          h4("For search bouts:"),
-                                                          sliderInput(inputId = "rate_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "tmin_bs", label = "Minimum waiting time prior to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "rate_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "tmin_os", label = "Minimum waiting time prior to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "rate_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "tmin_ms", label = "Minimum waiting time prior to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "rate_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "tmin_ss", label = "Minimum waiting time prior to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                        helpText("Define 'the inverse of average waiting time' and 'the minimum waiting time prior to next launch':"),
+                                                         tabsetPanel(id = "timing_model_2",
+                                                          tabPanel("B",
+                                                            conditionalPanel(condition = "input.Search_bout.includes('B')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "rate_bs", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "tmin_bs", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Search_bout.includes('B')",
+                                                              helpText("Blood Feeding Search Bout is turned off")
+                                                              ),
+                                                            hr(),
+                                                            conditionalPanel(condition = "input.Attempt_bout.includes('B')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "rate_b", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "tmin_b", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Attempt_bout.includes('B')",
+                                                              helpText("Blood Feeding Attempt Bout is turned off")
+                                                              )
+
+                                                            ),
+                                                          tabPanel("O",
+                                                            conditionalPanel(condition = "input.Search_bout.includes('O')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "rate_os", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "tmin_os", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Search_bout.includes('O')",
+                                                              helpText("Oviposition Search Bout is turned off")
+                                                              ),
+                                                            hr(),
+                                                            conditionalPanel(condition = "input.Attempt_bout.includes('O')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "rate_o", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "tmin_o", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Attempt_bout.includes('O')",
+                                                              helpText("Oviposition Attempt Bout is turned off")
+                                                              )
+                                                            ),
+                                                          tabPanel("M",
+                                                            conditionalPanel(condition = "input.Search_bout.includes('M')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "rate_ms", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "tmin_ms", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Search_bout.includes('M')",
+                                                              helpText("Mating Search Bout is turned off")
+                                                              ),
+                                                            hr(),
+                                                            conditionalPanel(condition = "input.Attempt_bout.includes('M')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "rate_m", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "tmin_m", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Attempt_bout.includes('M')",
+                                                              helpText("Mating Attempt Bout is turned off")
+                                                              )
+                                                            ),
+                                                          tabPanel("S",
+                                                            conditionalPanel(condition = "input.Search_bout.includes('S')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "rate_ss", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "tmin_ss", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Search_bout.includes('S')",
+                                                              helpText("Sugar Feeding Search Bout is turned off")
+                                                              ),
+                                                            hr(),
+                                                            conditionalPanel(condition = "input.Attempt_bout.includes('S')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "rate_s", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "tmin_s", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Attempt_bout.includes('S')",
+                                                              helpText("Sugar Feeding Attempt Bout is turned off")
+                                                              )
+                                                            )
                                                           )
                                                         ),
+
+
                                                        conditionalPanel(condition = "input.timing_model == 3",
                                                         wellPanel(
                                                           h4("For attempt bouts:"),
