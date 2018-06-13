@@ -176,10 +176,19 @@ mosquitos = data.frame(
 library(MBITES)
 
 # initialize methods
-MBITES_Setup_Timing(timing_model = 1,
-                    wait_b = 1,wait_o = 1,wait_m = 1,wait_s = 1,
-                    wait_bs = 1,wait_os = 1,wait_ms = 1,wait_ss = 1,
-                    ppr_model = 1,wait_ppr = 0.5/24)
+# deterministic wait times
+# MBITES_Setup_Timing(timing_model = 1,
+#                     wait_b = 1,wait_o = 1,wait_m = 1,wait_s = 1,
+#                     wait_bs = 1,wait_os = 1,wait_ms = 1,wait_ss = 1,
+#                     ppr_model = 1,wait_ppr = 0.5/24)
+
+MBITES_Setup_Timing(timing_model = 2,
+                    rate_b = 1/3,tmin_b = 0,
+                    rate_bs = 1/3,tmin_bs = 0,
+                    rate_o = 1/3,tmin_o = 0,
+                    rate_os = 1/3,tmin_os = 0,
+                    ppr_model = 1,wait_ppr = 0.5/24
+)
 
 MBITES_Setup_BloodMeal(overfeeding = FALSE)
 
