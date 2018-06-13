@@ -102,10 +102,12 @@ ParList <- reactive({
                                           ######### Timing #######################
                                           tabPanel("Timing",
                                             tabsetPanel(
+                                              ######################### Timing model panel ##################################################################
                                               tabPanel("Timing model",
                                                 helpText("Timing model for for attempt & search bout inter-launch time-to-event sampling distribution."),
                                                 column(4,
                                                        selectInput("timing_model", label = "Timing Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
+                                                        ######################### Timing model 1 ##################################################################
                                                        conditionalPanel(condition = "input.timing_model == 1",
                                                         tabsetPanel(id = "timing_model_1",
                                                           tabPanel("B",
@@ -177,6 +179,7 @@ ParList <- reactive({
                                                               )
                                                             )
                                                         )),
+                                                       ######################### Timing model 2 ##################################################################
                                                        conditionalPanel(condition = "input.timing_model == 2",
                                                         helpText("Define 'the inverse of average waiting time' and 'the minimum waiting time prior to next launch':"),
                                                          tabsetPanel(id = "timing_model_2",
@@ -259,31 +262,116 @@ ParList <- reactive({
                                                             )
                                                           )
                                                         ),
-
+                                                        
+                                                        ######################### Timing model 3 ##################################################################
 
                                                        conditionalPanel(condition = "input.timing_model == 3",
-                                                        wellPanel(
-                                                          h4("For attempt bouts:"),
-                                                          sliderInput(inputId = "mean_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "cv_b", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "mean_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "cv_o", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "mean_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "cv_m", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "mean_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "cv_s", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
-                                                          ), 
-                                                        wellPanel(
-                                                          h4("For search bouts:"),
-                                                          sliderInput(inputId = "mean_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "cv_bs", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "mean_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "cv_os", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "mean_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "cv_ms", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "mean_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                          sliderInput(inputId = "cv_ss", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                        helpText("Define 'the inverse of average waiting time' and 'Coefficient of variation between mean and variance of waiting time':"),
+                                                        tabsetPanel(id = "timing_model_3",
+                                                          tabPanel("B",
+                                                            conditionalPanel(condition = "input.Search_bout.includes('B')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "mean_bs", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "cv_bs", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Search_bout.includes('B')",
+                                                              helpText("Blood Feeding Search Bout is turned off")
+                                                              ),
+                                                            hr(),
+                                                            conditionalPanel(condition = "input.Attempt_bout.includes('B')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "mean_b", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "cv_b", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Attempt_bout.includes('B')",
+                                                              helpText("Blood Feeding Attempt Bout is turned off")
+                                                              )
+
+                                                            ),
+                                                          tabPanel("O",
+                                                            conditionalPanel(condition = "input.Search_bout.includes('O')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "mean_os", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "cv_os", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Search_bout.includes('O')",
+                                                              helpText("Oviposition Search Bout is turned off")
+                                                              ),
+                                                            hr(),
+                                                            conditionalPanel(condition = "input.Attempt_bout.includes('O')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "mean_o", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "cv_o", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Attempt_bout.includes('O')",
+                                                              helpText("Oviposition Attempt Bout is turned off")
+                                                              )
+                                                            ),
+                                                          tabPanel("M",
+                                                            conditionalPanel(condition = "input.Search_bout.includes('M')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "mean_ms", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "cv_ms", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Search_bout.includes('M')",
+                                                              helpText("Mating Search Bout is turned off")
+                                                              ),
+                                                            hr(),
+                                                            conditionalPanel(condition = "input.Attempt_bout.includes('M')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "mean_m", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "cv_m", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Attempt_bout.includes('M')",
+                                                              helpText("Mating Attempt Bout is turned off")
+                                                              )
+                                                            ),
+                                                          tabPanel("S",
+                                                            conditionalPanel(condition = "input.Search_bout.includes('S')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "mean_ss", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "cv_ss", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Search_bout.includes('S')",
+                                                              helpText("Sugar Feeding Search Bout is turned off")
+                                                              ),
+                                                            hr(),
+                                                            conditionalPanel(condition = "input.Attempt_bout.includes('S')",
+                                                              wellPanel(
+                                                              sliderInput(inputId = "mean_s", label = "Inverse of average:", value = 12 , min = 0, max = 24, step = 0.25),
+                                                              sliderInput(inputId = "cv_s", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              )),
+                                                            conditionalPanel(condition = "!input.Attempt_bout.includes('S')",
+                                                              helpText("Sugar Feeding Attempt Bout is turned off")
+                                                              )
+                                                            )
                                                           )
+
+
+
+
+                                                        # wellPanel(
+                                                        #   h4("For attempt bouts:"),
+                                                        #   sliderInput(inputId = "mean_b", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "cv_b", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "mean_o", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "cv_o", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "mean_m", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "cv_m", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "mean_s", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "cv_s", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                        #   ), 
+                                                        # wellPanel(
+                                                        #   h4("For search bouts:"),
+                                                        #   sliderInput(inputId = "mean_bs", label = "Inverse of average waiting time to next launch for blood feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "cv_bs", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "mean_os", label = "Inverse of average waiting time to next launch for oviposition:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "cv_os", label = "Coefficient of variation between mean and variance of waiting time", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "mean_ms", label = "Inverse of average waiting time to next launch for mating:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "cv_ms", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "mean_ss", label = "Inverse of average waiting time to next launch for sugar feeding:", value = 0.5 , min = 0, max = 1, step = 0.05),
+                                                        #   sliderInput(inputId = "cv_ss", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                        #   )
                                                         )
                                           )),
 
