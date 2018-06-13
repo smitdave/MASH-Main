@@ -349,6 +349,8 @@ ParList <- reactive({
 
                                                         )
                                           )),
+                                      
+                                      ########################## PPR model ################################################################################################################
 
                                           tabPanel("PPR model",
                                             helpText("Post-prandial resting length sampling distribution:"),
@@ -356,22 +358,22 @@ ParList <- reactive({
                                                 selectInput("ppr_model", label = "PPR Model", choice = list('Deterministic' = 1, "Exponential" = 2, "Gamma" = 3),selected = 'Deterministic'),
                                                 conditionalPanel(condition = "input.ppr_model == 1",
                                                   wellPanel(
-                                                    sliderInput(inputId = "wait_ppr", label = "Deterministic length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                    sliderInput(inputId = "wait_ppr", label = "Deterministic length of post-prandial resting bout:", value = 24 , min = 0, max = 72, step = 0.25)
                                                     )
                                                   ),
 
 
                                                 conditionalPanel(condition = "input.ppr_model == 2",
                                                   wellPanel(
-                                                    sliderInput(inputId = "rate_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                    sliderInput(inputId = "tmin_ppr", label = "Minimum time of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                    sliderInput(inputId = "inv_rate_ppr", label = "Average length of post-prandial resting bout:", value = 24 , min = 0, max = 72, step = 0.25), #1/rate_ppr
+                                                    sliderInput(inputId = "tmin_ppr", label = "Minimum time of post-prandial resting bout:", value = 24 , min = 0, max = 72, step = 0.25)
                                                     )
                                                   ),
 
                                                 conditionalPanel(condition = "input.ppr_model == 3",
                                                   wellPanel(
-                                                    sliderInput(inputId = "mean_ppr", label = "Inverse of average length of post-prandial resting bout:", value = 0.5 , min = 0, max = 1, step = 0.05),
-                                                    sliderInput(inputId = "cv_ppr", label = "Coefficient of variation between mean and variance of waiting time:", value = 0.5 , min = 0, max = 1, step = 0.05)
+                                                    sliderInput(inputId = "inv_mean_ppr", label = "Average length of post-prandial resting bout:", value = 24 , min = 0, max = 72, step = 0.25),
+                                                    sliderInput(inputId = "cv_ppr", label = "Coefficient of variation between mean and variance of waiting time:", value = 24 , min = 0, max = 72, step = 0.25)
                                                     )
                                                   )
 
