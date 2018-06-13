@@ -559,3 +559,36 @@ shinyApp(ui = ui, server = server)
 ```
 
 Note: `switch` is a useful companion to multiple choice Shiny widgets. Use `switch` to change the values of a widget into R expressions.
+
+## Use Reactive Expressions
+A reactive expression is an R expression that uses widget input and returns a value. The reactive expression will update this value whenever the original widget changes.
+
+To create a reactive expression use the `reactive` function:
+```R
+dataInput <- reactive({
+  getSymbols(input$symb, src = "google",
+    from = input$dates[1],
+    to = input$dates[2],
+    auto.assign = FALSE)
+})
+```
+
+The reactive expression will only return the saved result if it knows the result is up-to-date. If the reactive expression has learned that the result is obsolete (because a widget has changed), the expression will recalculate the result. It then returns the new result and saves a new copy. The reactive expression will use this new copy until it too becomes out of date.
+
+Summarizing this behavior:
+* A reactive expression saves its result the first time you run it.
+* The next time the reactive expression is called, it checks if the saved value has become out of date (i.e., whether the widgets it depends on have changed).
+* If the value is out of date, the reactive object will recalculate it (and then save the new result).
+* If the value is up-to-date, the reactive expression will return the saved value without doing any computation.
+
+Shiny keeps track of which reactive expressions an `output` object depends on, as well as which widget inputs. Shiny will automatically re-build an object if
+* an `input` value in the object's `render*` function changes, or
+* a reactive expression in the object's `render*` function becomes obsolete
+
+#### Recap
+You can make your apps run faster by modularizing your code with reactive expressions.
+* A reactive expression takes `input` values, or values from other reactive expressions, and returns a new value
+* Reactive expressions save their results, and will only re-calculate if their input has changed
+* Create reactive expressions with `reactive({ })`
+* Call reactive expressions with the name of the expression followed by parentheses `()`
+* Only call reactive expressions from within other reactive expressions or `render*` functions

@@ -12,7 +12,7 @@ ui <- fluidPage(
   sidebarLayout(
     sidebarPanel(
       helpText("Select a stock to examine. 
-        Information will be collected from Google finance."),
+        Information will be collected from Yahoo finance."),
       
       textInput("symb", "Symbol", "SPY"),
       
@@ -39,18 +39,21 @@ ui <- fluidPage(
 server <- function(input, output) {
   
   dataInput <- reactive({
-    getSymbols(input$symb, src = "google", 
+    getSymbols(input$symb, src = "yahoo",
                from = input$dates[1],
                to = input$dates[2],
                auto.assign = FALSE)
   })
   
-  output$plot <- renderPlot({
-    
-    chartSeries(dataInput(), theme = chartTheme("white"), 
-                type = "line", log.scale = input$log, TA = NULL)
+  finalInput <- reactive({
+    if (!input$adjust) return(dataInput())
+    adjust(dataInput())
   })
   
+  output$plot <- renderPlot({   
+    chartSeries(finalInput(), theme = chartTheme("white"),
+                type = "line", log.scale = input$log, TA = NULL)
+  })
 }
 
 # Run the app
