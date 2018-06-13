@@ -100,7 +100,10 @@ MBDETES_getPrOverfeed <- function(){
   integrate(FF, 0, 1)$value
 }
 
-# probability to die from post-prandial period (1 - pPPR = survival prob)
+#' MBDETES: Probability to Survive Post-prandial Resting Flight
+#'
+#'
+#' @export
 MBDETES_getPrPPRFlight <- function(){
   PPR_a = MBITES:::Parameters$get_PPR_a()
   PPR_b = MBITES:::Parameters$get_PPR_b()
@@ -169,29 +172,25 @@ MBDETES_getLeaveUnladen <- function(){
   leave/(1-retry)
 }
 
-#' MBDETES: Resting spot probabilities
+#' MBDETES: Resting spot probabilities3
 #'
 #' Calculate resting spot probabilities according to a mixture distribution with
 #' equal weights given to the 3 main behavioral states (B,O,S).
 #'
 #' @export
 MBDETES_getRestingParam <- function(){
-  # if(private$site$get_type()==1L){
-    # use "l" because that is the rspot when a mosquito arrives at a new site
-    mix_wts = rep(1,3)/3
-    inandout = MBITES:::Parameters$get_InAndOut_row("l")
-    probs = mix_wts[1]*(inandout* MBITES:::Parameters$get_wts("B")) +
-            mix_wts[2]*(inandout* MBITES:::Parameters$get_wts("O")) +
-            mix_wts[3]*(inandout* MBITES:::Parameters$get_wts("S"))
 
-     # probs = MBITES:::Parameters$get_InAndOut_row("l") * MBITES:::Parameters$get_wts("l")
-     land = sum(probs[1:3])
-     retry = probs[4]
-     leave = probs[5]
-  # not homestead
-  # } else {
-  #    return("v")
-  # }
+  mix_wts = rep(1,3)/3
+  inandout = MBITES:::Parameters$get_InAndOut()
+  inandout_stationary = eigen(t(inandout))$vectors[,1]/sum(eigen(t(inandout))$vectors[,1])
+  probs = mix_wts[1]*(inandout_stationary* MBITES:::Parameters$get_wts("B")) +
+          mix_wts[2]*(inandout_stationary* MBITES:::Parameters$get_wts("O")) +
+          mix_wts[3]*(inandout_stationary* MBITES:::Parameters$get_wts("S"))
+
+  land = sum(probs[1:3])
+  retry = probs[4]
+  leave = probs[5]
+
   out = unname(c(land, retry, leave))
   return(out/sum(out))
 }
@@ -236,6 +235,7 @@ MBDETES_BstateTransitions <- function(site){
   # check the function
   if(site$has_feed()){
     host = site$get_feed(1L)$RiskQ$typewtsQ()
+    host = host/sum(host)
   } else {
     host = rep(0,4)
   }
@@ -302,7 +302,7 @@ MBDETES_RperiodTransitions <- function(site){
   blood = site$has_feed()
 
   # survive the post-prandial resting period
-  surviveRest = 1 - MBDETES_getPrPPRFlight() # FIX ME !!!
+  surviveRest = MBDETES_getPrPPRFlight() # FIX ME !!!
 
   R2B = blood*refeed*surviveRest
   R2F = (1-blood)*refeed*surviveRest

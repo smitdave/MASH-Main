@@ -80,9 +80,9 @@ Mosquito_Female$set(which = "public",name = "rBloodMealSize",
 # Post-prandial Resting Flight Mortality
 ###############################################################################
 
-#' MBITES: Probability of Death due to the Blood Meal during the Post Prandial Flight
+#' MBITES: Probability to Survive the Post Prandial Flight
 #'
-#' Incremental mortality as a function of being laden during the post-prandial flight \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
+#' Survival probability as a function of being laden with blood during the post-prandial flight \eqn{ \frac{e^{S.a\times energy}}{S.b+e^{S.a\times energy}} }
 #'  * This method is bound to \code{Mosquito_Female$pPPRFlight}.
 #'
 mbites_pPPRFlight <- function(){
@@ -100,7 +100,7 @@ mbites_pPPRFlight <- function(){
 mbites_PPRFlight <- function(){
   if(private$alive){
     private$tNow = MBITES:::Parameters$ttEvent$ppr(private$tNow)
-    if(runif(1) < self$pPPRFlight()){
+    if(runif(1) < 1-self$pPPRFlight()){
       private$alive = FALSE
     }
   }

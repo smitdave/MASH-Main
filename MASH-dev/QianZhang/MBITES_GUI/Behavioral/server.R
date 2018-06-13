@@ -49,10 +49,55 @@ ParList <- reactive({
                              helpText("Welcome to MBITES! Please set parameters here:"),
                              navlistPanel(widths = c(2,10),
                                           ######### Timing #######################
-                                          tabPanel("Bouts"
-
-
-
+                                          tabPanel("Bouts",
+                                            column(6,
+                                              checkboxGroupButtons(inputId = "Search_bout", label = "Search:", choices = c("B", "O", "M", "S"), status = "success", 
+                                                selected = c("B", "O"), checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon")))),
+                                            column(6,
+                                              checkboxGroupButtons(inputId = "Attempt_bout", label = "Attempt:", choices = c("B", "O", "M", "S"), status = "success",
+                                                selected = c("B", "O"), checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon")))),
+                                            tabsetPanel(id = "boutbar",
+                                              tabPanel("B",
+                                                helpText("test B"),
+                                                column(6,
+                                                conditionalPanel(condition = "input.Search_bout.includes('B')", 
+                                                  wellPanel(
+                                                    h4("test BS"))),
+                                                conditionalPanel(condition = "input.Attempt_bout.includes('B')", 
+                                                  wellPanel(
+                                                    h4("test B"))))
+                                                ),
+                                              tabPanel("O",
+                                                helpText("test O"),
+                                                column(6,
+                                                conditionalPanel(condition = "input.Search_bout.includes('O')", 
+                                                  wellPanel(
+                                                    h4("test OS"))),
+                                                conditionalPanel(condition = "input.Attempt_bout.includes('O')", 
+                                                  wellPanel(
+                                                    h4("test O"))))
+                                                ),
+                                              tabPanel("M",
+                                                helpText("test M"),
+                                                column(6,
+                                                conditionalPanel(condition = "input.Search_bout.includes('M')", 
+                                                  wellPanel(
+                                                    h4("test MS"))),
+                                                conditionalPanel(condition = "input.Attempt_bout.includes('M')", 
+                                                  wellPanel(
+                                                    h4("test M"))))
+                                                ),
+                                              tabPanel("S",
+                                                helpText("test S"),
+                                                column(6,
+                                                conditionalPanel(condition = "input.Search_bout.includes('S')", 
+                                                  wellPanel(
+                                                    h4("test SS"))),
+                                                conditionalPanel(condition = "input.Attempt_bout.includes('S')", 
+                                                  wellPanel(
+                                                    h4("test S"))))
+                                                )
+                                                )
                                             ),
                                           ######### Timing #######################
                                           tabPanel("Timing",
@@ -251,9 +296,8 @@ ParList <- reactive({
                                     })
 
 
-  
-  
-  
+##################### Output here ##########################################################################################
+
 
   #####################Simualtion output ########################################################
   output$sim_panel <- renderUI({
@@ -300,8 +344,9 @@ ParList <- reactive({
   
 
 
-  ################################################################################################################
+##################################     Observe Event   #######################################################
   
+  ############################ Pipeline ###############################################
   
   observe({
     if (input$project == 'demo' && input$createDemoFolder > 0) {
@@ -391,8 +436,52 @@ ParList <- reactive({
   })
   
   
-  
-  
+
+
+
+  ##################### Observe Bouts ###########################################################
+  observeEvent(input$Search_bout, {
+    if("B" %in% input$Search_bout){
+      updateTabsetPanel(session, "boutbar",selected = "B")
+    }
+  })
+  observeEvent(input$Search_bout, {
+    if("O" %in% input$Search_bout){
+      updateTabsetPanel(session, "boutbar",selected = "O")
+    }
+  })
+
+  observeEvent(input$Search_bout, {
+    if("M" %in% input$Search_bout){
+      updateTabsetPanel(session, "boutbar",selected = "M")
+    }
+  })
+  observeEvent(input$Search_bout, {
+    if("S" %in% input$Search_bout){
+      updateTabsetPanel(session, "boutbar",selected = "S")
+    }
+  })
+  observeEvent(input$Attempt_bout, {
+    if("B" %in% input$Attempt_bout){
+      updateTabsetPanel(session, "boutbar",selected = "B")
+    }
+  })
+  observeEvent(input$Attempt_bout, {
+    if("O" %in% input$Attempt_bout){
+      updateTabsetPanel(session, "boutbar",selected = "O")
+    }
+  })
+
+  observeEvent(input$Attempt_bout, {
+    if("M" %in% input$Attempt_bout){
+      updateTabsetPanel(session, "boutbar",selected = "M")
+    }
+  })
+  observeEvent(input$Attempt_bout, {
+    if("S" %in% input$Attempt_bout){
+      updateTabsetPanel(session, "boutbar",selected = "S")
+    }
+  })
   
   ##########################################################################################
   
