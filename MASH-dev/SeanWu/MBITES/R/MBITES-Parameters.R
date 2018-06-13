@@ -1089,6 +1089,10 @@ get_InAndOut_row_MBITES_Parameters <- function(i){
   private$InAndOut[i,]
 }
 
+get_InAndOut_MBITES_Parameters <- function(){
+  private$InAndOut
+}
+
 get_tSwarm_MBITES_Parameters <- function(){
   return(private$tSwarm)
 }
@@ -1368,6 +1372,10 @@ MBITES_Parameters$set(which = "public",name = "get_wts",
 
 MBITES_Parameters$set(which = "public",name = "get_InAndOut_row",
     value = get_InAndOut_row_MBITES_Parameters, overwrite = TRUE
+)
+
+MBITES_Parameters$set(which = "public",name = "get_InAndOut",
+    value = get_InAndOut_MBITES_Parameters, overwrite = TRUE
 )
 
 MBITES_Parameters$set(which = "public",name = "get_tSwarm",
