@@ -62,7 +62,7 @@ ParList <- reactive({
                                                   conditionalPanel(condition = "input.Search_bout.includes('B') || input.Attempt_bout.includes('B')",
                                                     wellPanel(
                                                       helpText("B: Blood Feeding: Enter a vector (comma delimited) here"),
-                                                      textInput("o_wts", "Landing Spot Weights:", value = paste(ParList()$b_wts, collapse = ",")))
+                                                      textInput("b_wts", "Landing Spot Weights:", value = paste(ParList()$b_wts, collapse = ",")))
                                                     ),
                                                   conditionalPanel(condition = "input.Search_bout.includes('B')", 
                                                     wellPanel(
