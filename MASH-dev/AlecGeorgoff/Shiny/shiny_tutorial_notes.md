@@ -592,3 +592,49 @@ You can make your apps run faster by modularizing your code with reactive expres
 * Create reactive expressions with `reactive({ })`
 * Call reactive expressions with the name of the expression followed by parentheses `()`
 * Only call reactive expressions from within other reactive expressions or `render*` functions
+
+## Share Your Apps
+Two basic options:
+1. **Share your Shiny app as R scripts**. This is the simplest way to share an app, but it works only if your users have R on their own computer (and know how to use it). Users can use these scripts to launch the app from their own R session.
+2. **Share your Shiny app as a web page**. This is definitely the most user friendly way to share a Shiny app. Your users can navigate to your app through the internet with a web browser. They will find your app fully rendered, up to date, and ready to go.
+
+#### Share as R Scripts
+Shiny has three built in commands that make it easy to use files that are hosted online: `runUrl`, `runGithub`, and `runGist`.
+
+##### `runUrl`
+`runUrl` will download and launch a Shiny app straight from a weblink.
+
+To use `runUrl`:
+* Save your Shiny app's directory as a zip file
+* Host that zip file at its own link on a web page. Anyone with access to the link can launch the app from inside R by running:
+```R
+library(shiny)
+runUrl("<the weblink>")
+```
+
+##### `runGithub`
+To share an app through Github, create a project repository on Github. Then store your `app.R` file in the repository, along with any supplementary files that the app uses.
+
+Your users can launch the app by running:
+```R
+runGithub("<your repository name>", "<your user name>")
+```
+
+##### `runGist`
+To share your app as a gist:
+* Copy and paste your `app.R` files to the gist web page.
+* Note the URL that Github gives the gist.
+
+Once you've made your gist, users can launch the app with `runGist("<gist number>")` where `"<gist number>"` is the number that appears at the end of your Gist's web address.
+
+#### Share as a Web Page
+Four ways to host:
+* [shinyapps.io](http://www.shinyapps.io/)
+* [Shiny Server](https://github.com/rstudio/shiny-server/blob/master/README.md)
+* [Shiny Server Pro](http://www.rstudio.com/shiny/server/)
+* [RStudio Connect](https://www.rstudio.com/products/connect/)
+
+## More Resources
+The [Shiny Dev Center](http://shiny.rstudio.com/) hosts a [gallery](https://shiny.rstudio.com/gallery/) of apps and the code that runs them.
+
+The Shiny Dev Center also has [articles](https://shiny.rstudio.com/articles/) for different Shiny topics.
