@@ -458,20 +458,32 @@ ParList <- reactive({
                                           )),
                                           ######## Blood Meal #####################
                                           tabPanel("Blood Meal",
-                                            column(4,
-                                              helpText("Setup the beta-distributed Blood Meal: "),
-                                              wellPanel(
-                                                sliderInput(inputId = "bm_u", label = "Mean of blood meal size:", value = ParList()$bm_a/(ParList()$bm_a + ParList()$bm_b) , min = 0, max = 1, step = 0.05), #bm_a = uv
-                                                sliderInput(inputId = "bm_v", label = "Sample size of blood meal size:", value = (ParList()$bm_a + ParList()$bm_b), min = 0, max = 20, step = 0.5), #bm_b = (1-u)v
-                                                checkboxInput(inputId = "overfeeding", label = "Overfeeding", value = 1),
-                                                conditionalPanel(condition = "input.overfeeding == 1",
-                                                  sliderInput(inputId = "of_u", label = "Mean of death:", value = ParList()$of_a/(ParList()$of_a + ParList()$of_b), min = 0, max = 0.1, step = 0.001),
-                                                  sliderInput(inputId = "of_v", label = "Sample size of death:", value = (ParList()$of_a + ParList()$of_b), min = 0, max = 10000, step = 100)
+                                            fluidRow(
+                                              column(4,
+                                                helpText("Setup the beta-distributed Blood Meal: "),
+                                                wellPanel(
+                                                  sliderInput(inputId = "bm_u", label = "Mean of blood meal size:", value = ParList()$bm_a/(ParList()$bm_a + ParList()$bm_b) , min = 0, max = 1, step = 0.05), #bm_a = uv
+                                                  sliderInput(inputId = "bm_v", label = "Sample size of blood meal size:", value = (ParList()$bm_a + ParList()$bm_b), min = 0, max = 20, step = 0.5) #bm_b = (1-u)v
+                                                  
                                                   )
-                                                )
 
-                                              )
+                                                ),
+                                              column(8,
+                                                plotOutput("bm_plot")
+                                                )
                                             ),
+                                            fluidRow(
+                                              column(4,
+                                                wellPanel(
+                                                  checkboxInput(inputId = "overfeeding", label = "Overfeeding", value = 1),
+                                                  conditionalPanel(condition = "input.overfeeding == 1",
+                                                    sliderInput(inputId = "of_u", label = "Mean of death:", value = ParList()$of_a/(ParList()$of_a + ParList()$of_b), min = 0, max = 0.1, step = 0.001),
+                                                    sliderInput(inputId = "of_v", label = "Sample size of death:", value = (ParList()$of_a + ParList()$of_b), min = 0, max = 10000, step = 100)
+                                                    )
+                                                  )
+
+                                                )
+                                            )),
 
                                           ######## Oogenesis ######################
                                           tabPanel("Oogenesis",
@@ -531,6 +543,15 @@ ParList <- reactive({
 
 ##################### Output here ##########################################################################################
 
+
+####################### Plot Output #####################################################################
+
+output$bm_plot <- renderPlot({
+      bm_a <- input$bm_u * input$bm_v
+      bm_b <- (1 - input$bm_u) * input$bm_v
+      rBloodMealSize = function(bm_a, bm_b){rbeta(1,bm_a,bm_b)}
+      hist(replicate(10000, rBloodMealSize(bm_a, bm_b)), 20, main = "Blood Meal Size", xlab = "Proportion of Full", probability=TRUE)
+  })
 
   #####################Simualtion output ########################################################
   output$sim_panel <- renderUI({
