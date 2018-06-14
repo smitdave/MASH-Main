@@ -475,3 +475,166 @@ You learned to:
 * surround R expressions by curly braces, `{}`, in each `render*` function
 * save your `render*` expressions in the `output` list, with one entry for each reactive object in your app
 * create reactivity by including an `input` value in a `render*` expression
+
+## Use R Scripts and Data
+Directory that you save `server.R` in will become the working directory of your Shiny app
+
+#### How Shiny Runs Apps
+Shiny will run the whole script the first time you call `runApp`
+
+![example](https://shiny.rstudio.com/tutorial/written-tutorial/lesson5/images/run-once.png)
+
+Shiny saves the `server` function until a new user arrives. Each time a new user visits your app, Shiny runs the `server` function again, one time. The function helps Shiny build a distinct set of reactive objects for each user
+
+![example](https://shiny.rstudio.com/tutorial/written-tutorial/lesson5/images/run-once-per-user.png)
+
+As users interact with the widgets and change their values, Shiny will re-run the R expressions assigned to each reactive object that depend on a widget whose value has changed. If your user is very active, these expressions may be re-run many, many times a second
+
+![example](https://shiny.rstudio.com/tutorial/written-tutorial/lesson5/images/run-many-times.png)
+
+#### Recap
+* The `shinyApp` function is run once, when you launch your app
+* The `server` function is run once _each time_ a user visits your app
+* The R expressions inside `render*` functions are run many times. Shiny runs them once each time a user changes the value of a widget
+
+#### How to Use This Information
+Source scripts, load libraries, and read data sets at the beginning of `app.R` _outside_ of the `server` function. Shiny will only run this code once, which is all you need to set your server up to run the R expressions contained in `server`.
+
+Define user specific objects inside `server` function, but outside of any `render*` calls. These would be objects that you think each user will need their own personal copy of. For example, an object that records the user's session information. This code will be run once per user.
+
+Only place code that Shiny _must_ rerun to build an object inside of a `render*` function. Shiny will rerun _all_ of the code in a `render*` chunk each time a user changes a widget mentioned in the chunk. This can be quite often.
+
+You should generally avoid placing code inside a `render` function that does not need to be there. Doing so will slow down the entire app.
+
+_Example:_
+```R
+library(shiny)
+
+source("helpers.R")
+counties <- readRDS("data/counties.rds")
+library(maps)
+library(mapproj)
+
+# Define UI ----
+ui <- fluidPage(
+  titlePanel("censusVis"),
+
+  sidebarLayout(
+    sidebarPanel(
+      helpText("Create demographic maps with
+               information from the 2010 US Census."),
+
+      selectInput("var",
+                  label = "Choose a variable to display",
+                  choices = c("Percent White",
+                              "Percent Black",
+                              "Percent Hispanic",
+                              "Percent Asian"),
+                  selected = "Percent White"),
+
+      sliderInput("range",
+                  label = "Range of interest:",
+                  min = 0, max = 100, value = c(0, 100))
+    ),
+
+    mainPanel(plotOutput("map"))
+  )
+)
+
+# Define server logic ----
+server <- function(input, output) {
+  output$map <- renderPlot({
+    data <- switch(input$var,
+                   "Percent White" = counties$white,
+                   "Percent Black" = counties$black,
+                   "Percent Hispanic" = counties$hispanic,
+                   "Percent Asian" = counties$asian)
+
+    percent_map(var = data, color = "peachpuff", legend.title = input$var, max = input$range[2], min = input$range[1])
+  })
+}
+
+# Run the app ----
+shinyApp(ui = ui, server = server)
+```
+
+Note: `switch` is a useful companion to multiple choice Shiny widgets. Use `switch` to change the values of a widget into R expressions.
+
+## Use Reactive Expressions
+A reactive expression is an R expression that uses widget input and returns a value. The reactive expression will update this value whenever the original widget changes.
+
+To create a reactive expression use the `reactive` function:
+```R
+dataInput <- reactive({
+  getSymbols(input$symb, src = "google",
+    from = input$dates[1],
+    to = input$dates[2],
+    auto.assign = FALSE)
+})
+```
+
+The reactive expression will only return the saved result if it knows the result is up-to-date. If the reactive expression has learned that the result is obsolete (because a widget has changed), the expression will recalculate the result. It then returns the new result and saves a new copy. The reactive expression will use this new copy until it too becomes out of date.
+
+Summarizing this behavior:
+* A reactive expression saves its result the first time you run it.
+* The next time the reactive expression is called, it checks if the saved value has become out of date (i.e., whether the widgets it depends on have changed).
+* If the value is out of date, the reactive object will recalculate it (and then save the new result).
+* If the value is up-to-date, the reactive expression will return the saved value without doing any computation.
+
+Shiny keeps track of which reactive expressions an `output` object depends on, as well as which widget inputs. Shiny will automatically re-build an object if
+* an `input` value in the object's `render*` function changes, or
+* a reactive expression in the object's `render*` function becomes obsolete
+
+#### Recap
+You can make your apps run faster by modularizing your code with reactive expressions.
+* A reactive expression takes `input` values, or values from other reactive expressions, and returns a new value
+* Reactive expressions save their results, and will only re-calculate if their input has changed
+* Create reactive expressions with `reactive({ })`
+* Call reactive expressions with the name of the expression followed by parentheses `()`
+* Only call reactive expressions from within other reactive expressions or `render*` functions
+
+## Share Your Apps
+Two basic options:
+1. **Share your Shiny app as R scripts**. This is the simplest way to share an app, but it works only if your users have R on their own computer (and know how to use it). Users can use these scripts to launch the app from their own R session.
+2. **Share your Shiny app as a web page**. This is definitely the most user friendly way to share a Shiny app. Your users can navigate to your app through the internet with a web browser. They will find your app fully rendered, up to date, and ready to go.
+
+#### Share as R Scripts
+Shiny has three built in commands that make it easy to use files that are hosted online: `runUrl`, `runGithub`, and `runGist`.
+
+##### `runUrl`
+`runUrl` will download and launch a Shiny app straight from a weblink.
+
+To use `runUrl`:
+* Save your Shiny app's directory as a zip file
+* Host that zip file at its own link on a web page. Anyone with access to the link can launch the app from inside R by running:
+```R
+library(shiny)
+runUrl("<the weblink>")
+```
+
+##### `runGithub`
+To share an app through Github, create a project repository on Github. Then store your `app.R` file in the repository, along with any supplementary files that the app uses.
+
+Your users can launch the app by running:
+```R
+runGithub("<your repository name>", "<your user name>")
+```
+
+##### `runGist`
+To share your app as a gist:
+* Copy and paste your `app.R` files to the gist web page.
+* Note the URL that Github gives the gist.
+
+Once you've made your gist, users can launch the app with `runGist("<gist number>")` where `"<gist number>"` is the number that appears at the end of your Gist's web address.
+
+#### Share as a Web Page
+Four ways to host:
+* [shinyapps.io](http://www.shinyapps.io/)
+* [Shiny Server](https://github.com/rstudio/shiny-server/blob/master/README.md)
+* [Shiny Server Pro](http://www.rstudio.com/shiny/server/)
+* [RStudio Connect](https://www.rstudio.com/products/connect/)
+
+## More Resources
+The [Shiny Dev Center](http://shiny.rstudio.com/) hosts a [gallery](https://shiny.rstudio.com/gallery/) of apps and the code that runs them.
+
+The Shiny Dev Center also has [articles](https://shiny.rstudio.com/articles/) for different Shiny topics.
