@@ -243,16 +243,19 @@ hardreset_MBITES_Globals <- function(){
   # mosquito globals
   private$mosquito_id = 0L
   if(!is.null(private$mosquito_f_out)){
-   close(private$mosquito_f_out)
+    private$mosquito_f_out = NULL
+    # close(private$mosquito_f_out)
   }
   if(!is.null(private$mosquito_m_out)){
-   close(private$mosquito_m_out)
+    private$mosquito_m_out = NULL
+    # close(private$mosquito_m_out)
   }
 
   # human globals
   private$human_id = 0L
   if(!is.null(private$human_out)){
-   close(private$human_out)
+    private$human_out = NULL
+    # close(private$human_out)
   }
 
   # tile globals
