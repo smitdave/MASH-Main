@@ -525,7 +525,24 @@ ParList <- reactive({
 
                                           ######## Energetics #####################
                                           tabPanel("Energetics",
-                                            checkboxInput(inputId = "sugar", label = "Sugar feeding behavior", value = 1)
+                                            checkboxInput(inputId = "sugar", label = "Sugar feeding behavior", value = 1),
+                                            conditionalPanel(condition = "input.sugar",
+                                              fluidRow(
+                                                column(4,
+                                                  wellPanel(
+                                                    sliderInput(inputId = "S_sa", label ="Shape Param a of Probability to queue Sugar bout", value = ParList()$S_sa, min = 0, max = 100, step = 1),
+                                                    sliderInput(inputId = "S_sb", label ="Shape Param b of Probability to queue Sugar bout", value = ParList()$S_sb, min = 0, max = 100, step = 1),
+                                                    sliderInput(inputId = "S_w", label ="Shape Param a of Probability to queue Sugar bout", value = ParList()$S_sa, min = 0, max = 100, step = 1),
+                                                    sliderInput(inputId = "S_p", label ="Shape Param b of Probability to queue Sugar bout", value = ParList()$S_sb, min = 0, max = 100, step = 1),
+                                                    sliderInput(inputId = "energyPreG", label ="Pre-gonotrophic Energy Requirement", value = ParList()$energyPreG, min = 0, max = 100, step = 1),
+                                                    sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)", value = ParList()$preGsugar, min = 0, max = 100, step = 1),
+                                                    sliderInput(inputId = "omega", label ="Omega", value = ParList()$omega, min = 0, max = 100, step = 1),
+                                                    sliderInput(inputId = "energyFromBlood_b", label ="Half-maximum parameter for energy from blood", value = ParList()$energyFromBlood_b, min = 0, max = 1, step = 0.01)
+
+                                                  )
+                                                  )
+                                                )
+                                              )
                                             ),
 
                                           #######  Oviposition ###################
