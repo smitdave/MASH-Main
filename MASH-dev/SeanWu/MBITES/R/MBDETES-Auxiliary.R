@@ -246,11 +246,12 @@ MBDETES_BstateTransitions <- function(site){
   }
 
   # probability of taking a human bloodmeal | human chosen
-  h1 = MBITES:::Parameters$get_probeH()
-  h2 = MBITES:::Parameters$get_surviveprobeH()
-  h3 = MBITES:::Parameters$get_feedH()
-  hfeed = h1*h2*h3
-  hfail = (1-h1)+h1*h2*(1-h3)
+  h1 = MBITES:::Parameters$get_surviveH()
+  h2 = MBITES:::Parameters$get_probeH()
+  h3 = MBITES:::Parameters$get_surviveprobeH()
+  h4 = MBITES:::Parameters$get_feedH()
+  hfeed = h1*h2*h3*h4
+  hfail = (1-h1) + h1*(1-h2) + h1*h2*(1-h3) + h1*h2*h3*(1-h4)
 
   # probability of taking a bloodmeal | other host chosen
   z1 = MBITES:::Parameters$get_surviveZ()
