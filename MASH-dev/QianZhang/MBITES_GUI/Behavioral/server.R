@@ -6,7 +6,7 @@
 #     /_/  /_/     /_____/___/ /_/ /_____//____/
 #
 #     SERVER for MBITES GUI: Behavioral Options
-#     MBITES Team 
+#     MBITES Team
 #     JUN 2018
 #
 ###############################################################################
@@ -51,7 +51,7 @@ ParList <- reactive({
                                           ######### Timing #######################
                                           tabPanel("Bouts",
                                             column(6,
-                                              checkboxGroupButtons(inputId = "Search_bout", label = "Search:", choices = c("B", "O", "M", "S"), status = "success", 
+                                              checkboxGroupButtons(inputId = "Search_bout", label = "Search:", choices = c("B", "O", "M", "S"), status = "success",
                                                 selected = c("B", "O"), checkIcon = list(yes = icon("ok", lib = "glyphicon"), no = icon("remove", lib = "glyphicon")))),
                                             column(6,
                                               checkboxGroupButtons(inputId = "Attempt_bout", label = "Attempt:", choices = c("B", "O", "M", "S"), status = "success",
@@ -64,12 +64,12 @@ ParList <- reactive({
                                                       helpText("B: Blood Feeding: Enter a vector (comma delimited) here"),
                                                       textInput("b_wts", "Landing Spot Weights:", value = paste(ParList()$b_wts, collapse = ",")))
                                                     ),
-                                                  conditionalPanel(condition = "input.Search_bout.includes('B')", 
+                                                  conditionalPanel(condition = "input.Search_bout.includes('B')",
                                                     wellPanel(
                                                       sliderInput(inputId = "Bs_succeed", label ="Probability of Success", value = ParList()$Bs_succeed, min = 0.8, max = 1, step = 0.01),                #
                                                       sliderInput(inputId = "Bs_surv", label ="Baseline Probability of Survival",value = ParList()$Bs_surv, min = 0.9, max = 1, step = 0.01)
                                                       )),
-                                                  conditionalPanel(condition = "input.Attempt_bout.includes('B')", 
+                                                  conditionalPanel(condition = "input.Attempt_bout.includes('B')",
                                                     wellPanel(
                                                       sliderInput(inputId = "B_succeed", label ="Probability of Success", value = ParList()$B_succeed, min = 0.8, max = 1, step = 0.01),                #
                                                       sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival",value = ParList()$B_surv, min = 0.9, max = 1, step = 0.01)
@@ -87,13 +87,13 @@ ParList <- reactive({
                                                       helpText("O: Oviposition: Enter a vector (comma delimited) here"),
                                                       textInput("o_wts", "Landing Spot Weights:", value = paste(ParList()$o_wts, collapse = ",")))
                                                   ),
-                                                  conditionalPanel(condition = "input.Search_bout.includes('O')", 
+                                                  conditionalPanel(condition = "input.Search_bout.includes('O')",
                                                     wellPanel(
                                                       sliderInput(inputId = "Os_succeed", label ="Probability of Success", value = ParList()$Os_succeed, min = 0.8, max = 1, step = 0.01),                #
                                                       sliderInput(inputId = "Os_surv", label ="Baseline Probability of Survival",value = ParList()$Os_surv, min = 0.9, max = 1, step = 0.01)
                                                       )
                                                     ),
-                                                  conditionalPanel(condition = "input.Attempt_bout.includes('O')", 
+                                                  conditionalPanel(condition = "input.Attempt_bout.includes('O')",
                                                     wellPanel(
                                                       sliderInput(inputId = "O_succeed", label ="Probability of Success", value = ParList()$O_succeed, min = 0.8, max = 1, step = 0.01),                #
                                                       sliderInput(inputId = "O_surv", label ="Baseline Probability of Survival",value = ParList()$O_surv, min = 0.9, max = 1, step = 0.01)
@@ -112,12 +112,12 @@ ParList <- reactive({
                                                       helpText("M: Mating: Enter a vector (comma delimited) here"),
                                                       textInput("m_wts", "Landing Spot Weights:", value = paste(ParList()$m_wts, collapse = ",")))
                                                   ),
-                                                  conditionalPanel(condition = "input.Search_bout.includes('M')", 
+                                                  conditionalPanel(condition = "input.Search_bout.includes('M')",
                                                     wellPanel(
                                                       sliderInput(inputId = "Ms_succeed", label ="Probability of Success", value = ParList()$Ms_succeed, min = 0.8, max = 1, step = 0.01),                #
                                                       sliderInput(inputId = "Ms_surv", label ="Baseline Probability of Survival",value = ParList()$Ms_surv, min = 0.9, max = 1, step = 0.01)
                                                       )),
-                                                  conditionalPanel(condition = "input.Attempt_bout.includes('M')", 
+                                                  conditionalPanel(condition = "input.Attempt_bout.includes('M')",
                                                     wellPanel(
                                                       sliderInput(inputId = "M_succeed", label ="Probability of Success", value = ParList()$M_succeed, min = 0.8, max = 1, step = 0.01),                #
                                                       sliderInput(inputId = "M_surv", label ="Baseline Probability of Survival",value = ParList()$M_surv, min = 0.9, max = 1, step = 0.01)
@@ -134,12 +134,12 @@ ParList <- reactive({
                                                       helpText("S: Sugar Feeding: Enter a vector (comma delimited) here"),
                                                       textInput("s_wts", "Landing Spot Weights:", value = paste(ParList()$s_wts, collapse = ",")))
                                                   ),
-                                                conditionalPanel(condition = "input.Search_bout.includes('S')", 
+                                                conditionalPanel(condition = "input.Search_bout.includes('S')",
                                                   wellPanel(
                                                       sliderInput(inputId = "Ss_succeed", label ="Probability of Success", value = ParList()$Ss_succeed, min = 0.8, max = 1, step = 0.01),                #
                                                       sliderInput(inputId = "Ss_surv", label ="Baseline Probability of Survival",value = ParList()$Ss_surv, min = 0.9, max = 1, step = 0.01)
                                                     )),
-                                                conditionalPanel(condition = "input.Attempt_bout.includes('S')", 
+                                                conditionalPanel(condition = "input.Attempt_bout.includes('S')",
                                                   wellPanel(
                                                       sliderInput(inputId = "S_succeed", label ="Probability of Success", value = ParList()$S_succeed, min = 0.8, max = 1, step = 0.01),                #
                                                       sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival",value = ParList()$S_surv, min = 0.9, max = 1, step = 0.01)
@@ -315,7 +315,7 @@ ParList <- reactive({
                                                             )
                                                           )
                                                         ),
-                                                        
+
                                                         ######################### Timing model 3 ##################################################################
 
                                                        conditionalPanel(condition = "input.timing_model == 3",
@@ -402,7 +402,7 @@ ParList <- reactive({
 
                                                         )
                                           )),
-                                      
+
                                       ########################## PPR model ################################################################################################################
 
                                           tabPanel("PPR model",
@@ -552,8 +552,19 @@ ParList <- reactive({
 
                                           #######  Survival ######################
                                           tabPanel("Survival",
-                                            checkboxInput(inputId = "tattering", label = "Wing tattering derived contribution to mortality", value = FALSE),
-                                            checkboxInput(inputId = "senescence", label = "Senescence derived contribution to mortality", value = FALSE)
+                                            checkboxInput(inputId = "tattering", label = "Wing-Tattering-Derived Contribution to Mortality", value = FALSE),
+                                              conditionalPanel(condition = "input.tattering",
+                                                h5("Select Parameters for Wing Tattering Beta Distribution:"),
+                                                sliderInput(inputId = "ttsz_a", label = "'a' Parameter of Beta Distribution:", value = ParList()$ttsz_a, min = 0, max = 10, step = 1),
+                                                sliderInput(inputId = "ttsz_b", label = "'b' Parameter of Beta Distribution:", value = ParList()$ttsz_b, min = 0, max = 100, step = 1),
+                                                sliderInput(inputId = "ttsz_p", label = "Probability of Wing Tattering:", value = ParList()$ttsz_p, min = 0, max = 1, step = 0.01)
+                                                ),
+                                            checkboxInput(inputId = "senescence", label = "Senescence-Derived Contribution to Mortality", value = FALSE),
+                                              conditionalPanel(condition = "input.senescence",
+                                                h5("Select Parameters for Senescence Distrbution:"),
+                                                sliderInput(inputId = "sns_a", label = "'a' Parameter:", value = ParList()$sns_a, min = 0, max = 10, step = 0.1),
+                                                sliderInput(inputId = "sns_b", label = "'b' Parameter:", value = ParList()$sns_b, min = 0, max = 100, step = 1)
+                                                )
                                             ),
 
                                           ####### Pathogen #######################
@@ -620,7 +631,7 @@ output$rf_plot <- renderPlot({
                                           ))
                           }
   })
-  
+
 
   ########################Demo Running and Plottting #########################################
 
@@ -640,21 +651,21 @@ output$rf_plot <- renderPlot({
   # })
 
 
-  
+
 
 
 ##################################     Observe Event   #######################################################
-  
+
   ############################ Pipeline ###############################################
-  
+
   observe({
     if (input$project == 'demo' && input$createDemoFolder > 0) {
       updateTabsetPanel(session, "nav", selected = "simulation")
     }
   })
-  
-  
-  
+
+
+
   observe({
     if (input$project == 'exist' && input$launchgo > 0) {
       session$sendCustomMessage('activeNavs', 'Parameters')
@@ -667,7 +678,7 @@ output$rf_plot <- renderPlot({
       updateTabsetPanel(session, "nav", selected = "initial")
     }
   })
-  
+
   observe({
     if (input$project == 'demo' && input$createDemoFolder > 0) {
       session$sendCustomMessage('activeNavs', 'Simulation')
@@ -680,18 +691,18 @@ output$rf_plot <- renderPlot({
       session$sendCustomMessage('activeNavs', 'Pathogen')
     }
   })
-  
+
   observeEvent(input$JumpToSim,{
     session$sendCustomMessage('activeNavs', 'Simulation')
     updateTabsetPanel(session, "nav", selected = "simulation")
   })
-  
+
   observeEvent(input$JumpToMore,{
     session$sendCustomMessage('activeNavs', 'Parameters')
     session$sendCustomMessage('activeNavs', 'Pathogen')
     updateTabsetPanel(session, "nav", selected = "initial")
   })
-  
+
   observeEvent(input$createDemoFolder, {
     if(!file.exists("demo")){
       dir.create("demo")
@@ -704,7 +715,7 @@ output$rf_plot <- renderPlot({
       session$sendCustomMessage(type='jsCode', list(value = js_string_2))
     }
   })
-  
+
   observeEvent(input$createNewFolder, {
     if(!file.exists(input$new_proj_name)){
       dir.create(input$new_proj_name)
@@ -717,7 +728,7 @@ output$rf_plot <- renderPlot({
       session$sendCustomMessage(type='jsCode', list(value = js_string_4))
     }
   })
-  
+
   observeEvent(input$save_inputs_bout, {
     js_string_5 <- 'alert("Parameters Saved!");'
     session$sendCustomMessage(type='jsCode', list(value = js_string_5))
@@ -728,13 +739,13 @@ output$rf_plot <- renderPlot({
     session$sendCustomMessage(type='jsCode', list(value = js_string_7))
     updateTabsetPanel(session, "nav", selected = "simulation")
   })
-  
+
   observeEvent(input$save_demo_land, {
     js_string_6 <- 'alert("Selected Demo Sites have been saved in the folder: demo!");'
     session$sendCustomMessage(type='jsCode', list(value = js_string_6))
   })
-  
-  
+
+
 
 
 
@@ -781,15 +792,15 @@ output$rf_plot <- renderPlot({
       updateTabsetPanel(session, "boutbar",selected = "S")
     }
   })
-  
+
   ##########################################################################################
-  
-  
-  
+
+
+
   observeEvent(input$done, {
     stopApp(brushedPoints(data, input$brush))
   })
-  
+
   observeEvent(input$createDemoFolder, {
     toggle(selector = "#nav li a[data-value=start]")
   })
@@ -799,5 +810,5 @@ output$rf_plot <- renderPlot({
   observeEvent(input$launchgo, {
     toggle(selector = "#nav li a[data-value=start]")
   })
-  
+
 }
