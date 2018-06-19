@@ -557,8 +557,15 @@ ParList <- reactive({
                                                 fluidRow(
                                                   column(4,
                                                     wellPanel(
-                                                      sliderInput(inputId = "ttsz_p", label = "Probability of Wing Damage Occurring:", value = ParList()$ttsz_p, min = 0, max = 1, step = 0.01),
+                                                      sliderInput(inputId = "ttsz_p", label = "Probability of Wing Damage Occurring:", value = ParList()$ttsz_p, min = 0, max = 1, step = 0.01)
+                                                    )
+                                                  )
+                                                ),
+                                                fluidRow(
+                                                  column(4,
+                                                    wellPanel(
                                                       h4("Select Parameters for How Much Damage Occurs:"),
+                                                      h6("This distribution determines how much damage will occur during a bout"),
                                                       sliderInput(inputId = "ttsz_mean", label = "Mean of Damage Distribution:", value = 0.5, min = 0, max = 1, step = 0.01),
                                                       sliderInput(inputId = "ttsz_var", label = "Variance of Damage Distribution:", value = 0.1, min = 0, max = 0.25, step = 0.01)
                                                       # sliderInput(inputId = "ttsz_a", label = "'a' Parameter of Beta Distribution:", value = ParList()$ttsz_a, min = 0, max = 10, step = 1),
@@ -567,6 +574,19 @@ ParList <- reactive({
                                                   ),
                                                   column(6,
                                                     plotOutput("sur_plot")
+                                                  )
+                                                ),
+                                                fluidRow(
+                                                  column(4,
+                                                    wellPanel(
+                                                      h4("Select Parameters for Damage-Induced Mortality:"),
+                                                      h6("This distribution determines how much excess mortality is added by the amount of damage sustained"),
+                                                      sliderInput(inputId = "ttr_a", label = "'a' Parameter:", value = ParList()$ttr_a, min = 0, max = 100, step = 1),
+                                                      sliderInput(inputId = "ttr_b", label = "'b' Parameter:", value = ParList()$ttr_b, min = 0, max = 100, step = 1)
+                                                    )
+                                                  ),
+                                                  column(6,
+                                                    plotOutput("ttr_damage_plot")
                                                   )
                                                 )
                                               ),
@@ -648,6 +668,17 @@ output$sns_plot <- renderPlot({
   x_values <- seq(0,30,length.out=100)
 
   plot(x_values, sns_func(x_values, sns_a, sns_b), type = "l", col = "blue", xlab = "Age (Days)", ylab = "Marginal Survival, per Bout", main = "Senescence")
+})
+
+output$ttr_damage_plot <- renderPlot({
+  ttr_a <- input$ttr_a
+  ttr_b <- input$ttr_b
+  ttr_func <- function(x, ttr_a, ttr_b) {
+    (2+exp(ttr_b))/(1+exp(ttr_b)) - exp(x*ttr_a)/(exp(ttr_b) + exp(x*ttr_a))
+  }
+  x_values <- seq(0,1,length.out=100)
+
+  plot(x_values, ttr_func(x_values, ttr_a, ttr_b), type = "l", col = "blue", xlab = "Physical Damage", ylab = "Marginal Survival, per Bout", main = "Physical Damage (Wing Tattering)")
 })
 
   #####################Simualtion output ########################################################
