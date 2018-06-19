@@ -554,17 +554,39 @@ ParList <- reactive({
                                           tabPanel("Survival",
                                             checkboxInput(inputId = "tattering", label = "Wing-Tattering-Derived Contribution to Mortality", value = FALSE),
                                               conditionalPanel(condition = "input.tattering",
-                                                h5("Select Parameters for Wing Tattering Beta Distribution:"),
-                                                sliderInput(inputId = "ttsz_a", label = "'a' Parameter of Beta Distribution:", value = ParList()$ttsz_a, min = 0, max = 10, step = 1),
-                                                sliderInput(inputId = "ttsz_b", label = "'b' Parameter of Beta Distribution:", value = ParList()$ttsz_b, min = 0, max = 100, step = 1),
-                                                sliderInput(inputId = "ttsz_p", label = "Probability of Wing Tattering:", value = ParList()$ttsz_p, min = 0, max = 1, step = 0.01)
-                                                ),
+                                                fluidRow(
+                                                  column(4,
+                                                    wellPanel(
+                                                      sliderInput(inputId = "ttsz_p", label = "Probability of Wing Damage Occurring:", value = ParList()$ttsz_p, min = 0, max = 1, step = 0.01),
+                                                      h4("Select Parameters for How Much Damage Occurs:"),
+                                                      sliderInput(inputId = "ttsz_mean", label = "Mean of Damage Distribution:", value = 0.5, min = 0, max = 1, step = 0.01),
+                                                      sliderInput(inputId = "ttsz_var", label = "Variance of Damage Distribution:", value = 0.1, min = 0, max = 0.25, step = 0.01)
+                                                      # sliderInput(inputId = "ttsz_a", label = "'a' Parameter of Beta Distribution:", value = ParList()$ttsz_a, min = 0, max = 10, step = 1),
+                                                      # sliderInput(inputId = "ttsz_b", label = "'b' Parameter of Beta Distribution:", value = ParList()$ttsz_b, min = 0, max = 100, step = 1)
+                                                    )
+                                                  ),
+                                                  column(6,
+                                                    plotOutput("sur_plot")
+                                                  )
+                                                )
+                                              ),
                                             checkboxInput(inputId = "senescence", label = "Senescence-Derived Contribution to Mortality", value = FALSE),
                                               conditionalPanel(condition = "input.senescence",
-                                                h5("Select Parameters for Senescence Distrbution:"),
-                                                sliderInput(inputId = "sns_a", label = "'a' Parameter:", value = ParList()$sns_a, min = 0, max = 10, step = 0.1),
-                                                sliderInput(inputId = "sns_b", label = "'b' Parameter:", value = ParList()$sns_b, min = 0, max = 100, step = 1)
+                                                fluidRow(
+                                                  column(4,
+                                                    wellPanel(
+                                                      h5("Select Parameters for Senescence Distrbution:"),
+                                                      sliderInput(inputId = "sns_a", label = "'a' Parameter:", value = 0.09, min = 0, max = 1, step = 0.01),
+                                                      sliderInput(inputId = "sns_b", label = "'b' Parameter:", value = 100, min = 0, max = 1000, step = 10)
+                                                    )
+                                                  ),
+                                                  column(6,
+                                                    plotOutput("sns_plot")
+                                                  )
                                                 )
+
+                                              )
+
                                             ),
 
                                           ####### Pathogen #######################
@@ -608,6 +630,25 @@ output$rf_plot <- renderPlot({
   }
 })
 
+#################### Survival Output ####################################################################
+output$sur_plot <- renderPlot({
+  beta_a <- input$ttsz_mean^2*((1-input$ttsz_mean)/input$ttsz_var^2 + 1/input$ttsz_mean)
+  beta_b <- beta_a*(1/input$ttsz_mean - 1)
+  x_values <- seq(0,1,length.out=100)
+
+  plot(x_values, stats::dbeta(x_values, shape1 = beta_a, shape2 = beta_b), type = "l", col = "blue", xlab = "Physical Damage", ylab = "Density", main = "Physical Damage (Wing Tattering)")
+})
+
+output$sns_plot <- renderPlot({
+  sns_a <- input$sns_a
+  sns_b <- input$sns_b
+  sns_func <- function(x, sns_a, sns_b) {
+    (2+sns_b)/(1+sns_b) - exp(x*sns_a)/(sns_b+exp(x*sns_a))
+  }
+  x_values <- seq(0,30,length.out=100)
+
+  plot(x_values, sns_func(x_values, sns_a, sns_b), type = "l", col = "blue", xlab = "Age (Days)", ylab = "Marginal Survival, per Bout", main = "Senescence")
+})
 
   #####################Simualtion output ########################################################
   output$sim_panel <- renderUI({
