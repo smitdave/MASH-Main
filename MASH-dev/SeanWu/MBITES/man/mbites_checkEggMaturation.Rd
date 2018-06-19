@@ -7,7 +7,7 @@
 mbites_checkEggMaturation()
 }
 \description{
-This function is called during \code{\link{mbites_checkRefeed}},
+This function is called during \code{\link{mbites_updateState}},
 it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
 if this condition is filled. If the eggs are not mature, go on another blood search.
 \itemize{

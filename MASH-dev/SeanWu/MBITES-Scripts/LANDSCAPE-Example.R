@@ -17,6 +17,7 @@ library(spatstat)
 library(truncdist)
 library(viridis)
 
+set.seed(42)
 
 ###############################################################################
 # Set up points
