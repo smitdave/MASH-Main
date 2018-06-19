@@ -386,7 +386,6 @@ mbites_attempt_B <- function(){
   } else {
     # reset flags
     private$boutFail = 0L
-    # private$bloodfed = FALSE
   }
 }
 
