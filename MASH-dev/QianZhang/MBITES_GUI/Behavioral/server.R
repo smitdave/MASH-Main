@@ -40,11 +40,6 @@ ParList <- reactive({
     }else{
       return(readRDS("default_demo/mbites_parameters_list.rds"))
     }
-    # ttsz_a <- ParList()$ttsz_a
-    # ttsz_b <- ParList()$ttsz_b
-    #
-    # ParList()$ttsz_mean <- ttsz_a/(ttsz_a + ttsz_b)
-    # ParList()$ttsz_var <- (ttsz_a * ttsz_b)/((ttsz_a + ttsz_b)^2 * (ttsz_a + ttsz_b + 1))
 })
 
   #################### Bouts Output #########################################################
@@ -223,26 +218,26 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Search Bout:"),
                                                               sliderInput(inputId = "avg_bs", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25), #1/rate_bs
-                                                              sliderInput(inputId = "tmin_bs", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "tmin_bs", label = "Minimum:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               ),
                                                             hr(),
                                                               wellPanel(
                                                                 helpText("Attempt Bout:"),
                                                               sliderInput(inputId = "avg_b", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "tmin_b", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "tmin_b", label = "Minimum:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )
                                                             ),
                                                           tabPanel("O",
                                                               wellPanel(
                                                                 helpText("Search Bout:"),
                                                               sliderInput(inputId = "avg_os", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "tmin_os", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "tmin_os", label = "Minimum:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               ),
                                                             hr(),
                                                               wellPanel(
                                                                 helpText("Attempt Bout:"),
                                                               sliderInput(inputId = "avg_o", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "tmin_o", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "tmin_o", label = "Minimum:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )
                                                             ),
                                                           tabPanel("M",
@@ -250,7 +245,7 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Search Bout:"),
                                                               sliderInput(inputId = "avg_ms", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "tmin_ms", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "tmin_ms", label = "Minimum:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "input.M_search == 0",
                                                               helpText("Mating Search Bout is turned off")
@@ -260,7 +255,7 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Attempt Bout:"),
                                                               sliderInput(inputId = "avg_m", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "tmin_m", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "tmin_m", label = "Minimum:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "input.M_attempt == 0",
                                                               helpText("Mating Attempt Bout is turned off")
@@ -271,7 +266,7 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Search Bout:"),
                                                               sliderInput(inputId = "avg_ss", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "tmin_ss", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "tmin_ss", label = "Minimum:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "input.S_search == 0",
                                                               helpText("Sugar Feeding Search Bout is turned off")
@@ -281,7 +276,7 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Attempt Bout:"),
                                                               sliderInput(inputId = "avg_s", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "tmin_s", label = "Minimum:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "tmin_s", label = "Minimum:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "input.S_attempt == 0",
                                                               helpText("Sugar Feeding Attempt Bout is turned off")
@@ -297,26 +292,26 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Search Bout:"),
                                                               sliderInput(inputId = "ivs_mean_bs", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "cv_bs", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "cv_bs", label = "Coefficient:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               ),
                                                             hr(),
                                                               wellPanel(
                                                                 helpText("Attempt Bout:"),
                                                               sliderInput(inputId = "ivs_mean_b", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "cv_b", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "cv_b", label = "Coefficient:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )
                                                             ),
                                                           tabPanel("O",
                                                               wellPanel(
                                                                 helpText("Search Bout:"),
                                                               sliderInput(inputId = "ivs_mean_os", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "cv_os", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "cv_os", label = "Coefficient:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               ),
                                                             hr(),
                                                               wellPanel(
                                                                 helpText("Attempt Bout:"),
                                                               sliderInput(inputId = "ivs_mean_o", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "cv_o", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "cv_o", label = "Coefficient:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )
                                                             ),
                                                           tabPanel("M",
@@ -324,7 +319,7 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Search Bout:"),
                                                               sliderInput(inputId = "ivs_mean_ms", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "cv_ms", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "cv_ms", label = "Coefficient:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "input.M_search == 0",
                                                               helpText("Mating Search Bout is turned off")
@@ -334,7 +329,7 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Attempt Bout:"),
                                                               sliderInput(inputId = "ivs_mean_m", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "cv_m", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "cv_m", label = "Coefficient:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "input.M_attempt == 0",
                                                               helpText("Mating Attempt Bout is turned off")
@@ -345,7 +340,7 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Search Bout:"),
                                                               sliderInput(inputId = "ivs_mean_ss", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "cv_ss", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "cv_ss", label = "Coefficient:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "input.S_search == 0",
                                                               helpText("Sugar Feeding Search Bout is turned off")
@@ -355,7 +350,7 @@ ParList <- reactive({
                                                               wellPanel(
                                                                 helpText("Attempt Bout:"),
                                                               sliderInput(inputId = "ivs_mean_s", label = "Average:", value = 12 , min = 0, max = 24, step = 0.25),
-                                                              sliderInput(inputId = "cv_s", label = "Coefficient:", value = 12 , min = 0, max = 24, step = 0.25)
+                                                              sliderInput(inputId = "cv_s", label = "Coefficient:", value = 3 , min = 0, max = 24, step = 0.25)
                                                               )),
                                                             conditionalPanel(condition = "input.S_attempt == 0",
                                                               helpText("Sugar Feeding Attempt Bout is turned off")
