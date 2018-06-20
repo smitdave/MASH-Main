@@ -600,52 +600,52 @@ ParList <- reactive({
 output$timing_model_plot_search <-renderPlot({
   if(input$timing_model == 2){
     if(input$timing_model_2 == "B"){
-      timing_model_exp_t = as.numeric(input$avg_bs) - as.numeric(input$tmin_bs)
-      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
-              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
-            xlab = "Exponentially-distributed Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_bs)+24)))
+      timing_model_exp_ts = as.numeric(input$avg_bs) - as.numeric(input$tmin_bs)
+      curve(dexp(x, rate = 1/timing_model_exp_ts, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_ts, log = FALSE)),
+            xlab = "Exponentially-distributed Blood Feeding Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_bs)+24)))
     } else if(input$timing_model_2 == "O"){
-      timing_model_exp_t = as.numeric(input$avg_os) - as.numeric(input$tmin_os)
-      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
-              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
-            xlab = "Exponentially-distributed Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_os)+24)))
+      timing_model_exp_ts = as.numeric(input$avg_os) - as.numeric(input$tmin_os)
+      curve(dexp(x, rate = 1/timing_model_exp_ts, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_ts, log = FALSE)),
+            xlab = "Exponentially-distributed Oviposition Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_os)+24)))
     } else if(input$timing_model_2 == "M" && input$M_search){
-      timing_model_exp_t = as.numeric(input$avg_ms) - as.numeric(input$tmin_ms)
-      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
-              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
-            xlab = "Exponentially-distributed Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_ms)+24)))
+      timing_model_exp_ts = as.numeric(input$avg_ms) - as.numeric(input$tmin_ms)
+      curve(dexp(x, rate = 1/timing_model_exp_ts, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_ts, log = FALSE)),
+            xlab = "Exponentially-distributed Mating Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_ms)+24)))
     } else if(input$timing_model_2 == "S" && input$S_search){
-      timing_model_exp_t = as.numeric(input$avg_ss) - as.numeric(input$tmin_ss)
-      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
-              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
-            xlab = "Exponentially-distributed Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_ss)+24)))
+      timing_model_exp_ts = as.numeric(input$avg_ss) - as.numeric(input$tmin_ss)
+      curve(dexp(x, rate = 1/timing_model_exp_ts, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_ts, log = FALSE)),
+            xlab = "Exponentially-distributed Sugar Feeding Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_ss)+24)))
     }
 
   }else if(input$timing_model == 3){
     if(input$timing_model_3 == "B"){
-      timing_model_gamma_shape = as.numeric(input$cv_bs)
-      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_bs)
-      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
-              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
-            xlab = "Gamma-distributed Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_bs +24)))
+      timing_model_gamma_shape_s = as.numeric(input$cv_bs)
+      timing_model_gamma_rate_s = 1/as.numeric(input$ivs_mean_bs)
+      curve(dgamma(x, shape = timing_model_gamma_shape_s ,rate = timing_model_gamma_rate_s, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape_s ,rate = timing_model_gamma_rate_s, log = FALSE)),
+            xlab = "Gamma-distributed Blood Feeding Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_bs +24)))
     }else if(input$timing_model_3 == "O"){
-      timing_model_gamma_shape = as.numeric(input$cv_os)
-      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_os)
-      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
-              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
-            xlab = "Gamma-distributed Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_os +24)))
+      timing_model_gamma_shape_s = as.numeric(input$cv_os)
+      timing_model_gamma_rate_s = 1/as.numeric(input$ivs_mean_os)
+      curve(dgamma(x, shape = timing_model_gamma_shape_s ,rate = timing_model_gamma_rate_s, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape_s ,rate = timing_model_gamma_rate_s, log = FALSE)),
+            xlab = "Gamma-distributed Oviposition Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_os +24)))
     }else if(input$timing_model_3 == "M" && input$M_search){
-      timing_model_gamma_shape = as.numeric(input$cv_ms)
-      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_ms)
-      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
-              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
-            xlab = "Gamma-distributed Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_ms +24)))
+      timing_model_gamma_shape_s = as.numeric(input$cv_ms)
+      timing_model_gamma_rate_s = 1/as.numeric(input$ivs_mean_ms)
+      curve(dgamma(x, shape = timing_model_gamma_shape_s ,rate = timing_model_gamma_rate_s, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape_s ,rate = timing_model_gamma_rate_s, log = FALSE)),
+            xlab = "Gamma-distributed Mating Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_ms +24)))
     }else if(input$timing_model_3 == "S" && input$S_search){
-      timing_model_gamma_shape = as.numeric(input$cv_ss)
-      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_ss)
-      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
-              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
-            xlab = "Gamma-distributed Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_ss +24)))
+      timing_model_gamma_shape_s = as.numeric(input$cv_ss)
+      timing_model_gamma_rate_s = 1/as.numeric(input$ivs_mean_ss)
+      curve(dgamma(x, shape = timing_model_gamma_shape_s ,rate = timing_model_gamma_rate_s, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape_s ,rate = timing_model_gamma_rate_s, log = FALSE)),
+            xlab = "Gamma-distributed Sugar Feeding Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_ss +24)))
     }
 
   }
@@ -653,6 +653,61 @@ output$timing_model_plot_search <-renderPlot({
 })
 
 
+
+output$timing_model_plot_attempt <-renderPlot({
+  if(input$timing_model == 2){
+    if(input$timing_model_2 == "B"){
+      timing_model_exp_t = as.numeric(input$avg_b) - as.numeric(input$tmin_b)
+      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
+            xlab = "Exponentially-distributed Blood Feeding Attempting time (in hours)", ylab = " Normalized Density", col = "Red", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_b)+24)))
+    } else if(input$timing_model_2 == "O"){
+      timing_model_exp_t = as.numeric(input$avg_o) - as.numeric(input$tmin_o)
+      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
+            xlab = "Exponentially-distributed Oviposition Attempting time (in hours)", ylab = " Normalized Density", col = "Red", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_o)+24)))
+    } else if(input$timing_model_2 == "M" && input$M_search){
+      timing_model_exp_t = as.numeric(input$avg_m) - as.numeric(input$tmin_m)
+      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
+            xlab = "Exponentially-distributed Mating Attempting time (in hours)", ylab = " Normalized Density", col = "Red", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_m)+24)))
+    } else if(input$timing_model_2 == "S" && input$S_search){
+      timing_model_exp_t = as.numeric(input$avg_s) - as.numeric(input$tmin_s)
+      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
+            xlab = "Exponentially-distributed Sugar Feeding Attempting time (in hours)", ylab = " Normalized Density", col = "Red", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_s)+24)))
+    }
+
+  }else if(input$timing_model == 3){
+    if(input$timing_model_3 == "B"){
+      timing_model_gamma_shape = as.numeric(input$cv_b)
+      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_b)
+      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
+            xlab = "Gamma-distributed Blood Feeding Attempting time", ylab = " Normalized Density", col = "Purple", lwd = 1.5, xlim = c(0,(input$ivs_mean_b +24)))
+    }else if(input$timing_model_3 == "O"){
+      timing_model_gamma_shape = as.numeric(input$cv_o)
+      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_o)
+      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
+            xlab = "Gamma-distributed Oviposition Attempting time", ylab = " Normalized Density", col = "Purple", lwd = 1.5, xlim = c(0,(input$ivs_mean_o +24)))
+    }else if(input$timing_model_3 == "M" && input$M_search){
+      timing_model_gamma_shape = as.numeric(input$cv_m)
+      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_m)
+      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
+            xlab = "Gamma-distributed Mating Attempting time", ylab = " Normalized Density", col = "Purple", lwd = 1.5, xlim = c(0,(input$ivs_mean_m +24)))
+    }else if(input$timing_model_3 == "S" && input$S_search){
+      timing_model_gamma_shape = as.numeric(input$cv_s)
+      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_s)
+      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
+            xlab = "Gamma-distributed Sugar Feeding Attempting time", ylab = " Normalized Density", col = "Purple", lwd = 1.5, xlim = c(0,(input$ivs_mean_s +24)))
+    }
+
+  }
+
+})
 
 
 ####################### Blood Meal Output ###############################################################
