@@ -40,6 +40,11 @@ ParList <- reactive({
     }else{
       return(readRDS("default_demo/mbites_parameters_list.rds"))
     }
+    # ttsz_a <- ParList()$ttsz_a
+    # ttsz_b <- ParList()$ttsz_b
+    #
+    # ParList()$ttsz_mean <- ttsz_a/(ttsz_a + ttsz_b)
+    # ParList()$ttsz_var <- (ttsz_a * ttsz_b)/((ttsz_a + ttsz_b)^2 * (ttsz_a + ttsz_b + 1))
 })
 
 
@@ -566,14 +571,14 @@ ParList <- reactive({
                                                     wellPanel(
                                                       h4("Select Parameters for How Much Damage Occurs:"),
                                                       h6("This distribution determines how much damage will occur during a bout"),
-                                                      sliderInput(inputId = "ttsz_mean", label = "Mean of Damage Distribution:", value = 0.5, min = 0, max = 1, step = 0.01),
-                                                      sliderInput(inputId = "ttsz_var", label = "Variance of Damage Distribution:", value = 0.1, min = 0, max = 0.25, step = 0.01)
+                                                      sliderInput(inputId = "ttsz_mean", label = "Mean of Damage Distribution:", value = ParList()$ttsz_a/(ParList()$ttsz_a + ParList()$ttsz_b), min = 0, max = 1, step = 0.01),
+                                                      sliderInput(inputId = "ttsz_var", label = "Variance of Damage Distribution:", value = (ParList()$ttsz_a * ParList()$ttsz_b)/((ParList()$ttsz_a + ParList()$ttsz_b)^2 * (ParList()$ttsz_a + ParList()$ttsz_b + 1)), min = 0, max = 0.25, step = 0.01)
                                                       # sliderInput(inputId = "ttsz_a", label = "'a' Parameter of Beta Distribution:", value = ParList()$ttsz_a, min = 0, max = 10, step = 1),
                                                       # sliderInput(inputId = "ttsz_b", label = "'b' Parameter of Beta Distribution:", value = ParList()$ttsz_b, min = 0, max = 100, step = 1)
                                                     )
                                                   ),
                                                   column(6,
-                                                    plotOutput("sur_plot")
+                                                    plotOutput("ttr_density_plot")
                                                   )
                                                 ),
                                                 fluidRow(
@@ -596,8 +601,8 @@ ParList <- reactive({
                                                   column(4,
                                                     wellPanel(
                                                       h5("Select Parameters for Senescence Distrbution:"),
-                                                      sliderInput(inputId = "sns_a", label = "'a' Parameter:", value = 0.09, min = 0, max = 1, step = 0.01),
-                                                      sliderInput(inputId = "sns_b", label = "'b' Parameter:", value = 100, min = 0, max = 1000, step = 10)
+                                                      sliderInput(inputId = "sns_a", label = "'a' Parameter:", value = ParList()$sns_a, min = 0, max = 1, step = 0.01),
+                                                      sliderInput(inputId = "sns_b", label = "'b' Parameter:", value = ParList()$sns_b, min = 0, max = 1000, step = 10)
                                                     )
                                                   ),
                                                   column(6,
@@ -651,7 +656,7 @@ output$rf_plot <- renderPlot({
 })
 
 #################### Survival Output ####################################################################
-output$sur_plot <- renderPlot({
+output$ttr_density_plot <- renderPlot({
   beta_a <- input$ttsz_mean^2*((1-input$ttsz_mean)/input$ttsz_var^2 + 1/input$ttsz_mean)
   beta_b <- beta_a*(1/input$ttsz_mean - 1)
   x_values <- seq(0,1,length.out=100)
