@@ -360,7 +360,7 @@ ParList <- reactive({
 
                                                         )
                                           ),
-                                          column(6,
+                                          column(7,
                                             br(),
                                             br(),
                                             br(),
@@ -438,7 +438,7 @@ ParList <- reactive({
                                                   sliderInput(inputId = "bm_v", label = "Sample size of blood meal size:", value = (ParList()$bm_a + ParList()$bm_b), min = 0, max = 20, step = 0.5) #bm_b = (1-u)v
                                                   )
                                                 ),
-                                              column(8,
+                                              column(7,
                                                 plotOutput("bm_plot")
                                                 )
                                             ),
@@ -452,7 +452,7 @@ ParList <- reactive({
                                                     )
                                                   )
                                                 ),
-                                              column(8,
+                                              column(7,
                                                 plotOutput("of_plot")
                                                 )
                                             )),
@@ -490,7 +490,7 @@ ParList <- reactive({
                                                   sliderInput(inputId = "maxBatch", label = "Maximum possible size of an egg batch", value = ParList()$maxBatch, min = 0, max = 100, step = 1)
                                                   )
                                                 )),
-                                            column(8,
+                                            column(7,
                                               plotOutput("savespace"),
                                               plotOutput("rf_plot"))
                                             ),
@@ -544,7 +544,7 @@ ParList <- reactive({
                                                       # sliderInput(inputId = "ttsz_b", label = "'b' Parameter of Beta Distribution:", value = ParList()$ttsz_b, min = 0, max = 100, step = 1)
                                                     )
                                                   ),
-                                                  column(6,
+                                                  column(7,
                                                     plotOutput("ttr_density_plot")
                                                   )
                                                 ),
@@ -557,7 +557,7 @@ ParList <- reactive({
                                                       sliderInput(inputId = "ttr_b", label = "'b' Parameter:", value = ParList()$ttr_b, min = 0, max = 100, step = 1)
                                                     )
                                                   ),
-                                                  column(6,
+                                                  column(7,
                                                     plotOutput("ttr_damage_plot")
                                                   )
                                                 )
@@ -572,7 +572,7 @@ ParList <- reactive({
                                                       sliderInput(inputId = "sns_b", label = "'b' Parameter:", value = ParList()$sns_b, min = 0, max = 1000, step = 10)
                                                     )
                                                   ),
-                                                  column(6,
+                                                  column(7,
                                                     plotOutput("sns_plot")
                                                   )
                                                 )
