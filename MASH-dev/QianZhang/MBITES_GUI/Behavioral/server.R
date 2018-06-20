@@ -59,9 +59,7 @@ ParList <- reactive({
                                           wellPanel(
                                             sliderInput(inputId = "B_succeed", label ="Probability of Success for Blood Feeding Attempt", value = ParList()$B_succeed, min = 0.8, max = 1, step = 0.01),                #
                                             sliderInput(inputId = "B_surv", label ="Baseline Probability of Survival for Blood Feeding Attempt",value = ParList()$B_surv, min = 0.9, max = 1, step = 0.01)
-                                            ),
-                                          wellPanel(
-                                            helpText("Blood Feeding is turned off"))
+                                            )
                                       )
                                       ),
                                     tabPanel("O",
@@ -77,9 +75,7 @@ ParList <- reactive({
                                           wellPanel(
                                             sliderInput(inputId = "O_succeed", label ="Probability of Success for Oviposition Attempt", value = ParList()$O_succeed, min = 0.8, max = 1, step = 0.01),                #
                                             sliderInput(inputId = "O_surv", label ="Baseline Probability of Survival for Oviposition Attempt",value = ParList()$O_surv, min = 0.9, max = 1, step = 0.01)
-                                          ),
-                                          wellPanel(
-                                            helpText("Oviposition is turned off"))
+                                          )
                                         )
                                       ),
                                     tabPanel("M",
