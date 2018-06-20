@@ -106,6 +106,7 @@ MASH-dev/HectorSanchez/VectorControl/Debug/
 #*.pdf
 #*.doc
 #*.docx
+*.png
 
 ######################################
 # User-specific files
