@@ -410,11 +410,15 @@ ParList <- reactive({
                                             )),
                                           tabPanel("Mating",
                                             column(4,
-                                                checkboxInput(inputId = "mating", label = "Mating", value = 0),
-                                                conditionalPanel(condition = "input.mating == 1",
+                                                conditionalPanel(condition = "input.M_attempt == 1 || input.M_search == 1",
                                                   wellPanel(
                                                   sliderInput(inputId = "tSwarm", label = "Time of day of mating swarm formation (eg; noon is 12/24):", value = ParList()$tSwarm, min = 0, max = 1, step = 1/24, round = -3)
-                                                  ))
+                                                  )),
+                                                conditionalPanel(condition = "!(input.M_attempt == 1 || input.M_search == 1)",
+                                                  wellPanel(
+                                                    helpText("Mating bout is turned off.")
+                                                    )
+                                                  )
                                                 ))
                                           )),
                                           ######## Blood Meal #####################
