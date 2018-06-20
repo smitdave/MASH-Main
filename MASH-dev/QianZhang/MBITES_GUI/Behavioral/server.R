@@ -362,7 +362,17 @@ ParList <- reactive({
                                                           )
 
                                                         )
-                                          )),
+                                          ),
+                                          column(6,
+                                            br(),
+                                            br(),
+                                            br(),
+                                            br(),
+                                            br(),
+                                            plotOutput("timing_model_plot_search"),
+                                            hr(),
+                                            plotOutput("timing_model_plot_attempt")
+                                            )),
                                       
                                       ########################## PPR model ################################################################################################################
 
@@ -535,7 +545,65 @@ ParList <- reactive({
 ####################### Plot Output #####################################################################
 
 
-####################### Parameters output ###############################################################
+####################### Timing Model output ###############################################################
+
+output$timing_model_plot_search <-renderPlot({
+  if(input$timing_model == 2){
+    if(input$timing_model_2 == "B"){
+      timing_model_exp_t = as.numeric(input$avg_bs) - as.numeric(input$tmin_bs)
+      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
+            xlab = "Exponentially-distributed Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_bs)+24)))
+    } else if(input$timing_model_2 == "O"){
+      timing_model_exp_t = as.numeric(input$avg_os) - as.numeric(input$tmin_os)
+      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
+            xlab = "Exponentially-distributed Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_os)+24)))
+    } else if(input$timing_model_2 == "M" && input$M_search){
+      timing_model_exp_t = as.numeric(input$avg_ms) - as.numeric(input$tmin_ms)
+      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
+            xlab = "Exponentially-distributed Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_ms)+24)))
+    } else if(input$timing_model_2 == "S" && input$S_search){
+      timing_model_exp_t = as.numeric(input$avg_ss) - as.numeric(input$tmin_ss)
+      curve(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)/
+              max(dexp(x, rate = 1/timing_model_exp_t, log = FALSE)),
+            xlab = "Exponentially-distributed Searching time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(as.numeric(input$tmin_ss)+24)))
+    }
+
+  }else if(input$timing_model == 3){
+    if(input$timing_model_3 == "B"){
+      timing_model_gamma_shape = as.numeric(input$cv_bs)
+      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_bs)
+      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
+            xlab = "Gamma-distributed Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_bs +24)))
+    }else if(input$timing_model_3 == "O"){
+      timing_model_gamma_shape = as.numeric(input$cv_os)
+      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_os)
+      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
+            xlab = "Gamma-distributed Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_os +24)))
+    }else if(input$timing_model_3 == "M" && input$M_search){
+      timing_model_gamma_shape = as.numeric(input$cv_ms)
+      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_ms)
+      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
+            xlab = "Gamma-distributed Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_ms +24)))
+    }else if(input$timing_model_3 == "S" && input$S_search){
+      timing_model_gamma_shape = as.numeric(input$cv_ss)
+      timing_model_gamma_rate = 1/as.numeric(input$ivs_mean_ss)
+      curve(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)/
+              max(dgamma(x, shape = timing_model_gamma_shape ,rate = timing_model_gamma_rate, log = FALSE)),
+            xlab = "Gamma-distributed Searching time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(input$ivs_mean_ss +24)))
+    }
+
+  }
+
+})
+
+
+
 
 ####################### Blood Meal Output ###############################################################
 output$bm_plot <- renderPlot({
