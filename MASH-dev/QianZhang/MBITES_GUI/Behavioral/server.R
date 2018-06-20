@@ -6,7 +6,7 @@
 #     /_/  /_/     /_____/___/ /_/ /_____//____/
 #
 #     SERVER for MBITES GUI: Behavioral Options
-#     MBITES Team 
+#     MBITES Team
 #     JUN 2018
 #
 ###############################################################################
@@ -40,6 +40,11 @@ ParList <- reactive({
     }else{
       return(readRDS("default_demo/mbites_parameters_list.rds"))
     }
+    # ttsz_a <- ParList()$ttsz_a
+    # ttsz_b <- ParList()$ttsz_b
+    #
+    # ParList()$ttsz_mean <- ttsz_a/(ttsz_a + ttsz_b)
+    # ParList()$ttsz_var <- (ttsz_a * ttsz_b)/((ttsz_a + ttsz_b)^2 * (ttsz_a + ttsz_b + 1))
 })
 
   #################### Bouts Output #########################################################
@@ -138,7 +143,6 @@ ParList <- reactive({
                             fluidPage(
                              helpText("Please set up more parameters here:"),
                              navlistPanel(widths = c(2,10),
-                                        
                                           ######### Timing #######################
                                           tabPanel("Timing",
                                             tabsetPanel(
@@ -285,8 +289,6 @@ ParList <- reactive({
                                                             )
                                                           )
                                                         ),
-                                                        
-                                                        ######################## Timing model 3 ##################################################################
 
                                                        conditionalPanel(condition = "input.timing_model == 3",
                                                         helpText("Define 'the average waiting time' and 'Coefficient of variation between mean and variance of waiting time':"),
@@ -373,7 +375,7 @@ ParList <- reactive({
                                             hr(),
                                             plotOutput("timing_model_plot_attempt")
                                             )),
-                                      
+                                     
                                       ########################## PPR model ################################################################################################################
 
                                           tabPanel("PPR model",
@@ -527,8 +529,61 @@ ParList <- reactive({
 
                                           #######  Survival ######################
                                           tabPanel("Survival",
-                                            checkboxInput(inputId = "tattering", label = "Wing tattering derived contribution to mortality", value = FALSE),
-                                            checkboxInput(inputId = "senescence", label = "Senescence derived contribution to mortality", value = FALSE)
+                                            checkboxInput(inputId = "tattering", label = "Wing-Tattering-Derived Contribution to Mortality", value = FALSE),
+                                              conditionalPanel(condition = "input.tattering",
+                                                fluidRow(
+                                                  column(4,
+                                                    wellPanel(
+                                                      sliderInput(inputId = "ttsz_p", label = "Probability of Wing Damage Occurring:", value = ParList()$ttsz_p, min = 0, max = 1, step = 0.01)
+                                                    )
+                                                  )
+                                                ),
+                                                fluidRow(
+                                                  column(4,
+                                                    wellPanel(
+                                                      h4("Select Parameters for How Much Damage Occurs:"),
+                                                      h6("This distribution determines how much damage will occur during a bout"),
+                                                      sliderInput(inputId = "ttsz_mean", label = "Mean of Damage Distribution:", value = ParList()$ttsz_a/(ParList()$ttsz_a + ParList()$ttsz_b), min = 0, max = 1, step = 0.01),
+                                                      sliderInput(inputId = "ttsz_var", label = "Variance of Damage Distribution:", value = (ParList()$ttsz_a * ParList()$ttsz_b)/((ParList()$ttsz_a + ParList()$ttsz_b)^2 * (ParList()$ttsz_a + ParList()$ttsz_b + 1)), min = 0, max = 0.25, step = 0.01)
+                                                      # sliderInput(inputId = "ttsz_a", label = "'a' Parameter of Beta Distribution:", value = ParList()$ttsz_a, min = 0, max = 10, step = 1),
+                                                      # sliderInput(inputId = "ttsz_b", label = "'b' Parameter of Beta Distribution:", value = ParList()$ttsz_b, min = 0, max = 100, step = 1)
+                                                    )
+                                                  ),
+                                                  column(6,
+                                                    plotOutput("ttr_density_plot")
+                                                  )
+                                                ),
+                                                fluidRow(
+                                                  column(4,
+                                                    wellPanel(
+                                                      h4("Select Parameters for Damage-Induced Mortality:"),
+                                                      h6("This distribution determines how much excess mortality is added by the amount of damage sustained"),
+                                                      sliderInput(inputId = "ttr_a", label = "'a' Parameter:", value = ParList()$ttr_a, min = 0, max = 100, step = 1),
+                                                      sliderInput(inputId = "ttr_b", label = "'b' Parameter:", value = ParList()$ttr_b, min = 0, max = 100, step = 1)
+                                                    )
+                                                  ),
+                                                  column(6,
+                                                    plotOutput("ttr_damage_plot")
+                                                  )
+                                                )
+                                              ),
+                                            checkboxInput(inputId = "senescence", label = "Senescence-Derived Contribution to Mortality", value = FALSE),
+                                              conditionalPanel(condition = "input.senescence",
+                                                fluidRow(
+                                                  column(4,
+                                                    wellPanel(
+                                                      h5("Select Parameters for Senescence Distrbution:"),
+                                                      sliderInput(inputId = "sns_a", label = "'a' Parameter:", value = ParList()$sns_a, min = 0, max = 1, step = 0.01),
+                                                      sliderInput(inputId = "sns_b", label = "'b' Parameter:", value = ParList()$sns_b, min = 0, max = 1000, step = 10)
+                                                    )
+                                                  ),
+                                                  column(6,
+                                                    plotOutput("sns_plot")
+                                                  )
+                                                )
+
+                                              )
+
                                             ),
 
                                           ####### Pathogen #######################
@@ -630,6 +685,36 @@ output$rf_plot <- renderPlot({
   }
 })
 
+#################### Survival Output ####################################################################
+output$ttr_density_plot <- renderPlot({
+  beta_a <- input$ttsz_mean^2*((1-input$ttsz_mean)/input$ttsz_var^2 + 1/input$ttsz_mean)
+  beta_b <- beta_a*(1/input$ttsz_mean - 1)
+  x_values <- seq(0,1,length.out=100)
+
+  plot(x_values, stats::dbeta(x_values, shape1 = beta_a, shape2 = beta_b), type = "l", col = "blue", xlab = "Physical Damage", ylab = "Density", main = "Physical Damage (Wing Tattering)")
+})
+
+output$sns_plot <- renderPlot({
+  sns_a <- input$sns_a
+  sns_b <- input$sns_b
+  sns_func <- function(x, sns_a, sns_b) {
+    (2+sns_b)/(1+sns_b) - exp(x*sns_a)/(sns_b+exp(x*sns_a))
+  }
+  x_values <- seq(0,30,length.out=100)
+
+  plot(x_values, sns_func(x_values, sns_a, sns_b), type = "l", col = "blue", xlab = "Age (Days)", ylab = "Marginal Survival, per Bout", main = "Senescence")
+})
+
+output$ttr_damage_plot <- renderPlot({
+  ttr_a <- input$ttr_a
+  ttr_b <- input$ttr_b
+  ttr_func <- function(x, ttr_a, ttr_b) {
+    (2+exp(ttr_b))/(1+exp(ttr_b)) - exp(x*ttr_a)/(exp(ttr_b) + exp(x*ttr_a))
+  }
+  x_values <- seq(0,1,length.out=100)
+
+  plot(x_values, ttr_func(x_values, ttr_a, ttr_b), type = "l", col = "blue", xlab = "Physical Damage", ylab = "Marginal Survival, per Bout", main = "Physical Damage (Wing Tattering)")
+})
 
   #####################Simualtion output ########################################################
   output$sim_panel <- renderUI({
@@ -653,7 +738,7 @@ output$rf_plot <- renderPlot({
                                           ))
                           }
   })
-  
+
 
   ########################Demo Running and Plottting #########################################
 
@@ -673,21 +758,21 @@ output$rf_plot <- renderPlot({
   # })
 
 
-  
+
 
 
 ##################################     Observe Event   #######################################################
-  
+
   ############################ Pipeline ###############################################
-  
+
   observe({
     if (input$project == 'demo' && input$createDemoFolder > 0) {
       updateTabsetPanel(session, "nav", selected = "simulation")
     }
   })
-  
-  
-  
+
+
+
   observe({
     if (input$project == 'exist' && input$launchgo > 0) {
       session$sendCustomMessage('activeNavs', 'Bouts')
@@ -701,7 +786,7 @@ output$rf_plot <- renderPlot({
       updateTabsetPanel(session, "nav", selected = "bouts")
     }
   })
-  
+
   observe({
     if (input$project == 'demo' && input$createDemoFolder > 0) {
       session$sendCustomMessage('activeNavs', 'Simulation')
@@ -715,19 +800,19 @@ output$rf_plot <- renderPlot({
       session$sendCustomMessage('activeNavs', 'Pathogen')
     }
   })
-  
+
   observeEvent(input$JumpToSim,{
     session$sendCustomMessage('activeNavs', 'Simulation')
     updateTabsetPanel(session, "nav", selected = "simulation")
   })
-  
+
   observeEvent(input$JumpToMore,{
     session$sendCustomMessage('activeNavs', 'Bouts')
     session$sendCustomMessage('activeNavs', 'Parameters')
     session$sendCustomMessage('activeNavs', 'Pathogen')
     updateTabsetPanel(session, "nav", selected = "bouts")
   })
-  
+
   observeEvent(input$createDemoFolder, {
     if(!file.exists("demo")){
       dir.create("demo")
@@ -740,7 +825,7 @@ output$rf_plot <- renderPlot({
       session$sendCustomMessage(type='jsCode', list(value = js_string_2))
     }
   })
-  
+
   observeEvent(input$createNewFolder, {
     if(!file.exists(input$new_proj_name)){
       dir.create(input$new_proj_name)
@@ -753,7 +838,7 @@ output$rf_plot <- renderPlot({
       session$sendCustomMessage(type='jsCode', list(value = js_string_4))
     }
   })
-  
+
   observeEvent(input$save_inputs_bout, {
     js_string_5 <- 'alert("Parameters Saved!");'
     session$sendCustomMessage(type='jsCode', list(value = js_string_5))
@@ -764,27 +849,26 @@ output$rf_plot <- renderPlot({
     session$sendCustomMessage(type='jsCode', list(value = js_string_7))
     updateTabsetPanel(session, "nav", selected = "simulation")
   })
-  
+
   observeEvent(input$save_demo_land, {
     js_string_6 <- 'alert("Selected Demo Sites have been saved in the folder: demo!");'
     session$sendCustomMessage(type='jsCode', list(value = js_string_6))
   })
-  
-  
+
+
 
 
 
   ##################### Observe Bouts ########################################################### need debug
-  
-  
+
   ##########################################################################################
-  
-  
-  
+
+
+
   observeEvent(input$done, {
     stopApp(brushedPoints(data, input$brush))
   })
-  
+
   observeEvent(input$createDemoFolder, {
     toggle(selector = "#nav li a[data-value=start]")
   })
@@ -794,5 +878,5 @@ output$rf_plot <- renderPlot({
   observeEvent(input$launchgo, {
     toggle(selector = "#nav li a[data-value=start]")
   })
-  
+
 }

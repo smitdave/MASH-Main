@@ -133,8 +133,8 @@ find_roots <- function(R_0_v, R_0_f,
 ###################################
 
 # set R values to cycle through:
-R_0_v_values <- seq(0, 10, 1)
-R_0_f_values <- seq(0, 10, 1)
+R_0_v_values <- seq(0, 10, 0.1)
+R_0_f_values <- seq(0, 10, 0.1)
 
 # create data table to store results:
 results <- data.table(R_0_v = rep(0, times = length(R_0_f_values) * length(R_0_v_values)),
