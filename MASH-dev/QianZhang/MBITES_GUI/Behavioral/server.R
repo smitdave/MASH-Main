@@ -483,7 +483,7 @@ ParList <- reactive({
                                                 wellPanel(
                                                 selectInput("eggsize_model", label = "Egg size Model", choice = list('Option 1' = 1, "Option 2" = 2),selected = 'Option 1'),
                                                 conditionalPanel(condition = "input.eggsize_model == 1",
-                                                  h5("sample Gaussian-distributed egg batch size"),
+                                                  h5("Gaussian-distributed egg batch size"),
                                                   sliderInput(inputId = "bs_m", label = "Mean of Gaussian distribution:", value = ParList()$bs_m, min = 0, max = 50, step = 1),
                                                   sliderInput(inputId = "bs_sd", label = "Standard deviation of Gaussian distributed:", value = ParList()$bs_sd, min = 0, max = 50, step = 1)
                                                   ),
@@ -493,8 +493,9 @@ ParList <- reactive({
                                                   )
                                                 )),
                                             column(7,
-                                              plotOutput("savespace"),
-                                              plotOutput("rf_plot"))
+                                              plotOutput("oogenesis_model_1_plot"),
+                                              plotOutput("rf_plot"),
+                                              plotOutput("egg_size_model_1_plot"))
                                             ),
 
                                           ######## Energetics #####################
@@ -754,11 +755,27 @@ output$of_plot <- renderPlot({
 
 
 #################### Oogenesis Output ####################################################################
+output$oogenesis_model_1_plot <- renderPlot({
+  if(input$oogenesis_model == 1){
+    x = seq(0, 10, length = 1000)
+    y = dnorm(x, mean= input$emt_m, sd= input$emt_sd)
+    plot(x, y, type="l", lwd=1.5, col = "blue", xlab = "Gaussian-distributed Egg Maturation Time", ylab = " Probability", xlim = c(0, 10))
+  }
+})
+
 output$rf_plot <- renderPlot({
-  if(input$refeeding){
+  if(input$refeeding && input$oogenesis_model == 1){
     pReFeed <- function(x,rf_a,rf_b){1 - exp(rf_a*x)/(exp(rf_b)+ exp(rf_a*x))}
     x=seq(0,1,length.out=100)
     plot(x, pReFeed(x, input$rf_a, input$rf_b),type = "l", col ="blue", xlab= "Size of blood meal", ylab = "Probability to refeed", main = "Refeeding")
+  }
+})
+
+output$egg_size_model_1_plot <- renderPlot({
+  if(input$eggsize_model == 1){
+    x = seq(0, 10, length = 1000)
+    y = dnorm(x, mean= input$bs_m, sd= input$bs_sd)
+    plot(x, y, type="l", lwd=1.5, col = "blue", xlab = "Gaussian-distributed Egg Batch Size", ylab = " Probability", xlim = c(0, 50))
   }
 })
 
