@@ -500,23 +500,28 @@ ParList <- reactive({
 
                                           ######## Energetics #####################
                                           tabPanel("Energetics",
-                                            checkboxInput(inputId = "sugar", label = "Sugar feeding behavior", value = 1),
-                                            conditionalPanel(condition = "input.sugar",
+                                            conditionalPanel(condition = "input.S_attempt == 1",
                                               fluidRow(
                                                 column(4,
                                                   wellPanel(
                                                     sliderInput(inputId = "S_sa", label ="Shape Param a of Probability to queue Sugar bout", value = ParList()$S_sa, min = 0, max = 100, step = 1),
                                                     sliderInput(inputId = "S_sb", label ="Shape Param b of Probability to queue Sugar bout", value = ParList()$S_sb, min = 0, max = 100, step = 1),
-                                                    sliderInput(inputId = "S_w", label ="Shape Param a of Probability to queue Sugar bout", value = ParList()$S_sa, min = 0, max = 100, step = 1),
-                                                    sliderInput(inputId = "S_p", label ="Shape Param b of Probability to queue Sugar bout", value = ParList()$S_sb, min = 0, max = 100, step = 1),
+                                                    sliderInput(inputId = "S_w", label ="Shape Param w of Probability to queue Sugar bout", value = ParList()$S_w, min = 0, max = 100, step = 1),
+                                                    sliderInput(inputId = "S_p", label ="Shape Param p of Probability to queue Sugar bout", value = ParList()$S_p, min = 0, max = 100, step = 1)),
+                                                  wellPanel(
                                                     sliderInput(inputId = "energyPreG", label ="Pre-gonotrophic Energy Requirement", value = ParList()$energyPreG, min = 0, max = 100, step = 1),
                                                     sliderInput(inputId = "preGsugar", label ="Amount of Energy a Sugar Meal Contributes to Pre-gonotrophic Energy Requirement (%)", value = ParList()$preGsugar, min = 0, max = 100, step = 1),
                                                     sliderInput(inputId = "omega", label ="Omega", value = ParList()$omega, min = 0, max = 100, step = 1),
                                                     sliderInput(inputId = "energyFromBlood_b", label ="Half-maximum parameter for energy from blood", value = ParList()$energyFromBlood_b, min = 0, max = 1, step = 0.01)
 
                                                   )
-                                                  )
+                                                  ),
+                                                column(7,
+                                                  plotOutput("sugar_bout_plot"))
                                                 )
+                                              ),
+                                            conditionalPanel(condition = "input.S_attempt == 0",
+                                              helpText("Sugar Feeding Bout is turned off")
                                               )
                                             ),
 
@@ -778,6 +783,27 @@ output$egg_size_model_1_plot <- renderPlot({
     plot(x, y, type="l", lwd=1.5, col = "blue", xlab = "Gaussian-distributed Egg Batch Size", ylab = " Probability", xlim = c(0, 50))
   }
 })
+
+#################### Sugar Feeding/Energetics ###########################################################
+
+output$sugar_bout_plot <- renderPlot({
+  if(input$S_attempt){
+    pSugarBout <- function(x,omega,S_sa=input$S_sa,S_sb=input$S_sb,S_w=input$S_w,S_p=input$S_p){
+      exp(S_sa)/(S_sb*(1+(omega*S_w)^S_p)+exp(S_sa))-exp(S_sa*x)/(S_sb*(1+(omega*S_w)^S_p)+exp(S_sa*x))
+        }
+    x=seq(0,1,length.out=100)
+    plot(x, pSugarBout(x,0),type = "l", col ="blue", ylim = c(0,1), xlab= "Energy", ylab = "Probability to enter starved state", main = "Starvation")
+    lines(x, pSugarBout(x,1), col = "purple")
+  }
+
+
+
+})
+
+
+
+
+
 
 #################### Survival Output ####################################################################
 output$ttr_density_plot <- renderPlot({
