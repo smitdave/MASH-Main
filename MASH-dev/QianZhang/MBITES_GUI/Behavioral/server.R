@@ -90,13 +90,13 @@ ParList <- reactive({
                                             textInput("m_wts", "Landing Spot Weights:", value = paste(ParList()$m_wts, collapse = ",")))
                                         ),
                                         checkboxInput(inputId = "M_search", label = "Mating Search", value = 0),
-                                        conditionalPanel(condition = "input.M_search", 
+                                        conditionalPanel(condition = "input.M_search",
                                           wellPanel(
                                             sliderInput(inputId = "Ms_succeed", label ="Probability of Success for Mating Search", value = ParList()$Ms_succeed, min = 0.8, max = 1, step = 0.01),                #
                                             sliderInput(inputId = "Ms_surv", label ="Baseline Probability of Survival for Mating Search",value = ParList()$Ms_surv, min = 0.9, max = 1, step = 0.01)
                                             )),
                                         checkboxInput(inputId = "M_attempt", label = "Mating Attempt", value = 0),
-                                        conditionalPanel(condition = "input.M_attempt", 
+                                        conditionalPanel(condition = "input.M_attempt",
                                           wellPanel(
                                             sliderInput(inputId = "M_succeed", label ="Probability of Success for Mating Attempt", value = ParList()$M_succeed, min = 0.8, max = 1, step = 0.01),                #
                                             sliderInput(inputId = "M_surv", label ="Baseline Probability of Survival for Mating Attempt",value = ParList()$M_surv, min = 0.9, max = 1, step = 0.01)
@@ -114,13 +114,13 @@ ParList <- reactive({
                                             textInput("s_wts", "Landing Spot Weights:", value = paste(ParList()$s_wts, collapse = ",")))
                                         ),
                                         checkboxInput(inputId = "S_search", label = "Sugar Feeding Search", value = 0),
-                                        conditionalPanel(condition = "input.S_search", 
+                                        conditionalPanel(condition = "input.S_search",
                                           wellPanel(
                                             sliderInput(inputId = "Ss_succeed", label ="Probability of Success for Sugar Feeding Search", value = ParList()$Ss_succeed, min = 0.8, max = 1, step = 0.01),                #
                                             sliderInput(inputId = "Ss_surv", label ="Baseline Probability of Survival for Sugar Feeding Search",value = ParList()$Ss_surv, min = 0.9, max = 1, step = 0.01)
                                             )),
                                         checkboxInput(inputId = "S_attempt", label = "Sugar Feeding Attempt", value = 0),
-                                        conditionalPanel(condition = "input.S_attempt", 
+                                        conditionalPanel(condition = "input.S_attempt",
                                           wellPanel(
                                             sliderInput(inputId = "S_succeed", label ="Probability of Success for Sugar Feeding Attempt", value = ParList()$S_succeed, min = 0.8, max = 1, step = 0.01),                #
                                             sliderInput(inputId = "S_surv", label ="Baseline Probability of Survival for Sugar Feeding Attempt",value = ParList()$S_surv, min = 0.9, max = 1, step = 0.01)
@@ -370,7 +370,7 @@ ParList <- reactive({
                                             hr(),
                                             plotOutput("timing_model_plot_attempt")
                                             )),
-                                     
+
                                       ########################## PPR model ################################################################################################################
 
                                           tabPanel("PPR model",
@@ -387,7 +387,7 @@ ParList <- reactive({
                                                 conditionalPanel(condition = "input.ppr_model == 2",
                                                   wellPanel(
                                                     sliderInput(inputId = "inv_rate_ppr", label = "Average length of post-prandial resting bout:", value = 24 , min = 0, max = 72, step = 0.25), #1/rate_ppr
-                                                    sliderInput(inputId = "tmin_ppr", label = "Minimum time of post-prandial resting bout:", value = 24 , min = 0, max = 72, step = 0.25)
+                                                    sliderInput(inputId = "tmin_ppr", label = "Minimum time of post-prandial resting bout:", value = 12 , min = 0, max = 72, step = 0.25)
                                                     )
                                                   ),
 
@@ -398,7 +398,9 @@ ParList <- reactive({
                                                     )
                                                   )
 
-                                            )),
+                                            ),
+                                            column(7,
+                                              plotOutput("ppr_model_plot"))),
                                           tabPanel("Estivation model",
                                             column(4,
                                                 selectInput("estivation_model", label = "Estivation Model", choice = list('Off' = 1, "Probabilistic" = 2, "Hard cut-off" = 3),selected = 'Off'),
@@ -708,6 +710,31 @@ output$timing_model_plot_attempt <-renderPlot({
   }
 
 })
+
+####################### Timing Model output ###############################################################
+
+output$ppr_model_plot <- renderPlot({
+  if(input$ppr_model == 2){
+    ppr_model_avg = as.numeric(input$inv_rate_ppr)
+    ppr_model_min = as.numeric(input$tmin_ppr)
+    ppr_model_rate = ppr_model_avg - ppr_model_min
+
+    curve(dexp(x, rate = 1/ppr_model_rate, log = FALSE)/
+              max(dexp(x, rate = 1/ppr_model_rate, log = FALSE)),
+            xlab = "Exponentially-distributed PPR model time (in hours)", ylab = " Normalized Density", col = "Blue", lwd = 1.5, xlim = c(0,(ppr_model_rate+24)))
+  }else if(input$ppr_model == 3){
+    ppr_model_gamma_shape = as.numeric(input$cv_ppr)
+    ppr_model_gamma_rate = 1/as.numeric(input$inv_mean_ppr)
+    curve(dgamma(x, shape = ppr_model_gamma_shape ,rate = ppr_model_gamma_rate, log = FALSE)/
+              max(dgamma(x, shape = ppr_model_gamma_shape ,rate = ppr_model_gamma_rate, log = FALSE)),
+            xlab = "Gamma-distributed PPR model time", ylab = " Normalized Density", col = "Green", lwd = 1.5, xlim = c(0,(ppr_model_gamma_shape +24)))
+  }
+
+
+})
+
+
+
 
 
 ####################### Blood Meal Output ###############################################################
