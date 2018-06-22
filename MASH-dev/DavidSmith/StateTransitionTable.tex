@@ -1,0 +1,39 @@
+
+
+\begin{table}
+
+\begin{tabular}{|l|l|l|l|l|l|l|} \hline 
+
+{\bf State} & {\bf Blood Feeding}   & {\bf Starved} ($\pm$) & {\bf Refeed} ($+$)&  {\bf Gravid} ($\pm$) & {\bf Success} ($+$)& {\bf Failure} ($-$) \\ \hline \hline  
+%
+{\bf [F]}  & Search &  {\bf [S]} or {\bf [N]}$^*$ && {\bf [O]} or {\bf [L]}$^*$ & {\bf [B]}& {\bf [F]}\\ 
+%
+{\bf [B]}    & Attempt&  {\bf [S]} or {\bf [N]}$^*$ &{\bf [B]} or {\bf [F]}$^*$ &{\bf [O]} or {\bf [L]}$^*$ & {\bf [O]} or {\bf [L]}$^*$ &   {\bf [B]} or {\bf [F]}$^*$   \\ \hline \hline
+
+\end{tabular}
+
+\vspace{0.1in}
+
+\begin{tabular}{|l|l|l|l|l|} \hline 
+{\bf State} & {\bf Gravid}  &  {\bf Starved} ($\pm$) & {\bf Success} ($+$) & {\bf Failure} ($-$)\\ \hline \hline  
+{\bf [L]} & Search&{\bf [S]} or {\bf [N]}$^*$ &   {\bf [O]}& {\bf [L]}\\ 
+{\bf [O]} & Attempt &{\bf [S]} or {\bf [N]}$^*$&{\bf [B]} or {\bf [F]}$^*$ & {\bf [O]} or {\bf [L]}$^*$\\ \hline
+\hline 
+\end{tabular}
+
+\vspace{0.1in}
+
+\begin{tabular}{|c|c|l|l|l|} \hline 
+{\bf State} & {\bf Starved}  & {\bf Failure} ($-$) &  {\bf Gravid}$^\dag$ ($+$)& {\bf Success} ($+$) \\ \hline \hline  
+{\bf [N]} & Search & {\bf [N]}  & &{\bf [S]} \\ 
+{\bf [S]} & Attempt & {\bf [S]} or {\bf [N]}$^*$ & {\bf [O]} or {\bf [L]}$^*$ & {\bf [B]} or {\bf [F]}$^*$ \\ \hline \hline 
+\end{tabular}
+
+\vspace{0.1in}
+
+\caption{{\bf The behavioral states transitions} following each bout differ, depending on several considerations. The model implements a hierarchy of needs, so that some states supercede others, regardless of success or failure of the last bout (denoted $\pm$ in the columns above). In general, starvation takes precedence over other behavioral states, which induces a sugar feeding bout. Egg laying generally takes precedence over blood feeding, but refeeding is possible, even when a mosquito is gravid. Otherwise, the state transitions depend on whether the outcome of the last bout was a success (denoted $+$)  or failure (denoted $-$). In general, a new search will not occur unless the resources are absent, or if repeated failure or frustrated attempts to land trigger a new search (denoted $^*$). Death, which is a possible outcome of each bout, is not shown. 
+ }
+
+\label{fig:behavioralStates}
+\end{table} 
+
