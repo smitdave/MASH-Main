@@ -13,32 +13,60 @@
 
 #' MBITES: Oogenesis
 #'
+#' In MBITES, oogenesis (egg production) occurs during \code{\link{mbites_updateState}} if the mosquito
+#' is bloodfed. Related to oogenesis there are two other primary behaviors that must be selected by the user,
+#' namely, refeeding model choice and egg batch size model choice.
+#'
+#' @section Refeed Model Choice:
+#'
+#' Refeeding may occur if the mosquito is gravid yet requires more blood prior to oviposition. There are two models, plus a null model for turning off refeeding  behavior.
+#'
+#' @section Egg Batch Refeeding Model:
+#'
+#' In this model of refeeding (\code{\link{mbites_pReFeed_batch}}), refeeding probability is a function
+#' of the egg batch size, as a proportion of the maximum allowable batch size. This model is not compatible
+#' with the MBDETES approximation to MBITES.
+#'
+#' @section Blood Meal Refeeding Model:
+#'
+#' In this model of refeeding (\code{\link{mbites_pReFeed_bm}}), refeeding probability is a function
+#' of the proportion full the mosquito is (the blood meal size). This model is compatible
+#' with the MBDETES approximation to MBITES.
+#'
+#' @section Egg Batch Model Choice:
+#'
+#' There are two models of egg batch size.
+#'
+#' @section Gaussian-distributed Egg Batch Model:
+#'
+#' In this model of egg batch size (\code{\link{mbites_rBatchSizeNorm}}), the egg batch size is a
+#' normally distributed random variable.
+#'
+#' @section Blood Meal Dependent Egg Batch Model:
+#'
+#' In this model of egg batch size (\code{\link{mbites_rBatchSizeBms}}), the egg batch size is a
+#' function of the blood meal size.
+#'
 #' @section Oogenesis Model Choice:
 #'
-#' Oogenesis model should be selected in \code{\link{MBITES_Setup}} prior to creating any objects, note
-#' that if using the first model of oogenesis, then \code{\link{mbites_checkRefeed}} should be used
-#' as the refeeding model, if using the second model of oogenesis, refeeding behavior
-#' should be disabled by selecting \code{\link{mbites_checkRefeed_null}} as the refeed function.
-#' Oogenesis occurs during the blood meal, see \code{\link{MBITES-BloodMeal}}.
+#' Oogenesis model should be selected in \code{\link{MBITES_Setup}} prior to creating any objects.
+#' Oogenesis occurs during the post-prandial rest following a blood meal when the mosquito's state is updated, see \code{\link{mbites_updateState}}.
+#' Both models require the user to select a refeeding model and a egg batch size model choice
+#' (MBITES does not check if these selections are logically consistent, and care should be taken to choose appropriate combinations of models).
 #'
 #' @section Oogenesis Model 1 (Enter gravid state after egg maturation time has passed):
 #'
-#' In the first model (\code{\link{mbites_oogenesis1}}), egg batch size is proportional to blood
-#' meal size, the egg batch incubation period is equal to the
-#' post-prandial resting period, but the mosquito can refeed
-#' with some probability (depending on egg batch size) with some
-#' probability.
+#' In the first model (\code{\link{mbites_oogenesis1}}), the egg batch will be gravid after a period of maturation time
+#' has passed for the clutch of eggs. This can be a normally distributed amount of time (see \code{\link{mbites_rEggMaturationTimeNorm}})
+#' or occur instantaneously (see \code{\link{mbites_rEggMaturationTimeOff}}).
 #'
 #' @section Oogenesis Model 2 (Enter gravid state after egg provision is fulfilled):
 #'
-#' In the second model (\code{\link{mbites_oogenesis2}}), a batch of eggs (of some size) commits to
-#' development at the first bloodmeal after hatching or laying.
-#' The total blood required for maturation is proportional to the
-#' egg batch size. At the end of the post-prandial period after
-#' completing the blood requirement, the eggs are mature and the
-#' mosquito is gravid.
+#' In the second model (\code{\link{mbites_oogenesis2}}), a batch of eggs (of some size) requires a certain blood provision
+#' per egg in the batch. After this provision has been filled by blood feeding, the mosquito is gravid and will seek
+#' an aquatic habitat to oviposit.
 #'
-#'  * This method is bound to \code{Mosquito_Female$oogenesis}.
+#'  * This method is bound to \code{Mosquito_Female$Oogenesis}.
 #' @name MBITES-Oogenesis
 NULL
 #> NULL
@@ -50,7 +78,7 @@ NULL
 
 #' MBITES: Check Egg Maturation
 #'
-#' This function is called during \code{\link{mbites_checkRefeed}},
+#' This function is called during \code{\link{mbites_updateState}},
 #' it checks that the mosquito has passed the egg maturation time and only sets \code{gravid = TRUE}
 #' if this condition is filled. If the eggs are not mature, go on another blood search.
 #'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
@@ -183,8 +211,9 @@ mbites_oogenesis2 <- function(){
     # if the egg provision is fulfilled we can go ahead and get ready for oviposition
     if(private$eggP <= 0){
       private$eggT = 0
-      private$gravid = TRUE # now mosquito is gravid
-      private$state = "O"
+      # dont need to set these flags; gets checked at end of every bout in mbites_updateState
+      # private$gravid = TRUE # now mosquito is gravid
+      # private$state = "O"
       private$bmSize = max(0,private$bmSize - private$eggP)
     }
 

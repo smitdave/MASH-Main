@@ -31,24 +31,31 @@ for (i in seq(1, 460*459, 459)) {
                        mapping = aes(x=Distance, y=Probability),
                        direction="vh",
                        color = 'mediumblue',
-                       alpha = 0.2, size = 0.2) 
+                       alpha = 0.1, size = 0.2) 
 }
 #make everything pretty
 x = x +  scale_y_continuous(breaks = seq(0, 1, by=0.2), limits=c(0,1)) +
   ggtitle("PDF") +
   theme(plot.title = element_text(hjust = 0.5))
+
+#get median line
+dist.sorted = data.frame((apply(dist,1,sort)))
+dist_medians = apply(dist.sorted, 1, median)
+
+#sort probs based on distances
+B = as.matrix(kernel)
+A = as.matrix(dist)
+prob.sorted = as.data.frame((sapply(1:NROW(A), function(i) B[i,][order(A[i,])])))
+prob_medians = apply(prob.sorted, 1, median)
+
+#plot median
+x = x + geom_step(data = data.frame(x = dist_medians, y = prob_medians),
+                  mapping = aes(x=x, y=y),
+                  direction="vh",
+                  color = 'black',
+                  alpha = 0.9, size = 1) 
 x
 
-
-#trying to get median to work
-small = d[c(1:460), ]
-meds = data.frame(x = small$Distance)
-meds1 = meds[order(meds$x), ]
-k1 = kernel[order(meds$x), ]
-k = as.matrix(k1)
-medians = apply(k, 1, median)
-test = data.frame(Distance = meds1, median = medians)
-ggplot()+ geom_step(data=test, mapping = aes(x = Distance, y=median), direction = "vh")
 
 
 #CDF plot
@@ -79,5 +86,6 @@ x = x + scale_y_continuous(breaks = seq(0, 1, by=0.2), limits=c(0,1)) +
   ggtitle("CDF") + ylab("Probability")+
   theme(plot.title = element_text(hjust = 0.5))
 x
+
 
 

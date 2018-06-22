@@ -1,0 +1,117 @@
+---
+title: "WrongTurns"
+author: "David L Smith"
+date: "6/20/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+So what is the waiting time to $R$ starting from $F$?
+$$
+T_{F,R} \left(P_{F,F}+ P_{F,B} \right) = P_{F,F} T_{F,R} + P_{F,B} \left(T_F + \frac{P_{B,R} T_B + P_{B,B} T_{B,R} + P_{B,F} T_{F,R} }{P_{B,R} + P_{B,B}+ P_{B,F} } \right)
+$$
+
+Notice that the first two terms cancel, and then the constant $P_{F,B}$ cancels, leaving 
+$$T_{F,R} = T_F + \frac{P_{B,R} T_B + P_{B,B} T_{B,R} + P_{B,F} T_{F,R} }{P_{B,R} + P_{B,B}+ P_{B,F} }$$
+
+
+
+$$
+T_{F,R}\left(P_{B,R} + P_{B,B} \right) = T_F\left( P_{B,R}+ P_{B,B} + P_{B,F}  \right) + P_{B,R} T_B + P_{B,B} T_{B,R}
+$$
+
+$$
+T_{F,R} = \frac{T_F\left( P_{B,R} + P_{B,F} + P_{B,B} \right) + P_{B,R} T_B + P_{B,B} T_{B,R}}{P_{B,R} + P_{B,B}} 
+$$
+
+
+
+
+But hang on. Haven't we done this before? Shouldn't it be:
+$$T_{F,R} = T_F + \frac{P_{B,R} T_B + P_{B,B} T_{B,R} + P_{B,F} \Psi_{F,B} T_{F,R} }{P_{B,R} + P_{B,B}+ P_{B,F} }?$$ 
+```{r}
+T_FRa = function(PAR){with(PAR,{
+  tF + T_BR(PAR)
+})}
+
+T_FRa(PAR)
+```
+
+If we write:
+$$T_{F,R} = T_F + \frac{P_{B,R} T_B + P_{B,B} T_{B,R} + P_{B,F} P_{F,B} T_{F,R} \left(P_{F,B} + P_{F,F} \right)}{P_{B,R} + P_{B,B}+ P_{B,F} }$$ 
+
+where the extra terms describe the difference between $T_{F,R}$ conditioned on surviving vs. unconditioned on surviving after re-entering $F$. Let's do some algebra: 
+$$
+T_{F,R} \left(1- \frac{P_{B,F}  P_{F,B} \left(P_{F,F}+ P_{F,B} \right)}{P_{B,R} + P_{B,B}+ P_{B,F}}\right)= T_F + \frac{P_{B,R} T_B + P_{B,B} T_{B,R}}{P_{B,R} + P_{B,B}+ P_{B,F} }
+$$ 
+
+```{r}
+T_FRb = function(PAR){with(PAR,{
+  numer = tF + (P_BR*tB + P_BB*T_BR(PAR))/(P_BR+P_BB+P_BF)
+  denom = 1- P_BF*P_FB*(P_FF+P_FB)/(P_BR+P_BB+P_BF)
+  numer/denom
+})}
+
+T_FRb(PAR)
+```
+
+
+
+
+
+
+
+
+
+John's Formula: 
+
+```{r}
+T_FR1 = function(PAR){with(PAR,{
+(tF + tB)*(P_BR + P_BF)/P_BR 
+})}
+T_FR1(PAR)
+```
+
+John's Logic: 
+$$
+T_{F,R} = T_F + T_B \frac{P_{B,R}}{P_{B,R} + P_{B,F}} + \frac{P_{B,F}}{P_{B,R} + P_{B,F}} T_{F,R}
+$$
+$$
+T_{F,R}\left( P_{B,R} + P_{B,F}\right) = T_F \left( P_{B,R} + P_{B,F}\right)+ T_B P_{B,R}  + P_{B,F} T_{F,R}
+$$
+
+$$
+T_{F,R}  P_{B,R} = T_F \left( P_{B,R} + P_{B,F}\right)+ T_B P_{B,R}
+$$
+
+$$
+T_{F,R}  = T_F \left( 1+ \frac{P_{B,F}}{P_{B,R}} \right) + T_B
+$$
+```{r}
+T_FR2 = function(PAR){with(PAR,{
+tF*(1+ P_BF/P_BR) + tB
+})}
+T_FR2(PAR)
+```
+
+Modified John's Logic: 
+$$
+T_{F,R} = T_F +  \frac{P_{B,R}}{P_{B,R} + P_{B,B} + P_{B,F}} T_B +   \frac{P_{B,B}}{P_{B,R} + P_{B,B} + P_{B,F}} T_{B,R} + \frac{P_{B,F}}{P_{B,R} + P_{B,B} + P_{B,F}} T_{F,R}
+$$
+$$
+T_{F,R}\left( P_{B,R} + P_{B,F}\right) = T_F \left( P_{B,R} + P_{B,B} +  P_{B,F}\right)+ T_B P_{B,R}  + P_{B,B} T_{B,R}
+$$
+
+$$
+T_{F,R}= T_F\left(1+ \frac{ P_{B,B} }{ P_{B,R} + P_{B,F}} \right)+ \frac{T_B P_{B,R}  + P_{B,B} T_{B,R}}{ P_{B,R} + P_{B,F}}
+$$
+
+
+```{r}
+T_FR3 = function(PAR){with(PAR,{
+tF*(1+ P_BB/(P_BR+P_BF)) + (tB*P_BR + P_BB*T_BR(PAR))/(P_BR+P_BF) 
+})}
+T_FR2(PAR)
+```

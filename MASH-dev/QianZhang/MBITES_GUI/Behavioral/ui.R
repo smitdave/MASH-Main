@@ -31,6 +31,7 @@ THEME = "flatly"#themeSource="https://bootswatch.com/flatly/"
 ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                        tags$head(tags$script("
                                              window.onload = function() {
+                                            $('#nav a:contains(\"Bouts\")').parent().addClass('hide');
                                              $('#nav a:contains(\"Parameters\")').parent().addClass('hide');
                                              $('#nav a:contains(\"Simulation\")').parent().addClass('hide');
                                              $('#nav a:contains(\"Ecology\")').parent().addClass('hide');
@@ -93,6 +94,13 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                                         )
                                            )
                                   ),
+
+                                  #################################################################################
+                                  tabPanel(title = "Bouts", value = 'bouts',
+                                          useShinyjs(),
+                                          uiOutput("panel_bouts")
+                                  ),
+  
                                   
                                   #################################################################################
                                   tabPanel(title = "Parameters", value = 'initial',

@@ -1,5 +1,14 @@
 
+
 M = as.matrix(MT_PT_NP)
+
+Mmu = rowMeans(M,na.rm=T)
+
+plot(log10(Mmu*5*10^6),type="l",xlim=c(0,365))
+Mmx = which(Mmu == max(Mmu))
+abline(v = Mmx)
+
+plot(log10(Mmu),1:length(Mmu),type="l",ylim=c(0,365),ylab="Age of Infection (Days)",xlab="log10 Parasite Count")
 
 ## 4 pflome tent function parameters:
 duration = rep(0,333)
@@ -53,7 +62,7 @@ lines(x,dlnorm(x,muMLE,ssMLE))
 
 
 ## check for lognormality
-hist(log(peakTime),breaks=30) #### appears kinda normal? bit left-skewed
+hist(log(peakTime),breaks=30) #### appears kinda normal? bit skewed
 
 ## LN using MoM
 #muhat = -log(sum(peakTime^2))/2+2*log(sum(peakTime))-3/2*log(length(peakTime))
@@ -65,8 +74,8 @@ hist(log(peakTime),breaks=30) #### appears kinda normal? bit left-skewed
 
 #################### initial density ##################
 
-hist(log10(initial*5*10^6),breaks=20,freq=F)
-x = seq(0,4,.01)
+hist(log10(initial*5*10^6),breaks=50,freq=F,xlim=c(7,15))
+x = seq(0,4.5,.01)
 ## this is both MoM and MLE, but biased estimator
 lambda = 1/mean(log10(initial*5*10^6)-7.5)
 lines(x+7.5,dexp(x,lambda))
@@ -98,7 +107,7 @@ tent_test = function(){
     duration = rexp(1,1/103)
   }
   
-  x = seq(0,365,.01)
+  x = seq(0,365,1)
   tent = x
   for(i in 1:length(x)){
     if(x[i] <= peakTime){
@@ -113,6 +122,7 @@ tent_test = function(){
   abline(h=log10(50))
   abline(h=log10(5000),col="red")
 }
+
 
 tent_test()
 
