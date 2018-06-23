@@ -31,7 +31,7 @@ a_f = 0.88   # Human blood feeding rate in forest
 g_f = 0.1   # Per capita death rate of mosquitoes in forest
 H_f = 2000  # Human population (density?) in forest
 X_f = 0     # Number of infected forest-goers
-p = 0.1     # Proportion of time forest-goers spend in the forest
+p = 0.3     # Proportion of time forest-goers spend in the forest
 V_f = 500  # Vector population in forest
 Y_f = 0     # Number of infected vectors in forest
 Z_f = exp(-g_f*n)*Y_f # Number of infectious vectors in forest
@@ -46,7 +46,6 @@ V_v = 100   # Vector population in village
 Y_v = 0     # Number of infected vectors in village
 Z_v = exp(-g_v*n)*Y_v # Number of infectious vectors in village
 c <- 0.15
-p <- 0.3
 
 # set up function to calculate R values:
 calculate_R <- function(V, a, b, c, g, n, H, r) {
