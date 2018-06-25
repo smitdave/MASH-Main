@@ -4,7 +4,7 @@
 \alias{mbites_exit}
 \title{MBITES: Export History and Remove Self}
 \usage{
-mbites_exit()
+mbites_exit(endSim = FALSE)
 }
 \arguments{
 \item{pretty}{prettify JSON output}

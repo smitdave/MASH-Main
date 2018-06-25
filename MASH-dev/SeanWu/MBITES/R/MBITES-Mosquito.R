@@ -178,10 +178,14 @@ mbites_trackHistory <- function(){
 #'
 #' @param pretty prettify JSON output
 #'
-mbites_exit <- function(){
+mbites_exit <- function(endSim=FALSE){
   self$trackHistory()
   # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
-  private$stateHist[private$nEvent] = "D"
+  if(endSim){
+    private$stateHist[private$nEvent] = "E"
+  } else {
+    private$stateHist[private$nEvent] = "D"
+  }
   cat(jsonlite::toJSON(x = list(
           id = private$id,
           tile = private$tileID,
@@ -325,10 +329,14 @@ trackFeed_Mosquito_Female <- function(){
 }
 
 # need to overwrite default exit function
-mbites_exit_Mosquito_Female <- function(){
+mbites_exit_Mosquito_Female <- function(endSim=FALSE){
   self$trackHistory()
   # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
-  private$stateHist[private$nEvent] = "D"
+  if(endSim){
+    private$stateHist[private$nEvent] = "E"
+  } else {
+    private$stateHist[private$nEvent] = "D"
+  }
   cat(jsonlite::toJSON(x = list(
           # basic history
           id = private$id,
