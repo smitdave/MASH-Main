@@ -139,7 +139,7 @@ simulate_MBITES_Globals <- function(tMax,pretty=TRUE){
 
   # write out all agent histories and clear containers
   for(i in 1:length(private$tiles)){
-    private$tiles[[i]]$get_mosquitoes()$apply(tag="exit",pretty)
+    private$tiles[[i]]$get_mosquitoes()$apply(tag="exit",endSim=TRUE)
     private$tiles[[i]]$get_humans()$apply(tag="exit",pretty)
   }
 
