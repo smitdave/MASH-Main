@@ -31,7 +31,7 @@ a_f = 0.88   # Human blood feeding rate in forest
 g_f = 0.1   # Per capita death rate of mosquitoes in forest
 H_f = 2000  # Human population (density?) in forest
 X_f = 0     # Number of infected forest-goers
-p = 0.1     # Proportion of time forest-goers spend in the forest
+p = 0.3     # Proportion of time forest-goers spend in the forest
 V_f = 500  # Vector population in forest
 Y_f = 0     # Number of infected vectors in forest
 Z_f = exp(-g_f*n)*Y_f # Number of infectious vectors in forest
@@ -46,7 +46,6 @@ V_v = 100   # Vector population in village
 Y_v = 0     # Number of infected vectors in village
 Z_v = exp(-g_v*n)*Y_v # Number of infectious vectors in village
 c <- 0.15
-p <- 0.3
 
 # set up function to calculate R values:
 calculate_R <- function(V, a, b, c, g, n, H, r) {
@@ -86,7 +85,8 @@ model <- function(X, R_0_v, R_0_f, H_v, H_f, S_v, S_f, c_val, p_val) {
   chi_f = X[1] / H_f
   chi_v = ((1 - p_val) * X[1] + X[2]) / ((1 - p_val) * H_f + H_v)
   
-  equation_village <- (R_0_v * (1 - p_val) * (chi_v / (1 + S_v * c_val * chi_v))) * (H_v - X[2]) - X[2]
+  # equation_village <- (R_0_v * (1 - p_val) * (chi_v / (1 + S_v * c_val * chi_v))) * (H_v - X[2]) - X[2]
+  equation_village <- (R_0_v * (chi_v / (1 + S_v * c_val * chi_v))) * (H_v - X[2]) - X[2]
   
   equation_forest <- (R_0_v * (1 - p_val) * chi_v / (1 + S_v * c_val * chi_v) + R_0_f * p_val * chi_f / 
                         (1 + S_f * c_val * chi_f)) * (H_f - X[1]) - X[1]
@@ -133,8 +133,8 @@ find_roots <- function(R_0_v, R_0_f,
 ###################################
 
 # set R values to cycle through:
-R_0_v_values <- seq(0, 10, 0.1)
-R_0_f_values <- seq(0, 10, 0.1)
+R_0_v_values <- seq(0, 5, 0.1)
+R_0_f_values <- seq(0, 5, 0.1)
 
 # create data table to store results:
 results <- data.table(R_0_v = rep(0, times = length(R_0_f_values) * length(R_0_v_values)),
@@ -173,10 +173,21 @@ p <- plot_ly(x = results$R_0_v,
 
 p
 
-p2 <- plot_ly(x = results$R_0_v,
-              y = results$R_0_f,
-              z = results$chi_v,
+# results$thresh[which(results$chi_v < 0.001)] <- "no malaria"
+# results$thresh[which(results$chi_v >0.001)] <- "malaria!"
+
+results$thresh <- "malaria!"
+results$thresh[which(results$chi_v < 0.001)] <- "no malaria"
+results$thresh[which(results$R_0_v < 1 & results$R_0_f < 1)] <- "SAFE ZONE"
+
+p2 <- plot_ly(data = results,
+              x = ~R_0_v,
+              y = ~R_0_f,
+              z = ~chi_v,
+              color = ~thresh,
+              colors = c("red", "blue", "purple"),
               type = "scatter3d") %>%
+  add_markers() %>%
   layout(
     title = "Malaria Prevalence in the Village as a Function of R_0",
     scene = list(

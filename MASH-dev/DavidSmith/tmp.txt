@@ -1,0 +1,13 @@
+
+In MBITES, oogenesis (egg development) is called during
+mbites_updateState, if a mosquito is bloodfed. Two models for
+oogenesis have been developed. In the first model, called
+oogenesis1, each batch of eggs matures after some fixed time that
+coincides with the duration of the post-prandial resting period.
+In this model, the probability of refeeding is computed based
+either on the egg batch size or on the blood meal size.  
+In the second model, called oogenesis2, each batch of eggs must
+be provisioned by a pre-determined amount of blood; refeeding
+occurs until the blood resource requirement has been reached.  
+
+
