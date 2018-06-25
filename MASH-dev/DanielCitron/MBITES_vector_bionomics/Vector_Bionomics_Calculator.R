@@ -8,23 +8,23 @@
 # 1. Vector lifetime distribution
 # 2. Vector blood feeding interval distribution
 # 3. Vector blood feeding events per lifetime distribution
-# 4. Vectorial capacity distribution: 
+# 4. Vectorial capacity distribution:
 #     number of secondary bites that arise following from a single host on a single day
 #
 ###
 # Example function call:
 #
 # bionomics.data <- combine.bionomics.data(filename, EIP=2) # read JSON data into data.table format
-# 
+#
 # VC.distn <- vc.distribution.data(bionomics.data) # Calculate Vectorial Capacity
 # hist(VC.distn, breaks = c(0:(ceiling(max(VC.distn))+1))-.5)
-# 
+#
 ###
 
 require(data.table)
 require(jsonlite)
 
-### 
+###
 # preprocess.vector.data
 # A function for processing a single mosquito's events from JSON data,
 # to be passed on to vector.bionomics()
@@ -44,19 +44,22 @@ preprocess.vector.data <- function(row.number, mosquito.biting.data = mosquito.b
   event.times <- unlist(mos.dat.row$time)
   row.table <- data.table(
     mosID = unlist(mos.dat.row$id),
-    birth.time = event.times[1],
-    death.time = event.times[length(event.times)] # last behavior should always be "D" for death
-  )
-  blood.feeding <- data.table(timeFeed = unlist(mos.dat.row$timeFeed),
-                              siteFeed = unlist(mos.dat.row$siteFeed),
-                              #siteFeed = unlist(mos.dat.row$sites)[1:length(unlist(mos.dat.row$timeFeed))], # the kluge we were using before
-                              bloodHost = unlist(mos.dat.row$bloodHosts),
-                              probeAndFeed = unlist(mos.dat.row$probeAndFeed)
-  )
-  return(cbind(row.table,blood.feeding))
+      birth.time = event.times[1],
+      # Check to see whether the mosquito lived its full lifetime: Avoid truncation
+      death.time = if (unlist(mos.dat.row$behavior)[length(event.times)] == "D"){
+                       event.times[length(event.times)]
+                       } else { NA }
+    )
+    blood.feeding <- data.table(timeFeed = unlist(mos.dat.row$timeFeed),
+                                siteFeed = unlist(mos.dat.row$siteFeed),
+                                bloodHost = unlist(mos.dat.row$bloodHosts),
+                                probeAndFeed = unlist(mos.dat.row$probeAndFeed)
+    )
+    row.table <- cbind(row.table,blood.feeding)
+  return(row.table)
 }
 
-### 
+###
 # count.secondary.bites
 # A function for counting the number of secondary bites attributed to each primary bite
 ###
@@ -92,13 +95,13 @@ vector.bionomics <- function(mos.data, EIP = EIP){
   if (nBites > 1){
     feed.intv <- feeding.times[c(2:length(feeding.times))] - feeding.times[c(1:(length(feeding.times)-1))]
   } else {
-    feed.intv <- NA 
+    feed.intv <- NA
   }
   if (length(feed.intv) < nBites){
     feed.intv <- c(feed.intv, NA)
   }
   ## Host and location where bite occurred
-  
+
   ## VC calculation
   if (nBites > 0){
     secondary.bites <- sapply(X=1:nBites, FUN = count.secondary.bites, bite.times = feeding.times, EIP = EIP)
@@ -117,7 +120,7 @@ vector.bionomics <- function(mos.data, EIP = EIP){
   )
 }
 
-### 
+###
 # vector.bionomics.processor
 # Putting it all together: pipe the preprocessed output directly into the vector bionomics calculatr
 ###
@@ -169,7 +172,7 @@ combine.bionomics.data <- function(file.path.name, EIP = 11){
 
 
 
-### 
+###
 # lifetimes.distribution.data
 # Calculate histogram data of lifetimes
 # Can be used as an input on a histogram to plot and represent statistics
@@ -182,12 +185,13 @@ combine.bionomics.data <- function(file.path.name, EIP = 11){
 # hist(lifetimes.data, breaks = c(0:ceiling(max(lifetimes.data)))-.5) # plot a histogram
 ###
 lifetimes.distribution.data <- function(bionomics.data){
-  lifetimes.data <- bionomics.data[, .SD[1], by = "mosID"]$lifetime
+  # discount the mosquitoes that don't live their full life cycles during the simulation
+  lifetimes.data <- bionomics.data[!is.na(lifetime)][, .SD[1], by = "mosID"]$lifetime
   return(lifetimes.data)
 }
 
 
-### 
+###
 # feed.intervals.distribution.data
 # Calculate histogram data of blood feeding intervals
 # Can be used as an input on a histogram to plot and represent statistics
@@ -200,12 +204,12 @@ lifetimes.distribution.data <- function(bionomics.data){
 # hist(feedtimes.data, breaks = c(0:ceiling(max(feedtimes.distn)))-.5) # plot a histogram
 ###
 feed.intervals.distribution.data <- function(bionomics.data){
-  feedtimes.data <- bionomics.data[!is.na(feeding.intervals)]$feeding.intervals
+  feedtimes.data <- bionomics.data[!is.na(feeding.intervals) & !is.na(lifetime)]$feeding.intervals
   return(feedtimes.data)
 }
 
 
-### 
+###
 # biting.distribution.data
 # Calculate histogram data of bites per mosquito lifetime
 # Can be used as an input on a histogram to plot and represent statistics
@@ -219,17 +223,17 @@ feed.intervals.distribution.data <- function(bionomics.data){
 ###
 biting.distribution.data <- function(bionomics.data){
   # Count number of bites per mosquito:
-  numbites.data <- bionomics.data[!is.na(bite.times)][,c("mosID","bite.times")][, .N, by = "mosID"]
+  numbites.data <- bionomics.data[!is.na(bite.times) & !is.na(lifetime)][,c("mosID","bite.times")][, .N, by = "mosID"]
   # No bite is listed with NA, so we can add zero-bite mosquitoes as zeroes...
   numbites.data <- rbind(numbites.data, data.table(mosID = bionomics.data[is.na(bite.times)][,c("mosID")]$mosID, N = 0))$N
 }
 
 
-### 
+###
 # vc.distribution.data
 # Calculate histogram data for vectorial capcity,
 #   specifically the number of secondary bites arising from each primary biting event on each host
-#   NB: This does not require hosts to be infected or infectious, this is only counting the number 
+#   NB: This does not require hosts to be infected or infectious, this is only counting the number
 #       of pairs of events that could potentially lead to parasite transmission.
 #   NB: This can be extended to integrate over all hosts in a particular patch, or over all days,
 #       depending on which specific definition of VC one ascribes to.
@@ -244,14 +248,14 @@ biting.distribution.data <- function(bionomics.data){
 # hist(vc.data, breaks = c(0:ceiling(max(feedtimes.distn)))-.5) # plot a histogram
 ###
 vc.distribution.data <- function(bionomics.data){
-  vc.data <- bionomics.data[!is.na(VC.bites)][, sum(VC.bites), by=.(bite.times, bite.hosts)]$V1
+  vc.data <- bionomics.data[!is.na(VC.bites) & !is.na(lifetime)][, sum(VC.bites), by=.(bite.times, bite.hosts)]$V1
   return(vc.data)
 }
 
 
 
 ###
-# Left to do: 
+# Left to do:
 # Need to accommodate death event logging (pull, try running again with pretty data)
 # Need to make sure feeding *site* is marked in the json file, along with host
 # Need to accommodate both pretty and mini-formatted data - allow for streaming JSON in (pull, try running without pretty data)

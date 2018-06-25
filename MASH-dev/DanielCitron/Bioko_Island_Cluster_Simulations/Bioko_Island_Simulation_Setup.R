@@ -197,5 +197,8 @@ A <- P.ij %*% d.kappa
 g.x.pfpr <- r/(1-rho)*x.pfpr.input/(1-(1+rho*r/eta/(1-rho))*x.pfpr.input)
 VC <- ginv(A) %*% g.x.pfpr
 m <- VC*g/a/a/peip
-area.EIR <- (m*a*a*b*c*peip - (1-p)*r/(1-rho))/(p*a*b*c + (1 + rho/eta*r/(1-rho))*b*(1-p))
+area.EIR <- ginv(P.ij) %*% g.x.pfpr/b
+# Turns out this only works for the single patch model
+#area.EIR <- (m*a*a*b*c*peip - (1-p)*r/(1-rho))/(p*a*b*c + (1 + rho/eta*r/(1-rho))*b*(1-p))
+# Second term here is the population in each cluster
 area.lambda <- (1-p)/p*m[1:41]*travel.model.data[Region==1 & !is.na(clusId)][, sum(pop), by=clusId][order(clusId)]$V1

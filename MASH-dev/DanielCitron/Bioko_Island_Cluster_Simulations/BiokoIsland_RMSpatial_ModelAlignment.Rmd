@@ -1,0 +1,31 @@
+---
+title: "BiokoIsland_RMSpatial"
+output: pdf_document
+---
+
+# Human Mobility and Time at Risk in the Bioko Island Metapopulation simulation model
+
+This document will begin by reviewing how we use the Time at Risk (TaR) matrix to model risk and exposure that occurs as a result of human mobility (outlined in RMSpatial.Rmd and TaR.Rmd documents).  We will then show an illustrative example of how to parameterize a MASH-MACRO simulation model of Bioko Island using the MIS data (outlined at: https://github.com/smitdave/MASH-Main/blob/master/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/Bioko_Island_Simulation_Setup.R and based on Ruktanonchai et al. PLoS CB 2016).
+
+## Time at Risk matrix for metapopulation Ross-Macdonald model
+
+We begin by adapting the conventional single-compartment Ross-Macdonald (RM) model by including multiple compartments. Each compartment represents a "patch" or geographical region where humans live. Interactions between patches are modeled by allowing humans from one patch to spend some time in another patch, as denoted by the Time at Risk (TaR) matrix.  The TaR matrix $P$ is defined such that element $P_{i,j}$ is the fraction of time that a human who lives at site $i$ spends at site $j$.  That is to say, $P_{i,j}$ is the fraction of _risk of exposure_ that each person living at site $i$ experiences because of time spent visitng site $j$.
+
+
+$$
+2 + 2 \ne 5
+$$
+
+## Calibrating MASH-MACRO using the 
+
+What we need to know is EIR and, consequently, the emergence rate of mosquitoes at each patch
+
+But the MACRO model is a little different from the RM model - we have the Emergence of mosquitoes, and treatment seeking behavior, and so on, but at the least we can show how we use the data to construct the time at risk matrix and calibrate to EIR and m in each patch
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+

@@ -16,6 +16,7 @@ rm(list=ls());gc()
 library(spatstat)
 library(truncdist)
 library(viridis)
+library(MBITES)
 
 set.seed(42)
 
@@ -204,7 +205,7 @@ MBITES_Setup_Survival(tattering = FALSE,senescence = FALSE)
 PATHOGEN_Setup(pathogen_model = "null")
 
 # we want detailed output of blood hosts from the mosquito
-# trackBloodHost()
+trackBloodHost()
 
 # set parameters
 MBITES:::Parameters$set_parameters(disperse = 0.01,Bs_surv = 0.98,Os_surv = 0.98,B_surv = 0.98,O_surv = 0.98,
@@ -217,11 +218,14 @@ Human_NULL_Initialize(humans)
 
 MBITES_Initialize(mosquitos)
 
+
 # run simulation
-set_output(directory = "/Users/slwu89/Desktop/mbites/",runID = 1)
+#set_output(directory = "/Users/slwu89/Desktop/mbites/",runID = 1)
+set_output(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 1)
 simulation(tMax = 365,pretty = TRUE)
 
-reset(directory = "/Users/slwu89/Desktop/mbites/",runID = 2)
+#reset(directory = "/Users/slwu89/Desktop/mbites/",runID = 2)
+reset(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 2)
 Human_NULL_Initialize(humans)
 MBITES_Initialize(mosquitos)
 simulation(tMax = 365,pretty = TRUE)
