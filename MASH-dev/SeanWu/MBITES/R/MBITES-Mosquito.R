@@ -314,7 +314,7 @@ trackProbe_Mosquito_Female <- function(){
   private$feedTime[private$nFeed] = private$tNow
   private$feedSite[private$nFeed] = private$siteHist[private$nEvent]
   private$hostHist[private$nFeed] = private$hostID
-  private$probeAndFeed[private$nFeed] = private$probeAndFeed
+  private$probeAndFeed[private$nFeed] = FALSE
 
   private$nFeed = private$nFeed + 1L
 }
