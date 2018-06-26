@@ -58,7 +58,7 @@ MBDETES_Approx <- function(tileID){
 
 
 ###############################################################################
-# BloodMeal and Oogenesis probabilities (inc. PPRFlight survival)
+# Refeeding, Overfeeding, Survival
 ###############################################################################
 
 #' MBDETES: Refeeding Probability
@@ -175,7 +175,7 @@ MBDETES_getLeaveUnladen <- function(){
   leave/(1-retry)
 }
 
-#' MBDETES: Resting spot probabilities3
+#' MBDETES: Resting spot probabilities
 #'
 #' Calculate resting spot probabilities according to a mixture distribution with
 #' equal weights given to the 3 main behavioral states (B,O,S).
@@ -200,6 +200,16 @@ MBDETES_getRestingParam <- function(){
   return(out/sum(out))
 }
 
+#' MBDETES: Probability of Death from Local (Site-specific) Hazards
+#'
+#' Mortality due to local hazards is a Bernoulli event (see \code{\link{mbites_surviveHazards}})
+#' so this function just returns the probability of death.
+#'
+#' @export
+MBDETES_getLocalHazMortality <- function(site){
+  return(site$get_haz())
+}
+
 
 ###############################################################################
 # State Transitions
@@ -220,7 +230,15 @@ MBDETES_FstateTransitions <- function(site){
   F2F = (1-succeed)*survive
   F2D = 1-survive
 
-  return(c(F2F, F2B, 0, 0, 0, F2D))
+  # additional mass on D from local hazards
+  localHaz = MBDETES_getLocalHazMortality(site)
+  F2D = F2D + localHaz
+
+  # normalize
+  F2ALL = c(F2F, F2B, 0, 0, 0, F2D)
+  F2ALL = F2ALL/sum(F2ALL)
+
+  return(F2ALL)
 }
 
 
@@ -282,7 +300,16 @@ MBDETES_BstateTransitions <- function(site){
   B2F2 = approach*failApproach*surviveUnladen*(1-stayUnladen)*survive
   B2F = B2F1 + B2F2
   B2D = 1-B2R-B2B-B2F
-  return(c(B2F, B2B, B2R, 0, 0, B2D))
+
+  # additional mass on D from local hazards
+  localHaz = MBDETES_getLocalHazMortality(site)
+  B2D = B2D + localHaz
+
+  # normalize
+  B2ALL = c(B2F, B2B, B2R, 0, 0, B2D)
+  B2ALL = B2ALL/sum(B2ALL)
+
+  return(B2ALL)
 }
 
 
@@ -315,7 +342,16 @@ MBDETES_RperiodTransitions <- function(site){
   R2L = (1-aquatic)*(1-refeed)*surviveRest
   R2O = aquatic*(1-refeed)*surviveRest
   R2D = 1-R2F-R2B-R2L-R2O
-  return(c(R2F, R2B, 0, R2L, R2O, R2D))
+
+  # additional mass on D from local hazards
+  localHaz = MBDETES_getLocalHazMortality(site)
+  R2D = R2D + localHaz
+
+  # normalize
+  R2ALL = c(R2F, R2B, 0, R2L, R2O, R2D)
+  R2ALL = R2ALL/sum(R2ALL)
+
+  return(R2ALL)
 }
 
 
@@ -334,7 +370,15 @@ MBDETES_LstateTransitions <- function(site){
   L2L = (1-success)*survive
   L2D = 1-L2O-L2L
 
-  return(c(0, 0, 0, L2L, L2O, L2D))
+  # additional mass on D from local hazards
+  localHaz = MBDETES_getLocalHazMortality(site)
+  L2D = L2D + localHaz
+
+  # normalize
+  L2ALL = c(0, 0, 0, L2L, L2O, L2D)
+  L2ALL = L2ALL/sum(L2ALL)
+
+  return(L2ALL)
 }
 
 
@@ -356,7 +400,16 @@ MBDETES_OstateTransitions <- function(site){
   O2O = (1-success)*survive*stay
   O2L = (1-success)*survive*(1-stay)
   O2D = 1-O2F-O2B-O2O-O2L
-  return(c(O2F, O2B, 0, O2L, O2O, O2D))
+
+  # additional mass on D from local hazards
+  localHaz = MBDETES_getLocalHazMortality(site)
+  O2D = O2D + localHaz
+
+  # normalize
+  O2ALL = c(O2F, O2B, 0, O2L, O2O, O2D)
+  O2ALL = O2ALL/sum(O2ALL)
+
+  return(O2ALL)
 }
 
 
