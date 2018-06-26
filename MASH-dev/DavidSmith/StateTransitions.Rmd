@@ -1,0 +1,169 @@
+---
+title: "State Transitions in MBITES"
+author: "David L Smith"
+date: "6/26/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Survival 
+
+```{r}
+mbites_survival <- function(){
+  self$surviveFlight()
+  self$surviveHazards()
+}
+```
+
+The base survival probability for <code>surviveFlight()</code> is $X_surv$ 
+
+## Leave or Stay
+
+```{r}
+mbites_survival <- function(){
+  self$surviveFlight()
+  self$surviveHazards()
+}
+```
+
+
+## Blood Feeding Search Bout
+```{r}
+MBDETES_FstateTransitions <- function(site){
+  succeed = MBITES:::Parameters$get_Bs_succeed()
+  survive = MBITES:::Parameters$get_Bs_surv()
+
+  F2B = succeed*survive
+  F2F = (1-succeed)*survive
+  F2D = 1-survive
+
+  return(c(F2F, F2B, 0, 0, 0, F2D))
+}
+```
+
+
+## Blood Feeding Attempt Bout
+
+```{r}
+MBDETES_BstateTransitions <- function(site){
+
+  # Does the mosquito even make it to an initial approach?
+  approach = MBITES:::Parameters$get_B_succeed()
+  survive = MBITES:::Parameters$get_B_surv()
+
+  # check the function
+  if(site$has_feed()){
+    host = site$get_feed(1L)$RiskQ$typewtsQ()
+    host = host/sum(host)
+  } else {
+    host = rep(0,4)
+  }
+
+  # probability of taking a human bloodmeal | human chosen
+  h1 = MBITES:::Parameters$get_surviveH()
+  h2 = MBITES:::Parameters$get_probeH()
+  h3 = MBITES:::Parameters$get_surviveprobeH()
+  h4 = MBITES:::Parameters$get_feedH()
+  hfeed = h1*h2*h3*h4
+  hfail = (1-h1) + h1*(1-h2) + h1*h2*(1-h3) + h1*h2*h3*(1-h4)
+
+  # probability of taking a bloodmeal | other host chosen
+  z1 = MBITES:::Parameters$get_surviveZ()
+  z2 = MBITES:::Parameters$get_feedZ()
+  zfeed = z1*z2
+  zfail = z1*(1-z2)
+
+  # probability of failing | trap chosen
+  tfail = 0
+
+  # survive an unladen flight, stay
+  surviveUnladen = MBDETES_getSurvUnladen()
+  stayUnladen = 1 - MBDETES_getLeaveUnladen()
+
+  # survive a laden flight, stay
+  surviveLaden = MBDETES_getSurvLaden()
+
+  ##########################################################
+  # fail the approach
+  # note :: check hfeed and zfeed above for more fails
+  ##########################################################
+  failApproach = host[1]*hfail+host[2]*zfail+host[3]*tfail+host[4]
+  bFeed = host[1]*hfeed+host[2]*zfeed
+
+  B2R = approach*bFeed*surviveLaden
+  B2B = approach*failApproach*surviveUnladen*stayUnladen*survive
+  B2F1 = (1-approach)*surviveUnladen*stayUnladen*survive
+  B2F2 = approach*failApproach*surviveUnladen*(1-stayUnladen)*survive
+  B2F = B2F1 + B2F2
+  B2D = 1-B2R-B2B-B2F
+  return(c(B2F, B2B, B2R, 0, 0, B2D))
+}
+```
+
+
+## Post-Prandial Resting Period
+
+```{r}
+MBDETES_RperiodTransitions <- function(site){
+
+  # The probability of refeeding
+  refeed = MBDETES_getPrRefeed()
+
+  # stay, after a laden flight
+  stayLaden = MBDETES_getLeaveLaden()
+
+  # aquatic habitat present
+  aquatic = site$has_aqua()
+
+  # blood host present
+  blood = site$has_feed()
+
+  # survive the post-prandial resting period
+  surviveRest = MBDETES_getPrPPRFlight() # FIX ME !!!
+
+  R2B = blood*refeed*surviveRest
+  R2F = (1-blood)*refeed*surviveRest
+  R2L = (1-aquatic)*(1-refeed)*surviveRest
+  R2O = aquatic*(1-refeed)*surviveRest
+  R2D = 1-R2F-R2B-R2L-R2O
+  return(c(R2F, R2B, 0, R2L, R2O, R2D))
+}
+```
+
+
+## Egg Laying Search Bout
+
+```{r, echo=TRUE}
+MBDETES_LstateTransitions <- function(site){
+  success = MBITES:::Parameters$get_Os_succeed()
+  survive = MBITES:::Parameters$get_Os_surv()
+  L2O = success*survive
+  L2L = (1-success)*survive
+  L2D = 1-L2O-L2L
+
+  return(c(0, 0, 0, L2L, L2O, L2D))
+}
+```
+
+## Egg Laying Attempt Bout
+
+```{r}
+MBDETES_OstateTransitions <- function(site){
+  success = MBITES:::Parameters$get_O_succeed()
+  survive = MBITES:::Parameters$get_O_surv()
+  blood   = site$has_feed()
+  stay    = 1-MBDETES_getLeaveUnladen()
+
+  O2F = success*survive*(1-blood)
+  O2B = success*survive*blood
+  O2O = (1-success)*survive*stay
+  O2L = (1-success)*survive*(1-stay)
+  O2D = 1-O2F-O2B-O2O-O2L
+  return(c(O2F, O2B, 0, O2L, O2O, O2D))
+}
+```
+
+

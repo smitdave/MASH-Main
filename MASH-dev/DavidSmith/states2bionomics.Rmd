@@ -2,13 +2,9 @@
 title: "From State Transitions and Waiting Times to Bionomics"
 author: "David L Smith"
 date: "6/8/2018"
-output:
-  pdf_document: default
-  html_document:
-    df_print: paged
+output: pdf_document
 ouTut:
   pdf_document: default
-  html_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -110,6 +106,7 @@ $$T_{F,B} =  T_F + P_{F,F} T_{F,B} = \frac{T_F}{1-P_{F,F}}$$
 
 ```{r}
 T_FB = function(PAR){with(PAR,{tF/(1-P_FF)})} 
+T_FB = function(PAR){with(PAR,{tF/(P_FB/(P_FF+P_FB))})} 
 ```
 
 #### *Transitions from B to R*
@@ -267,53 +264,76 @@ T_RR = function(PAR){with(PAR,{
 })}
 ```
 
-
-
 We can check this out by giving some reasonable times: 
 
 ```{r}
 Psi_RR(PAR)
 T_RR(PAR)
-```
-```{r}
-PAR1 = list(
-  # Waiting Times
-tF = 2/24, # 2 hours
-tB = 6/24, # 3 hours
-tR = 1,    # 18 hours
-tL = 2/24, # 30 minutes
-tO = 6/24, # 1 hour
-
-# Transitions out of F 
-P_FF = .1,
-P_FB = .88,
-
-# Transitions out of B 
-P_BF = .1,
-P_BB = .1, 
-P_BR = .75,
-
-#Transitions out of L 
-P_LL = .05,
-P_LO = .93,
-
-#Transitions out of O 
-P_OL = .1,
-P_OO = .1,
-P_OB = .4,
-P_OF = .35,
-
-#Transitions out of R
-P_RF = .05,
-P_RB = .2,
-P_RL = .4,
-P_RO = .35
-) 
+T_RR(PAR)/-log(Psi_RR(PAR))
 ```
 
 ```{r}
-P.RR = Psi_RR(PAR1)
-T.RR = T_RR(PAR1)
-T.RR/-log(P.RR)
-T.RR
+require(deSolve)
+MBDETES_R2R_ODE = function(t,X,P){with(as.list(c(P,X)),{
+  dR = -R/tR
+  dL = P_RL*R/tR + P_OL*O/tO - (1-P_LL)*L/tL
+  dO = P_RO*R/tR + P_LO*L/tL - (1-P_OO)*O/tO
+  dF = P_RF*R/tR + P_OF*O/tO + P_BF*B/tB - (1-P_FF)*FF/tF
+  dB = P_RB*R/tR + P_OB*O/tO + P_FB*FF/tF - (1-P_BB)*B/tB
+  dR2 = P_BR*B/tB
+  list(c(dR,dL,dO,dF,dB,dR2))
+})}
+
+MBDETES_R2R_solve = function(PAR, mxT=20, dt=0.001){
+  inits = c(R=1,L=0,O=0,FF=0,B=0,R2=0)
+  tm = seq(0,mxT,by=dt)
+  data.frame(lsoda(inits,tm,MBDETES_R2R_ODE,PAR,atol=1e-10))
+}
+R2R=MBDETES_R2R_solve(PAR)
+```
+
+
+
+
+
+```{r}
+R2=R2R[,7]
+tt=R2R[,1]
+highSum=sum(diff(R2)*tt[-1])/max(R2)
+lowSum=sum(diff(R2)*tt[-length(tt)])/max(R2)
+(lowSum+highSum)/2
+```
+
+```{r}
+R2R_pdf = diff(R2)/max(R2)
+tt_pdf = (tt[-1]+tt[-length(tt)])/2
+ix = which(tt_pdf<5)
+plot(tt_pdf[ix], R2R_pdf[ix], type = "l", xlab = "Time (Days)", ylab = "Feeding Cycle Duration")
+```
+
+```{r}
+MBDETES_cohort_ODE = function(t,X,P){with(as.list(c(P,X)),{
+  dF = P_RF*R/tR + P_OF*O/tO + P_BF*B/tB - (1-P_FF)*FF/tF
+  dB = P_RB*R/tR + P_OB*O/tO + P_FB*FF/tF - (1-P_BB)*B/tB
+  dR = P_BR*B/tB-R/tR
+  dL = P_RL*R/tR + P_OL*O/tO - (1-P_LL)*L/tL
+  dO = P_RO*R/tR + P_LO*L/tL - (1-P_OO)*O/tO
+  list(c(dF,dB,dR,dL,dO))
+})}
+
+MBDETES_cohort_solve = function(PAR, pF=1, mxT=100, dt=0.001){
+  inits = c(FF=pF,B=1-pF,R=0,L=0,O=0)
+  tm = seq(0,mxT,by=dt)
+  data.frame(lsoda(inits,tm,MBDETES_cohort_ODE,PAR,atol=1e-10))
+}
+cohort=MBDETES_cohort_solve(PAR)
+tt=cohort[,1]
+alive = rowSums(cohort[,-1])
+
+highSum=-sum(diff(alive)*tt[-1])
+lowSum=-sum(diff(alive)*tt[-length(tt)])
+(lowSum+highSum)/2
+
+
+plot(tt, alive, type = "l")
 ```
