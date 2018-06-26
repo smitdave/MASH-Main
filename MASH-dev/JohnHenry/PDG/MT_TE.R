@@ -173,6 +173,4 @@ abline(h=0)
 
 plot(logGT,betaVars,type="l")
 plot(logGT,betaMeans/betaVars,type="l")
-plot(logGT,betaMeans/sqrt(betaVars))
-
-jcurve = nls(betaMeans/betaVars ~ (a*logGT^2+b*logGT+c)/(d*logGT+e),start=list(a=10,b=1,c=2,d=2,e=1))
+plot(logGT,betaMeans/sqrt(betaVars),type="l")
