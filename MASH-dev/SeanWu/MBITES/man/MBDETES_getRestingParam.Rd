@@ -2,7 +2,7 @@
 % Please edit documentation in R/MBDETES-Auxiliary.R
 \name{MBDETES_getRestingParam}
 \alias{MBDETES_getRestingParam}
-\title{MBDETES: Resting spot probabilities3}
+\title{MBDETES: Resting spot probabilities}
 \usage{
 MBDETES_getRestingParam()
 }

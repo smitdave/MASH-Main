@@ -11,13 +11,14 @@ rLO = 1
 rOL = 1
 rOD = .1
 rOF = 1
+rOB = 1
 ## FX
 rFB = 1
 rFD = .1
 ## BX
 rBD = .1
 rBF = 1
-rBR = 1
+rBR = 1#seq(0,10,.01)
 
 
 ET = function(condition='condition'){
@@ -77,9 +78,10 @@ PS = function(){
   PLO = rLO/(rLD+rLO)
   TL = 1/(rLD+rLO)
   
-  POL = rOL/(rOL+rOD+rOF)
-  POD = rOD/(rOL+rOD+rOF)
-  POF = rOF/(rOL+rOD+rOF)
+  POL = rOL/(rOL+rOD+rOF+rOB)
+  POD = rOD/(rOL+rOD+rOF+rOB)
+  POF = rOF/(rOL+rOD+rOF+rOB)
+  POB = rOB/(rOL+rOD+rOF+rOB)
   TO = 1/(rOL+rOD+rOF)
   
   PFB = rFB/(rFB+rFD)
@@ -91,7 +93,7 @@ PS = function(){
   PBR = rBR/(rBD+rBF+rBR)
   TB = 1/(rBD+rBF+rBR)
   
-  PS = (1-PRD)*PBR/(1-PBF*PFB)*(PRB+PRF*PFB+PRO*POF*PFB/(1-POL*PLO)+PRL*PLO*POF*PFB/(1-POL*PLO))
+  PS = PBR/(1-PFB*PBF)*(PRB+PRF*PFB+(PRO+PRL*PLO)*(POB+POF*PFB)/(1-POL*PLO))
   return(PS)
 }
 
