@@ -49,3 +49,35 @@ ggplot() + geom_histogram(data = e, aes(x), fill = "#fc9272", binwidth = 1) +
 }
 
 humanBloodHost(mosquitos)
+
+#Takes in a data frame with column called "bloodHosts" that contains IDs of blood hosts per mosquito
+#subset each elem of time_feed such that it only contains values where corresponding Bloodhost is positive
+#returns plot of number of bloodmeal intervals
+
+bloodIntervals = function(mosquitos_df) {
+  blood_h = mosquitos_df$bloodHosts
+  time_feed = mosquitos_df$timeFeed
+  time_feed_copy = mosquitos_df$timeFeed
+  #get time_feed only where blood_h >= 0
+  for (i in seq(1, length(time_feed), 1)){
+    b_elem = blood_h[[i]]
+    index = which(b_elem >= 0)
+    time_feed_copy[[i]] = time_feed[[i]][index]
+  }
+
+  intervals = sapply(time_feed, FUN = function(v){
+    if (length(v) == 1) {return (0)}
+    diff(v)
+  })
+  
+  i = unlist(intervals)
+  #turn into dataframe for ggplot useage
+  e = data.frame(x = i)
+  
+  #Mosquito lifespan chart
+  ggplot() + geom_histogram(data = e, aes(x), fill = "chartreuse4", binwidth = 1) +
+    ggtitle("Bloodmeal Interval") + xlab("Days") + ylab("Frequency")
+}
+
+bloodIntervals(mosquitos)
+
