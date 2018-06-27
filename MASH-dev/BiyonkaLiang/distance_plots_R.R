@@ -69,6 +69,7 @@ for (i in seq(1, 460*459, 459)) {
   #order by distance
   small = small[order(small$Distance), ]
   small['cumsum'] = cumsum(small$Probability)
+  
   #precision errors in summing make the cumsum larger or smaller than 1 sometimes, so I need to 
   #add this condition
   if (small$cumsum[460] <= 1 & small$cumsum[460] > 0.95){  
