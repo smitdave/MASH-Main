@@ -15,7 +15,7 @@ The multi-compartmental RM model can be rewritten as follows using $\vec{X}$ to 
 
 $$
 \begin{split}
-  & \frac{d X_i}{dt} = b_i \left( \psi \cdot \vec{E}_{(\psi)} \right)_i \times \left(H_i - X_i\right) - r X_i \\
+  & \frac{d X_i}{dt} = \left( \psi \cdot \vec{h}_{(\psi)} \right)_i \times \left(H_i - X_i\right) - r X_i \\
   & \frac{d Y_i}{dt} = a_i c_i \kappa_i \left( M_i - Y_i \right) - g_i Y_i \\
 \end{split}
 $$
@@ -24,10 +24,10 @@ In addition to the standard parameter sets (vectorized across each patch) $(\vec
 $$
 \kappa_i \equiv \frac{\sum_j \psi_{j,i} X_j}{\sum_j \psi_{j,i} H_j} = \frac{\left( \psi^T \cdot \vec{X}\right)_i}{\left( \psi^T \cdot \vec{H}\right)_i}
 $$
-The second term $\vec{E}_{(\psi)}$ represents the force of infection (roughly, EIR) on humans, properly normalized to account for the fact that humans are moving around and visiting different patches:
+The second term $\vec{h}_{(\psi)}$ represents the force of infection (roughly, "happenings" or EIR) on humans, properly normalized to account for the fact that humans are moving around and visiting different patches:
 
 $$
- \left(\vec{E}_{(\psi)}\right)_i \equiv a_i \frac{Z_i}{\left(\vec{H}_{(\psi)}\right)_i} = a_i \frac{Z_i}{\left( \psi^T \cdot \vec{H}\right)_i}
+ \left(\vec{h}_{(\psi)}\right)_i \equiv a_i b_i \frac{Z_i}{\left(\vec{H}_{(\psi)}\right)_i} = a_i b_i \frac{Z_i}{\left( \psi^T \cdot \vec{H}\right)_i}
 $$
 Assuming dynamical equilibrium, we may add a third equation which allows us to solve the RM model:
 $$
@@ -37,16 +37,16 @@ $$
 For the purposes of mapping risk and importation, we choose to remain agnostic about the exact functional forms of how the population density of infectious mosquitoes maps onto the force of infection.  Instead, our plan is to leverage malaria prevalence data to parameterize $\vec{X}$ and travel survey data to parameterize $\psi$ in order to _solve for the force of infection_ $\vec{E}_{(\psi)}$ _for all of the patches included in the model_.  At equilibrium, the model becomes:
 $$
 \begin{split}
-  & 0 = b_i \left( \psi \cdot \vec{E}_{(\psi)} \right)_i \times \left(H_i - X_i\right) - r X_i \\
-  & \frac{r}{b_i}\frac{X_i}{H_i - X_i} = \left( \psi \cdot \vec{E}_{(\psi)} \right)_i \\
-  & \Rightarrow \left(\vec{E}_{(\psi)}\right)_i = \sum_i \left(\psi^{-1}\right)_{ij} \cdot \left(\frac{r}{b_i}\frac{x_i}{1 - x_i}\right) \\
+  & 0 =  \left( \psi \cdot \vec{h}_{(\psi)} \right)_i \times \left(H_i - X_i\right) - r X_i \\
+  & \frac{r X_i}{H_i - X_i} = \left( \psi \cdot \vec{h}_{(\psi)} \right)_i \\
+  & \Rightarrow \left(\vec{h}_{(\psi)}\right)_i = \sum_i \left(\psi^{-1}\right)_{ij} \cdot \frac{r x_i}{1 - x_i} \\
 \end{split}
 $$
 where $\vec{x}$ is defined as the prevalence (fraction) in each patch ($x_i \equiv X_i/H_i$)
 
 In addition, we will also include treatment seeking behavior in the model, such that some humans end up with symptoms that prompt them to seek treatment.   We may accordingly parameterize our model, where the probability that a human seeks treatment is $\rho \equiv \mathbb{P}(treatment \mid fever)\mathbb{P}(fever)$.  We adapt the model by allowing some humans to move to a "protected" status following infection, and the resulting expression for the unknown force of infection becomes:
 $$ 
-\left(\vec{E}_{(\psi)}\right)_i = \sum_i \left(\psi^{-1}\right)_{ij} \cdot \left(\frac{r}{b_i(1 - \rho)} \frac{x_i}{\left(1 - (1 + \frac{\rho}{\epsilon}\frac{r}{1-\rho} ) x_i \right)}\right)
+\left(\vec{h}_{(\psi)}\right)_i = \sum_i \left(\psi^{-1}\right)_{ij} \cdot \left(\frac{r}{1 - \rho} \frac{x_i}{\left(1 - (1 + \frac{\rho}{\epsilon}\frac{r}{1-\rho} ) x_i \right)}\right)
 $$
 
 ## Calibrating MASH-MACRO using data from the Bioko Island Malaria Elimination Program
@@ -358,20 +358,18 @@ peip = p^11 # fraction of mosquitoes who survive incubation period
 
 Recalling:
 $$
-\left(\vec{E}_{(\psi)}\right)_i = \sum_i \left(\psi^{-1}\right)_{ij} \cdot \left(\frac{r}{b_i(1 - \rho)} \frac{x_i}{\left(1 - (1 + \frac{\rho}{\epsilon}\frac{r}{1-\rho} ) x_i \right)}\right)
+\left(\vec{h}_{(\psi)}\right)_i = \sum_i \left(\psi^{-1}\right)_{ij} \cdot \left(\frac{r}{1 - \rho} \frac{x_i}{\left(1 - (1 + \frac{\rho}{\epsilon}\frac{r}{1-\rho} ) x_i \right)}\right)
 $$
 
 ```{r}
-g <- r/b/(1-rho)*pfpr.input/(1-(1+rho*r/eta/(1-rho))*pfpr.input)
+g <- r/(1-rho)*pfpr.input/(1-(1+rho*r/eta/(1-rho))*pfpr.input)
 FOI <- ginv(P.ij) %*% g
 # merge with travel.model.data
 travel.model.data[, foi:=NULL]
 travel.model.data <- merge(travel.model.data, data.table(areaId = areaIds, foi = FOI[1:194]), by = "areaId")
 ```
 
-One important constraint on the solution here is that the FOI must be non-negative.
-
-__Sanity Check__ does the mean EIR calculated across all patches in each region come close to matching the EIR calculated for each region?
+__Sanity Check__: One important constraint on the solution here is that the FOI must be non-negative.
 
 One problem here is that apparently there's a lot of smoothing going on - it's not clear whether this is because of the travel model or not?
 It could be that because there's higher PfPR in Malabo, but also more travel in Malabo, we also have decreased local EIR in Malabo - the residents of that district have increased total risk because of the time spent on the island?
@@ -400,7 +398,7 @@ plot.data<-area.data[order(area.data$order), ]
 p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
 p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
 pr <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = pfpr*100), color = NA, size = 0.25) +
-  scale_fill_gradient(name="PfPR (%)", low="yellow", high="red", limits=c(0,50)) +
+  scale_fill_gradient(name="PfPR (%)", low="yellow", high="red", limits=c(0,40)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
@@ -413,7 +411,7 @@ pr
 p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
 p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
 eir <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = foi*365), color = NA, size = 0.25) +
-  scale_fill_gradient(name="FOI (Annual EIR)", low="yellow", high="red", limits=c(0,3)) +
+  scale_fill_gradient(name="FOI (Annual EIR)", low="yellow", high="red", limits=c(0,1.25)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
