@@ -324,7 +324,7 @@ pfpr.input[194 + 7] <- (travel.model.data[ad2 == "Ureka"]$pop %*%
 As noted above, one key parameter that is missing from our data is a time scale that allows us to determine the fraction of time spent away from home, as opposed to how frequently each person travels to each destination region.  We will assume at this point that every person spends on average 3 days out of the year away from home, or 0.8% of the time traveling.
 ```{r}
 # Fraction of time away
-fraction.time.away = 3./365
+fraction.time.away = 10./365
 # Most of the elements of this matrix are empty:
 # Only where i is a patch and j is a region do we have nonzero entries
 P.ij <- diag(1, nrow = 194+7, ncol = 194+7)
@@ -333,10 +333,15 @@ for (i in 1:194){
   for (j in 1:7){
     holder[j] <- travel.model.data[areaId == areaIds[i] & TravelRegion == reg.names[j]]$predict.zinb.log.w
   }
+  # Average number of trips each person makes
+  holder <- holder/travel.model.data[areaId==areaIds[i]]$pop
+  # Fraction of time spent in each location by each person
+  # Note that the time spent on the mainland 
+  holder <-  c(7,3,3,3,3,3,3)*52/8/365*holder
   # Time spent away
-  P.ij[i, (194 + 1):(194+7)] <- holder/sum(holder)*fraction.time.away
+  P.ij[i, (194 + 1):(194+7)] <- holder
   # Time spent at home
-  P.ij[i, i] <- 1 - fraction.time.away
+  P.ij[i, i] <- 1 - sum(holder)
 }
 ```
 
