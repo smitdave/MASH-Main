@@ -91,6 +91,9 @@ MBITES_Globals <- R6::R6Class(classname = "MBITES_Globals",
                    mosquito_id        = 0L, # global counter of IDs
                    mosquito_f_out     = NULL, # connection object for logging female mosquito histories
                    mosquito_m_out     = NULL, # connection object for logging male mosquito histories
+                   # options for more detailed logging output
+                   mosquito_f_bloodHist = FALSE,
+                   mosquito_f_eggHist   = FALSE,
 
                    # human globals
                    human_id           = 0L, # global counter of IDs
@@ -200,6 +203,40 @@ set_output_MBITES_Globals <- function(directory,runID){
   private$human_out = file(description = paste0(dirOut,"/human_",runID,".json"),open = "wt")
 
 }
+
+set_mosquito_f_bloodHist_MBITES_Globals <- function(bloodHist){
+  if(!is.logical(bloodHist)){stop("argument 'bloodHist' to set_mosquito_f_bloodHist_MBITES_Globals must be logical")}
+  private$mosquito_f_bloodHist <- bloodHist
+}
+
+set_mosquito_f_eggHist_MBITES_Globals <- function(eggHist){
+  if(!is.logical(eggHist)){stop("argument 'eggHist' to set_mosquito_f_eggHist_MBITES_Globals must be logical")}
+  private$mosquito_f_eggHist <- eggHist
+}
+
+get_mosquito_f_bloodHist_MBITES_Globals <- function(){
+  return(private$mosquito_f_bloodHist)
+}
+
+get_mosquito_f_eggHist_MBITES_Globals <- function(){
+  return(private$mosquito_f_eggHist)
+}
+
+MBITES_Globals$set(which = "public",name = "set_mosquito_f_bloodHist",
+          value = set_mosquito_f_bloodHist_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "set_mosquito_f_eggHist",
+          value = set_mosquito_f_eggHist_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_mosquito_f_bloodHist",
+          value = get_mosquito_f_bloodHist_MBITES_Globals, overwrite = TRUE
+)
+
+MBITES_Globals$set(which = "public",name = "get_mosquito_f_eggHist",
+          value = get_mosquito_f_eggHist_MBITES_Globals, overwrite = TRUE
+)
 
 #' MBITES Globals: Reset Tiles and logging
 #'

@@ -56,6 +56,7 @@ Mosquito_Female$set(which = "public",name = "chooseHabitat",
 #'
 mbites_layEggs_Emerge <- function(){
   if(runif(1) < MBITES:::Parameters$get_O_succeed()){
+    self$trackOviposit()
     private$eggT = 2e16
     private$gravid = FALSE
     private$batch = 0
@@ -75,6 +76,7 @@ mbites_layEggs_Emerge <- function(){
 #'
 mbites_layEggs_EL4P <- function(){
   if(runif(1) < MBITES:::Parameters$get_O_succeed()){
+    self$trackOviposit()
     private$eggT = 2e16
     private$gravid = FALSE
     private$aqua_resource$EggQ$add2Q(private$batch,private$tNow)
