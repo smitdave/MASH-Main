@@ -72,21 +72,21 @@ for(i in 2:length(t)){
   D[i] = 1-sum(temp)
   Q = Q%*%Qexp
 }
-PP = R[length(R)]
-RR = R/PP
+PS = R[length(R)]
+RR = R/PS
 plot(t,RR,type="l")
-TT = sum(1-RR)*dt
-TD = sum(1-D/(1-PP))*dt
+TS = sum(1-RR)*dt
+TD = sum(1-D/(1-PS))*dt
 
-lines(t,D/(1-PP),type="l",col="red")
+lines(t,D/(1-PS),type="l",col="red")
 
 dR = 0*R
 dD = 0*D
 for(i in 1:(length(R)-1)){
-  dR[i] = (R[i+1]-R[i])/dt/PP
-  dD[i] = (D[i+1]-D[i])/dt/(1-PP)
+  dR[i] = (R[i+1]-R[i])/dt/PS
+  dD[i] = (D[i+1]-D[i])/dt/(1-PS)
 }
 plot(t,dR,type="l", ylim=c(0,.6))
-abline(v = TT)
+abline(v = TS)
 lines(t,dD,type="l",col="red")
 abline(v = TD,col="red")

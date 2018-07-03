@@ -34,15 +34,20 @@ zS = zS/zS[length(zS)]
 TD1 = sum(1-zD)*dt
 TS1 = sum(1-zS)*dt
 
-##written once TT, TD, and PP are known (time to successfully complete a bout, time to die
-##in a bout, and probability of surviving a bout)
+##Lifespan once TS, TS1, TD1, TD, and PS, PS1 are known
+##(TS := time to successfully complete a bout,
+##TS1 := time to successfully complete the first bout,
+##TD := time to die, 
+##TD1 := time to die in the first bout,
+##PS := probability of surviving a typical bout,
+##PS1 := probability of surviving the first bout
 
 Lifespan = function(){
-  (1-PS1)*TD1 + PS1*(TS1 + TD + TT*PP/(1-PP))
+  (1-PS1)*TD1 + PS1*(TS1 + TD + TS*PS/(1-PS))
 }
 
 ##human biting rate, given the fraction of bloodmeals on humans Q
 Q = .9
 HBR = function(){
-  Q*PS1/(1-PP)/Lifespan()
+  Q*PS1/(1-PS)/Lifespan()
 }
