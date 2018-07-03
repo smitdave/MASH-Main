@@ -10,7 +10,7 @@ PFF = .15
 PFB = .83/(1-PFF)
 PFD = 1-PFB
 
-tF = Tf/(1-PFF)
+tF = TF/(1-PFF)
 rF = 1/tF
 
 # Transitions out of B
@@ -49,7 +49,7 @@ rR = 1/tR
 
 ########### Infinitesimal Generator for Single Feeding Cycle, QI ###################
 
-QI = t(matrix(c(-rR,0,0,0,0,0,rR*PRF,-rF,rB*PBF,0,rO*POF,0,rR*PRB,rF*PFB,-rB,0,rO*POB,0,rR*PRL,0,0,-rL,rO*POL,0,rR*PRO,0,0,rL*PLO,-rO,0,0,0,rB*PBR,0,0,0),nrow=6))
+QI = matrix(c(-rR,0,0,0,0,0,rR*PRF,-rF,rB*PBF,0,rO*POF,0,rR*PRB,rF*PFB,-rB,0,rO*POB,0,rR*PRL,0,0,-rL,rO*POL,0,rR*PRO,0,0,rL*PLO,-rO,0,0,0,rB*PBR,0,0,0),nrow=6)
 
 ## define time vector, initial condition
 dt = 10^-4
@@ -57,6 +57,8 @@ tfin = 10
 t = seq(0,tfin,dt)
 R = 0*t
 R[1] = 0
+D = 0*t
+D[1] = 0
 v0 = c(1,0,0,0,0,0)
 
 ## compute single matrix exponential; iterate by multiplying by this "time step" matrix 
@@ -65,20 +67,26 @@ v0 = c(1,0,0,0,0,0)
 Qexp = expm::expm(QI*dt)
 Q = Qexp
 for(i in 2:length(t)){
-  temp = Q%*%v0
+  temp = v0%*%Q
   R[i] = temp[6]
+  D[i] = 1-sum(temp)
   Q = Q%*%Qexp
 }
 PP = R[length(R)]
 RR = R/PP
 plot(t,RR,type="l")
-TT = sum(1-R/R[length(R)])*dt
-RR = R/PP
+TT = sum(1-RR)*dt
+TD = sum(1-D/(1-PP))*dt
+
+lines(t,D/(1-PP),type="l",col="red")
 
 dR = 0*R
+dD = 0*D
 for(i in 1:(length(R)-1)){
-  dR[i] = (R[i+1]-R[i])/dt/R[length(R)]
+  dR[i] = (R[i+1]-R[i])/dt/PP
+  dD[i] = (D[i+1]-D[i])/dt/(1-PP)
 }
-plot(t,dR,type="l")
+plot(t,dR,type="l", ylim=c(0,.6))
 abline(v = TT)
-abline(v = dR[min(which(RR>=.5))], col="red")
+lines(t,dD,type="l",col="red")
+abline(v = TD,col="red")
