@@ -1,25 +1,41 @@
-setwd("~/Downloads/Mission01")
-library(ggplot2)
+###############################################################################
+#         __  ___      ____  _____________________
+#        /  |/  /     / __ )/  _/_  __/ ____/ ___/
+#       / /|_/ /_____/ __  |/ /  / / / __/  \__ \
+#      / /  / /_____/ /_/ // /  / / / /___ ___/ /
+#     /_/  /_/     /_____/___/ /_/ /_____//____/
+#
+#     Plot Movement Kernels
+#     MBITES Team
+#     July 2018
+#
+###############################################################################
+
+
+###############################################################################
+# load data and libraries, define helper functions
+###############################################################################
+
+rm(list=ls());gc()
+
 library(parallel)
+library(cobs)
 
-dist = as.matrix(read.csv("lscape_dist_5.csv", header = FALSE))
-kernel = as.matrix(read.csv("lscape_kernel_5.csv", header = FALSE))
-
-# turn conditional PMF into unconditional PMF
-# marginalX <- 1/nrow(kernel)
-# kernelNorm <- kernel*0
-# pb <- txtProgressBar(min = 1,max = nrow(kernel))
-# for(i in 1:nrow(kernel)){
-#   for(j in 1:ncol(kernel)){
-#     kernelNorm[i,j] <- kernel[i,j]*marginalX
-#   }
-#   setTxtProgressBar(pb,i)
-# }
+# get a landscape
+dir_dev <- "/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/"
+dist <- as.matrix(read.csv(paste0(dir_dev,"DavidSmith/MBITES-Demo/dist_5.csv"), header = FALSE))
+kernel <- as.matrix(read.csv(paste0(dir_dev,"DavidSmith/MBITES-Demo/movement_5.csv"), header = FALSE))
+kernel <- kernel/rowSums(kernel)
 
 # comparisons of floats
 fequal <- function(x,y){
   abs(x-y) <= .Machine$double.eps
 }
+
+
+###############################################################################
+# plot movement for entire landscape
+###############################################################################
 
 distV <- as.vector(dist)
 probV <- as.vector(kernel)
@@ -40,47 +56,142 @@ probV <- probV[ordD]
 distBins <- unique(distV)
 
 # get empirical PDF by summing stuff in the distance bins (takes awhile, use parallel if you can)
-# PDF_emp <-sapply(X = distBins[1:10],FUN = function(x){
-#   sum(probV[which(fequal(distV,x))])
-# })
-
 PDF_emp <- mclapply(X = distBins,FUN = function(x,probV,distV){
   sum(probV[which(fequal(distV,x))])
-},probV=probV,distV=distV,mc.cores = 4)
+},probV=probV,distV=distV,mc.cores = detectCores()-2)
 PDF_emp <- unlist(PDF_emp) # mclapply outputs lists; coerce to vector
 
 # technically its a PMF so we normalize it
 PDF_emp <- PDF_emp/sum(PDF_emp)
 
 # get empirical CDF by preforming a cumulative sum over data points in distance bins
-CDF_emp <- mclapply(X = distBins,FUN = function(x,probV,distV){
-  sum(probV[which(distV <= x)])
-},probV=probV,distV=distV,mc.cores = 4)
-CDF_emp <- unlist(CDF_emp)
-
-CDF_emp <- CDF_emp/max(CDF_emp)
+CDF_emp <- cumsum(PDF_emp)
+# CDF_emp <- mclapply(X = distBins,FUN = function(x,probV,distV){
+#   sum(probV[which(distV <= x)])
+# },probV=probV,distV=distV,mc.cores = 4)
+# CDF_emp <- unlist(CDF_emp)
+#
+# CDF_emp <- CDF_emp/max(CDF_emp)
 
 # smoothed CDF
+
 CDF_sth <- smooth.spline(x = distBins,y = CDF_emp,all.knots = TRUE,cv = NA,keep.data = FALSE)
+CDF_sth$y <- CDF_sth$y / max(CDF_sth$y)
+# force the smoothed CDF to be an increasing function
+cdf_err <- which(diff(CDF_sth$y) < 0)
+CDF_sth$y[cdf_err[1]:length(CDF_sth$y)] <- sort(CDF_sth$y[cdf_err[1]:length(CDF_sth$y)],decreasing = FALSE)
+# # take the ones that still wont behave and force the function to increase
+# cdf_err <- which(diff(CDF_sth$y) < 0)
+# if(length(cdf_err)>1){
+#   warning("after initial forcing of CDF to increase there are still > 1 values that are broken")
+# }
+#
+# CDF_sth$y[cdf_err] <- (CDF_sth$y[cdf_err-1]+CDF_sth$y[cdf_err+1]) / 2
+
+
+
+# i=1
+# while(any(diff(CDF_sth$y) < 0)){
+#   cat("i: ",i,"\n");i=i+1
+#   cdf_err <- which(diff(CDF_sth$y) < 0)
+#   CDF_sth$y[cdf_err] <- sort(CDF_sth$y[cdf_err],decreasing = FALSE)
+# }
+
+# CDF_sth <- cobs(x = distBins,y = CDF_emp,constraint = "increase")
+# CDF_sth <- scam(CDF_emp~s(distBins,k=500,bs="mpi"),family = gaussian(link="identity"),not.exp = T)
+# CDF_sth <- ksmooth(distBins,CDF_emp,kernel="normal",bandwidth = 5 * dpill(distBins,CDF_emp))
+
 
 # differentiate smoothed CDF at bins to get smooth PDF (PMF really)
 PDF_sth <- predict(object = CDF_sth,x = distBins,deriv = 1)
+PDF_sth$y[which(PDF_sth$y<0)] = 0
 PDF_sth$y <- PDF_sth$y/sum(PDF_sth$y) # normalize
 
 
+###############################################################################
+# calculate distributions for each site
+###############################################################################
+
+# distance bins to use for each site
+distV <- as.vector(dist)
+distV <- distV[-which(fequal(distV,0))]
+distBins <- unique(distV)
+
+nsite <- nrow(dist)
+
+sitesKern <- vector(mode = "list",length = nsite)
+
+# notation Vi: means vector for site i
+pb <- txtProgressBar(min = 1,max = nsite)
+
+# go over all sites
+for(i in 1:nsite){
+
+  # distance and probabilities for site i
+  distVi <- as.vector(dist[i,])
+  probVi <- as.vector(kernel[i,])
+
+  # get rid of zero distance elements (have probability 0 anyway)
+  zeroDi <- which(fequal(distVi,0))
+
+  distVi <- distVi[-zeroDi]
+  probVi <- probVi[-zeroDi]
+
+  # sort by increasing distance
+  ordDi <- order(distVi)
+
+  distVi <- distVi[ordDi]
+  probVi <- probVi[ordDi]
+
+  # get empirical PDF by summing stuff in the distance bins (takes awhile, use parallel if you can)
+  PDF_empi <- mclapply(X = distBins,FUN = function(x,probVi,distVi){
+    sum(probVi[which(fequal(distVi,x))])
+  },probVi=probVi,distVi=distVi,mc.cores = detectCores()-2)
+  PDF_empi <- unlist(PDF_empi) # mclapply outputs lists; coerce to vector
+
+  # technically its a PMF so we normalize it
+  PDF_empi <- PDF_empi/sum(PDF_empi)
+
+  # get empirical CDF by preforming a cumulative sum over data points in distance bins
+  CDF_empi <- mclapply(X = distBins,FUN = function(x,probVi,distVi){
+    sum(probVi[which(distVi <= x)])
+  },probVi=probVi,distVi=distVi,mc.cores = detectCores()-2)
+  CDF_empi <- unlist(CDF_empi)
+
+  CDF_empi <- CDF_empi/max(CDF_empi)
+
+  # smoothed CDF
+  CDF_sthi <- smooth.spline(x = distBins,y = CDF_empi,all.knots = TRUE,cv = NA,keep.data = FALSE)
+
+  # differentiate smoothed CDF at bins to get smooth PDF (PMF really)
+  PDF_sthi <- predict(object = CDF_sthi,x = distBins,deriv = 1)
+  PDF_sthi$y <- PDF_sthi$y / sum(PDF_sthi$y) # normalize)
+
+  sitesKern[[i]]$PDF_emp <- PDF_empi
+  sitesKern[[i]]$CDF_emp <- CDF_empi
+  sitesKern[[i]]$CDF_sth <- CDF_sthi
+  sitesKern[[i]]$PDF_sth <- PDF_sthi
+
+  setTxtProgressBar(pb,i)
+}
+
+sum(sitesKern[[1]]$PDF_sth)
 
 
 
 
 
 
+###############################################################################
+# biyonka code
+###############################################################################
 
+setwd("~/Downloads/Mission01")
+library(ggplot2)
+library(parallel)
 
-
-
-
-
-
+dist = as.matrix(read.csv("lscape_dist_5.csv", header = FALSE))
+kernel = as.matrix(read.csv("lscape_kernel_5.csv", header = FALSE))
 
 kernel_list = unlist(as.data.frame(t(as.matrix(kernel))))
 dist_list = unlist(as.data.frame(t(as.matrix(dist))))
