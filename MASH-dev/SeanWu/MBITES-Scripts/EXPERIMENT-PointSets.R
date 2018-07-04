@@ -55,28 +55,28 @@ xy_sites <- vector(mode = "list",length = n)
 
 # type (0 = only feeding, 1 = only laying, 2 = both)
 for(i in 1:n){
-  
+
   # check which points are same
   same <- fnear(xy_points[[i]]$f[,c("x")],xy_points[[i]]$l[,c("x")]) & fnear(xy_points[[i]]$f[,c("y")],xy_points[[i]]$l[,c("y")])
   same_ind <- which(unname(same))
-  
+
   if(length(same_ind)==0){
-    
+
     xy_sites[[i]]$sites <- rbind(cbind(xy_points[[i]]$f,type=rep(0,n_pts)),cbind(xy_points[[i]]$l,type=rep(1,n_pts)))
-    
+
   } else if(length(same_ind)==n_pts){
-    
+
     xy_sites[[i]]$sites <- cbind(xy_points[[i]]$f,type=rep(2,n_pts))
-    
+
   } else {
-   
+
     xy_sites[[i]]$sites <- cbind(xy_points[[i]]$f[same_ind,],type=rep(2,length(same_ind)))
     xy_sites[[i]]$sites <- rbind(xy_sites[[i]]$sites,
                                  cbind(xy_points[[i]]$f[-same_ind,],type=rep(0,n_pts-length(same_ind))),
                                  cbind(xy_points[[i]]$l[-same_ind,],type=rep(1,n_pts-length(same_ind))))
-    
+
   }
-  
+
   rownames(xy_sites[[i]]$sites) <- 1:nrow(xy_sites[[i]]$sites)
 }
 
@@ -92,12 +92,18 @@ exp_fit <- function(d,q,up=1){
 # generate movement kernel between sites
 pb <- txtProgressBar(min = 0,max = n)
 for(i in 1:n){
-  
+
   dist <- as.matrix(dist(xy_sites[[i]]$sites[,c("x","y")],diag = TRUE,upper = TRUE))
   half_d <- max(dist)/2
   exp_kern <- exp_fit(d = half_d,q = 0.95)
   xy_sites[[i]]$distance <- dist
   xy_sites[[i]]$movement <- apply(X = dist,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = 1/exp_kern)})
+
+  # write out unnormalized movement matrix
+  write.table(x = xy_sites[[i]]$movement,
+              file = paste0(dir_dev,"DavidSmith/MBITES-Demo/movement_",i,".csv"),
+              sep = ",",row.names = F,col.names = F)
+
   xy_sites[[i]]$movement <- xy_sites[[i]]$movement/rowSums(xy_sites[[i]]$movement)
   setTxtProgressBar(pb,i)
 }
@@ -164,10 +170,10 @@ n_aqua <- unique(sapply(xy_sites,function(x){
 lambda <- 1
 
 for(i in 1:n){
-  
+
   n_site <- nrow(xy_sites[[i]]$sites)
   landscapes[[i]]$sites <- vector(mode="list",length=n_site)
-  
+
   for(j in 1:n_site){
     landscapes[[i]]$sites[[j]]$id  <- j
     landscapes[[i]]$sites[[j]]$xy  <- xy_sites[[i]]$sites[j,c("x","y")]
@@ -190,7 +196,7 @@ for(i in 1:n){
     }
   }
 
-  setTxtProgressBar(pb,i)  
+  setTxtProgressBar(pb,i)
 }
 
 saveRDS(object = landscapes,file = paste0(dir_dev,"DavidSmith/MBITES-Demo/periDomesticLandscapes.rds"))
@@ -205,13 +211,13 @@ humans <- vector(mode = "list",length = n)
 pb <- txtProgressBar(min = 0,max = n)
 
 for(i in 1:n){
-  
+
   humans[[i]]$siteID = which(sapply(landscapes[[i]]$sites,function(x){!is.null(x$feed)}))
   humans[[i]]$tileID = rep(1,length(humans[[i]]$siteID))
   humans[[i]]$feedingID = rep(1,length(humans[[i]]$siteID))
   humans[[i]]$w = rep(1,length(humans[[i]]$siteID))
-    
-  
+
+
   setTxtProgressBar(pb,i)
 }
 
@@ -226,11 +232,11 @@ mosquitoes <- vector(mode = "list",length = n)
 pb <- txtProgressBar(min = 0,max = n)
 
 for(i in 1:n){
-  
+
   mosquitoes[[i]]$siteID = which(sapply(landscapes[[i]]$sites,function(x){!is.null(x$aqua)}))
   mosquitoes[[i]]$tileID = rep(1,length(mosquitoes[[i]]$siteID))
   mosquitoes[[i]]$female = rep(TRUE,length(mosquitoes[[i]]$siteID))
-  
+
   setTxtProgressBar(pb,i)
 }
 

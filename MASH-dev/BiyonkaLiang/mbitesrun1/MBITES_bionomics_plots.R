@@ -17,7 +17,7 @@ lifespan = function(mosquitos_df) {
   w = sapply(t, FUN = function(v){
     tail(v, n=1) - v[1]
     })
-  
+
   #unlist lifespan values
   w = unlist(w)
   #turn into dataframe for ggplot useage
@@ -38,7 +38,7 @@ humanBloodHost = function(mosquitos_df) {
     #subset each bloodHost vector to only count humans (id >= 0)
   length(v[v>= 0])
   })
-  
+
 #turn into dataframe for ggplot useage
 e = data.frame(x = num_human_host)
 
@@ -71,11 +71,11 @@ bloodIntervals = function(mosquitos_df, human = TRUE) {
     if (length(v) == 1) {return (0)}
     diff(v)
   })
-  
+
   i = unlist(intervals)
   #turn into dataframe for ggplot useage
   e = data.frame(x = i)
-  
+
   #Mosquito lifespan chart
   ggplot() + geom_histogram(data = e, aes(x), fill = "chartreuse4", binwidth = 1) +
     ggtitle("Bloodmeal Interval") + xlab("Days") + ylab("Frequency")
@@ -84,19 +84,19 @@ bloodIntervals = function(mosquitos_df, human = TRUE) {
 bloodIntervals(mosquitos)
 
 
-#the number of pairs of human bites 
+#the number of pairs of human bites
 #separated by at least EIP days
 #divided by the number of humans
 # Counts number of diff() of bite_time that are >= EIP (is that right?)
 VC = function(mosquito_df, EIP = 0.5) {
 num_humans = length(human$id)
 
-bites = sapply(mosquito_df$bite_times, FUN = function(v) { 
+bites = sapply(mosquito_df$bite_times, FUN = function(v) {
   if (length(v) == 1) {return (0)}
   diff(v)
 })
 
-len_bites = sapply(test, FUN = function(v) { 
+len_bites = sapply(test, FUN = function(v) {
   length(v[v >= EIP])/num_humans
 })
 
