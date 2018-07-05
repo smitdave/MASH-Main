@@ -90,3 +90,13 @@ plot(t,dR,type="l", ylim=c(0,.6))
 abline(v = TS)
 lines(t,dD,type="l",col="red")
 abline(v = TD,col="red")
+
+
+############################ NOTE TO SELF ###############################
+#
+# Need to consider laying eggs successfully before dying in final bout
+# for a better estimate of the expected number of eggs per lifetime;
+# should be negligibly small, but for the sake of completeness shouldn't
+# be too difficult to compute...
+#
+#########################################################################
