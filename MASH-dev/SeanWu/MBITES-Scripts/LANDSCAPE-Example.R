@@ -201,15 +201,15 @@ mosquitos = data.frame(
 # Run MBITES
 ###############################################################################
 
-library(MBITES)
+# library(MBITES)
 
 # initialize methods
 MBITES_Setup_Timing(timing_model = 2,
-                    rate_b = 1/2/24,tmin_b = 0,
-                    rate_bs = 3/24,tmin_bs = 0,
-                    rate_o = 1/2/24,tmin_o = 0,
-                    rate_os = 1/24,tmin_os = 0,
-                    ppr_model = 2,rate_ppr = 18/24,tmin_ppr = 0
+                    rate_b = 1/(1/2/24),tmin_b = 0,
+                    rate_bs = 1/(3/24),tmin_bs = 0,
+                    rate_o = 1/(1/2/24),tmin_o = 0,
+                    rate_os = 1/(1/24),tmin_os = 0,
+                    ppr_model = 2,rate_ppr = 1/(18/24),tmin_ppr = 0
 )
 
 MBITES_Setup_BloodMeal(overfeeding = FALSE)
@@ -229,12 +229,9 @@ trackBloodHost()
 trackOviposition()
 
 # set parameters
-Bs_success = 0.84/0.94
-B_success = 0.75/0.95
-O_success = 0.75/0.95
-Os_success = 0.84/0.94
-MBITES:::Parameters$set_parameters(disperse = 0.1,Bs_surv = 0.98,Os_surv = 0.98,B_surv = 0.98,O_surv = 0.98,
-                                   Bs_succeed = Bs_success,Os_succeed = Os_success,B_succeed = B_succes,O_succeed = O_success)
+MBITES:::Parameters$set_parameters(disperse = 0.05,Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
+                                   Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.99,O_succeed = 0.99,
+                                   energyFromBlood_b = 1,bm_a = 10)
 
 # initialize a tile
 Tile_Initialize(landscape)
@@ -246,11 +243,30 @@ MBITES_Initialize(mosquitos)
 
 # run simulation
 set_output(directory = directory,runID = 1)
-# set_output(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 1)
 simulation(tMax = 365,pretty = TRUE)
+hardreset()
 
-reset(directory = directory,runID = 2)
-# reset(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 2)
-Human_NULL_Initialize(humans)
-MBITES_Initialize(mosquitos)
-simulation(tMax = 365,pretty = TRUE)
+
+###############################################################################
+# Parse output
+###############################################################################
+
+library(jsonlite)
+library(ggplot2)
+
+# where the files can be found
+output_dir <- paste0(directory,"run1")
+
+mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE)
+mosquitos_df <- mosquitos_df[-which(sapply(mosquitos_df$id,is.null)),]
+humans_df <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
+humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
+
+lf <- Bionomics_lifespan(mosquitos_df)
+mean(lf$lifespan)
+sd(lf$lifespan)
+
+#Mosquito lifespan chart
+ggplot() + geom_histogram(data = lf, aes(lifespan), fill = "steelblue", bins = 20) +
+  ggtitle("Mosquito Lifespans") + xlab("Days") + ylab("Frequency") + theme_bw()
+

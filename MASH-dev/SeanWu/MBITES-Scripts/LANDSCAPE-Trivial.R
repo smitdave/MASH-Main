@@ -101,7 +101,7 @@ Bs_success = 0.84/0.94
 B_success = 0.75/0.95
 O_success = 0.75/0.95
 Os_success = 0.84/0.94
-MBITES:::Parameters$set_parameters(disperse = 0.1,Bs_surv = 0.98,Os_surv = 0.98,B_surv = 0.98,O_surv = 0.98,
+MBITES:::Parameters$set_parameters(disperse = 0.05,Bs_surv = 0.94,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
                                    Bs_succeed = Bs_success,Os_succeed = Os_success,B_succeed = B_success,O_succeed = O_success)
 
 # initialize a tile
@@ -117,8 +117,29 @@ MBITES_Initialize(mosquitos)
 set_output(directory = directory,runID = 1)
 
 simulation(tMax = 365*2,pretty = TRUE)
+hardreset()
 
 
 ###############################################################################
 # Parse output
 ###############################################################################
+
+library(jsonlite)
+library(ggplot2)
+
+# where the files can be found
+output_dir <- "/Users/slwu89/Desktop/mbites/trivial/run1"
+
+mosquitos <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE)
+mosquitos <- mosquitos[-which(sapply(mosquitos$id,is.null)),]
+humans <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
+humans <- humans[-which(sapply(humans$id,is.null)),]
+
+lf <- Bionomics_lifespan(mosquitos)
+mean(lf$lifespan)
+sd(lf$lifespan)
+
+#Mosquito lifespan chart
+ggplot() + geom_histogram(data = lf, aes(lifespan), fill = "steelblue", bins = 20) +
+  ggtitle("Mosquito Lifespans") + xlab("Days") + ylab("Frequency") + theme_bw()
+
