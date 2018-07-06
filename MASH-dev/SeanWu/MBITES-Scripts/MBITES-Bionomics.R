@@ -24,10 +24,10 @@ library(ggplot2)
 # where the files can be found
 output_dir <- "/Users/slwu89/Desktop/mbites/run1"
 
-mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE)
-mosquitos_df <- mosquitos_df[-nrow(mosquitos_df),]
-human <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
-
+mosquitos <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE)
+mosquitos <- mosquitos[-which(sapply(mosquitos$id,is.null)),]
+humans <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
+humans <- humans[-which(sapply(humans$id,is.null)),]
 
 ###############################################################################
 # mosquito lifespans
@@ -54,7 +54,7 @@ lifespan <- function(mosquitos_df) {
   return(data.frame(lifespan=w))
 }
 
-lf <- lifespan(mosquitos_df)
+lf <- lifespan(mosquitos)
 mean(lf$lifespan)
 sd(lf$lifespan)
 
@@ -92,7 +92,7 @@ humanBloodHost <- function(mosquitos_df, who = "human"){
   return(data.frame(humanHost=w))
 }
 
-bh <- humanBloodHost(mosquitos_df)
+bh <- humanBloodHost(mosquitos)
 mean(bh$humanHost)
 sd(bh$humanHost)
 
@@ -143,7 +143,7 @@ bloodIntervals <- function(mosquitos_df, who = "human"){
   return(data.frame(bmIntervals=intervals))
 }
 
-bi <- bloodIntervals(mosquitos_df)
+bi <- bloodIntervals(mosquitos)
 ggplot() + geom_histogram(data = bi, aes(bmIntervals), fill = "chartreuse4", binwidth = 1) +
   ggtitle("Bloodmeal Interval") + xlab("Days") + ylab("Frequency")
 
@@ -172,12 +172,81 @@ humanBitingRate <- function(mosquitos_df){
   return(hbr)
 }
 
-hbr <- humanBitingRate(mosquitos_df)
+hbr <- humanBitingRate(mosquitos)
 mean(hbr)
 
 ###############################################################################
 # vectorial capacity
 ###############################################################################
+
+vectorialCapacity <- function(mosquitos,humans,EIP){
+
+  # number of humans
+  nhum <- nrow(humans)
+
+  # get only mosquitoes who took more than 1 blood meal and were dead by end of simulation
+  filter <- sapply(mosquitos[,"bloodHosts"],function(x){length(x)>1}) & sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- which(filter)
+
+  # VC
+  VC <- replicate(n = nhum,expr = {
+    list(
+      VC = 0, # their vectorial capacity
+      spatialVC = list() # the distribution of secondary bites (on sites)
+    )
+  },simplify = FALSE)
+
+  # iterate over mosquitoes
+  pb <- txtProgressBar(min = 1,max = length(filter))
+  for(i in filter){
+
+    bloodHosts <- mosquitos[i,"bloodHosts"][[1]]
+    timeFeed <- mosquitos[i,"timeFeed"][[1]]
+    siteFeed <- mosquitos[i,"siteFeed"][[1]]
+    probeAndFeed <- mosquitos[i,"probeAndFeed"][[1]]
+
+    # iterate over bites
+    while(length(timeFeed)>1){
+
+      # only if the bite was a probing AND feeding event
+      # (feeding needs to occur for human -> mosy transmission)
+      if(probeAndFeed[1]){
+
+        # get indices of secondary bites
+        pairTimes <- diff(timeFeed)
+        secondaryBites <- which(pairTimes>EIP)+1
+
+        # only if there were secondary bites arising from this bite
+        if(length(secondaryBites)>0){
+
+          # add to the primary host's VC
+          VC[[bloodHosts[1]]]$VC = VC[[bloodHosts[1]]]$VC + length(secondaryBites)
+
+          # get spatial distribution of bites
+          spatDist <- list(origin=siteFeed[1],dest=siteFeed[secondaryBites])
+
+          len <- length(VC[[bloodHosts[1]]]$spatialVC)
+          VC[[bloodHosts[1]]]$spatialVC[[len+1]] = spatDist
+          # VC[[bloodHosts[1]]]$spatialVC <- c(VC[[bloodHosts[1]]]$spatialVC,spatDist)
+        }
+      }
+
+      # take off the first bite
+      bloodHosts <- bloodHosts[-1]
+      timeFeed <- timeFeed[-1]
+      siteFeed <- siteFeed[-1]
+      probeAndFeed <- probeAndFeed[-1]
+    }
+
+    setTxtProgressBar(pb,i)
+  }
+
+  return(VC)
+}
+
+
+vc <- vectorialCapacity(mosquitos = mosquitos,humans = humans,EIP =2)
+
 
 # # biyonka
 # #the number of pairs of human bites
