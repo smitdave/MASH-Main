@@ -70,7 +70,7 @@ wSite = rgamma(n = nSite,shape = 1,rate = 1)
 landscape <- vector(mode = "list",length = nSite)
 
 # movement kernel
-exp_fit <- function(d,q,up=1){
+exp_fit <- function(d,q,up=1e3){
   f_opt = function(x){
     abs(d - qexp(p = q,rate = x))
   }
@@ -82,7 +82,7 @@ exp_kern <- exp_fit(d = 0.1,q = 0.75)
 
 # movement matrices
 dist <- as.matrix(dist(xy_points,diag = TRUE,upper = TRUE))
-movement <- apply(X = dist,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = 1/exp_kern)})
+movement <- apply(X = dist,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = exp_kern)})
 movement <- movement/rowSums(movement)
 
 
@@ -150,6 +150,10 @@ for(i in 1:nAqua){
 # write landscape
 ###############################################################################
 
+write.table(x = dist,
+            file = paste0(directory,"sites_dist.csv"),
+            sep = ",",row.names = F,col.names = F)
+
 write.table(x = t(sapply(landscape,function(x){x$xy})),
           file = paste0(directory,"sites_xy.csv"),
           sep = ",",row.names = F,col.names = F)
@@ -200,18 +204,12 @@ mosquitos = data.frame(
 library(MBITES)
 
 # initialize methods
-# deterministic wait times
-# MBITES_Setup_Timing(timing_model = 1,
-#                     wait_b = 1,wait_o = 1,wait_m = 1,wait_s = 1,
-#                     wait_bs = 1,wait_os = 1,wait_ms = 1,wait_ss = 1,
-#                     ppr_model = 1,wait_ppr = 0.5/24)
-
 MBITES_Setup_Timing(timing_model = 2,
-                    rate_b = 1/3,tmin_b = 0,
-                    rate_bs = 1/3,tmin_bs = 0,
-                    rate_o = 1/3,tmin_o = 0,
-                    rate_os = 1/3,tmin_os = 0,
-                    ppr_model = 1,wait_ppr = 0.5/24
+                    rate_b = 1/2/24,tmin_b = 0,
+                    rate_bs = 3/24,tmin_bs = 0,
+                    rate_o = 1/2/24,tmin_o = 0,
+                    rate_os = 1/24,tmin_os = 0,
+                    ppr_model = 2,rate_ppr = 18/24,tmin_ppr = 0
 )
 
 MBITES_Setup_BloodMeal(overfeeding = FALSE)
@@ -231,8 +229,12 @@ trackBloodHost()
 trackOviposition()
 
 # set parameters
-MBITES:::Parameters$set_parameters(disperse = 0.01,Bs_surv = 0.98,Os_surv = 0.98,B_surv = 0.98,O_surv = 0.98,
-                                   Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.99,O_succeed = 0.99)
+Bs_success = 0.84/0.94
+B_success = 0.75/0.95
+O_success = 0.75/0.95
+Os_success = 0.84/0.94
+MBITES:::Parameters$set_parameters(disperse = 0.1,Bs_surv = 0.98,Os_surv = 0.98,B_surv = 0.98,O_surv = 0.98,
+                                   Bs_succeed = Bs_success,Os_succeed = Os_success,B_succeed = B_succes,O_succeed = O_success)
 
 # initialize a tile
 Tile_Initialize(landscape)

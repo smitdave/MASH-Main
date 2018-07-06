@@ -13,39 +13,25 @@
 
 
 ###############################################################################
-# load libraries and data
-###############################################################################
-
-rm(list=ls());gc()
-
-library(jsonlite)
-library(ggplot2)
-
-# where the files can be found
-output_dir <- "/Users/slwu89/Desktop/mbites/run1"
-
-mosquitos <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE)
-mosquitos <- mosquitos[-which(sapply(mosquitos$id,is.null)),]
-humans <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
-humans <- humans[-which(sapply(humans$id,is.null)),]
-
-###############################################################################
 # mosquito lifespans
 ###############################################################################
 
-#Takes in a data frame with column called "time" that contains mosquito life events
-#last time is death and first time is birth
-#returns plot of lifespan
-lifespan <- function(mosquitos_df) {
+#' Bionomics: Compute Mosquito Lifespans
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run and returns a data.frame of mosquito lifespans.
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @export
+Bionomics_lifespan <- function(mosquitos) {
 
-  n = nrow(mosquitos_df)
+  n = nrow(mosquitos)
   w = rep(NaN,n)
   pb = txtProgressBar(min = 1, max = n, initial = 0)
 
   for(i in 1:n){
     # filter mosquitoes that were still alive at end of simulation
-    if(tail(mosquitos_df[i,"behavior"][[1]],1) != "E"){
-      w[i] = tail(mosquitos_df[i,"time"][[1]],1) - mosquitos_df[i,"time"][[1]][1]
+    if(tail(mosquitos[i,"behavior"][[1]],1) != "E"){
+      w[i] = tail(mosquitos[i,"time"][[1]],1) - mosquitos[i,"time"][[1]][1]
     }
     setTxtProgressBar(pb,i)
   }
@@ -54,30 +40,31 @@ lifespan <- function(mosquitos_df) {
   return(data.frame(lifespan=w))
 }
 
-lf <- lifespan(mosquitos)
-mean(lf$lifespan)
-sd(lf$lifespan)
-
-#Mosquito lifespan chart
-ggplot() + geom_histogram(data = lf, aes(lifespan), fill = "steelblue", bins = 20) +
-  ggtitle("Mosquito Lifespans") + xlab("Days") + ylab("Frequency") + theme_bw()
-
-
 ###############################################################################
-# mosquito human hosts
+# mosquito blood hosts
 ###############################################################################
 
 # who: 'human','all','zoo'
-humanBloodHost <- function(mosquitos_df, who = "human"){
 
-  n = nrow(mosquitos_df)
+#' Bionomics: Compute Number of Blood Meals
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' This function returns a data.frame of lifetime blood meals
+#' for each mosquito for a chosen host type.
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @param who either 'human', 'zoo', or 'all'
+#' @export
+Bionomics_humanBloodHost <- function(mosquitos, who = "human"){
+
+  n = nrow(mosquitos)
   w = rep(NaN,n)
   pb = txtProgressBar(min = 1, max = n, initial = 0)
 
   for(i in 1:n){
     # filter mosquitoes that were still alive at end of simulation
-    if(tail(mosquitos_df[i,"behavior"][[1]],1) != "E"){
-      bh = mosquitos_df[i,"bloodHosts"][[1]]
+    if(tail(mosquitos[i,"behavior"][[1]],1) != "E"){
+      bh = mosquitos[i,"bloodHosts"][[1]]
       switch(who,
              human = {w[i] = length(bh[bh > 0])},
              all = {w[i] = length(bh[bh > 0 | bh == -1])},
@@ -92,28 +79,27 @@ humanBloodHost <- function(mosquitos_df, who = "human"){
   return(data.frame(humanHost=w))
 }
 
-bh <- humanBloodHost(mosquitos)
-mean(bh$humanHost)
-sd(bh$humanHost)
-
-#human blood meals histogram
-ggplot() + geom_histogram(data = bh, aes(humanHost), fill = "#fc9272", binwidth = 1) +
-  ggtitle("Human Bloodmeals") + xlab("Count") + ylab("Frequency") +
-  scale_x_continuous(breaks=seq(0, 11, 1)) + theme_bw()
-
 
 ###############################################################################
 # intervals between blood meals
 ###############################################################################
 
-# who: 'human','all','zoo'
-bloodIntervals <- function(mosquitos_df, who = "human"){
+#' Bionomics: Compute Interval between Blood Meals
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' This function returns a data.frame of intervals between blood meals
+#' for each mosquito for the chosen host type.
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @param who either 'human', 'zoo', or 'all'
+#' @export
+Bionomics_bloodIntervals <- function(mosquitos, who = "human"){
 
   # check args
   if(!(who %in% c("human","all","zoo"))){stop("argument 'who' must be in: 'human', 'all', or 'zoo'")}
 
   # only want mosquitoes with more than 1 bloodmeal and died before end of the simulation
-  filter <- sapply(mosquitos_df[,"bloodHosts"],function(x){length(x)>1}) & sapply(mosquitos_df[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- sapply(mosquitos[,"bloodHosts"],function(x){length(x)>1}) & sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
 
   # get the intervals
   intervals <- mapply(function(host,time,who){
@@ -130,8 +116,8 @@ bloodIntervals <- function(mosquitos_df, who = "human"){
       return(diff(time[ix]))
     }
   },
-  host=mosquitos_df[which(filter),"bloodHosts"],
-  time=mosquitos_df[which(filter),"timeFeed"],
+  host=mosquitos[which(filter),"bloodHosts"],
+  time=mosquitos[which(filter),"timeFeed"],
   MoreArgs = list(who=who),
   USE.NAMES = FALSE)
   # end mapply call
@@ -143,23 +129,26 @@ bloodIntervals <- function(mosquitos_df, who = "human"){
   return(data.frame(bmIntervals=intervals))
 }
 
-bi <- bloodIntervals(mosquitos)
-ggplot() + geom_histogram(data = bi, aes(bmIntervals), fill = "chartreuse4", binwidth = 1) +
-  ggtitle("Bloodmeal Interval") + xlab("Days") + ylab("Frequency")
-
 
 ###############################################################################
 # human biting rate
 ###############################################################################
 
-# not really a rate, its Q
-humanBitingRate <- function(mosquitos_df){
+#' Bionomics: Compute Proportion of Blood Meals on Humans
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' This function returns a single value, corresponding to \deqn{Q} in
+#' Ross-Macdonald parameters.
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @export
+Bionomics_humanBitingRate <- function(mosquitos){
 
   # only want mosquitoes who died before the end of simulation
-  filter <- sapply(mosquitos_df[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
 
   # dont count mosquitoes who never took a blood meal
-  hbr <- sapply(mosquitos_df[which(filter),"bloodHosts"],function(x){
+  hbr <- sapply(mosquitos[which(filter),"bloodHosts"],function(x){
     if(length(x)==1 & x[1]==0){
       return(NaN)
     }
@@ -172,9 +161,6 @@ humanBitingRate <- function(mosquitos_df){
   return(hbr)
 }
 
-hbr <- humanBitingRate(mosquitos)
-mean(hbr)
-
 
 ###############################################################################
 # vectorial capacity
@@ -183,7 +169,27 @@ mean(hbr)
 # calculate VC:
 # this function actually counts the number of secondary bites and their
 # spatial distribution from each human. it is easy to then get VC from it.
-vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
+
+#' Bionomics: Compute Vectorial Capacity
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' Computes vectorial capacity, as well as its spatial dispersion, from a human-centric (ego-centric)
+#' algorithm, described as follows:
+#'  1. For each mosquito iterate through all its bites:
+#'    * If the bite had a successful blood meal (human to mosquito transmission only occurs during a blood meal)
+#'      find all pairs of bites seperated by more than EIP days, where the other bites can be probing events or blood meal events.
+#'    * Add these secondary bites to the initial bite's human host's individual vectorial capacity.
+#'    * Optionally, record the sites where these secondary bites were dispersed to.
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' @return a list where each element corresponds to a human host.
+#'         Each host has \code{VC}, which is the total number of secondary bites arising from him or her, and
+#'         \code{spatialVC} which is a list of origin/destination pairs tracking dispersion of each initial bite.
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @param humans a data.frame of parsed JSON human output
+#' @param EIP the length of EIP
+#' @param spatial compute spatial dispersion of bites or not
+#' @export
+Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
 
   # number of humans
   nhum <- nrow(humans)
@@ -247,17 +253,3 @@ vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
 
   return(VC)
 }
-
-vc <- vectorialCapacity(mosquitos = mosquitos,humans = humans,EIP = 3,spatial = F)
-# average VC
-sum(sapply(vc,function(x){x$VC}))/length(vc)
-
-
-###############################################################################
-# lifetime egg production
-###############################################################################
-
-
-###############################################################################
-# dispersion of lifetime egg production
-###############################################################################
