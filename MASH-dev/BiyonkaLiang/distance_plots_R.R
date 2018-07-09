@@ -72,13 +72,13 @@ for (i in seq(1, 460*459, 459)) {
   
   #precision errors in summing make the cumsum larger or smaller than 1 sometimes, so I need to 
   #add this condition
-  if (small$cumsum[460] <= 1 & small$cumsum[460] > 0.95){  
+  #if (small$cumsum[460] <= 1 & small$cumsum[460] > 0.99){  
     x = x + geom_step(data = small,
                       mapping = aes(x=Distance, y=cumsum),
                       direction="vh",
                       color = 'purple',
                       alpha = 0.15, size = 0.2)
-}
+  #}
   #add geom_step plot to our ggplot
  
 }
@@ -86,7 +86,22 @@ for (i in seq(1, 460*459, 459)) {
 x = x + scale_y_continuous(breaks = seq(0, 1, by=0.2), limits=c(0,1)) +
   ggtitle("CDF") + ylab("Probability")+
   theme(plot.title = element_text(hjust = 0.5))
-x
 
+#get median line
+dist.sorted = data.frame((apply(dist,1,sort)))
+dist_medians = apply(dist.sorted, 1, mean)
 
+#sort probs based on distances
+B = as.matrix(kernel)
+A = as.matrix(dist)
+prob.sorted = as.data.frame((sapply(1:NROW(A), function(i) B[i,][order(A[i,])])))
+prob_medians = apply(prob.sorted, 1, mean)
+w = cumsum(prob_medians)
+#plot median
+x + geom_step(data = data.frame(x = dist_medians, y = w),
+                  mapping = aes(x=x, y=y),
+                  direction="vh",
+                  color = 'black',
+                  alpha = 0.9, size = 1) 
+w
 

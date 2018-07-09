@@ -20,6 +20,8 @@ library(MBITES)
 
 set.seed(42)
 
+directory <- "/Users/slwu89/Desktop/mbites/"
+
 ###############################################################################
 # Set up points
 ###############################################################################
@@ -145,6 +147,26 @@ for(i in 1:nAqua){
 
 
 ###############################################################################
+# write landscape
+###############################################################################
+
+write.table(x = t(sapply(landscape,function(x){x$xy})),
+          file = paste0(directory,"sites_xy.csv"),
+          sep = ",",row.names = F,col.names = F)
+
+
+sites_movement <- matrix(data = 0,nrow = length(landscape),ncol = length(landscape))
+sites_movement[1,] <- c(0,landscape[[1]]$move)
+for(i in 2:(length(landscape)-1)){
+  sites_movement[i,] <- c(landscape[[i]]$move[1:(i-1)], 0, landscape[[i]]$move[i:(length(landscape)-1)])
+}
+sites_movement[length(landscape),] <- c(landscape[[length(landscape)]]$move,0)
+
+write.table(x = sites_movement,
+          file = paste0(directory,"sites_movement.csv"),
+          sep = ",",row.names = F,col.names = F)
+
+###############################################################################
 # Make human initialization object
 ###############################################################################
 
@@ -206,6 +228,7 @@ PATHOGEN_Setup(pathogen_model = "null")
 
 # we want detailed output of blood hosts from the mosquito
 trackBloodHost()
+trackOviposition()
 
 # set parameters
 MBITES:::Parameters$set_parameters(disperse = 0.01,Bs_surv = 0.98,Os_surv = 0.98,B_surv = 0.98,O_surv = 0.98,
@@ -220,12 +243,12 @@ MBITES_Initialize(mosquitos)
 
 
 # run simulation
-#set_output(directory = "/Users/slwu89/Desktop/mbites/",runID = 1)
-set_output(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 1)
+set_output(directory = directory,runID = 1)
+# set_output(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 1)
 simulation(tMax = 365,pretty = TRUE)
 
-#reset(directory = "/Users/slwu89/Desktop/mbites/",runID = 2)
-reset(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 2)
+reset(directory = directory,runID = 2)
+# reset(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 2)
 Human_NULL_Initialize(humans)
 MBITES_Initialize(mosquitos)
 simulation(tMax = 365,pretty = TRUE)

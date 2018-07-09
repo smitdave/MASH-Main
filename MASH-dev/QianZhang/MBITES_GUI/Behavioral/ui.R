@@ -105,7 +105,12 @@ ui = shinyUI(fluidPage(theme = shinytheme(THEME),
                                   #################################################################################
                                   tabPanel(title = "Parameters", value = 'initial',
                                           useShinyjs(),
-                                          uiOutput("panel_initial")
+                                          uiOutput("panel_initial"),
+                                          absolutePanel(left = 20, bottom = 20, width = 160, draggable = TRUE,
+                                            wellPanel(
+                                              actionButton('save_inputs_bout', 'Save Inputs',width = "100%"),
+                                              hr(),
+                                              actionButton('run_demo_again', 'Update Demo',width = "100%")))
                                   ),
 
                               

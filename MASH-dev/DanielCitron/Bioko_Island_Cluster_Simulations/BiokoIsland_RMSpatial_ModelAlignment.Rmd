@@ -1,6 +1,6 @@
 ---
-title: "BiokoIsland_RMSpatial"
-output: pdf_document
+title: "Spatial Ross-Macdonald Model Applied to Bioko Island"
+output: html_document
 ---
 
 # Human Mobility and Time at Risk in the Bioko Island Metapopulation simulation model
@@ -9,23 +9,418 @@ This document will begin by reviewing how we use the Time at Risk (TaR) matrix t
 
 ## Time at Risk matrix for metapopulation Ross-Macdonald model
 
-We begin by adapting the conventional single-compartment Ross-Macdonald (RM) model by including multiple compartments. Each compartment represents a "patch" or geographical region where humans live. Interactions between patches are modeled by allowing humans from one patch to spend some time in another patch, as denoted by the Time at Risk (TaR) matrix.  The TaR matrix $P$ is defined such that element $P_{i,j}$ is the fraction of time that a human who lives at site $i$ spends at site $j$.  That is to say, $P_{i,j}$ is the fraction of _risk of exposure_ that each person living at site $i$ experiences because of time spent visitng site $j$.
+We begin by adapting the conventional single-compartment Ross-Macdonald (RM) model by including multiple compartments. Each compartment represents a "patch" or geographical region where humans live. Interactions between patches are modeled by allowing humans from one patch to spend some time in another patch, as denoted by the Time at Risk (TaR) matrix.  The TaR matrix $\psi$ is defined such that element $\psi_{i,j}$ is the fraction of time that a human who lives at site $i$ spends at site $j$.  That is to say, $\psi_{i,j}$ is the fraction of _risk of exposure_ that each person living at site $i$ experiences because of time spent visitng site $j$.
 
+The multi-compartmental RM model can be rewritten as follows using $\vec{X}$ to represent the vector of infectious humans, such that $X_i$ is the number of infectious humans in the $i$th compartment. $\vec{H}$ is the vector of total human population in each compartment.  $(\vec{M}, \vec{Y}, \vec{Z})$ are vectors representing the total population of mosquitoes, the population of infected mosquitoes, and the population of infectious mosquitoes, respectively, each compartment.
 
 $$
-2 + 2 \ne 5
+\begin{split}
+  & \frac{d X_i}{dt} = \left( \psi \cdot \vec{h}_{(\psi)} \right)_i \times \left(H_i - X_i\right) - r X_i \\
+  & \frac{d Y_i}{dt} = a_i c_i \kappa_i \left( M_i - Y_i \right) - g_i Y_i \\
+\end{split}
+$$
+In addition to the standard parameter sets (vectorized across each patch) $(\vec{a}, \vec{b}, \vec{c}, \vec{g}, r)$, there are two additional terms that need to be defined.  The first $\vec{\kappa}$ is the rate at which infectious humans transfer parasite to mosquitoes that bite them, and is defined such that includes the force of infection due to humans from patch $j$ visiting patch $i$:
+
+$$
+\kappa_i \equiv \frac{\sum_j \psi_{j,i} X_j}{\sum_j \psi_{j,i} H_j} = \frac{\left( \psi^T \cdot \vec{X}\right)_i}{\left( \psi^T \cdot \vec{H}\right)_i}
+$$
+The second term $\vec{h}_{(\psi)}$ represents the force of infection (roughly, "happenings" or EIR) on humans, properly normalized to account for the fact that humans are moving around and visiting different patches:
+
+$$
+ \left(\vec{h}_{(\psi)}\right)_i \equiv a_i b_i \frac{Z_i}{\left(\vec{H}_{(\psi)}\right)_i} = a_i b_i \frac{Z_i}{\left( \psi^T \cdot \vec{H}\right)_i}
+$$
+Assuming dynamical equilibrium, we may add a third equation which allows us to solve the RM model:
+$$
+Z_i = Y_i e^{-g_i n_i}
 $$
 
-## Calibrating MASH-MACRO using the 
+For the purposes of mapping risk and importation, we choose to remain agnostic about the exact functional forms of how the population density of infectious mosquitoes maps onto the force of infection.  Instead, our plan is to leverage malaria prevalence data to parameterize $\vec{X}$ and travel survey data to parameterize $\psi$ in order to _solve for the force of infection_ $\vec{E}_{(\psi)}$ _for all of the patches included in the model_.  At equilibrium, the model becomes:
+$$
+\begin{split}
+  & 0 =  \left( \psi \cdot \vec{h}_{(\psi)} \right)_i \times \left(H_i - X_i\right) - r X_i \\
+  & \frac{r X_i}{H_i - X_i} = \left( \psi \cdot \vec{h}_{(\psi)} \right)_i \\
+  & \Rightarrow \left(\vec{h}_{(\psi)}\right)_i = \sum_i \left(\psi^{-1}\right)_{ij} \cdot \frac{r x_i}{1 - x_i} \\
+\end{split}
+$$
+where $\vec{x}$ is defined as the prevalence (fraction) in each patch ($x_i \equiv X_i/H_i$)
 
-What we need to know is EIR and, consequently, the emergence rate of mosquitoes at each patch
+In addition, we will also include treatment seeking behavior in the model, such that some humans end up with symptoms that prompt them to seek treatment.   We may accordingly parameterize our model, where the probability that a human seeks treatment is $\rho \equiv \mathbb{P}(treatment \mid fever)\mathbb{P}(fever)$.  We adapt the model by allowing some humans to move to a "protected" status following infection, and the resulting expression for the unknown force of infection becomes:
+$$ 
+\left(\vec{h}_{(\psi)}\right)_i = \sum_i \left(\psi^{-1}\right)_{ij} \cdot \left(\frac{r}{1 - \rho} \frac{x_i}{\left(1 - (1 + \frac{\rho}{\epsilon}\frac{r}{1-\rho} ) x_i \right)}\right)
+$$
 
-But the MACRO model is a little different from the RM model - we have the Emergence of mosquitoes, and treatment seeking behavior, and so on, but at the least we can show how we use the data to construct the time at risk matrix and calibrate to EIR and m in each patch
+## Calibrating MASH-MACRO using data from the Bioko Island Malaria Elimination Program
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+We now apply this formalism to the case of Bioko Island, where surveys have made it possible to estimate the PfPR ($\vec{x}$) across the island.  Additionally, the surveys also say how frequently people from each area on Bioko Island travel to different destinations both on and off the island.  We can use this second data set to fit a travel model to estimate the TaR matrix $\psi$.
+
+The Bioko Island data set consists of 194 populated patches representing a 1x1 square kilometer region.  The total island population consists 226,000 people, with the majority of the population living in and around the capitol city (Malabo) at the north of the island.
+
+The data related to travel include two survey questions, one related to destinations of travel (which places did you travel to in the past 8 weeks) and one related to frequency of travel (how many times did you travel in the past 6 months). For the travel destinations, respondents reported that they traveled to one of seven destinations, each representing a settlement or geographical region: Malabo (the capitol city), Baney (northeast), Luba (west), Moka (south), Riaba (east),  Ureka (far south), and "off-island".  Here we will assume that all off-island travelers visited mainland Equatorial Guinea, although it is possible that they visited other places.  The travel survey data are aggregated over three years, from 2015-2017.  We will then fit these data to a travel model in order to estimate the frequency of travel between each patch and each destination. 
+
+We note that the travel origins within the island are 1x1 square kilometer patches, but the within-island travel destinations represent large regions that represent agglomerations of many patches. This is important to keep in mind because in the future we may need to find a way to disambiguate, for example, "traveling to the region of Malabo" from "traveling to a specific patch within the Malabo region."  For now, however, we will stick to using each patch on the island as a travel origin and 7 regions as destinations.  We will agglomerate the total population of each region, as well as compute averages of quantities like PfPR over all patches within each region.
+
+The resulting travel matrix can be broken down like this:
+
+![TaR matrix schematic](TaR_schematic.jpg)
+
+__Note__: The one important piece that is missing is an additional time scale that defines _how long_ on average a given traveler spends away from home.  The travel destinations inform where each traveler tends to go.  The travel frequency data inform how often a traveler leaves home.  But importantly the TaR matrix counts the fraction of time spent in each location, not the frequency at which travelers arrive there.  We will need to make some additional assumptions about time spent away from home in order to convert from the _travel frequency_ to the _time spent at risk_.
+
+```{r echo=FALSE}
+library(data.table, quietly = TRUE) # The workhorse of this exercise
+library(pscl, quietly = TRUE) # Used for fitting the travel model 
+library(boot, quietly = TRUE)
+library(MASS, quietly = TRUE)
 ```
 
-## R Markdown
 
+
+### 1. Read in all data
+
+#### Total population denominator
+```{r}
+denom <- data.table(read.csv("BI_sim_setup_data/bioko_areas.csv"))
+```
+
+#### We use the mean PfPR estimates from Su's prevalence map, initially produced in October of 2018.
+```{r}
+pfpr <- data.table(read.csv("BI_sim_setup_data/data_area.csv"))
+```
+
+#### Travel survey data, aggregated by Carlos
+```{r}
+travel <- data.table(read.csv("BI_sim_setup_data/summaries.csv"))
+```
+
+#### Travel times between all areas, estimated using MAP's friction surfaces
+```{r}
+times <- data.table(read.csv("BI_sim_setup_data/travel_times.csv"))
+# rename some of the columns, and reorder
+times <- times[, 5:199]
+colnames(times)[2:195] <- sapply(colnames(times)[2:195], FUN = function(s){
+  return(substring(s, 2, 5))}
+)
+setcolorder(times, c(1,order(as.integer(colnames(times)[2:195]))+1))
+times <- times[order(areaId)]
+```
+
+
+
+
+### 2. Merge and combine relevant data
+For each area, we need to know the number of times that the survey respondents from each patch traveled to each possible travel destination.  Combine the data into a single table, and extract the subset that is relevant to what we need.  The last bloc of columns in the table represent counts of number of times people have traveled to each of the seven destination regions:
+
+  * `to` = traveling off-island
+  * `ti_ban` = Baney regional travel
+  * `ti_mal` = Malabo regional travel
+  * `ti_lub` = Luba regional travel
+  * `ti_ria` = Riaba regional travel
+  * `ti_mok` = Moka regional travel
+  * `ti_ure` = Ureka regional travel
+
+```{r}
+# Combine travel with pfprsu based on areaId
+travel <- merge(travel, pfpr[,.(areaId, pfpr)], by = "areaId")
+# Combine geographic data with travel based on areaId
+travel<- merge(travel, denom[,c("areaId", "pop", "lon", "lat")], by = "areaId")
+
+# Here's the subset that I'll be dealing with for the travel model
+travel.model.data <- travel[, .(areaId, lon, lat, X, Y, # areaID and location
+                                # A2 region and whether or not the patch is near Malabo
+                                ad2, malabo, 
+                                # Population, PfPR
+                                pop, pfpr, 
+                                 # Cluster ID
+                                clusId,
+                                # Number surveyed, number surveyed with Pf+
+                                n, pf,
+                                # Number surveyed who reported fever, got treatment
+                                pffv, pftto, 
+                                # Number of times traveled to each destination, 2015-2017
+                                to, ti_ban, ti_mal, ti_lub, ti_ria, ti_mok, ti_ure 
+)]
+```
+
+
+### 3. Travel times
+We use the time of travel as a proxy for geographical distance when fitting our model because the geography of Bioko Island restricts movement in straight lines across the island.  We calculate the travel time between each patch and each destination region by averaging over the travel times to each patch in the destination region. We either perform a simple average, or an average weighted according to resident population in each target patch (the two ways of averaging do not produce dramatically different results).
+
+```{r}
+all = travel.model.data[, .(areaId, ad2, pop)]
+all.times = merge(all, times, by = "areaId", all = FALSE)
+# Names of the target regions
+admin2.names = levels(unique(travel.model.data$ad2))
+# Names of target regions, "tt" = "time to" 
+tt.weighted.names = c("tt.weighted.ban", "tt.weighted.lub", "tt.weighted.mal",
+                      "tt.weighted.mok", "tt.weighted.ria", "tt.weighted.ure")
+tt.sum.names = c("tt.sum.ban", "tt.sum.lub", "tt.sum.mal",
+                 "tt.sum.mok", "tt.sum.ria", "tt.sum.ure")
+# Loop over target regions
+for(i in c(1:length(admin2.names))){
+  # Time to all patches in the target region
+  reg.times <- all.times[ad2==admin2.names[[i]]][, !c("areaId", "ad2", "pop" )]
+  # The weighted average of travel times to the malabo area from each patch
+  reg.times1 <- data.table(
+    all.times[ad2 == admin2.names[[i]] ]$pop %*% as.matrix(
+      reg.times, 
+      ncol = ncol(reg.times), 
+      nrow = nrow(all.times[ad2 == admin2.names[[i]] ])
+      )/sum(all.times[ad2 == admin2.names[[i]] ]$pop)
+    )
+  reg.times1 <- melt(reg.times1,
+                     measure.vars = colnames(reg.times1), 
+                     variable.name = "areaId", 
+                     value.name = tt.weighted.names[[i]])
+  reg.times1$areaId <- as.integer(levels(reg.times1$areaId))
+  # The unweighted average of travel times to the malabo area from each patch
+  reg.times2 <- data.table(
+    matrix(
+      colSums(as.matrix(
+        reg.times, 
+        ncol = ncol(mal.times), 
+        nrow = nrow(all.times[ad2 == admin2.names[[i]] ]))
+        )/nrow(all.times[ad2 == admin2.names[[i]] ]), nrow = 1)
+    )
+  reg.times2 <- melt(reg.times2, 
+                     measure.vars = colnames(reg.times2), 
+                     variable.name = "areaId", 
+                     value.name = tt.sum.names[[i]] )
+  reg.times2$areaId = reg.times1$areaId
+  # Add to data set
+  # Average time to travel to each of the regions
+  travel.model.data <- merge(travel.model.data, reg.times1, by = "areaId", all = FALSE)
+  travel.model.data <- merge(travel.model.data, reg.times2, by = "areaId", all = FALSE)
+}
+```
+
+We estimate the travel time to mainland by assuming that first people travel to Malabo and then take a plane off-island. The time to travel to the mainland by plane is 45 minutes, so we add 3x45 minutes extra travel time to reach the mainland from Malabo.
+```{r}
+# Use: time to travel to mainland = time to travel to malabo + 45*3 minutes
+# where 45 minutes is the time of the flight
+travel.model.data$tt.weighted.o = travel.model.data$tt.weighted.mal + 135
+travel.model.data$tt.sum.o = travel.model.data$tt.sum.mal + 135
+```
+
+#### 4. Fit the data to a travel model
+
+First, we reformat our data to be easier to plug into our travel model.  The off-island population is taken from CIA world factbook for the whole of EG minus the BI total population.
+```{r}
+reg.names = c("to", "ti_ban", "ti_lub", "ti_mal", "ti_mok", "ti_ria", "ti_ure")
+tt.s.names = c("tt.sum.o", tt.sum.names)
+tt.w.names = c("tt.weighted.o",tt.weighted.names)
+travel.model.data <- melt(travel.model.data,
+                          id.vars = setdiff(colnames(travel.model.data), 
+                                            union(union(tt.w.names, tt.s.names), 
+                                                  reg.names)),
+                          measure.vars = list(reg.names, tt.w.names, tt.s.names),
+                          variable.name = "Region", 
+                          value.name = c("Freq", "TravelTime.Weighted", "TravelTime.Sum"),
+                          value.factor = TRUE)
+# Set NA travel frequencies to 0:
+travel.model.data[is.na(Freq)]$Freq <- 0
+
+# Write in the population of each target region
+reg.pops = c(552408, 
+             sum(travel.model.data[ad2 == "Baney"]$pop)/7,
+             sum(travel.model.data[ad2 == "Luba"]$pop)/7,
+             sum(travel.model.data[ad2 == "Malabo"]$pop)/7,
+             sum(travel.model.data[ad2 == "Moka"]$pop)/7,
+             sum(travel.model.data[ad2 == "Riaba"]$pop)/7,
+             sum(travel.model.data[ad2 == "Ureka"]$pop)/7)
+travel.model.data$pop.Region = 0
+travel.model.data$pop.Region <- sapply(travel.model.data$Region, 
+                                       FUN = function(s){return(reg.pops[[s]])})
+# Rename the "Regions," mapping from numbers to location names
+reg.names = c("off", "baney", "luba", "malabo", "moka", "riaba", "ureka")
+travel.model.data$TravelRegion <- sapply(travel.model.data$Region, 
+                                         FUN = function(s){return(reg.names[[s]])})
+```
+
+We now fit the data to the travel model.  The travel model is a statistical model that estimates the number of times a person travels from one patch to one destination based on the distance (travel time) separating the two locations and the respective populations in each location.  We expect that the travel frequency should increase with the population of the origin and destination region and decrease with travel time.
+$$
+Freq \sim \text{population}_\text{origin} + \text{population}_\text{destination region} + \text{time}_\text{separation}
+$$
+We use a zero inflated negative binomial regression to fit our model.  In order to remain consistent with the assumptions that go into the model (Gaussian-distributed input variables), we log-transform each of the population data sets.
+```{r}
+# Log transform population data
+travel.model.data$pop.log = log(travel.model.data$pop)
+travel.model.data$pop.Region.log = log(travel.model.data$pop.Region)
+# Here we use the weighted average travel times
+# but the unweighted average could also be used and the answers are not too different
+gravity.zinb.log.w <- zeroinfl(Freq ~ pop.log + pop.Region.log + TravelTime.Weighted, 
+                               data = travel.model.data, dist = "negbin")
+```
+
+We can now use the model to "predict" what the frequency of travel is between each origin patch and each destination location
+```{r}
+travel.model.data$predict.zinb.log.w <- predict(gravity.zinb.log.w, 
+                                                data = travel.model.data, 
+                                                type = "response")
+```
+
+__Note__: We probably want to establish some standards for evaluating goodness of fit.  Using the zero-inflated negative binomial model to fit the travel model was determined using Vuong's non-nested hypothesis test, which compares two models to one another.  But in the future we will want to also be able to quantitatively compare our data and our model's prediction.
+
+#### 5. Calculate probability of fever and seeking treatment
+```{r}
+h <- travel.model.data[pf > 0][, c("pf", "pffv", "pftto")]
+fever.pf = sum(h$pffv)/sum(h$pf)
+# binom.test(x = c(sum(h$pffv), sum(h$pf - h$pffv)))
+treat.pf = sum(h[pffv >0]$pftto)/sum(h[pffv >0]$pffv)
+# binom.test(x = c(sum(h[pffv >0]$pftto),
+#            sum(h[pffv >0]$pffv) - sum(h[pffv >0]$pftto) )) # 0.6025641
+```
+
+
+#### 6. Construct the TaR matrix
+```{r}
+# In order to keep track of each patch, we need to index on areaID
+areaIds <- sort(unique(travel.model.data$areaId))
+```
+
+Construct the vector of denominator populations ($\vec{H}$) for each patch and each destination region.
+```{r}
+human.pops = rep(0, 194+7)
+# Island patches
+for (i in 1:194){
+  human.pops[i] <- travel.model.data[areaId == areaIds[i] & Region == 1]$pop
+}
+human.pops[(194 + 1) : (194 + 7)] <- reg.pops
+```
+
+Construct the vector of PfPR ($\vec{x}$) for each patch and each destination region using a weighted sum.
+```{r}
+pfpr.input = rep(0, 194 + 7)
+# Island patches
+for (i in 1:194){
+  pfpr.input[i] <- travel.model.data[areaId == areaIds[i] & Region == 1]$pfpr
+}
+# "Off-island"
+pfpr.input[194 + 1] <- 0.5
+# Baney
+pfpr.input[194 + 2] <- (travel.model.data[ad2 == "Baney"]$pop %*% 
+                       travel.model.data[ad2 == "Baney"]$pfpr / 
+                       sum(travel.model.data[ad2 == "Baney"]$pop))[[1]]
+# Luba
+pfpr.input[194 + 3] <- (travel.model.data[ad2 == "Luba"]$pop %*% 
+                       travel.model.data[ad2 == "Luba"]$pfpr / 
+                       sum(travel.model.data[ad2 == "Luba"]$pop))[[1]]
+# Malabo
+pfpr.input[194 + 4] <- (travel.model.data[ad2 == "Malabo"]$pop %*% 
+                       travel.model.data[ad2 == "Malabo"]$pfpr / 
+                       sum(travel.model.data[ad2 == "Malabo"]$pop))[[1]]
+# Moka
+pfpr.input[194 + 5] <- (travel.model.data[ad2 == "Moka"]$pop %*% 
+                       travel.model.data[ad2 == "Moka"]$pfpr / 
+                       sum(travel.model.data[ad2 == "Moka"]$pop))[[1]]
+# Riaba
+pfpr.input[194 + 6] <- (travel.model.data[ad2 == "Riaba"]$pop %*% 
+                       travel.model.data[ad2 == "Riaba"]$pfpr / 
+                       sum(travel.model.data[ad2 == "Riaba"]$pop))[[1]]
+# Ureka
+pfpr.input[194 + 7] <- (travel.model.data[ad2 == "Ureka"]$pop %*% 
+                       travel.model.data[ad2 == "Ureka"]$pfpr / 
+                       sum(travel.model.data[ad2 == "Ureka"]$pop))[[1]]
+```
+
+As noted above, one key parameter that is missing from our data is a time scale that allows us to determine the fraction of time spent away from home, as opposed to how frequently each person travels to each destination region.  We will assume at this point that every person spends on average 3 days out of the year away from home, or 0.8% of the time traveling.
+```{r}
+# Fraction of time away
+fraction.time.away = 10./365
+# Most of the elements of this matrix are empty:
+# Only where i is a patch and j is a region do we have nonzero entries
+P.ij <- diag(1, nrow = 194+7, ncol = 194+7)
+for (i in 1:194){
+  holder = rep(0, 7)
+  for (j in 1:7){
+    holder[j] <- travel.model.data[areaId == areaIds[i] & TravelRegion == reg.names[j]]$predict.zinb.log.w
+  }
+  # Average number of trips each person makes
+  holder <- holder/travel.model.data[areaId==areaIds[i]]$pop
+  # Fraction of time spent in each location by each person
+  # Note that the time spent on the mainland 
+  holder <-  c(7,3,3,3,3,3,3)*52/8/365*holder
+  # Time spent away
+  P.ij[i, (194 + 1):(194+7)] <- holder
+  # Time spent at home
+  P.ij[i, i] <- 1 - sum(holder)
+}
+```
+
+
+#### 7. Solving for force of infection using TaR matrix
+Define parameters.  In the most general version of the multi-patch RM model many of these parameters are allowed to vary across patches, but here we will assume they are constant
+```{r}
+# Assemble the parameters!
+a = 0.3*0.9
+b = 0.55
+c = 0.15
+rho = fever.pf*treat.pf
+r = 1./200 # rate at which people become cured
+eta = 1./30 # rate at which prophylaxis wears off
+p = 0.9 # fraction of surviving mosquitoes
+g = 1 - p # fraction of dying mosquitoes
+peip = p^11 # fraction of mosquitoes who survive incubation period
+```
+
+Recalling:
+$$
+\left(\vec{h}_{(\psi)}\right)_i = \sum_i \left(\psi^{-1}\right)_{ij} \cdot \left(\frac{r}{1 - \rho} \frac{x_i}{\left(1 - (1 + \frac{\rho}{\epsilon}\frac{r}{1-\rho} ) x_i \right)}\right)
+$$
+
+```{r}
+g <- r/(1-rho)*pfpr.input/(1-(1+rho*r/eta/(1-rho))*pfpr.input)
+FOI <- ginv(P.ij) %*% g
+# merge with travel.model.data
+travel.model.data[, foi:=NULL]
+travel.model.data <- merge(travel.model.data, data.table(areaId = areaIds, foi = FOI[1:194]), by = "areaId")
+```
+
+__Sanity Check__: One important constraint on the solution here is that the FOI must be non-negative.
+
+One problem here is that apparently there's a lot of smoothing going on - it's not clear whether this is because of the travel model or not?
+It could be that because there's higher PfPR in Malabo, but also more travel in Malabo, we also have decreased local EIR in Malabo - the residents of that district have increased total risk because of the time spent on the island?
+At the same time, the time spent traveling is a tiny fraction of the total time - so why should we expect the travel matrix to have any noticeable effect at all?
+
+### Visualizations
+```{r, include = FALSE}
+library(ggplot2, quietly = TRUE)
+library(sp, quietly = TRUE)
+library(maptools, quietly = TRUE)
+library(rgdal, quietly = TRUE)
+
+# Read in shape files of Bioko Island and the area-level grid
+bioko<-readOGR("BI_maps/bioko", "bioko_admin1")
+areas_inh<-readOGR("BI_maps/areas_inh", "areas_inh")
+areasf<-fortify(areas_inh, region = "areaId")
+# Merge travel.model.data with the area-level grid shapefile
+area.data = merge(areasf, travel.model.data, by.x = "id", by.y = "areaId", all=TRUE)
+plot.data<-area.data[order(area.data$order), ]
+```
+
+
+
+```{r fig.width=6, fig.height=6, echo = FALSE}
+# PfPR map
+p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
+p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
+pr <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = pfpr*100), color = NA, size = 0.25) +
+  scale_fill_gradient(name="PfPR (%)", low="yellow", high="red", limits=c(0,40)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+pr
+```
+
+```{r fig.width=6, fig.height=6, echo = FALSE}
+# EIR map
+p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
+p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
+eir <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = foi*365), color = NA, size = 0.25) +
+  scale_fill_gradient(name="FOI (Annual EIR)", low="yellow", high="red", limits=c(0,1.25)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+eir
+```
 
