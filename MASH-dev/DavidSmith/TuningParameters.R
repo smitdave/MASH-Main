@@ -12,7 +12,7 @@ PAR = list(
   P_FF = .1,
   P_FB = .84,
   
-  # Transitions out of B 
+  # Tr    ansitions out of B 
   P_BF = .15,
   P_BB = .05, 
   P_BR = .75,
