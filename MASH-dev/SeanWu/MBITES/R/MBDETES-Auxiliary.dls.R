@@ -254,7 +254,6 @@ MBDETES_BstateTransitions <- function(site){
   # Does the mosquito choose  
   A = MBITES:::Parameters$get_B_succeed()
 
-
   # check the function
   if(site$has_feed()){
     host = site$get_feed(1L)$RiskQ$typewtsQ()
