@@ -316,6 +316,9 @@ ggplot() + geom_histogram(data = vc_df, aes(vc), fill = "steelblue", bins = 20) 
 # spatial bionomics
 ###############################################################################
 
+library(parallel)
+library(lokern)
+
 # spatial vectorial capacity
 vc_pairs <- lapply(vc,function(x){x$spatialVC})
 vc_pairs <- Filter(function(x){length(x)>0},vc_pairs)
@@ -330,52 +333,36 @@ vc_dist <- lapply(vc_pairs,function(x){
   return(out)
 })
 vc_dist <- do.call(c,vc_dist)
+vc_dist <- sort(vc_dist,decreasing = FALSE)
 
+vc_bins <- unique(vc_dist)
 
-distV <- as.vector(dist)
-probV <- as.vector(kernel)
-
-# get rid of diagonal of dist matrix (mosy has no self loops)
-zeroD <- which(fequal(distV,0))
-
-distV <- distV[-zeroD]
-probV <- probV[-zeroD]
-
-# sort in increasing distance
-ordD <- order(distV)
-
-distV <- distV[ordD]
-probV <- probV[ordD]
-
-# make distance bins
-distBins <- unique(distV)
+# comparisons of floats
+fequal <- function(x,y){
+  abs(x-y) <= .Machine$double.eps
+}
 
 # get empirical PDF by summing stuff in the distance bins (takes awhile, use parallel if you can)
-PDF_emp <- mclapply(X = distBins,FUN = function(x,probV,distV){
-  sum(probV[which(fequal(distV,x))])
-},probV=probV,distV=distV,mc.cores = detectCores()-2)
+PDF_emp <- mclapply(X = vc_bins,FUN = function(x,vc_dist){
+  length(vc_dist[which(fequal(vc_dist,x))])
+},vc_dist=vc_dist,mc.cores = detectCores()-2)
 PDF_emp <- unlist(PDF_emp) # mclapply outputs lists; coerce to vector
-
 # technically its a PMF so we normalize it
 PDF_emp <- PDF_emp/sum(PDF_emp)
 
 # get empirical CDF by preforming a cumulative sum over data points in distance bins
 CDF_emp <- cumsum(PDF_emp)
 
-# smoothed CDF
-CDF_sth <- smooth.spline(x = distBins,y = CDF_emp,all.knots = TRUE,cv = NA,keep.data = FALSE)
-CDF_sth$y <- CDF_sth$y / max(CDF_sth$y)
-# force the smoothed CDF to be an increasing function
-CDF_sth$y <- sort(CDF_sth$y,decreasing = FALSE)
-# cdf_err <- which(diff(CDF_sth$y) < 0)
-# if(length(cdf_err)>0){
-#   CDF_sth$y[cdf_err[1]:length(CDF_sth$y)] <- sort(CDF_sth$y[cdf_err[1]:length(CDF_sth$y)],decreasing = FALSE)
-# }
+# smoothed CDF and PDF
+CDF_sth <- glkerns(vc_bins,CDF_emp,deriv = 0,korder = 4,x.out=vc_bins)
+PDF_sth <- glkerns(vc_bins,CDF_emp,deriv = 1,korder = 3,x.out=vc_bins)
 
-# differentiate smoothed CDF at bins to get smooth PDF (PMF really)
-PDF_sth <- predict(object = CDF_sth,x = distBins,deriv = 1)
-pdf_err <-which(PDF_sth$y<0)
-if(length(pdf_err)>0){
-  PDF_sth$y[pdf_err] = 0
-}
-PDF_sth$y <- PDF_sth$y/sum(PDF_sth$y) # normalize
+# plot
+par(mar = c(5, 4, 4, 4) + 0.3)  # Leave space for z axis
+plot(CDF_sth$x.out, CDF_sth$est,type="l",col="firebrick3",lwd=3,
+     ylab="CDF",xlab="Distance",main="Spatial Dispersion of Vectorial Capacity")
+par(new = TRUE)
+plot(PDF_sth$x.out, PDF_sth$est, type = "l",col="mediumblue",lwd=3,
+     axes = FALSE, bty = "n", xlab = "", ylab = "")
+axis(side=4, at = pretty(range(PDF_sth$est)))
+mtext("PDF", side=4, line=3)
