@@ -263,7 +263,7 @@ hardreset()
 
 
 ###############################################################################
-# Parse output
+# Analysis
 ###############################################################################
 
 library(jsonlite)
@@ -276,6 +276,11 @@ mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE
 mosquitos_df <- mosquitos_df[-which(sapply(mosquitos_df$id,is.null)),]
 humans_df <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
 humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
+
+
+###############################################################################
+# basic bionomics
+###############################################################################
 
 # lifespan
 lf <- Bionomics_lifespan(mosquitos_df)
@@ -306,6 +311,11 @@ vc_df <- data.frame(vc=sapply(vc,function(x){x$VC}))
 ggplot() + geom_histogram(data = vc_df, aes(vc), fill = "steelblue", bins = 20) +
   ggtitle("Vectorial Capacity") + xlab("Secondary Bites") + ylab("Frequency") + theme_bw()
 
+
+###############################################################################
+# spatial bionomics
+###############################################################################
+
 # spatial vectorial capacity
 vc_pairs <- lapply(vc,function(x){x$spatialVC})
 vc_pairs <- Filter(function(x){length(x)>0},vc_pairs)
@@ -320,3 +330,52 @@ vc_dist <- lapply(vc_pairs,function(x){
   return(out)
 })
 vc_dist <- do.call(c,vc_dist)
+
+
+distV <- as.vector(dist)
+probV <- as.vector(kernel)
+
+# get rid of diagonal of dist matrix (mosy has no self loops)
+zeroD <- which(fequal(distV,0))
+
+distV <- distV[-zeroD]
+probV <- probV[-zeroD]
+
+# sort in increasing distance
+ordD <- order(distV)
+
+distV <- distV[ordD]
+probV <- probV[ordD]
+
+# make distance bins
+distBins <- unique(distV)
+
+# get empirical PDF by summing stuff in the distance bins (takes awhile, use parallel if you can)
+PDF_emp <- mclapply(X = distBins,FUN = function(x,probV,distV){
+  sum(probV[which(fequal(distV,x))])
+},probV=probV,distV=distV,mc.cores = detectCores()-2)
+PDF_emp <- unlist(PDF_emp) # mclapply outputs lists; coerce to vector
+
+# technically its a PMF so we normalize it
+PDF_emp <- PDF_emp/sum(PDF_emp)
+
+# get empirical CDF by preforming a cumulative sum over data points in distance bins
+CDF_emp <- cumsum(PDF_emp)
+
+# smoothed CDF
+CDF_sth <- smooth.spline(x = distBins,y = CDF_emp,all.knots = TRUE,cv = NA,keep.data = FALSE)
+CDF_sth$y <- CDF_sth$y / max(CDF_sth$y)
+# force the smoothed CDF to be an increasing function
+CDF_sth$y <- sort(CDF_sth$y,decreasing = FALSE)
+# cdf_err <- which(diff(CDF_sth$y) < 0)
+# if(length(cdf_err)>0){
+#   CDF_sth$y[cdf_err[1]:length(CDF_sth$y)] <- sort(CDF_sth$y[cdf_err[1]:length(CDF_sth$y)],decreasing = FALSE)
+# }
+
+# differentiate smoothed CDF at bins to get smooth PDF (PMF really)
+PDF_sth <- predict(object = CDF_sth,x = distBins,deriv = 1)
+pdf_err <-which(PDF_sth$y<0)
+if(length(pdf_err)>0){
+  PDF_sth$y[pdf_err] = 0
+}
+PDF_sth$y <- PDF_sth$y/sum(PDF_sth$y) # normalize
