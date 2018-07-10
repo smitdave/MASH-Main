@@ -27,7 +27,7 @@ directory <- "/Users/slwu89/Desktop/mbites/"
 ###############################################################################
 
 # number of sites
-nSite = 20
+nSite = 25
 
 # number of resources
 nFeed = 15
@@ -44,10 +44,25 @@ points.clustered = function(n, meanParents = 10, clusteredness = .25, ...){
   return(ps)
 }
 
+# get an allocation of resources to sites with minimal overlap
+get_minimalOverlap <- function(nSite,nFeed,nAqua){
+  feed <- sample(x = 1:nSite,size = nFeed)
+  notFeed <- setdiff(x = 1:nSite,y = feed)
+  aqua <- notFeed
+  if(length(aqua)<nAqua){
+    aqua <- append(aqua,sample(feed,nAqua-length(aqua)))
+  }
+  if(length(aqua)>nAqua){
+    aqua <- aqua[1:nAqua]
+  }
+  return(list(feed=feed,aqua=aqua))
+}
+
 # assign resources to sites
-ix_feed = 1:nFeed
+resources <- get_minimalOverlap(nSite,nFeed,nAqua)
+ix_feed = resources$feed
 w_feed = rgamma(n=nFeed,shape=1,rate=1)
-ix_aqua = (nSite-nAqua):nSite
+ix_aqua = resources$aqua
 w_aqua = rgamma(n=nAqua,shape=1,rate=1)
 
 # generate lambda
@@ -178,7 +193,7 @@ nHumans = 200
 
 humans = data.frame(
   tileID = rep(1,nHumans),
-  siteID = sample(x = 1:nFeed,size = nHumans,replace=TRUE),
+  siteID = sample(x = ix_feed,size = nHumans,replace=TRUE),
   feedingID = rep(1,nHumans),
   w = rep(1,nHumans)
 )
@@ -206,9 +221,9 @@ mosquitos = data.frame(
 # initialize methods
 MBITES_Setup_Timing(timing_model = 2,
                     rate_b = 1/(1/2/24),tmin_b = 0,
-                    rate_bs = 1/(3/24),tmin_bs = 0,
+                    rate_bs = 1/(6/24),tmin_bs = 0,
                     rate_o = 1/(1/2/24),tmin_o = 0,
-                    rate_os = 1/(1/24),tmin_os = 0,
+                    rate_os = 1/(6/24),tmin_os = 0,
                     ppr_model = 2,rate_ppr = 1/(18/24),tmin_ppr = 0
 )
 
@@ -229,9 +244,9 @@ trackBloodHost()
 trackOviposition()
 
 # set parameters
-MBITES:::Parameters$set_parameters(disperse = 0.05,Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
-                                   Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.99,O_succeed = 0.99,
-                                   energyFromBlood_b = 1,bm_a = 10)
+MBITES:::Parameters$set_parameters(disperse = 0.25,Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
+                                   Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
+                                   S_u = 0,energyFromBlood_b = 2e16)
 
 # initialize a tile
 Tile_Initialize(landscape)
@@ -262,11 +277,46 @@ mosquitos_df <- mosquitos_df[-which(sapply(mosquitos_df$id,is.null)),]
 humans_df <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
 humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 
+# lifespan
 lf <- Bionomics_lifespan(mosquitos_df)
 mean(lf$lifespan)
 sd(lf$lifespan)
 
-#Mosquito lifespan chart
 ggplot() + geom_histogram(data = lf, aes(lifespan), fill = "steelblue", bins = 20) +
   ggtitle("Mosquito Lifespans") + xlab("Days") + ylab("Frequency") + theme_bw()
 
+# human blood hosts
+bh <- Bionomics_humanBloodHost(mosquitos_df,who = "human")
+mean(bh$humanHost)
+
+ggplot() + geom_histogram(data = bh, aes(humanHost), fill = "steelblue", bins = 20) +
+  ggtitle("Number of Human Blood Hosts per mosquito") + xlab("Num Hosts") + ylab("Frequency") + theme_bw()
+
+# blood meal intervals
+bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "human")
+mean(bmi$bmIntervals)
+
+ggplot() + geom_histogram(data = bmi, aes(bmIntervals), fill = "steelblue", bins = 20) +
+  ggtitle("Human Blood Meal Interval") + xlab("Duration") + ylab("Frequency") + theme_bw()
+
+# vectorial capacity
+vc <- Bionomics_vectorialCapacity(mosquitos = mosquitos_df,humans = humans_df,EIP = 5,spatial = T)
+vc_df <- data.frame(vc=sapply(vc,function(x){x$VC}))
+
+ggplot() + geom_histogram(data = vc_df, aes(vc), fill = "steelblue", bins = 20) +
+  ggtitle("Vectorial Capacity") + xlab("Secondary Bites") + ylab("Frequency") + theme_bw()
+
+# spatial vectorial capacity
+vc_pairs <- lapply(vc,function(x){x$spatialVC})
+vc_pairs <- Filter(function(x){length(x)>0},vc_pairs)
+vc_pairs <- do.call(c,vc_pairs)
+# needs the distance matrix between sites to be called 'dist'
+vc_dist <- lapply(vc_pairs,function(x){
+  out <- NULL
+  i <- x$origin
+  for(j in 1:length(x$dest)){
+    out <- append(out,dist[i,x$dest[j]])
+  }
+  return(out)
+})
+vc_dist <- do.call(c,vc_dist)

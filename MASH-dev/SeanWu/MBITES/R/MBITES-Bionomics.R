@@ -181,6 +181,8 @@ Bionomics_humanBitingRate <- function(mosquitos){
 #'    * Add these secondary bites to the initial bite's human host's individual vectorial capacity.
 #'    * Optionally, record the sites where these secondary bites were dispersed to.
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' Please note that in order to reconstruct kernels for VC, the distance matrix between sites
+#' must be preserved somewhere, as the mosquito only records the index of the site it visited, not the xy coordinates.
 #' @return a list where each element corresponds to a human host.
 #'         Each host has \code{VC}, which is the total number of secondary bites arising from him or her, and
 #'         \code{spatialVC} which is a list of origin/destination pairs tracking dispersion of each initial bite.

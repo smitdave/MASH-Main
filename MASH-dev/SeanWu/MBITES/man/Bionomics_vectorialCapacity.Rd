@@ -16,6 +16,8 @@ find all pairs of bites seperated by more than EIP days, where the other bites c
 \item Add these secondary bites to the initial bite's human host's individual vectorial capacity.
 \item Optionally, record the sites where these secondary bites were dispersed to.
 Mosquitoes that were still alive at the end of simulation are filtered out.
+Please note that in order to reconstruct kernels for VC, the distance matrix between sites
+must be preserved somewhere, as the mosquito only records the index of the site it visited, not the xy coordinates.
 }}
 \usage{
 Bionomics_vectorialCapacity(mosquitos, humans, EIP, spatial = FALSE)
@@ -49,5 +51,7 @@ find all pairs of bites seperated by more than EIP days, where the other bites c
 \item Add these secondary bites to the initial bite's human host's individual vectorial capacity.
 \item Optionally, record the sites where these secondary bites were dispersed to.
 Mosquitoes that were still alive at the end of simulation are filtered out.
+Please note that in order to reconstruct kernels for VC, the distance matrix between sites
+must be preserved somewhere, as the mosquito only records the index of the site it visited, not the xy coordinates.
 }
 }

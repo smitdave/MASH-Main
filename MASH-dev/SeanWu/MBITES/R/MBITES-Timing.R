@@ -140,6 +140,7 @@ mbites_checkEstivation1 <- function(){
       private$tNext = wakeUpTime()
     } else {
       private$alive = FALSE
+      private$cod = "estivation"
     }
   }
 }
