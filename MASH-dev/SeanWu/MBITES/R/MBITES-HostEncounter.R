@@ -69,6 +69,7 @@ mbites_humanEncounter <- function(){
   if(runif(1) < 1 - MBITES:::Parameters$get_surviveH()){
     # does not survive to probe
     private$alive = FALSE
+    private$cod = "surviveH"
   # survives to probe
   } else {
     if(runif(1) < MBITES:::Parameters$get_probeH()){
@@ -77,6 +78,7 @@ mbites_humanEncounter <- function(){
       if(runif(1) < 1 - MBITES:::Parameters$get_surviveprobeH()){
         # does not survive to blood feed
         private$alive = FALSE
+        private$cod = "surviveprobeH"
       # survives to blood feed
       } else {
         if(runif(1) < MBITES:::Parameters$get_feedH()){
@@ -112,6 +114,7 @@ mbites_zooEncounter <- function(){
   if(runif(1) < 1-MBITES:::Parameters$get_surviveZ()){
     # does not survive to feed
     private$alive = FALSE
+    private$cod = "surviveZ"
   # survives to feed
   } else {
     if(runif(1) < MBITES:::Parameters$get_feedZ()){

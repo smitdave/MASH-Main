@@ -102,6 +102,7 @@ mbites_PPRFlight <- function(){
     private$tNow = MBITES:::Parameters$ttEvent$ppr(private$tNow)
     if(runif(1) < 1-self$pPPRFlight()){
       private$alive = FALSE
+      private$cod = "PPRFlight"
     }
   }
 }
@@ -128,6 +129,7 @@ mbites_Overfeeding <- function(){
   # Overfeeding mortality
   if(runif(1) < self$pOverFeed()){
     private$alive = FALSE
+    private$cod = "Overfeeding"
   }
 }
 
