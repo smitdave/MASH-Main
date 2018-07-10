@@ -71,15 +71,17 @@ CDF_emp <- cumsum(PDF_emp)
 CDF_sth <- smooth.spline(x = distBins,y = CDF_emp,all.knots = TRUE,cv = NA,keep.data = FALSE)
 CDF_sth$y <- CDF_sth$y / max(CDF_sth$y)
 # force the smoothed CDF to be an increasing function
-if(length(cdf_err)>0){
-  cdf_err <- which(diff(CDF_sth$y) < 0)
-  CDF_sth$y[cdf_err[1]:length(CDF_sth$y)] <- sort(CDF_sth$y[cdf_err[1]:length(CDF_sth$y)],decreasing = FALSE)
-}
+CDF_sth$y <- sort(CDF_sth$y,decreasing = FALSE)
+# cdf_err <- which(diff(CDF_sth$y) < 0)
+# if(length(cdf_err)>0){
+#   CDF_sth$y[cdf_err[1]:length(CDF_sth$y)] <- sort(CDF_sth$y[cdf_err[1]:length(CDF_sth$y)],decreasing = FALSE)
+# }
 
 # differentiate smoothed CDF at bins to get smooth PDF (PMF really)
 PDF_sth <- predict(object = CDF_sth,x = distBins,deriv = 1)
-if(length(which(PDF_sth$y<0))>0){
-  PDF_sth$y[which(PDF_sth$y<0)] = 0
+pdf_err <-which(PDF_sth$y<0)
+if(length(pdf_err)>0){
+  PDF_sth$y[pdf_err] = 0
 }
 PDF_sth$y <- PDF_sth$y/sum(PDF_sth$y) # normalize
 
@@ -131,10 +133,11 @@ for(i in 1:nsite){
   CDF_sthi <- smooth.spline(x = distBins,y = CDF_empi,all.knots = TRUE,cv = NA,keep.data = FALSE)
   CDF_sthi$y <- CDF_sthi$y / max(CDF_sthi$y)
   # force the smoothed CDF to be an increasing function
-  cdf_erri <- which(diff(CDF_sthi$y) < 0)
-  if(length(cdf_erri)>0){
-    CDF_sthi$y[cdf_erri[1]:length(CDF_sthi$y)] <- sort(CDF_sthi$y[cdf_erri[1]:length(CDF_sthi$y)],decreasing = FALSE)
-  }
+  CDF_sthi$y <- sort(CDF_sthi$y,decreasing = FALSE)
+  # cdf_erri <- which(diff(CDF_sthi$y) < 0)
+  # if(length(cdf_erri)>0){
+  #   CDF_sthi$y[cdf_erri[1]:length(CDF_sthi$y)] <- sort(CDF_sthi$y[cdf_erri[1]:length(CDF_sthi$y)],decreasing = FALSE)
+  # }
 
   # differentiate smoothed CDF at bins to get smooth PDF (PMF really)
   PDF_sthi <- predict(object = CDF_sthi,x = distBins,deriv = 1)
@@ -153,8 +156,8 @@ for(i in 1:nsite){
 }
 
 # save or read back in the object
-# saveRDS(object = sitesKern,file = paste0(dir_dev,"DavidSmith/MBITES-Demo/peridomestic_kern.rds"))
-# sitesKern <- readRDS(file = paste0(dir_dev,"DavidSmith/MBITES-Demo/peridomestic_kern.rds"))
+# saveRDS(object = sitesKern,file = paste0(dir_dev,"DavidSmith/MBITES-Demo/periDomesticKernel.rds"))
+# sitesKern <- readRDS(file = paste0(dir_dev,"DavidSmith/MBITES-Demo/periDomesticKernel.rds"))
 
 # calculate mean of all the smooth CDFs and PDFs
 cdfs <- sapply(X = sitesKern,function(x){x$CDF_sth$y})
@@ -166,14 +169,14 @@ meanPDF <- rowMeans(pdfs)
 alpha <- 0.5
 maxy <- max(sapply(sitesKern,function(x){max(x$PDF_sth$y)}))
 maxy <- round(maxy,digits = 2)
-plot(distBins,sitesKern[[1]]$PDF_sth$y,type="l",col=adjustcolor("mediumblue",alpha),lwd=3,ylim=c(.Machine$double.eps,maxy),xlim=c(0,1))
+plot(distBins,sitesKern[[1]]$PDF_sth$y,type="l",col=adjustcolor("mediumblue",alpha),lwd=3,ylim=c(.Machine$double.eps,maxy),xlim=c(0,4))
 for(i in 2:nsite){
   lines(distBins,sitesKern[[i]]$PDF_sth$y,col=adjustcolor("mediumblue",alpha),lwd=3)
 }
 lines(distBins,meanPDF,col=grey(level = 0.1),lwd=3)
 
 # plot smoothed CDFs
-plot(sitesKern[[1]]$CDF_sth$x,sitesKern[[1]]$CDF_sth$y,type="l",col=adjustcolor("firebrick3",alpha),lwd=3,ylim=c(0,1),xlim=c(0,5))
+plot(sitesKern[[1]]$CDF_sth$x,sitesKern[[1]]$CDF_sth$y,type="l",col=adjustcolor("firebrick3",alpha),lwd=3,ylim=c(0,1),xlim=c(0,4))
 for(i in 2:nsite){
   lines(sitesKern[[i]]$CDF_sth$x,sitesKern[[i]]$CDF_sth$y,col=adjustcolor("firebrick3",alpha),lwd=3)
 }

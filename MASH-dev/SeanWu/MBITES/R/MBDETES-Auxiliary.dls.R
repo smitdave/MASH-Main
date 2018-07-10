@@ -251,7 +251,7 @@ MBDETES_FstateTransitions <- function(site){
 #' @export
 MBDETES_BstateTransitions <- function(site){
 
-  # Does the mosquito choose  
+  # Does the mosquito choose
   A = MBITES:::Parameters$get_B_succeed()
 
   # check the function
@@ -259,7 +259,7 @@ MBDETES_BstateTransitions <- function(site){
     host = site$get_feed(1L)$RiskQ$typewtsQ()
     host = host/sum(host)
   } else {
-    host = c(0,0,0,1) 
+    host = c(0,0,0,1)
   }
   B1=host[1]
   B2=host[2]
@@ -271,21 +271,21 @@ MBDETES_BstateTransitions <- function(site){
   h2 = MBITES:::Parameters$get_probeH()
   C1 = 1-h1
   C2 = h1*h2
-  C3 = h1*(1-h2)  
+  C3 = h1*(1-h2)
 
 
   h3 = MBITES:::Parameters$get_surviveprobeH()
   h4 = MBITES:::Parameters$get_feedH()
   D1 = 1-h3
   D2 = h3*h4
-  D3 = h3*(1-h4) 
+  D3 = h3*(1-h4)
 
   # probability of taking a bloodmeal | other host chosen
   z1 = MBITES:::Parameters$get_surviveZ()
   z2 = MBITES:::Parameters$get_feedZ()
-  C4 = 1-z1  
-  C5 = z1*z2 
-  C6 = z1*(1-z2)  
+  C4 = 1-z1
+  C5 = z1*z2
+  C6 = z1*(1-z2)
 
   # probability of failing | trap chosen
   C7=0.5
@@ -300,13 +300,13 @@ MBDETES_BstateTransitions <- function(site){
 
   I2 = MBDETES_getLeaveUnladen()
 
-  B2R = A*(B1*C2*D2+B2*C6)*F  
-  Fail = ((1-A)+A*(B1*(D3*C2+C3)+B2*C6+B3*C8+B4)) 
+  B2R = A*(B1*C2*D2+B2*C6)*F
+  Fail = ((1-A)+A*(B1*(D3*C2+C3)+B2*C6+B3*C8+B4))
   B2F = Fail*(1-G2)*I2
-  B2B = Fail*(1-G2)*(1-I2) 
+  B2B = Fail*(1-G2)*(1-I2)
 
   # additional mass on D from local hazards
-  B2D = 1-B2R-B2F-B2B  
+  B2D = 1-B2R-B2F-B2B
 
   # normalize
   B2ALL = c(B2F, B2B, B2R, 0, 0, B2D)
