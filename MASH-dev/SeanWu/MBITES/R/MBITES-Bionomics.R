@@ -50,7 +50,8 @@ Bionomics_lifespan <- function(mosquitos) {
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run.
 #' This function returns a data.frame of lifetime blood meals
-#' for each mosquito for a chosen host type.
+#' for each mosquito for a chosen host type. It does not filter mosquitos who took no blood meals
+#' (that is to say 0s are counted and included in the output).
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
 #' @param mosquitos a data.frame of parsed JSON mosquito output
 #' @param who either 'human', 'zoo', or 'all'
@@ -258,10 +259,10 @@ Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
 
 
 ###############################################################################
-# lifetime egg production
+# egg production & oviposition
 ###############################################################################
 
-#' Bionomics: Compute Lifetime Egg Production
+#' Bionomics: Compute Lifetime Egg Production and Spatial Dispersion
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run.
 #' Computes lifetime egg production, as well as its spatial dispersion.
@@ -299,4 +300,40 @@ Bionomics_lifetimeOviposition <- function(mosquitos, spatial=FALSE){
   } else {
     return(out)
   }
+}
+
+#' Bionomics: Compute Oviposition Intervals and Number of Successful Oviposition Events
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' Computes the interval between successful oviposition events and the total number of
+#' successful oviposition events in a mosquito's lifespan (0s are included, that is to say if a mosquito
+#' never successfully oviposited it will contribute a 0 to the vector).
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @export
+Bionomics_ovipositionInterval <- function(mosquitos){
+
+  filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- which(filter)
+
+  numOviposit <- rep(0,length(filter))
+  interval <- vector(mode="list",length=length(filter))
+
+  pb <- txtProgressBar(min = 0,max = length(filter))
+  for(i in 1:length(filter)){
+
+    numOviposit[i] <- length(mosquitos_df[filter[i],"ovipositionTimes"][[1]])
+
+    if(numOviposit[i]>1){
+      interval[[i]] <- diff(mosquitos_df[filter[i],"ovipositionTimes"][[1]])
+    }
+    setTxtProgressBar(pb,i)
+  }
+
+  interval <- Filter(Negate(is.null),interval)
+  interval <- do.call(c,interval)
+
+  return(
+    list(numOviposit=numOviposit,interval=interval)
+  )
 }
