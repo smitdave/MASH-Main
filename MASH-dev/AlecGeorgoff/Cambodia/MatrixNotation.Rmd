@@ -1,0 +1,72 @@
+---
+title: "MatrixNotation"
+output: pdf_document
+---
+### Notation 
+
+The following requires developing notation. We let $\vec X$ denote a vector. We will tend to use capital letters for vectors and matrices, and lower case letters for scalars. In the derivations that follow, matrix and vector operations can be a bit confusing. The following guide describes the text notation and its implementation in R:
+
+```{r}
+a = .3 
+vecX = matrix(c(1,2))
+X = matrix(c(1:4),2,2)
+Y = matrix(c(5:8),2,2)
+```
+
+
+* If $a$ is a scalar and $\vec X$ is a vector or matrix then let $a \vec X$ denote scalar multiplication. 
+
+* Let $X^t$ denote the transpose of the matrix $X$.
+
+```{r}
+t(X)
+```
+
+* If $X$ and $Y$ are matrices, then let $X \times Y$ denotes matrix multiplication. 
+
+```{r}
+X 
+Y
+X %*% Y
+```
+* Let $D(x)$ denote the diagonal matrix, whose on-diagonal elements are $\vec x$.
+
+```{r}
+diag(as.vector(vecX))
+```
+
+* Let $x \odot \vec y = x \times D(y)$. 
+
+```{r}
+X%*%diag(as.vector(vecX))
+```
+
+
+
+* Let $X$ and $Y$ denote matrices that are the same size. Let $x \cdot y$ denotes elementwise multiplication; if $x_{i,j} \in x$ and $y_{i,j} \in y$ then the corresponding element in $\vec x \cdot \vec y$ is $x_{i,j} y_{i,j}$. 
+```{r}
+X*X
+```
+
+* Let $x$ denote a matrix and $\vec y$ denote a vector, then $x \cdot y$ denotes elementwise multiplication; if $x_{i,j} \in x$ and $y_i \in \vec y$ then the corresponding element in $x \cdot \vec y$ is $x_{i,j} y_i$. 
+```{r}
+X*as.vector(vecX)
+```
+
+Note that $X*Y \neq X \cdot Y$ 
+
+```{r}
+X%*%diag(as.vector(vecX))
+```
+
+* Let $1/\vec y$ denote the vector whose elements the inverse of the elements of $\vec y$: If $y_i \neq 0 \in \vec y$ then $1/y_i$ is the corresponding element in $1/\vec y$.
+```{r}
+1/vecX
+```
+
+* Let $\vec 1$ be the identity matrix. 
+
+```{r}
+diag(1, 2)
+```
+
