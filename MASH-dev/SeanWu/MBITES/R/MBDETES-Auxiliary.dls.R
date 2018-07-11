@@ -398,10 +398,10 @@ ELAB_R2X = function(PAR){with(PAR,{
 
   Fail = (1-A) + A*(B0+ B1*C3 + B2*C5)
 
-  O2L = Fail*D2*F3 + B1*C2*D1*E*F1
-  O2O = Fail*D2*(1-F3) + B1*C2*D1*E*(1-F1)
-  O2F = A*B1*C2*D1*(1-E)*F2
-  O2B = A*B1*C2*D1*(1-E)*(1-F2)
+  O2L = Fail*D2*(1-F3) + B1*C2*D1*E*(1-F1)
+  O2O = Fail*D2*F3 + B1*C2*D1*E*F1
+  O2F = A*B1*C2*D1*(1-E)*(1-F2)
+  O2B = A*B1*C2*D1*(1-E)*F2
   O2D = 1-O2L-O2O-O2F-O2B
   O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)
   return(O2ALL)

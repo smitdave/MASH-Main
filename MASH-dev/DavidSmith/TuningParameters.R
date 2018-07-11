@@ -2,14 +2,14 @@
 
 PAR = list(
   # Waiting Times
-  tF = 8/24, # 30 minutes
-  tB = 3/24,   # 3 hours
-  tR = 30/24,  # 18 hours
-  tL = 8/24, # 30 minutes
-  tO = 3/24,   # 1 hour
+  tF =  8/24, 
+  tB =  3/24,   
+  tR = 30/24,  
+  tL =  8/24, 
+  tO =  3/24, 
   
   # Transitions out of F 
-  P_FF = .1,
+  P_FF = .10,
   P_FB = .84,
   
   # Tr    ansitions out of B 
@@ -18,19 +18,19 @@ PAR = list(
   P_BR = .75,
   
   #Transitions out of L 
-  P_LL = .1,
+  P_LL = .10,
   P_LO = .84,
   
   #Transitions out of O 
   P_OL = .15,
   P_OO = .05,
-  P_OB = .3,
+  P_OB = .30,
   P_OF = .45,
   
   #Transitions out of R
   P_RF = .05,
-  P_RB = .2,
-  P_RL = .4,
+  P_RB = .20,
+  P_RL = .40,
   P_RO = .35
 ) 
 
