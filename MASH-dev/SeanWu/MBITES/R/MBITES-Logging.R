@@ -58,7 +58,8 @@ mbites_basicHistoryList <- function(){
     time = private$timeHist[1:private$nEvent],
     sites = private$siteHist[1:private$nEvent],
     search = private$searchHist[1:private$nEvent],
-    behavior = private$stateHist[1:private$nEvent]
+    behavior = private$stateHist[1:private$nEvent],
+    cod = private$cod
   )
 }
 

@@ -109,6 +109,7 @@ mbites_surviveFlight <- function(){
 
   if(runif(1) < 1-p){
     private$alive = FALSE
+    private$cod = "surviveFlight"
   }
 }
 
@@ -275,6 +276,7 @@ mbites_surviveHazards <- function(){
   if(private$alive){
     if(runif(1) < private$site$get_haz()){
       private$alive = FALSE
+      private$cod = "surviveHazards"
     }
   }
 }

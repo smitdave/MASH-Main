@@ -115,7 +115,7 @@ mbites_checkRefeed <- function(){
   # check refeed
   if(runif(1) < self$pReFeed()){
     private$gravid = FALSE
-    private$state = "B" # check with DS
+    private$state = "B"
   }
 }
 

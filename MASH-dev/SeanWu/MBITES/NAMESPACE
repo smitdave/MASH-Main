@@ -2,6 +2,11 @@
 
 export(Aqua_Resource)
 export(Aqua_Resource_Emerge)
+export(Bionomics_bloodIntervals)
+export(Bionomics_humanBitingRate)
+export(Bionomics_humanBloodHost)
+export(Bionomics_lifespan)
+export(Bionomics_vectorialCapacity)
 export(Feeding_Resource)
 export(Generic_Pathogen)
 export(Generic_Pathogen_Parameters)
