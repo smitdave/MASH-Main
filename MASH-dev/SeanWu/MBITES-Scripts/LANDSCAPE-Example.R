@@ -284,40 +284,46 @@ humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 
 # lifespan
 lf <- Bionomics_lifespan(mosquitos_df)
-mean(lf$lifespan)
+mean_lf <- mean(lf$lifespan)
 sd(lf$lifespan)
 
 ggplot() + geom_histogram(data = lf, aes(lifespan), fill = "steelblue", bins = 20) +
-  ggtitle("Mosquito Lifespans") + xlab("Days") + ylab("Frequency") + theme_bw()
+  geom_vline(xintercept = mean_lf,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Mosquito Lifespans (mean: ",round(mean_lf,3),")")) + xlab("Days") + ylab("Frequency") + theme_bw()
 
 # human blood hosts
 bh <- Bionomics_humanBloodHost(mosquitos_df,who = "human")
-mean(bh$humanHost)
+mean_bh <- mean(bh$humanHost)
 
 ggplot() + geom_histogram(data = bh, aes(humanHost), fill = "steelblue", bins = 20) +
-  ggtitle("Number of Human Blood Hosts per mosquito") + xlab("Num Hosts") + ylab("Frequency") + theme_bw()
+  geom_vline(xintercept = mean_bh,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Number of Human Blood Hosts per mosquito (mean: ",round(mean_bh,3),")")) + xlab("Num Hosts") + ylab("Frequency") + theme_bw()
 
 # blood meal intervals
 bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "human")
-mean(bmi$bmIntervals)
+mean_bmi <- mean(bmi$bmIntervals)
 
 ggplot() + geom_histogram(data = bmi, aes(bmIntervals), fill = "steelblue", bins = 20) +
-  ggtitle("Human Blood Meal Interval") + xlab("Duration") + ylab("Frequency") + theme_bw()
+  geom_vline(xintercept = mean_bmi,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Human Blood Meal Interval (mean: ",round(mean_bmi,3),")")) + xlab("Time") + ylab("Frequency") + theme_bw()
 
 # vectorial capacity
 vc <- Bionomics_vectorialCapacity(mosquitos = mosquitos_df,humans = humans_df,EIP = 10,spatial = T)
 vc_df <- data.frame(vc=sapply(vc,function(x){x$VC}))
+mean_vc <- mean(vc_df$vc)
 
 ggplot() + geom_histogram(data = vc_df, aes(vc), fill = "steelblue", bins = 20) +
-  ggtitle("Vectorial Capacity") + xlab("Secondary Bites") + ylab("Frequency") + theme_bw()
+  geom_vline(xintercept = mean_vc,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Vectorial Capacity (mean: ",round(mean_vc,3),")")) + xlab("Secondary Bites") + ylab("Frequency") + theme_bw()
 
 # lifetime egg production
 egg <- Bionomics_lifetimeOviposition(mosquitos_df,TRUE)
-
 egg_df <- data.frame(egg=egg$lifetime)
+mean_egg <- mean(egg_df$egg)
 
 ggplot() + geom_histogram(data = egg_df, aes(egg), fill = "steelblue", bins = 20) +
-  ggtitle("Lifetime Egg Production") + xlab("Eggs") + ylab("Frequency") + theme_bw()
+  geom_vline(xintercept = mean_egg,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Lifetime Egg Production (mean: ",round(mean_egg,3),")")) + xlab("Eggs") + ylab("Frequency") + theme_bw()
 
 
 ###############################################################################
@@ -381,7 +387,6 @@ mtext("PDF", side=4, line=3)
 ###############################################################################
 
 egg_pairs <- Filter(f = function(x){
-  # browser()
   !(is.nan(x$natal) && is.nan(x$dest))
 },x = egg$dispersion)
 
