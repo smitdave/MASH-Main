@@ -123,7 +123,8 @@ find_roots <- function(R_0_v, R_0_f,
   chi_v_SS <- ss$root[1] / H_v
   chi_f_SS <- ss$root[2] / H_f
   
-  return(c(chi_v_SS, chi_f_SS))
+  # return(c(chi_v_SS, chi_f_SS))
+  return(ss)
 }
 
 ###################################

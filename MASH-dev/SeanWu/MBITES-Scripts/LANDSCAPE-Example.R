@@ -27,11 +27,11 @@ directory <- "/Users/slwu89/Desktop/mbites/"
 ###############################################################################
 
 # number of sites
-nSite = 20
+nSite = 55
 
 # number of resources
-nFeed = 15
-nAqua = 15
+nFeed = 30
+nAqua = 30
 
 # source: https://github.com/slwu89/PlosCompBio_2013/blob/master/fig2/code/functionsModel.R
 points.clustered = function(n, meanParents = 10, clusteredness = .25, ...){
@@ -44,10 +44,25 @@ points.clustered = function(n, meanParents = 10, clusteredness = .25, ...){
   return(ps)
 }
 
+# get an allocation of resources to sites with minimal overlap
+get_minimalOverlap <- function(nSite,nFeed,nAqua){
+  feed <- sample(x = 1:nSite,size = nFeed)
+  notFeed <- setdiff(x = 1:nSite,y = feed)
+  aqua <- notFeed
+  if(length(aqua)<nAqua){
+    aqua <- append(aqua,sample(feed,nAqua-length(aqua)))
+  }
+  if(length(aqua)>nAqua){
+    aqua <- aqua[1:nAqua]
+  }
+  return(list(feed=feed,aqua=aqua))
+}
+
 # assign resources to sites
-ix_feed = 1:nFeed
+resources <- get_minimalOverlap(nSite,nFeed,nAqua)
+ix_feed = resources$feed
 w_feed = rgamma(n=nFeed,shape=1,rate=1)
-ix_aqua = (nSite-nAqua):nSite
+ix_aqua = resources$aqua
 w_aqua = rgamma(n=nAqua,shape=1,rate=1)
 
 # generate lambda
@@ -70,7 +85,7 @@ wSite = rgamma(n = nSite,shape = 1,rate = 1)
 landscape <- vector(mode = "list",length = nSite)
 
 # movement kernel
-exp_fit <- function(d,q,up=1){
+exp_fit <- function(d,q,up=1e3){
   f_opt = function(x){
     abs(d - qexp(p = q,rate = x))
   }
@@ -82,7 +97,7 @@ exp_kern <- exp_fit(d = 0.1,q = 0.75)
 
 # movement matrices
 dist <- as.matrix(dist(xy_points,diag = TRUE,upper = TRUE))
-movement <- apply(X = dist,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = 1/exp_kern)})
+movement <- apply(X = dist,MARGIN = 1,FUN = function(x){dtrunc(x = x,spec = "exp",a = 1e-12,b = Inf, rate = exp_kern)})
 movement <- movement/rowSums(movement)
 
 
@@ -150,6 +165,10 @@ for(i in 1:nAqua){
 # write landscape
 ###############################################################################
 
+write.table(x = dist,
+            file = paste0(directory,"sites_dist.csv"),
+            sep = ",",row.names = F,col.names = F)
+
 write.table(x = t(sapply(landscape,function(x){x$xy})),
           file = paste0(directory,"sites_xy.csv"),
           sep = ",",row.names = F,col.names = F)
@@ -174,7 +193,7 @@ nHumans = 200
 
 humans = data.frame(
   tileID = rep(1,nHumans),
-  siteID = sample(x = 1:nFeed,size = nHumans,replace=TRUE),
+  siteID = sample(x = ix_feed,size = nHumans,replace=TRUE),
   feedingID = rep(1,nHumans),
   w = rep(1,nHumans)
 )
@@ -200,18 +219,12 @@ mosquitos = data.frame(
 library(MBITES)
 
 # initialize methods
-# deterministic wait times
-# MBITES_Setup_Timing(timing_model = 1,
-#                     wait_b = 1,wait_o = 1,wait_m = 1,wait_s = 1,
-#                     wait_bs = 1,wait_os = 1,wait_ms = 1,wait_ss = 1,
-#                     ppr_model = 1,wait_ppr = 0.5/24)
-
 MBITES_Setup_Timing(timing_model = 2,
-                    rate_b = 1/3,tmin_b = 0,
-                    rate_bs = 1/3,tmin_bs = 0,
-                    rate_o = 1/3,tmin_o = 0,
-                    rate_os = 1/3,tmin_os = 0,
-                    ppr_model = 1,wait_ppr = 0.5/24
+                    rate_b = 1/(3/24),tmin_b = 0,
+                    rate_bs = 1/(8/24),tmin_bs = 0,
+                    rate_o = 1/(3/24),tmin_o = 0,
+                    rate_os = 1/(8/24),tmin_os = 0,
+                    ppr_model = 2,rate_ppr = 1/(30/24),tmin_ppr = 0
 )
 
 MBITES_Setup_BloodMeal(overfeeding = FALSE)
@@ -231,8 +244,9 @@ trackBloodHost()
 trackOviposition()
 
 # set parameters
-MBITES:::Parameters$set_parameters(disperse = 0.01,Bs_surv = 0.98,Os_surv = 0.98,B_surv = 0.98,O_surv = 0.98,
-                                   Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.99,O_succeed = 0.99)
+MBITES:::Parameters$set_parameters(disperse = 0.25,Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
+                                   Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
+                                   S_u = 0)
 
 # initialize a tile
 Tile_Initialize(landscape)
@@ -244,11 +258,173 @@ MBITES_Initialize(mosquitos)
 
 # run simulation
 set_output(directory = directory,runID = 1)
-# set_output(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 1)
-simulation(tMax = 365,pretty = TRUE)
+simulation(tMax = 365*2,pretty = TRUE)
+hardreset()
 
-reset(directory = directory,runID = 2)
-# reset(directory = "/Users/dtcitron/Documents/MASH/MICRO-testing/prettified/",runID = 2)
-Human_NULL_Initialize(humans)
-MBITES_Initialize(mosquitos)
-simulation(tMax = 365,pretty = TRUE)
+
+###############################################################################
+# Analysis
+###############################################################################
+
+library(jsonlite)
+library(ggplot2)
+
+# where the files can be found
+output_dir <- paste0(directory,"run1")
+
+mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE)
+mosquitos_df <- mosquitos_df[-which(sapply(mosquitos_df$id,is.null)),]
+humans_df <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
+humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
+
+
+###############################################################################
+# basic bionomics
+###############################################################################
+
+# lifespan
+lf <- Bionomics_lifespan(mosquitos_df)
+mean_lf <- mean(lf$lifespan)
+sd(lf$lifespan)
+
+ggplot() + geom_histogram(data = lf, aes(lifespan), fill = "steelblue", bins = 20) +
+  geom_vline(xintercept = mean_lf,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Mosquito Lifespans (mean: ",round(mean_lf,3),")")) + xlab("Days") + ylab("Frequency") + theme_bw()
+
+# human blood hosts
+bh <- Bionomics_humanBloodHost(mosquitos_df,who = "human")
+mean_bh <- mean(bh$humanHost)
+
+ggplot() + geom_histogram(data = bh, aes(humanHost), fill = "steelblue", bins = 20) +
+  geom_vline(xintercept = mean_bh,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Number of Human Blood Hosts per mosquito (mean: ",round(mean_bh,3),")")) + xlab("Num Hosts") + ylab("Frequency") + theme_bw()
+
+# blood meal intervals
+bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "human")
+mean_bmi <- mean(bmi$bmIntervals)
+
+ggplot() + geom_histogram(data = bmi, aes(bmIntervals), fill = "steelblue", bins = 20) +
+  geom_vline(xintercept = mean_bmi,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Human Blood Meal Interval (mean: ",round(mean_bmi,3),")")) + xlab("Time") + ylab("Frequency") + theme_bw()
+
+# vectorial capacity
+vc <- Bionomics_vectorialCapacity(mosquitos = mosquitos_df,humans = humans_df,EIP = 10,spatial = T)
+vc_df <- data.frame(vc=sapply(vc,function(x){x$VC}))
+mean_vc <- mean(vc_df$vc)
+
+ggplot() + geom_histogram(data = vc_df, aes(vc), fill = "steelblue", bins = 20) +
+  geom_vline(xintercept = mean_vc,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Vectorial Capacity (mean: ",round(mean_vc,3),")")) + xlab("Secondary Bites") + ylab("Frequency") + theme_bw()
+
+# lifetime egg production
+egg <- Bionomics_lifetimeOviposition(mosquitos_df,TRUE)
+egg_df <- data.frame(egg=egg$lifetime)
+mean_egg <- mean(egg_df$egg)
+
+ggplot() + geom_histogram(data = egg_df, aes(egg), fill = "steelblue", bins = 20) +
+  geom_vline(xintercept = mean_egg,col="firebrick3",size=1.15) +
+  ggtitle(paste0("Lifetime Egg Production (mean: ",round(mean_egg,3),")")) + xlab("Eggs") + ylab("Frequency") + theme_bw()
+
+
+###############################################################################
+# spatial bionomics: vectorial capacity
+###############################################################################
+
+library(parallel)
+library(lokern)
+
+# spatial vectorial capacity
+vc_pairs <- lapply(vc,function(x){x$spatialVC})
+vc_pairs <- Filter(function(x){length(x)>0},vc_pairs)
+vc_pairs <- do.call(c,vc_pairs)
+# needs the distance matrix between sites to be called 'dist'
+vc_dist <- lapply(vc_pairs,function(x){
+  out <- NULL
+  i <- x$origin
+  for(j in 1:length(x$dest)){
+    out <- append(out,dist[i,x$dest[j]])
+  }
+  return(out)
+})
+vc_dist <- do.call(c,vc_dist)
+vc_dist <- sort(vc_dist,decreasing = FALSE)
+
+vc_bins <- unique(vc_dist)
+
+# comparisons of floats
+fequal <- function(x,y){
+  abs(x-y) <= .Machine$double.eps
+}
+
+# get empirical PDF by summing stuff in the distance bins (takes awhile, use parallel if you can)
+PDF_emp <- mclapply(X = vc_bins,FUN = function(x,vc_dist){
+  length(vc_dist[which(fequal(vc_dist,x))])
+},vc_dist=vc_dist,mc.cores = detectCores()-2)
+PDF_emp <- unlist(PDF_emp) # mclapply outputs lists; coerce to vector
+# technically its a PMF so we normalize it
+PDF_emp <- PDF_emp/sum(PDF_emp)
+
+# get empirical CDF by preforming a cumulative sum over data points in distance bins
+CDF_emp <- cumsum(PDF_emp)
+
+# smoothed CDF and PDF
+CDF_sth <- glkerns(vc_bins,CDF_emp,deriv = 0,korder = 4,x.out=vc_bins)
+PDF_sth <- glkerns(vc_bins,CDF_emp,deriv = 1,korder = 3,x.out=vc_bins)
+
+# plot
+par(mar = c(5, 4, 4, 4) + 0.3)  # Leave space for z axis
+plot(CDF_sth$x.out, CDF_sth$est,type="l",col="firebrick3",lwd=3,
+     ylab="CDF",xlab="Distance",main="Spatial Dispersion of Vectorial Capacity")
+par(new = TRUE)
+plot(PDF_sth$x.out, PDF_sth$est, type = "l",col="mediumblue",lwd=3,
+     axes = FALSE, bty = "n", xlab = "", ylab = "")
+axis(side=4, at = pretty(range(PDF_sth$est)))
+mtext("PDF", side=4, line=3)
+
+
+###############################################################################
+# spatial bionomics: egg production
+###############################################################################
+
+egg_pairs <- Filter(f = function(x){
+  !(is.nan(x$natal) && is.nan(x$dest))
+},x = egg$dispersion)
+
+# spatial egg dispersion
+egg_pairs <- lapply(egg_pairs,function(x){
+  out <- NULL
+  i <- x$natal
+  for(j in 1:length(x$dest)){
+    out <- append(out,dist[i,x$dest[j]])
+  }
+  return(out)
+})
+egg_dist <- do.call(c,egg_pairs)
+egg_dist <- sort(egg_dist,decreasing = FALSE)
+
+egg_bins <- unique(egg_dist)
+
+# get empirical PDF by summing stuff in the distance bins (takes awhile, use parallel if you can)
+PDF_emp <- mclapply(X = egg_bins,FUN = function(x,egg_dist){
+  length(egg_dist[which(fequal(egg_dist,x))])
+},egg_dist=egg_dist,mc.cores = detectCores()-2)
+PDF_emp <- unlist(PDF_emp) # mclapply outputs lists; coerce to vector
+# technically its a PMF so we normalize it
+PDF_emp <- PDF_emp/sum(PDF_emp)
+
+# get empirical CDF by preforming a cumulative sum over data points in distance bins
+CDF_emp <- cumsum(PDF_emp)
+
+# smoothed CDF and PDF
+CDF_sth <- glkerns(egg_bins,CDF_emp,deriv = 0,korder = 4,x.out=vc_bins)
+PDF_sth <- glkerns(egg_bins,CDF_emp,deriv = 1,korder = 3,x.out=vc_bins)
+
+# plot
+par(mar = c(5, 4, 4, 4) + 0.3)  # Leave space for z axis
+plot(CDF_sth$x.out, CDF_sth$est,type="l",col="firebrick3",lwd=3,
+     ylab="CDF",xlab="Distance",main="Spatial Dispersion of Egg Batches")
+par(new = TRUE)
+plot(PDF_sth$x.out, PDF_sth$est, type = "l",col="mediumblue",lwd=3,
+     axes = FALSE, bty = "n", xlab = "", ylab = "")
+axis(side=4, at = pretty(range(PDF_sth$est)))
+mtext("PDF", side=4, line=3)

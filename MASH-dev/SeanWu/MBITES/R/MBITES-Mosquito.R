@@ -127,7 +127,8 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                    timeHist       = numeric(30), # history of event times (t)
                    siteHist       = integer(30), # history of sites visited (s)
                    searchHist     = logical(30), # history of searching?
-                   stateHist      = character(30) # history of behavioral states (b)
+                   stateHist      = character(30), # history of behavioral states (b)
+                   cod            = character(1) # for mosquito autopsies
                  ) # end private members
 )
 
