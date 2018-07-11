@@ -291,22 +291,22 @@ MBDETES_BstateTransitions <- function(site){
   C7=0.5
   C8=0.5
 
-  # survive a laden flight 
+  # survive a laden flight
   E = MBDETES_getSurvLaden()
 
   # survive an unladen flight, stay
   Fb = MBITES:::Parameters$get_B_surv()
   Fa = MBDETES_getLocalHazMortality(site)
-  F2 = Fa*Fb 
+  F2 = Fa*Fb
 
   H2 = MBDETES_getLeaveUnladen()
-  
+
   PAR = list(A=A, B0=B0, B1=B1, B2=B2, B3=B3,
-          C1=C1, C2=C2, C3=C3, C4=C4, 
-          C5=C5, C6=C6, C7=C7, C8=C8, 
-          D1=D1, D2=D2, D3=D3, 
- 					E=E, F2=F2, H2=H2) 
-  BFAB_B2X(PAR) 
+          C1=C1, C2=C2, C3=C3, C4=C4,
+          C5=C5, C6=C6, C7=C7, C8=C8,
+          D1=D1, D2=D2, D3=D3,
+ 					E=E, F2=F2, H2=H2)
+  BFAB_B2X(PAR)
 }
 
 BFAB_B2X = function(PAR){with(PAR,{
@@ -314,7 +314,7 @@ BFAB_B2X = function(PAR){with(PAR,{
 
   Fail = (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
   B2B = Fail*F2*H2
-  B2B = Fail*F2*(1-H2) 
+  B2B = Fail*F2*(1-H2)
 
   # additional mass on D from local hazards
   B2D = 1-B2R-B2F-B2B
@@ -322,7 +322,7 @@ BFAB_B2X = function(PAR){with(PAR,{
   # normalize
   B2ALL = c(B2F, B2B, B2R, 0, 0, B2D)
   return(B2ALL)
-})} 
+})}
 
 
 #' MBDETES: Resting Period State Transitions
@@ -334,10 +334,10 @@ BFAB_B2X = function(PAR){with(PAR,{
 #' @export
 MBDETES_RperiodTransitions <- function(site){
 
-  # Survive  
+  # Survive
   Fb = MBITES:::Parameters$get_B_surv()
   Fa = MBDETES_getLocalHazMortality(site)
-  F2 = Fa*Fb 
+  F2 = Fa*Fb
 
   # Refeeding
   G = MBDETES_getPrRefeed()
@@ -348,21 +348,21 @@ MBDETES_RperiodTransitions <- function(site){
   # aquatic habitat present
   H1b = site$has_aqua()
 
-  H1 = H1a*H1b 
+  H1 = H1a*H1b
 
-  PAR(F1=F1,G=G,H1=H1) 
-  BFAB_R2X(PAR)  
+  PAR(F1=F1,G=G,H1=H1)
+  BFAB_R2X(PAR)
 }
 
 BFAB_R2X = function(PAR){with(PAR,{
-  R2B = F1*G 
+  R2B = F1*G
   R2O = F1*(1-G)*H1
-  R2L = F1*(1-G)*(1-H1) 
-  R2D = 1-R2B-R2O-R2L-R2D 
+  R2L = F1*(1-G)*(1-H1)
+  R2D = 1-R2B-R2O-R2L-R2D
 
-  R2ALL = c(0,R2B,0,R2L,R2O,R2D) 
+  R2ALL = c(0,R2B,0,R2L,R2O,R2D)
   return(B2ALL)
-})} 
+})}
 
 
 #' MBDETES: Egg Laying Search Bout State Transitions
@@ -388,25 +388,25 @@ MBDETES_LstateTransitions <- function(site){
   L2ALL = c(0, 0, 0, L2L, L2O, L2D)
   L2ALL = L2ALL/sum(L2ALL)
 
-  PAR = list(A=A, B0=B0, B1=B1, B2=B2, 
-          C1=C1, C2=C2, C3=C3, C4=C4, C5=C5, 
-          D1=D1, D2=D2, E=E, F1=F1, F2=F2) 
-  ELAB_O2X(PAR) 
+  PAR = list(A=A, B0=B0, B1=B1, B2=B2,
+          C1=C1, C2=C2, C3=C3, C4=C4, C5=C5,
+          D1=D1, D2=D2, E=E, F1=F1, F2=F2)
+  ELAB_O2X(PAR)
 }
 
 ELAB_R2X = function(PAR){with(PAR,{
 
-  Fail = (1-A) + A*(B0+ B1*C3 + B2*C5) 
-  
-  O2L = Fail*D2*F3 + B1*C2*D1*E*F1  
-  O2O = Fail*D2*(1-F3) + B1*C2*D1*E*(1-F1) 
-  O2F = A*B1*C2*D1*(1-E)*F2  
-  O2B = A*B1*C2*D1*(1-E)*(1-F2) 
+  Fail = (1-A) + A*(B0+ B1*C3 + B2*C5)
+
+  O2L = Fail*D2*F3 + B1*C2*D1*E*F1
+  O2O = Fail*D2*(1-F3) + B1*C2*D1*E*(1-F1)
+  O2F = A*B1*C2*D1*(1-E)*F2
+  O2B = A*B1*C2*D1*(1-E)*(1-F2)
   O2D = 1-O2L-O2O-O2F-O2B
-  O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)  
+  O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)
   return(O2ALL)
 
-})} 
+})}
 
 
 #' MBDETES: Egg Laying Attempt Bout State Transitions
