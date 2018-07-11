@@ -255,3 +255,48 @@ Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
 
   return(VC)
 }
+
+
+###############################################################################
+# lifetime egg production
+###############################################################################
+
+#' Bionomics: Compute Lifetime Egg Production
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' Computes lifetime egg production, as well as its spatial dispersion.
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' Please note that in order to reconstruct kernels for egg dispersion, the distance matrix between sites
+#' must be preserved somewhere, as the mosquito only records the index of the site it visited, not the xy coordinates.
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @param spatial compute spatial dispersion of eggs or not
+#' @export
+Bionomics_lifetimeOviposition <- function(mosquitos, spatial=FALSE){
+
+  filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- which(filter)
+
+  out <- rep(0,length(filter))
+  if(spatial){
+    dispersion <- replicate(length(filter),{list(natal=NaN,dest=NaN)},simplify=FALSE)
+  }
+
+  pb <- txtProgressBar(min = 0,max = length(filter))
+  for(i in 1:length(filter)){
+    out[i] <- sum(mosquitos[filter[i],"ovipositionBatchSize"][[1]])
+    if(spatial & out[i]>0){
+      dispersion[[i]]$natal <- mosquitos_df[filter[i],"sites"][[1]][1]
+      dispersion[[i]]$dest <- mosquitos_df[filter[i],"ovipositionSites"][[1]]
+    }
+    setTxtProgressBar(pb,i)
+  }
+
+  if(spatial){
+    return(list(
+      dispersion=dispersion,
+      lifetime=out
+    ))
+  } else {
+    return(out)
+  }
+}
