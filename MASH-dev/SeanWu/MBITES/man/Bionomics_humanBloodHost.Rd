@@ -6,7 +6,8 @@
 Takes in JSON output parsed into a data.frame object from
 an MBITES simulation run.
 This function returns a data.frame of lifetime blood meals
-for each mosquito for a chosen host type.
+for each mosquito for a chosen host type. It does not filter mosquitos who took no blood meals
+(that is to say 0s are counted and included in the output).
 Mosquitoes that were still alive at the end of simulation are filtered out.}
 \usage{
 Bionomics_humanBloodHost(mosquitos, who = "human")
@@ -21,6 +22,7 @@ Bionomics: Compute Number of Blood Meals
 Takes in JSON output parsed into a data.frame object from
 an MBITES simulation run.
 This function returns a data.frame of lifetime blood meals
-for each mosquito for a chosen host type.
+for each mosquito for a chosen host type. It does not filter mosquitos who took no blood meals
+(that is to say 0s are counted and included in the output).
 Mosquitoes that were still alive at the end of simulation are filtered out.
 }

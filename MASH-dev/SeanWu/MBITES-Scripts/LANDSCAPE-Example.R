@@ -246,7 +246,7 @@ trackOviposition()
 # set parameters
 MBITES:::Parameters$set_parameters(disperse = 0.25,Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
                                    Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
-                                   S_u = 0,energyFromBlood_b = 2e16)
+                                   S_u = 0)
 
 # initialize a tile
 Tile_Initialize(landscape)
