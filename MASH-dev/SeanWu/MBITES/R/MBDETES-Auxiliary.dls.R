@@ -314,7 +314,7 @@ BFAB_B2X = function(PAR){with(PAR,{
 
   Fail = (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
   B2B = Fail*F2*H2
-  B2B = Fail*F2*(1-H2) 
+  B2F = Fail*F2*(1-H2) 
 
   # additional mass on D from local hazards
   B2D = 1-B2R-B2F-B2B
@@ -355,14 +355,14 @@ MBDETES_RperiodTransitions <- function(site){
 }
 
 BFAB_R2X = function(PAR){with(PAR,{
-  R2B = F1*G 
+  R2B = F1*G
   R2O = F1*(1-G)*H1
-  R2L = F1*(1-G)*(1-H1) 
-  R2D = 1-R2B-R2O-R2L-R2D 
-
-  R2ALL = c(0,R2B,0,R2L,R2O,R2D) 
-  return(B2ALL)
-})} 
+  R2L = F1*(1-G)*(1-H1)
+  R2D = 1-R2B-R2O-R2L
+  
+  R2ALL = c(0,R2B=R2B,0,R2L=R2L,R2O=R2O,R2D=R2D)
+  return(R2ALL)
+})}
 
 
 #' MBDETES: Egg Laying Search Bout State Transitions
@@ -388,13 +388,42 @@ MBDETES_LstateTransitions <- function(site){
   L2ALL = c(0, 0, 0, L2L, L2O, L2D)
   L2ALL = L2ALL/sum(L2ALL)
 
-  PAR = list(A=A, B0=B0, B1=B1, B2=B2, 
-          C1=C1, C2=C2, C3=C3, C4=C4, C5=C5, 
-          D1=D1, D2=D2, E=E, F1=F1, F2=F2) 
-  ELAB_O2X(PAR) 
 }
 
-ELAB_R2X = function(PAR){with(PAR,{
+
+#' MBDETES: Egg Laying Attempt Bout State Transitions
+#'
+#' Calculate vector of probabilities to transition between: O -> F, B, L, O, D
+#' This function is called from \code{\link{MBDETES_StateTransitions}}.
+#'
+#' @param site a \code{\link{Site}} object
+#' @export
+MBDETES_OstateTransitions <- function(site){
+  A = MBITES:::Parameters$get_O_succeed()
+
+  # Survive
+  Da = MBITES:::Parameters$get_O_surv()
+  Db = MBDETES_getLocalHazMortality(site)
+  D1 = Da*Db
+  D2 = D1 
+
+  # Placeholder for skip oviposition
+  E  = 1 
+
+  # Stay  
+  Fa = 1-MBDETES_getLeaveUnladen()
+  Fb = site$has_feed()
+  F1 = Fa*Fb 
+  F2 = F1
+  F3 = F1
+  PAR = list(A=A, B0=B0, B1=B1, B2=B2,
+             C1=C1, C2=C2, C3=C3, C4=C4, C5=C5,
+             D1=D1, D2=D2, E=E, 
+             F1=F1, F2=F2, F3=F3) 
+  ELAB_O2X(PAR)
+}
+
+ELAB_O2X = function(PAR){with(PAR,{
 
   Fail = (1-A) + A*(B0+ B1*C3 + B2*C5) 
   
@@ -407,37 +436,6 @@ ELAB_R2X = function(PAR){with(PAR,{
   return(O2ALL)
 
 })} 
-
-
-#' MBDETES: Egg Laying Attempt Bout State Transitions
-#'
-#' Calculate vector of probabilities to transition between: O -> F, B, L, O, D
-#' This function is called from \code{\link{MBDETES_StateTransitions}}.
-#'
-#' @param site a \code{\link{Site}} object
-#' @export
-MBDETES_OstateTransitions <- function(site){
-  success = MBITES:::Parameters$get_O_succeed()
-  survive = MBITES:::Parameters$get_O_surv()
-  blood   = site$has_feed()
-  stay    = 1-MBDETES_getLeaveUnladen()
-
-  O2F = success*survive*(1-blood)
-  O2B = success*survive*blood
-  O2O = (1-success)*survive*stay
-  O2L = (1-success)*survive*(1-stay)
-  O2D = 1-O2F-O2B-O2O-O2L
-
-  # additional mass on D from local hazards
-  localHaz = MBDETES_getLocalHazMortality(site)
-  O2D = O2D + localHaz
-
-  # normalize
-  O2ALL = c(O2F, O2B, 0, O2L, O2O, O2D)
-  O2ALL = O2ALL/sum(O2ALL)
-
-  return(O2ALL)
-}
 
 
 #' MBDETES: The State Transition Matrix
