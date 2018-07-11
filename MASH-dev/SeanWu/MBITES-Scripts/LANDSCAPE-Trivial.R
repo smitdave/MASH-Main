@@ -20,17 +20,19 @@ library(MBITES)
 ###############################################################################
 
 # landscapes
-landscape <- vector(mode = "list",length = 1)
+landscape <- vector(mode = "list",length = 3)
 
 # site characteristics
-i = 1L
-landscape[[i]]$id = 1
-landscape[[i]]$xy = c(1,1)
-landscape[[i]]$type = 1L
-landscape[[i]]$tileID = 1L
-landscape[[i]]$move = 1
-landscape[[i]]$move_id = as.integer(1)
-landscape[[i]]$haz = 0.001
+for(i in 1:3){
+  landscape[[i]]$id = 1
+  landscape[[i]]$xy = c(1,1)
+  landscape[[i]]$type = 1L
+  landscape[[i]]$tileID = 1L
+  landscape[[i]]$move = 1
+  landscape[[i]]$move_id = (1:3)[-i]
+  landscape[[i]]$haz = 0.001
+}
+
 # null resources
 landscape[[i]]$feed[[1]] = list(w=1,enterP=1)
 landscape[[i]]$aqua[[1]] = list(w=1,lambda=1)
