@@ -242,6 +242,10 @@ Mosquito$set(which = "public",name = "updateState",
 #'  * This method is bound to \code{Mosquito_Female$checkForResources}
 #'
 mbites_checkForResources <- function(){
+  # mbites_restingSpot (MBITES-Resting.R) can set search = TRUE
+  # due to bout failures, so only do this check if search = FALSE to look for local
+  # resources
+  if(!private$search){
     switch(private$state,
       B = {self$BloodFeedingSearchCheck()},
       O = {self$OvipositSearchCheck()},
@@ -249,6 +253,7 @@ mbites_checkForResources <- function(){
       S = {self$SugarSearchCheck()},
       {stop("illegal behavioral state: ",private$state,"\n")}
     )
+  }
 }
 
 #' MBITES: Check for Blood Feeding Search Bout
