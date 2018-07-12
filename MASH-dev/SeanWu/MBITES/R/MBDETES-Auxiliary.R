@@ -325,77 +325,6 @@ BFAB_B2X <- function(PAR){with(PAR,{
 })}
 
 
-# #' MBDETES: Blood Feeding Attempt Bout State Transitions
-# #'
-# #' Calculate vector of probabilities to transition between: B -> F, B, R, D
-# #' This function is called from \code{\link{MBDETES_StateTransitions}}.
-# #'
-# #' @param site a \code{\link{Site}} object
-# #' @export
-# MBDETES_BstateTransitions <- function(site){
-#
-#   # Does the mosquito even make it to an initial approach?
-#   approach = MBITES:::Parameters$get_B_succeed()
-#   survive = MBITES:::Parameters$get_B_surv()
-#
-#   # check the function
-#   if(site$has_feed()){
-#     host = site$get_feed(1L)$RiskQ$typewtsQ()
-#     host = host/sum(host)
-#   } else {
-#     host = rep(0,4)
-#   }
-#
-#   # probability of taking a human bloodmeal | human chosen
-#   h1 = MBITES:::Parameters$get_surviveH()
-#   h2 = MBITES:::Parameters$get_probeH()
-#   h3 = MBITES:::Parameters$get_surviveprobeH()
-#   h4 = MBITES:::Parameters$get_feedH()
-#   hfeed = h1*h2*h3*h4
-#   hfail = (1-h1) + h1*(1-h2) + h1*h2*(1-h3) + h1*h2*h3*(1-h4)
-#
-#   # probability of taking a bloodmeal | other host chosen
-#   z1 = MBITES:::Parameters$get_surviveZ()
-#   z2 = MBITES:::Parameters$get_feedZ()
-#   zfeed = z1*z2
-#   zfail = z1*(1-z2)
-#
-#   # probability of failing | trap chosen
-#   tfail = 0
-#
-#   # survive an unladen flight, stay
-#   surviveUnladen = MBDETES_getSurvUnladen()
-#   stayUnladen = 1 - MBDETES_getLeaveUnladen()
-#
-#   # survive a laden flight, stay
-#   surviveLaden = MBDETES_getSurvLaden()
-#
-#   ##########################################################
-#   # fail the approach
-#   # note :: check hfeed and zfeed above for more fails
-#   ##########################################################
-#   failApproach = host[1]*hfail+host[2]*zfail+host[3]*tfail+host[4]
-#   bFeed = host[1]*hfeed+host[2]*zfeed
-#
-#   B2R = approach*bFeed*surviveLaden
-#   B2B = approach*failApproach*surviveUnladen*stayUnladen*survive
-#   B2F1 = (1-approach)*surviveUnladen*stayUnladen*survive
-#   B2F2 = approach*failApproach*surviveUnladen*(1-stayUnladen)*survive
-#   B2F = B2F1 + B2F2
-#   B2D = 1-B2R-B2B-B2F
-#
-#   # additional mass on D from local hazards
-#   localHaz = MBDETES_getLocalHazMortality(site)
-#   B2D = B2D + localHaz
-#
-#   # normalize
-#   B2ALL = c(B2F, B2B, B2R, 0, 0, B2D)
-#   B2ALL = B2ALL/sum(B2ALL)
-#
-#   return(B2ALL)
-# }
-
-
 #' MBDETES: Resting Period State Transitions
 #'
 #' Calculate vector of probabilities to transition between: R-> B, F, L, O, D
@@ -421,7 +350,7 @@ MBDETES_RperiodTransitions <- function(site){
 
   H1 = Ha
   H2 = Ha*Hb
-  
+
   PAR(F1=F1,G=G,H1=H1,H2=H2)
   BFAB_R2X(PAR)
 }
@@ -438,48 +367,6 @@ BFAB_R2X <- function(PAR){with(PAR,{
 })}
 
 
-# #' MBDETES: Resting Period State Transitions
-# #'
-# #' Calculate vector of probabilities to transition between: R-> B, F, L, O, D
-# #' This function is called from \code{\link{MBDETES_StateTransitions}}.
-# #'
-# #' @param site a \code{\link{Site}} object
-# #' @export
-# MBDETES_RperiodTransitions <- function(site){
-#
-#   # The probability of refeeding
-#   refeed = MBDETES_getPrRefeed()
-#
-#   # stay, after a laden flight
-#   stayLaden = MBDETES_getLeaveLaden()
-#
-#   # aquatic habitat present
-#   aquatic = site$has_aqua()
-#
-#   # blood host present
-#   blood = site$has_feed()
-#
-#   # survive the post-prandial resting period
-#   surviveRest = MBDETES_getPrPPRFlight() # FIX ME !!!
-#
-#   R2B = blood*refeed*surviveRest
-#   R2F = (1-blood)*refeed*surviveRest
-#   R2L = (1-aquatic)*(1-refeed)*surviveRest
-#   R2O = aquatic*(1-refeed)*surviveRest
-#   R2D = 1-R2F-R2B-R2L-R2O
-#
-#   # additional mass on D from local hazards
-#   localHaz = MBDETES_getLocalHazMortality(site)
-#   R2D = R2D + localHaz
-#
-#   # normalize
-#   R2ALL = c(R2F, R2B, 0, R2L, R2O, R2D)
-#   R2ALL = R2ALL/sum(R2ALL)
-#
-#   return(R2ALL)
-# }
-
-
 #' MBDETES: Egg Laying Search Bout State Transitions
 #'
 #' Calculate vector of probabilities to transition between: L -> L, O, D
@@ -493,7 +380,7 @@ MBDETES_LstateTransitions <- function(site){
 
   # additional mass on D from local hazards
   localHaz = MBDETES_getLocalHazMortality(site)
-  survive = survive*(1-localHaz) 
+  survive = survive*(1-localHaz)
 
   L2O = success*survive
   L2L = (1-success)*survive
@@ -506,34 +393,6 @@ MBDETES_LstateTransitions <- function(site){
 }
 
 
-
-# #' MBDETES: Egg Laying Search Bout State Transitions
-# #'
-# #' Calculate vector of probabilities to transition between: L -> L, O, D
-# #' This function is called from \code{\link{MBDETES_StateTransitions}}.
-# #'
-# #' @param site a \code{\link{Site}} object
-# #' @export
-# MBDETES_LstateTransitions <- function(site){
-#   success = MBITES:::Parameters$get_Os_succeed()
-#   survive = MBITES:::Parameters$get_Os_surv()
-#
-#   L2O = success*survive
-#   L2L = (1-success)*survive
-#   L2D = 1-L2O-L2L
-#
-#   # additional mass on D from local hazards
-#   localHaz = MBDETES_getLocalHazMortality(site)
-#   L2D = L2D + localHaz
-#
-#   # normalize
-#   L2ALL = c(0, 0, 0, L2L, L2O, L2D)
-#   L2ALL = L2ALL/sum(L2ALL)
-#
-#   return(L2ALL)
-# }
-
-
 #' MBDETES: Egg Laying Attempt Bout State Transitions
 #'
 #' Calculate vector of probabilities to transition between: O -> F, B, L, O, D
@@ -543,29 +402,29 @@ MBDETES_LstateTransitions <- function(site){
 #' @export
 MBDETES_OstateTransitions <- function(site){
   A = MBITES:::Parameters$get_O_succeed()
-  
-  B1 = site$has_aqua() 
+
+  B1 = site$has_aqua()
   B0 = 1-B1
-  B2 = 0 
-  
+  B2 = 0
+
   C1 = 0
-  C2 = 1 
+  C2 = 1
   C3 = 0
   C4 = 1
-  C5 = 0  
- 
+  C5 = 0
+
   D1 = MBITES:::Parameters$get_O_surv()
   localHaz = MBDETES_getLocalHazMortality(site)
-  D1 = D1*(1-localHaz) 
-  D2 = D1   
- 
-  E = 0 
+  D1 = D1*(1-localHaz)
+  D2 = D1
 
-  F1 = 0.5 # not implemented 
+  E = 0
+
+  F1 = 0.5 # not implemented
 
   stay = 1-MBDETES_getLeaveUnladen()
-  F2 = site$has_feed()*stay 
-  F3 = stay 
+  F2 = site$has_feed()*stay
+  F3 = stay
 
 #  O2F = success*survive*(1-blood)
 #  O2B = success*survive*blood
@@ -590,9 +449,9 @@ ELAB_O2X <- function(PAR){with(PAR,{
 
   Fail = (1-A) + A*(B0+ B1*C3 + B2*C5)
 
-  O2L = Fail*D2*(1-F3) + A*B1*C2*D1*E*(1-F1) 
-  O2O = Fail*D2*F3 + A*B1*C2*D1*E*F1 
-  O2F = A*B1*C2*D1*(1-E)*(1-F2) 
+  O2L = Fail*D2*(1-F3) + A*B1*C2*D1*E*(1-F1)
+  O2O = Fail*D2*F3 + A*B1*C2*D1*E*F1
+  O2F = A*B1*C2*D1*(1-E)*(1-F2)
   O2B = A*B1*C2*D1*(1-E)*F2
   O2D = 1-O2L-O2O-O2F-O2B
   O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)
