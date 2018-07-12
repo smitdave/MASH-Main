@@ -216,8 +216,23 @@ mbites_oogenesis2 <- function(){
   }
 
   private$bloodfed = FALSE
-  
+
 }
+
+
+###############################################################################
+# Trivial Oogenesis model (for MBDETES approximation)
+###############################################################################
+
+mbites_oogenesisMBDETES <- function(){
+
+  private$batch = self$rBatchSize() # new batch of eggs
+  private$eggT = 0 # ready to go immediately
+  private$bmSize = 0 # takes all of the blood to do this
+  private$bloodfed = FALSE # now i'm unfed
+
+}
+
 
 ###############################################################################
 # Egg Batch Size
