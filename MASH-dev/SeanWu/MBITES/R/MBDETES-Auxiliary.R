@@ -586,7 +586,7 @@ MBDETES_OstateTransitions <- function(site){
   ELAB_O2X(PAR)
 }
 
-ELAB_R2X <- function(PAR){with(PAR,{
+ELAB_O2X <- function(PAR){with(PAR,{
 
   Fail = (1-A) + A*(B0+ B1*C3 + B2*C5)
 
@@ -597,7 +597,6 @@ ELAB_R2X <- function(PAR){with(PAR,{
   O2D = 1-O2L-O2O-O2F-O2B
   O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)
   return(O2ALL)
-
 })}
 
 
