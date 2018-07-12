@@ -18,21 +18,22 @@ BFAB_PAR = function(
   F2= 0.99,
   G = 0.2,
   H1= 0.8,
-  H2= 0.8
+  H2= 0.8, 
+  H3= 0.8
 ){
 list(A=A, B0=B0, B1=B1, B2=B2, B3=B3,
            C1=C1, C2=C2, C3=1-C1-C2, C4=C4,
            C5=C5, C6=1-C4-C5, C7=C7, C8=1-C7,
            D1=D1, D2=D2, D3=D3, E=E, 
-           F1=F1, F2=F2, G=G, H1=H1, H2=H2)
+           F1=F1, F2=F2, G=G, H1=H1, H2=H2, H3=H3)
 } 
 
 BFAB_B2Y = function(PAR){with(PAR,{
   B2R = A*(B1*C2*D2 + B2*C5)*E
   
   Fail = (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
-  B2B = Fail*F2*H2
-  B2F = Fail*F2*(1-H2)
+  B2B = Fail*F2*H3
+  B2F = Fail*F2*(1-H3)
   
   # additional mass on D from local hazards
   B2D = 1-B2R-B2F-B2B
@@ -48,12 +49,13 @@ BFAB_B2Y(BFAB_PAR(A=.8,C1=.01, C2=.84))
 #P_BR = .75,
 
 BFAB_R2Y = function(PAR){with(PAR,{
-  R2B = F1*G
-  R2O = F1*(1-G)*H1
-  R2L = F1*(1-G)*(1-H1)
+  R2B = F1*G*H1
+  R2F = F1*G*(1-H1)
+  R2O = F1*(1-G)*H2
+  R2L = F1*(1-G)*(1-H2)
   R2D = 1-R2B-R2O-R2L
   
-  R2ALL = c(0,R2B=R2B,0,R2L=R2L,R2O=R2O,R2D=R2D)
+  R2ALL = c(R2F=R2F,R2B=R2B,0,R2L=R2L,R2O=R2O,R2D=R2D)
   return(R2ALL)
 })}
 
