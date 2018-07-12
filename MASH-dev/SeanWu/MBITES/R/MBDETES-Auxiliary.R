@@ -70,7 +70,7 @@ MBDETES_Approx <- function(tileID){
 #'  * MBITES functions can be found in MBITES-Oogenesis.R
 #'
 #' @export
-MBDETES_getPrRefeed <- function(){
+MBDETES_PrRefeed <- function(){
   rf_a = MBITES:::Parameters$get_rf_a()
   rf_b = MBITES:::Parameters$get_rf_b()
   bm_a = MBITES:::Parameters$get_bm_a()
@@ -91,7 +91,7 @@ MBDETES_getPrRefeed <- function(){
 #'  * MBITES functions can be found in MBITES-BloodMeal.R
 #'
 #' @export
-MBDETES_getPrOverfeed <- function(){
+MBDETES_PrOverfeed <- function(){
   of_a = MBITES:::Parameters$get_of_a()
   of_b = MBITES:::Parameters$get_of_b()
   bm_a = MBITES:::Parameters$get_bm_a()
@@ -107,7 +107,7 @@ MBDETES_getPrOverfeed <- function(){
 #'
 #'
 #' @export
-MBDETES_getPrPPRFlight <- function(){
+MBDETES_PrPPRFlight <- function(){
   PPR_a = MBITES:::Parameters$get_PPR_a()
   PPR_b = MBITES:::Parameters$get_PPR_b()
   bm_a = MBITES:::Parameters$get_bm_a()
@@ -119,12 +119,97 @@ MBDETES_getPrPPRFlight <- function(){
   integrate(FF, 0, 1)$value
 }
 
+
+###############################################################################
+# Searching
+###############################################################################
+
+#' MBDETES: Probability to Leave a Site
+#' Return the probability for a mosquito to leave a site and (initiate a search).
+#' @param site a \code{\link{Site}} object
+#' @param res either 'aqua' or 'feed'
+#' @param fail did the attempt bout result in a failure?
+#' @export
+MBDETES_PrLeave <- function(site,res,fail=FALSE){
+  # P(Leave | Fail)
+  if(fail){
+    # if I need an aquatic habitat
+    if(res=="aqua"){
+      #  P(Leave | Fail, Site doesn't have what I need)
+      if(!site$has_aqua()){
+        return(1)
+      #  P(Leave | Fail, Site has what I need)
+      } else {
+        p <- MBITES:::Parameters$get_boutFail_p()
+        p <- p + ((1-p)*MBITES:::Parameters$get_disperse())
+        return(p)
+      }
+    }
+    # if I need a blood feeding queue
+    if(res=="feed"){
+      #  P(Leave | Fail, Site doesn't have what I need)
+      if(!site$has_feed()){
+        return(1)
+      #  P(Leave | Fail, Site has what I need)
+      } else {
+        p <- MBITES:::Parameters$get_boutFail_p()
+        p <- p + ((1-p)*MBITES:::Parameters$get_disperse())
+        return(p)
+      }
+    }
+  # P(Leave | Success)
+  } else {
+    # if i need an aquatic habitat
+    if(res=="aqua"){
+      # P(Leave | Success, Site doesn't have what I need)
+      if(!site$has_aqua()){
+        return(1)
+      # P(Leave | Success, Site has what I need)
+      } else {
+        return(MBITES:::Parameters$get_disperse())
+      }
+    }
+    if(res=="feed"){
+      # P(Leave | Success, Site doesn't have what I need)
+      if(!site$has_feed()){
+        return(1)
+      # P(Leave | Success, Site has what I need)
+      } else {
+        return(MBITES:::Parameters$get_disperse())
+      }
+    }
+  }
+}
+
+
+#' MBDETES: Probability to Survive a Bout
+#' Compute survival probability as a result of flight and local hazards.
+#' @param site a \code{\link{Site}} object
+#' @param bout character in 'F','B','L','O'
+#' @export
+MBDETES_PrSurvive <- function(site, bout){
+  if(bout == "F"){
+    p <- MBITES:::Parameters$get_Bs_surv()
+  }
+  if(bout == "B"){
+    p <- MBITES:::Parameters$get_B_surv()
+  }
+  if(bout == "L"){
+    p <- MBITES:::Parameters$get_Os_surv()
+  }
+  if(bout == "O"){
+    p <- MBITES:::Parameters$get_O_surv()
+  }
+  return(p * (1-site$get_haz()))
+}
+
+
 #' MBDETES: Probability of Surviving the post-prandial flight (laden mosquito)
 #'
 #'
 #' @export
-MBDETES_getSurvLaden <- function(){
-  lrl = MBDETES_getRestingParam()
+MBDETES_SurvLaden <- function(){
+  lrl = MBDETES_RestingParam()
   land = lrl[1]; retry = lrl[2]; leave = lrl[3]
   PPR_a = MBITES:::Parameters$get_PPR_a()
   PPR_b = MBITES:::Parameters$get_PPR_b()
@@ -141,8 +226,8 @@ MBDETES_getSurvLaden <- function(){
 #'
 #'
 #' @export
-MBDETES_getLeaveLaden <- function(){
-  lrl = MBDETES_getRestingParam()
+MBDETES_LeaveLaden <- function(){
+  lrl = MBDETES_RestingParam()
   land = lrl[1]; retry = lrl[2]; leave = lrl[3]
   PPR_a = MBITES:::Parameters$get_PPR_a()
   PPR_b = MBITES:::Parameters$get_PPR_b()
@@ -159,8 +244,8 @@ MBDETES_getLeaveLaden <- function(){
 #'
 #'
 #' @export
-MBDETES_getSurvUnladen <- function(){
-  lrl = MBDETES_getRestingParam()
+MBDETES_SurvUnladen <- function(){
+  lrl = MBDETES_RestingParam()
   land = lrl[1]; retry = lrl[2]; leave = lrl[3]
   (land+leave)/(1-retry)
 }
@@ -169,8 +254,8 @@ MBDETES_getSurvUnladen <- function(){
 #'
 #'
 #' @export
-MBDETES_getLeaveUnladen <- function(){
-  lrl = MBDETES_getRestingParam()
+MBDETES_LeaveUnladen <- function(){
+  lrl = MBDETES_RestingParam()
   land = lrl[1]; retry = lrl[2]; leave = lrl[3]
   leave/(1-retry)
 }
@@ -181,7 +266,7 @@ MBDETES_getLeaveUnladen <- function(){
 #' equal weights given to blood feeding and oviposition behavioral states (B,O).
 #'
 #' @export
-MBDETES_getRestingParam <- function(){
+MBDETES_RestingParam <- function(){
 
   inandout = MBITES:::Parameters$get_InAndOut()
   inandout = inandout/rowSums(inandout)
@@ -206,7 +291,7 @@ MBDETES_getRestingParam <- function(){
 #' so this function just returns the probability of death.
 #'
 #' @export
-MBDETES_getLocalHazMortality <- function(site){
+MBDETES_LocalHazMortality <- function(site){
   return(site$get_haz())
 }
 
@@ -224,15 +309,12 @@ MBDETES_getLocalHazMortality <- function(site){
 #' @export
 MBDETES_FstateTransitions <- function(site){
   succeed = MBITES:::Parameters$get_Bs_succeed()
-  survive = MBITES:::Parameters$get_Bs_surv()
+
+  survive <- MBDETES_PrSurvive(site,"F")
 
   F2B = succeed*survive
   F2F = (1-succeed)*survive
   F2D = 1-survive
-
-  # additional mass on D from local hazards
-  localHaz = MBDETES_getLocalHazMortality(site)
-  F2D = F2D + localHaz
 
   # normalize
   F2ALL = c(F2F, F2B, 0, 0, 0, F2D)
@@ -291,15 +373,16 @@ MBDETES_BstateTransitions <- function(site){
   C7 = 0.5
   C8 = 1-C7
 
-  # survive a laden flight
-  E = MBDETES_getSurvLaden()
+  # P(survive PPR | implicit conditioning on having taken a bloodmeal)
+  E = MBDETES_PrPPRFlight()
 
-  # survive an unladen flight, stay
-  Fb = MBITES:::Parameters$get_B_surv()
-  Fa = MBDETES_getLocalHazMortality(site)
-  F2 = Fa*Fb
+  # P(Survive | i tried to bloodfeed)
+  surv <- MBDETES_PrSurvive(site,"B")
+  # P(Stay | I want to bloodfeed, i failed to  bloodfeed last time)
+  stay <- 1 - MBDETES_PrLeave(site,"feed",TRUE)
+  F2 <- surv
 
-  H3 = MBDETES_getLeaveUnladen()
+  H3 <- F2 * stay
 
   PAR = list(A=A, B0=B0, B1=B1, B2=B2, B3=B3,
           C1=C1, C2=C2, C3=C3, C4=C4,
@@ -334,22 +417,17 @@ BFAB_B2X <- function(PAR){with(PAR,{
 #' @export
 MBDETES_RperiodTransitions <- function(site){
 
-  # Survive
-  Fb = MBITES:::Parameters$get_B_surv()
-  Fa = MBDETES_getLocalHazMortality(site)
-  F1 = Fa*Fb
+  # P(Survive | I was busy bloodfeeding)
+  F1 <- MBDETES_PrSurvive(site,"B")
 
-  # Refeeding
-  G = MBDETES_getPrRefeed()
+  # P(Refeed)
+  G <- MBDETES_PrRefeed()
 
-  # stay, after a laden flight
-  Ha = MBDETES_getLeaveLaden()
+  # H1: P(Stay | I want to bloodfeed, i'm resting)
+  H1 <- 1 - MBDETES_PrLeave(site,"feed",FALSE)
 
-  # aquatic habitat present
-  Hb = site$has_aqua()
-
-  H1 = Ha
-  H2 = Ha*Hb
+  # H2: P(Stay | I want to oviposit, i'm resting)
+  H2 <- 1 - MBDETES_PrLeave(site,"aqua",FALSE)
 
   PAR(F1=F1,G=G,H1=H1,H2=H2)
   BFAB_R2X(PAR)
@@ -376,11 +454,7 @@ BFAB_R2X <- function(PAR){with(PAR,{
 #' @export
 MBDETES_LstateTransitions <- function(site){
   success = MBITES:::Parameters$get_Os_succeed()
-  survive = MBITES:::Parameters$get_Os_surv()
-
-  # additional mass on D from local hazards
-  localHaz = MBDETES_getLocalHazMortality(site)
-  survive = survive*(1-localHaz)
+  survive <- MBDETES_PrSurvive(site,"L")
 
   L2O = success*survive
   L2L = (1-success)*survive
@@ -414,7 +488,7 @@ MBDETES_OstateTransitions <- function(site){
   C5 = 0
 
   D1 = MBITES:::Parameters$get_O_surv()
-  localHaz = MBDETES_getLocalHazMortality(site)
+  localHaz = MBDETES_LocalHazMortality(site)
   D1 = D1*(1-localHaz)
   D2 = D1
 
@@ -422,7 +496,7 @@ MBDETES_OstateTransitions <- function(site){
 
   F1 = 0.5 # not implemented
 
-  stay = 1-MBDETES_getLeaveUnladen()
+  stay = 1-MBDETES_LeaveUnladen()
   F2 = site$has_feed()*stay
   F3 = stay
 
