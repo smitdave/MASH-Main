@@ -8,5 +8,5 @@ MBDETES_getRestingParam()
 }
 \description{
 Calculate resting spot probabilities according to a mixture distribution with
-equal weights given to the 3 main behavioral states (B,O,S).
+equal weights given to blood feeding and oviposition behavioral states (B,O).
 }
