@@ -314,7 +314,7 @@ BFAB_B2X <- function(PAR){with(PAR,{
 
   Fail = (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
   B2B = Fail*F2*H3
-  B2B = Fail*F2*(1-H3)
+  B2F = Fail*F2*(1-H3)
 
   # additional mass on D from local hazards
   B2D = 1-B2R-B2F-B2B
@@ -408,7 +408,7 @@ MBDETES_RperiodTransitions <- function(site){
   # Survive
   Fb = MBITES:::Parameters$get_B_surv()
   Fa = MBDETES_getLocalHazMortality(site)
-  F2 = Fa*Fb
+  F1 = Fa*Fb
 
   # Refeeding
   G = MBDETES_getPrRefeed()
@@ -433,7 +433,7 @@ BFAB_R2X <- function(PAR){with(PAR,{
   R2L = F1*(1-G)*(1-H2)
   R2D = 1-R2B-R2O-R2L-R2D
 
-  R2ALL = c(0,R2B,0,R2L,R2O,R2D)
+  R2ALL = c(R2F,R2B,0,R2L,R2O,R2D)
   return(B2ALL)
 })}
 
@@ -491,37 +491,20 @@ MBDETES_LstateTransitions <- function(site){
   success = MBITES:::Parameters$get_Os_succeed()
   survive = MBITES:::Parameters$get_Os_surv()
 
+  # additional mass on D from local hazards
+  localHaz = MBDETES_getLocalHazMortality(site)
+  survive = survive*(1-localHaz) 
+
   L2O = success*survive
   L2L = (1-success)*survive
   L2D = 1-L2O-L2L
-
-  # additional mass on D from local hazards
-  localHaz = MBDETES_getLocalHazMortality(site)
-  L2D = L2D + localHaz
 
   # normalize
   L2ALL = c(0, 0, 0, L2L, L2O, L2D)
   L2ALL = L2ALL/sum(L2ALL)
 
-  PAR = list(A=A, B0=B0, B1=B1, B2=B2,
-          C1=C1, C2=C2, C3=C3, C4=C4, C5=C5,
-          D1=D1, D2=D2, E=E, F1=F1, F2=F2)
-  ELAB_O2X(PAR)
 }
 
-ELAB_R2X <- function(PAR){with(PAR,{
-
-  Fail = (1-A) + A*(B0+ B1*C3 + B2*C5)
-
-  O2L = Fail*D2*F3 + B1*C2*D1*E*F1
-  O2O = Fail*D2*(1-F3) + B1*C2*D1*E*(1-F1)
-  O2F = A*B1*C2*D1*(1-E)*F2
-  O2B = A*B1*C2*D1*(1-E)*(1-F2)
-  O2D = 1-O2L-O2O-O2F-O2B
-  O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)
-  return(O2ALL)
-
-})}
 
 
 # #' MBDETES: Egg Laying Search Bout State Transitions
@@ -559,27 +542,62 @@ ELAB_R2X <- function(PAR){with(PAR,{
 #' @param site a \code{\link{Site}} object
 #' @export
 MBDETES_OstateTransitions <- function(site){
-  success = MBITES:::Parameters$get_O_succeed()
-  survive = MBITES:::Parameters$get_O_surv()
-  blood   = site$has_feed()
-  stay    = 1-MBDETES_getLeaveUnladen()
-
-  O2F = success*survive*(1-blood)
-  O2B = success*survive*blood
-  O2O = (1-success)*survive*stay
-  O2L = (1-success)*survive*(1-stay)
-  O2D = 1-O2F-O2B-O2O-O2L
-
-  # additional mass on D from local hazards
+  A = MBITES:::Parameters$get_O_succeed()
+  
+  B1 = site$has_aqua() 
+  B0 = 1-B1
+  B2 = 0 
+  
+  C1 = 0
+  C2 = 1 
+  C3 = 0
+  C4 = 1
+  C5 = 0  
+ 
+  D1 = MBITES:::Parameters$get_O_surv()
   localHaz = MBDETES_getLocalHazMortality(site)
-  O2D = O2D + localHaz
+  D1 = D1*(1-localHaz) 
+  D2 = D1   
+ 
+  E = 0 
 
-  # normalize
-  O2ALL = c(O2F, O2B, 0, O2L, O2O, O2D)
-  O2ALL = O2ALL/sum(O2ALL)
+  F1 = 0.5 # not implemented 
 
-  return(O2ALL)
+  stay = 1-MBDETES_getLeaveUnladen()
+  F2 = site$has_feed()*stay 
+  F3 = stay 
+
+#  O2F = success*survive*(1-blood)
+#  O2B = success*survive*blood
+#  O2O = (1-success)*survive*stay
+#  O2L = (1-success)*survive*(1-stay)
+#  O2D = 1-O2F-O2B-O2O-O2L
+#
+#  # additional mass on D from local hazards
+#  O2D = O2D + localHaz
+#
+#  # normalize
+#  O2ALL = c(O2F, O2B, 0, O2L, O2O, O2D)
+#  O2ALL = O2ALL/sum(O2ALL)
+
+  PAR = list(A=A, B0=B0, B1=B1, B2=B2,
+          C1=C1, C2=C2, C3=C3, C4=C4, C5=C5,
+          D1=D1, D2=D2, E=E, F1=F1, F2=F2, F3=F3)
+  ELAB_O2X(PAR)
 }
+
+ELAB_O2X <- function(PAR){with(PAR,{
+
+  Fail = (1-A) + A*(B0+ B1*C3 + B2*C5)
+
+  O2L = Fail*D2*(1-F3) + A*B1*C2*D1*E*(1-F1) 
+  O2O = Fail*D2*F3 + A*B1*C2*D1*E*F1 
+  O2F = A*B1*C2*D1*(1-E)*(1-F2) 
+  O2B = A*B1*C2*D1*(1-E)*F2
+  O2D = 1-O2L-O2O-O2F-O2B
+  O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)
+  return(O2ALL)
+})}
 
 
 #' MBDETES: The State Transition Matrix
