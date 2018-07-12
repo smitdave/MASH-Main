@@ -7,12 +7,9 @@ BFAB_PAR = function(
   B3= 0.00,
   C1= 0.01,
   C2= 0.85,
-  C3= 0.14,
   C4= 0.01,
   C5= 0.85,
-  C6= 0.14,
   C7= 0.5,
-  C8= 0.5,
   D1= 0.01, 
   D2= 0.90,
   D3= 0.09, 
@@ -24,13 +21,13 @@ BFAB_PAR = function(
   H2= 0.8
 ){
 list(A=A, B0=B0, B1=B1, B2=B2, B3=B3,
-           C1=C1, C2=C2, C3=C3, C4=C4,
-           C5=C5, C6=C6, C7=C7, C8=C8,
+           C1=C1, C2=C2, C3=1-C1-C2, C4=C4,
+           C5=C5, C6=1-C4-C5, C7=C7, C8=1-C7,
            D1=D1, D2=D2, D3=D3, E=E, 
            F1=F1, F2=F2, G=G, H1=H1, H2=H2)
 } 
 
-BFAB_B2X = function(PAR){with(PAR,{
+BFAB_B2Y = function(PAR){with(PAR,{
   B2R = A*(B1*C2*D2 + B2*C5)*E
   
   Fail = (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
@@ -45,7 +42,12 @@ BFAB_B2X = function(PAR){with(PAR,{
   return(B2ALL)
 })}
 
-BFAB_R2X = function(PAR){with(PAR,{
+BFAB_B2Y(BFAB_PAR(A=.8,C1=.01, C2=.84))
+#P_BF = .15,
+#P_BB = .05, 
+#P_BR = .75,
+
+BFAB_R2Y = function(PAR){with(PAR,{
   R2B = F1*G
   R2O = F1*(1-G)*H1
   R2L = F1*(1-G)*(1-H1)
@@ -78,7 +80,7 @@ ELAB_PAR = function(
        D1=D1, D2=D2, E=E, 
        F1=F1, F2=F2, F3=F3) 
 }
-ELAB_O2X = function(PAR){with(PAR,{
+ELAB_O2Y = function(PAR){with(PAR,{
   
   Fail = (1-A) + A*(B0+ B1*C3 + B2*C5)
   
@@ -89,12 +91,45 @@ ELAB_O2X = function(PAR){with(PAR,{
   O2D = 1-O2L-O2O-O2F-O2B
   O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)
   return(O2ALL)
-  
 })}
 
+BFSB_PAR = function(A=.94,
+                    B=0.893617){
+  list(A=A,B=B)
+}
 
+BFSB_F2Y= function(PAR){with(PAR,{
+  F2B = A*B
+  F2F = A*(1-B)
+  F2D = 1-F2B-F2F
+  F2ALL = c(F2F=F2F, F2B=F2B, 0,0,0, F2D=F2D)
+  return(F2ALL)
+})}
 
-BFAB_B2X(BFAB_PAR())
-BFAB_R2X(BFAB_PAR())
-ELAB_O2X(ELAB_PAR())
+BFSB_F2Y(BFSB_PAR(A=.94, B=.893617))
+
+ELSB_PAR = function(A=.94, B=.893617){
+  list(A=A,B=B)
+}
+
+ELSB_L2Y= function(PAR){with(PAR,{
+  L2O = A*B
+  L2L = A*(1-B)
+  L2D = 1-L2O-L2L
+  L2ALL = c(0,0,0,L2L=L2L, L2O=L2O, L2D=L2D)
+  return(L2ALL)
+})}
+
+Y2Y = rbind(
+BFSB_F2Y(BFSB_PAR()),
+BFAB_B2Y(BFAB_PAR()),
+BFAB_R2Y(BFAB_PAR()),
+ELAB_O2Y(ELAB_PAR()),
+ELSB_L2Y(ELSB_PAR()),
+c(rep(0, 5), 1)
+) 
+rownames(Y2Y) = c("F","B","R","L","O", "D")
+colnames(Y2Y) = c("F","B","R","L","O", "D")
+round(1000*Y2Y)/1000
+
 

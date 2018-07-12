@@ -28,8 +28,8 @@ PAR = list(
   P_OF = .45,
   
   #Transitions out of R
-  P_RF = .05,
-  P_RB = .20,
+  P_RF = .0,
+  P_RB = .25,
   P_RL = .40,
   P_RO = .35
 ) 
