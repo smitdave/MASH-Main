@@ -182,8 +182,7 @@ mbites_updateState <- function(){
     if(private$alive){
 
       if(private$bloodfed){
-        self$Oogenesis() # MBITES-Oogenesis.R
-        private$bloodfed = FALSE
+        self$Oogenesis() # MBITES-Oogenesis.R        
       }
       self$checkEggMaturation() # MBITES-Oogenesis.R
 

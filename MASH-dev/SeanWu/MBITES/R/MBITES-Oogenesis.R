@@ -162,16 +162,15 @@ mbites_pReFeed_bm <- function(){
 
 #' @rdname MBITES-Oogenesis
 mbites_oogenesis1 <- function(){
-  if(private$alive){
 
-    # dont make a new batch if i am carrying around eggs
-    if(private$batch <= 0){
-      private$batch = self$rBatchSize()
-      private$eggT = private$tNow + self$rEggMaturationTime()
-    }
-    private$bmSize = 0
-
+  # dont make a new batch if i am carrying around eggs
+  if(private$batch <= 0){
+    private$batch = self$rBatchSize()
+    private$eggT = private$tNow + self$rEggMaturationTime()
   }
+  private$bmSize = 0
+  private$bloodfed = FALSE
+
 }
 
 #' MBITES: Normally-distributed Egg Maturation Time
@@ -199,25 +198,25 @@ mbites_rEggMaturationTimeOff <- function(){
 
 #' @rdname MBITES-Oogenesis
 mbites_oogenesis2 <- function(){
-  if(private$alive){
 
-    # dont make a new batch if i am carrying around eggs
-    if(private$batch <= 0){
-      private$batch = self$rBatchSize()
-      private$eggP = MBITES:::Parameters$get_bloodPerEgg()*private$batch
-    }
-    # egg provision: after we've fed enough then mosquito is gravid
-    private$eggP = private$eggP - private$bmSize
-    # if the egg provision is fulfilled we can go ahead and get ready for oviposition
-    if(private$eggP <= 0){
-      private$eggT = 0
-      # dont need to set these flags; gets checked at end of every bout in mbites_updateState
-      # private$gravid = TRUE # now mosquito is gravid
-      # private$state = "O"
-      private$bmSize = max(0,private$bmSize - private$eggP)
-    }
-
+  # dont make a new batch if i am carrying around eggs
+  if(private$batch <= 0){
+    private$batch = self$rBatchSize()
+    private$eggP = MBITES:::Parameters$get_bloodPerEgg()*private$batch
   }
+  # egg provision: after we've fed enough then mosquito is gravid
+  private$eggP = private$eggP - private$bmSize
+  # if the egg provision is fulfilled we can go ahead and get ready for oviposition
+  if(private$eggP <= 0){
+    private$eggT = 0
+    # dont need to set these flags; gets checked at end of every bout in mbites_updateState
+    # private$gravid = TRUE # now mosquito is gravid
+    # private$state = "O"
+    private$bmSize = max(0,private$bmSize - private$eggP)
+  }
+
+  private$bloodfed = FALSE
+  
 }
 
 ###############################################################################
