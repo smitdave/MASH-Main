@@ -84,13 +84,15 @@ NULL
 #'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
 #'
 mbites_checkEggMaturation <- function(){
-  # check egg maturation
-  if(private$eggT <= private$tNow){
-    private$gravid = TRUE
-    private$state = "O"
-  } else {
-    private$gravid = FALSE
-    private$state = "B"
+  # check egg maturation if the mosy is not gravid
+  if(!private$gravid){
+    if(private$eggT <= private$tNow){
+      private$gravid = TRUE
+      private$state = "O"
+    } else {
+      private$gravid = FALSE
+      private$state = "B"
+    }
   }
 }
 

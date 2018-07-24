@@ -20,6 +20,8 @@
 #'
 #' For each \code{\link{Site}} in a landscape, calculate approximate
 #' state transitions matrix by calling \code{\link{MBDETES_StateTransitions}}.
+#' This requires a full landscape and humans to be constructed first, as well as MBITES parameters to be set (the only MBITES initialization function that is not necessary is \code{MBITES_Initialize}).
+#'
 #'
 #' @param tileID an integer ID of a tile (must have already called \code{\link{Tile_Initialize}} and the appropriate \code{Human_XX_Initialize} routines)
 #' @return a list of length equal to number of sites in the tile \code{tileID} where
@@ -183,7 +185,8 @@ MBDETES_PrLeave <- function(site,res,fail=FALSE){
 
 
 #' MBDETES: Probability to Survive a Bout
-#' Compute survival probability as a result of flight and local hazards.
+#' Compute survival probability as a result of flight and local hazards. This gives the expectation
+#' of survival from \code{\link{mbites_survival}}.
 #' @param site a \code{\link{Site}} object
 #' @param bout character in 'F','B','L','O'
 #' @export
@@ -429,7 +432,7 @@ MBDETES_RperiodTransitions <- function(site){
   # H2: P(Stay | I want to oviposit, i'm resting)
   H2 <- 1 - MBDETES_PrLeave(site,"aqua",FALSE)
 
-  PAR(F1=F1,G=G,H1=H1,H2=H2)
+  PAR <- list(F1=F1,G=G,H1=H1,H2=H2)
   BFAB_R2X(PAR)
 }
 
@@ -438,10 +441,10 @@ BFAB_R2X <- function(PAR){with(PAR,{
   R2B = F1*G*H1
   R2O = F1*(1-G)*H2
   R2L = F1*(1-G)*(1-H2)
-  R2D = 1-R2B-R2O-R2L-R2D
+  R2D = 1-R2B-R2O-R2L-R2F
 
   R2ALL = c(R2F,R2B,0,R2L,R2O,R2D)
-  return(B2ALL)
+  return(R2ALL)
 })}
 
 
@@ -453,17 +456,20 @@ BFAB_R2X <- function(PAR){with(PAR,{
 #' @param site a \code{\link{Site}} object
 #' @export
 MBDETES_LstateTransitions <- function(site){
-  success = MBITES:::Parameters$get_Os_succeed()
-  survive <- MBDETES_PrSurvive(site,"L")
 
-  L2O = success*survive
-  L2L = (1-success)*survive
-  L2D = 1-L2O-L2L
+  A <- MBITES:::Parameters$get_Os_succeed()
+  D2 <- D1 <- MBDETES_PrSurvive(site,"L")
+  R <- MBDETES_PrRefeed()
+  F1 <- MBDETES_PrLeave(site,"feed",FALSE)
+  F2 <- MBDETES_PrLeave(site,"aqua",FALSE)
 
-  # normalize
-  L2ALL = c(0, 0, 0, L2L, L2O, L2D)
-  L2ALL = L2ALL/sum(L2ALL)
+  L2F <- A*D1*R*F1  # blood feeding search
+  L2B <- A*D1*R*(1-F1) # blood feeding here
+  L2L <- (A*D1*(1-R)*F2) + ((1-A)*D2) # oviposition search
+  L2O <- A*D1*(1-R)*(1-F2) # oviposition here
+  L2D <- (A*(1-D1)) + ((1-A)*(1-D2)) # death
 
+  return(c(L2F,L2B,0,L2L,L2O,L2D))
 }
 
 
@@ -504,63 +510,16 @@ MBDETES_OstateTransitions <- function(site){
   ELAB_O2X(PAR)
 }
 
-# DS original
-# MBDETES_OstateTransitions <- function(site){
-#   A = MBITES:::Parameters$get_O_succeed()
-#
-#   B1 = site$has_aqua()
-#   B0 = 1-B1
-#   B2 = 0
-#
-#   C1 = 0
-#   C2 = 1
-#   C3 = 0
-#   C4 = 1
-#   C5 = 0
-#
-#   D1 = MBITES:::Parameters$get_O_surv()
-#   localHaz = MBDETES_LocalHazMortality(site)
-#   D1 = D1*(1-localHaz)
-#   D2 = D1
-#
-#   E = 0
-#
-#   F1 = 0.5 # not implemented
-#
-#   stay = 1-MBDETES_LeaveUnladen()
-#   F2 = site$has_feed()*stay
-#   F3 = stay
-#
-# #  O2F = success*survive*(1-blood)
-# #  O2B = success*survive*blood
-# #  O2O = (1-success)*survive*stay
-# #  O2L = (1-success)*survive*(1-stay)
-# #  O2D = 1-O2F-O2B-O2O-O2L
-# #
-# #  # additional mass on D from local hazards
-# #  O2D = O2D + localHaz
-# #
-# #  # normalize
-# #  O2ALL = c(O2F, O2B, 0, O2L, O2O, O2D)
-# #  O2ALL = O2ALL/sum(O2ALL)
-#
-#   PAR = list(A=A, B0=B0, B1=B1, B2=B2,
-#           C1=C1, C2=C2, C3=C3, C4=C4, C5=C5,
-#           D1=D1, D2=D2, E=E, F1=F1, F2=F2, F3=F3)
-#   ELAB_O2X(PAR)
-# }
-
 ELAB_O2X <- function(PAR){with(PAR,{
 
-  Fail = (1-A) + A*(B0+ B1*C3 + B2*C5)
+  Fail = (1-A) + (A*B0) + (A*(1-B0)*B1*C3) + (A*(1-B0)*B2*C5)
 
-  O2L = Fail*D2*(1-F3) + A*B1*C2*D1*E*(1-F1)
-  O2O = Fail*D2*F3 + A*B1*C2*D1*E*F1
-  O2F = A*B1*C2*D1*(1-E)*(1-F2)
-  O2B = A*B1*C2*D1*(1-E)*F2
-  O2D = 1-O2L-O2O-O2F-O2B
-  O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)
-  return(O2ALL)
+  O2L <- (Fail*D2*(1-F3)) + (A*(1-B0)*B1*C2*D1*E*(1-F1))
+  O2O <- (Fail*D2*F3) + (A*(1-B0)*B1*C2*D1*E*F1)
+  O2F <- (A*(1-B0)*B1*C2*D1*(1-E)*(1-F2))
+  O2B <- (A*(1-B0)*B1*C2*D1*(1-E)*F2)
+  O2D <- 1-O2L-O2O-O2F-O2B
+  return(c(O2F,O2B,0,O2L,O2O,O2D))
 })}
 
 

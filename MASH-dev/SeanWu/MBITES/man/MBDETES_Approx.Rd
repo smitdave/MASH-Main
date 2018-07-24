@@ -17,4 +17,5 @@ states {F,B,R,L,O,D}
 \description{
 For each \code{\link{Site}} in a landscape, calculate approximate
 state transitions matrix by calling \code{\link{MBDETES_StateTransitions}}.
+This requires a full landscape and humans to be constructed first, as well as MBITES parameters to be set (the only MBITES initialization function that is not necessary is \code{MBITES_Initialize}).
 }
