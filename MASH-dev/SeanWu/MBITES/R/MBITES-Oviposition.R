@@ -55,13 +55,11 @@ Mosquito_Female$set(which = "public",name = "chooseHabitat",
 #'  * This method is bound to \code{MosquitoFemale$layEggs()}.
 #'
 mbites_layEggs_Emerge <- function(){
-  if(runif(1) < MBITES:::Parameters$get_O_succeed()){
-    self$trackOviposit()
-    private$eggT = 2e16
-    private$gravid = FALSE
-    private$batch = 0
-    private$state = "B"
-  }
+  self$trackOviposit()
+  private$eggT = 2e16
+  private$gravid = FALSE
+  private$batch = 0
+  private$state = "B"
 }
 
 
@@ -75,12 +73,10 @@ mbites_layEggs_Emerge <- function(){
 #'  * This method is bound to \code{MosquitoFemale$layEggs()}.
 #'
 mbites_layEggs_EL4P <- function(){
-  if(runif(1) < MBITES:::Parameters$get_O_succeed()){
-    self$trackOviposit()
-    private$eggT = 2e16
-    private$gravid = FALSE
-    private$aqua_resource$EggQ$add2Q(private$batch,private$tNow)
-    private$batch = 0
-    private$state = "B"
-  }
+  self$trackOviposit()
+  private$eggT = 2e16
+  private$gravid = FALSE
+  private$aqua_resource$EggQ$add2Q(private$batch,private$tNow)
+  private$batch = 0
+  private$state = "B"
 }

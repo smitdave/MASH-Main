@@ -119,7 +119,7 @@ Tile_Initialize(landscape)
 
 Human_NULL_Initialize(humans)
 
-# transitions <- MBDETES_Approx(1L)
+transitions <- MBDETES_Approx(1L)
 
 MBITES_Initialize(mosquitos)
 
