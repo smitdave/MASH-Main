@@ -311,25 +311,25 @@ MBDETES_LocalHazMortality <- function(site){
 #' @param site a \code{\link{Site}} object
 #' @export
 MBDETES_FstateTransitions <- function(site){
-  succeed = MBITES:::Parameters$get_Bs_succeed()
 
-  survive <- MBDETES_PrSurvive(site,"F")
+  A <- MBITES:::Parameters$get_Bs_succeed()
+  D1 <- D2 <- MBDETES_PrSurvive(site,"F")
+  F1 <- MBDETES_PrLeave(site,"feed",FALSE)
 
-  F2B = succeed*survive
-  F2F = (1-succeed)*survive
-  F2D = 1-survive
+  F2F <- (A*D1*F1) + ((1-A)*D2)
+  F2B <- A*D1*(1-F1)
+  F2D <- 1-(F2F+F2B)
 
-  # normalize
-  F2ALL = c(F2F, F2B, 0, 0, 0, F2D)
-  F2ALL = F2ALL/sum(F2ALL)
-
-  return(F2ALL)
+  return(c(F2F, F2B, 0, 0, 0, F2D))
 }
 
 
 #' MBDETES: Blood Feeding Attempt Bout State Transitions
 #'
-#' Calculate vector of probabilities to transition between: B -> F, B, R, D
+#' Calculate vector of probabilities to transition between: B -> F, B, R, D.
+#' In the flow diagram of the "B" state (blood feeding attempt bout),
+#' probabilities are calculated for all paths except those that branch after
+#' entering "R", which are calculated in \code{\link{MBDETES_RperiodTransitions}}.
 #' This function is called from \code{\link{MBDETES_StateTransitions}}.
 #'
 #' @param site a \code{\link{Site}} object
@@ -377,15 +377,13 @@ MBDETES_BstateTransitions <- function(site){
   C8 = 1-C7
 
   # P(survive PPR | implicit conditioning on having taken a bloodmeal)
-  E = MBDETES_PrPPRFlight()
+  E <- MBDETES_PrPPRFlight()
 
   # P(Survive | i tried to bloodfeed)
-  surv <- MBDETES_PrSurvive(site,"B")
-  # P(Stay | I want to bloodfeed, i failed to  bloodfeed last time)
-  stay <- 1 - MBDETES_PrLeave(site,"feed",TRUE)
-  F2 <- surv
+  F2 <-  MBDETES_PrSurvive(site,"B")
 
-  H3 <- F2 * stay
+  # P(Stay | I want to bloodfeed, i failed to  bloodfeed last time)
+  H3 <- 1 - MBDETES_PrLeave(site,"feed",TRUE)
 
   PAR = list(A=A, B0=B0, B1=B1, B2=B2, B3=B3,
           C1=C1, C2=C2, C3=C3, C4=C4,
@@ -396,18 +394,15 @@ MBDETES_BstateTransitions <- function(site){
 }
 
 BFAB_B2X <- function(PAR){with(PAR,{
-  B2R = A*(B1*C2*D2 + B2*C5)*E
 
-  Fail = (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
-  B2B = Fail*F2*H3
-  B2F = Fail*F2*(1-H3)
+  Fail <- (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
 
-  # additional mass on D from local hazards
-  B2D = 1-B2R-B2F-B2B
+  B2F <- Fail*F2*(1-H3)
+  B2B <- Fail*F2*H3
+  B2R <- A*(B1*C2*D2 + B2*C5)*E
+  B2D <- 1-B2R-B2F-B2B
 
-  # normalize
-  B2ALL = c(B2F, B2B, B2R, 0, 0, B2D)
-  return(B2ALL)
+  return(c(B2F, B2B, B2R, 0, 0, B2D))
 })}
 
 
