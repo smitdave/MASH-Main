@@ -475,11 +475,12 @@ MBDETES_LstateTransitions <- function(site){
 #' @param site a \code{\link{Site}} object
 #' @export
 MBDETES_OstateTransitions <- function(site){
-  A = MBITES:::Parameters$get_O_succeed()
 
-  B1 = site$has_aqua()
-  B0 = 1-B1
-  B2 = 0
+  A = MBITES:::Parameters$get_O_succeed() # P(bout failure)
+
+  B0 = 1 - site$has_aqua() # P(No aquatic habitats and/or traps present)
+  B2 = 0 # P(Trap | Aquatic habitat and/or trap present)
+  B1 = (1 - B2) # P(Aquatic habitat | Aquatic habitat and/or trap present)
 
   C1 = 0
   C2 = 1
@@ -487,37 +488,67 @@ MBDETES_OstateTransitions <- function(site){
   C4 = 1
   C5 = 0
 
-  D1 = MBITES:::Parameters$get_O_surv()
-  localHaz = MBDETES_LocalHazMortality(site)
-  D1 = D1*(1-localHaz)
+  D1 = MBDETES_PrSurvive(site,"O")
   D2 = D1
 
   E = 0
 
   F1 = 0.5 # not implemented
 
-  stay = 1-MBDETES_LeaveUnladen()
-  F2 = site$has_feed()*stay
-  F3 = stay
-
-#  O2F = success*survive*(1-blood)
-#  O2B = success*survive*blood
-#  O2O = (1-success)*survive*stay
-#  O2L = (1-success)*survive*(1-stay)
-#  O2D = 1-O2F-O2B-O2O-O2L
-#
-#  # additional mass on D from local hazards
-#  O2D = O2D + localHaz
-#
-#  # normalize
-#  O2ALL = c(O2F, O2B, 0, O2L, O2O, O2D)
-#  O2ALL = O2ALL/sum(O2ALL)
+  F2 = 1 - MBDETES_PrLeave(site,"feed",FALSE) # P(leave | i want to blood feed, bout was not a failure)
+  F3 = 1 - MBDETES_PrLeave(site,"aqua",TRUE) # P(leave | i want to oviposit, bout was a failure)
 
   PAR = list(A=A, B0=B0, B1=B1, B2=B2,
           C1=C1, C2=C2, C3=C3, C4=C4, C5=C5,
           D1=D1, D2=D2, E=E, F1=F1, F2=F2, F3=F3)
   ELAB_O2X(PAR)
 }
+
+# DS original
+# MBDETES_OstateTransitions <- function(site){
+#   A = MBITES:::Parameters$get_O_succeed()
+#
+#   B1 = site$has_aqua()
+#   B0 = 1-B1
+#   B2 = 0
+#
+#   C1 = 0
+#   C2 = 1
+#   C3 = 0
+#   C4 = 1
+#   C5 = 0
+#
+#   D1 = MBITES:::Parameters$get_O_surv()
+#   localHaz = MBDETES_LocalHazMortality(site)
+#   D1 = D1*(1-localHaz)
+#   D2 = D1
+#
+#   E = 0
+#
+#   F1 = 0.5 # not implemented
+#
+#   stay = 1-MBDETES_LeaveUnladen()
+#   F2 = site$has_feed()*stay
+#   F3 = stay
+#
+# #  O2F = success*survive*(1-blood)
+# #  O2B = success*survive*blood
+# #  O2O = (1-success)*survive*stay
+# #  O2L = (1-success)*survive*(1-stay)
+# #  O2D = 1-O2F-O2B-O2O-O2L
+# #
+# #  # additional mass on D from local hazards
+# #  O2D = O2D + localHaz
+# #
+# #  # normalize
+# #  O2ALL = c(O2F, O2B, 0, O2L, O2O, O2D)
+# #  O2ALL = O2ALL/sum(O2ALL)
+#
+#   PAR = list(A=A, B0=B0, B1=B1, B2=B2,
+#           C1=C1, C2=C2, C3=C3, C4=C4, C5=C5,
+#           D1=D1, D2=D2, E=E, F1=F1, F2=F2, F3=F3)
+#   ELAB_O2X(PAR)
+# }
 
 ELAB_O2X <- function(PAR){with(PAR,{
 
