@@ -316,11 +316,20 @@ MBDETES_FstateTransitions <- function(site){
   D1 <- D2 <- MBDETES_PrSurvive(site,"F")
   F1 <- MBDETES_PrLeave(site,"feed",FALSE)
 
-  F2F <- (A*D1*F1) + ((1-A)*D2)
-  F2B <- A*D1*(1-F1)
-  F2D <- 1-(F2F+F2B)
+  PAR = list(A=A,D1=D1,F1=F1)
+  BFSB_F2X(PAR)
+}
 
-  return(c(F2F, F2B, 0, 0, 0, F2D))
+BFSB_F2X <- function(PAR){
+  with(PAR,{
+
+    F2F <- (A*D1*F1) + ((1-A)*D2)
+    F2B <- A*D1*(1-F1)
+    F2D <- 1-(F2F+F2B)
+
+    return(c(F2F, F2B, 0, 0, 0, F2D))
+
+  })
 }
 
 
@@ -458,13 +467,22 @@ MBDETES_LstateTransitions <- function(site){
   F1 <- MBDETES_PrLeave(site,"feed",FALSE)
   F2 <- MBDETES_PrLeave(site,"aqua",FALSE)
 
-  L2F <- A*D1*R*F1  # blood feeding search
-  L2B <- A*D1*R*(1-F1) # blood feeding here
-  L2L <- (A*D1*(1-R)*F2) + ((1-A)*D2) # oviposition search
-  L2O <- A*D1*(1-R)*(1-F2) # oviposition here
-  L2D <- (A*(1-D1)) + ((1-A)*(1-D2)) # death
+  PAR <- list(A=A,D1=D1,D2=D2,R=R,F1=F1,F2=F2)
+  ELSB_L2X(PAR)
+}
 
-  return(c(L2F,L2B,0,L2L,L2O,L2D))
+ELSB_L2X <- function(PAR){
+  with(PAR,{
+
+    L2F <- A*D1*R*F1  # blood feeding search
+    L2B <- A*D1*R*(1-F1) # blood feeding here
+    L2L <- (A*D1*(1-R)*F2) + ((1-A)*D2) # oviposition search
+    L2O <- A*D1*(1-R)*(1-F2) # oviposition here
+    L2D <- (A*(1-D1)) + ((1-A)*(1-D2)) # death
+
+    return(c(L2F,L2B,0,L2L,L2O,L2D))
+
+  })
 }
 
 
