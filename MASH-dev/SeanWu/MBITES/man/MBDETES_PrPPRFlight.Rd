@@ -7,5 +7,11 @@
 MBDETES_PrPPRFlight()
 }
 \description{
-MBDETES: Probability to Survive Post-prandial Resting Flight
+Computes the intergral of the probability of surviving
+the post-prandial resting flight conditioned on the
+size of the bloodmeal, multiplied by the probability of
+a bloodmeal of that size.
+\itemize{
+\item MBITES functions can be found in MBITES-BloodMeal.R
+}
 }

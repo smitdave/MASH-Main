@@ -107,6 +107,11 @@ MBDETES_PrOverfeed <- function(){
 
 #' MBDETES: Probability to Survive Post-prandial Resting Flight
 #'
+#' Computes the intergral of the probability of surviving
+#' the post-prandial resting flight conditioned on the
+#' size of the bloodmeal, multiplied by the probability of
+#' a bloodmeal of that size.
+#'  * MBITES functions can be found in MBITES-BloodMeal.R
 #'
 #' @export
 MBDETES_PrPPRFlight <- function(){
@@ -320,6 +325,14 @@ MBDETES_FstateTransitions <- function(site){
   BFSB_F2X(PAR)
 }
 
+#' MBDETES: Blood Feeding Search Bout Transition Probabilities
+#'
+#' After receiving parameter values, compute state transition probabilities
+#' from the blood feeding search bout state to all other states.
+#' This function is called from \code{\link{MBDETES_FstateTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
 BFSB_F2X <- function(PAR){
   with(PAR,{
 
@@ -402,6 +415,14 @@ MBDETES_BstateTransitions <- function(site){
   BFAB_B2X(PAR)
 }
 
+#' MBDETES: Blood Feeding Attempt Bout Transition Probabilities
+#'
+#' After receiving parameter values, compute state transition probabilities
+#' from the blood feeding attempt bout state to all other states.
+#' This function is called from \code{\link{MBDETES_BstateTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
 BFAB_B2X <- function(PAR){with(PAR,{
 
   Fail <- (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
@@ -440,6 +461,14 @@ MBDETES_RperiodTransitions <- function(site){
   BFAB_R2X(PAR)
 }
 
+#' MBDETES: Resting Period Transition Probabilities
+#'
+#' After receiving parameter values, compute state transition probabilities
+#' from the resting period state to all other states.
+#' This function is called from \code{\link{MBDETES_RperiodTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
 BFAB_R2X <- function(PAR){with(PAR,{
   R2F = F1*G*(1-H1)
   R2B = F1*G*H1
@@ -471,6 +500,14 @@ MBDETES_LstateTransitions <- function(site){
   ELSB_L2X(PAR)
 }
 
+#' MBDETES: Egg Laying Search Bout Transition Probabilities
+#'
+#' After receiving parameter values, compute state transition probabilities
+#' from the egg laying search bout state to all other states.
+#' This function is called from \code{\link{MBDETES_LstateTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
 ELSB_L2X <- function(PAR){
   with(PAR,{
 
@@ -523,6 +560,14 @@ MBDETES_OstateTransitions <- function(site){
   ELAB_O2X(PAR)
 }
 
+#' MBDETES: Egg Laying Attempt Bout Transition Probabilities
+#'
+#' After receiving parameter values, compute state transition probabilities
+#' from the egg laying attempt bout state to all other states.
+#' This function is called from \code{\link{MBDETES_OstateTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
 ELAB_O2X <- function(PAR){with(PAR,{
 
   Fail = (1-A) + (A*B0) + (A*(1-B0)*B1*C3) + (A*(1-B0)*B2*C5)
