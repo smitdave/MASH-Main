@@ -65,7 +65,7 @@ The resulting travel matrix can be broken down like this:
 
 __Note__: The one important piece that is missing is an additional time scale that defines _how long_ on average a given traveler spends away from home.  The travel destinations inform where each traveler tends to go.  The travel frequency data inform how often a traveler leaves home.  But importantly the TaR matrix counts the fraction of time spent in each location, not the frequency at which travelers arrive there.  We will need to make some additional assumptions about time spent away from home in order to convert from the _travel frequency_ to the _time spent at risk_.
 
-```{r echo=FALSE}
+```{r}
 library(data.table, quietly = TRUE) # The workhorse of this exercise
 library(pscl, quietly = TRUE) # Used for fitting the travel model 
 library(boot, quietly = TRUE)
@@ -81,7 +81,7 @@ library(MASS, quietly = TRUE)
 denom <- data.table(read.csv("BI_sim_setup_data/bioko_areas.csv"))
 ```
 
-#### We use the mean PfPR estimates from Su's prevalence map, initially produced in October of 2018.
+#### We use the mean PfPR estimates from Su's prevalence map, initially produced in October of 2017.
 ```{r}
 pfpr <- data.table(read.csv("BI_sim_setup_data/data_area.csv"))
 ```
@@ -196,9 +196,13 @@ We estimate the travel time to mainland by assuming that first people travel to 
 ```{r}
 # Use: time to travel to mainland = time to travel to malabo + 45*3 minutes
 # where 45 minutes is the time of the flight
-travel.model.data$tt.weighted.o = travel.model.data$tt.weighted.mal + 135
-travel.model.data$tt.sum.o = travel.model.data$tt.sum.mal + 135
+# Use: time to travel to mainland = time to travel to malabo + 8 hours
+# where 8 hours is the time on the boat
+# Using boat travel time does appear to give a better AIC for our modeling fits
+travel.model.data$tt.weighted.o = travel.model.data$tt.weighted.mal + 8*60 #135
+travel.model.data$tt.sum.o = travel.model.data$tt.sum.mal + 8*60 #135
 ```
+
 
 #### 4. Fit the data to a travel model
 
@@ -235,9 +239,32 @@ travel.model.data$TravelRegion <- sapply(travel.model.data$Region,
                                          FUN = function(s){return(reg.names[[s]])})
 ```
 
+And just in case, remove all of the zeroes from the travel times:
+```{r}
+travel.model.data[TravelTime.Weighted < 1]$TravelTime.Weighted <- 1
+travel.model.data[TravelTime.Sum < 1]$TravelTime.Sum <- 1
+```
+
+
+We also need to re-scale the number of trips according to the population in each patch.  Only `n` people in each patch are surveyed over the course of 3 years, so we should rescale according to `pop/(n/3)`.  Similarly, we want to know the number of times that someone might travel over the full year, not just 8 weeks - so we again rescale by 52/(8*3) - the extra factor of 3 is added because we include 3 years' worth of respondent time.
+```{r}
+# Replace all of the n=NA with 0
+travel.model.data[is.na(n)]$n <- 1
+
+# Rescale the 3 years of survey respondents' number of times traveled by the number of people living in each patch
+travel.model.data$Freq.all <- round(travel.model.data$Freq*travel.model.data$pop/travel.model.data$n)
+
+# Rescale according to a year's worth of time, instead of just 8 weeks
+# But we also need to account for 3 years' worth of respondent time
+#travel.model.data$Freq.all <- round(travel.model.data$Freq.all*52/(8*3))
+# Alternatively, do this below
+```
+
+
+
 We now fit the data to the travel model.  The travel model is a statistical model that estimates the number of times a person travels from one patch to one destination based on the distance (travel time) separating the two locations and the respective populations in each location.  We expect that the travel frequency should increase with the population of the origin and destination region and decrease with travel time.
 $$
-Freq \sim \text{population}_\text{origin} + \text{population}_\text{destination region} + \text{time}_\text{separation}
+Freq \sim \log(\text{population}_\text{origin}) + \log(\text{population}_\text{destination region}) + \text{time}_\text{separation}
 $$
 We use a zero inflated negative binomial regression to fit our model.  In order to remain consistent with the assumptions that go into the model (Gaussian-distributed input variables), we log-transform each of the population data sets.
 ```{r}
@@ -246,7 +273,10 @@ travel.model.data$pop.log = log(travel.model.data$pop)
 travel.model.data$pop.Region.log = log(travel.model.data$pop.Region)
 # Here we use the weighted average travel times
 # but the unweighted average could also be used and the answers are not too different
-gravity.zinb.log.w <- zeroinfl(Freq ~ pop.log + pop.Region.log + TravelTime.Weighted, 
+gravity.zinb.log.w <- zeroinfl(Freq.all ~ pop.log + pop.Region.log + log(TravelTime.Weighted), 
+                   data = travel.model.data, dist = "negbin")
+
+gravity.zinb.log.s <- zeroinfl(Freq.all ~ pop.log + pop.Region.log + log(TravelTime.Sum), 
                                data = travel.model.data, dist = "negbin")
 ```
 
@@ -258,6 +288,48 @@ travel.model.data$predict.zinb.log.w <- predict(gravity.zinb.log.w,
 ```
 
 __Note__: We probably want to establish some standards for evaluating goodness of fit.  Using the zero-inflated negative binomial model to fit the travel model was determined using Vuong's non-nested hypothesis test, which compares two models to one another.  But in the future we will want to also be able to quantitatively compare our data and our model's prediction.
+
+Show AIC for the two fit models
+```{r}
+# AIC for our model prediction, with weighted travel times:
+AIC(gravity.zinb.log.w)
+# AIC for our model prediction, with summed travel times:
+AIC(gravity.zinb.log.s)
+```
+
+Some more statistical fits, comparing different models.  Include non-transformed populations, non-transformed travel times, zero-inflated poisson fits, negative binomial fits, poisson fits.  (This is not yet a comprehensive overview of all possible fits we can perform, but we can make it comprehensive if we want.)  Overall, the zero-inflated negative binomial model with log-transformed populations seems to have the smallest AIC value.
+```{r}
+# non-log-transformed populations
+holder <- zeroinfl(Freq.all ~ pop + pop.Region + TravelTime.Weighted, 
+                   data = travel.model.data, dist = "negbin")
+AIC(holder)
+
+# non-log-transformed travel times
+gravity.zinb.log.w <- zeroinfl(Freq.all ~ pop.log + pop.Region.log + TravelTime.Weighted, 
+                               data = travel.model.data, dist = "negbin")
+AIC(holder)
+
+# zero-inflated poisson fit
+holder <- zeroinfl(Freq.all ~ pop.log + pop.Region.log + TravelTime.Weighted, 
+                               data = travel.model.data, dist = "poisson")
+AIC(holder)
+
+# ordinary negative binomial fit
+holder <- glm.nb(Freq.all ~ pop.log + pop.Region.log + TravelTime.Weighted,
+                 data = travel.model.data)
+AIC(holder)
+
+# ordinary negative binomial fit, without log transformed variables
+holder <- glm.nb(Freq.all ~ pop + pop.Region + TravelTime.Weighted,
+                 data = travel.model.data)
+AIC(holder)
+
+# ordinary poisson fit
+holder <- glm(Freq.all ~ pop.log + pop.Region.log + TravelTime.Weighted, family = "poisson", 
+              data = travel.model.data)
+AIC(holder)
+```
+
 
 #### 5. Calculate probability of fever and seeking treatment
 ```{r}
@@ -321,23 +393,24 @@ pfpr.input[194 + 7] <- (travel.model.data[ad2 == "Ureka"]$pop %*%
                        sum(travel.model.data[ad2 == "Ureka"]$pop))[[1]]
 ```
 
-As noted above, one key parameter that is missing from our data is a time scale that allows us to determine the fraction of time spent away from home, as opposed to how frequently each person travels to each destination region.  We will assume at this point that every person spends on average 3 days out of the year away from home, or 0.8% of the time traveling.
+As noted above, one key parameter that is missing from our data is a time scale that allows us to determine the fraction of time spent away from home, as opposed to how frequently each person travels to each destination region.  We will assume that each on-island trip lasts about 3 days, and each off-island trip lasts about 7 days.
 ```{r}
-# Fraction of time away
-fraction.time.away = 10./365
 # Most of the elements of this matrix are empty:
 # Only where i is a patch and j is a region do we have nonzero entries
 P.ij <- diag(1, nrow = 194+7, ncol = 194+7)
 for (i in 1:194){
   holder = rep(0, 7)
   for (j in 1:7){
+    # Total number of trips, for all people
     holder[j] <- travel.model.data[areaId == areaIds[i] & TravelRegion == reg.names[j]]$predict.zinb.log.w
   }
-  # Average number of trips each person makes
-  holder <- holder/travel.model.data[areaId==areaIds[i]]$pop
+  # Average number of trips each person makes - Divide out by the number of people in each patch
+  d <- travel.model.data[areaId==areaIds[i]]$pop
+  holder <- holder/d
   # Fraction of time spent in each location by each person
   # Note that the time spent on the mainland 
-  holder <-  c(7,3,3,3,3,3,3)*52/8/365*holder
+  holder <-  holder*52/8*c(7,3,3,3,3,3,3)/365
+  #holder <-  c(7,3,3,3,3,3,3)/365*holder
   # Time spent away
   P.ij[i, (194 + 1):(194+7)] <- holder
   # Time spent at home
@@ -345,9 +418,14 @@ for (i in 1:194){
 }
 ```
 
+What we find is that most people spend about 95-100% of their time at home
+```{r}
+hist(diag(P.ij[1:194, 1:194]))
+```
+
 
 #### 7. Solving for force of infection using TaR matrix
-Define parameters.  In the most general version of the multi-patch RM model many of these parameters are allowed to vary across patches, but here we will assume they are constant
+Define parameters.  In the most general version of the multi-patch RM model many of these parameters are allowed to vary across patches, but here we will assume they are constant.  (Not all parameters are used in the TaR calculation here.)
 ```{r}
 # Assemble the parameters!
 a = 0.3*0.9
@@ -372,6 +450,12 @@ FOI <- ginv(P.ij) %*% g
 # merge with travel.model.data
 travel.model.data[, foi:=NULL]
 travel.model.data <- merge(travel.model.data, data.table(areaId = areaIds, foi = FOI[1:194]), by = "areaId")
+
+# And for plotting, we can set the negative regions to have 0 local FOI
+travel.model.data[, foi.plot:=NULL]
+FOI.plot = FOI
+FOI.plot[which(FOI.plot < 0)] <- 0
+travel.model.data <- merge(travel.model.data, data.table(areaId = areaIds, foi.plot = FOI.plot[1:194]), by = "areaId")
 ```
 
 __Sanity Check__: One important constraint on the solution here is that the FOI must be non-negative.
@@ -386,6 +470,8 @@ library(ggplot2, quietly = TRUE)
 library(sp, quietly = TRUE)
 library(maptools, quietly = TRUE)
 library(rgdal, quietly = TRUE)
+library(rgeos, quietly = TRUE)
+library(gpclib, quietly = TRUE)
 
 # Read in shape files of Bioko Island and the area-level grid
 bioko<-readOGR("BI_maps/bioko", "bioko_admin1")
@@ -397,13 +483,13 @@ plot.data<-area.data[order(area.data$order), ]
 ```
 
 
-
+Plot the mean surface of MAP's PfPR estimates, showing a range from 5 to 45%.  The dark gray areas have very low estimated PfPR.
 ```{r fig.width=6, fig.height=6, echo = FALSE}
 # PfPR map
 p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
 p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
 pr <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = pfpr*100), color = NA, size = 0.25) +
-  scale_fill_gradient(name="PfPR (%)", low="yellow", high="red", limits=c(0,40)) +
+  scale_fill_gradient(name="PfPR (%)", low="yellow", high="red", limits=c(5,45)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
@@ -411,16 +497,125 @@ pr <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group
 pr
 ```
 
+Plot the annual FOI.  The dark gray areas have negative FOI, meaning that there is too much travel estimated for those areas.  Note also that areas with negative FOI also have very low estimated PfPR.
 ```{r fig.width=6, fig.height=6, echo = FALSE}
 # EIR map
 p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
 p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
 eir <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = foi*365), color = NA, size = 0.25) +
-  scale_fill_gradient(name="FOI (Annual EIR)", low="yellow", high="red", limits=c(0,1.25)) +
+  scale_fill_gradient(name="FOI (Annual EIR)", low="yellow", high="red", limits=c(0,1.5)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
         axis.title.x=element_blank(),
         axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
 eir
+```
+
+
+How does this FOI map differ from what we would find if there were no travel at all?
+```{r}
+g <- r/(1-rho)*pfpr.input/(1-(1+rho*r/eta/(1-rho))*pfpr.input)
+FOI.notravel <- g
+# merge with travel.model.data
+travel.model.data[, foi.nt:=NULL]
+travel.model.data <- merge(travel.model.data, data.table(areaId = areaIds, foi.nt = FOI.notravel[1:194]), by = "areaId")
+
+# Merge travel.model.data with the area-level grid shapefile
+area.data = merge(areasf, travel.model.data, by.x = "id", by.y = "areaId", all=TRUE)
+plot.data<-area.data[order(area.data$order), ]
+```
+
+```{r fig.width=6, fig.height=6, echo = FALSE}
+# EIR map
+p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
+p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
+eir.notravel <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = foi.nt*365), color = NA, size = 0.25) +
+  scale_fill_gradient(name="FOI (Annual EIR), No Travel", low="yellow", high="red", limits=c(0,1.5)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+eir.notravel
+```
+
+
+
+Plotting the percent change in FOI adding travel.  Note that there are no areas with positive change to FOI following the addition of travel to the model - only areas where the addition of travel cause the local estimate of FOI decrease - by as much as -400% in some places.
+```{r fig.width=6, fig.height=6, echo = FALSE}
+p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
+p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
+eir.notravel <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = 100*(foi - foi.nt)/foi.nt), color = NA, size = 0.25) +
+  scale_fill_gradient(name="% change in FOI, with travel", low="yellow", high="red", limits=c(-50,0)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(), axis.title.y=element_blank(), 
+        panel.background=element_blank(), legend.position=c(0.2, 0.8))
+eir.notravel
+```
+
+Examine the PfPR and FOI in Moka, the 5 areas grouped in the middle of the southwestern part of Riaba district.  How much travel is reported in this area?  How much travel is estimated in this area?
+```{r}
+moka.travel.data <- travel.model.data[ad2 == "Moka"]
+moka.areaIds <- unique(moka.travel.data$areaId)
+
+# Which indices correspond to this subset of areas?
+moka.ix <- which(areaIds %in% moka.areaIds)
+moka.pfpr.input <- pfpr.input[c(moka.ix, (194+1):(194+7))]
+
+# Can I create a TaR matrix just for this one set of areas?
+
+
+P.ij.moka <- diag(1, nrow = 5+7, ncol = 5+7)
+for (i in 1:5){
+  holder = rep(0, 7)
+  for (j in 1:7){
+    # Total number of trips, for all people
+    holder[j] <- moka.travel.data[areaId == moka.areaIds[i] & TravelRegion == reg.names[j]]$predict.zinb.log.w
+  }
+  # Average number of trips each person makes - Divide out by the number of people in each patch
+  d <- moka.travel.data[areaId==moka.areaIds[i]]$pop
+  holder <- holder/d
+  # Fraction of time spent in each location by each person
+  # Note that the time spent on the mainland 
+  holder <-  c(7,3,3,3,3,3,3)*52/(8)/365*holder
+  #holder <-  c(7,3,3,3,3,3,3)/365*holder
+  # Time spent away
+  P.ij.moka[i, (5 + 1):(5+7)] <- holder
+  # Time spent at home
+  P.ij.moka[i, i] <- 1 - sum(holder)
+}
+# Can show: this is just a subset of P.ij, with the appropriate row/column indices examined
+#moka.ix <- which(areaIds %in% moka.areaIds)
+#P.ij[moka.ix,moka.ix]
+
+
+g.moka <- r/(1-rho)*moka.pfpr.input/(1-(1+rho*r/eta/(1-rho))*moka.pfpr.input)
+FOI.moka <- ginv(P.ij.moka) %*% g.moka
+FOI.moka
+
+# What happens when we force the negative FOI areas to zero?  What kind of local pfpr do we find?
+
+FOI.moka[which(FOI.moka < 0)] <- 0
+g.inv <- P.ij.moka %*% FOI.moka
+
+cbind(g.inv/( g.inv*(1+rho*r/eta/(1-rho)) + r/(1-rho)), moka.pfpr.input)
+
+moka.pfpr.input
+
+g.moka
+```
+
+
+```{r fig.width=6, fig.height=6, echo = FALSE}
+# EIR map
+p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
+p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
+eir.plot <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = foi.plot*365/.55), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Annual EIR", low="yellow", high="red", limits=c(0,3)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+eir.plot
 ```
 
