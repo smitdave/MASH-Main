@@ -132,6 +132,14 @@ mbites_checkRefeed_null <- function(){
   # private$state = "O" (already set in mbites_checkEggMaturation)
 }
 
+mbites_checkRefeedMBDETES <- function(){
+  # check refeed
+  if(private$state == "B" & (runif(1) < self$pReFeed())){
+    private$gravid = FALSE
+    private$state = "B"
+  }
+}
+
 #' MBITES: Probability of Refeeding as Function of Egg Batch Size
 #'
 #' Probability to re-enter blood feeding cycle after incomplete blood feeding given by \eqn{ \frac{2+rf_{b}}{1+rf_{b}}-\frac{e^{rf_{a}\times \frac{batch}{batch_{max}}}}{rf_{b}+e^{rf_{a}\times \frac{batch}{batch_{max}}}} }
