@@ -167,7 +167,7 @@ ggplot() + geom_histogram(data = bh, aes(humanHost), fill = "steelblue", bins = 
   ggtitle(paste0("Number of Human Blood Hosts per mosquito (mean: ",round(mean_bh,3),")")) + xlab("Number of Hosts") + ylab("Frequency") + theme_bw()
 
 # blood meal intervals
-bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "human")
+bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "all")
 mean_bmi <- mean(bmi$bmIntervals)
 
 ggplot() + geom_histogram(data = bmi, aes(bmIntervals), fill = "steelblue", bins = 20) +
