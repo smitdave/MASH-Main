@@ -10,6 +10,7 @@ MBDETES_FstateTransitions(site)
 \item{site}{a \code{\link{Site}} object}
 }
 \description{
-Calculate vector of probabilities to transition between: F -> F, B, D
+Calculate vector of probabilities to transition between: F -> F, B, D.
+Probability vector is calculated in \code{\link{BFSB_F2X}}.
 This function is called from \code{\link{MBDETES_StateTransitions}}.
 }
