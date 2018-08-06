@@ -14,5 +14,6 @@ Calculate vector of probabilities to transition between: B -> F, B, R, D.
 In the flow diagram of the "B" state (blood feeding attempt bout),
 probabilities are calculated for all paths except those that branch after
 entering "R", which are calculated in \code{\link{MBDETES_RperiodTransitions}}.
+Probability vector is calculated in \code{\link{BFAB_B2X}}.
 This function is called from \code{\link{MBDETES_StateTransitions}}.
 }

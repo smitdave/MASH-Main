@@ -85,7 +85,7 @@
 # }
 #
 #
-# PARD = function(PAR){with(PAR,{
+# MBDETES_MortalityPars <- function(PAR){with(PAR,{
 #   PAR$P_FD = 1-P_FB-P_FF
 #   PAR$P_BD = 1-P_BF-P_BB-P_BR
 #   PAR$P_RD = 1-P_RF-P_RB-P_RL-P_RO

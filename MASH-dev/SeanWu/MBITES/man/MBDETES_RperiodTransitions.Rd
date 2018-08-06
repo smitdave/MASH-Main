@@ -10,6 +10,7 @@ MBDETES_RperiodTransitions(site)
 \item{site}{a \code{\link{Site}} object}
 }
 \description{
-Calculate vector of probabilities to transition between: R-> B, F, L, O, D
+Calculate vector of probabilities to transition between: R-> B, F, L, O, D.
+Probability vector is calculated in \code{\link{BFAB_R2X}}.
 This function is called from \code{\link{MBDETES_StateTransitions}}.
 }

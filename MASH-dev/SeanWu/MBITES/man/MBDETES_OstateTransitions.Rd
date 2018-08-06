@@ -10,6 +10,7 @@ MBDETES_OstateTransitions(site)
 \item{site}{a \code{\link{Site}} object}
 }
 \description{
-Calculate vector of probabilities to transition between: O -> F, B, L, O, D
+Calculate vector of probabilities to transition between: O -> F, B, L, O, D.
+Probability vector is calculated in \code{\link{ELAB_O2X}}.
 This function is called from \code{\link{MBDETES_StateTransitions}}.
 }
