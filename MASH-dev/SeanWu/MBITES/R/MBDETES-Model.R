@@ -108,12 +108,13 @@ MBDETES_Parameters <- function(
   P_RL = .4,
   P_RO = .35
 ){
-  return(list(
+  PAR <- list(
     tF = tF, tB = tB, tR = tR, tL = tL, tO = tO,P_FF = P_FF, P_FB = P_FB,
     P_BF = P_BF, P_BB = P_BB, P_BR = P_BR, P_LL = P_LL, P_LO = P_LO,
     P_OL = P_OL, P_OO = P_OO, P_OB = P_OB, P_OF = P_OF,
-    P_RF = P_RF, P_RB = P_RB, P_RL = P_RL, P_RO = P_RO,
-  ))
+    P_RF = P_RF, P_RB = P_RB, P_RL = P_RL, P_RO = P_RO
+  )
+  return(MBDETES_MortalityPars(PAR))
 }
 
 #' MBDETES: Mortality Probabilities
@@ -392,51 +393,3 @@ MBDETES_cohort_solve <- function(PAR, pF=1, mxT=100, dt=0.001){
   tm = seq(0,mxT,by=dt)
   data.frame(deSolve::lsoda(inits,tm,MBDETES_cohort_ODE,PAR,atol=1e-10))
 }
-
-
-
-# R2R=MBDETES_R2R_solve(PAR)
-#
-# R2=R2R[,7]
-# tt=R2R[,1]
-# highSum=sum(diff(R2)*tt[-1])/max(R2)
-# lowSum=sum(diff(R2)*tt[-length(tt)])/max(R2)
-# (lowSum+highSum)/2
-#
-# R2R_pdf = diff(R2)/max(R2)
-# tt_pdf = (tt[-1]+tt[-length(tt)])/2
-# ix = which(tt_pdf<5)
-# plot(tt_pdf[ix], R2R_pdf[ix], type = "l", xlab = "Time (Days)", ylab = "Feeding Cycle Duration")
-#
-# MBDETES_cohort_ODE = function(t,X,P){with(as.list(c(P,X)),{
-#   dF = P_RF*R/tR + P_OF*O/tO + P_BF*B/tB - (1-P_FF)*FF/tF
-#   dB = P_RB*R/tR + P_OB*O/tO + P_FB*FF/tF - (1-P_BB)*B/tB
-#   dR = P_BR*B/tB-R/tR
-#   dL = P_RL*R/tR + P_OL*O/tO - (1-P_LL)*L/tL
-#   dO = P_RO*R/tR + P_LO*L/tL - (1-P_OO)*O/tO
-#   dOO = (P_OF + P_OB)*O/tO
-#   dRR = P_BR*B/tB
-#   list(c(dF,dB,dR,dL,dO,dOO,dRR))
-# })}
-#
-# MBDETES_cohort_solve = function(PAR, pF=1, mxT=100, dt=0.001){
-#   inits = c(FF=pF,B=1-pF,R=0,L=0,O=0,OO=0,RR=0)
-#   tm = seq(0,mxT,by=dt)
-#   data.frame(lsoda(inits,tm,MBDETES_cohort_ODE,PAR,atol=1e-10))
-# }
-# cohort=MBDETES_cohort_solve(PAR,pF=.5,dt=0.01)
-# tt=cohort[,1]
-# alive = rowSums(cohort[,2:6])
-# eggs = cohort[,7]
-# bloodmeals = cohort[,8]
-#
-# highSum=-sum(diff(alive)*tt[-1])
-# lowSum=-sum(diff(alive)*tt[-length(tt)])
-# (lowSum+highSum)/2
-#
-# par(mfrow=c(2,2), mar = c(5,4,2,2))
-# plot(tt, alive, type = "l", xlab = "Age (days)", ylab = "Surviving")
-# #lines(tt, exp(-tt/9.78), col = "red")
-# plot(tt[-1], diff(eggs), col = "blue", type = "l", xlab = "Age (days)", ylab= "Laying Rate")
-# plot(tt[-1], diff(bloodmeals), col = "red", type = "l", xlab = "Age (days)", ylab = "Feeding Rate")
-# plot(tt_pdf[ix], R2R_pdf[ix], type = "l", xlab = "Time (days)", ylab = "Feeding Cycle Length")
