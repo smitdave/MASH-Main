@@ -17,9 +17,11 @@
 ###############################################################################
 
 #' Bionomics: Compute Mosquito Lifespans
+#'
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run and returns a data.frame of mosquito lifespans.
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
+#'
 #' @param mosquitos a data.frame of parsed JSON mosquito output
 #' @export
 Bionomics_lifespan <- function(mosquitos) {
@@ -47,12 +49,14 @@ Bionomics_lifespan <- function(mosquitos) {
 # who: 'human','all','zoo'
 
 #' Bionomics: Compute Number of Blood Meals
+#'
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run.
 #' This function returns a data.frame of lifetime blood meals
 #' for each mosquito for a chosen host type. It does not filter mosquitos who took no blood meals
 #' (that is to say 0s are counted and included in the output).
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
+#'
 #' @param mosquitos a data.frame of parsed JSON mosquito output
 #' @param who either 'human', 'zoo', or 'all'
 #' @export
@@ -86,11 +90,13 @@ Bionomics_humanBloodHost <- function(mosquitos, who = "human"){
 ###############################################################################
 
 #' Bionomics: Compute Interval between Blood Meals
+#'
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run.
 #' This function returns a data.frame of intervals between blood meals
 #' for each mosquito for the chosen host type.
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
+#'
 #' @param mosquitos a data.frame of parsed JSON mosquito output
 #' @param who either 'human', 'zoo', or 'all'
 #' @export
@@ -136,11 +142,13 @@ Bionomics_bloodIntervals <- function(mosquitos, who = "human"){
 ###############################################################################
 
 #' Bionomics: Compute Proportion of Blood Meals on Humans
+#'
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run.
 #' This function returns a single value, corresponding to \deqn{Q} in
 #' Ross-Macdonald parameters.
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
+#'
 #' @param mosquitos a data.frame of parsed JSON mosquito output
 #' @export
 Bionomics_humanBitingRate <- function(mosquitos){
@@ -172,6 +180,7 @@ Bionomics_humanBitingRate <- function(mosquitos){
 # spatial distribution from each human. it is easy to then get VC from it.
 
 #' Bionomics: Compute Vectorial Capacity
+#'
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run.
 #' Computes vectorial capacity, as well as its spatial dispersion, from a human-centric (ego-centric)
@@ -184,6 +193,7 @@ Bionomics_humanBitingRate <- function(mosquitos){
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
 #' Please note that in order to reconstruct kernels for VC, the distance matrix between sites
 #' must be preserved somewhere, as the mosquito only records the index of the site it visited, not the xy coordinates.
+#'
 #' @return a list where each element corresponds to a human host.
 #'         Each host has \code{VC}, which is the total number of secondary bites arising from him or her, and
 #'         \code{spatialVC} which is a list of origin/destination pairs tracking dispersion of each initial bite.
@@ -263,12 +273,14 @@ Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
 ###############################################################################
 
 #' Bionomics: Compute Lifetime Egg Production and Spatial Dispersion
+#'
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run.
 #' Computes lifetime egg production, as well as its spatial dispersion.
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
 #' Please note that in order to reconstruct kernels for egg dispersion, the distance matrix between sites
 #' must be preserved somewhere, as the mosquito only records the index of the site it visited, not the xy coordinates.
+#'
 #' @param mosquitos a data.frame of parsed JSON mosquito output
 #' @param spatial compute spatial dispersion of eggs or not
 #' @export
@@ -303,12 +315,14 @@ Bionomics_lifetimeOviposition <- function(mosquitos, spatial=FALSE){
 }
 
 #' Bionomics: Compute Oviposition Intervals and Number of Successful Oviposition Events
+#'
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run.
 #' Computes the interval between successful oviposition events and the total number of
 #' successful oviposition events in a mosquito's lifespan (0s are included, that is to say if a mosquito
 #' never successfully oviposited it will contribute a 0 to the vector).
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
+#'
 #' @param mosquitos a data.frame of parsed JSON mosquito output
 #' @export
 Bionomics_ovipositionInterval <- function(mosquitos){
@@ -336,4 +350,64 @@ Bionomics_ovipositionInterval <- function(mosquitos){
   return(
     list(numOviposit=numOviposit,interval=interval)
   )
+}
+
+#'
+#' @export
+Bionomics_ovipositionRate <- function(mosquitos){
+
+  filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- which(filter)
+
+  age_batch_list <- vector(mode="list",length=length(filter))
+
+  pb <- txtProgressBar(min = 0,max = length(filter)+2)
+  for(i in 1:length(filter)){
+
+    # mosy did oviposit
+    if(mosquitos[filter[i],"ovipositionTimes"][[1]][1] > 0){
+
+      bday <- mosquitos_df[filter[i],"time"][[1]][1]
+      batch_sizes <-  mosquitos_df[filter[i],"ovipositionBatchSize"][[1]]
+      batch_times <- mosquitos_df[filter[i],"ovipositionTimes"][[1]]
+      batch_times <- batch_times - bday
+
+      age_batch_list[[i]]$batches <- batch_sizes
+      age_batch_list[[i]]$ages <- batch_times
+
+    # mosquito did not oviposit
+    } else {
+      # how to deal with these mosquitoes?????
+      age_batch_list[[i]]$batches <- NaN
+      age_batch_list[[i]]$ages <- NaN
+
+    }
+
+    setTxtProgressBar(pb,i)
+  }
+
+  # filter out empty elements
+  filter_fn <- function(x){
+    if(is.nan(x$batches[1]) & is.nan(x$ages[1])){
+      return(FALSE)
+    } else {
+      return(TRUE)
+    }
+  }
+
+  age_batch_list <- Filter(filter_fn,age_batch_list)
+  setTxtProgressBar(pb,i+1)
+
+  # reduce filtered list
+  reduce_fn <- function(x,y){
+    list(batches=c(x$batches,y$batches),ages=c(x$ages,y$ages))
+  }
+  age_batch_list <- Reduce(reduce_fn,age_batch_list)
+  setTxtProgressBar(pb,i+2)
+
+  # return sorted list
+  age_batch_list$batches <- age_batch_list$batches[order(age_batch_list$ages)]
+  age_batch_list$ages <- age_batch_list$ages[order(age_batch_list$ages)]
+
+  return(age_batch_list)
 }

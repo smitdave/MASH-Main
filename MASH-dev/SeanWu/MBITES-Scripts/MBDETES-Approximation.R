@@ -42,7 +42,7 @@ lowSum=-sum(diff(alive)*tt[-length(tt)])
 # binomics plots for cohort
 par(mfrow=c(2,2), mar = c(5,4,2,2))
 
-# survival function of cohort
+# survival function of cohort (lifespan plot in MBITES)
 alive_mean <- weighted.mean(tt,alive)
 plot(tt, alive, type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("Cohort Survival Time (mean: ",round(alive_mean,3),")"),lwd=2,col="steelblue")
 polygon(c(0, tt), c(0, alive), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
@@ -60,7 +60,7 @@ plot(tt[-1], diff(bloodmeals),type = "l", xlab = "Age (days)", ylab = "Density",
 polygon(c(0, tt[-1]), c(0, diff(bloodmeals)), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
 abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
 
-# length of feeding (gonotrophic) cycle
+# length of feeding (gonotrophic) cycle (blood meal interval in MBITES)
 plot(tt_pdf[ix], R2R_pdf[ix], type = "l", xlab = "Time (Days)", ylab = "Density",main=paste0("Feeding Cycle Duration (mean: ",round(R2R_mean,3),")"),lwd=2,col="steelblue")
 polygon(c(0, tt_pdf[ix]), c(0, R2R_pdf[ix]), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
 abline(v = R2R_mean,lwd=2.5,lty=2,col="firebrick3")
