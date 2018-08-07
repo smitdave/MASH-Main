@@ -126,7 +126,7 @@ MBITES_Initialize(mosquitos)
 # run simulation
 set_output(directory = directory,runID = 1)
 
-simulation(tMax = 365*2,pretty = TRUE)
+simulation(tMax = 365*3,pretty = TRUE)
 hardreset()
 
 
@@ -208,3 +208,37 @@ ggplot() + geom_histogram(data = oviposit_interval, aes(interval), fill = "steel
 ggplot() + geom_histogram(data = oviposit_num, aes(number), fill = "steelblue", bins = 20) +
   geom_vline(xintercept = mean_oviposit_num,col="firebrick3",size=1.15) +
   ggtitle(paste0("Number of Successful Oviposition Events (mean: ",round(mean_oviposit_num,3),")")) + xlab("Number of Events") + ylab("Frequency") + theme_bw()
+
+
+
+rate <- Bionomics_ovipositionRate(mosquitos_df)
+
+eggRate <- density(rate$ages)
+
+egg_mean <- weighted.mean(eggRate$x,eggRate$y)
+plot(eggRate$x, eggRate$y,type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Egg Laying Rate (mean: ",round(egg_mean,3),")"),lwd=2,col="steelblue")
+polygon(c(0, eggRate$x), c(0, eggRate$y), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+abline(v = egg_mean,lwd=2.5,lty=2,col="firebrick3")
+
+
+blood <- Bionomics_bloodfeedingRate(mosquitos_df)
+
+bloodRate <- density(blood)
+
+blood_mean <- weighted.mean(bloodRate$x,bloodRate$y)
+plot(bloodRate$x, bloodRate$y,type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Blood Feeding Rate (mean: ",round(blood_mean,3),")"),lwd=2,col="steelblue")
+polygon(c(0, bloodRate$x), c(0, bloodRate$y), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
+
+# ages <- as.vector(rate$ages)
+# eggs <- as.vector(rate$batches)
+# 
+# ages <- c(-0.1,rep(0,1e2),ages)
+# eggs <- c(0,rep(0,1e2),eggs)
+# 
+# eggs_c <- cumsum(eggs)
+# 
+# eggs_c_s <- smooth.spline(x = ages,y = eggs_c,all.knots = TRUE,cv = NA,keep.data = FALSE)
+# eggs_rate <- predict(object = eggs_c_s,x = ages,deriv = 1)
+# 
+# plot(eggs_rate$x,eggs_rate$y/length(ages),type="l")

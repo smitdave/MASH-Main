@@ -2,13 +2,7 @@
 % Please edit documentation in R/MBITES-Bionomics.R
 \name{Bionomics_humanBloodHost}
 \alias{Bionomics_humanBloodHost}
-\title{Bionomics: Compute Number of Blood Meals
-Takes in JSON output parsed into a data.frame object from
-an MBITES simulation run.
-This function returns a data.frame of lifetime blood meals
-for each mosquito for a chosen host type. It does not filter mosquitos who took no blood meals
-(that is to say 0s are counted and included in the output).
-Mosquitoes that were still alive at the end of simulation are filtered out.}
+\title{Bionomics: Compute Number of Blood Meals}
 \usage{
 Bionomics_humanBloodHost(mosquitos, who = "human")
 }
@@ -18,7 +12,6 @@ Bionomics_humanBloodHost(mosquitos, who = "human")
 \item{who}{either 'human', 'zoo', or 'all'}
 }
 \description{
-Bionomics: Compute Number of Blood Meals
 Takes in JSON output parsed into a data.frame object from
 an MBITES simulation run.
 This function returns a data.frame of lifetime blood meals

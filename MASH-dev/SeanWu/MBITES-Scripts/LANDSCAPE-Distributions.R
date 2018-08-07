@@ -86,6 +86,22 @@ if(length(pdf_err)>0){
 PDF_sth$y <- PDF_sth$y/sum(PDF_sth$y) # normalize
 
 
+# plot smoothed PDFs
+par(mar = c(5, 5, 3, 5))
+alpha <- 0.5
+maxy <- max(PDF_sth$y)
+plot(distBins,PDF_sth$y,type="l",col=adjustcolor("mediumblue",alpha),lwd=3,ylim=c(.Machine$double.eps,maxy),xlim=c(0,4),
+     xlab="Distance",ylab="Density",main="Smoothed Distance Kernel CDF and PDF") # PDF
+par(new = TRUE)
+
+# plot smoothed CDFs
+cdf_final <- predict(object = CDF_sth,x = distBins,deriv = 0)
+plot(distBins,cdf_final$y,type="l",col=adjustcolor("firebrick3",alpha),lwd=3,xlim=c(0,4), xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+axis(side=4, at = pretty(range(cdf_final$y)))
+mtext("Cumulative Probability", side = 4, line = 3)
+par(mar = c(5,4,2,2)) # defaults
+
+
 ###############################################################################
 # calculate distributions for each site
 ###############################################################################
