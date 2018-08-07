@@ -73,8 +73,8 @@ for(i in 2:length(t)){
   Q = Q%*%Qexp
 }
 PS = R[length(R)]
-RR = R/PS
-plot(t,RR,type="l")
+RR = R
+plot(t,RR,type="l",ylab="Probability",xlab="Time (in Days)")
 TS = sum(1-RR)*dt
 TD = sum(1-D/(1-PS))*dt
 
@@ -86,17 +86,7 @@ for(i in 1:(length(R)-1)){
   dR[i] = (R[i+1]-R[i])/dt/PS
   dD[i] = (D[i+1]-D[i])/dt/(1-PS)
 }
-plot(t,dR,type="l", ylim=c(0,.6))
-abline(v = TS)
+plot(t,dR,type="l", ylim=c(0,.6),ylab="Probability Density",xlab="Time (in Days)")
+#abline(v = TS)
 lines(t,dD,type="l",col="red")
-abline(v = TD,col="red")
-
-
-############################ NOTE TO SELF ###############################
-#
-# Need to consider laying eggs successfully before dying in final bout
-# for a better estimate of the expected number of eggs per lifetime;
-# should be negligibly small, but for the sake of completeness shouldn't
-# be too difficult to compute...
-#
-#########################################################################
+#abline(v = TD,col="red")
