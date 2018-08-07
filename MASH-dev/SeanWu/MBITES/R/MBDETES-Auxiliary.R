@@ -317,7 +317,7 @@ MBDETES_FstateTransitions <- function(site){
   D1 <- D2 <- MBDETES_PrSurvive(site,"F")
   F1 <- MBDETES_PrLeave(site,"feed",FALSE)
 
-  PAR = list(A=A,D1=D1,F1=F1)
+  PAR = list(A=A,D1=D1,D2=D2,F1=F1)
   BFSB_F2X(PAR)
 }
 
