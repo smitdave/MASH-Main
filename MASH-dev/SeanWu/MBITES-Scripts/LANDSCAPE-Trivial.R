@@ -208,3 +208,20 @@ ggplot() + geom_histogram(data = oviposit_interval, aes(interval), fill = "steel
 ggplot() + geom_histogram(data = oviposit_num, aes(number), fill = "steelblue", bins = 20) +
   geom_vline(xintercept = mean_oviposit_num,col="firebrick3",size=1.15) +
   ggtitle(paste0("Number of Successful Oviposition Events (mean: ",round(mean_oviposit_num,3),")")) + xlab("Number of Events") + ylab("Frequency") + theme_bw()
+
+
+
+rate <- Bionomics_ovipositionRate(mosquitos_df)
+
+ages <- as.vector(rate$ages)
+eggs <- as.vector(rate$batches)
+
+ages <- c(-0.1,rep(0,1e2),ages)
+eggs <- c(0,rep(0,1e2),eggs)
+
+eggs_c <- cumsum(eggs)
+
+eggs_c_s <- smooth.spline(x = ages,y = eggs_c,all.knots = TRUE,cv = NA,keep.data = FALSE)
+eggs_rate <- predict(object = eggs_c_s,x = ages,deriv = 1)
+
+plot(eggs_rate$x,eggs_rate$y/length(ages),type="l")
