@@ -151,7 +151,7 @@ Bionomics_bloodIntervals <- function(mosquitos, who = "human"){
 #'
 #' @param mosquitos a data.frame of parsed JSON mosquito output
 #' @export
-Bionomics_humanBitingRate <- function(mosquitos){
+Bionomics_humanBitingProportion <- function(mosquitos){
 
   # only want mosquitoes who died before the end of simulation
   filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
@@ -168,6 +168,73 @@ Bionomics_humanBitingRate <- function(mosquitos){
   hbr <- Filter(Negate(is.nan),hbr)
 
   return(hbr)
+}
+
+
+#' Bionomics: Compute Blood Feeding Events by Age
+#'
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' Computes for all processed mosquitoes a vector of ages when successful blood feeding events
+#' were recorded.
+#' Blood feeding rate by age can be calculated from this output by calculating the density
+#' of events as a function of age.
+#' Mosquitoes that were still alive at the end of simulation or never oviposited are filtered out.
+#'
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @export
+Bionomics_bloodfeedingRate <- function(mosquitos){
+
+  filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- which(filter)
+
+  feed_list <- vector(mode="list",length=length(filter))
+
+  pb <- txtProgressBar(min = 0,max = length(filter)+2)
+  for(i in 1:length(filter)){
+
+    # mosy did oviposit
+    if(mosquitos[filter[i],"timeFeed"][[1]][1] > 0){
+
+      bday <- mosquitos_df[filter[i],"time"][[1]][1]
+      feed_ages <- mosquitos_df[filter[i],"timeFeed"][[1]]
+      feed_ages <- feed_ages - bday
+
+      feed_list[[i]]$feed_ages <- feed_ages
+
+    # mosquito did not oviposit
+    } else {
+
+      feed_list[[i]]$feed_ages <- NaN
+
+    }
+
+    setTxtProgressBar(pb,i)
+  }
+
+  # filter out empty elements
+  filter_fn <- function(x){
+    if(is.nan(x$feed_ages[1])){
+      return(FALSE)
+    } else {
+      return(TRUE)
+    }
+  }
+
+  feed_list <- Filter(filter_fn,feed_list)
+  setTxtProgressBar(pb,i+1)
+
+  # reduce filtered list
+  reduce_fn <- function(x,y){
+    list(feed_ages=c(x$feed_ages,y$feed_ages))
+  }
+  feed_list <- Reduce(reduce_fn,feed_list)
+  setTxtProgressBar(pb,i+2)
+
+  # return sorted list
+  feed_list$feed_ages <- feed_list$feed_ages[order(feed_list$feed_ages)]
+
+  return(feed_list$feed_ages)
 }
 
 
@@ -352,7 +419,17 @@ Bionomics_ovipositionInterval <- function(mosquitos){
   )
 }
 
+#' Bionomics: Compute Batch Sizes (Oviposition Events) by Age
 #'
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' Computes for all processed mosquitoes a vector of ages when successful oviposition events
+#' were recorded and a vector of egg batch sizes sorted by ages (vectors are the same length).
+#' Oviposition rate by age can be calculated from this output by calculating the density
+#' of events as a function of age.
+#' Mosquitoes that were still alive at the end of simulation or never oviposited are filtered out.
+#'
+#' @param mosquitos a data.frame of parsed JSON mosquito output
 #' @export
 Bionomics_ovipositionRate <- function(mosquitos){
 
