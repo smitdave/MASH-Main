@@ -193,8 +193,8 @@ Bionomics_bloodfeedingRate <- function(mosquitos){
   pb <- txtProgressBar(min = 0,max = length(filter)+2)
   for(i in 1:length(filter)){
 
-    # mosy did oviposit
-    if(mosquitos[filter[i],"timeFeed"][[1]][1] > 0){
+    # mosy did blood feed
+    if(mosquitos[filter[i],"bloodHosts"][[1]][1] != 0){
 
       bday <- mosquitos_df[filter[i],"time"][[1]][1]
       feed_ages <- mosquitos_df[filter[i],"timeFeed"][[1]]
