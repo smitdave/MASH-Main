@@ -84,23 +84,7 @@ mosquitos = data.frame(
 directory <- "/Users/slwu89/Desktop/mbites/trivial/"
 
 # initialize methods
-MBITES_Setup_Timing(timing_model = 2,
-                    rate_b = 1/(3/24),tmin_b = 0,
-                    rate_bs = 1/(8/24),tmin_bs = 0,
-                    rate_o = 1/(3/24),tmin_o = 0,
-                    rate_os = 1/(8/24),tmin_os = 0,
-                    ppr_model = 2,rate_ppr = 1/(30/24),tmin_ppr = 0
-)
-
-MBITES_Setup_BloodMeal(overfeeding = FALSE)
-
-MBITES_Setup_Oogenesis(oogenesis_model = 1,eggMaturationTime = FALSE,eggsize_model = 2,refeeding = 3)
-
-MBITES_Setup_Energetics(sugar = FALSE)
-
-MBITES_Setup_Oviposition(aqua_model = 1)
-
-MBITES_Setup_Survival(tattering = FALSE,senescence = FALSE)
+MBITES_Setup_MBDETES()
 
 PATHOGEN_Setup(pathogen_model = "null")
 
@@ -119,7 +103,7 @@ Tile_Initialize(landscape)
 
 Human_NULL_Initialize(humans)
 
-transitions <- MBDETES_Approx(1L)
+# transitions <- MBDETES_Approx(1L)
 
 MBITES_Initialize(mosquitos)
 
@@ -232,13 +216,13 @@ abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
 
 # ages <- as.vector(rate$ages)
 # eggs <- as.vector(rate$batches)
-# 
+#
 # ages <- c(-0.1,rep(0,1e2),ages)
 # eggs <- c(0,rep(0,1e2),eggs)
-# 
+#
 # eggs_c <- cumsum(eggs)
-# 
+#
 # eggs_c_s <- smooth.spline(x = ages,y = eggs_c,all.knots = TRUE,cv = NA,keep.data = FALSE)
 # eggs_rate <- predict(object = eggs_c_s,x = ages,deriv = 1)
-# 
+#
 # plot(eggs_rate$x,eggs_rate$y/length(ages),type="l")
