@@ -74,6 +74,7 @@ mbites_humanEncounter <- function(){
   } else {
     if(runif(1) < MBITES:::Parameters$get_probeH()){
       # undeterred, probes the host
+      self$trackProbe()
       self$probeHost() # PATHOGEN-XX.R (mosy -> host transmission)
       if(runif(1) < 1 - MBITES:::Parameters$get_surviveprobeH()){
         # does not survive to blood feed
@@ -83,6 +84,7 @@ mbites_humanEncounter <- function(){
       } else {
         if(runif(1) < MBITES:::Parameters$get_feedH()){
           # successfully begins blood feeding
+          self$trackFeed()
           self$feedHost() # PATHOGEN-XX.R
           self$BloodMeal() # MBITES-BloodMeal.R
         }

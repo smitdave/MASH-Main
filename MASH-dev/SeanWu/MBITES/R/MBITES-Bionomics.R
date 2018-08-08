@@ -133,7 +133,10 @@ Bionomics_bloodIntervals <- function(mosquitos, who = "human"){
   intervals <- unlist(intervals)
   intervals <- Filter(Negate(is.nan),intervals)
 
-  return(data.frame(bmIntervals=intervals))
+  rest_intervals <- lapply(mosquitos[which(filter),"trackRest"],diff)
+  rest_intervals <- unlist(rest_intervals)
+
+  return(data.frame(bmIntervals=intervals,rest_intervals=rest_intervals))
 }
 
 
