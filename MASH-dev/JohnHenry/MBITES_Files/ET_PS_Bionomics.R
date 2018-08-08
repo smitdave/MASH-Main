@@ -70,7 +70,7 @@ G = function(){
 ##nu := mean clutch size
 ##n  := extrinsic incubation period n
 Q = .5
-n = 21
+n = 7
 VC = function(){
   G()*(Q*PS1/(1-PS))^2*exp(-n/Lifespan())/Lifespan()
 }
