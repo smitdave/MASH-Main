@@ -26,7 +26,6 @@ NULL
 #' if using the null human & pathogen model. It calls \code{\link{pushProbe_Human_NULL}} to log probing events.
 #'
 probeHost_NULL <- function(){
-  self$trackProbe()
   MBITES:::Globals$get_tile(private$tileID)$get_human(private$hostID)$pushProbe(m_id=private$id,t=private$tNow)
 }
 
@@ -36,7 +35,6 @@ probeHost_NULL <- function(){
 #' if using the null human & pathogen model. It calls \code{\link{pushFeed_Human_NULL}} to log probing events.
 #'
 feedHost_NULL <- function(){
-  self$trackFeed()
   MBITES:::Globals$get_tile(private$tileID)$get_human(private$hostID)$pushFeed()
 }
 

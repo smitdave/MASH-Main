@@ -100,6 +100,7 @@ mbites_pPPRFlight <- function(){
 mbites_PPRFlight <- function(){
   if(private$alive){
     private$tNow = MBITES:::Parameters$ttEvent$ppr(private$tNow)
+    self$trackRest()
     if(runif(1) < 1-self$pPPRFlight()){
       private$alive = FALSE
       private$cod = "PPRFlight"

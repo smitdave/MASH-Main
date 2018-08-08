@@ -217,7 +217,7 @@ MBDETES$ix <- which(MBDETES$tt_pdf<5)
 MBDETES$cohort <- MBDETES_cohort_solve(MBDETES$PAR,pF=.5,dt=0.01)
 MBDETES$tt <- MBDETES$cohort[,1]
 MBDETES$alive <- rowSums(MBDETES$cohort[,2:6])
-MBDETES$eggs <- cohort[,7]
+MBDETES$eggs <- MBDETES$cohort[,7]
 MBDETES$bloodmeals <- MBDETES$cohort[,8]
 
 
@@ -268,8 +268,8 @@ egg_mbites <- Bionomics_ovipositionRate(mosquitos_df)
 eggRate <- density(egg_mbites$ages)
 # egg_mean <- weighted.mean(eggRate$x,eggRate$y)
 egg_mean <- mean(egg_mbites$ages)
-hist(rate$ages,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
-     xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Egg Laying Rate Rate (mean: ",round(mean(rate$ages),3),")"))
+hist(egg_mbites$ages,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
+     xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Egg Laying Rate Rate (mean: ",round(mean(egg_mbites$ages),3),")"))
 abline(v = egg_mean,lwd=2.5,lty=2,col="firebrick3")
 
 
@@ -285,7 +285,7 @@ blood_mbites <- Bionomics_bloodfeedingRate(mosquitos_df)
 
 bloodRate <- density(blood_mbites,from=0)
 
-hist(blood,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
+hist(blood_mbites,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
      xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Blood Feeding Rate (mean: ",round(mean(blood_mbites),3),")"))
 abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
 
@@ -315,9 +315,9 @@ abline(v = MBDETES$R2R_mean,lwd=2.5,lty=2,col="firebrick3")
 
 # MBITES blood feeding interval
 bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "all")
-mean_bmi <- mean(bmi$bmIntervals)
+mean_bmi <- mean(bmi$rest_intervals)
 
-hist(bmi$bmIntervals,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
+hist(bmi$rest_intervals,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
      xlab = "Time (days)", ylab = "Density", main = paste0("MBITES Feeding Cycle Duration (mean: ",round(mean_bmi,3),")"))
 abline(v = mean_bmi,lwd=2.5,lty=2,col="firebrick3")
 
