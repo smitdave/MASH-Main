@@ -370,7 +370,7 @@ MBDETES_R2R_solve <- function(PAR, mxT=20, dt=0.001){
 MBDETES_cohort_ODE <- function(t,X,P){with(as.list(c(P,X)),{
   dF = P_RF*R/tR + P_OF*O/tO + P_BF*B/tB - (1-P_FF)*FF/tF
   dB = P_RB*R/tR + P_OB*O/tO + P_FB*FF/tF - (1-P_BB)*B/tB
-  dR = P_BR*B/tB-R/tR
+  dR = P_BR*B/tB - R/tR
   dL = P_RL*R/tR + P_OL*O/tO - (1-P_LL)*L/tL
   dO = P_RO*R/tR + P_LO*L/tL - (1-P_OO)*O/tO
   dOO = (P_OF + P_OB)*O/tO

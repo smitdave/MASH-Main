@@ -84,23 +84,7 @@ mosquitos = data.frame(
 directory <- "/Users/slwu89/Desktop/mbites/trivial/"
 
 # initialize methods
-MBITES_Setup_Timing(timing_model = 2,
-                    rate_b = 1/(3/24),tmin_b = 0,
-                    rate_bs = 1/(8/24),tmin_bs = 0,
-                    rate_o = 1/(3/24),tmin_o = 0,
-                    rate_os = 1/(8/24),tmin_os = 0,
-                    ppr_model = 2,rate_ppr = 1/(30/24),tmin_ppr = 0
-)
-
-MBITES_Setup_BloodMeal(overfeeding = FALSE)
-
-MBITES_Setup_Oogenesis(oogenesis_model = 1,eggMaturationTime = FALSE,eggsize_model = 2,refeeding = 3)
-
-MBITES_Setup_Energetics(sugar = FALSE)
-
-MBITES_Setup_Oviposition(aqua_model = 1)
-
-MBITES_Setup_Survival(tattering = FALSE,senescence = FALSE)
+MBITES_Setup_MBDETES()
 
 PATHOGEN_Setup(pathogen_model = "null")
 
@@ -119,7 +103,7 @@ Tile_Initialize(landscape)
 
 Human_NULL_Initialize(humans)
 
-transitions <- MBDETES_Approx(1L)
+# transitions <- MBDETES_Approx(1L)
 
 MBITES_Initialize(mosquitos)
 
@@ -210,35 +194,132 @@ ggplot() + geom_histogram(data = oviposit_num, aes(number), fill = "steelblue", 
   ggtitle(paste0("Number of Successful Oviposition Events (mean: ",round(mean_oviposit_num,3),")")) + xlab("Number of Events") + ylab("Frequency") + theme_bw()
 
 
+###############################################################################
+# MBDETES approximation
+###############################################################################
 
-rate <- Bionomics_ovipositionRate(mosquitos_df)
+MBDETES <- new.env()
 
-eggRate <- density(rate$ages)
+MBDETES$PAR <- MBDETES_Parameters()
 
-egg_mean <- weighted.mean(eggRate$x,eggRate$y)
-plot(eggRate$x, eggRate$y,type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Egg Laying Rate (mean: ",round(egg_mean,3),")"),lwd=2,col="steelblue")
-polygon(c(0, eggRate$x), c(0, eggRate$y), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+# R2R model (feeding cycle)
+MBDETES$R2R <- MBDETES_R2R_solve(MBDETES$PAR)
+
+MBDETES$R2 <- MBDETES$R2R[,7]
+MBDETES$tt <- MBDETES$R2R[,1]
+
+MBDETES$R2R_pdf <- diff(MBDETES$R2)/max(MBDETES$R2)
+MBDETES$tt_pdf <- (MBDETES$tt[-1]+MBDETES$tt[-length(MBDETES$tt)])/2
+MBDETES$R2R_mean <- weighted.mean(MBDETES$tt_pdf,MBDETES$R2R_pdf)
+MBDETES$ix <- which(MBDETES$tt_pdf<5)
+
+# cohort model
+MBDETES$cohort <- MBDETES_cohort_solve(MBDETES$PAR,pF=.5,dt=0.01)
+MBDETES$tt <- MBDETES$cohort[,1]
+MBDETES$alive <- rowSums(MBDETES$cohort[,2:6])
+MBDETES$eggs <- cohort[,7]
+MBDETES$bloodmeals <- MBDETES$cohort[,8]
+
+
+# # binomics plots for cohort
+# par(mfrow=c(2,2), mar = c(5,4,2,2))
+#
+# # survival function of cohort (lifespan plot in MBITES)
+# alive_mean <- weighted.mean(tt,alive)
+# plot(tt, alive, type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("Cohort Survival Time (mean: ",round(alive_mean,3),")"),lwd=2,col="steelblue")
+# polygon(c(0, tt), c(0, alive), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+# abline(v = alive_mean,lwd=2.5,lty=2,col="firebrick3")
+#
+# # egg laying rate
+# egg_mean <- weighted.mean(tt[-1],diff(eggs))
+# plot(tt[-1], diff(eggs),type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("Egg Laying Rate (mean: ",round(egg_mean,3),")"),lwd=2,col="steelblue")
+# polygon(c(0, tt[-1]), c(0, diff(eggs)), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+# abline(v = egg_mean,lwd=2.5,lty=2,col="firebrick3")
+#
+# # blood feeding rate
+# blood_mean <- weighted.mean(tt[-1],diff(bloodmeals))
+# plot(tt[-1], diff(bloodmeals),type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("Blood Feeding Rate (mean: ",round(blood_mean,3),")"),lwd=2,col="steelblue")
+# polygon(c(0, tt[-1]), c(0, diff(bloodmeals)), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+# abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
+#
+# # length of feeding (gonotrophic) cycle (blood meal interval in MBITES)
+# plot(tt_pdf[ix], R2R_pdf[ix], type = "l", xlab = "Time (Days)", ylab = "Density",main=paste0("Feeding Cycle Duration (mean: ",round(R2R_mean,3),")"),lwd=2,col="steelblue")
+# polygon(c(0, tt_pdf[ix]), c(0, R2R_pdf[ix]), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+# abline(v = R2R_mean,lwd=2.5,lty=2,col="firebrick3")
+# par(mfrow=c(1,1))
+
+
+###############################################################################
+# MBDETES vs. MBITES comparison
+###############################################################################
+
+# egg laying and blood feeding rates plots
+par(mfrow=c(2,2))
+
+# MBDETES egg laying rate
+egg_mean <- weighted.mean(MBDETES$tt[-1],diff(MBDETES$eggs))
+plot(MBDETES$tt[-1], diff(MBDETES$eggs),type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBDETES Egg Laying Rate (mean: ",round(egg_mean,3),")"),lwd=2,col="steelblue")
+polygon(c(0, MBDETES$tt[-1]), c(0, diff(MBDETES$eggs)), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+abline(v = egg_mean,lwd=2.5,lty=2,col="firebrick3")
+
+# MBITES egg laying rate
+egg_mbites <- Bionomics_ovipositionRate(mosquitos_df)
+
+eggRate <- density(egg_mbites$ages)
+# egg_mean <- weighted.mean(eggRate$x,eggRate$y)
+egg_mean <- mean(egg_mbites$ages)
+hist(rate$ages,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
+     xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Egg Laying Rate Rate (mean: ",round(mean(rate$ages),3),")"))
 abline(v = egg_mean,lwd=2.5,lty=2,col="firebrick3")
 
 
-blood <- Bionomics_bloodfeedingRate(mosquitos_df)
 
-bloodRate <- density(blood)
-
-blood_mean <- weighted.mean(bloodRate$x,bloodRate$y)
-plot(bloodRate$x, bloodRate$y,type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Blood Feeding Rate (mean: ",round(blood_mean,3),")"),lwd=2,col="steelblue")
-polygon(c(0, bloodRate$x), c(0, bloodRate$y), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+# MDETES blood feeding rate
+blood_mean <- weighted.mean(MBDETES$tt[-1],diff(MBDETES$bloodmeals))
+plot(MBDETES$tt[-1], diff(MBDETES$bloodmeals),type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBDETES Blood Feeding Rate (mean: ",round(blood_mean,3),")"),lwd=2,col="steelblue")
+polygon(c(0, MBDETES$tt[-1]), c(0, diff(MBDETES$bloodmeals)), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
 abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
 
-# ages <- as.vector(rate$ages)
-# eggs <- as.vector(rate$batches)
-# 
-# ages <- c(-0.1,rep(0,1e2),ages)
-# eggs <- c(0,rep(0,1e2),eggs)
-# 
-# eggs_c <- cumsum(eggs)
-# 
-# eggs_c_s <- smooth.spline(x = ages,y = eggs_c,all.knots = TRUE,cv = NA,keep.data = FALSE)
-# eggs_rate <- predict(object = eggs_c_s,x = ages,deriv = 1)
-# 
-# plot(eggs_rate$x,eggs_rate$y/length(ages),type="l")
+# MBITES blood feeding rate
+blood_mbites <- Bionomics_bloodfeedingRate(mosquitos_df)
+
+bloodRate <- density(blood_mbites,from=0)
+
+hist(blood,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
+     xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Blood Feeding Rate (mean: ",round(mean(blood_mbites),3),")"))
+abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
+
+par(mfrow=c(1,1))
+
+# lifespan and feeding cycle interval plots
+par(mfrow=c(2,2))
+
+# MBDETES lifespan (survivor function)
+alive_mean <- weighted.mean(MBDETES$tt,MBDETES$alive)
+plot(MBDETES$tt, MBDETES$alive, type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBDETES Survival Time (mean: ",round(alive_mean,3),")"),lwd=2,col="steelblue")
+polygon(c(0, MBDETES$tt), c(0, MBDETES$alive), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+abline(v = alive_mean,lwd=2.5,lty=2,col="firebrick3")
+
+# MBITES lifespan
+lf <- Bionomics_lifespan(mosquitos_df)
+mean_lf <- mean(lf$lifespan)
+
+hist(lf$lifespan,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
+     xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Survival Time Rate (mean: ",round(mean_lf,3),")"))
+abline(v = mean_lf,lwd=2.5,lty=2,col="firebrick3")
+
+# MBDETES blood feeding interval
+plot(MBDETES$tt_pdf[MBDETES$ix], MBDETES$R2R_pdf[MBDETES$ix], type = "l", xlab = "Time (Days)", ylab = "Density",main=paste0("MBDETES Feeding Cycle Duration (mean: ",round(MBDETES$R2R_mean,3),")"),lwd=2,col="steelblue")
+polygon(c(0, MBDETES$tt_pdf[MBDETES$ix]), c(0, MBDETES$R2R_pdf[MBDETES$ix]), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+abline(v = MBDETES$R2R_mean,lwd=2.5,lty=2,col="firebrick3")
+
+# MBITES blood feeding interval
+bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "all")
+mean_bmi <- mean(bmi$bmIntervals)
+
+hist(bmi$bmIntervals,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
+     xlab = "Time (days)", ylab = "Density", main = paste0("MBITES Feeding Cycle Duration (mean: ",round(mean_bmi,3),")"))
+abline(v = mean_bmi,lwd=2.5,lty=2,col="firebrick3")
+
+
+par(mfrow=c(1,1))
