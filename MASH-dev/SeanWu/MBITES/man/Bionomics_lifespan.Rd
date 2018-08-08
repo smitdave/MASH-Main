@@ -2,10 +2,7 @@
 % Please edit documentation in R/MBITES-Bionomics.R
 \name{Bionomics_lifespan}
 \alias{Bionomics_lifespan}
-\title{Bionomics: Compute Mosquito Lifespans
-Takes in JSON output parsed into a data.frame object from
-an MBITES simulation run and returns a data.frame of mosquito lifespans.
-Mosquitoes that were still alive at the end of simulation are filtered out.}
+\title{Bionomics: Compute Mosquito Lifespans}
 \usage{
 Bionomics_lifespan(mosquitos)
 }
@@ -13,7 +10,6 @@ Bionomics_lifespan(mosquitos)
 \item{mosquitos}{a data.frame of parsed JSON mosquito output}
 }
 \description{
-Bionomics: Compute Mosquito Lifespans
 Takes in JSON output parsed into a data.frame object from
 an MBITES simulation run and returns a data.frame of mosquito lifespans.
 Mosquitoes that were still alive at the end of simulation are filtered out.

@@ -3,7 +3,8 @@
 \name{MBDETES_PrSurvive}
 \alias{MBDETES_PrSurvive}
 \title{MBDETES: Probability to Survive a Bout
-Compute survival probability as a result of flight and local hazards.}
+Compute survival probability as a result of flight and local hazards. This gives the expectation
+of survival from \code{\link{mbites_survival}}.}
 \usage{
 MBDETES_PrSurvive(site, bout)
 }
@@ -14,5 +15,6 @@ MBDETES_PrSurvive(site, bout)
 }
 \description{
 MBDETES: Probability to Survive a Bout
-Compute survival probability as a result of flight and local hazards.
+Compute survival probability as a result of flight and local hazards. This gives the expectation
+of survival from \code{\link{mbites_survival}}.
 }

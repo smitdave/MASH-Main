@@ -84,13 +84,15 @@ NULL
 #'  * This method is bound to \code{Mosquito_Female$checkEggMaturation}
 #'
 mbites_checkEggMaturation <- function(){
-  # check egg maturation
-  if(private$eggT <= private$tNow){
-    private$gravid = TRUE
-    private$state = "O"
-  } else {
-    private$gravid = FALSE
-    private$state = "B"
+  # check egg maturation if the mosy is not gravid
+  if(!private$gravid){
+    if(private$eggT <= private$tNow){
+      private$gravid = TRUE
+      private$state = "O"
+    } else {
+      private$gravid = FALSE
+      private$state = "B"
+    }
   }
 }
 
@@ -128,6 +130,14 @@ mbites_checkRefeed_null <- function(){
   # null function
   # private$gravid = TRUE (already set in mbites_checkEggMaturation)
   # private$state = "O" (already set in mbites_checkEggMaturation)
+}
+
+mbites_checkRefeedMBDETES <- function(){
+  # check refeed
+  if(private$state == "B" & (runif(1) < self$pReFeed())){
+    private$gravid = FALSE
+    private$state = "B"
+  }
 }
 
 #' MBITES: Probability of Refeeding as Function of Egg Batch Size

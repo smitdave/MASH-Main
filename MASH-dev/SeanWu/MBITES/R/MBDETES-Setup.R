@@ -51,7 +51,7 @@ MBITES_Setup_MBDETES <- function(){
 
   # refeeding probability is function of blood meal size
   Mosquito_Female$set(which = "public",name = "checkRefeed",
-      value = mbites_checkRefeed, overwrite = TRUE
+      value = mbites_checkRefeedMBDETES, overwrite = TRUE
   )
 
   Mosquito_Female$set(which = "public",name = "pReFeed",

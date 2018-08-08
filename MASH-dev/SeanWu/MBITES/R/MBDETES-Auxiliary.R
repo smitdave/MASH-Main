@@ -20,6 +20,8 @@
 #'
 #' For each \code{\link{Site}} in a landscape, calculate approximate
 #' state transitions matrix by calling \code{\link{MBDETES_StateTransitions}}.
+#' This requires a full landscape and humans to be constructed first, as well as MBITES parameters to be set (the only MBITES initialization function that is not necessary is \code{MBITES_Initialize}).
+#'
 #'
 #' @param tileID an integer ID of a tile (must have already called \code{\link{Tile_Initialize}} and the appropriate \code{Human_XX_Initialize} routines)
 #' @return a list of length equal to number of sites in the tile \code{tileID} where
@@ -183,7 +185,8 @@ MBDETES_PrLeave <- function(site,res,fail=FALSE){
 
 
 #' MBDETES: Probability to Survive a Bout
-#' Compute survival probability as a result of flight and local hazards.
+#' Compute survival probability as a result of flight and local hazards. This gives the expectation
+#' of survival from \code{\link{mbites_survival}}.
 #' @param site a \code{\link{Site}} object
 #' @param bout character in 'F','B','L','O'
 #' @export
@@ -302,31 +305,49 @@ MBDETES_LocalHazMortality <- function(site){
 
 #' MBDETES: Blood Feeding Search Bout State Transitions
 #'
-#' Calculate vector of probabilities to transition between: F -> F, B, D
+#' Calculate vector of probabilities to transition between: F -> F, B, D.
+#' Probability vector is calculated in \code{\link{BFSB_F2X}}.
 #' This function is called from \code{\link{MBDETES_StateTransitions}}.
 #'
 #' @param site a \code{\link{Site}} object
 #' @export
 MBDETES_FstateTransitions <- function(site){
-  succeed = MBITES:::Parameters$get_Bs_succeed()
 
-  survive <- MBDETES_PrSurvive(site,"F")
+  A <- MBITES:::Parameters$get_Bs_succeed()
+  D1 <- D2 <- MBDETES_PrSurvive(site,"F")
+  F1 <- MBDETES_PrLeave(site,"feed",FALSE)
 
-  F2B = succeed*survive
-  F2F = (1-succeed)*survive
-  F2D = 1-survive
+  PAR = list(A=A,D1=D1,D2=D2,F1=F1)
+  BFSB_F2X(PAR)
+}
 
-  # normalize
-  F2ALL = c(F2F, F2B, 0, 0, 0, F2D)
-  F2ALL = F2ALL/sum(F2ALL)
+#' MBDETES: Blood Feeding Search Bout Transition Probability Vector
+#'
+#' Calculate vector of probabilities to transition between: F -> F, B, D
+#' This function is called from \code{\link{MBDETES_FstateTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
+BFSB_F2X <- function(PAR){
+  with(PAR,{
 
-  return(F2ALL)
+    F2F <- (A*D1*F1) + ((1-A)*D2)
+    F2B <- A*D1*(1-F1)
+    F2D <- 1-(F2F+F2B)
+
+    return(c(F2F, F2B, 0, 0, 0, F2D))
+
+  })
 }
 
 
 #' MBDETES: Blood Feeding Attempt Bout State Transitions
 #'
-#' Calculate vector of probabilities to transition between: B -> F, B, R, D
+#' Calculate vector of probabilities to transition between: B -> F, B, R, D.
+#' In the flow diagram of the "B" state (blood feeding attempt bout),
+#' probabilities are calculated for all paths except those that branch after
+#' entering "R", which are calculated in \code{\link{MBDETES_RperiodTransitions}}.
+#' Probability vector is calculated in \code{\link{BFAB_B2X}}.
 #' This function is called from \code{\link{MBDETES_StateTransitions}}.
 #'
 #' @param site a \code{\link{Site}} object
@@ -374,15 +395,13 @@ MBDETES_BstateTransitions <- function(site){
   C8 = 1-C7
 
   # P(survive PPR | implicit conditioning on having taken a bloodmeal)
-  E = MBDETES_PrPPRFlight()
+  E <- MBDETES_PrPPRFlight()
 
   # P(Survive | i tried to bloodfeed)
-  surv <- MBDETES_PrSurvive(site,"B")
-  # P(Stay | I want to bloodfeed, i failed to  bloodfeed last time)
-  stay <- 1 - MBDETES_PrLeave(site,"feed",TRUE)
-  F2 <- surv
+  F2 <-  MBDETES_PrSurvive(site,"B")
 
-  H3 <- F2 * stay
+  # P(Stay | I want to bloodfeed, i failed to  bloodfeed last time)
+  H3 <- 1 - MBDETES_PrLeave(site,"feed",TRUE)
 
   PAR = list(A=A, B0=B0, B1=B1, B2=B2, B3=B3,
           C1=C1, C2=C2, C3=C3, C4=C4,
@@ -392,25 +411,30 @@ MBDETES_BstateTransitions <- function(site){
   BFAB_B2X(PAR)
 }
 
+#' MBDETES: Blood Feeding Attempt Bout Transition Probability Vector
+#'
+#' Calculate vector of probabilities to transition between: B -> F, B, R, D.
+#' This function is called from \code{\link{MBDETES_BstateTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
 BFAB_B2X <- function(PAR){with(PAR,{
-  B2R = A*(B1*C2*D2 + B2*C5)*E
 
-  Fail = (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
-  B2B = Fail*F2*H3
-  B2F = Fail*F2*(1-H3)
+  Fail <- (1-A) + A*(B0 + B1*(C3 + C2*D3) + B2*C6 + B3*C8)
 
-  # additional mass on D from local hazards
-  B2D = 1-B2R-B2F-B2B
+  B2F <- Fail*F2*(1-H3)
+  B2B <- Fail*F2*H3
+  B2R <- A*(B1*C2*D2 + B2*C5)*E
+  B2D <- 1-B2R-B2F-B2B
 
-  # normalize
-  B2ALL = c(B2F, B2B, B2R, 0, 0, B2D)
-  return(B2ALL)
+  return(c(B2F, B2B, B2R, 0, 0, B2D))
 })}
 
 
 #' MBDETES: Resting Period State Transitions
 #'
-#' Calculate vector of probabilities to transition between: R-> B, F, L, O, D
+#' Calculate vector of probabilities to transition between: R-> B, F, L, O, D.
+#' Probability vector is calculated in \code{\link{BFAB_R2X}}.
 #' This function is called from \code{\link{MBDETES_StateTransitions}}.
 #'
 #' @param site a \code{\link{Site}} object
@@ -429,57 +453,82 @@ MBDETES_RperiodTransitions <- function(site){
   # H2: P(Stay | I want to oviposit, i'm resting)
   H2 <- 1 - MBDETES_PrLeave(site,"aqua",FALSE)
 
-  PAR(F1=F1,G=G,H1=H1,H2=H2)
+  PAR <- list(F1=F1,G=G,H1=H1,H2=H2)
   BFAB_R2X(PAR)
 }
 
+#' MBDETES: Resting Period Transition Probability Vector
+#'
+#' Calculate vector of probabilities to transition between: R-> B, F, L, O, D.
+#' This function is called from \code{\link{MBDETES_RperiodTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
 BFAB_R2X <- function(PAR){with(PAR,{
   R2F = F1*G*(1-H1)
   R2B = F1*G*H1
   R2O = F1*(1-G)*H2
   R2L = F1*(1-G)*(1-H2)
-  R2D = 1-R2B-R2O-R2L-R2D
+  R2D = 1-R2B-R2O-R2L-R2F
 
   R2ALL = c(R2F,R2B,0,R2L,R2O,R2D)
-  return(B2ALL)
+  return(R2ALL)
 })}
 
 
 #' MBDETES: Egg Laying Search Bout State Transitions
 #'
-#' Calculate vector of probabilities to transition between: L -> L, O, D
+#' Calculate vector of probabilities to transition between: L -> L, O, D.
+#' Probability vector is calculated in \code{\link{ELSB_L2X}}.
 #' This function is called from \code{\link{MBDETES_StateTransitions}}.
 #'
 #' @param site a \code{\link{Site}} object
 #' @export
 MBDETES_LstateTransitions <- function(site){
-  success = MBITES:::Parameters$get_Os_succeed()
-  survive <- MBDETES_PrSurvive(site,"L")
 
-  L2O = success*survive
-  L2L = (1-success)*survive
-  L2D = 1-L2O-L2L
+  A <- MBITES:::Parameters$get_Os_succeed()
+  D2 <- D1 <- MBDETES_PrSurvive(site,"L")
+  F1 <- MBDETES_PrLeave(site,"aqua",FALSE)
 
-  # normalize
-  L2ALL = c(0, 0, 0, L2L, L2O, L2D)
-  L2ALL = L2ALL/sum(L2ALL)
+  PAR <- list(A=A,D1=D1,D2=D2,F1=F1)
+  ELSB_L2X(PAR)
+}
 
+#' MBDETES: Egg Laying Search Bout Transition Probability Vector
+#'
+#' Calculate vector of probabilities to transition between: L -> L, O, D.
+#' This function is called from \code{\link{MBDETES_LstateTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
+ELSB_L2X <- function(PAR){
+  with(PAR,{
+
+    L2L <- (A*D1*F1) + ((1-A)*D2) # oviposition search
+    L2O <- A*D1*(1-F1) # oviposition here
+    L2D <- (A*(1-D1)) + ((1-A)*(1-D2)) # death
+
+    return(c(0,0,0,L2L,L2O,L2D))
+
+  })
 }
 
 
 #' MBDETES: Egg Laying Attempt Bout State Transitions
 #'
-#' Calculate vector of probabilities to transition between: O -> F, B, L, O, D
+#' Calculate vector of probabilities to transition between: O -> F, B, L, O, D.
+#' Probability vector is calculated in \code{\link{ELAB_O2X}}.
 #' This function is called from \code{\link{MBDETES_StateTransitions}}.
 #'
 #' @param site a \code{\link{Site}} object
 #' @export
 MBDETES_OstateTransitions <- function(site){
-  A = MBITES:::Parameters$get_O_succeed()
 
-  B1 = site$has_aqua()
-  B0 = 1-B1
-  B2 = 0
+  A = MBITES:::Parameters$get_O_succeed() # P(bout failure)
+
+  B0 = 1 - site$has_aqua() # P(No aquatic habitats and/or traps present)
+  B2 = 0 # P(Trap | Aquatic habitat and/or trap present)
+  B1 = (1 - B2) # P(Aquatic habitat | Aquatic habitat and/or trap present)
 
   C1 = 0
   C2 = 1
@@ -487,31 +536,15 @@ MBDETES_OstateTransitions <- function(site){
   C4 = 1
   C5 = 0
 
-  D1 = MBITES:::Parameters$get_O_surv()
-  localHaz = MBDETES_LocalHazMortality(site)
-  D1 = D1*(1-localHaz)
+  D1 = MBDETES_PrSurvive(site,"O")
   D2 = D1
 
   E = 0
 
   F1 = 0.5 # not implemented
 
-  stay = 1-MBDETES_LeaveUnladen()
-  F2 = site$has_feed()*stay
-  F3 = stay
-
-#  O2F = success*survive*(1-blood)
-#  O2B = success*survive*blood
-#  O2O = (1-success)*survive*stay
-#  O2L = (1-success)*survive*(1-stay)
-#  O2D = 1-O2F-O2B-O2O-O2L
-#
-#  # additional mass on D from local hazards
-#  O2D = O2D + localHaz
-#
-#  # normalize
-#  O2ALL = c(O2F, O2B, 0, O2L, O2O, O2D)
-#  O2ALL = O2ALL/sum(O2ALL)
+  F2 = 1 - MBDETES_PrLeave(site,"feed",FALSE) # P(leave | i want to blood feed, bout was not a failure)
+  F3 = 1 - MBDETES_PrLeave(site,"aqua",TRUE) # P(leave | i want to oviposit, bout was a failure)
 
   PAR = list(A=A, B0=B0, B1=B1, B2=B2,
           C1=C1, C2=C2, C3=C3, C4=C4, C5=C5,
@@ -519,17 +552,23 @@ MBDETES_OstateTransitions <- function(site){
   ELAB_O2X(PAR)
 }
 
+#' MBDETES: Egg Laying Attempt Bout Transition Probability Vector
+#'
+#' Calculate vector of probabilities to transition between: O -> F, B, L, O, D.
+#' This function is called from \code{\link{MBDETES_OstateTransitions}}.
+#'
+#' @param PAR a named list of parameters
+#' @export
 ELAB_O2X <- function(PAR){with(PAR,{
 
-  Fail = (1-A) + A*(B0+ B1*C3 + B2*C5)
+  Fail = (1-A) + (A*B0) + (A*(1-B0)*B1*C3) + (A*(1-B0)*B2*C5)
 
-  O2L = Fail*D2*(1-F3) + A*B1*C2*D1*E*(1-F1)
-  O2O = Fail*D2*F3 + A*B1*C2*D1*E*F1
-  O2F = A*B1*C2*D1*(1-E)*(1-F2)
-  O2B = A*B1*C2*D1*(1-E)*F2
-  O2D = 1-O2L-O2O-O2F-O2B
-  O2ALL = c(O2F,O2B,0,O2L,O2O,O2D)
-  return(O2ALL)
+  O2L <- (Fail*D2*(1-F3)) + (A*(1-B0)*B1*C2*D1*E*(1-F1))
+  O2O <- (Fail*D2*F3) + (A*(1-B0)*B1*C2*D1*E*F1)
+  O2F <- (A*(1-B0)*B1*C2*D1*(1-E)*(1-F2))
+  O2B <- (A*(1-B0)*B1*C2*D1*(1-E)*F2)
+  O2D <- 1-O2L-O2O-O2F-O2B
+  return(c(O2F,O2B,0,O2L,O2O,O2D))
 })}
 
 

@@ -2,12 +2,7 @@
 % Please edit documentation in R/MBITES-Bionomics.R
 \name{Bionomics_bloodIntervals}
 \alias{Bionomics_bloodIntervals}
-\title{Bionomics: Compute Interval between Blood Meals
-Takes in JSON output parsed into a data.frame object from
-an MBITES simulation run.
-This function returns a data.frame of intervals between blood meals
-for each mosquito for the chosen host type.
-Mosquitoes that were still alive at the end of simulation are filtered out.}
+\title{Bionomics: Compute Interval between Blood Meals}
 \usage{
 Bionomics_bloodIntervals(mosquitos, who = "human")
 }
@@ -17,7 +12,6 @@ Bionomics_bloodIntervals(mosquitos, who = "human")
 \item{who}{either 'human', 'zoo', or 'all'}
 }
 \description{
-Bionomics: Compute Interval between Blood Meals
 Takes in JSON output parsed into a data.frame object from
 an MBITES simulation run.
 This function returns a data.frame of intervals between blood meals
