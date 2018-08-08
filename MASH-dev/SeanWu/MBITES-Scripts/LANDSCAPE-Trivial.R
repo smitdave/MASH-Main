@@ -207,7 +207,7 @@ abline(v = egg_mean,lwd=2.5,lty=2,col="firebrick3")
 
 blood <- Bionomics_bloodfeedingRate(mosquitos_df)
 
-bloodRate <- density(blood)
+bloodRate <- density(blood,from=0)
 
 blood_mean <- weighted.mean(bloodRate$x,bloodRate$y)
 plot(bloodRate$x, bloodRate$y,type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Blood Feeding Rate (mean: ",round(blood_mean,3),")"),lwd=2,col="steelblue")
