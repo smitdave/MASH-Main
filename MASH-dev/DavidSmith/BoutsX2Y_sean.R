@@ -1,6 +1,31 @@
 
-
-BFAB_PAR = function(
+#' MBDETES: Parameters for Transitions from B
+#'
+#' Produce named list of parameters for \code{\link{BFAB_B2X}}.
+#' This function is useful for finding parameter sets that map between
+#' MBITES and MBDETES parameter spaces.
+#'
+#' @param A probability of successful launch (maps to \code{B_succeed})
+#' @param B0 probability of empty host queue (not possible to directly set)
+#' @param B1 weight on human hosts (add to sites on a tile through \code{\link{Human_NULL_Initialize}})
+#' @param B2 weight on zoo hosts (add to sites on a tile through \code{\link{Tile_Initialize}})
+#' @param C1 probability of death during human host approach (maps to 1 - \code{surviveH})
+#' @param C2 probability to not be deterred during probing a human host (maps to \code{surviveH}*\code{probeH})
+#' @param C4 probability of death during zoo host approach (maps to 1 - \code{surviveZ})
+#' @param C5 probability to successfully begin blood feeding a zoo host (maps to \code{surviveZ}*\code{feedZ})
+#' @param C7 probability of death when encountering a blood trap (pending traps in MBITES ...)
+#' @param D1 probability of death during probing a human host (maps to 1 - \code{surviveprobeH})
+#' @param D2 probability to be deterred prior to starting blood feeding a human host (maps to 1 - \code{feedH})
+#' @param E probability to survive post-prandial resting flight after a blood meal (calculate with \code{\link{MBDETES_PrPPRFlight}}, uses parameters \code{PPR_a}, \code{PPR_b}, \code{bm_a}, \code{bm_b})
+#' @param F1 probability to survive resting (\code{updateState}) given a successful blood meal (calculate with \code{MBDETES_PrSurvive(site,"B")}, uses parameters \code{B_surv}, and the local \code{\link{Site}} object's hazard)
+#' @param F2 probability to survive resting (\code{updateState}) given an unsuccessful blood meal attempt (calculate with \code{MBDETES_PrSurvive(site,"B")}, uses parameters \code{B_surv}, and the local \code{\link{Site}} object's hazard)
+#' @param G probability to refeed following resting (calculate with \code{\link{MBDETES_PrRefeed}}, uses parameters \code{rf_a}, \code{rf_b}, \code{bm_a}, \code{bm_b})
+#' @param H1 probability to leave the current \code{\link{Site}} and go on a blood feeding search given a successful blood meal attempt (calculate with \code{1 - MBDETES_PrLeave(site,"feed",FALSE)}, uses parameters \code{boutFail_p}, \code{disperse})
+#' @param H2 probability to leave the current \code{\link{Site}} and go on an oviposition search given a successful blood meal attempt (calculate with \code{1 - MBDETES_PrLeave(site,"aqua",FALSE)}, uses parameters \code{boutFail_p}, \code{disperse})
+#' @param H3 probability to leave the current \code{\link{Site}} and go on a blood feeding search given an unsuccessful blood meal attempt (calculate with \code{1 - MBDETES_PrLeave(site,"feed",TRUE)}, uses parameters \code{boutFail_p}, \code{disperse})
+#'
+#' @export
+BFAB_PAR <- function(
   A=  1,
   B0= 0.00, B1= 0.90,  B2= 0.10, #B3 = 1-B0-B1-B2
   C1= 0.01, C2= 0.85,            #C3 = 1-C1-D2
