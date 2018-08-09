@@ -111,8 +111,8 @@ ELAB_PAR <- function(
 #' @export
 BFSB_PAR <- function(
   A=.94,
-  D1,
-  F1
+  D1=0.98,
+  F1=0.5
 ){
   list(A=A,D1=D1,D2=D1,F1=F1)
 }
@@ -131,8 +131,8 @@ BFSB_PAR <- function(
 #' @export
 ELSB_PAR <- function(
   A=.94,
-  D1,
-  F1
+  D1=0.98,
+  F1=0.5
 ){
   list(A=A,D1=D1,D2=D1,F1=F1)
 }
