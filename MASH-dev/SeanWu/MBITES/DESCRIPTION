@@ -29,6 +29,7 @@ Collate:
     'LANDSCAPE-Sugar.R'
     'MBDETES-Auxiliary.R'
     'MBDETES-Model.R'
+    'MBDETES-Parameters.R'
     'MBDETES-Setup.R'
     'MBITES-Bionomics.R'
     'MBITES-Mosquito.R'
