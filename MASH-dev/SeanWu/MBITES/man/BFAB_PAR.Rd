@@ -29,7 +29,7 @@ BFAB_PAR(A = 1, B0 = 0, B1 = 0.9, B2 = 0.1, C1 = 0.01, C2 = 0.85,
 
 \item{D1}{probability of death during probing a human host (maps to 1 - \code{surviveprobeH})}
 
-\item{D2}{probability to be deterred prior to starting blood feeding a human host (maps to 1 - \code{feedH})}
+\item{D2}{probability to be successfully begin blood feeding on a human (maps to \code{surviveprobeH}*\code{feedH})}
 
 \item{E}{probability to survive post-prandial resting flight after a blood meal (calculate with \code{\link{MBDETES_PrPPRFlight}}, uses parameters \code{PPR_a}, \code{PPR_b}, \code{bm_a}, \code{bm_b})}
 

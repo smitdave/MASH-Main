@@ -84,6 +84,26 @@ MBDETES_PrRefeed <- function(){
   integrate(FF, 0, 1)$value
 }
 
+#' MBDETES: Refeeding Probability (Parameter Calibration)
+#'
+#' Calculate the expectation probability of refeeding
+#' (integrating the probability with respect to the probability density function describing blood meal size).
+#'
+#' @param rf_a shape parameters for refeeding
+#' @param rf_b shape parameters for refeeding
+#' @param bm_a alpha parameter for beta distributed blood meal size
+#' @param bm_b beta parameter for beta distributed blood meal size
+#'
+#' @export
+MBDETES_PrRefeed_calibrate <- function(rf_a,rf_b,bm_a,bm_b){
+
+  FF = function(X,rf_a,rf_b,bm_a,bm_b){
+    dbeta(X,bm_a,bm_b)*(2+rf_b)/(1+rf_b) - exp(rf_a*X)/(rf_b + exp(rf_a*X))
+  }
+  integrate(f=FF,lower=0,upper=1,rf_a=rf_a,rf_b=rf_b,bm_a=bm_a,bm_b=bm_b)$value
+}
+
+
 #' MBDETES: Overfeeding Probability
 #'
 #' Computes the integral of the probability of
@@ -105,9 +125,32 @@ MBDETES_PrOverfeed <- function(){
   integrate(FF, 0, 1)$value
 }
 
+#' MBDETES: Overfeeding Probability (Parameter Calibration)
+#'
+#' Calculate the expectation probability of overfeeding
+#' (integrating the probability with respect to the probability density function describing blood meal size).
+#'
+#' @param of_a shape parameters for overfeeding
+#' @param of_b shape parameters for overfeeding
+#' @param bm_a alpha parameter for beta distributed blood meal size
+#' @param bm_b beta parameter for beta distributed blood meal size
+#'
+#' @export
+MBDETES_PrOverfeed_calibrate <- function(of_a,of_b,bm_a,bm_b){
+
+  FF = function(X,of_a,of_b,bm_a,bm_b){
+    dbeta(X,bm_a,bm_b)*exp(of_a*X)/(of_b + exp(of_a*X))
+  }
+  integrate(f=FF,lower=0,upper=1,of_a=of_a,of_b=of_b,bm_a=bm_a,bm_b=bm_b)$value
+}
+
+
 #' MBDETES: Probability to Survive Post-prandial Resting Flight
 #'
-#'
+#' Computes the integral of the probability of
+#' mortality conditioned on the size of the bloodmeal,
+#' multiplied by the probability of bloodmeal
+#' of that size.
 #' @export
 MBDETES_PrPPRFlight <- function(){
   PPR_a = MBITES:::Parameters$get_PPR_a()
@@ -119,6 +162,26 @@ MBDETES_PrPPRFlight <- function(){
     dbeta(X,bm_a,bm_b)*exp(PPR_a*X)/(PPR_b + exp(PPR_a*X))
   }
   integrate(FF, 0, 1)$value
+}
+
+#' MBDETES: Probability to Survive Post-prandial Resting Flight (Parameter Calibration)
+#'
+#' Calculate the expectation probability to survive the post-prandial resting flight
+#' (integrating the probability with respect to the probability density function describing blood meal size).
+#'
+#' @param PPR_a shape parameters for ppr mortality
+#' @param PPR_b shape parameters for ppr mortality
+#' @param bm_a alpha parameter for beta distributed blood meal size
+#' @param bm_b beta parameter for beta distributed blood meal size
+#'
+#' @export
+MBDETES_PrPPRFlight_calibrate <- function(PPR_a,PPR_b,bm_a,bm_b){
+
+  FF = function(X,PPR_a,PPR_b,bm_a,bm_b){
+    dbeta(X,bm_a,bm_b)*exp(PPR_a*X)/(PPR_b + exp(PPR_a*X))
+  }
+
+  integrate(f=FF,lower=0,upper=1,PPR_a=PPR_a,PPR_b=PPR_b,bm_a=bm_a,bm_b=bm_b)$value
 }
 
 
