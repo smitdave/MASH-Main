@@ -1,0 +1,383 @@
+---
+title: "Cluster_Determination"
+author: "Daniel T. Citron"
+date: "8/9/2018"
+output: html_document
+---
+
+
+```{r Load Libraries}
+library(sp, quietly = TRUE)
+library(rgdal, quietly = TRUE)
+library(data.table, quietly = TRUE)
+library(rootSolve, quietly = TRUE)
+```
+
+
+# Functions for Cluster Determination
+This document will illustrate how to use the Ross-Macdonald model to calculate the change to the Force of Infection in a location on Bioko island following the introduction of a vaccine.
+
+The Force of Infection appears in the Ross-Macdonald equations as $b EIR$ where $b$ is the efficiency with which infectious mosquitoes are able to transfer new infections to susceptible humans and $EIR$ is the entomological inoculation rate.  Introducing a vaccine that changes the transmission efficiency will affect the force of infection in two ways.
+  1. Reducing $b$ will protect certain individuals, and thereby reduce the prevalence among those individuals.
+  2. As an *indirect* result of reducing prevalence, EIR will also decrease.
+The purpose of the upcoming PfSPZ vaccine trials will be to measure how the vaccine is able to stop transmission as measured by changes to the force of infection, measured through incidence.
+
+## The mathematical model
+
+We begin by defining a *scale of transmission*, a kernel that includes all of the people living in an area near where the vaccine is introduced. We expect that the force of infection changes for all people living in this area - this may include people who are not themselves included in the trial but live nearby.  Knowing the scale of transmission defines the full population denominator for the trial, which allows us to quantify vaccine coverage ($v$) in the area.
+
+$$
+\begin{split}
+  & H_{v+} = \text{vaccination cohort, vaccine is effective} \\
+  & H_{v-} = \text{vaccination cohort, vaccine is NOT effective} \\
+  & H_o = \text{everyone not included in the vaccination cohort} \\
+  & H_{tot} = H_{v+} + H_{v-} + H_o \\
+  & H_{tot} = \text{population denominator, all humans nearby} \\
+  & v = \frac{H_{v+} + H_{v-}}{H_{tot}} = \text{fraction belonging to vaccination cohort} \\
+\end{split}
+$$
+
+Sanaria claims that their vaccine's personal protective efficacy is 100%, but that the vaccine is only effective in a certain fraction of people (~40%).  This means that we need two parameters for defining the vaccine's effects 
+  * vaccine effectiveness ($\epsilon$), or the fraction of people for whom the vaccine works
+  * change to transmission efficiency ($b \rightarrow b_v$), or how good the vaccine's personal protective efficacy is
+
+$$
+\begin{split}
+  & H_{o} = (1 - v) H_{tot} \\
+  & H_{v+} = \epsilon v H_{tot} \\
+  & H_{v-} = (1 - \epsilon)v H_{tot} \\
+\end{split}
+$$
+
+
+We can similarly define all of our prevalences, using $H_{tot}$ as the denominator:
+$$
+\begin{split}
+  & PR_{v+} = \frac{X_{v+}}{H_{tot}} = \epsilon v\frac{X_{v+}}{H_{v+}} = \text{contribution to prevalence from vaccine effective group} \\
+  & PR_{v-} = \frac{X_{v-}}{H_{tot}} = (1-\epsilon) v\frac{X_{v-}}{H_{v-}} = \text{contribution to prevalence from vaccine ineffective group} \\
+  & PR_{o} = \frac{X_{o}}{H_{tot}} = (1 - v)\frac{X_{o}}{H_{o}} = \text{contribution to prevalence from vaccine effective group} \\
+\end{split}
+$$
+
+We pick these particular definitions for the different prevalence terms because it is straightforward to sum them together to get the total prevalence overall:
+$$
+PR = PR_{v+} + PR_{v-} + PR_{o} = \frac{X_{v+} + X_{v-} + X_{o}}{H}
+$$
+
+We can now write down a variation on the Ross-Macdonald equations that incorporates the different subgroups, those for whom the vaccine works and those for whom it does not work:
+$$
+\begin{split}
+  & \frac{d X_{v+}}{dt} = b_v EIR \left(H_{v+} - X_{v+} \right) - rX_{v+}\\
+  & \frac{d X_{v-}}{dt} = b_v EIR \left(H_{v-} - X_{v-} \right) - rX_{v-}\\
+  & \frac{d X_{o}}{dt} = b_v EIR \left(H_{o} - X_{o} \right) - rX_{o}\\
+  & \frac{d Z}{dt} = ac \frac{X_{v+} + X_{v-} + X_{o}}{H} \left(e^{-gn} - Z \right) -gZ\\
+  & EIR = maZ \\
+\end{split}
+$$
+
+Setting the left hand sides to 0 allows us to solve for the equilibrium PR and EIR:
+$$
+\begin{split}
+  & PR_{v+} = \epsilon v \frac{ b_v EIR}{ r + b_v EIR} \\
+  & PR_{v-} = (1 - \epsilon) v \frac{ b EIR}{ r + b EIR} \\
+  & PR_{o} =  (1 - v) \frac{ b EIR}{ r + b EIR} \\
+  & EIR = \frac{m a^2 c (PR_{v+} + PR_{v-} + PR_{o})}{g + ac(PR_{v+} + PR_{v-} + PR_{o})} e^{-gn} \\
+\end{split}
+$$
+We can simplify this by noting that $PR_{v-}$ and $PR_{o}$ differ by a multiplicative constant:
+$$
+\begin{split}
+  & PR_{o,v-} = PR_{v-}+ PR_{o} = (1 - \epsilon v)  \frac{ b EIR}{ r + b EIR} \\
+  & PR_{v-} = \frac{(1 - \epsilon )v}{ (1 - \epsilon v) } PR_{o,v-}\\
+\end{split}
+$$
+
+
+Unfortuantely the algebraic solutions to these equations are too complicated to understand by writing out explicitly, but it is easy to solve them numerically.
+
+## Numerical solutions
+We are primarily interested in solving for EIR before and after the vaccine is added.  
+
+### Step 1: Calibrating to Baseline
+Using the baseline PR prior to vaccination allows us to calibrate $m$, the last free parameter in the model.  Once that is known, we can use that to see how EIR changes after implementing the vaccine.
+
+In the absence of the vaccine, solving for PR is straightforward:
+$$
+PR = \frac{ma^2bce^{-gn} - gr}{ma^2bce^{-gn} + acr}
+$$
+In this context, the baseline $PR$ is known but the mosquito density $m$ is not known.  We can solve numerically for $m$ by defining an R function, which then is used along with a numerical solver `uniroot`:
+```{r Calibrating to Baseline}
+# Calibrate baseline
+# Essentially, finds mosquito population density to reproduce the baseline
+# This function is intended to be used with a root solver to solve the Ross-Macdonald equations
+#
+# Inputs: PR = prevalence
+#         m = mosquitoes/human
+m.calibrator <- function(m, PR){
+  a <- 0.3*0.9;
+  b <- 0.55;
+  c <- 0.15;
+  peip <- 0.9^11;
+  g <- -log(.9);
+  r <- 1/200.;
+  (m*a*a*b*c*peip - g*r)/(m*a*a*c*b*peip + a*c*r) - PR
+}
+
+# Calculate EIR at baseline
+# Input: m = mosquitoes/human
+# Output: EIR
+eir.calculator <- function(m){
+  a <- 0.3*0.9;
+  b <- 0.55;
+  c <- 0.15;
+  peip <- 0.9^11;
+  g <- -log(.9);
+  r <- 1/200.;
+  (m*a*a*b*c*peip - g*r)/(b*(a*c + g))
+}
+```
+
+The function `m.calibrator` takes two arguments - $m$ (what we are solving for) and $PR$ (what we are using to calibrate).  Here's how to use `m.calibrator` with a root solver (`uniroot`) to solve for $m$.  In this case, we specify that the baseline PR is 0.1 and search for $m$ along the interval $[0,10]$:
+```{r Solving for m with uniroot}
+PR.baseline = 0.1
+m.calibrated.ex1 <- uniroot(m.calibrator, interval = c(0,10), PR = PR.baseline)
+m.calibrated.ex1$root
+```
+
+### Step 2: Specify size of intervention
+When the vaccine is introduced into the area, we need to specify some important quantities:
+  * Mosquito density $m$, obtained by calibrating to baseline PR
+  * Vaccine coverage $v = (H_{v+} + H_{v-})/H_{tot}$
+  * Vaccine effectiveness $\epsilon$
+  * Changed transmission efficiency $b_v$
+Note that vaccine coverage $v$ requires specifying the correct population denominator $H_{tot}$ for the area.
+  
+  
+Define an R function similar to the one defined above for calibrating the baseline.  This time, the function tracks three different variables (`PRvp`=$PR_{v+}$, `PRcvn` = $PR_{o,v-} = PR_{v-}+ PR_{o}$, `EIR`=$EIR$) and takes four parameters that correspond to the quantities described before.  We use the `multiroot` function to solve for our variables.
+```{r Calculate effect sizes}
+# Calculate effect size
+# This function, like the previous one, is intended to be used with a root solver to solve the Ross-Macdonald equations
+# 
+# Inputs: x = c(PRvp, number of those vaccinated, for whom the vaccine did work
+#               PRovn, number of those either not vaccinated, or those vaccianted for whom the vaccine did not work
+#               EIR, entomological inoculation rate
+#             )
+#         parms = c(m, calibrated using m.calibrator()
+#                   v, fraction infected
+#                   bv, change to efficiency, recommend writing as a fraction of b = 0.55 eg 0.5*.55
+#                   eff, vaccine efficacy; fraction of those vaccinated for whom the vaccine works
+effect.size <- function(x, parms){
+  # m is the density of mosquitoes, calibrated in Step 1
+  # v is the fraction of people who are vaccinated
+  # bv is the rate at which vaccinated people take up new infections
+  m <- parms[1];
+  v <- parms[2];
+  bv <- parms[3];
+  eff <- parms[4];
+  a <- 0.3*0.9;
+  b <- 0.55;
+  c <- 0.15;
+  peip <- 0.9^11;
+  g <- -log(.9);
+  r <- 1/200.;
+  PRvp <- x[1];
+  PRcvn <- x[2];
+  EIR <- x[3];
+  F1 <- eff*v*bv*EIR/(bv*EIR + r) - PRvp;
+  F2 <- (1-eff*v)*(b*EIR)/(b*EIR + r) - PRcvn;
+  F3 <- m*a*a*c*peip*(PRvp + PRcvn)/(a*c*(PRvp + PRcvn) + g) - EIR;
+  c(F1, F2, F3)
+}
+```
+
+We use the `multiroot` function to input our parameters and solve for PR and EIR.  To check that the function works, we verify that when zero people are vaccinated or the vaccine has zero effectiveness we recover the baseline PR.   (`PRvp`=0, `PRcvn` = 0.1, `EIR`=0.00101)
+```{r Effect Size calculator verification, no vaccine}
+PR.baseline = 0.1
+m.calibrated.ex1 <- uniroot(m.calibrator, interval = c(0,10), PR = PR.baseline)
+effect.size.ex1 <- multiroot(effect.size, 
+                             parms = c(m.calibrated.ex1$root, 0,   0.55, .5),  # v = 0, e = 0.5
+                             start = c(0.05, 0.05, 1), maxiter = 100)
+effect.size.ex1$root
+
+effect.size.ex2 <- multiroot(effect.size, 
+                             parms = c(m.calibrated.ex1$root, .1,   0.55, 0),  # v = .1, e = 0.
+                             start = c(0.05, 0.05, 1), maxiter = 100)
+effect.size.ex2$root
+```
+
+And if we implement the vaccine in 10% of the total population, and the vaccine is effective 40% of the time.  This drives $PR_{v+}$ to 0 and decreases $PR_{o,v-}$ and $EIR$ both:
+```{r Effect Size calculator validation, with effective vaccine}
+PR.baseline = 0.1
+m.calibrated.ex1 <- uniroot(m.calibrator, interval = c(0,10), PR = PR.baseline)
+effect.size.ex3 <- multiroot(effect.size, 
+                             parms = c(m.calibrated.ex1$root, .1,   0, .4),  # v = 0.1, bv = 0, e = 0.4
+                             start = c(0.05, 0.05, 1), maxiter = 100)
+effect.size.ex3$root
+```
+
+## Demonstrating effect size with data from Basupu
+
+### Read in Data
+Read in sector-level data for Basupu
+```{r Read in Basupu Data}
+basupuSectors = fread("datBasupu_sectors.csv")
+# Extract latitude, longitude, population data by sector
+cntr.lat = basupuSectors$Y
+cntr.long = basupuSectors$X
+pop = basupuSectors$pop
+# Convert lat-long coordinates to UTM projection
+# https://tools.wmflabs.org/geohack/geohack.php?pagename=Bioko&params=3_30_N_8_42_E_type:isle_region:GQ_dim:200000    
+basupu_latlon_coord <- data.table(lat = cntr.lat, lon = cntr.long)
+coordinates(basupu_latlon_coord) <- c("lon", "lat")
+proj4string(basupu_latlon_coord) <- CRS("+proj=longlat")
+reproj_UTM <- spTransform(basupu_latlon_coord, CRS("+proj=utm +zone=32N"))
+cntr.Y <- reproj_UTM$lat
+cntr.X <- reproj_UTM$lon
+```
+
+### Defining Kernel Functions
+Define a function for calculating the number of people included in a kernel of a certain shape.  This also requires us to specify a kernel function and a function for calculating distances between sectors.
+```{r Define Kernel Functions}
+
+# We will use a kernel function to count the approximate number of people included in a cluster
+# centered at a particular location
+kern = function(x, k=0.02, x50=250){
+  # k controls the steepness of the slope
+  # x50 controls the radial distance away from the center where the kernel strength hits 50%
+  1-1/(1+exp(-k*(x-x50)))
+}
+
+# Calculate distance between two sectors (using UTM projection)
+# Enter: the x-y coordinates of the center location
+#        the x-y coordinates of the other sector's location
+krDistance <- function(x.center, y.center, x.other, y.other){
+  dst = sqrt((x.center - x.other)^2 + (y.center - y.other)^2)
+  return(dst)
+}
+
+# Calculate the number of people included in a kernel of a certain shape
+# Enter: i - the index of the center location
+#        qty - list of populations
+#        y.coords - list of Y coordiantes, converted from latitudes
+#        x.coords - list of X coordinates, converted from longitudes
+#        k, x50 are parameters that define the shape of the kernel envelope
+krSmooth = function(i, qty, y.coords, x.coords, k=0.02, x50=250, PAUSE = FALSE){
+  if (PAUSE == TRUE) browser()
+  dst = sqrt((y.coords[i] - y.coords)^2 + (x.coords[i] - x.coords)^2)
+  #q = weighted.mean(qty, kern(dst,k,x50))
+  # The weighted mean doesn't really make sense to me, since turning up the mean distance turns down the total number of people included
+  q = sum(qty * kern(dst,k,x50)) 
+  return(q)
+}
+```
+
+### Demonstration
+Calculating the change to EIR following an intervention at sector #10 in Basupu.
+
+_Step 1._ Use the kernel to determine the population denominator $H_{tot}$. The radius of the kernel essentially defines the scale of transmission, a currently unknown quantity.  At the very least, we can see how sensitive our results are to changes in the scale of transmission.
+```{r Population Denominator for Basupu}
+pop.denom <- ceiling(krSmooth(10, pop, cntr.Y, cntr.X, k=0.05, x50 = 100))
+```
+
+_Step 2._ Calibrate to baseline
+```{r Baseline calibration for Basupu}
+PR.baseline <- 0.2055; # for basupu
+m.basupu <- uniroot(m.calibrator, c(0,1000), PR = 0.2055) # should be ~ 0.379
+m.basupu$root
+```
+
+_Step 3._ Define coverage and calculate effect size
+```{r Define Coverage and Calculate Effect Size}
+v <- min(1., 300/pop.denom) # 75% of people in the cluster
+eff <- .4
+bv <- 0
+
+PRvp.PRcvn.EIR <- multiroot(effect.size, 
+                         parms = c(m.basupu$root, v, bv, eff), 
+                         start = c(eff*v*PR.baseline, (1-eff*v)*PR.baseline, 0.1), maxiter = 100)$root;
+PRvp.PRcvn.EIR
+```
+
+Having such high vaccine effectiveness and vaccine coverage drives EIR and PR among those not vaccinated to zero.  We can see how this changes if we vary the size of our kernel and the population denominator:
+```{r Varying Kernel Size}
+k.sizes = c(100, 150, 200, 250, 300, 350, 400, 450, 500, 1000)
+P.P.E.table = matrix(0, ncol = 5, nrow = length(k.sizes))
+for (i in 1:length(k.sizes)){
+  s = k.sizes[i]
+  pop.denom <- ceiling(krSmooth(10, pop, cntr.Y, cntr.X, k=0.05, x50 = s))
+  v <- min(1., 300/pop.denom) # 75% of people in the cluster
+  eff <- .4
+  bv <- 0
+  PRvp.PRcvn.EIR <- multiroot(effect.size, 
+                           parms = c(m.basupu$root, v, bv, eff), 
+                           start = c(eff*v*PR.baseline, (1-eff*v)*PR.baseline, 0.1), maxiter = 100)$root;
+  P.P.E.table[i,] = c(pop.denom, v, PRvp.PRcvn.EIR)
+}
+P.P.E.table
+```
+
+Calculate EIR before the intervention, for comparison
+```{r Calculate EIR at Baseline}
+eir.calculator(m.basupu$root)
+```
+
+Create a plot showing how EIR varies depending on the population denominator, assuming that 300 people are vaccinated in the trial.  The horizontal line represents the baseline EIR.
+```{r Create a plot}
+plot( P.P.E.table[,1], P.P.E.table[,5],
+     xlab = "Population Denominator", ylab = "EIR",
+     ylim = c(0,.0025))
+abline(h = eir.calculator(m.basupu$root))
+```
+
+# Effect Size Calculations
+
+The last step is to calculate the statistical power of an intervention.  If we assume that all of the clusters in our trial are identically sized and have identical baseline PR and EIR, how many of them do we need to obtain statistically significant results?
+
+```{r Power Calculations}
+# Power calculations
+#
+# Calculatethe cluster size required for measuring the effect size
+# Inputs: p1 = PR with intervention
+#         p0 = baseline PR (before intervention)
+n.clustersize <- function(p1,p0){
+  # For a 90% probability of detecting with p-value < 5%
+  (1.96 + 1.28)^2 * (p1*(1 - p1) + p0*(1 - p0))/((p1 - p0)^2)  
+}
+
+# Calculatethe number of clusters required for the trial
+# Inputs: p1 = PR with intervention
+#         p0 = baseline PR (before intervention)
+#         k = coefficient of variation, which is the variability (standard deviation/mean) in PR 
+#             across the different sectors in the trial
+#             (unfortunately our answers are sensitive to this but k is difficult to determine ahead of time)
+#         n = cluster size - if not specified then n.clustersize() is used
+c.clusternumber <- function(p1, p0, k =  0.5, n = NA){
+  if (is.na(n)){
+    n <- n.clustersize(p1, p0)
+  }
+  # For a 90% probability of detecting with p-value < 5%
+  c <- 1 + (1.96 + 1.28)^2 * (p1*(1 - p1)/n + p0*(1 - p0)/n + k^2*(p1^2 + p0^2))/((p1 - p0)^2) 
+  c
+}
+```
+
+Calculate EIR before and after the intervention, and find how many clusters we will need to obtain statistically significant results:
+```{r}
+PR.baseline <- 0.2055; # for basupu
+m.basupu <- uniroot(m.calibrator, c(0,1000), PR = 0.2055)
+
+pop.denom <- ceiling(krSmooth(10, pop, cntr.Y, cntr.X, k=0.05, x50 = 300))
+v <- min(1., 300/pop.denom)
+eff <- .4
+bv <- 0
+PRvp.PRcvn.EIR <- multiroot(effect.size, 
+                         parms = c(m.basupu$root, v, bv, eff), 
+                         start = c(eff*v*PR.baseline, (1-eff*v)*PR.baseline, 0.1), maxiter = 100)$root
+p0 = eir.calculator(m.basupu$root)
+p1 = PRvp.PRcvn.EIR[3]
+print(c(p0, p1))
+
+n.clusters <- c.clusternumber(p1, p0)
+print(n.clusters)
+```
+
