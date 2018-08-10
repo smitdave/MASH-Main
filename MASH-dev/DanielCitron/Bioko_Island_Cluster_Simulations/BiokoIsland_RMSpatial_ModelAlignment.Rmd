@@ -237,27 +237,16 @@ travel.model.data$pop.Region <- sapply(travel.model.data$Region,
 reg.names = c("off", "baney", "luba", "malabo", "moka", "riaba", "ureka")
 travel.model.data$TravelRegion <- sapply(travel.model.data$Region, 
                                          FUN = function(s){return(reg.names[[s]])})
-```
 
-And just in case, remove all of the zeroes from the travel times:
-```{r}
+# And just in case, remove all of the zeroes from the travel times:
 travel.model.data[TravelTime.Weighted < 1]$TravelTime.Weighted <- 1
 travel.model.data[TravelTime.Sum < 1]$TravelTime.Sum <- 1
 ```
 
-
-We also need to re-scale the number of trips according to the population in each patch.  Only `n` people in each patch are surveyed over the course of 3 years, so we should rescale according to `pop/(n/3)`.  Similarly, we want to know the number of times that someone might travel over the full year, not just 8 weeks - so we again rescale by 52/(8*3) - the extra factor of 3 is added because we include 3 years' worth of respondent time.
+Our model is going to estimate the number of trips taken from each area on BI to each of 7 travel destinations *in the surveyed population sample*.  This is questionable, given that the population sample size varies across the island, but until we can build a more nuanced model this is where we will settle for now.
 ```{r}
 # Replace all of the n=NA with 0
 travel.model.data[is.na(n)]$n <- 1
-
-# Rescale the 3 years of survey respondents' number of times traveled by the number of people living in each patch
-travel.model.data$Freq.all <- round(travel.model.data$Freq*travel.model.data$pop/travel.model.data$n)
-
-# Rescale according to a year's worth of time, instead of just 8 weeks
-# But we also need to account for 3 years' worth of respondent time
-#travel.model.data$Freq.all <- round(travel.model.data$Freq.all*52/(8*3))
-# Alternatively, do this below
 ```
 
 
@@ -273,16 +262,23 @@ travel.model.data$pop.log = log(travel.model.data$pop)
 travel.model.data$pop.Region.log = log(travel.model.data$pop.Region)
 # Here we use the weighted average travel times
 # but the unweighted average could also be used and the answers are not too different
-gravity.zinb.log.w <- zeroinfl(Freq.all ~ pop.log + pop.Region.log + log(TravelTime.Weighted), 
-                   data = travel.model.data, dist = "negbin")
 
-gravity.zinb.log.s <- zeroinfl(Freq.all ~ pop.log + pop.Region.log + log(TravelTime.Sum), 
+
+# non-log-transformed travel times
+gravity.zinb.log.w <- zeroinfl(Freq ~ pop.log + pop.Region.log + TravelTime.Weighted, 
+                               data = travel.model.data, dist = "negbin")
+
+gravity.zinb.log.s <- zeroinfl(Freq ~ pop.log + pop.Region.log + TravelTime.Sum, 
                                data = travel.model.data, dist = "negbin")
 ```
 
 We can now use the model to "predict" what the frequency of travel is between each origin patch and each destination location
 ```{r}
 travel.model.data$predict.zinb.log.w <- predict(gravity.zinb.log.w, 
+                                                data = travel.model.data, 
+                                                type = "response")
+
+travel.model.data$predict.zinb.log.s <- predict(gravity.zinb.log.s, 
                                                 data = travel.model.data, 
                                                 type = "response")
 ```
@@ -300,32 +296,32 @@ AIC(gravity.zinb.log.s)
 Some more statistical fits, comparing different models.  Include non-transformed populations, non-transformed travel times, zero-inflated poisson fits, negative binomial fits, poisson fits.  (This is not yet a comprehensive overview of all possible fits we can perform, but we can make it comprehensive if we want.)  Overall, the zero-inflated negative binomial model with log-transformed populations seems to have the smallest AIC value.
 ```{r}
 # non-log-transformed populations
-holder <- zeroinfl(Freq.all ~ pop + pop.Region + TravelTime.Weighted, 
+holder <- zeroinfl(Freq ~ pop + pop.Region + TravelTime.Weighted, 
                    data = travel.model.data, dist = "negbin")
 AIC(holder)
 
-# non-log-transformed travel times
-gravity.zinb.log.w <- zeroinfl(Freq.all ~ pop.log + pop.Region.log + TravelTime.Weighted, 
-                               data = travel.model.data, dist = "negbin")
+# log-transformed travel times
+holder <- zeroinfl(Freq ~ pop.log + pop.Region.log + log(TravelTime.Weighted), 
+                   data = travel.model.data, dist = "negbin")
 AIC(holder)
 
 # zero-inflated poisson fit
-holder <- zeroinfl(Freq.all ~ pop.log + pop.Region.log + TravelTime.Weighted, 
+holder <- zeroinfl(Freq ~ pop.log + pop.Region.log + TravelTime.Weighted, 
                                data = travel.model.data, dist = "poisson")
 AIC(holder)
 
 # ordinary negative binomial fit
-holder <- glm.nb(Freq.all ~ pop.log + pop.Region.log + TravelTime.Weighted,
+holder <- glm.nb(Freq ~ pop.log + pop.Region.log + TravelTime.Weighted,
                  data = travel.model.data)
 AIC(holder)
 
 # ordinary negative binomial fit, without log transformed variables
-holder <- glm.nb(Freq.all ~ pop + pop.Region + TravelTime.Weighted,
+holder <- glm.nb(Freq ~ pop + pop.Region + TravelTime.Weighted,
                  data = travel.model.data)
 AIC(holder)
 
 # ordinary poisson fit
-holder <- glm(Freq.all ~ pop.log + pop.Region.log + TravelTime.Weighted, family = "poisson", 
+holder <- glm(Freq ~ pop.log + pop.Region.log + TravelTime.Weighted, family = "poisson", 
               data = travel.model.data)
 AIC(holder)
 ```
@@ -404,23 +400,38 @@ for (i in 1:194){
     # Total number of trips, for all people
     holder[j] <- travel.model.data[areaId == areaIds[i] & TravelRegion == reg.names[j]]$predict.zinb.log.w
   }
-  # Average number of trips each person makes - Divide out by the number of people in each patch
-  d <- travel.model.data[areaId==areaIds[i]]$pop
+  # Average number of trips each person makes - Divide out by the number of people in each area's population sample (n)
+  d <- travel.model.data[areaId==areaIds[i]]$n
   holder <- holder/d
   # Fraction of time spent in each location by each person
   # Note that the time spent on the mainland 
-  holder <-  holder*52/8*c(7,3,3,3,3,3,3)/365
+  holder <-  holder*52/(8)*c(7,3,3,3,3,3,3)/365
   #holder <-  c(7,3,3,3,3,3,3)/365*holder
   # Time spent away
   P.ij[i, (194 + 1):(194+7)] <- holder
   # Time spent at home
   P.ij[i, i] <- 1 - sum(holder)
 }
+
+# Saving output:
+# This was calculated by fitting a model where we rescaled the travel frequency from the sample size to the full population size
+#colnames(P.ij) <- c(as.character(areaIds), "OffIsland", "Baney", "Luba", "Malabo", "Moka", "Riaba", "Ureka")
+#rownames(P.ij) <- c(as.character(areaIds), "OffIsland", "Baney", "Luba", "Malabo", "Moka", "Riaba", "Ureka")
+#write.csv(x = P.ij, file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/FOI_Maps_With_TaR/TaR_matrix.csv")
 ```
 
 What we find is that most people spend about 95-100% of their time at home
 ```{r}
 hist(diag(P.ij[1:194, 1:194]))
+
+# Notice that there are quite a few outliers here - all of these represent patches where very few people live
+# This seems wrong
+# These are the areas where we have too much travel!  They are all tiny!
+areaIds[which(rowSums(P.ij[1:194, 195:201]) > .15)]
+travel.model.data[areaId == 573]
+
+travel.model.data[areaId == 573]$predict.zinb.log.w/travel.model.data[areaId == 573]$n*52/(8)*c(7,3,3,3,3,3,3)/365
+
 ```
 
 
@@ -617,5 +628,132 @@ eir.plot <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group =
         axis.title.x=element_blank(),
         axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
 eir.plot
+```
+
+We also should try visualizing the rates of travel to the different locations on the island. Start by using a 
+
+  * Columns should include areaId, population, pfpr, A2 district, and 7 columns of the number of days spent in each location
+
+```{r}
+travel.rates <- travel[, .(areaId, # areaID
+                          # A2 region and whether or not the patch is near Malabo
+                          ad2, malabo, 
+                          # Population, PfPR
+                          pop, pfpr 
+                          # 
+                      )]
+# The row indices of each areaId should be the same as in areaIds
+# Scale up to show time spent per year
+travel.rates$t.off <- P.ij[1:194,(194 + 1)]*365 
+travel.rates$t.ban <- P.ij[1:194,(194 + 2)]*365
+travel.rates$t.lub <- P.ij[1:194,(194 + 3)]*365
+travel.rates$t.mal <- P.ij[1:194,(194 + 4)]*365
+travel.rates$t.mok <- P.ij[1:194,(194 + 5)]*365
+travel.rates$t.ria <- P.ij[1:194,(194 + 6)]*365
+travel.rates$t.ure <- P.ij[1:194,(194 + 7)]*365
+```
+
+Now let's see if the average time spent in malabo vs. off-island vs. rest-of-island reflects the same patterns reported by Carlos
+```{r}
+# Travel from Malabo off-island, in person-days over the course of a year
+travel.rates[ad2 == "Malabo",]$t.off %*% travel.rates[ad2 == "Malabo",]$pop/sum(travel.rates[ad2 == "Malabo",]$pop)
+# Travel from Malabo to rest of island
+(travel.rates[ad2 == "Malabo",]$t.ban + travel.rates[ad2 == "Malabo",]$t.lub + 
+    travel.rates[ad2 == "Malabo",]$t.mok + travel.rates[ad2 == "Malabo",]$t.ure) %*% travel.rates[ad2 == "Malabo",]$pop/sum(travel.rates[ad2 == "Malabo",]$pop)
+# Travel from Malabo to Malabo
+travel.rates[ad2 == "Malabo",]$t.mal %*% travel.rates[ad2 == "Malabo",]$pop/sum(travel.rates[ad2 == "Malabo",]$pop)
+
+# Repeat, but with Urban Malabo instead of ad2 malabo
+# Travel from Malabo off-island, in person-days over the course of a year
+travel.rates[malabo == "Malabo",]$t.off %*% travel.rates[malabo == "Malabo",]$pop/sum(travel.rates[malabo == "Malabo",]$pop)
+# Travel from Malabo to rest of island
+(travel.rates[malabo == "Malabo",]$t.ban + travel.rates[malabo == "Malabo",]$t.lub + 
+    travel.rates[malabo == "Malabo",]$t.mok + travel.rates[malabo == "Malabo",]$t.ure) %*% travel.rates[malabo == "Malabo",]$pop/sum(travel.rates[malabo == "Malabo",]$pop)
+# Travel from Malabo to Malabo
+travel.rates[malabo == "Malabo",]$t.mal %*% travel.rates[malabo == "Malabo",]$pop/sum(travel.rates[malabo == "Malabo",]$pop)
+
+# Now compare this to the rest of the island
+ori <- "Riaba" # "Luba", "Moka", "Ureka"
+# Travel from rest of island off-island
+travel.rates[ad2 == ori,]$t.off %*% travel.rates[ad2 == ori,]$pop/sum(travel.rates[ad2 == ori,]$pop)
+# Travel from rest of island  to rest of island
+(travel.rates[ad2 == ori,]$t.ban + travel.rates[ad2 == ori,]$t.lub + 
+    travel.rates[ad2 == ori,]$t.mok + travel.rates[ad2 == ori,]$t.ure + 
+    travel.rates[ad2 == ori,]$t.ria) %*% travel.rates[ad2 == ori,]$pop/sum(travel.rates[ad2 == ori,]$pop)
+# Travel from from rest of island to Malabo
+travel.rates[ad2 == ori,]$t.mal %*% travel.rates[ad2 == ori,]$pop/sum(travel.rates[ad2 == ori,]$pop)
+
+
+# Travel from everywhere outside of Malabo to off-island, in person-days over the course of a year
+travel.rates[ad2 != "Malabo",]$t.off %*% travel.rates[ad2 != "Malabo",]$pop/sum(travel.rates[ad2 != "Malabo",]$pop)
+# Travel to rest of island
+(travel.rates[ad2 != "Malabo",]$t.ban + travel.rates[ad2 != "Malabo",]$t.lub + 
+    travel.rates[ad2 != "Malabo",]$t.mok + travel.rates[ad2 != "Malabo",]$t.ure +
+    travel.rates[ad2 != "Malabo",]$t.ria) %*% travel.rates[ad2 != "Malabo",]$pop/sum(travel.rates[ad2 != "Malabo",]$pop)
+# Travel to Malabo
+travel.rates[ad2 != "Malabo",]$t.mal %*% travel.rates[ad2 != "Malabo",]$pop/sum(travel.rates[ad2 != "Malabo",]$pop)
+
+
+sum(travel.rates[ad2 != "Malabo",]$pop)
+sum(travel.rates[ad2 == "Baney",]$pop) + sum(travel.rates[ad2 == "Luba",]$pop) +
+  sum(travel.rates[ad2 == "Moka",]$pop) + sum(travel.rates[ad2 == "Ureka",]$pop) + 
+  sum(travel.rates[ad2 == "Riaba",]$pop)
+
+View(travel.rates[ad2 == "Riaba"])
+View(travel.rates[ad2 == "Baney"])
+View(travel.rates[ad2 == "Malabo"])
+
+# Look at a place inside Baney, what are the travel times to the different locations...
+
+travel.model.data[areaId == 1815, ]
+```
+
+### Carlos also wants malaria importation rates
+
+How do we calculate importations?  For a given area, we calculate a weighted sum over all possible destination regions that accounts for
+  
+  1. The fraction of susceptibles living in that area
+  2. The force of infection at the target region
+  3. The Time at Risk spent at the target region
+
+We want to know the fraction of malaria infections that are acquired while traveling. What's omitted from this calculation is the fraction of malaria infections caused by force of infection at home, meaning we ignore the diagonal elements of $\psi_{i,j}$:
+
+$$
+\left( H_i - X_i \right) \sum_{j \ne i} \psi_{i,j} E_j
+$$
+
+Now we can use the travel matrix $\psi_{i,j}$ and FOI that we calculated to 
+```{r}
+names.for.matrix <- c(as.character(areaIds), "OffIsland", "Baney", "Luba", "Malabo", "Moka", "Riaba", "Ureka")
+P.ij <- read.csv(file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/FOI_Maps_With_TaR/TaR_matrix.csv", row.names = names.for.matrix, header = TRUE)
+P.ij <- as.matrix(P.ij[, 2:202])
+colnames(P.ij) <- names.for.matrix
+#View(P.ij[, (194+1):(194+7)])
+
+g <- r/(1-rho)*pfpr.input/(1-(1+rho*r/eta/(1-rho))*pfpr.input)
+FOI <- ginv(P.ij) %*% g
+
+# PfPR (infections) attributable to importations
+(1-rho)*(1 - (1+rho*r/eta/(1-rho))*pfpr.input[1:194]) * ((P.ij - diag(diag(P.ij)))[, (194+1):(194+7)] %*% FOI[(194+1):(194+7)])[1:194]
+
+# PfPR (infections) attributable to local transmission
+# Note that the imported infections are only a few percent of the infections in these different places
+# This may change if we adjust our FOI calculations based on those who had traveled vs. those who had not traveled...
+(1-rho)*(1 - (1+rho*r/eta/(1-rho))*pfpr.input[1:194]) * P.ij[1:194, 1:194] %*% FOI[1:194]
+
+# Output a data.table with columns: areaId, area population, area pfpr, local transmission, imported transmission
+out <- data.table(areaId=areaIds, 
+           area.pop=travel.model.data[Region == 1][, c("areaId", "pop")]$pop,
+           pfpr=pfpr.input[1:194],
+           local.infections= as.numeric((1-rho)*(1 - (1+rho*r/eta/(1-rho))*pfpr.input[1:194]) * P.ij[1:194, 1:194] %*% FOI[1:194]),
+           imported.infections = (1-rho)*(1 - (1+rho*r/eta/(1-rho))*pfpr.input[1:194]) * ((P.ij - diag(diag(P.ij)))[, (194+1):(194+7)] %*% FOI[(194+1):(194+7)])[1:194],
+           FOI = FOI[1:194]
+           )
+# One cursory check:
+# These should all be zero
+out$local.infections + out$imported.infections - out$pfpr/200
+
+# Write out
+fwrite(out, file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/FOI_Maps_With_TaR/FOI_importations_local.csv")
 ```
 
