@@ -2,23 +2,7 @@
 % Please edit documentation in R/MBITES-Bionomics.R
 \name{Bionomics_vectorialCapacity}
 \alias{Bionomics_vectorialCapacity}
-\title{Bionomics: Compute Vectorial Capacity
-Takes in JSON output parsed into a data.frame object from
-an MBITES simulation run.
-Computes vectorial capacity, as well as its spatial dispersion, from a human-centric (ego-centric)
-algorithm, described as follows:
-\enumerate{
-\item For each mosquito iterate through all its bites:
-}
-\itemize{
-\item If the bite had a successful blood meal (human to mosquito transmission only occurs during a blood meal)
-find all pairs of bites seperated by more than EIP days, where the other bites can be probing events or blood meal events.
-\item Add these secondary bites to the initial bite's human host's individual vectorial capacity.
-\item Optionally, record the sites where these secondary bites were dispersed to.
-Mosquitoes that were still alive at the end of simulation are filtered out.
-Please note that in order to reconstruct kernels for VC, the distance matrix between sites
-must be preserved somewhere, as the mosquito only records the index of the site it visited, not the xy coordinates.
-}}
+\title{Bionomics: Compute Vectorial Capacity}
 \usage{
 Bionomics_vectorialCapacity(mosquitos, humans, EIP, spatial = FALSE)
 }
@@ -37,7 +21,6 @@ Each host has \code{VC}, which is the total number of secondary bites arising fr
 \code{spatialVC} which is a list of origin/destination pairs tracking dispersion of each initial bite.
 }
 \description{
-Bionomics: Compute Vectorial Capacity
 Takes in JSON output parsed into a data.frame object from
 an MBITES simulation run.
 Computes vectorial capacity, as well as its spatial dispersion, from a human-centric (ego-centric)

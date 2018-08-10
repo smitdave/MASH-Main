@@ -140,6 +140,9 @@ trackProbe_Mosquito_Female_Null <- function(){}
 #' default track feeding is to turn it off
 trackFeed_Mosquito_Female_Null <- function(){}
 
+#' default track resting is to turn it off
+trackRest_Mosquito_Female_Null <- function(){}
+
 # set methods
 Mosquito_Female$set(which = "public",name = "trackProbe",
           value = trackProbe_Mosquito_Female_Null, overwrite = TRUE
@@ -147,6 +150,10 @@ Mosquito_Female$set(which = "public",name = "trackProbe",
 
 Mosquito_Female$set(which = "public",name = "trackFeed",
           value = trackFeed_Mosquito_Female_Null, overwrite = TRUE
+)
+
+Mosquito_Female$set(which = "public",name = "trackRest",
+          value = trackRest_Mosquito_Female_Null, overwrite = TRUE
 )
 
 # advanced host tracking
@@ -175,6 +182,11 @@ trackFeed_Mosquito_Female <- function(){
   private$probeAndFeed[private$nFeed-1L] = TRUE
 }
 
+#' track resting
+trackRest_Mosquito_Female <- function(){
+  private$trackRest[private$nFeed-1L] = private$tNow
+}
+
 #' MBITES: Blood Feeding History List
 #'
 #' Return a named list of the blood feeding history object.
@@ -185,7 +197,8 @@ mbites_bloodHistList <- function(){
     bloodHosts = private$hostHist[1:(private$nFeed-1L)],
     timeFeed = private$feedTime[1:(private$nFeed-1L)],
     siteFeed = private$feedSite[1:(private$nFeed-1L)],
-    probeAndFeed = private$probeAndFeed[1:(private$nFeed-1L)]
+    probeAndFeed = private$probeAndFeed[1:(private$nFeed-1L)],
+    trackRest = private$trackRest[1:(private$nFeed-1L)]
   )
 }
 
@@ -242,6 +255,10 @@ trackBloodHost <- function(){
             value = logical(10), overwrite = TRUE
   )
 
+  Mosquito_Female$set(which = "private",name = "restTime",
+            value = numeric(10), overwrite = TRUE
+  )
+
   # public method for tracking
   Mosquito_Female$set(which = "public",name = "trackProbe",
             value = trackProbe_Mosquito_Female, overwrite = TRUE
@@ -249,6 +266,10 @@ trackBloodHost <- function(){
 
   Mosquito_Female$set(which = "public",name = "trackFeed",
             value = trackFeed_Mosquito_Female, overwrite = TRUE
+  )
+
+  Mosquito_Female$set(which = "public",name = "trackRest",
+            value = trackRest_Mosquito_Female, overwrite = TRUE
   )
 
   Mosquito_Female$set(which = "public",name = "bloodHistList",

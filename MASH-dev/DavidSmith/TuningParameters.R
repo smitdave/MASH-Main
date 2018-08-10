@@ -13,19 +13,19 @@ PAR = list(
   P_FB = .84,
   
   # Tr    ansitions out of B 
-  P_BF = .15,
-  P_BB = .05, 
-  P_BR = .75,
+  P_BF = .1537,
+  P_BB = .0512, 
+  P_BR = .7433,
   
   #Transitions out of L 
   P_LL = .10,
   P_LO = .84,
   
   #Transitions out of O 
-  P_OL = .15,
-  P_OO = .05,
-  P_OB = .30,
-  P_OF = .45,
+  P_OL = .169,
+  P_OO = .056,
+  P_OB = .282,
+  P_OF = .423,
   
   #Transitions out of R
   P_RF = .0,

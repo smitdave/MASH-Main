@@ -2,13 +2,7 @@
 % Please edit documentation in R/MBITES-Bionomics.R
 \name{Bionomics_ovipositionInterval}
 \alias{Bionomics_ovipositionInterval}
-\title{Bionomics: Compute Oviposition Intervals and Number of Successful Oviposition Events
-Takes in JSON output parsed into a data.frame object from
-an MBITES simulation run.
-Computes the interval between successful oviposition events and the total number of
-successful oviposition events in a mosquito's lifespan (0s are included, that is to say if a mosquito
-never successfully oviposited it will contribute a 0 to the vector).
-Mosquitoes that were still alive at the end of simulation are filtered out.}
+\title{Bionomics: Compute Oviposition Intervals and Number of Successful Oviposition Events}
 \usage{
 Bionomics_ovipositionInterval(mosquitos)
 }
@@ -16,7 +10,6 @@ Bionomics_ovipositionInterval(mosquitos)
 \item{mosquitos}{a data.frame of parsed JSON mosquito output}
 }
 \description{
-Bionomics: Compute Oviposition Intervals and Number of Successful Oviposition Events
 Takes in JSON output parsed into a data.frame object from
 an MBITES simulation run.
 Computes the interval between successful oviposition events and the total number of
