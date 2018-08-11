@@ -11,6 +11,11 @@
 #
 ###############################################################################
 
+
+###############################################################################
+# MBDETES with MBDETES parameters
+###############################################################################
+
 rm(list=ls());gc()
 library(MBITES)
 
@@ -65,3 +70,63 @@ plot(tt_pdf[ix], R2R_pdf[ix], type = "l", xlab = "Time (Days)", ylab = "Density"
 polygon(c(0, tt_pdf[ix]), c(0, R2R_pdf[ix]), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
 abline(v = R2R_mean,lwd=2.5,lty=2,col="firebrick3")
 par(mfrow=c(1,1))
+
+
+###############################################################################
+# Mapping MBITES to MBDETES parameter space
+###############################################################################
+
+# landscapes
+landscape <- vector(mode = "list",length = 3)
+
+# site characteristics
+for(i in 1:3){
+  landscape[[i]]$id = i
+  landscape[[i]]$xy = c(1,1)
+  landscape[[i]]$type = 1L
+  landscape[[i]]$tileID = 1L
+  landscape[[i]]$move = rep(0.5,2)
+  landscape[[i]]$move_id = (1:3)[-i]
+  landscape[[i]]$haz = 0
+  # null resources
+  landscape[[i]]$feed = NULL
+  landscape[[i]]$aqua = NULL
+}
+
+
+PAR_map <- list()
+
+PAR_map$B <- BFAB_PAR()
+
+
+# BFAB_PAR2MBITES <- function()
+B_succeed <- PAR_map$B$A
+
+# site 1 has both resources
+landscape[[1]]$feed[[1]] = list(w=1,enterP=1,zoo_id=-1,zoo_w=0.1)
+landscape[[1]]$aqua[[1]] = list(w=1,lambda=1)
+
+# site 2 has only blood feeding resource
+landscape[[2]]$feed[[1]] = list(w=1,enterP=1,zoo_id=-1,zoo_w=0.1)
+
+# site 3 has only aquatic habitat resource
+landscape[[3]]$aqua[[1]] = list(w=1,lambda=1)
+
+surviveH <- 1 - PAR_map$B$C1
+probeH <- PAR_map$B$C2 / surviveH
+
+surviveZ <- 1 - PAR_map$B$C4
+feedZ <- PAR_map$B$C5 / surviveZ
+
+surviveprobeH <- 1 - PAR_map$B$D1
+feedH <- PAR_map$B$D2 / surviveprobeH
+
+Epars <- MBDETES_PrPPRFlight_optim(E = PAR_map$B$E)
+PPR_a <- Epars$par[1]
+PPR_b <- Epars$par[2]
+
+B_surv <-PAR_map$B$F1
+
+Gpars <- MBDETES_PrRefeed_optim(G = PAR_map$B$G)
+rf_a <- Gpars$par[1]
+rf_b <- Gpars$par[2]

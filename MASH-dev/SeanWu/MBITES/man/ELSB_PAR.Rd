@@ -4,7 +4,7 @@
 \alias{ELSB_PAR}
 \title{MBDETES: Parameters for Transitions from L}
 \usage{
-ELSB_PAR(A = 0.94, D1, F1)
+ELSB_PAR(A = 0.94, D1 = 0.98, F1 = 0.5)
 }
 \arguments{
 \item{A}{probability of successful launch (maps to \code{Os_succeed})}

@@ -28,7 +28,7 @@
 #' @param C5 probability to successfully begin blood feeding a zoo host (maps to \code{surviveZ}*\code{feedZ})
 #' @param C7 probability of death when encountering a blood trap (pending traps in MBITES ...)
 #' @param D1 probability of death during probing a human host (maps to 1 - \code{surviveprobeH})
-#' @param D2 probability to be deterred prior to starting blood feeding a human host (maps to 1 - \code{feedH})
+#' @param D2 probability to be successfully begin blood feeding on a human (maps to \code{surviveprobeH}*\code{feedH})
 #' @param E probability to survive post-prandial resting flight after a blood meal (calculate with \code{\link{MBDETES_PrPPRFlight}}, uses parameters \code{PPR_a}, \code{PPR_b}, \code{bm_a}, \code{bm_b})
 #' @param F1 probability to survive resting (\code{updateState}) given a successful blood meal (calculate with \code{MBDETES_PrSurvive(site,"B")}, uses parameters \code{B_surv}, and the local \code{\link{Site}} object's hazard)
 #' @param F2 probability to survive resting (\code{updateState}) given an unsuccessful blood meal attempt (calculate with \code{MBDETES_PrSurvive(site,"B")}, uses parameters \code{B_surv}, and the local \code{\link{Site}} object's hazard)
@@ -50,10 +50,10 @@ BFAB_PAR <- function(
   G = 0.20,
   H1= 0.80, H2= 0.80, H3= 0.8
 ){
-list(A=A, B0=B0, B1=B1, B2=B2, B3=1-B0-B1-B2,
-           C1=C1, C2=C2, C3=1-C1-C2, C4=C4,
-           C5=C5, C6=1-C4-C5, C7=C7, C8=1-C7,
-           D1=D1, D2=D2, D3=1-D1-D2, E=E,
+list(A=A, B0=B0, B1=B1, B2=B2, B3=1-sum(B0,B1,B2),
+           C1=C1, C2=C2, C3=1-sum(C1,C2), C4=C4,
+           C5=C5, C6=1-sum(C4,C5), C7=C7, C8=1-C7,
+           D1=D1, D2=D2, D3=1-sum(D1,D2), E=E,
            F1=F1, F2=F2, G=G, H1=H1, H2=H2, H3=H3)
 }
 
@@ -90,8 +90,8 @@ ELAB_PAR <- function(
   F2= 0.4,
   F3=0.7
 ){
-  list(A=A, B0=B0, B1=B1, B2=1-B0-B1,
-       C1=C1, C2=C2, C3=1-C1-C2,
+  list(A=A, B0=B0, B1=B1, B2=1-sum(B0,B1),
+       C1=C1, C2=C2, C3=1-sum(C1,C2),
        C4=C4, C5=1-C4,
        D1=D1, D2=D2, E=E,
        F1=F1, F2=F2, F3=F3)
