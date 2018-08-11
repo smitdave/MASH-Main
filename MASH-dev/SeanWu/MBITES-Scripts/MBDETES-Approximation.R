@@ -120,3 +120,13 @@ feedZ <- PAR_map$B$C5 / surviveZ
 
 surviveprobeH <- 1 - PAR_map$B$D1
 feedH <- PAR_map$B$D2 / surviveprobeH
+
+Epars <- MBDETES_PrPPRFlight_optim(E = PAR_map$B$E)
+PPR_a <- Epars$par[1]
+PPR_b <- Epars$par[2]
+
+B_surv <-PAR_map$B$F1
+
+Gpars <- MBDETES_PrRefeed_optim(G = PAR_map$B$G)
+rf_a <- Gpars$par[1]
+rf_b <- Gpars$par[2]
