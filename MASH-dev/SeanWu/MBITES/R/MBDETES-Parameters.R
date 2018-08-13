@@ -48,7 +48,7 @@ BFAB_PAR <- function(
   E = 0.99,
   F1= 0.99, F2= 0.99,
   G = 0.20,
-  H1= 0.80, H2= 0.80, H3= 0.8
+  H1= 0.80, H2= 0.80, H3= 0.7
 ){
 list(A=A, B0=B0, B1=B1, B2=B2, B3=1-sum(B0,B1,B2),
            C1=C1, C2=C2, C3=1-sum(C1,C2), C4=C4,
@@ -135,4 +135,55 @@ ELSB_PAR <- function(
   F1=0.5
 ){
   list(A=A,D1=D1,D2=D1,F1=F1)
+}
+
+#' MBDETES: State Transition Matrix from Interpolating Parameters
+#'
+#' From the parameters in the A,B,F1,F2,etc space, produce a named list of parameters
+#' suitable for plugging into the MBDETES differential equation models (\code{\link{MBDETES_R2R_solve}} and \code{\link{MBDETES_cohort_solve}}).
+#'
+#' @param BFAB_PAR from \code{\link{BFAB_PAR}}, gives paramters for B and R transitions
+#' @param ELAB_PAR from \code{\link{ELAB_PAR}}, gives paramters for O transitions
+#' @param BFSB_PAR from \code{\link{BFSB_PAR}}, gives paramters for F transitions
+#' @param ELSB_PAR from \code{\link{ELSB_PAR}}, gives paramters for L transitions
+#' @param tF sojourn time in blood feeding search bout
+#' @param tB sojourn time in blood feeding attempt bout
+#' @param tR sojourn time in post-prandial resting bout
+#' @param tL sojourn time in egg laying search bout
+#' @param tO sojourn time in egg laying attempt bout
+#'
+#' @export
+MBDETES_StateTransitions_Interp <- function(BFAB_PAR,ELAB_PAR,BFSB_PAR,ELSB_PAR,
+  tF = 6/24, # 30 minutes
+  tB = 3/24,   # 3 hours
+  tR = 18/24,  # 18 hours
+  tL = 6/24, # 30 minutes
+  tO = 3/24   # 1 hour
+){
+
+  # create and fill the matrix
+  M = matrix(0,nrow=6,ncol=6,dimnames=list(c("F","B","R","L","O","D"),c("F","B","R","L","O","D")))
+  M[1,] = BFSB_F2X(BFSB_PAR)
+  M[2,] = BFAB_B2X(BFAB_PAR)
+  M[3,] = BFAB_R2X(BFAB_PAR)
+  M[4,] = ELSB_L2X(ELSB_PAR)
+  M[5,] = ELAB_O2X(ELAB_PAR)
+  M[6,6] = 1 # death is absorbing
+
+  PAR <- list(
+    # timing
+    tF = tF, tB = tB, tR = tR, tL = tL, tO = tO,
+    # F2X
+    P_FF = M["F","F"], P_FB = M["F","B"], P_FD = M["F","D"],
+    # B2X
+    P_BF = M["B","F"], P_BB = M["B","B"], P_BR = M["B","R"], P_BD = M["B","D"],
+    # R2X
+    P_RF = M["R","F"], P_RB = M["R","B"], P_RL = M["R","L"], P_RO = M["R","O"], P_RD = M["R","D"],
+    # L2X
+    P_LL = M["L","L"], P_LO = M["L","O"], P_LD = M["L","D"],
+    # O2X
+    P_OL = M["O","L"], P_OO = M["O","O"], P_OB = M["O","B"], P_OF = M["O","F"], P_OD = M["O","D"]
+  )
+
+  return(PAR)
 }

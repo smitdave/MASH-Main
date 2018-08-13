@@ -302,54 +302,22 @@ MBDETES_PrLeave <- function(site,res,fail=FALSE){
 #'
 #' @export
 MBDETES_PrLeave_pars <- function(site,res,boutFail_p,disperse,fail=FALSE){
+  # if the site doesn't have what you need, you always leave
+  if(!site){
+    return(1)
+  }
   # P(Leave | Fail)
   if(fail){
-    # if I need an aquatic habitat
-    if(res=="aqua"){
-      #  P(Leave | Fail, Site doesn't have what I need)
-      if(!site){
-        return(1)
-      #  P(Leave | Fail, Site has what I need)
-      } else {
-        p <- boutFail_p
-        p <- p + ((1-p)*disperse)
-        return(p)
-      }
-    }
-    # if I need a blood feeding queue
-    if(res=="feed"){
-      #  P(Leave | Fail, Site doesn't have what I need)
-      if(!site){
-        return(1)
-      #  P(Leave | Fail, Site has what I need)
-      } else {
-        p <- boutFail_p
-        p <- p + ((1-p)*disperse)
-        return(p)
-      }
-    }
+    p <- boutFail_p
   # P(Leave | Success)
   } else {
-    # if i need an aquatic habitat
-    if(res=="aqua"){
-      # P(Leave | Success, Site doesn't have what I need)
-      if(!site){
-        return(1)
-      # P(Leave | Success, Site has what I need)
-      } else {
-        return(disperse)
-      }
-    }
-    if(res=="feed"){
-      # P(Leave | Success, Site doesn't have what I need)
-      if(!site){
-        return(1)
-      # P(Leave | Success, Site has what I need)
-      } else {
-        return(disperse)
-      }
-    }
+    p <- 0
   }
+
+  # not dependent on what resource you need.
+
+  p <- p + ((1-p)*disperse)
+  return(p)
 }
 
 

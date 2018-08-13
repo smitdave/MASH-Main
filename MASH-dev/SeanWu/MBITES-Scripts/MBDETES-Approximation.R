@@ -19,7 +19,12 @@
 rm(list=ls());gc()
 library(MBITES)
 
-PAR <- MBDETES_Parameters()
+# PAR <- MBDETES_Parameters()
+
+PAR <- MBDETES_StateTransitions_Interp(BFAB_PAR = BFAB_PAR(),
+                                        ELAB_PAR = ELAB_PAR(),
+                                        BFSB_PAR = BFSB_PAR(),
+                                        ELSB_PAR = ELSB_PAR())
 
 R2R=MBDETES_R2R_solve(PAR)
 
@@ -96,10 +101,9 @@ for(i in 1:3){
 
 PAR_map <- list()
 
+# B and R interpolating params to MBITES params
 PAR_map$B <- BFAB_PAR()
 
-
-# BFAB_PAR2MBITES <- function()
 B_succeed <- PAR_map$B$A
 
 # site 1 has both resources
@@ -125,8 +129,17 @@ Epars <- MBDETES_PrPPRFlight_optim(E = PAR_map$B$E)
 PPR_a <- Epars$par[1]
 PPR_b <- Epars$par[2]
 
-B_surv <-PAR_map$B$F1
+B_surv <-PAR_map$B$F1 #holds for both F1 and F2
 
 Gpars <- MBDETES_PrRefeed_optim(G = PAR_map$B$G)
 rf_a <- Gpars$par[1]
 rf_b <- Gpars$par[2]
+
+# H1,H2,H3
+# H1 and H2 are the same right now.
+# H3 is not.
+boutFail_p <- 1/8
+disperse <- 0.2
+
+# O interpolating params to MBITES params
+PAR_map$O <- ELAB_PAR()
