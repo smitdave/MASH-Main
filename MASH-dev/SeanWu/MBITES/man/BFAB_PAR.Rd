@@ -6,7 +6,7 @@
 \usage{
 BFAB_PAR(A = 1, B0 = 0, B1 = 0.9, B2 = 0.1, C1 = 0.01, C2 = 0.85,
   C4 = 0.01, C5 = 0.85, C7 = 0.5, D1 = 0.01, D2 = 0.9, E = 0.99,
-  F1 = 0.99, F2 = 0.99, G = 0.2, H1 = 0.8, H2 = 0.8, H3 = 0.8)
+  F1 = 0.99, F2 = 0.99, G = 0.2, H1 = 0.8, H2 = 0.8, H3 = 0.7)
 }
 \arguments{
 \item{A}{probability of successful launch (maps to \code{B_succeed})}

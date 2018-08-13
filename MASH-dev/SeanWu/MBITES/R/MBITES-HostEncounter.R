@@ -121,6 +121,8 @@ mbites_zooEncounter <- function(){
   } else {
     if(runif(1) < MBITES:::Parameters$get_feedZ()){
       # successfully begins blood feeding
+      self$trackProbe()
+      self$trackFeed()
       self$BloodMeal() # MBITES-Energetics.R
     }
   }

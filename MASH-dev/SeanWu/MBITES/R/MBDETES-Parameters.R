@@ -71,11 +71,11 @@ list(A=A, B0=B0, B1=B1, B2=B2, B3=1-sum(B0,B1,B2),
 #' @param C2 probability to not be deterred during aquatic habitat approach (no current MBITES mapping ...)
 #' @param C4 probability of death when encountering an ovitrap (pending traps in MBITES ...)
 #' @param D1 probability to survive resting (\code{\link{upstateState}}) given successful oviposition (calculate with \code{MBDETES_PrSurvive(site,"O")}, uses parameters \code{O_surv}, and the local \code{\link{Site}} object's hazard)
-#' @param D2 probability to survive resting (\code{\link{upstateState}}) given successful oviposition (calculate with \code{MBDETES_PrSurvive(site,"O")}, uses parameters \code{O_surv}, and the local \code{\link{Site}} object's hazard)
+#' @param D2 probability to survive resting (\code{\link{upstateState}}) given unsuccessful oviposition (calculate with \code{MBDETES_PrSurvive(site,"O")}, uses parameters \code{O_surv}, and the local \code{\link{Site}} object's hazard)
 #' @param E probability of skip oviposition (no skip oviposition in MBITES yet so must equal 0)
 #' @param F1 only used if skip-oviposition is implementd (but E must be 0)
-#' @param F2 probability to leave the current \code{\link{Site}} and go on a blood feeding search given an unsuccessful blood meal attempt (calculate with \code{1 - MBDETES_PrLeave(site,"feed",FALSE)}, uses parameters \code{boutFail_p}, \code{disperse})
-#' @param F3 probability to leave the current \code{\link{Site}} and go on a oviposition search given an unsuccessful blood meal attempt (calculate with \code{1 - MBDETES_PrLeave(site,"aqua",TRUE)}, uses parameters \code{boutFail_p}, \code{disperse})
+#' @param F2 probability to leave the current \code{\link{Site}} and go on a blood feeding search given an successful oviposition (calculate with \code{1 - MBDETES_PrLeave(site,"feed",FALSE)}, uses parameters \code{boutFail_p}, \code{disperse})
+#' @param F3 probability to leave the current \code{\link{Site}} and go on a oviposition search given an unsuccessful oviposition attempt (calculate with \code{1 - MBDETES_PrLeave(site,"aqua",TRUE)}, uses parameters \code{boutFail_p}, \code{disperse})
 #'
 #' @export
 ELAB_PAR <- function(
@@ -84,10 +84,10 @@ ELAB_PAR <- function(
   C1= 0.0,  C2= 1,    #C3=1-C1-C2
   C4= 0.00,           #C5=1-C4
   D1= 0.95,
-  D2= 0.9,
+  D2= 0.95,
   E = 0,
-  F1= 0.5,
-  F2= 0.4,
+  F1= 0.7,
+  F2= 0.8,
   F3=0.7
 ){
   list(A=A, B0=B0, B1=B1, B2=1-sum(B0,B1),
@@ -112,7 +112,7 @@ ELAB_PAR <- function(
 BFSB_PAR <- function(
   A=.94,
   D1=0.98,
-  F1=0.5
+  F1=0.8
 ){
   list(A=A,D1=D1,D2=D1,F1=F1)
 }
@@ -132,7 +132,7 @@ BFSB_PAR <- function(
 ELSB_PAR <- function(
   A=.94,
   D1=0.98,
-  F1=0.5
+  F1=0.8
 ){
   list(A=A,D1=D1,D2=D1,F1=F1)
 }

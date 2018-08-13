@@ -94,7 +94,9 @@ mbites_oneBout <- function(){
   self$updateState() # MBITES-Bout.R
 
   # log history
-  self$trackHistory()
+  if(private$alive){
+    self$trackHistory()
+  }
 }
 
 # set methods
@@ -182,7 +184,7 @@ mbites_updateState <- function(){
     if(private$alive){
 
       if(private$bloodfed){
-        self$Oogenesis() # MBITES-Oogenesis.R        
+        self$Oogenesis() # MBITES-Oogenesis.R
       }
       self$checkEggMaturation() # MBITES-Oogenesis.R
 
