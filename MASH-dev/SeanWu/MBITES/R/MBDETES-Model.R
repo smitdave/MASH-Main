@@ -376,6 +376,7 @@ MBDETES_cohort_ODE <- function(t,X,P){with(as.list(c(P,X)),{
   dOO = (P_OF + P_OB)*O/tO
   dRR = P_BR*B/tB
   list(c(dF,dB,dR,dL,dO,dOO,dRR))
+
 })}
 
 #' MBDETES: Cohort ODE Model Trajectory

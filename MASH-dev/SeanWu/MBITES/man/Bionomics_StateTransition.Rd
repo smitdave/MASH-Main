@@ -4,16 +4,15 @@
 \alias{Bionomics_StateTransition}
 \title{Bionomics: Calculate State Transition Matrix}
 \usage{
-Bionomics_StateTransition(mosquitos, R = FALSE)
+Bionomics_StateTransition(mosquitos)
 }
 \arguments{
 \item{mosquitos}{a data.frame of parsed JSON mosquito output}
-
-\item{R}{calculate "R" as a state (if \code{TRUE}, output must have been logged with detailed host tracking via \code{\link{trackBloodHost}})}
 }
 \description{
 Takes in JSON output parsed into a data.frame object from
 an MBITES simulation run and returns a matrix of state transition frequencies.
-Optionally include "R" (post-prandial resting) as a state, but requires detailed output logging.
+Optionally include "R" (post-prandial resting) as a state, but requires detailed output logging,
+if detailed logging was not used, the transition matrix will not include "R".
 Mosquitoes that were still alive at the end of simulation are filtered out.
 }
