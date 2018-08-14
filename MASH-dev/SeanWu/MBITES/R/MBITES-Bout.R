@@ -183,7 +183,7 @@ mbites_updateState <- function(){
     # check again for being alive because can be killed in survival; don't want zombie mosquitoes preforming actions
     if(private$alive){
 
-      if(private$bloodfed){
+      if(private$bloodfed){        
         self$Oogenesis() # MBITES-Oogenesis.R
       }
       self$checkEggMaturation() # MBITES-Oogenesis.R

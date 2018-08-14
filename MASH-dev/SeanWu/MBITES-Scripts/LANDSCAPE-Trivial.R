@@ -93,18 +93,19 @@ trackBloodHost()
 trackOviposition()
 
 # set parameters
-# PPR <- MBDETES_PrPPRFlight_optim(E = BFAB_PAR()$E)
-# rf <- MBDETES_PrRefeed_optim(G = BFAB_PAR()$G)
-# MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
-#                                    Bs_succeed = 0.98,Os_succeed = 0.98,B_succeed = 0.95,O_succeed = 0.98,
-#                                    S_u = 0,
-#                                    boutFail_p = 1/8,disperse = 0.2,
-#                                    PPR_a = PPR$par[1],PPR_b = PPR$par[2],
-#                                    rf_a = rf$par[1],rf_b = rf$par[2])
+PPR <- MBDETES_PrPPRFlight_optim(E = BFAB_PAR()$E)
+rf <- MBDETES_PrRefeed_optim(G = BFAB_PAR()$G)
 
+# MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
+#                                    Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
+#                                    S_u = 0,disperse = 0.2,boutFail_p = 1/8,
+#                                    rf_a = rf$par[1],rf_b = rf$par[2],
+#                                    PPR_a = PPR$par[1],PPR_b = PPR$par[2])
+
+# # a good paramter set (when refeeding is totally turned off)
 MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
                                    Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
-                                   S_u = 0,disperse = 0.25)
+                                   S_u = 0,disperse = 0.2)
 
 
 # initialize a tile
@@ -113,9 +114,9 @@ Human_NULL_Initialize(humans)
 MBITES_Initialize(mosquitos)
 
 # run simulation
-set_output(directory = directory,runID = 1)
+set_output(directory = directory,runID = 2)
 
-simulation(tMax = 365*10,pretty = TRUE)
+simulation(tMax = 365*3,pretty = TRUE)
 hardreset()
 
 
@@ -127,11 +128,11 @@ library(jsonlite)
 library(ggplot2)
 
 # where the files can be found
-output_dir <- paste0(directory,"run1")
+output_dir <- paste0(directory,"run2")
 
-mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE)
+mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_2.json"), flatten = TRUE)
 mosquitos_df <- mosquitos_df[-which(sapply(mosquitos_df$id,is.null)),]
-humans_df <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
+humans_df <- fromJSON(paste0(output_dir,"/human_2.json"), flatten = TRUE)
 humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 
 
@@ -253,7 +254,7 @@ MBDETES$bloodmeals <- MBDETES$cohort[,8]
 ###############################################################################
 
 # egg laying and blood feeding rates plots
-par(mfrow=c(2,2))
+par(mfrow=c(4,2))
 
 # MBDETES egg laying rate
 egg_mean <- weighted.mean(MBDETES$tt[-1],diff(MBDETES$eggs))
@@ -288,10 +289,10 @@ hist(blood_mbites,probability = T,breaks = 100,col = adjustcolor("firebrick3",al
      xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Blood Feeding Rate (mean: ",round(mean(blood_mbites),3),")"))
 abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
 
-par(mfrow=c(1,1))
+# par(mfrow=c(1,1))
 
 # lifespan and feeding cycle interval plots
-par(mfrow=c(2,2))
+# par(mfrow=c(2,2))
 
 # MBDETES lifespan (survivor function)
 alive_mean <- weighted.mean(MBDETES$tt,MBDETES$alive)

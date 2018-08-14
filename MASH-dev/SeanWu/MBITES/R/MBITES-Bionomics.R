@@ -36,7 +36,6 @@ Bionomics_StateTransition <- function(mosquitos,R=FALSE){
   if(!R){
     M <- M[-which(rownames(M)=="R"),-which(colnames(M)=="R")]
   }
-  S <- colnames(M)
 
   pb <- txtProgressBar(min = 0,max = length(filter)+1)
   for(i in 1:length(filter)){

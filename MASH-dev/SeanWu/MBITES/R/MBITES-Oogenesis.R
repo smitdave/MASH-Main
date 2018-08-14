@@ -135,9 +135,13 @@ mbites_checkRefeed_null <- function(){
 mbites_checkRefeedMBDETES <- function(){
   # check refeed
   if(private$state == "B" & (runif(1) < self$pReFeed())){
+  # browser()
+  # if((runif(1) < self$pReFeed()) & (private$bmSize > 0)){
     private$gravid = FALSE
     private$state = "B"
   }
+
+  # private$bmSize = 0
 }
 
 #' MBITES: Probability of Refeeding as Function of Egg Batch Size
