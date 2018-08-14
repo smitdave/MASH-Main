@@ -93,19 +93,18 @@ trackBloodHost()
 trackOviposition()
 
 # set parameters
-PPR <- MBDETES_PrPPRFlight_optim(E = BFAB_PAR()$E)
-rf <- MBDETES_PrRefeed_optim(G = BFAB_PAR()$G)
-MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
-                                   Bs_succeed = 0.98,Os_succeed = 0.98,B_succeed = 0.95,O_succeed = 0.98,
-                                   S_u = 0,
-                                   boutFail_p = 1/8,disperse = 0.2,
-                                   PPR_a = PPR$par[1],PPR_b = PPR$par[2],
-                                   rf_a = rf$par[1],rf_b = rf$par[2])
-
+# PPR <- MBDETES_PrPPRFlight_optim(E = BFAB_PAR()$E)
+# rf <- MBDETES_PrRefeed_optim(G = BFAB_PAR()$G)
 # MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
-#                                    Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
+#                                    Bs_succeed = 0.98,Os_succeed = 0.98,B_succeed = 0.95,O_succeed = 0.98,
 #                                    S_u = 0,
-#                                   boutFail_p = 1/8,disperse = 0.25)
+#                                    boutFail_p = 1/8,disperse = 0.2,
+#                                    PPR_a = PPR$par[1],PPR_b = PPR$par[2],
+#                                    rf_a = rf$par[1],rf_b = rf$par[2])
+
+MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
+                                   Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
+                                   S_u = 0,disperse = 0.25)
 
 
 # initialize a tile
@@ -116,7 +115,7 @@ MBITES_Initialize(mosquitos)
 # run simulation
 set_output(directory = directory,runID = 1)
 
-simulation(tMax = 365*20,pretty = TRUE)
+simulation(tMax = 365*10,pretty = TRUE)
 hardreset()
 
 
@@ -204,9 +203,31 @@ humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 # MBDETES approximation
 ###############################################################################
 
+M <- Bionomics_StateTransition(mosquitos_df,R = TRUE)
+
 MBDETES <- new.env()
 
-MBDETES$PAR <- MBDETES_Parameters()
+PAR <- list(
+  # timing
+  tF = 6/24, # 30 minutes
+  tB = 3/24,   # 3 hours
+  tR = 18/24,  # 18 hours
+  tL = 6/24, # 30 minutes
+  tO = 3/24,   # 1 hour
+  # F2X
+  P_FF = M["F","F"], P_FB = M["F","B"], P_FD = M["F","D"],
+  # B2X
+  P_BF = M["B","F"], P_BB = M["B","B"], P_BR = M["B","R"], P_BD = M["B","D"],
+  # R2X
+  P_RF = M["R","F"], P_RB = M["R","B"], P_RL = M["R","L"], P_RO = M["R","O"], P_RD = M["R","D"],
+  # L2X
+  P_LL = M["L","L"], P_LO = M["L","O"], P_LD = M["L","D"],
+  # O2X
+  P_OL = M["O","L"], P_OO = M["O","O"], P_OB = M["O","B"], P_OF = M["O","F"], P_OD = M["O","D"]
+)
+
+# MBDETES$PAR <- MBDETES_Parameters()
+MBDETES$PAR <- PAR
 
 # R2R model (feeding cycle)
 MBDETES$R2R <- MBDETES_R2R_solve(MBDETES$PAR)

@@ -24,16 +24,16 @@
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
 #'
 #' @param mosquitos a data.frame of parsed JSON mosquito output
-#' @param rest calculate "R" as a state (if \code{TRUE}, output must have been logged with detailed host tracking via \code{\link{trackBloodHost}})
+#' @param R calculate "R" as a state (if \code{TRUE}, output must have been logged with detailed host tracking via \code{\link{trackBloodHost}})
 #' @export
-Bionomics_StateTransition <- function(mosquitos,rest=FALSE){
+Bionomics_StateTransition <- function(mosquitos,R=FALSE){
 
   filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
   filter <- which(filter)
 
   # transition and state space
   M <- matrix(0L,nrow=6,ncol=6,dimnames=list(c("F","B","R","L","O","D"),c("F","B","R","L","O","D")))
-  if(!rest){
+  if(!R){
     M <- M[-which(rownames(M)=="R"),-which(colnames(M)=="R")]
   }
   S <- colnames(M)
@@ -41,17 +41,44 @@ Bionomics_StateTransition <- function(mosquitos,rest=FALSE){
   pb <- txtProgressBar(min = 0,max = length(filter)+1)
   for(i in 1:length(filter)){
 
-    state <- mosquitos_df[filter[i],"behavior"][[1]]
-    search <- mosquitos_df[filter[i],"search"][[1]]
+    state <- mosquitos[filter[i],"behavior"][[1]]
+    search <- mosquitos[filter[i],"search"][[1]]
+    state[which(state=="B" & search)] <- "F"
+    state[which(state=="O" & search)] <- "L"
+    from <- state[1:(length(state)-1)]
+    to <- state[2:length(state)]
 
     # calculate PPR as seperate state
-    if(rest){
+    if(R){
+      time <- mosquitos[filter[i],"time"][[1]]
+      rest <- mosquitos[filter[i],"restTime"][[1]]
 
-    # do not consider PPR as seperate state
+      # if there were no resting events
+      if(length(rest)==1 & fequal(rest[1],0)){
+        for(j in 1:length(from)){
+          M[from[j],to[j]] = M[from[j],to[j]] + 1L
+        }
+      } else {
+
+        rix <- sapply(rest,function(x,time){
+          which(time >= x)[1]
+        },time=time)
+
+        state <- R.utils::insert(state,ats=rix,values="R")
+        from <- state[1:(length(state)-1)]
+        to <- state[2:length(state)]
+        for(j in 1:length(from)){
+          if((from[j] %in% c("O")) & (to[j] == "R")){
+            browser()
+          }
+          M[from[j],to[j]] = M[from[j],to[j]] + 1L
+        }
+
+      }
+
+      # do not consider PPR as seperate state
     } else {
 
-      from <- state[1:(length(state)-1)]
-      to <- state[2:length(state)]
       for(j in 1:length(from)){
         M[from[j],to[j]] = M[from[j],to[j]] + 1L
       }
@@ -60,11 +87,12 @@ Bionomics_StateTransition <- function(mosquitos,rest=FALSE){
 
     setTxtProgressBar(pb,i)
   }
-
+  M["D","D"] <- 1
+  M <- M/rowSums(M)
   setTxtProgressBar(pb,i+1)
 
+  return(M)
 }
-
 
 ###############################################################################
 # mosquito lifespans
