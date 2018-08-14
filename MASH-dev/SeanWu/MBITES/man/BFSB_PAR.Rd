@@ -4,7 +4,7 @@
 \alias{BFSB_PAR}
 \title{MBDETES: Parameters for Transitions from F}
 \usage{
-BFSB_PAR(A = 0.94, D1 = 0.98, F1 = 0.5)
+BFSB_PAR(A = 0.94, D1 = 0.98, F1 = 0.8)
 }
 \arguments{
 \item{A}{probability of successful launch (maps to \code{Bs_succeed})}

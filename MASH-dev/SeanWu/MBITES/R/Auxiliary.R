@@ -28,6 +28,17 @@ sample <- function(x, ...){
   )
 }
 
+#' Approximate Equality for Floating Point Numbers
+#'
+#' @param a \code{\link[base]{numeric}} value
+#' @param b \code{\link[base]{numeric}} value
+#' @param tol numeric tolerance
+#'
+#' @export
+fequal <- function(a, b, tol=.Machine$double.eps^0.5){
+  abs(a - b) <= tol
+}
+
 
 ###############################################################################
 # spatstat wrappers

@@ -37,11 +37,11 @@ for(i in 1:3){
 }
 
 # site 1 has both resources
-landscape[[1]]$feed[[1]] = list(w=1,enterP=1)
+landscape[[1]]$feed[[1]] = list(w=1,enterP=1,zoo_id=-1,zoo_w=0.1)
 landscape[[1]]$aqua[[1]] = list(w=1,lambda=1)
 
 # site 2 has only blood feeding resource
-landscape[[2]]$feed[[1]] = list(w=1,enterP=1)
+landscape[[2]]$feed[[1]] = list(w=1,enterP=1,zoo_id=-1,zoo_w=0.1)
 
 # site 3 has only aquatic habitat resource
 landscape[[3]]$aqua[[1]] = list(w=1,lambda=1)
@@ -58,7 +58,7 @@ humans = data.frame(
   # make sure the humans are at the sites with blood feeding resources
   siteID = 1:2,
   feedingID = rep(1,nHumans),
-  w = rep(1,nHumans)
+  w = rep(0.9,nHumans)
 )
 
 
@@ -93,22 +93,28 @@ trackBloodHost()
 trackOviposition()
 
 # set parameters
-MBITES:::Parameters$set_parameters(disperse = 0.25,Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
+PPR <- MBDETES_PrPPRFlight_optim(E = BFAB_PAR()$E)
+rf <- MBDETES_PrRefeed_optim(G = BFAB_PAR()$G)
+
+# MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
+#                                    Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
+#                                    S_u = 0,disperse = 0.2,boutFail_p = 1/8,
+#                                    rf_a = rf$par[1],rf_b = rf$par[2],
+#                                    PPR_a = PPR$par[1],PPR_b = PPR$par[2])
+
+# # a good paramter set (when refeeding is totally turned off)
+MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
                                    Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
-                                   S_u = 0)
+                                   S_u = 0,disperse = 0.2)
 
 
 # initialize a tile
 Tile_Initialize(landscape)
-
 Human_NULL_Initialize(humans)
-
-# transitions <- MBDETES_Approx(1L)
-
 MBITES_Initialize(mosquitos)
 
 # run simulation
-set_output(directory = directory,runID = 1)
+set_output(directory = directory,runID = 2)
 
 simulation(tMax = 365*3,pretty = TRUE)
 hardreset()
@@ -122,11 +128,11 @@ library(jsonlite)
 library(ggplot2)
 
 # where the files can be found
-output_dir <- paste0(directory,"run1")
+output_dir <- paste0(directory,"run2")
 
-mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE)
+mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_2.json"), flatten = TRUE)
 mosquitos_df <- mosquitos_df[-which(sapply(mosquitos_df$id,is.null)),]
-humans_df <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
+humans_df <- fromJSON(paste0(output_dir,"/human_2.json"), flatten = TRUE)
 humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 
 
@@ -134,73 +140,95 @@ humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 # basic bionomics
 ###############################################################################
 
-# lifespan
-lf <- Bionomics_lifespan(mosquitos_df)
-mean_lf <- mean(lf$lifespan)
-
-ggplot() + geom_histogram(data = lf, aes(lifespan), fill = "steelblue", bins = 20) +
-  geom_vline(xintercept = mean_lf,col="firebrick3",size=1.15) +
-  ggtitle(paste0("Mosquito Lifespans (mean: ",round(mean_lf,3),")")) + xlab("Days") + ylab("Frequency") + theme_bw()
-
-# human blood hosts
-bh <- Bionomics_humanBloodHost(mosquitos_df,who = "human")
-mean_bh <- mean(bh$humanHost)
-
-ggplot() + geom_histogram(data = bh, aes(humanHost), fill = "steelblue", bins = 20) +
-  geom_vline(xintercept = mean_bh,col="firebrick3",size=1.15) +
-  ggtitle(paste0("Number of Human Blood Hosts per mosquito (mean: ",round(mean_bh,3),")")) + xlab("Number of Hosts") + ylab("Frequency") + theme_bw()
-
-# blood meal intervals
-bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "human")
-mean_bmi <- mean(bmi$bmIntervals)
-
-ggplot() + geom_histogram(data = bmi, aes(bmIntervals), fill = "steelblue", bins = 20) +
-  geom_vline(xintercept = mean_bmi,col="firebrick3",size=1.15) +
-  ggtitle(paste0("Human Blood Meal Interval (mean: ",round(mean_bmi,3),")")) + xlab("Time") + ylab("Frequency") + theme_bw()
-
-# vectorial capacity (might not make a whole lot of sense to look at the histogram, just mean value)
-vc <- Bionomics_vectorialCapacity(mosquitos = mosquitos_df,humans = humans_df,EIP = 10,spatial = T)
-vc_df <- data.frame(vc=sapply(vc,function(x){x$VC}))
-mean_vc <- mean(vc_df$vc)
-
-ggplot() + geom_histogram(data = vc_df, aes(vc), fill = "steelblue", bins = 20) +
-  geom_vline(xintercept = mean_vc,col="firebrick3",size=1.15) +
-  ggtitle(paste0("Vectorial Capacity (mean: ",round(mean_vc,3),")")) + xlab("Secondary Bites") + ylab("Frequency") + theme_bw()
-
-# lifetime egg production
-egg <- Bionomics_lifetimeOviposition(mosquitos_df,TRUE)
-egg_df <- data.frame(egg=egg$lifetime)
-mean_egg <- mean(egg_df$egg)
-
-ggplot() + geom_histogram(data = egg_df, aes(egg), fill = "steelblue", bins = 20) +
-  geom_vline(xintercept = mean_egg,col="firebrick3",size=1.15) +
-  ggtitle(paste0("Lifetime Egg Production (mean: ",round(mean_egg,3),")")) + xlab("Eggs") + ylab("Frequency") + theme_bw()
-
-# oviposition intervals and successful events
-oviposit <- Bionomics_ovipositionInterval(mosquitos_df)
-
-oviposit_interval <- data.frame(interval=oviposit$interval)
-mean_oviposit_interval <- mean(oviposit_interval$interval)
-
-oviposit_num <- data.frame(number=oviposit$numOviposit)
-mean_oviposit_num <- mean(oviposit_num$number)
-
-ggplot() + geom_histogram(data = oviposit_interval, aes(interval), fill = "steelblue", bins = 20) +
-  geom_vline(xintercept = mean_oviposit_interval,col="firebrick3",size=1.15) +
-  ggtitle(paste0("Interval between Successful Oviposition (mean: ",round(mean_oviposit_interval,3),")")) + xlab("Time") + ylab("Frequency") + theme_bw()
-
-ggplot() + geom_histogram(data = oviposit_num, aes(number), fill = "steelblue", bins = 20) +
-  geom_vline(xintercept = mean_oviposit_num,col="firebrick3",size=1.15) +
-  ggtitle(paste0("Number of Successful Oviposition Events (mean: ",round(mean_oviposit_num,3),")")) + xlab("Number of Events") + ylab("Frequency") + theme_bw()
+# # lifespan
+# lf <- Bionomics_lifespan(mosquitos_df)
+# mean_lf <- mean(lf$lifespan)
+#
+# ggplot() + geom_histogram(data = lf, aes(lifespan), fill = "steelblue", bins = 20) +
+#   geom_vline(xintercept = mean_lf,col="firebrick3",size=1.15) +
+#   ggtitle(paste0("Mosquito Lifespans (mean: ",round(mean_lf,3),")")) + xlab("Days") + ylab("Frequency") + theme_bw()
+#
+# # human blood hosts
+# bh <- Bionomics_humanBloodHost(mosquitos_df,who = "human")
+# mean_bh <- mean(bh$humanHost)
+#
+# ggplot() + geom_histogram(data = bh, aes(humanHost), fill = "steelblue", bins = 20) +
+#   geom_vline(xintercept = mean_bh,col="firebrick3",size=1.15) +
+#   ggtitle(paste0("Number of Human Blood Hosts per mosquito (mean: ",round(mean_bh,3),")")) + xlab("Number of Hosts") + ylab("Frequency") + theme_bw()
+#
+# # blood meal intervals
+# bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "human")
+# mean_bmi <- mean(bmi$bmIntervals)
+#
+# ggplot() + geom_histogram(data = bmi, aes(bmIntervals), fill = "steelblue", bins = 20) +
+#   geom_vline(xintercept = mean_bmi,col="firebrick3",size=1.15) +
+#   ggtitle(paste0("Human Blood Meal Interval (mean: ",round(mean_bmi,3),")")) + xlab("Time") + ylab("Frequency") + theme_bw()
+#
+# # vectorial capacity (might not make a whole lot of sense to look at the histogram, just mean value)
+# vc <- Bionomics_vectorialCapacity(mosquitos = mosquitos_df,humans = humans_df,EIP = 10,spatial = T)
+# vc_df <- data.frame(vc=sapply(vc,function(x){x$VC}))
+# mean_vc <- mean(vc_df$vc)
+#
+# ggplot() + geom_histogram(data = vc_df, aes(vc), fill = "steelblue", bins = 20) +
+#   geom_vline(xintercept = mean_vc,col="firebrick3",size=1.15) +
+#   ggtitle(paste0("Vectorial Capacity (mean: ",round(mean_vc,3),")")) + xlab("Secondary Bites") + ylab("Frequency") + theme_bw()
+#
+# # lifetime egg production
+# egg <- Bionomics_lifetimeOviposition(mosquitos_df,TRUE)
+# egg_df <- data.frame(egg=egg$lifetime)
+# mean_egg <- mean(egg_df$egg)
+#
+# ggplot() + geom_histogram(data = egg_df, aes(egg), fill = "steelblue", bins = 20) +
+#   geom_vline(xintercept = mean_egg,col="firebrick3",size=1.15) +
+#   ggtitle(paste0("Lifetime Egg Production (mean: ",round(mean_egg,3),")")) + xlab("Eggs") + ylab("Frequency") + theme_bw()
+#
+# # oviposition intervals and successful events
+# oviposit <- Bionomics_ovipositionInterval(mosquitos_df)
+#
+# oviposit_interval <- data.frame(interval=oviposit$interval)
+# mean_oviposit_interval <- mean(oviposit_interval$interval)
+#
+# oviposit_num <- data.frame(number=oviposit$numOviposit)
+# mean_oviposit_num <- mean(oviposit_num$number)
+#
+# ggplot() + geom_histogram(data = oviposit_interval, aes(interval), fill = "steelblue", bins = 20) +
+#   geom_vline(xintercept = mean_oviposit_interval,col="firebrick3",size=1.15) +
+#   ggtitle(paste0("Interval between Successful Oviposition (mean: ",round(mean_oviposit_interval,3),")")) + xlab("Time") + ylab("Frequency") + theme_bw()
+#
+# ggplot() + geom_histogram(data = oviposit_num, aes(number), fill = "steelblue", bins = 20) +
+#   geom_vline(xintercept = mean_oviposit_num,col="firebrick3",size=1.15) +
+#   ggtitle(paste0("Number of Successful Oviposition Events (mean: ",round(mean_oviposit_num,3),")")) + xlab("Number of Events") + ylab("Frequency") + theme_bw()
 
 
 ###############################################################################
 # MBDETES approximation
 ###############################################################################
 
+M <- Bionomics_StateTransition(mosquitos_df,R = TRUE)
+
 MBDETES <- new.env()
 
-MBDETES$PAR <- MBDETES_Parameters()
+PAR <- list(
+  # timing
+  tF = 6/24, # 30 minutes
+  tB = 3/24,   # 3 hours
+  tR = 18/24,  # 18 hours
+  tL = 6/24, # 30 minutes
+  tO = 3/24,   # 1 hour
+  # F2X
+  P_FF = M["F","F"], P_FB = M["F","B"], P_FD = M["F","D"],
+  # B2X
+  P_BF = M["B","F"], P_BB = M["B","B"], P_BR = M["B","R"], P_BD = M["B","D"],
+  # R2X
+  P_RF = M["R","F"], P_RB = M["R","B"], P_RL = M["R","L"], P_RO = M["R","O"], P_RD = M["R","D"],
+  # L2X
+  P_LL = M["L","L"], P_LO = M["L","O"], P_LD = M["L","D"],
+  # O2X
+  P_OL = M["O","L"], P_OO = M["O","O"], P_OB = M["O","B"], P_OF = M["O","F"], P_OD = M["O","D"]
+)
+
+# MBDETES$PAR <- MBDETES_Parameters()
+MBDETES$PAR <- PAR
 
 # R2R model (feeding cycle)
 MBDETES$R2R <- MBDETES_R2R_solve(MBDETES$PAR)
@@ -226,7 +254,7 @@ MBDETES$bloodmeals <- MBDETES$cohort[,8]
 ###############################################################################
 
 # egg laying and blood feeding rates plots
-par(mfrow=c(2,2))
+par(mfrow=c(4,2))
 
 # MBDETES egg laying rate
 egg_mean <- weighted.mean(MBDETES$tt[-1],diff(MBDETES$eggs))
@@ -261,10 +289,10 @@ hist(blood_mbites,probability = T,breaks = 100,col = adjustcolor("firebrick3",al
      xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Blood Feeding Rate (mean: ",round(mean(blood_mbites),3),")"))
 abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
 
-par(mfrow=c(1,1))
+# par(mfrow=c(1,1))
 
 # lifespan and feeding cycle interval plots
-par(mfrow=c(2,2))
+# par(mfrow=c(2,2))
 
 # MBDETES lifespan (survivor function)
 alive_mean <- weighted.mean(MBDETES$tt,MBDETES$alive)
@@ -277,7 +305,7 @@ lf <- Bionomics_lifespan(mosquitos_df)
 mean_lf <- mean(lf$lifespan)
 
 hist(lf$lifespan,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
-     xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Survival Time Rate (mean: ",round(mean_lf,3),")"))
+     xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Survival Time (mean: ",round(mean_lf,3),")"))
 abline(v = mean_lf,lwd=2.5,lty=2,col="firebrick3")
 
 # MBDETES blood feeding interval

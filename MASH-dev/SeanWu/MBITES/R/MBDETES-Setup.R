@@ -25,10 +25,11 @@ MBITES_Setup_MBDETES <- function(){
   # time to event parameters
   MBITES::MBITES_Setup_Timing(timing_model = 2,
                     rate_b = 1/(3/24),tmin_b = 0,
-                    rate_bs = 1/(8/24),tmin_bs = 0,
+                    rate_bs = 1/(6/24),tmin_bs = 0,
                     rate_o = 1/(3/24),tmin_o = 0,
-                    rate_os = 1/(8/24),tmin_os = 0,
-                    ppr_model = 2,rate_ppr = 1/(30/24),tmin_ppr = 0)
+                    rate_os = 1/(6/24),tmin_os = 0,
+                    # minimum waiting time needed for ppr to avoid numerical difficulties
+                    ppr_model = 2,rate_ppr = 1/(18/24),tmin_ppr = 1e-2)
 
   MBITES:::Globals$set_SETUP("timing")
 

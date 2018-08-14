@@ -2,8 +2,7 @@
 % Please edit documentation in R/MBDETES-Calibration.R
 \name{MBDETES_PrLeave}
 \alias{MBDETES_PrLeave}
-\title{MBDETES: Probability to Leave a Site
-Return the probability for a mosquito to leave a site and (initiate a search).}
+\title{MBDETES: Probability to Leave a Site}
 \usage{
 MBDETES_PrLeave(site, res, fail = FALSE)
 }
@@ -15,6 +14,5 @@ MBDETES_PrLeave(site, res, fail = FALSE)
 \item{fail}{did the attempt bout result in a failure?}
 }
 \description{
-MBDETES: Probability to Leave a Site
 Return the probability for a mosquito to leave a site and (initiate a search).
 }

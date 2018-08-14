@@ -94,7 +94,9 @@ mbites_oneBout <- function(){
   self$updateState() # MBITES-Bout.R
 
   # log history
-  self$trackHistory()
+  if(private$alive){
+    self$trackHistory()
+  }
 }
 
 # set methods
@@ -181,8 +183,8 @@ mbites_updateState <- function(){
     # check again for being alive because can be killed in survival; don't want zombie mosquitoes preforming actions
     if(private$alive){
 
-      if(private$bloodfed){
-        self$Oogenesis() # MBITES-Oogenesis.R        
+      if(private$bloodfed){        
+        self$Oogenesis() # MBITES-Oogenesis.R
       }
       self$checkEggMaturation() # MBITES-Oogenesis.R
 
@@ -563,6 +565,13 @@ mbites_MBITES <- function(){
 
   # if mosy died then output its history and cleanup
   if(!private$alive){
+    # sometimes the mosy dies during resting (PPRFlight); this means that
+    # it made it to resting, and therefore we should output the proper time of death,
+    # which is the current tNow (gets updated in mbites_PPRFlight).
+    # we update tNext because it gets logged one final time when the mosquito exits.
+    if(private$tNow > private$tNext){
+      private$tNext <- private$tNow
+    }
     self$exit()
   }
 }

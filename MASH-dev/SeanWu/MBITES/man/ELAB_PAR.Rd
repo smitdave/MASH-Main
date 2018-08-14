@@ -5,7 +5,7 @@
 \title{MBDETES: Parameters for Transitions from O}
 \usage{
 ELAB_PAR(A = 0.83, B0 = 0, B1 = 1, C1 = 0, C2 = 1, C4 = 0,
-  D1 = 0.95, D2 = 0.9, E = 0, F1 = 0.5, F2 = 0.4, F3 = 0.7)
+  D1 = 0.95, D2 = 0.95, E = 0, F1 = 0.7, F2 = 0.8, F3 = 0.7)
 }
 \arguments{
 \item{A}{probability of successful launch (maps to \code{O_succeed})}
@@ -22,15 +22,15 @@ ELAB_PAR(A = 0.83, B0 = 0, B1 = 1, C1 = 0, C2 = 1, C4 = 0,
 
 \item{D1}{probability to survive resting (\code{\link{upstateState}}) given successful oviposition (calculate with \code{MBDETES_PrSurvive(site,"O")}, uses parameters \code{O_surv}, and the local \code{\link{Site}} object's hazard)}
 
-\item{D2}{probability to survive resting (\code{\link{upstateState}}) given successful oviposition (calculate with \code{MBDETES_PrSurvive(site,"O")}, uses parameters \code{O_surv}, and the local \code{\link{Site}} object's hazard)}
+\item{D2}{probability to survive resting (\code{\link{upstateState}}) given unsuccessful oviposition (calculate with \code{MBDETES_PrSurvive(site,"O")}, uses parameters \code{O_surv}, and the local \code{\link{Site}} object's hazard)}
 
 \item{E}{probability of skip oviposition (no skip oviposition in MBITES yet so must equal 0)}
 
 \item{F1}{only used if skip-oviposition is implementd (but E must be 0)}
 
-\item{F2}{probability to leave the current \code{\link{Site}} and go on a blood feeding search given an unsuccessful blood meal attempt (calculate with \code{1 - MBDETES_PrLeave(site,"feed",FALSE)}, uses parameters \code{boutFail_p}, \code{disperse})}
+\item{F2}{probability to leave the current \code{\link{Site}} and go on a blood feeding search given an successful oviposition (calculate with \code{1 - MBDETES_PrLeave(site,"feed",FALSE)}, uses parameters \code{boutFail_p}, \code{disperse})}
 
-\item{F3}{probability to leave the current \code{\link{Site}} and go on a oviposition search given an unsuccessful blood meal attempt (calculate with \code{1 - MBDETES_PrLeave(site,"aqua",TRUE)}, uses parameters \code{boutFail_p}, \code{disperse})}
+\item{F3}{probability to leave the current \code{\link{Site}} and go on a oviposition search given an unsuccessful oviposition attempt (calculate with \code{1 - MBDETES_PrLeave(site,"aqua",TRUE)}, uses parameters \code{boutFail_p}, \code{disperse})}
 }
 \description{
 Produce named list of parameters for \code{\link{ELAB_O2X}}.
