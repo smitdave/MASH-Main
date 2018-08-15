@@ -87,6 +87,9 @@ mbites_checkEggMaturation <- function(){
   # check egg maturation if the mosy is not gravid
   if(!private$gravid){
     if(private$eggT <= private$tNow){
+      # if(private$state == "B"){
+      #   cat("mosy: ",private$id," calling mbites_checkEggMaturation in state: ",private$state," and search: ",private$search," and searchNow: ",private$searchNow," is setting itself gravid and next state to 'O'!","\n")
+      # }
       private$gravid = TRUE
       private$state = "O"
     } else {
@@ -128,8 +131,6 @@ mbites_checkRefeed <- function(){
 #'
 mbites_checkRefeed_null <- function(){
   # null function
-  # private$gravid = TRUE (already set in mbites_checkEggMaturation)
-  # private$state = "O" (already set in mbites_checkEggMaturation)
 }
 
 mbites_checkRefeedMBDETES <- function(){
@@ -139,6 +140,9 @@ mbites_checkRefeedMBDETES <- function(){
   if((runif(1) < self$pReFeed()) & (private$bmSize > 0)){
     private$gravid = FALSE
     private$state = "B"
+
+    private$eggT = 2e16
+    private$batch = 0
   }
 
   private$bmSize = 0
@@ -223,9 +227,6 @@ mbites_oogenesis2 <- function(){
   # if the egg provision is fulfilled we can go ahead and get ready for oviposition
   if(private$eggP <= 0){
     private$eggT = 0
-    # dont need to set these flags; gets checked at end of every bout in mbites_updateState
-    # private$gravid = TRUE # now mosquito is gravid
-    # private$state = "O"
     private$bmSize = max(0,private$bmSize - private$eggP)
   }
 

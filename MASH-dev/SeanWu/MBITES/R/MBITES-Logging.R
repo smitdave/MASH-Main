@@ -167,7 +167,6 @@ trackProbe_Mosquito_Female <- function(){
     private$feedSite = c(private$feedSite,integer(lVec))
     private$hostHist = c(private$hostHist,integer(lVec))
     private$probeAndFeed = c(private$probeAndFeed,logical(lVec))
-    private$restTime = c(private$restTime,numeric(lVec))
   }
 
   private$feedTime[private$nFeed] = private$tNow
@@ -185,7 +184,6 @@ trackFeed_Mosquito_Female <- function(){
 
 #' track resting
 trackRest_Mosquito_Female <- function(){
-  # private$restTime[private$nFeed-1L] = private$tNow
 
   # increment number of events
   private$nEvent = private$nEvent + 1L
@@ -216,8 +214,7 @@ mbites_bloodHistList <- function(){
     bloodHosts = private$hostHist[1:(private$nFeed-1L)],
     timeFeed = private$feedTime[1:(private$nFeed-1L)],
     siteFeed = private$feedSite[1:(private$nFeed-1L)],
-    probeAndFeed = private$probeAndFeed[1:(private$nFeed-1L)],
-    restTime = private$restTime[1:(private$nFeed-1L)]
+    probeAndFeed = private$probeAndFeed[1:(private$nFeed-1L)]
   )
 }
 

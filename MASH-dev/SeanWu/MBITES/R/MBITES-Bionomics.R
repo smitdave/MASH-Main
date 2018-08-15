@@ -47,9 +47,6 @@ Bionomics_StateTransition <- function(mosquitos){
     to <- state[2:length(state)]
 
     for(j in 1:length(from)){
-      if((from[j] %in% c("B","F")) & (to[j] %in% c("L","O"))){
-        browser()
-      }
       M[from[j],to[j]] = M[from[j],to[j]] + 1L
     }
 

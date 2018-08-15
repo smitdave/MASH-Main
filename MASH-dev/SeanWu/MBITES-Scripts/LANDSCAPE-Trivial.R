@@ -204,7 +204,7 @@ humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 # MBDETES approximation
 ###############################################################################
 
-M <- Bionomics_StateTransition(mosquitos_df,R = TRUE)
+M <- Bionomics_StateTransition(mosquitos_df)
 
 MBDETES <- new.env()
 
