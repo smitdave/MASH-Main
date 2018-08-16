@@ -102,7 +102,7 @@ rf <- MBDETES_PrRefeed_optim(G = BFAB_PAR()$G)
 #                                    rf_a = rf$par[1],rf_b = rf$par[2],
 #                                    PPR_a = PPR$par[1],PPR_b = PPR$par[2])
 
-# # a good paramter set (when refeeding is totally turned off)
+# a good paramter set
 MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.99,O_surv = 0.99,
                                    Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
                                    S_u = 0,disperse = 0.2)
