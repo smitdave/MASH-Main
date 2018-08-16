@@ -48,16 +48,20 @@ NULL
 mbites_restingSpot <- function(){
   if(private$alive){ # if mosquito not dead
     if(private$bloodfed){
+      # cat("mosy: ",private$id," calling PPRFlight in state: ",private$state," and search: ",private$search,"\n")
       self$PPRFlight() # MBITES-BloodMeal.R
     }
-    if(self$boutFailCheck()){ # check if they will just leave
-      private$rspot = "l"
-      private$search = TRUE
-    } else {
-      old_spot = private$rspot
-      self$newSpot()
-      if(old_spot != "i" & private$rspot == "i"){
-        self$enterHouse()
+    # mosquito can die in PPRFlight
+    if(private$alive){
+      if(self$boutFailCheck()){ # check if they will just leave
+        private$rspot = "l"
+        private$search = TRUE
+      } else {
+        old_spot = private$rspot
+        self$newSpot()
+        if(old_spot != "i" & private$rspot == "i"){
+          self$enterHouse()
+        }
       }
     }
   }

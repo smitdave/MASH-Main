@@ -187,16 +187,16 @@ for(i in 1:n){
     landscapes[[i]]$sites[[j]]$tileID <- 1L
     landscapes[[i]]$sites[[j]]$move <- xy_sites[[i]]$movement[j,-j]
     landscapes[[i]]$sites[[j]]$move_id <- as.integer(names(xy_sites[[i]]$movement[j,-j]))
-    landscapes[[i]]$sites[[j]]$haz <- 0.001
+    landscapes[[i]]$sites[[j]]$haz <- 0.005
     if(fnear(xy_sites[[i]]$sites[j,"type"],0)){
-      landscapes[[i]]$sites[[j]]$feed[[1]] <- list(w=1,enterP=0.95)
+      landscapes[[i]]$sites[[j]]$feed[[1]] <- list(w=1,enterP=1,zoo_id=-1,zoo_w=0.1)
       landscapes[[i]]$sites[[j]]$aqua <- NULL
     } else if(fnear(xy_sites[[i]]$sites[j,"type"],1)){
       landscapes[[i]]$sites[[j]]$feed <- NULL
       landscapes[[i]]$sites[[j]]$aqua[[1]] <- list(w=1,lambda=lambda)
     } else if(fnear(xy_sites[[i]]$sites[j,"type"],2)){
-      landscapes[[i]]$sites[[j]]$feed[[1]] <- list(w=1,enterP=0.95)
-      landscapes[[i]]$sites[[j]]$aqua[[1]] <- list(w=1,lambda=lambda)
+      landscapes[[i]]$sites[[j]]$feed[[1]] <- list(w=1,enterP=1)
+      landscapes[[i]]$sites[[j]]$aqua[[1]] <- list(w=1,lambda=lambda,zoo_id=-1,zoo_w=0.1)
     } else {
       cat("warning! unrecognized type detected at i: ",i," j: ",j,"\n")
     }
@@ -221,7 +221,7 @@ for(i in 1:n){
   humans[[i]]$siteID = which(sapply(landscapes[[i]]$sites,function(x){!is.null(x$feed)}))
   humans[[i]]$tileID = rep(1,length(humans[[i]]$siteID))
   humans[[i]]$feedingID = rep(1,length(humans[[i]]$siteID))
-  humans[[i]]$w = rep(1,length(humans[[i]]$siteID))
+  humans[[i]]$w = rep(0.9,length(humans[[i]]$siteID))
 
 
   setTxtProgressBar(pb,i)

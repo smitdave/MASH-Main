@@ -167,7 +167,6 @@ trackProbe_Mosquito_Female <- function(){
     private$feedSite = c(private$feedSite,integer(lVec))
     private$hostHist = c(private$hostHist,integer(lVec))
     private$probeAndFeed = c(private$probeAndFeed,logical(lVec))
-    private$restTime = c(private$restTime,numeric(lVec))
   }
 
   private$feedTime[private$nFeed] = private$tNow
@@ -185,7 +184,24 @@ trackFeed_Mosquito_Female <- function(){
 
 #' track resting
 trackRest_Mosquito_Female <- function(){
-  private$restTime[private$nFeed-1L] = private$tNow
+
+  # increment number of events
+  private$nEvent = private$nEvent + 1L
+
+  # check we have not overran vector
+  lVec = length(private$timeHist)
+  if(private$nEvent > lVec){
+    private$timeHist = c(private$timeHist,numeric(lVec))
+    private$siteHist = c(private$siteHist,integer(lVec))
+    private$searchHist = c(private$searchHist,logical(lVec))
+    private$stateHist = c(private$stateHist,character(lVec))
+  }
+
+  # add rest to history (use tNow because it is updated in mbites_PPRFlight)
+  private$timeHist[private$nEvent] = private$tNow
+  private$siteHist[private$nEvent] = private$siteHist[private$nEvent-1L]
+  private$searchHist[private$nEvent] = FALSE
+  private$stateHist[private$nEvent] = "R"
 }
 
 #' MBITES: Blood Feeding History List
@@ -198,8 +214,7 @@ mbites_bloodHistList <- function(){
     bloodHosts = private$hostHist[1:(private$nFeed-1L)],
     timeFeed = private$feedTime[1:(private$nFeed-1L)],
     siteFeed = private$feedSite[1:(private$nFeed-1L)],
-    probeAndFeed = private$probeAndFeed[1:(private$nFeed-1L)],
-    restTime = private$restTime[1:(private$nFeed-1L)]
+    probeAndFeed = private$probeAndFeed[1:(private$nFeed-1L)]
   )
 }
 
@@ -254,10 +269,6 @@ trackBloodHost <- function(){
 
   Mosquito_Female$set(which = "private",name = "probeAndFeed",
             value = logical(10), overwrite = TRUE
-  )
-
-  Mosquito_Female$set(which = "private",name = "restTime",
-            value = numeric(10), overwrite = TRUE
   )
 
   # public method for tracking

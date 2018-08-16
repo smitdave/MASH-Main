@@ -194,22 +194,22 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                  private = list(
 
                    # resources
-                   aqua_resource       = NULL, # reference to my current aquatic habitat resource
-                   feeding_resource       = NULL, # reference to my current blood feeding resource
+                   aqua_resource        = NULL, # reference to my current aquatic habitat resource
+                   feeding_resource     = NULL, # reference to my current blood feeding resource
 
                    # behavioral state parameters
                    mated          = FALSE, # have i mated yet?
-                   gravid         = logical(1), # am i gravid to oviposit?
+                   gravid         = FALSE, # am i gravid to oviposit?
 
                    # energetics
                    energyPreG    = numeric(1), # pre-gonotrophic energy requirement
 
                    # bloodfeeding and oogenesis
                    bloodfed       = FALSE, # have i fed on blood this bout?
-                   batch          = integer(1), # size of my egg batch
+                   batch          = 0, # size of my egg batch
                    eggT           = 2e16, # time my egg batch is ready
                    eggP           = numeric(1),
-                   bmSize         = numeric(1), # size of my blood meal
+                   bmSize         = 0, # size of my blood meal
 
                    # host ids
                    hostID         = integer(1) # id of my blood host

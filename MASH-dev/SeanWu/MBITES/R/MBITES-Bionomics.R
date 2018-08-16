@@ -20,22 +20,21 @@
 #'
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run and returns a matrix of state transition frequencies.
-#' Optionally include "R" (post-prandial resting) as a state, but requires detailed output logging.
+#' Optionally include "R" (post-prandial resting) as a state, but requires detailed output logging,
+#' if detailed logging was not used, the transition matrix will not include "R".
 #' Mosquitoes that were still alive at the end of simulation are filtered out.
 #'
 #' @param mosquitos a data.frame of parsed JSON mosquito output
-#' @param R calculate "R" as a state (if \code{TRUE}, output must have been logged with detailed host tracking via \code{\link{trackBloodHost}})
 #' @export
-Bionomics_StateTransition <- function(mosquitos,R=FALSE){
+Bionomics_StateTransition <- function(mosquitos){
 
+  # filter out mosquitoes that were still alive at the end of the simulation
   filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
   filter <- which(filter)
 
   # transition and state space
   M <- matrix(0L,nrow=6,ncol=6,dimnames=list(c("F","B","R","L","O","D"),c("F","B","R","L","O","D")))
-  if(!R){
-    M <- M[-which(rownames(M)=="R"),-which(colnames(M)=="R")]
-  }
+
 
   pb <- txtProgressBar(min = 0,max = length(filter)+1)
   for(i in 1:length(filter)){
@@ -47,46 +46,16 @@ Bionomics_StateTransition <- function(mosquitos,R=FALSE){
     from <- state[1:(length(state)-1)]
     to <- state[2:length(state)]
 
-    # calculate PPR as seperate state
-    if(R){
-      time <- mosquitos[filter[i],"time"][[1]]
-      rest <- mosquitos[filter[i],"restTime"][[1]]
-
-      # if there were no resting events
-      if(length(rest)==1 & fequal(rest[1],0)){
-        for(j in 1:length(from)){
-          M[from[j],to[j]] = M[from[j],to[j]] + 1L
-        }
-      } else {
-
-        rix <- sapply(rest,function(x,time){
-          which(time >= x)[1]
-        },time=time)
-
-        state <- R.utils::insert(state,ats=rix,values="R")
-        from <- state[1:(length(state)-1)]
-        to <- state[2:length(state)]
-        for(j in 1:length(from)){
-          if((from[j] %in% c("O")) & (to[j] == "R")){
-            browser()
-          }
-          M[from[j],to[j]] = M[from[j],to[j]] + 1L
-        }
-
-      }
-
-      # do not consider PPR as seperate state
-    } else {
-
-      for(j in 1:length(from)){
-        M[from[j],to[j]] = M[from[j],to[j]] + 1L
-      }
-
+    for(j in 1:length(from)){
+      M[from[j],to[j]] = M[from[j],to[j]] + 1L
     }
 
     setTxtProgressBar(pb,i)
   }
   M["D","D"] <- 1
+  if(all(fequal(M["R",],0)) & all(fequal(M[,"R"],0))){
+    M <- M[-which(rownames(M)=="R"),-which(colnames(M)=="R")]
+  }
   M <- M/rowSums(M)
   setTxtProgressBar(pb,i+1)
 
@@ -186,17 +155,18 @@ Bionomics_bloodIntervals <- function(mosquitos, who = "human"){
   # check args
   if(!(who %in% c("human","all","zoo"))){stop("argument 'who' must be in: 'human', 'all', or 'zoo'")}
 
+  # blood meal intervals
   # only want mosquitoes with more than 1 bloodmeal and died before end of the simulation
   filter <- sapply(mosquitos[,"bloodHosts"],function(x){length(x)>1}) & sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
 
   # get the intervals
-  intervals <- mapply(function(host,time,who){
+  bm_intervals <- mapply(function(host,time,who){
     # get indices
     ix <- switch(who,
                  human = {which(host>0)},
                  all = {which(host>0 | host==-1)},
                  zoo = {which(host == -1)}
-                 )
+    )
     # check we haven't indexed nothing
     if(length(ix)==0){
       return(NaN)
@@ -211,15 +181,29 @@ Bionomics_bloodIntervals <- function(mosquitos, who = "human"){
   # end mapply call
 
   # clean up and return
-  intervals <- unlist(intervals)
-  intervals <- Filter(Negate(is.nan),intervals)
+  bm_intervals <- unlist(bm_intervals)
+  bm_intervals <- Filter(Negate(is.nan),bm_intervals)
 
-  rest_intervals <- lapply(mosquitos[which(filter),"restTime"],function(x){
-    diff(x[which(x>0)])
-  })
+  # resting intervals
+  # only want mosquitoes with more than 1 bloodmeal and died before end of the simulation
+  filter <- sapply(mosquitos[,"behavior"],function(x){sum(x=="R")>1}) & sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  rest_intervals <- mapply(function(behavior,time){
+    ix <- which(behavior=="R")
+    if(length(ix)==0){
+      return(NaN)
+    } else {
+      return(diff(time[ix]))
+    }
+  },
+  behavior=mosquitos[which(filter),"behavior"],
+  time=mosquitos[which(filter),"time"],
+  USE.NAMES = FALSE)
+
+  # clean up and return
   rest_intervals <- unlist(rest_intervals)
+  rest_intervals <- Filter(Negate(is.nan),rest_intervals)
 
-  return(list(bmIntervals=intervals,rest_intervals=rest_intervals))
+  return(list(bmIntervals=bm_intervals,rest_intervals=rest_intervals))
 }
 
 
