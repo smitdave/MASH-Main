@@ -30,7 +30,7 @@ for(i in 1:3){
   landscape[[i]]$tileID = 1L
   landscape[[i]]$move = rep(0.5,2)
   landscape[[i]]$move_id = (1:3)[-i]
-  landscape[[i]]$haz = 0
+  landscape[[i]]$haz = 0.005
   # null resources
   landscape[[i]]$feed = NULL
   landscape[[i]]$aqua = NULL
@@ -114,9 +114,9 @@ Human_NULL_Initialize(humans)
 MBITES_Initialize(mosquitos)
 
 # run simulation
-set_output(directory = directory,runID = 2)
+set_output(directory = directory,runID = 3)
 
-simulation(tMax = 365*100,pretty = TRUE)
+simulation(tMax = 365*5,pretty = TRUE)
 hardreset()
 
 
@@ -128,11 +128,11 @@ library(jsonlite)
 library(ggplot2)
 
 # where the files can be found
-output_dir <- paste0(directory,"run2")
+output_dir <- paste0(directory,"run3")
 
-mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_2.json"), flatten = TRUE)
+mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_3.json"), flatten = TRUE)
 mosquitos_df <- mosquitos_df[-which(sapply(mosquitos_df$id,is.null)),]
-humans_df <- fromJSON(paste0(output_dir,"/human_2.json"), flatten = TRUE)
+humans_df <- fromJSON(paste0(output_dir,"/human_3.json"), flatten = TRUE)
 humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 
 
@@ -275,20 +275,21 @@ abline(v = MBDETES$eggrate_mean,lwd=2.5,lty=2,col="firebrick3")
 
 # MBITES egg laying rate
 eggrate_mbites <- Bionomics_ovipositionRate(mosquitos_df)
-egg_mean <- mean(egg_mbites$ages)
-hist(egg_mbites$ages,probability = TRUE,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
-     xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Egg Laying Rate Rate (mean: ",round(mean(egg_mbites$ages),2),")"),
+egg_mean <- mean(eggrate_mbites$ages)
+hist(eggrate_mbites$ages,probability = TRUE,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
+     xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Egg Laying Rate Rate (mean: ",round(mean(eggrate_mbites$ages),2),")"),
      xlim = c(0,ceiling(max(MBDETES$eggrate_tt))))
 abline(v = egg_mean,lwd=2.5,lty=2,col="firebrick3")
 
 # MDETES blood feeding rate
-plot(MBDETES$bloodrate_tt, MBDETES$bloodrate_pdf,type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBDETES Blood Feeding Rate (mean: ",round(blood_mean,2),")"),lwd=2,col="steelblue")
+plot(MBDETES$bloodrate_tt, MBDETES$bloodrate_pdf,type = "l", xlab = "Age (days)", ylab = "Density", main = paste0("MBDETES Blood Feeding Rate (mean: ",round(MBDETES$bloodrate_mean,2),")"),lwd=2,col="steelblue")
 polygon(c(0, MBDETES$bloodrate_tt), c(0, MBDETES$bloodrate_pdf), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
-abline(v = blood_mean,lwd=2.5,lty=2,col="firebrick3")
+abline(v = MBDETES$bloodrate_mean,lwd=2.5,lty=2,col="firebrick3")
 
 # MBITES blood feeding rate
 blood_mbites <- Bionomics_bloodfeedingRate(mosquitos_df)
-bloodRate <- density(blood_mbites,from=0)
+# bloodRate <- density(blood_mbites,from=0)
+blood_mean <- mean(blood_mbites)
 hist(blood_mbites,probability = T,breaks = 100,col = adjustcolor("firebrick3",alpha.f = 0.5),
      xlab = "Age (days)", ylab = "Density", main = paste0("MBITES Blood Feeding Rate (mean: ",round(mean(blood_mbites),2),")"),
      xlim = c(0,ceiling(max(MBDETES$bloodrate_tt))))
