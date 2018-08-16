@@ -136,7 +136,10 @@ mbites_checkRefeed_null <- function(){
 mbites_checkRefeedMBDETES <- function(){
   # check refeed
   # if(private$state == "B" & (runif(1) < self$pReFeed())){
-  # browser()
+  #   private$gravid = FALSE
+  #   private$state = "B"
+  # }
+
   if((runif(1) < self$pReFeed()) & (private$bmSize > 0)){
     private$gravid = FALSE
     private$state = "B"
