@@ -65,6 +65,28 @@ Mosquito$set(which = "public",name = "timing",
     value = mbites_timing, overwrite = TRUE
 )
 
+#' MBITES: Time to Launch (Function ver. for death tte)
+mbites_timing_fn <- function(state,search,tt){
+
+  # sample time to next launch, conditional on search and behavioral state
+  if(search){
+    switch(state, # time i spent in these search bouts
+      B = {MBITES:::Parameters$ttEvent$BoutBs(tt)},
+      O = {MBITES:::Parameters$ttEvent$BoutOs(tt)},
+      M = {MBITES:::Parameters$ttEvent$BoutMs(tt)},
+      S = {MBITES:::Parameters$ttEvent$BoutSs(tt)}
+    )
+  } else {
+    switch(state, # time i spent in these attempt bouts
+      B = {MBITES:::Parameters$ttEvent$BoutB(tt)},
+      O = {MBITES:::Parameters$ttEvent$BoutO(tt)},
+      M = {MBITES:::Parameters$ttEvent$BoutM(tt)},
+      S = {MBITES:::Parameters$ttEvent$BoutS(tt)}
+    )
+  }
+
+}
+
 
 ###############################################################################
 # Find Mating Swarms

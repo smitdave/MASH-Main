@@ -71,6 +71,10 @@ mbites_basicHistoryList <- function(){
 #' @param pretty prettify JSON output
 #'
 mbites_exit_Mosquito_Female <- function(endSim=FALSE){
+  # # dead on first bout; advance time.
+  if(private$nEvent==1L){
+    private$tNext = mbites_timing_fn(private$stateHist[1],private$searchHist[1],private$timeHist[1])
+  }
   self$trackHistory()
   # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
   if(endSim){
@@ -100,6 +104,9 @@ mbites_exit_Mosquito_Female <- function(endSim=FALSE){
 #' @param pretty prettify JSON output
 #'
 mbites_exit_Mosquito_Male <- function(endSim=FALSE){
+  if(private$nEvent==1L){
+    private$tNext = mbites_timing_fn(private$stateHist[1],private$searchHist[1],private$timeHist[1])
+  }
   self$trackHistory()
   # write out to JSON (eventually need to use jsonlite::stream_out for efficiency)
   if(endSim){
