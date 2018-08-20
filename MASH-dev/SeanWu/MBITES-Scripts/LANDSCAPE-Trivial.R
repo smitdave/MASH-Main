@@ -115,9 +115,9 @@ Human_NULL_Initialize(humans)
 MBITES_Initialize(mosquitos)
 
 # run simulation
-set_output(directory = directory,runID = 1)
+set_output(directory = directory,runID = 3)
 
-simulation(tMax = 365*20,pretty = TRUE)
+simulation(tMax = 365*200,pretty = TRUE)
 hardreset()
 
 

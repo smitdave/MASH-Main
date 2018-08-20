@@ -26,6 +26,7 @@ Collate:
     'LANDSCAPE-Resource.R'
     'LANDSCAPE-Site.R'
     'LANDSCAPE-Sugar.R'
+    'MBDETES-Bionomics.R'
     'MBDETES-Calibration.R'
     'MBDETES-Model.R'
     'MBDETES-Parameters.R'
