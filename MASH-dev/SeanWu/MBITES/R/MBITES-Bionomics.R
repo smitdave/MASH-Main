@@ -57,7 +57,7 @@ Bionomics_StateTransition <- function(mosquitos){
     M <- M[-which(rownames(M)=="R"),-which(colnames(M)=="R")]
   }
   M <- M/rowSums(M)
-  setTxtProgressBar(pb,i+1)
+  setTxtProgressBar(pb,i+1);cat("\n")
 
   return(M)
 }
@@ -87,6 +87,7 @@ Bionomics_lifespan <- function(mosquitos) {
     }
     setTxtProgressBar(pb,i)
   }
+  setTxtProgressBar(pb,i+1);cat("\n")
 
   w = Filter(Negate(is.nan),w)
   return(data.frame(lifespan=w))
@@ -129,6 +130,7 @@ Bionomics_humanBloodHost <- function(mosquitos, who = "human"){
     }
     setTxtProgressBar(pb,i)
   }
+  setTxtProgressBar(pb,i+1);cat("\n")
 
   w = Filter(Negate(is.nan),w)
   return(data.frame(humanHost=w))
@@ -299,7 +301,7 @@ Bionomics_bloodfeedingRate <- function(mosquitos){
     list(feed_ages=c(x$feed_ages,y$feed_ages))
   }
   feed_list <- Reduce(reduce_fn,feed_list)
-  setTxtProgressBar(pb,i+2)
+  setTxtProgressBar(pb,i+2);cat("\n")
 
   # return sorted list
   feed_list$feed_ages <- feed_list$feed_ages[order(feed_list$feed_ages)]
@@ -400,6 +402,7 @@ Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
 
     setTxtProgressBar(pb,i)
   } # finish iterating over mosquitoes
+  setTxtProgressBar(pb,i+1);cat("\n")
 
   return(VC)
 }
@@ -440,6 +443,7 @@ Bionomics_lifetimeOviposition <- function(mosquitos, spatial=FALSE){
     }
     setTxtProgressBar(pb,i)
   }
+  setTxtProgressBar(pb,i+1);cat("\n")
 
   if(spatial){
     return(list(
@@ -483,6 +487,8 @@ Bionomics_ovipositionInterval <- function(mosquitos){
 
   interval <- Filter(Negate(is.null),interval)
   interval <- do.call(c,interval)
+
+  setTxtProgressBar(pb,i+1);cat("\n")
 
   return(
     list(numOviposit=numOviposit,interval=interval)
@@ -550,7 +556,7 @@ Bionomics_ovipositionRate <- function(mosquitos){
     list(batches=c(x$batches,y$batches),ages=c(x$ages,y$ages))
   }
   age_batch_list <- Reduce(reduce_fn,age_batch_list)
-  setTxtProgressBar(pb,i+2)
+  setTxtProgressBar(pb,i+2);cat("\n")
 
   # return sorted list
   age_batch_list$batches <- age_batch_list$batches[order(age_batch_list$ages)]

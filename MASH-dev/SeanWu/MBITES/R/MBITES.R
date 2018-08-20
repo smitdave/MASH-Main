@@ -3,7 +3,7 @@
 #' the mbites model.
 #'
 #'@name MBITES
-#'@import Rcpp
+# #'@import Rcpp
 #'@useDynLib MBITES
 NULL
 #> NULL

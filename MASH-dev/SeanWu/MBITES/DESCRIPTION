@@ -11,8 +11,7 @@ Encoding: UTF-8
 LazyData: true
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Imports: Rcpp (>= 0.12.14), R6, futile.logger, pryr, jsonlite, spatstat, deSolve, R.utils
-LinkingTo: Rcpp
+Imports: R6, futile.logger, pryr, jsonlite, spatstat, deSolve, R.utils
 ByteCompile: true
 Collate:
     'Auxiliary.R'
@@ -27,6 +26,7 @@ Collate:
     'LANDSCAPE-Resource.R'
     'LANDSCAPE-Site.R'
     'LANDSCAPE-Sugar.R'
+    'MBDETES-Bionomics.R'
     'MBDETES-Calibration.R'
     'MBDETES-Model.R'
     'MBDETES-Parameters.R'

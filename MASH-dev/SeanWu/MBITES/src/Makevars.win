@@ -1,3 +1,2 @@
 ## -*- makefile -*-
-CFLAGS += -O3 -Wall -pipe -pedantic -std=gnu99
-CXXFLAGS += -O3 -Wall -pipe -Wno-unused -pedantic
+PKG_CFLAGS += -std=c11 -g
