@@ -1,5 +1,4 @@
-
-
+MT_PT_NP <- read_excel("~/GitHub/MASH-Main/MASH-dev/JohnHenry/PDG/MT_PT_NP.xlsx")
 M = as.matrix(MT_PT_NP)
 
 Mmu = rowMeans(M,na.rm=T)
