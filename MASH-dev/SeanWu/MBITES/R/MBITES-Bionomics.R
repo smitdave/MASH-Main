@@ -367,6 +367,19 @@ Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
     siteFeed <- mosquitos[i,"siteFeed"][[1]]
     probeAndFeed <- mosquitos[i,"probeAndFeed"][[1]]
 
+    # check for non human hosts
+    if(any(bloodHosts == -1)){
+      nonhuman <- which(bloodHosts==-1)
+      if(length(nonhuman) == length(bloodHosts)){
+        next()
+      } else {
+        bloodHosts <- bloodHosts[-nonhuman]
+        timeFeed <- timeFeed[-nonhuman]
+        siteFeed <- siteFeed[-nonhuman]
+        probeAndFeed <- probeAndFeed[-nonhuman]
+      }
+    }
+
     # iterate over bites
     while(length(timeFeed)>1){
 
