@@ -253,5 +253,50 @@ hist(ptgtp$residuals,breaks=10)
 qqnorm((ptgtp$residuals-mean(ptgtp$residuals))/sqrt(var(ptgtp$residuals)))
 lines(seq(-5,5,.01),seq(-5,5,.01))
 
-plot(rmdp,type="l",ylim=c(-1,5))
-lines(grmdp+ptgtp$coefficients[[2]],col="red")
+##uses restricted dataset
+rmpp = c(0,0,0,0,0,0,0,0,rm)
+plot(log10(rm),type="l",ylim=c(-1,5),xlim=c(0,230),xlab="Days",ylab="log10 Density per microliter")
+lines(ptgtp$coefficients[[1]]+log10(rmpp)*ptgtp$coefficients[[2]],col="blue")
+lines(log10(grm),col="red")
+title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
+
+##uses full dataset
+rmpp = c(0,0,0,0,0,0,0,0,rm)
+plot(log10(rm),type="l",ylim=c(-1,5),xlim=c(0,230),xlab="Days",ylab="log10 Density per microliter")
+lines(ptgt$coefficients[[1]]+log10(rmpp)*ptgt$coefficients[[2]],col="blue")
+lines(log10(grm),col="red")
+title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
+
+
+
+
+
+
+################## piecewise-linear fitting of the two previous models
+
+fgpl = function(x){
+    x1 = x[which(x>=3)]
+    x2 = x[which(x<3)]
+    y1 = ptgtp$coefficients[[1]]+x1*ptgtp$coefficients[[2]]
+    y2 = ptgt$coefficients[[1]]+x2*ptgt$coefficients[[2]]
+    y = rep(0,length(x))
+    y[which(x>=3)] = y1
+    y[which(x<3)] = y2
+    return(y)
+}
+
+plot(rmd,grmd,xlab="9 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
+title(main="Lagged Power Law Relationship")
+lines(seq(-1,5,.01),fgpl(seq(-1,5,.01)))
+
+##see how it all fits together
+rmpp = c(0,0,0,0,0,0,0,0,rm)
+plot(log10(rm),type="l",ylim=c(-1,5),xlim=c(0,230),xlab="Days",ylab="log10 Density per microliter")
+plot(fgpl(log10(rmpp)),col="blue",xlab="Days",ylab="log10 Density per microliter",type="l",ylim=c(-1,3.5),xlim=c(0,240))
+lines(log10(grm),col="red")
+title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
+
+
+plot(10^fgpl(log10(rmpp)),col="blue",xlab="Days",ylab="Density per microliter",type="l",xlim=c(0,240))
+lines(grm,col="red")
+title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
