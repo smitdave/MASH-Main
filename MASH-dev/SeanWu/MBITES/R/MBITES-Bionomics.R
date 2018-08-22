@@ -268,8 +268,8 @@ Bionomics_bloodfeedingRate <- function(mosquitos){
     # mosy did blood feed
     if(mosquitos[filter[i],"bloodHosts"][[1]][1] != 0){
 
-      bday <- mosquitos_df[filter[i],"time"][[1]][1]
-      feed_ages <- mosquitos_df[filter[i],"timeFeed"][[1]]
+      bday <- mosquitos[filter[i],"time"][[1]][1]
+      feed_ages <- mosquitos[filter[i],"timeFeed"][[1]]
       feed_ages <- feed_ages - bday
 
       feed_list[[i]]$feed_ages <- feed_ages
@@ -367,6 +367,19 @@ Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
     siteFeed <- mosquitos[i,"siteFeed"][[1]]
     probeAndFeed <- mosquitos[i,"probeAndFeed"][[1]]
 
+    # check for non human hosts
+    if(any(bloodHosts == -1)){
+      nonhuman <- which(bloodHosts==-1)
+      if(length(nonhuman) == length(bloodHosts)){
+        next()
+      } else {
+        bloodHosts <- bloodHosts[-nonhuman]
+        timeFeed <- timeFeed[-nonhuman]
+        siteFeed <- siteFeed[-nonhuman]
+        probeAndFeed <- probeAndFeed[-nonhuman]
+      }
+    }
+
     # iterate over bites
     while(length(timeFeed)>1){
 
@@ -438,8 +451,8 @@ Bionomics_lifetimeOviposition <- function(mosquitos, spatial=FALSE){
   for(i in 1:length(filter)){
     out[i] <- sum(mosquitos[filter[i],"ovipositionBatchSize"][[1]])
     if(spatial & out[i]>0){
-      dispersion[[i]]$natal <- mosquitos_df[filter[i],"sites"][[1]][1]
-      dispersion[[i]]$dest <- mosquitos_df[filter[i],"ovipositionSites"][[1]]
+      dispersion[[i]]$natal <- mosquitos[filter[i],"sites"][[1]][1]
+      dispersion[[i]]$dest <- mosquitos[filter[i],"ovipositionSites"][[1]]
     }
     setTxtProgressBar(pb,i)
   }
@@ -477,10 +490,10 @@ Bionomics_ovipositionInterval <- function(mosquitos){
   pb <- txtProgressBar(min = 0,max = length(filter))
   for(i in 1:length(filter)){
 
-    numOviposit[i] <- length(mosquitos_df[filter[i],"ovipositionTimes"][[1]])
+    numOviposit[i] <- length(mosquitos[filter[i],"ovipositionTimes"][[1]])
 
     if(numOviposit[i]>1){
-      interval[[i]] <- diff(mosquitos_df[filter[i],"ovipositionTimes"][[1]])
+      interval[[i]] <- diff(mosquitos[filter[i],"ovipositionTimes"][[1]])
     }
     setTxtProgressBar(pb,i)
   }
@@ -520,9 +533,9 @@ Bionomics_ovipositionRate <- function(mosquitos){
     # mosy did oviposit
     if(mosquitos[filter[i],"ovipositionTimes"][[1]][1] > 0){
 
-      bday <- mosquitos_df[filter[i],"time"][[1]][1]
-      batch_sizes <-  mosquitos_df[filter[i],"ovipositionBatchSize"][[1]]
-      batch_times <- mosquitos_df[filter[i],"ovipositionTimes"][[1]]
+      bday <- mosquitos[filter[i],"time"][[1]][1]
+      batch_sizes <-  mosquitos[filter[i],"ovipositionBatchSize"][[1]]
+      batch_times <- mosquitos[filter[i],"ovipositionTimes"][[1]]
       batch_times <- batch_times - bday
 
       age_batch_list[[i]]$batches <- batch_sizes

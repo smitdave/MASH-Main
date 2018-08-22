@@ -24,7 +24,7 @@ library(jsonlite)
 # where the files can be found
 directory <- "/Users/slwu89/Desktop/mbites/trivial/"
 # run 1 was where mosy who died on first bout get lifespan 0, run 2 was where we sample their tte based on that first bout
-run <- "3"
+run <- "1"
 output_dir <- paste0(directory,"run",run)
 
 mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_",run,".json"), flatten = TRUE)

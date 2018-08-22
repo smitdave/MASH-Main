@@ -33,6 +33,7 @@ for(i in 1:length(peridomestic_data)){
   peridomestic_data[[i]]$landscape <- landscapes[[i]]$sites
   peridomestic_data[[i]]$humans <- as.data.frame(humans[[i]])
   peridomestic_data[[i]]$mosquitoes <- as.data.frame(mosquitoes[[i]])
+  dir.create(path = paste0(directory,"landscape",i))
 }
 
 
@@ -41,7 +42,7 @@ for(i in 1:length(peridomestic_data)){
 ###############################################################################
 
 library(parallel)
-cl <- parallel::makePSOCKcluster(names = 4)
+cl <- parallel::makePSOCKcluster(names = 8)
 
 # initialize MBITES parameters on cores
 parallel::clusterEvalQ(cl = cl,expr = {
@@ -65,21 +66,27 @@ parallel::clusterEvalQ(cl = cl,expr = {
 # set RNG streams
 parallel::clusterSetRNGStream(cl = cl,iseed = 123)
 
-# run simulation
-parallel::clusterMap(cl = cl,fun = function(x){
+# for running locally with only 4 cores
+idx <- list((1:4),(5:8),(9:12),(13:16),(17:20),(21:24),(25:26))
+idx <- list((1:8),(9:17),(18:25),26) # 8 cores
 
-  # initialize a tile
-  Tile_Initialize(x$landscape)
-  Human_NULL_Initialize(x$humans)
-  MBITES_Initialize(x$mosquitoes)
-
+for(ix in idx){
   # run simulation
-  set_output(directory = x$directory,runID = x$id)
+  parallel::clusterMap(cl = cl,fun = function(x){
 
-  simulation(tMax = 365*5,pretty = TRUE)
-  hardreset()
+    # initialize a tile
+    Tile_Initialize(x$landscape)
+    Human_NULL_Initialize(x$humans)
+    MBITES_Initialize(x$mosquitoes)
 
-},x=peridomestic_data[1:4],RECYCLE = FALSE,SIMPLIFY = FALSE,USE.NAMES = FALSE,.scheduling = "dynamic")
+    # run simulation
+    set_output(directory = x$directory,runID = x$id)
+
+    simulation(tMax = 365*100,pretty = TRUE)
+    hardreset()
+
+  },x=peridomestic_data[ix],RECYCLE = FALSE,SIMPLIFY = FALSE,USE.NAMES = FALSE,.scheduling = "dynamic")
+}
 
 parallel::stopCluster(cl)
 rm(cl);gc()
