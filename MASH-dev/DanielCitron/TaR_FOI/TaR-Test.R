@@ -111,3 +111,6 @@ psi_hat <- psi
 psi_hat[2,1] <- opt$solution[11]
 psi_hat[2,2] <- psi_hat[2,2] - opt$solution[11] - opt$solution[12]
 psi_hat[2,3] <- opt$solution[12]
+
+# results
+psi_hat %*% h_hat
