@@ -33,6 +33,7 @@ for(i in 1:length(peridomestic_data)){
   peridomestic_data[[i]]$landscape <- landscapes[[i]]$sites
   peridomestic_data[[i]]$humans <- as.data.frame(humans[[i]])
   peridomestic_data[[i]]$mosquitoes <- as.data.frame(mosquitoes[[i]])
+  dir.create(path = paste0(directory,"landscape",i))
 }
 
 
@@ -41,7 +42,7 @@ for(i in 1:length(peridomestic_data)){
 ###############################################################################
 
 library(parallel)
-cl <- parallel::makePSOCKcluster(names = 4)
+cl <- parallel::makePSOCKcluster(names = 8)
 
 # initialize MBITES parameters on cores
 parallel::clusterEvalQ(cl = cl,expr = {

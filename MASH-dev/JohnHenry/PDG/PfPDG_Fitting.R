@@ -8,6 +8,10 @@ M = as.matrix(MT_PT_NP)
 MT_GT_NP <- read_excel("~/Malaria Data Files/MT_GT_NP.xlsx")
 G = as.matrix(MT_GT_NP)
 
+n = sample(1:333,1)
+plot(log10(M[,n]),type="l",xlim=c(0,300),ylim=c(0,5))
+lines(log10(G[,n]),type="l",xlim=c(0,300),ylim=c(0,5),col="red")
+
 rm = rowMeans(M,na.rm=T)
 plot(log10(rm),type="l",xlim=c(0,365),xlab="Days Since First Detectable",ylab="log10 Parasites per microL")
 abline(h=log10(88))
@@ -185,7 +189,14 @@ plot(log10(rm),log10(rv),xlab="log10 Mean Parasite Density",ylab="log10 Variance
 lines(seq(-1,10,.01),fmv(seq(-1,10,.01)),col="blue")
 title(main="Mean-Variance Power Law for Asexual Parasites")
 
-grv = rowVars(G,na.rm=T)
+plot(mv$residuals,xlab="Days",ylab="Residual")
+title(main="Plot of Residuals from Asexual Mean-Variance Power Law")
+hist(mv$residuals,xlab="Residual",main="")
+title("Histogram of Residuals from Asexual Mean-Variance Power Law")
+qqnorm((mv$residuals-mean(mv$residuals))/sqrt(var(mv$residuals)))
+lines(seq(-4,4,.1),seq(-4,4,.1))
+
+rgrv = rowVars(G,na.rm=T)
 grm = rowMeans(G,na.rm=T)
 plot(log10(grv),type="l",xlim=c(0,500),xlab="Days Since First Detectable",ylab="log10 Gametocytes per microL")
 abline(h=log10(88))
@@ -203,7 +214,14 @@ plot(log10(grm),log10(grv),xlab="log10 Mean Gametocyte Density",ylab="log10 Vari
 lines(seq(-1,10,.01),ggmv(seq(-1,10,.01)),col="blue")
 title(main="Mean-Variance Power Law for Gametocytes")
 
-ccf(rm,grm,na.action = na.contiguous)
+plot(gmv$residuals)
+title(main="Plot of Residuals from Gametocyte Mean-Variance Power Law")
+hist(gmv$residuals,main="")
+title("Histogram of Residuals from Gametocyte Mean-Variance Power Law")
+qqnorm((gmv$residuals-mean(gmv$residuals))/sqrt(var(gmv$residuals)))
+lines(seq(-4,4,.1),seq(-4,4,.1))
+
+ccf(rm,grm,na.action = na.contiguous,main="Cross-Correlation between Asexual and Gametocyte Densities",ylab="CCF")
 plot(log10(rm)[1:(length(rm)-9)],log10(grm)[10:length(rm)],xlab="Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
 rmd = log10(rm)[1:(length(rm)-9)]
 rmd[which(is.infinite(rmd))] = NaN
@@ -215,18 +233,70 @@ fg = function(x){
 }
 lines(seq(-1,5,.01),fg(seq(-1,5,.01)))
 
-##restrict to larger than 10 parasites per microliter
+##restrict to larger than ~88 parasites per microliter for both gametocytes and asexuals
 
-rmdp = rmd[which(rmd>1)]
-grmdp = grmd[which(rmd>1)]
+rmdp = rmd[which(grmd>log10(88))]
+grmdp = grmd[which(grmd>log10(88))]
 plot(rmdp,type="l",ylim=c(-1,5))
 lines(grmdp,col="red")
-plot(rmdp,grmdp)
+plot(rmdp,grmdp,xlab="9 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
+title(main="Lagged Power Law Relationship")
 ptgtp = lm(grmdp~rmdp)
 fgp = function(x){
   ptgtp$coefficients[[1]]+x*ptgtp$coefficients[[2]]
 }
 lines(seq(-1,5,.01),fgp(seq(-1,5,.01)))
 
-plot(rmdp,type="l",ylim=c(-1,5))
-lines(grmdp+ptgtp$coefficients[[2]],col="red")
+plot(ptgtp$residuals)
+hist(ptgtp$residuals,breaks=10)
+
+qqnorm((ptgtp$residuals-mean(ptgtp$residuals))/sqrt(var(ptgtp$residuals)))
+lines(seq(-5,5,.01),seq(-5,5,.01))
+
+##uses restricted dataset
+rmpp = c(0,0,0,0,0,0,0,0,rm)
+plot(log10(rm),type="l",ylim=c(-1,5),xlim=c(0,230),xlab="Days",ylab="log10 Density per microliter")
+lines(ptgtp$coefficients[[1]]+log10(rmpp)*ptgtp$coefficients[[2]],col="blue")
+lines(log10(grm),col="red")
+title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
+
+##uses full dataset
+rmpp = c(0,0,0,0,0,0,0,0,rm)
+plot(log10(rm),type="l",ylim=c(-1,5),xlim=c(0,230),xlab="Days",ylab="log10 Density per microliter")
+lines(ptgt$coefficients[[1]]+log10(rmpp)*ptgt$coefficients[[2]],col="blue")
+lines(log10(grm),col="red")
+title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
+
+
+
+
+
+
+################## piecewise-linear fitting of the two previous models
+
+fgpl = function(x){
+    x1 = x[which(x>=3)]
+    x2 = x[which(x<3)]
+    y1 = ptgtp$coefficients[[1]]+x1*ptgtp$coefficients[[2]]
+    y2 = ptgt$coefficients[[1]]+x2*ptgt$coefficients[[2]]
+    y = rep(0,length(x))
+    y[which(x>=3)] = y1
+    y[which(x<3)] = y2
+    return(y)
+}
+
+plot(rmd,grmd,xlab="9 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
+title(main="Lagged Power Law Relationship")
+lines(seq(-1,5,.01),fgpl(seq(-1,5,.01)))
+
+##see how it all fits together
+rmpp = c(0,0,0,0,0,0,0,0,rm)
+plot(log10(rm),type="l",ylim=c(-1,5),xlim=c(0,230),xlab="Days",ylab="log10 Density per microliter")
+plot(fgpl(log10(rmpp)),col="blue",xlab="Days",ylab="log10 Density per microliter",type="l",ylim=c(-1,3.5),xlim=c(0,240))
+lines(log10(grm),col="red")
+title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
+
+
+plot(10^fgpl(log10(rmpp)),col="blue",xlab="Days",ylab="Density per microliter",type="l",xlim=c(0,240))
+lines(grm,col="red")
+title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
