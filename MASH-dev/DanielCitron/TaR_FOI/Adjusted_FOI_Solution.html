@@ -137,6 +137,7 @@ $(document).ready(function () {
                col.names = c(&quot;x&quot;,&quot;ban.area&quot;, &quot;mal.area&quot;, &quot;bas.area&quot;, &quot;off&quot;, &quot;ban&quot;, &quot;lub&quot;, &quot;mal&quot;, &quot;mok&quot;, &quot;ria&quot;, &quot;ure&quot;),
                row.names = c(&quot;ban.area&quot;, &quot;mal.area&quot;, &quot;bas.area&quot;, &quot;off&quot;, &quot;ban&quot;, &quot;lub&quot;, &quot;mal&quot;, &quot;mok&quot;, &quot;ria&quot;, &quot;ure&quot;))
 P.ij &lt;- P.ij[,2:11]</code></pre>
+<p>Each row of <code>P.ij</code> represents a probability distribution - the amount of time spent distributed across the 10 different locations included in this example.</p>
 <p>Define vector of PR estimates</p>
 <pre class="r"><code>X.est &lt;- c(0.17300000, 0.15575000, 0.20550000, # example areas
            0.50000000, 0.10624307, 0.10887395, 0.15729471, 0.01386838, 0.12828326, 0.17975000 # regions
@@ -165,25 +166,43 @@ h = bEIR = VC*(\text{sporozoite rate}) \propto \frac{M}{H}
 \]</span> If we assume that the sporozoite rate is roughly the same everywhere (which I have not actually checked yet), we find that the force of infection is proportional to the mosquito population divided by the human population.</p>
 <p>In the areas associated with Malabo, empirical studies find that there really aren’t very many mosquitoes and a large number of humans. In other words, the estimates of <span class="math inline">\(h\)</span> in Malabo are far too high.</p>
 <p>For the sake of this example, let’s impose a few conditions on the two elements of <span class="math inline">\(h\)</span>. <span class="math inline">\(h_2\)</span> is the FOI associated with the example area in Malabo, so we might say the following: <span class="math display">\[
-\frac{h_2}{h_1} \ge 100, \qquad \qquad \frac{h_2}{h_3} \ge 100
+\frac{h_1}{h_3} \ge 100, \qquad \qquad \frac{h_3}{h_2} \ge 100
 \]</span> <span class="math inline">\(h_7\)</span> is the FOI asociated with the destination region of Malabo, so we might also say the following: <span class="math display">\[
-h_7/((h_5 + h_6 + h_8 + h_9 + h_{10})/5) \ge 100
-\]</span> We have added two additional constraints to what the values of <span class="math inline">\(h\)</span> can be, so we also allow certain elements of <span class="math inline">\(\psi\)</span> to vary. Currently, the <span class="math inline">\(3\times3\)</span> upper-left-hand block of <span class="math inline">\(\psi\)</span>, representing the interactions between the three example areas, is defined like this:</p>
+\frac{h_5 + h_6 + h_8 + h_9 + h_{10}}{5}/h_7 \ge 100
+\]</span> Note that the constants on the right hand sides of these inequalities are equal to 100, but in practice can be set according to HLC data.</p>
+<p>We have added two additional constraints to what the values of <span class="math inline">\(h\)</span> can be, so we also allow certain elements of <span class="math inline">\(\psi\)</span> to vary. Currently, the <span class="math inline">\(3\times3\)</span> upper-left-hand block of <span class="math inline">\(\psi\)</span>, representing the interactions between the three example areas, is defined like this:</p>
 <pre class="r"><code>P.ij[1:3, 1:3]</code></pre>
 <pre><code>##           ban.area  mal.area  bas.area
 ## ban.area 0.9805047 0.0000000 0.0000000
 ## mal.area 0.0000000 0.9818041 0.0000000
 ## bas.area 0.0000000 0.0000000 0.9867172</code></pre>
 <p>We want to adjust this to allow people in <code>mal.area</code> to move around to <code>ban.area</code> and <code>bas.area</code>: <span class="math display">\[
-  \psi_{adj} = \left( {\begin{array}{ccc}
+  \hat{\psi} = \left( {\begin{array}{ccc}
    0.9805047 &amp; 0.0000000 &amp; 0.0000000 \\
    \delta_1 &amp; 0.9818041 - \delta_1 - \delta_2 &amp; \delta_2 \\
     0.0000000 &amp; 0.0000000 &amp; 0.9867172 \\
   \end{array} } \right)
-\]</span> Simultaneously, we need to have the rows of <span class="math inline">\(\psi_{adj}\)</span> remain normalized.</p>
-<p>Rearranging our model, we can solve for <span class="math inline">\(\hat{X}\)</span> and try to minimize the difference between it and <span class="math inline">\(\vec{X}\)</span>, subject to the constraints we’ve added: <span class="math display">\[
-\hat{X} = \frac{\psi_{adj}\cdot h}{ r + \psi_{adj}\cdot h}
-\]</span></p>
+\]</span> Simultaneously, we need to have the rows of <span class="math inline">\(\hat{\psi}\)</span> remain normalized.</p>
+<div id="to-summarize" class="section level2">
+<h2>To summarize</h2>
+<p>We are left with 12 free parameters to fit:</p>
+<ul>
+<li><span class="math inline">\(\delta_1\)</span> and <span class="math inline">\(\delta_2\)</span>, 2 parameters from <span class="math inline">\(\hat{\psi}\)</span></li>
+<li><span class="math inline">\(\vec{h}\)</span>, a 10-element vector</li>
+</ul>
+<p>We have some constraints on these parameters. We want to constrain <span class="math inline">\(h_2\)</span> and <span class="math inline">\(h_7\)</span> to be small compared to the other elements of <span class="math inline">\(\vec{h}\)</span></p>
+<ul>
+<li><span class="math inline">\(h_1 \ge 100 h_2\)</span></li>
+<li><span class="math inline">\(h_3 \ge 100 h_2\)</span></li>
+<li><span class="math inline">\(\frac{h_5 + h_6 + h_8 + h_9 + h_{10}}{5} \ge 100 h_7\)</span></li>
+</ul>
+<p>There are also some constraints on <span class="math inline">\(\delta_1\)</span> and <span class="math inline">\(\delta_2\)</span>, simply because each row of <span class="math inline">\(\hat{\psi}\)</span> represents a probability distribution.</p>
+<ul>
+<li><span class="math inline">\(0.9818041 - \delta_1 - \delta_2 \ge 0\)</span></li>
+<li><span class="math inline">\(\delta_1 \ge 0\)</span></li>
+<li><span class="math inline">\(\delta_2 \ge 0\)</span></li>
+</ul>
+</div>
 
 
 
