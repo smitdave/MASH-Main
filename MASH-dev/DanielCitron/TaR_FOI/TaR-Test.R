@@ -53,6 +53,7 @@ library(nloptr)
 pr <- (r*X_est) / (1 - X_est)
 
 eval_f <- function(theta,pr,psi){
+  psi_hat <- psi
   # psi matrix
   psi_hat[2,1] <- theta[11]
   psi_hat[2,2] <- psi_hat[2,2] - theta[11] - theta[12]
@@ -67,7 +68,7 @@ lb <- rep(0,12)
 ub <- rep(Inf,12)
 
 # inequality constraints
-eval_g_inneq <- function(theta,psi){
+eval_g_ineq <- function(theta,pr,psi){
   rbind(
     # FOI constraint 1
     -((theta[2]/theta[2]) - 100),
@@ -83,3 +84,30 @@ eval_g_inneq <- function(theta,psi){
     -theta[12]
   )
 }
+
+theta_init <- c(rep(1e-2,10),1e-2,1e-2)
+
+nlopt_opts <- list(
+  "algorithm" = "NLOPT_LN_BOBYQA",
+  # "algorithm" = "NLOPT_LN_COBYLA",
+  "xtol_rel"=1.0e-8,
+  "maxeval"=1e4L,
+  "print_level" = 1
+)
+
+# call out to nlopt
+opt <- nloptr::nloptr(x0 = theta_init,
+               eval_f = eval_f,
+               lb = lb,
+               ub = ub,
+               eval_g_ineq = eval_g_ineq,
+               opts = nlopt_opts,
+               pr = pr, psi = psi)
+
+opt$solution
+
+h_hat <- opt$solution[1:10]
+psi_hat <- psi
+psi_hat[2,1] <- opt$solution[11]
+psi_hat[2,2] <- psi_hat[2,2] - opt$solution[11] - opt$solution[12]
+psi_hat[2,3] <- opt$solution[12]
