@@ -71,11 +71,11 @@ ub <- rep(Inf,12)
 eval_g_ineq <- function(theta,pr,psi){
   rbind(
     # FOI constraint 1
-    -((theta[2]/theta[2]) - 100),
+    -((theta[1]/theta[2]) - 100),
     # FOI constraint 2
     -((theta[3]/theta[2]) - 100),
     # FOI constraint 3
-    -((theta[c(5,6,8,9,10)]/theta[7]) - 500),
+    -((sum(theta[c(5,6,8,9,10)])/theta[7]) - 500),
     # psi constraint 1
     -(psi[2,2] - theta[11] - theta[12]),
     # psi constraint 2
@@ -85,14 +85,29 @@ eval_g_ineq <- function(theta,pr,psi){
   )
 }
 
-theta_init <- c(rep(1e-2,10),1e-2,1e-2)
+theta_init <- c(
+  # FOI on h1,h2,h3
+  5e-1,1e-3,5e-1,
+  # FOI in h4 (no constraint)
+  1e-3,
+  # FOI in h5, ... ,h10 (strict constraint)
+  rep(1e-1,2),5e-4,rep(1e-1,3),
+  # deltas
+  1e-1,1e-1)
+
+if(any(eval_g_ineq(theta_init,pr,psi) >= 0)){
+  cat("warning! initial values for theta not in feasible region\n")
+}
 
 nlopt_opts <- list(
-  "algorithm" = "NLOPT_LN_BOBYQA",
-  # "algorithm" = "NLOPT_LN_COBYLA",
-  "xtol_rel"=1.0e-8,
-  "maxeval"=1e4L,
-  "print_level" = 1
+  # global methods
+  # "algorithm" = "NLOPT_GN_ORIG_DIRECT_L",
+  # # local gradient-free methods
+  "algorithm" = "NLOPT_LN_COBYLA",
+  "xtol_rel"=1.0e-10,
+  "maxeval"=1e5L,
+  "print_level" = 1,
+  "seed" = 42L
 )
 
 # call out to nlopt
@@ -114,3 +129,6 @@ psi_hat[2,3] <- opt$solution[12]
 
 # results
 psi_hat %*% h_hat
+
+# results vs data
+cbind(psi_hat %*% h_hat,pr)
