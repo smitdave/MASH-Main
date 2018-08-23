@@ -22,12 +22,18 @@ library(MBITES)
 library(jsonlite)
 
 # where the files can be found
-directory <- "/Users/slwu89/Desktop/mbites/peridom/"
+directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/"
 
 run <- "1"
-output_dir <- paste0(directory,"run",run)
+output_dir_set1 <- paste0(directory,"set1/","run",run)
+output_dir_set2 <- paste0(directory,"set2/","run",run)
 
-mosquitos <- fromJSON(paste0(output_dir,"/mosquito_F_",run,".json"), flatten = TRUE)
-# mosquitos <- mosquitos[-which(sapply(mosquitos$id,is.null)),]
+mosquitos1 <- fromJSON(paste0(output_dir_set1,"/mosquito_F_",run,".json"), flatten = TRUE)
+mosquitos2 <- fromJSON(paste0(output_dir_set2,"/mosquito_F_",run,".json"), flatten = TRUE)
 
-bionomics <- Bionomics_MBDETES_Approx(mosquitos)
+mosquitos <- rbind(mosquitos1,mosquitos2)
+mosquitos <- mosquitos[-which(sapply(mosquitos$id,is.null)),]
+
+rm(mosquitos1,mosquitos2)
+
+
