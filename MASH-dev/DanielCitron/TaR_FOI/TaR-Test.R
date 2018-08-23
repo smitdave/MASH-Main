@@ -46,12 +46,13 @@ g <- r*X_est/(1-X_est)
 h <- ginv(psi) %*% g
 h
 
-
+# nlopt library
 library(nloptr)
 
-# 
+# data is PfPR on odds scale
 pr <- (r*X_est) / (1 - X_est)
 
+# objective function (minimize SSE)
 eval_f <- function(theta,pr,psi){
   psi_hat <- psi
   # psi matrix
@@ -101,13 +102,12 @@ if(any(eval_g_ineq(theta_init,pr,psi) >= 0)){
 
 nlopt_opts <- list(
   # global methods
-  # "algorithm" = "NLOPT_GN_ORIG_DIRECT_L",
   # # local gradient-free methods
   "algorithm" = "NLOPT_LN_COBYLA",
   "xtol_rel"=1.0e-10,
-  "maxeval"=1e5L,
+  "maxeval"=1e6L,
   "print_level" = 1,
-  "seed" = 42L
+  "ranseed" = 66412L
 )
 
 # call out to nlopt
