@@ -41,14 +41,21 @@ gamma = .1
 
 ##fake data generation
 t = seq(0,Tfin,dt)
-SIR = Det_SIR(lambda,gamma,dt,N,Tfin)
-plot(t,SIR[,1],type="l",ylim=c(0,100))
-lines(t,SIR[,2])
-lines(t,SIR[,3])
+DSIR = Det_SIR(lambda,gamma,dt,N,Tfin)
+plot(t,DSIR[,1],type="l",ylim=c(0,100))
+lines(t,DSIR[,2])
+lines(t,DSIR[,3])
 
-for(i in 1:20){
-  SIR = Stoch_SIR(lambda,gamma,N,dt,Tfin)
-  lines(t,SIR[,1],type="l",col="blue",ylim=c(0,100))
-  lines(t,SIR[,2],col="red")
-  lines(t,SIR[,3],col="green")
+for(i in 1:10){
+  SSIR = Stoch_SIR(lambda,gamma,N,dt,Tfin)
+  lines(t,SSIR[,1],type="l",col="blue",ylim=c(0,100))
+  lines(t,SSIR[,2],col="red")
+  lines(t,SSIR[,3],col="green")
 }
+
+SIR = 0*SIR
+for(i in 1:20){
+  SIR = SIR + Stoch_SIR(lambda,gamma,N,dt,Tfin)
+}
+SIR = SIR/20
+

@@ -1,3 +1,5 @@
+library(R6)
+
 PDGHuman <- R6Class("PDGHuman",
                  
                  ## Public Fields, Methods, and Initialization
