@@ -13,27 +13,57 @@
 
 rm(list = ls());gc()
 library(MBITES)
-
+library(viridis)
 
 ###############################################################################
-# load data & calculate bionomics
+# load processed bionomics
 ###############################################################################
-
-library(jsonlite)
 
 # where the files can be found
-directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/"
+directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+
+run <- "26"
+MBITES <- readRDS(paste0(directory,"/analysis",run,".rds"))
+
+
+
+
+
+par(mfrow=c(1,1))
+
+
+with(MBITES,{
+  plot(surv_tt, surv_s,
+       type = "l", xlab = "Age (Days)", ylab = "Density",
+       main=paste0("MBITES Survival Function (mean: ",round(surv_mean,2),")"),
+       lwd=2,col="firebrick3",xlim=c(0,30))
+  polygon(c(0,surv_tt), c(0,surv_s),
+          border=NA, col=adjustcolor("firebrick3",alpha.f = 0.5))
+  abline(v = surv_mean,lwd=2.5,lty=2,col="firebrick3")
+})
+
+
+colors <- viridis(n = 26,alpha = 0.8)
 
 run <- "1"
-output_dir_set1 <- paste0(directory,"set1/","run",run)
-output_dir_set2 <- paste0(directory,"set2/","run",run)
+MBITES <- readRDS(paste0(directory,"/analysis",run,".rds"))
 
-mosquitos1 <- fromJSON(paste0(output_dir_set1,"/mosquito_F_",run,".json"), flatten = TRUE)
-mosquitos2 <- fromJSON(paste0(output_dir_set2,"/mosquito_F_",run,".json"), flatten = TRUE)
+with(MBITES,{
+  plot(surv_tt, surv_s,
+       type = "l", xlab = "Age (Days)", ylab = "Density",
+       main=paste0("MBITES Survival Function"),
+       lwd=2,col=colors[1],xlim=c(0,30))
+  abline(v = surv_mean,lwd=2.5,lty=2,col=colors[1])
+})
 
-mosquitos <- rbind(mosquitos1,mosquitos2)
-mosquitos <- mosquitos[-which(sapply(mosquitos$id,is.null)),]
+for(i in 2:26){
+  cat("i: ",i,"\n")
+  run <- as.character(i)
+  MBITES <- readRDS(paste0(directory,"/analysis",run,".rds"))
+  with(MBITES,{
+    lines(surv_tt, surv_s,
+         lwd=2,col=colors[as.integer(i)])
+    abline(v = surv_mean,lwd=2.5,lty=2,col=colors[as.integer(i)])
+  })
 
-rm(mosquitos1,mosquitos2)
-
-
+}
