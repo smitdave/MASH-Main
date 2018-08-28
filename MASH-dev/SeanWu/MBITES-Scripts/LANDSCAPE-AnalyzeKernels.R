@@ -11,7 +11,96 @@
 #
 ###############################################################################
 
+###############################################################################
+# load data
+###############################################################################
 
+rm(list=ls());gc()
+out_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+
+run <- "26"
+KERN <- readRDS(paste0(out_directory,"processed_kernels_",run,".rds"))
+
+
+###############################################################################
+# plot global movement
+###############################################################################
+
+with(KERN,{
+
+  # plot smoothed PDFs
+  par(mar = c(5, 5, 3, 5))
+  alpha <- 0.5
+  maxy <- max(PDF_sth$y)
+  plot(CDF_sth$x.out,PDF_sth$y,type="l",col=adjustcolor("mediumblue",alpha),lwd=3,ylim=c(.Machine$double.eps,maxy),xlim=c(0,4),
+       xlab="Distance",ylab="Density",main="Smoothed Distance Kernel CDF and PDF") # PDF
+  par(new = TRUE)
+
+  # plot smoothed CDFs
+  plot(CDF_sth$x.out,CDF_sth$est,type="l",col=adjustcolor("firebrick3",alpha),lwd=3,xlim=c(0,4), xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+  axis(side=4, at = pretty(range(CDF_sth$est)))
+  mtext("Cumulative Probability", side = 4, line = 2.25)
+  par(mar = c(5,4,2,2)) # defaults
+})
+
+
+# plot smoothed PDFs
+par(mar = c(5, 5, 3, 5))
+alpha <- 0.5
+maxy <- max(PDF_sth$y)
+plot(distBins,PDF_sth$y,type="l",col=adjustcolor("mediumblue",alpha),lwd=3,ylim=c(.Machine$double.eps,maxy),xlim=c(0,4),
+     xlab="Distance",ylab="Density",main="Smoothed Distance Kernel CDF and PDF") # PDF
+par(new = TRUE)
+
+# plot smoothed CDFs
+cdf_final <- predict(object = CDF_sth,x = distBins,deriv = 0)
+plot(distBins,cdf_final$y,type="l",col=adjustcolor("firebrick3",alpha),lwd=3,xlim=c(0,4), xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+axis(side=4, at = pretty(range(cdf_final$y)))
+mtext("Cumulative Probability", side = 4, line = 3)
+par(mar = c(5,4,2,2)) # defaults
+
+
+
+###############################################################################
+# plot site-specific movement
+###############################################################################
+
+par(mfrow=c(1,2))
+
+with(KERN,{
+
+  nsite <- length(sites)
+
+  # calculate mean of all the smooth CDFs and PDFs
+  cdfs <- sapply(X = sites,function(x){x$CDF_sth$est})
+  meanCDF <- rowMeans(cdfs)
+  pdfs <- sapply(X = sites,function(x){x$PDF_sth$y})
+  meanPDF <- rowMeans(pdfs)
+
+  # # plot smoothed PDFs
+  alpha <- 0.5
+  maxy <- max(sapply(sites,function(x){max(x$PDF_sth$y)}))
+  maxy <- round(maxy,digits = 2)
+  plot(sites[[1]]$PDF_sth$x,sites[[1]]$PDF_sth$y,
+       type="l",col=adjustcolor("mediumblue",alpha),lwd=3,ylim=c(.Machine$double.eps,maxy),xlim=c(0,4),
+       main = "Smoothed Movement PDFs",xlab="Distance",ylab="Density")
+  for(i in 2:nsite){
+    lines(sites[[1]]$PDF_sth$x,sites[[i]]$PDF_sth$y,col=adjustcolor("mediumblue",alpha),lwd=3)
+  }
+  lines(sites[[1]]$PDF_sth$x,meanPDF,col=grey(level = 0.1),lwd=3)
+
+  # plot smoothed CDFs
+  plot(sites[[1]]$CDF_sth$x.out,sites[[1]]$CDF_sth$est,
+       type="l",col=adjustcolor("firebrick3",alpha),lwd=3,ylim=c(0,1),xlim=c(0,4),
+       main = "Smoothed Movement CDFs",xlab="Distance",ylab="Cumulative Probability")
+  for(i in 2:nsite){
+    lines(sites[[i]]$CDF_sth$x.out,sites[[i]]$CDF_sth$est,col=adjustcolor("firebrick3",alpha),lwd=3)
+  }
+  lines(sites[[i]]$CDF_sth$x.out,meanCDF,col=grey(level = 0.1),lwd=3)
+
+})
+
+par(mfrow=c(1,1))
 
 
 ###############################################################################
@@ -199,4 +288,3 @@ for(i in 2:nsite){
   lines(sitesKern[[i]]$CDF_sth$x,sitesKern[[i]]$CDF_sth$y,col=adjustcolor("firebrick3",alpha),lwd=3)
 }
 lines(sitesKern[[i]]$CDF_sth$x,meanCDF,col=grey(level = 0.1),lwd=3)
-

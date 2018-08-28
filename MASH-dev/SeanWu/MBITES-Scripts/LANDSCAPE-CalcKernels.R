@@ -16,6 +16,7 @@
 # Calculate & process movement kernels for all sites and landscapes
 ###############################################################################
 
+rm(list=ls());gc()
 library(parallel)
 library(lokern)
 
@@ -71,8 +72,17 @@ for(i in 1:26){
   KERN$CDF_emp <- cumsum(KERN$PDF_emp)
 
   # smoothed CDF and PDF
-  KERN$CDF_sth <- glkerns(KERN$distance_bins,KERN$PDF_emp,deriv = 0,korder = 4,x.out=KERN$distance_bins)
-  KERN$PDF_sth <- glkerns(KERN$distance_bins,KERN$CDF_emp,deriv = 1,korder = 3,x.out=KERN$distance_bins)
+  KERN$CDF_sth <- glkerns(c(0,KERN$distance_bins),c(0,KERN$CDF_emp),deriv = 0,korder = 4,x.out=c(0,KERN$distance_bins))
+  KERN$CDF_sth$est <- KERN$CDF_sth$est / max(KERN$CDF_sth$est)
+  KERN$CDF_sth$est <- sort(KERN$CDF_sth$est,decreasing = FALSE)
+  KERN$PDF_sth <- predict(KERN$CDF_sth,deriv=1)
+  # KERN$PDF_sth <- glkerns(c(0,KERN$distance_bins),c(0,KERN$CDF_emp),deriv = 1,korder = 3,x.out=c(0,KERN$distance_bins))
+
+  # # old method using splines
+  # CDF_sth <- smooth.spline(x = distBins,y = CDF_emp,all.knots = TRUE,cv = NA,keep.data = FALSE)
+  # CDF_sth$y <- CDF_sth$y / max(CDF_sth$y)
+  # # force the smoothed CDF to be an increasing function
+  # CDF_sth$y <- sort(CDF_sth$y,decreasing = FALSE)
 
   cat("calculating movement distributions for all sites\n")
 
@@ -112,8 +122,12 @@ for(i in 1:26){
     CDF_emp <- cumsum(PDF_emp)
 
     # smoothed CDF and PDF
-    CDF_sth <- glkerns(KERN$distance_bins,PDF_emp,deriv = 0,korder = 4,x.out=KERN$distance_bins)
-    PDF_sth <- glkerns(KERN$distance_bins,CDF_emp,deriv = 1,korder = 3,x.out=KERN$distance_bins)
+    CDF_sth <- glkerns(c(0,KERN$distance_bins),c(0,CDF_emp),deriv = 0,korder = 4,x.out=c(0,KERN$distance_bins))
+    CDF_sth$est <- CDF_sth$est / max(KERN$CDF_sth$est)
+    CDF_sth$est <- sort(CDF_sth$est,decreasing = FALSE)
+    PDF_sth <- predict(CDF_sth,deriv=1)
+    # CDF_sth <- glkerns(KERN$distance_bins,CDF_emp,deriv = 0,korder = 4,x.out=KERN$distance_bins)
+    # PDF_sth <- glkerns(KERN$distance_bins,CDF_emp,deriv = 1,korder = 3,x.out=KERN$distance_bins)
 
     # put it in the container for this site
     KERN$sites[[j]]$PDF_emp <- PDF_emp
@@ -130,6 +144,6 @@ for(i in 1:26){
   cat("writing out to: ",outfile,"\n")
   saveRDS(object = KERN,file = outfile,compress = TRUE)
 
-  rm(KERN);gc()
+  rm(KERN,dist_mat,kernel,dist,prob,ord,zeros,PDF_emp,CDF_emp,PDF_sth,CDF_sth,n);gc()
   cat("\n")
 }
