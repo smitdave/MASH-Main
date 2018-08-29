@@ -17,7 +17,7 @@ library(jsonlite)
 library(parallel)
 
 ###############################################################################
-# make plots for all runs
+# make MBITES bionomics plots for all runs
 ###############################################################################
 
 # where the files can be found
@@ -205,3 +205,60 @@ setTxtProgressBar(pb,i+1)
 cat("\n")
 
 
+###############################################################################
+# make chord diagrams for all runs
+###############################################################################
+
+rm(list = ls());gc()
+library(MBITES)
+library(jsonlite)
+library(circlize)
+
+# where the files can be found
+directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+
+# loop over all experiments
+pb <- txtProgressBar(min = 1,max = 26)
+for(i in 1:26){
+
+  run <- as.character(i)
+
+  # mosquito histories
+  mosquitos_df <- fromJSON(paste0(directory,"/mosquito_F_",run,".json"), flatten = TRUE)
+  null_m <- which(sapply(mosquitos_df$id,is.null))
+  if(length(null_m)>0){
+    mosquitos_df <- mosquitos_df[-null_m,]
+  }
+
+  # state transitions matrix
+  M <- Bionomics_StateTransition(mosquitos_df)
+
+  # take out D self loop but keep its width
+  Vis <- M
+  Vis <- Vis*0
+  Vis <- Vis+1
+  Vis["D","D"] <- 0
+  Vis <- as.logical(Vis)
+
+  # make chord diagram
+  # colors (F, B, R, L, O, D)
+  cols <- adjustcolor(c("firebrick1","firebrick3","mediumorchid3","steelblue1","steelblue3","grey30"),
+                      alpha.f = 0.75)
+  names(cols) <- c("F","B","R","L","O","D")
+  cols_df <- expand.grid(s=rownames(M),d=colnames(M),stringsAsFactors = FALSE)
+  cols_df$cols <- cols[cols_df[,"s"]]
+  chordDiagramFromMatrix(M,
+                         directional = 1,
+                         direction.type = "arrows",
+                         col = cols_df,
+                         grid.col = cols,
+                         link.visible = Vis,
+                         grid.border = "black",
+                         annotationTrack = c("name","grid"),
+                         self.link = 2)
+
+  rm(mosquitos_df,M);gc()
+  setTxtProgressBar(pb,i)
+}
+setTxtProgressBar(pb,i+1)
+cat("\n")
