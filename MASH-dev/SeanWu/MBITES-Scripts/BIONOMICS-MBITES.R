@@ -326,3 +326,4 @@ with(MBITES,{
   axis(side=4, at = pretty(range(spatial_egg_PDF_sth$est)))
   mtext("PDF", side=4, line=3)
 })
+

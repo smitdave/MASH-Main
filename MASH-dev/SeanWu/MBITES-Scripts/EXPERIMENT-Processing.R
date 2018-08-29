@@ -185,8 +185,8 @@ for(i in 1:26){
     cat("smoothing empirical PMF and CDF ... \n")
 
     # smoothed CDF and PDF
-    MBITES$spatial_egg_CDF_sth <- glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 0,korder = 4,x.out=spatial_egg_bins)
-    MBITES$spatial_egg_PDF_sth <- glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 1,korder = 3,x.out=spatial_egg_bins)
+    MBITES$spatial_egg_CDF_sth <<- glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 0,korder = 4,x.out=spatial_egg_bins)
+    MBITES$spatial_egg_PDF_sth <<- glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 1,korder = 3,x.out=spatial_egg_bins)
 
     MBITES$spatial_egg_CDF_emp <<- spatial_egg_CDF_emp
     MBITES$spatial_egg_PDF_emp <<- spatial_egg_PDF_emp
