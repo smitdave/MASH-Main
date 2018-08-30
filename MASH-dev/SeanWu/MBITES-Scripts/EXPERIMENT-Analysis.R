@@ -412,3 +412,262 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+
+# feeding interval
+maxy <- max(sapply(feedingcycle_quant,max))
+plot(x = 1:max,
+     y = feedingcycle_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Time (Days)",main = "MBITES Feeding Cycle Duration",
+     ylim = c(0,ceiling(maxy)))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = feedingcycle_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = feedingcycle_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = feedingcycle_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = feedingcycle_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = feedingcycle_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = feedingcycle_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = feedingcycle_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = feedingcycle_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
+
+# vectorial capacity
+maxy <- max(c(sapply(vc_quant,max)),vc_means)
+plot(x = 1:max,
+     y = vc_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Secondary Bites",main = "MBITES Vectorial Capacity",
+     ylim = c(0,ceiling(maxy)))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = vc_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = vc_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = vc_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = vc_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = vc_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = vc_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = vc_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = vc_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
+
+# lifetime egg production
+maxy <- max(c(sapply(lifetimeEgg_quant,max)),lifetimeEgg_means)
+plot(x = 1:max,
+     y = lifetimeEgg_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Eggs",main = "MBITES Lifetime Egg Production",
+     ylim = c(0,ceiling(maxy)))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = lifetimeEgg_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = lifetimeEgg_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = lifetimeEgg_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = lifetimeEgg_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = lifetimeEgg_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = lifetimeEgg_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = lifetimeEgg_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = lifetimeEgg_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
+
+# egg laying rate
+maxy <- max(c(sapply(eggrate_quant,max)),eggrate_means)
+plot(x = 1:max,
+     y = eggrate_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Age (Days)",main = "MBITES Egg Laying Rate",
+     ylim = c(0,ceiling(maxy)))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = eggrate_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = eggrate_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = eggrate_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = eggrate_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = eggrate_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = eggrate_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = eggrate_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = eggrate_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
+
+# blood feeding rate
+maxy <- max(c(sapply(bloodrate_quant,max)),bloodrate_means)
+plot(x = 1:max,
+     y = bloodrate_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Age (Days)",main = "MBITES Blood Feeding Rate",
+     ylim = c(0,ceiling(maxy)))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = bloodrate_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = bloodrate_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = bloodrate_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = bloodrate_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = bloodrate_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = bloodrate_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = bloodrate_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = bloodrate_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
+
+# spatial vc
+maxy <- max(c(sapply(spatialvc_quant,max)),spatialvc_means)
+plot(x = 1:max,
+     y = spatialvc_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Distance",main = "MBITES Spatial Dispersion of VC",
+     ylim = c(0,ceiling(maxy)))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = spatialvc_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = spatialvc_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = spatialvc_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = spatialvc_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = spatialvc_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = spatialvc_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = spatialvc_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = spatialvc_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
+
+# spatial oviposition
+maxy <- max(c(sapply(spatialegg_quant,max)),spatialegg_means)
+plot(x = 1:max,
+     y = spatialegg_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Distance",main = "MBITES Spatial Dispersion of Eggs",
+     ylim = c(0,ceiling(maxy)))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = spatialegg_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = spatialegg_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = spatialegg_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = spatialegg_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = spatialegg_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = spatialegg_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = spatialegg_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = spatialegg_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
