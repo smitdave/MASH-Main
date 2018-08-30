@@ -279,9 +279,10 @@ library(jsonlite)
 library(Hmisc)
 
 directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
 
 # hold the means
-max <- 25
+max <- 26
 lifespan_means <- rep(0,max)
 numbloodhost_means <- rep(0,max)
 feedingcycle_means <- rep(0,max)
@@ -341,6 +342,7 @@ for(i in 1:max){
 
 # lifespan
 maxy <- max(sapply(lifespan_quant,max))
+pdf(file = paste0(plot_directory,"MBITES_means_lifespan.pdf"),width = 12,height = 8)
 plot(x = 1:max,
      y = lifespan_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
@@ -375,9 +377,11 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+dev.off()
 
 # number of blood hosts
 maxy <- max(sapply(numbloodhost_quant,max))
+pdf(file = paste0(plot_directory,"MBITES_means_numBloodHost.pdf"),width = 12,height = 8)
 plot(x = 1:max,
      y = numbloodhost_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
@@ -412,9 +416,11 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+dev.off()
 
 # feeding interval
 maxy <- max(sapply(feedingcycle_quant,max))
+pdf(file = paste0(plot_directory,"MBITES_means_feedingInterval.pdf"),width = 12,height = 8)
 plot(x = 1:max,
      y = feedingcycle_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
@@ -449,9 +455,11 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+dev.off()
 
 # vectorial capacity
 maxy <- max(c(sapply(vc_quant,max)),vc_means)
+pdf(file = paste0(plot_directory,"MBITES_means_vc.pdf"),width = 12,height = 8)
 plot(x = 1:max,
      y = vc_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
@@ -486,9 +494,11 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+dev.off()
 
 # lifetime egg production
 maxy <- max(c(sapply(lifetimeEgg_quant,max)),lifetimeEgg_means)
+pdf(file = paste0(plot_directory,"MBITES_means_lifetimeEgg.pdf"),width = 12,height = 8)
 plot(x = 1:max,
      y = lifetimeEgg_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
@@ -523,9 +533,11 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+dev.off()
 
 # egg laying rate
 maxy <- max(c(sapply(eggrate_quant,max)),eggrate_means)
+pdf(file = paste0(plot_directory,"MBITES_means_eggrate.pdf"),width = 12,height = 8)
 plot(x = 1:max,
      y = eggrate_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
@@ -560,9 +572,11 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+dev.off()
 
 # blood feeding rate
 maxy <- max(c(sapply(bloodrate_quant,max)),bloodrate_means)
+pdf(file = paste0(plot_directory,"MBITES_means_bloodrate.pdf"),width = 12,height = 8)
 plot(x = 1:max,
      y = bloodrate_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
@@ -597,9 +611,11 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+dev.off()
 
 # spatial vc
 maxy <- max(c(sapply(spatialvc_quant,max)),spatialvc_means)
+pdf(file = paste0(plot_directory,"MBITES_means_spatialvc.pdf"),width = 12,height = 8)
 plot(x = 1:max,
      y = spatialvc_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
@@ -634,9 +650,11 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+dev.off()
 
 # spatial oviposition
 maxy <- max(c(sapply(spatialegg_quant,max)),spatialegg_means)
+pdf(file = paste0(plot_directory,"MBITES_means_spatialegg.pdf"),width = 12,height = 8)
 plot(x = 1:max,
      y = spatialegg_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
@@ -671,3 +689,4 @@ for(i in 1:max){
            col = "grey40",
            lwd = 2.5,lend=2)
 }
+dev.off()
