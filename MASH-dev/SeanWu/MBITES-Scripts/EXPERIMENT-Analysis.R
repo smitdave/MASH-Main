@@ -219,9 +219,8 @@ directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
 plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
 
 # loop over all experiments
-pdf(file = paste0(plot_directory,"MBITES_chordAll.pdf"),width = 12,height = 8)
-par(mfrow=c(4,7))
-
+# pdf(file = paste0(plot_directory,"MBITES_chordAll.pdf"),width = 12,height = 8)
+# par(mfrow=c(4,7))
 for(i in 1:26){
 
   cat("plotting run ",i," of 26\n")
@@ -251,6 +250,7 @@ for(i in 1:26){
   names(cols) <- c("F","B","R","L","O","D")
   cols_df <- expand.grid(s=rownames(M),d=colnames(M),stringsAsFactors = FALSE)
   cols_df$cols <- cols[cols_df[,"s"]]
+  pdf(file = paste0(plot_directory,"MBITES_chord",run,".pdf"),width = 12,height = 8)
   chordDiagramFromMatrix(M,
                          directional = 1,
                          direction.type = "arrows",
@@ -261,8 +261,154 @@ for(i in 1:26){
                          annotationTrack = c("name","grid"),
                          self.link = 2)
   title(paste0("Simulated Landscape ",run))
+  dev.off()
 
   rm(mosquitos_df,M);gc()
 }
-par(mfrow=c(1,1))
-dev.off()
+# par(mfrow=c(1,1))
+# dev.off()
+
+
+###############################################################################
+# plot changes in means over all runs
+###############################################################################
+
+rm(list = ls());gc()
+library(MBITES)
+library(jsonlite)
+library(Hmisc)
+
+directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+
+# hold the means
+max <- 25
+lifespan_means <- rep(0,max)
+numbloodhost_means <- rep(0,max)
+feedingcycle_means <- rep(0,max)
+vc_means <- rep(0,max)
+lifetimeEgg_means <- rep(0,max)
+eggrate_means <- rep(0,max)
+bloodrate_means <- rep(0,max)
+spatialvc_means <- rep(0,max)
+spatialegg_means <- rep(0,max)
+
+# hold the quantiles
+lifespan_quant <- vector("list",max)
+numbloodhost_quant <- vector("list",max)
+feedingcycle_quant <- vector("list",max)
+vc_quant <- vector("list",max)
+lifetimeEgg_quant <- vector("list",max)
+eggrate_quant <- vector("list",max)
+bloodrate_quant <- vector("list",max)
+spatialvc_quant <- vector("list",max)
+spatialegg_quant <- vector("list",max)
+
+# probabilities for quantiles
+q_probs <- c(0.2,0.25,0.5,0.75,0.8)
+
+# iterate through all runs
+pb <- txtProgressBar(1,max)
+for(i in 1:max){
+
+  run <- as.character(i)
+  MBITES <- readRDS(paste0(directory,"/analysis",run,".rds"))
+
+  # get means
+  lifespan_means[i] <- MBITES$surv_mean
+  numbloodhost_means[i] <- MBITES$blood_hosts_mean
+  feedingcycle_means[i] <- MBITES$blood_interval_mean
+  vc_means[i] <- MBITES$vc_mean
+  lifetimeEgg_means[i] <- MBITES$lifetime_egg_mean
+  eggrate_means[i] <- MBITES$egg_rate_mean
+  bloodrate_means[i] <- MBITES$blood_rate_mean
+  spatialvc_means[i] <- weighted.mean(MBITES$spatial_vc_PDF_sth$x.out,MBITES$spatial_vc_PDF_sth$est)
+  spatialegg_means[i] <- weighted.mean(MBITES$spatial_egg_PDF_sth$x.out,MBITES$spatial_egg_PDF_sth$est)
+
+  # get quantiles
+  lifespan_quant[[i]] <- wtd.quantile(MBITES$surv_tt,MBITES$surv_s,probs = q_probs)
+  numbloodhost_quant[[i]] <- quantile(MBITES$blood_hosts$humanHost,probs = q_probs)
+  feedingcycle_quant[[i]] <- quantile(MBITES$blood_interval$rest_intervals,probs = q_probs)
+  vc_quant[[i]] <- quantile(MBITES$vc_df$vc,probs = q_probs)
+  lifetimeEgg_quant[[i]] <- quantile(MBITES$lifetime_egg$lifetime,probs = q_probs)
+  eggrate_quant[[i]] <- quantile(MBITES$egg_rate$ages,probs = q_probs)
+  bloodrate_quant[[i]] <- quantile(MBITES$blood_rate,probs = q_probs)
+  spatialvc_quant[[i]] <- wtd.quantile(MBITES$spatial_vc_PDF_sth$x.out,MBITES$spatial_vc_PDF_sth$est,probs = q_probs)
+  spatialegg_quant[[i]] <- wtd.quantile(MBITES$spatial_egg_PDF_sth$x.out,MBITES$spatial_egg_PDF_sth$est,probs = q_probs)
+
+  setTxtProgressBar(pb,i)
+}
+
+
+# lifespan
+maxy <- max(sapply(lifespan_quant,max))
+plot(x = 1:max,
+     y = lifespan_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Time (Days)",main = "MBITES Lifespan Distribution",
+     ylim = c(0,ceiling(maxy)))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = lifespan_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = lifespan_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = lifespan_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = lifespan_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = lifespan_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = lifespan_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = lifespan_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = lifespan_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
+
+# number of blood hosts
+maxy <- max(sapply(numbloodhost_quant,max))
+plot(x = 1:max,
+     y = numbloodhost_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Number of Hosts",main = "MBITES Human Blood Hosts",
+     ylim = c(0,ceiling(maxy)))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = numbloodhost_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = numbloodhost_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = numbloodhost_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = numbloodhost_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = numbloodhost_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = numbloodhost_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = numbloodhost_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = numbloodhost_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
