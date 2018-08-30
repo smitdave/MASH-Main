@@ -1,3 +1,11 @@
+library(readxl)
+library(fitdistrplus)
+library(zoib)
+library(gamlss)
+Mosquito_Transmission <- read_excel("~/Malaria Data Files/Mosquito_Transmission.xlsx")
+MT_Days <- read_excel("~/Malaria Data Files/MT_Days.xlsx")
+Gt_Col <- read_excel("~/Malaria Data Files/Gt_Col.xlsx")
+
 Days = as.matrix(MT_Days)
 ## which rows denote beginning of individual
 begin = which(Days==1)
@@ -26,7 +34,7 @@ for(i in 1:334){
 
 ### compare average gametocyte levels to average proportion of infected mosquitoes
 TEmu = rowMeans(TE,na.rm=T)
-GTmu = rowMeans(MGt,na.rm=T)
+GTmu = rowMeans(Gt,na.rm=T)
 PTmu = rowMeans(Pt,na.rm=T)
 
 rowVar = function(m){
@@ -40,20 +48,22 @@ TEvar = rowVar(TE)
 GTvar = rowVar(MGt)
 PTvar = rowVar(Pt)
 
-plot(TEmu/100,type="l",ylim=c(0,5),xlim=c(0,365),xlab="days")
+plot(TEmu/100,type="l",ylim=c(0,5),xlim=c(0,365),xlab="days",ylab="log10 Parasite Density per microliter")
 #lines(sqrt(TEvar/10^4)+TEmu/100,lty=2)
 #lines(pmax(-sqrt(TEvar/10^4)+TEmu/100,0),lty=2)
-lines(log10(GTmu),lty=2)
+lines(log10(GTmu),lty=2,col="red")
 lines(log10(PTmu))
 abline(h=log10(10))
+title(main="Transmission Efficiency in Mean Infection Profile")
 ###
-ccf(PTmu,GTmu,type="correlation")
+ccf(PTmu,GTmu,type="correlation",lag.max=20)
 TEmu[which(is.na(TEmu))]=0
 
 Mprime = Mosq[which(is.na(Mosq)==F)]
 Gtprime = Gt[which(is.na(Mosq)==F)]
 ##log10 gametocyte count vs % of mosquitoes infected from bitting from them
 plot(log10(Gtprime),Mprime/100,ylab="Proportion of Feeding Mosquitoes Infected",xlab="log10 Gametocyte Density per cmm")
+title(main="Transmission Efficiency as a Function of Gametocyte Density")
 
 beta1 = Mprime[which(log10(Gtprime) <= 1)]/100
 logGT1 = pmax(log10(Gtprime)[which(log10(Gtprime) <= 1)],0)
@@ -151,6 +161,7 @@ sigmoidTE = function(x,p1,p2,p3){
 }
 x = seq(.8,4.1,.01)
 lines(x,sigmoidTE(x,p1,p2,p3))
+title(main="Mean log10 Gametocyte Density vs Mean Transmission Efficiency")
 #lines(x,gompTE(x,g1,g2,g3),lty=2)
 
 
@@ -174,3 +185,29 @@ abline(h=0)
 plot(logGT,betaVars,type="l")
 plot(logGT,betaMeans/betaVars,type="l")
 plot(logGT,betaMeans/sqrt(betaVars),type="l")
+
+
+
+############################ zero inflation fit
+
+pz1 = sum(beta1==0)/length(beta1)
+pz2 = sum(beta2==0)/length(beta2)
+pz3 = sum(beta3==0)/length(beta3)
+pz4 = sum(beta4==0)/length(beta4)
+pz5 = sum(beta5==0)/length(beta5)
+pz6 = sum(beta6==0)/length(beta6)
+pz7 = sum(beta7==0)/length(beta7)
+pz = c(pz1,pz2,pz3,pz4,pz5,pz6,pz7)
+
+po1 = sum(beta1==1)/length(beta1)
+po2 = sum(beta2==1)/length(beta2)
+po3 = sum(beta3==1)/length(beta3)
+po4 = sum(beta4==1)/length(beta4)
+po5 = sum(beta5==1)/length(beta5)
+po6 = sum(beta6==1)/length(beta6)
+po7 = sum(beta7==1)/length(beta7)
+po = c(po1,po2,po3,po4,po5,po6,po7)
+
+s = 1:7
+plot(s,pz,type="l",ylim=c(0,1))
+lines(s,po)

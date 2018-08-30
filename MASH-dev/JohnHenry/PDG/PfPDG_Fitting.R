@@ -9,8 +9,9 @@ MT_GT_NP <- read_excel("~/Malaria Data Files/MT_GT_NP.xlsx")
 G = as.matrix(MT_GT_NP)
 
 n = sample(1:333,1)
-plot(log10(M[,n]),type="l",xlim=c(0,300),ylim=c(0,5))
+plot(log10(M[,n]),type="l",xlim=c(0,300),ylim=c(0,5),xlab="Days",ylab="log10 Parasite Density per microliter")
 lines(log10(G[,n]),type="l",xlim=c(0,300),ylim=c(0,5),col="red")
+title(main="Example Infection")
 
 rm = rowMeans(M,na.rm=T)
 plot(log10(rm),type="l",xlim=c(0,365),xlab="Days Since First Detectable",ylab="log10 Parasites per microL")
@@ -196,7 +197,7 @@ title("Histogram of Residuals from Asexual Mean-Variance Power Law")
 qqnorm((mv$residuals-mean(mv$residuals))/sqrt(var(mv$residuals)))
 lines(seq(-4,4,.1),seq(-4,4,.1))
 
-rgrv = rowVars(G,na.rm=T)
+grv = rowVars(G,na.rm=T)
 grm = rowMeans(G,na.rm=T)
 plot(log10(grv),type="l",xlim=c(0,500),xlab="Days Since First Detectable",ylab="log10 Gametocytes per microL")
 abline(h=log10(88))
@@ -275,13 +276,13 @@ title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
 ################## piecewise-linear fitting of the two previous models
 
 fgpl = function(x){
-    x1 = x[which(x>=3)]
-    x2 = x[which(x<3)]
+    x1 = x[which(x>=3.2)]
+    x2 = x[which(x<3.2)]
     y1 = ptgtp$coefficients[[1]]+x1*ptgtp$coefficients[[2]]
     y2 = ptgt$coefficients[[1]]+x2*ptgt$coefficients[[2]]
     y = rep(0,length(x))
-    y[which(x>=3)] = y1
-    y[which(x<3)] = y2
+    y[which(x>=3.2)] = y1
+    y[which(x<3.2)] = y2
     return(y)
 }
 
@@ -292,10 +293,16 @@ lines(seq(-1,5,.01),fgpl(seq(-1,5,.01)))
 ##see how it all fits together
 rmpp = c(0,0,0,0,0,0,0,0,rm)
 plot(log10(rm),type="l",ylim=c(-1,5),xlim=c(0,230),xlab="Days",ylab="log10 Density per microliter")
-plot(fgpl(log10(rmpp)),col="blue",xlab="Days",ylab="log10 Density per microliter",type="l",ylim=c(-1,3.5),xlim=c(0,240))
+lines(fgpl(log10(rmpp)),col="blue",xlab="Days",ylab="log10 Density per microliter",type="l",ylim=c(-1,3.5),xlim=c(0,240))
 lines(log10(grm),col="red")
 title(main="Measured vs Fitted Gametocytes with Asexual Predictor")
 
+presid = log10(grm[9:length(grm)])-fgpl(log10(rm[1:(length(rm)-8)]))
+presid = presid[!is.na(presid)]
+plot(presid)
+hist(presid,freq=F,breaks=20)
+qqnorm((presid-mean(presid))/sqrt(var(presid)))
+lines(seq(-4,4,.01),seq(-4,4,.01))
 
 plot(10^fgpl(log10(rmpp)),col="blue",xlab="Days",ylab="Density per microliter",type="l",xlim=c(0,240))
 lines(grm,col="red")
