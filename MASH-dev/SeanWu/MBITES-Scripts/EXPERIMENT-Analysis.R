@@ -216,11 +216,15 @@ library(circlize)
 
 # where the files can be found
 directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
 
 # loop over all experiments
-pb <- txtProgressBar(min = 1,max = 26)
+pdf(file = paste0(plot_directory,"MBITES_chordAll.pdf"),width = 12,height = 8)
+par(mfrow=c(4,7))
+
 for(i in 1:26){
 
+  cat("plotting run ",i," of 26\n")
   run <- as.character(i)
 
   # mosquito histories
@@ -233,12 +237,12 @@ for(i in 1:26){
   # state transitions matrix
   M <- Bionomics_StateTransition(mosquitos_df)
 
-  # take out D self loop but keep its width
-  Vis <- M
-  Vis <- Vis*0
-  Vis <- Vis+1
-  Vis["D","D"] <- 0
-  Vis <- as.logical(Vis)
+  # # take out D self loop but keep its width
+  # Vis <- M
+  # Vis <- Vis*0
+  # Vis <- Vis+1
+  # Vis["D","D"] <- 0
+  # Vis <- as.logical(Vis)
 
   # make chord diagram
   # colors (F, B, R, L, O, D)
@@ -252,13 +256,13 @@ for(i in 1:26){
                          direction.type = "arrows",
                          col = cols_df,
                          grid.col = cols,
-                         link.visible = Vis,
+                         # link.visible = Vis,
                          grid.border = "black",
                          annotationTrack = c("name","grid"),
                          self.link = 2)
+  title(paste0("Simulated Landscape ",run))
 
   rm(mosquitos_df,M);gc()
-  setTxtProgressBar(pb,i)
 }
-setTxtProgressBar(pb,i+1)
-cat("\n")
+par(mfrow=c(1,1))
+dev.off()
