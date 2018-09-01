@@ -80,7 +80,7 @@ mosquitos = data.frame(
 # Run MBITES
 ###############################################################################
 
-set.seed(42L)
+# set.seed(42L)
 
 directory <- "/Users/slwu89/Desktop/mbites/trivial/"
 
