@@ -23,8 +23,9 @@ library(jsonlite)
 
 # where the files can be found
 directory <- "/Users/slwu89/Desktop/mbites/trivial/"
+plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
 # run 1 was where mosy who died on first bout get lifespan 0, run 2 was where we sample their tte based on that first bout
-run <- "1"
+run <- "3"
 output_dir <- paste0(directory,"run",run)
 
 mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_",run,".json"), flatten = TRUE)
@@ -37,6 +38,7 @@ bionomics <- Bionomics_MBDETES_Approx(mosquitos_df)
 # BEGIN: 4 PANEL PLOT
 ###############################################################################
 
+pdf(file = paste0(plot_directory,"MBITES_MBDETES_compare.pdf"),width = 12,height = 8)
 par(mfrow=c(2,2))
 
 ###############################################################################
@@ -105,7 +107,7 @@ plot(blood_mbdetes_tt, blood_mbdetes_pdf,type = "l", xlab = "Age (days)", ylab =
      main=paste0("Blood Feeding Rate \n MBDETES mean: ",round(blood_mbdetes_mean,2),", MBITES mean: ",round(bionomics$MBITES$dist_blood_mean,2)),
      lwd=2,col="steelblue")
 polygon(c(0, blood_mbdetes_tt), c(0, blood_mbdetes_pdf), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
-abline(v = blood_mbdetes_pdf,lwd=2.5,lty=2,col="steelblue")
+abline(v = blood_mbdetes_mean,lwd=2.5,lty=2,col="steelblue")
 
 hist(bionomics$MBITES$dist_blood,probability = T,breaks = blood_breaks,col = adjustcolor("firebrick3",alpha.f = 0.5),add=TRUE)
 abline(v = bionomics$MBITES$dist_blood_mean,lwd=2.5,lty=2,col="firebrick3")
@@ -137,3 +139,4 @@ par(mfrow=c(1,1))
 ###############################################################################
 # END: 4 PANEL PLOT
 ###############################################################################
+dev.off()

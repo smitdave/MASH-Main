@@ -318,7 +318,7 @@ Bionomics_bloodfeedingRate <- function(mosquitos){
 # this function actually counts the number of secondary bites and their
 # spatial distribution from each human. it is easy to then get VC from it.
 
-#' Bionomics: Compute Vectorial Capacity
+#' Bionomics: Compute Vectorial Capacity (Human-centric)
 #'
 #' Takes in JSON output parsed into a data.frame object from
 #' an MBITES simulation run.
@@ -381,37 +381,37 @@ Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
     }
 
     # iterate over bites
-    while(length(timeFeed)>1){
+    while(length(timeFeed) > 1){
 
       # only if the bite was a probing AND feeding event
       # (feeding needs to occur for human -> mosy transmission)
       if(probeAndFeed[1]){
 
         # get indices of secondary bites
-        pairTimes <- diff(timeFeed)
-        secondaryBites <- which(pairTimes>EIP)+1
+        pairTimes <- timeFeed[-1] - timeFeed[1]
+        secondaryBites <- which(pairTimes > EIP)
 
         # only if there were secondary bites arising from this bite
-        if(length(secondaryBites)>0){
+        if(length(secondaryBites) > 0){
 
           # add to the primary host's VC
           VC[[bloodHosts[1]]]$VC = VC[[bloodHosts[1]]]$VC + length(secondaryBites)
 
           # get spatial distribution of bites
           if(spatial){
-            spatDist <- list(origin=siteFeed[1],dest=siteFeed[secondaryBites])
+            spatDist <- list(origin=siteFeed[1],dest=siteFeed[secondaryBites+1])
             len <- length(VC[[bloodHosts[1]]]$spatialVC)
-            VC[[bloodHosts[1]]]$spatialVC[[len+1]] = spatDist
+            VC[[bloodHosts[1]]]$spatialVC[[len+1]] <- spatDist
           }
         }
-      } # finish iterating over bites
+      }
 
       # take off the first bite
       bloodHosts <- bloodHosts[-1]
       timeFeed <- timeFeed[-1]
       siteFeed <- siteFeed[-1]
       probeAndFeed <- probeAndFeed[-1]
-    }
+    } # finish iterating over bites
 
     setTxtProgressBar(pb,i)
   } # finish iterating over mosquitoes
@@ -419,6 +419,115 @@ Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
 
   return(VC)
 }
+
+
+#' Bionomics: Compute Vectorial Capacity (Mosquito-centric)
+#'
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' Computes vectorial capacity, as well as its spatial dispersion, from a mosquito-centric (vector-centric)
+#' algorithm, described as follows:
+#'  1. For each mosquito iterate through all its bites:
+#'    * If the bite had a successful blood meal (human to mosquito transmission only occurs during a blood meal)
+#'      find all pairs of bites seperated by more than EIP days, where the other bites can be probing events or blood meal events.
+#'    * Add these secondary bites to the mosquito's individual vectorial capacity.
+#'    * Optionally, record the sites where these secondary bites were dispersed to.
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' Please note that in order to reconstruct kernels for VC, the distance matrix between sites
+#' must be preserved somewhere, as the mosquito only records the index of the site it visited, not the xy coordinates.
+#'
+#' @return a list where each element corresponds to a mosquito.
+#'         Each mosquito has \code{VC}, which is the total number of secondary bites arising from it, and
+#'         \code{spatialVC} which is a list of origin/destination pairs tracking dispersion of each initial bite.
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @param EIP the length of EIP
+#' @param spatial compute spatial dispersion of bites or not
+#' @export
+Bionomics_vectorialCapacityMosquito <- function(mosquitos,EIP,spatial=FALSE){
+
+  # number of mosquitos
+  nmosy <- nrow(mosquitos)
+
+  # get only mosquitoes who took more than 1 blood meal and were dead by end of simulation
+  filter <- sapply(mosquitos[,"bloodHosts"],function(x){length(x)>1}) & sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- which(filter)
+
+  # VC
+  VC <- replicate(n = nmosy,expr = {
+    list(
+      VC = NaN, # their vectorial capacity
+      spatialVC = list() # the distribution of secondary bites (on sites)
+    )
+  },simplify = FALSE)
+
+  # iterate over mosquitoes
+  pb <- txtProgressBar(min = 1,max = length(filter))
+  for(i in filter){
+
+    id <- mosquitos[i,"id"][[1]]
+    bloodHosts <- mosquitos[i,"bloodHosts"][[1]]
+    timeFeed <- mosquitos[i,"timeFeed"][[1]]
+    siteFeed <- mosquitos[i,"siteFeed"][[1]]
+    probeAndFeed <- mosquitos[i,"probeAndFeed"][[1]]
+
+    # check for non human hosts
+    if(any(bloodHosts == -1)){
+      nonhuman <- which(bloodHosts==-1)
+      if(length(nonhuman) == length(bloodHosts)){
+        next()
+      } else {
+        bloodHosts <- bloodHosts[-nonhuman]
+        timeFeed <- timeFeed[-nonhuman]
+        siteFeed <- siteFeed[-nonhuman]
+        probeAndFeed <- probeAndFeed[-nonhuman]
+      }
+    }
+
+    # iterate over bites
+    while(length(timeFeed) > 1){
+
+      # only if the bite was a probing AND feeding event
+      # (feeding needs to occur for human -> mosy transmission)
+      if(probeAndFeed[1]){
+
+        # get indices of secondary bites
+        pairTimes <- timeFeed[-1] - timeFeed[1]
+        secondaryBites <- which(pairTimes > EIP)
+
+        # only if there were secondary bites arising from this bite
+        if(length(secondaryBites) > 0){
+
+          # if we havent added any bites yet to this mosy, change from NaN to integer
+          if(is.nan(VC[[id]]$VC)){
+            VC[[id]]$VC <- 0
+          }
+
+          # add to the primary host's VC
+          VC[[id]]$VC = VC[[id]]$VC + length(secondaryBites)
+
+          # get spatial distribution of bites
+          if(spatial){
+            spatDist <- list(origin=siteFeed[1],dest=siteFeed[secondaryBites+1])
+            len <- length(VC[[id]]$spatialVC)
+            VC[[id]]$spatialVC[[len+1]] <- spatDist
+          }
+        }
+      }
+
+      # take off the first bite
+      bloodHosts <- bloodHosts[-1]
+      timeFeed <- timeFeed[-1]
+      siteFeed <- siteFeed[-1]
+      probeAndFeed <- probeAndFeed[-1]
+    } # finish iterating over bites
+
+    setTxtProgressBar(pb,i)
+  } # finish iterating over mosquitoes
+  setTxtProgressBar(pb,i+1);cat("\n")
+
+  return(VC)
+}
+
 
 
 ###############################################################################

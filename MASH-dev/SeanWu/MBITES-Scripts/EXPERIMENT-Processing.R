@@ -58,17 +58,22 @@ for(i in 1:26){
   MBITES$life_mean <- mean(MBITES$surv$lifespan)
 
   # number of blood hosts
-  MBITES$blood_hosts <- Bionomics_humanBloodHost(mosquitos_df,who = "all")
+  MBITES$blood_hosts <- Bionomics_humanBloodHost(mosquitos_df,who = "human")
   MBITES$blood_hosts_mean <- mean(MBITES$blood_hosts$humanHost)
 
   # feeding interval
-  MBITES$blood_interval <- Bionomics_bloodIntervals(mosquitos_df,who = "all")
+  MBITES$blood_interval <- Bionomics_bloodIntervals(mosquitos_df,who = "human")
   MBITES$blood_interval_mean <- mean(MBITES$blood_interval$rest_intervals)
 
   # vectorial capacity
   MBITES$vc <- Bionomics_vectorialCapacity(mosquitos = mosquitos_df,humans = humans_df,EIP = 10,spatial = T)
   MBITES$vc_df <- data.frame(vc=sapply(MBITES$vc,function(x){x$VC}))
   MBITES$vc_mean <- mean(MBITES$vc_df$vc)
+
+  # vectorial capacity for mosquitos
+  MBITES$vc_mosy <- Bionomics_vectorialCapacityMosquito(mosquitos = mosquitos_df,EIP = 10,spatial = T)
+  MBITES$vc_mosy_df <- data.frame(vc=sapply(MBITES$vc_mosy,function(x){x$VC}))
+  MBITES$vc_mosy_mean <- mean(MBITES$vc_mosy_df$vc)
 
   # egg production
   MBITES$lifetime_egg <- Bionomics_lifetimeOviposition(mosquitos_df,TRUE)
@@ -142,6 +147,64 @@ for(i in 1:26){
     cat("done! \n")
   })
 
+  # spatial dispersion of mosquito-centric vectorial capacity
+  with(MBITES,{
+
+    cat("getting pairs of (mosy-centric) bites ... \n")
+
+    # get pairs of bites
+    spatial_vc_mosy_pairs <- lapply(vc_mosy,function(x){x$spatialVC})
+    spatial_vc_mosy_pairs <- Filter(function(x){length(x)>0},spatial_vc_mosy_pairs)
+    spatial_vc_mosy_pairs <- do.call(c,spatial_vc_mosy_pairs)
+
+    cat("calculating distance matrix of (mosy-centric) bite pairs ... \n")
+
+    # get distance matrix between sites
+    spatial_vc_mosy_dist <- lapply(spatial_vc_mosy_pairs,function(x){
+      out <- NULL
+      i <- x$origin
+      for(j in 1:length(x$dest)){
+        out <- append(out,dmat[i,x$dest[j]])
+      }
+      return(out)
+    })
+    spatial_vc_mosy_dist <- do.call(c,spatial_vc_mosy_dist)
+    spatial_vc_mosy_dist <- sort(spatial_vc_mosy_dist,decreasing = FALSE)
+
+    cat("binning distance matrix ... \n")
+
+    # discretize into distance bins
+    spatial_vc_mosy_bins <- unique(spatial_vc_mosy_dist)
+
+    # comparisons of floats
+    fequal <- function(x,y){
+      abs(x-y) <= .Machine$double.eps
+    }
+
+    cat("calculating empirical PMF and CDF ... \n")
+
+    # get empirical PDF by summing stuff in the distance bins (takes awhile, use parallel if you can)
+    spatial_vc_mosy_PDF_emp <- mclapply(X = spatial_vc_mosy_bins,FUN = function(x,spatial_vc_mosy_dist){
+      length(spatial_vc_mosy_dist[which(fequal(spatial_vc_mosy_dist,x))])
+    },spatial_vc_mosy_dist=spatial_vc_mosy_dist,mc.cores = detectCores()-2)
+    spatial_vc_mosy_PDF_emp <- unlist(spatial_vc_mosy_PDF_emp) # mclapply outputs lists; coerce to vector
+    # technically its a PMF so we normalize it
+    spatial_vc_mosy_PDF_emp <- spatial_vc_mosy_PDF_emp/sum(spatial_vc_mosy_PDF_emp)
+
+    # get empirical CDF by preforming a cumulative sum over data points in distance bins
+    spatial_vc_mosy_CDF_emp <- cumsum(spatial_vc_mosy_PDF_emp)
+
+    cat("smoothing empirical PMF and CDF ... \n")
+
+    # smoothed CDF and PDF
+    MBITES$spatial_vc_mosy_CDF_sth <<- glkerns(spatial_vc_mosy_bins,spatial_vc_mosy_CDF_emp,deriv = 0,korder = 4,x.out=spatial_vc_mosy_bins)
+    MBITES$spatial_vc_mosy_PDF_sth <<- glkerns(spatial_vc_mosy_bins,spatial_vc_mosy_CDF_emp,deriv = 1,korder = 3,x.out=spatial_vc_mosy_bins)
+
+    MBITES$spatial_vc_mosy_CDF_emp <<- spatial_vc_mosy_CDF_emp
+    MBITES$spatial_vc_mosy_PDF_emp <<- spatial_vc_mosy_PDF_emp
+    cat("done! \n")
+  })
+
   # spatial dispersion of egg batches
   # spatial egg dispersion
   with(MBITES,{
@@ -200,4 +263,3 @@ for(i in 1:26){
   rm(MBITES,mosquitos_df,humans_df);gc()
   cat("\n")
 }
-
