@@ -6,9 +6,9 @@
 \usage{
 MBDETES_Parameters(tF = 6/24, tB = 3/24, tR = 18/24, tL = 6/24,
   tO = 3/24, P_FF = 0.15, P_FB = 0.83, P_BF = 0.15, P_BB = 0.05,
-  P_BR = 0.75, P_LL = 0.15, P_LO = 0.83, P_OL = 0.15, P_OO = 0.05,
-  P_OB = 0.3, P_OF = 0.45, P_RF = 0.05, P_RB = 0.2, P_RL = 0.4,
-  P_RO = 0.35)
+  P_BR = 0.75, P_LL = 0.15, P_LO = 0.83, P_OL = 0.15,
+  P_OO = 0.05, P_OB = 0.3, P_OF = 0.45, P_RF = 0.05, P_RB = 0.2,
+  P_RL = 0.4, P_RO = 0.35)
 }
 \arguments{
 \item{tF}{sojourn time in blood feeding search bout}

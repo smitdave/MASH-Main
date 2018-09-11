@@ -4,25 +4,27 @@
 \alias{set_parameters_MBITES_Parameters}
 \title{MBITES Parameters: Set Parameters}
 \usage{
-set_parameters_MBITES_Parameters(defaultState_F = "B", defaultState_M = "S",
-  aqua_model = "emerge", disperse = 0, boutFail_p = 1/3, b_wts = rep(1,
-  5), o_wts = rep(1, 5), m_wts = rep(1, 5), s_wts = rep(1, 5),
-  InAndOut = matrix(data = c(4, 2, 2, 1, 6, 2, 1, 1, 1, 4, 1, 1, 1, 1, 2, 0,
-  0, 0, 0, 1, 1, 1, 2, 1, 0), nrow = 5, ncol = 5, byrow = TRUE, dimnames =
-  list(c("i", "w", "v", "r", "l"), c("i", "w", "v", "r", "l"))),
-  tSwarm = 18.5/24, Emax = NaN, Eb = NaN, Ep = NaN, eEndm = NaN,
-  eEndSd = NaN, estivationDay = NaN, energyPreG = 0, preGsugar = 0,
+set_parameters_MBITES_Parameters(defaultState_F = "B",
+  defaultState_M = "S", aqua_model = "emerge", disperse = 0,
+  boutFail_p = 1/3, b_wts = rep(1, 5), o_wts = rep(1, 5),
+  m_wts = rep(1, 5), s_wts = rep(1, 5), InAndOut = matrix(data = c(4,
+  2, 2, 1, 6, 2, 1, 1, 1, 4, 1, 1, 1, 1, 2, 0, 0, 0, 0, 1, 1, 1, 2, 1, 0),
+  nrow = 5, ncol = 5, byrow = TRUE, dimnames = list(c("i", "w", "v", "r",
+  "l"), c("i", "w", "v", "r", "l"))), tSwarm = 18.5/24, Emax = NaN,
+  Eb = NaN, Ep = NaN, eEndm = NaN, eEndSd = NaN,
+  estivationDay = NaN, energyPreG = 0, preGsugar = 0,
   energyFromBlood_b = 0.25, S_u = 1/7, omega = 0, S_sa = 25,
   S_sb = 20, S_w = 5, S_p = 2, Bs_surv = 0.95, Os_surv = 0.9,
   Ms_surv = 0.98, Ss_surv = 0.98, B_surv = 0.98, O_surv = 0.98,
-  M_surv = 0.98, S_surv = 0.98, Bs_succeed = 0.99, Os_succeed = 0.99,
-  Ms_succeed = 0.99, Ss_succeed = 0.99, B_succeed = 0.95,
-  O_succeed = 0.95, M_succeed = 0.99, S_succeed = 0.99, surviveH = 1,
-  probeH = 1, surviveprobeH = 1, feedH = 1, surviveZ = 1, feedZ = 1,
-  PPR_a = 15, PPR_b = 300, S_a = 20, S_b = 10, ttsz_p = 0.5,
-  ttsz_a = 5, ttsz_b = 95, ttr_a = 15, ttr_b = 500, chm_a = 7.5,
-  chm_b = 500, sns_a = 0.085, sns_b = 100, bm_a = 7.5, bm_b = 2.5,
-  of_a = 5, of_b = 5000, bloodPerEgg = 0.05, bs_m = 50, bs_sd = 5,
+  M_surv = 0.98, S_surv = 0.98, Bs_succeed = 0.99,
+  Os_succeed = 0.99, Ms_succeed = 0.99, Ss_succeed = 0.99,
+  B_succeed = 0.95, O_succeed = 0.95, M_succeed = 0.99,
+  S_succeed = 0.99, surviveH = 1, probeH = 1, surviveprobeH = 1,
+  feedH = 1, surviveZ = 1, feedZ = 1, PPR_a = 15, PPR_b = 300,
+  S_a = 20, S_b = 10, ttsz_p = 0.5, ttsz_a = 5, ttsz_b = 95,
+  ttr_a = 15, ttr_b = 500, chm_a = 7.5, chm_b = 500,
+  sns_a = 0.085, sns_b = 100, bm_a = 7.5, bm_b = 2.5, of_a = 5,
+  of_b = 5000, bloodPerEgg = 0.05, bs_m = 50, bs_sd = 5,
   maxBatch = 60, emt_m = 3, emt_sd = 1, rf_a = 10, rf_b = 3)
 }
 \arguments{

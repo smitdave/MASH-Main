@@ -11,10 +11,10 @@ set_ttEvent_MBITES_Parameters(timing_model = 1L, wait_b = NULL,
   tmin_m = NULL, rate_s = NULL, tmin_s = NULL, rate_bs = NULL,
   tmin_bs = NULL, rate_os = NULL, tmin_os = NULL, rate_ms = NULL,
   tmin_ms = NULL, rate_ss = NULL, tmin_ss = NULL, mean_b = NULL,
-  cv_b = NULL, mean_o = NULL, cv_o = NULL, mean_m = NULL, cv_m = NULL,
-  mean_s = NULL, cv_s = NULL, mean_bs = NULL, cv_bs = NULL,
-  mean_os = NULL, cv_os = NULL, mean_ms = NULL, cv_ms = NULL,
-  mean_ss = NULL, cv_ss = NULL)
+  cv_b = NULL, mean_o = NULL, cv_o = NULL, mean_m = NULL,
+  cv_m = NULL, mean_s = NULL, cv_s = NULL, mean_bs = NULL,
+  cv_bs = NULL, mean_os = NULL, cv_os = NULL, mean_ms = NULL,
+  cv_ms = NULL, mean_ss = NULL, cv_ss = NULL)
 }
 \description{
 Sets concrete implementations of time-to-event sampling for attempt and search bout launch intervals. This method is called from \code{\link{MBITES_Setup}} and should
