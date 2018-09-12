@@ -12,7 +12,10 @@
 ###############################################################################
 
 rm(list = ls());gc()
-library(parallel)
+# Libraries
+.libPaths("/ihme/malaria_modeling/dtcitron/Rlibs")
+library(lokern)
+library(MBITES)
 
 ###############################################################################
 # make cluster
@@ -38,8 +41,8 @@ jobs <- lapply(1:26,function(i){
 })
 
 # set up cluster
-cores <- 8
-cl <- parallel::makePSOCKcluster(names = cores)
+#cores <- 8
+#cl <- parallel::makePSOCKcluster(names = cores)
 
 # load MBITES on each node
 parallel::clusterEvalQ(cl = cl,expr = {
