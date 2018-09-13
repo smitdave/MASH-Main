@@ -21,7 +21,8 @@ library(parallel)
 # directories for files
 JSON_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
 landscape_directory <- "/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/"
-output_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/analysis/"
+# output_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/analysis/"
+output_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/test/"
 
 # list of jobs to parallelize over
 jobs <- lapply(1:26,function(i){
@@ -33,7 +34,7 @@ jobs <- lapply(1:26,function(i){
     mosy_json = paste0(JSON_directory,"/mosquito_F_",i,".json"),
     human_json = paste0(JSON_directory,"/human_",i,".json"),
     # path to output
-    outfile = paste0(output_directory,"/analysis",i,".rds")
+    outfile = paste0(output_directory,"/analysis",i)
   )
 })
 
@@ -58,13 +59,13 @@ process <- function(job, verbose = FALSE){
 
   MBITES <- list()
 
-  mosquitos_df <- fromJSON(job$mosy_json, flatten = TRUE)
+  mosquitos_df <- jsonlite::fromJSON(job$mosy_json, flatten = TRUE)
   null_m <- which(sapply(mosquitos_df$id,is.null))
   if(length(null_m)>0){
     mosquitos_df <- mosquitos_df[-null_m,]
   }
 
-  humans_df <- fromJSON(job$human_json,flatten = TRUE)
+  humans_df <- jsonlite::fromJSON(job$human_json,flatten = TRUE)
   null_h <- which(sapply(humans_df$id,is.null))
   if(length(null_h)>0){
     humans_df <- humans_df[-null_h,]
@@ -92,19 +93,19 @@ process <- function(job, verbose = FALSE){
 
   # vectorial capacity
   if(verbose){cat("calculating human-centric vectorial capacity\n")}
-  MBITES$vc <- Bionomics_vectorialCapacity(mosquitos = mosquitos_df,humans = humans_df,EIP = 10,spatial = T)
+  MBITES$vc <- vc <- Bionomics_vectorialCapacity(mosquitos = mosquitos_df,humans = humans_df,EIP = 10,spatial = T)
   MBITES$vc_df <- data.frame(vc=sapply(MBITES$vc,function(x){x$VC}))
   MBITES$vc_mean <- mean(MBITES$vc_df$vc)
 
   # vectorial capacity for mosquitos
   if(verbose){cat("calculating mosquito-centric vectorial capacity\n")}
-  MBITES$vc_mosy <- Bionomics_vectorialCapacityMosquito(mosquitos = mosquitos_df,EIP = 10,spatial = T)
+  MBITES$vc_mosy <- vc_mosy <- Bionomics_vectorialCapacityMosquito(mosquitos = mosquitos_df,EIP = 10,spatial = T)
   MBITES$vc_mosy_df <- data.frame(vc=sapply(MBITES$vc_mosy,function(x){x$VC}))
   MBITES$vc_mosy_mean <- mean(MBITES$vc_mosy_df$vc)
 
   # egg production
   if(verbose){cat("calculating lifetime egg production\n")}
-  MBITES$lifetime_egg <- Bionomics_lifetimeOviposition(mosquitos_df,TRUE)
+  MBITES$lifetime_egg <- lifetime_egg <- Bionomics_lifetimeOviposition(mosquitos_df,TRUE)
   MBITES$lifetime_egg_mean <- mean(MBITES$lifetime_egg$lifetime)
 
   # egg laying rate
@@ -117,11 +118,19 @@ process <- function(job, verbose = FALSE){
   MBITES$blood_rate <- Bionomics_bloodfeedingRate(mosquitos_df)
   MBITES$blood_rate_mean <- mean(MBITES$blood_rate)
 
+  # clear out and write
+  if(verbose){cat("writing basic bionomics out to: ",paste0(job$outfile,"_basic.rds"),"\n")}
+  saveRDS(object = MBITES,file = paste0(job$outfile,"_basic.rds"),compress = TRUE)
+  rm(MBITES);gc()
+
+  # new object to write out
+  MBITES <- list()
+
   MBITES$dmat <- job$dmat
 
   # spatial dispersion of vectorial capacity
   if(verbose){cat("calculating spatial dispersion of vectorial capacity\n")}
-  with(MBITES,{
+  # with(MBITES,{
 
     if(verbose){cat("getting pairs of bites ... \n")}
 
@@ -137,7 +146,7 @@ process <- function(job, verbose = FALSE){
       out <- NULL
       i <- x$origin
       for(j in 1:length(x$dest)){
-        out <- append(out,dmat[i,x$dest[j]])
+        out <- append(out,MBITES$dmat[i,x$dest[j]])
       }
       return(out)
     })
@@ -170,17 +179,27 @@ process <- function(job, verbose = FALSE){
     if(verbose){cat("smoothing empirical PMF and CDF ... \n")}
 
     # smoothed CDF and PDF
-    MBITES$spatial_vc_CDF_sth <<- lokern::glkerns(spatial_vc_bins,spatial_vc_CDF_emp,deriv = 0,korder = 4,x.out=spatial_vc_bins)
-    MBITES$spatial_vc_PDF_sth <<- lokern::glkerns(spatial_vc_bins,spatial_vc_CDF_emp,deriv = 1,korder = 3,x.out=spatial_vc_bins)
+    MBITES$spatial_vc_CDF_sth <- lokern::glkerns(spatial_vc_bins,spatial_vc_CDF_emp,deriv = 0,korder = 4,x.out=spatial_vc_bins)
+    MBITES$spatial_vc_PDF_sth <- lokern::glkerns(spatial_vc_bins,spatial_vc_CDF_emp,deriv = 1,korder = 3,x.out=spatial_vc_bins)
 
-    MBITES$spatial_vc_CDF_emp <<- spatial_vc_CDF_emp
-    MBITES$spatial_vc_PDF_emp <<- spatial_vc_PDF_emp
+    MBITES$spatial_vc_CDF_emp <- spatial_vc_CDF_emp
+    MBITES$spatial_vc_PDF_emp <- spatial_vc_PDF_emp
     if(verbose){cat("done! \n")}
-  })
+  # })
+
+  # clear out and write
+  if(verbose){cat("writing spatial dispersion of vectorial capacity out to: ",paste0(job$outfile,"_spatialVC.rds"),"\n")}
+  saveRDS(object = MBITES,file = paste0(job$outfile,"_spatialVC.rds"),compress = TRUE)
+  rm(MBITES,vc);gc()
+
+  # new object to write out
+  MBITES <- list()
+
+  MBITES$dmat <- job$dmat
 
   # spatial dispersion of mosquito-centric vectorial capacity
   if(verbose){cat("calculating spatial dispersion of (mosy-centric) vectorial capacity\n")}
-  with(MBITES,{
+  # with(MBITES,{
 
     if(verbose){cat("getting pairs of bites ... \n")}
 
@@ -196,7 +215,7 @@ process <- function(job, verbose = FALSE){
       out <- NULL
       i <- x$origin
       for(j in 1:length(x$dest)){
-        out <- append(out,dmat[i,x$dest[j]])
+        out <- append(out,MBITES$dmat[i,x$dest[j]])
       }
       return(out)
     })
@@ -229,18 +248,28 @@ process <- function(job, verbose = FALSE){
     if(verbose){cat("smoothing empirical PMF and CDF ... \n")}
 
     # smoothed CDF and PDF
-    MBITES$spatial_vc_mosy_CDF_sth <<- lokern::glkerns(spatial_vc_mosy_bins,spatial_vc_mosy_CDF_emp,deriv = 0,korder = 4,x.out=spatial_vc_mosy_bins)
-    MBITES$spatial_vc_mosy_PDF_sth <<- lokern::glkerns(spatial_vc_mosy_bins,spatial_vc_mosy_CDF_emp,deriv = 1,korder = 3,x.out=spatial_vc_mosy_bins)
+    MBITES$spatial_vc_mosy_CDF_sth <- lokern::glkerns(spatial_vc_mosy_bins,spatial_vc_mosy_CDF_emp,deriv = 0,korder = 4,x.out=spatial_vc_mosy_bins)
+    MBITES$spatial_vc_mosy_PDF_sth <- lokern::glkerns(spatial_vc_mosy_bins,spatial_vc_mosy_CDF_emp,deriv = 1,korder = 3,x.out=spatial_vc_mosy_bins)
 
-    MBITES$spatial_vc_mosy_CDF_emp <<- spatial_vc_mosy_CDF_emp
-    MBITES$spatial_vc_mosy_PDF_emp <<- spatial_vc_mosy_PDF_emp
+    MBITES$spatial_vc_mosy_CDF_emp <- spatial_vc_mosy_CDF_emp
+    MBITES$spatial_vc_mosy_PDF_emp <- spatial_vc_mosy_PDF_emp
     if(verbose){cat("done! \n")}
-  })
+  # })
+
+  # clear out and write
+  if(verbose){cat("writing spatial dispersion of (mosy-centric) vectorial capacity out to: ",paste0(job$outfile,"_spatialMosyVC.rds"),"\n")}
+  saveRDS(object = MBITES,file = paste0(job$outfile,"_spatialMosyVC.rds"),compress = TRUE)
+  rm(MBITES,vc_mosy);gc()
+
+  # new object to write out
+  MBITES <- list()
+
+  MBITES$dmat <- job$dmat
 
   # spatial dispersion of egg batches
   # spatial egg dispersion
   if(verbose){cat("calculating spatial dispersion of egg batches\n")}
-  with(MBITES,{
+  # with(MBITES,{
 
     if(verbose){cat("getting pairs of oviposition events ... \n")}
 
@@ -256,7 +285,7 @@ process <- function(job, verbose = FALSE){
       out <- NULL
       i <- x$natal
       for(j in 1:length(x$dest)){
-        out <- append(out,dmat[i,x$dest[j]])
+        out <- append(out,MBITES$dmat[i,x$dest[j]])
       }
       return(out)
     })
@@ -281,17 +310,18 @@ process <- function(job, verbose = FALSE){
     if(verbose){cat("smoothing empirical PMF and CDF ... \n")}
 
     # smoothed CDF and PDF
-    MBITES$spatial_egg_CDF_sth <<- lokern::glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 0,korder = 4,x.out=spatial_egg_bins)
-    MBITES$spatial_egg_PDF_sth <<- lokern::glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 1,korder = 3,x.out=spatial_egg_bins)
+    MBITES$spatial_egg_CDF_sth <- lokern::glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 0,korder = 4,x.out=spatial_egg_bins)
+    MBITES$spatial_egg_PDF_sth <- lokern::glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 1,korder = 3,x.out=spatial_egg_bins)
 
-    MBITES$spatial_egg_CDF_emp <<- spatial_egg_CDF_emp
-    MBITES$spatial_egg_PDF_emp <<- spatial_egg_PDF_emp
+    MBITES$spatial_egg_CDF_emp <- spatial_egg_CDF_emp
+    MBITES$spatial_egg_PDF_emp <- spatial_egg_PDF_emp
     cat("done! \n")
-  })
+  # })
 
-  if(verbose){cat("writing out to: ",job$outfile,"\n")}
-  saveRDS(object = MBITES,file = job$outfile,compress = TRUE)
+  # clear out and write
+  if(verbose){cat("writing spatial dispersion of egg batches out to: ",paste0(job$outfile,"_spatialEgg.rds"),"\n")}
+  saveRDS(object = MBITES,file = paste0(job$outfile,"_spatialEgg.rds"),compress = TRUE)
 
-  rm(MBITES,mosquitos_df,humans_df);gc()
-  if(verbose){cat("\n")}
+  rm(MBITES,lifetime_egg,mosquitos_df,humans_df);gc()
+  if(verbose){cat("\ndone processing job ",job$id,"\n")}
 }

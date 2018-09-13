@@ -15,15 +15,18 @@ rm(list = ls());gc()
 library(MBITES)
 library(jsonlite)
 library(parallel)
+library(lokern)
 
 ###############################################################################
 # make MBITES bionomics plots for all runs
 ###############################################################################
 
 # where the files can be found
-directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+# directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/test/"
 lscape_dir <- "/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/"
-plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
+# plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
+plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/test/"
 
 # loop over all experiments
 pb <- txtProgressBar(min = 1,max = 26)
