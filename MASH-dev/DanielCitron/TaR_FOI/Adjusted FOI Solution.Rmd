@@ -13,7 +13,9 @@ $$
 \psi \cdot \vec{h} = \frac{r \vec{X}}{1 - \vec{X}}
 $$
 where $\vec{h}$ represents the Force of Infection, the quantity that we are solving for. 
-$\psi$ is a known matrix, $\vec{X}$ is a known vector, and $r =1/200$.
+$\psi$ is a known matrix, $\vec{X}$ represents prevalence, and $r =1/200$.
+
+The matrix $\psi$ represents the amount of time that someone who lives in one area spends time in each area.  That is to say, $\psi[i,j]$ is the amount of time that someone from area `i` spends in area `j`.
 
 This example problem will use 3 example areas.  Two of the areas are located outside of Malabo (`ban.area` and `bas.area`) while the third area is inside Malabo (`mal.area`).  The remaining 7 locations included in the model are all places where people travel to.
 ```{r Read in Movement Model Data}
@@ -21,8 +23,11 @@ P.ij <- read.csv( "pij.csv",
                col.names = c("x","ban.area", "mal.area", "bas.area", "off", "ban", "lub", "mal", "mok", "ria", "ure"),
                row.names = c("ban.area", "mal.area", "bas.area", "off", "ban", "lub", "mal", "mok", "ria", "ure"))
 P.ij <- P.ij[,2:11]
+P.ij <- as.matrix(P.ij)
+P.ij
 ```
 Each row of `P.ij` represents a probability distribution - the amount of time spent distributed across the 10 different locations included in this example.
+
 
 Define vector of PR estimates
 ```{r Defining the PR Estimates}
@@ -49,7 +54,7 @@ The problem now is that we actually have too much FOI in the Malabo-related area
 $$ 
 h = bEIR = VC*(\text{sporozoite rate}) \propto \frac{M}{H}
 $$
-If we assume that the sporozoite rate is roughly the same everywhere (which I have not actually checked yet), we find that the force of infection is proportional to the mosquito population divided by the human population.
+If we assume that the sporozoite rate is roughly the same everywhere, we find that the force of infection is proportional to the mosquito population divided by the human population.
 
 In the areas associated with Malabo, empirical studies find that there really aren't very many mosquitoes and a large number of humans. In other words, the estimates of $h$ in Malabo are far too high.
 
@@ -103,3 +108,146 @@ $$
 r \frac{\hat{X}}{1 - \hat{X}} = \hat{\psi} \cdot \vec{h}
 $$
 Our objective is to find $\hat{X}$ that comes as close to possible to estimating our PR estimates $\vec{X}$.
+
+
+
+# Solving using Numerical Optimizers
+To solve using a numerical optimizer, we first need to specify our objective function and our inequality constraints.  We also need to pick an initial guess that falls within the constraints.
+
+We want to maximize our objective function over the vector of free parameters $\theta$, where `theta[1:10]` $= \vec{h}$ and `theta[11:12]` $= (\delta_1, \delta_2)$
+
+### Define objective function
+Also define the gradient, which will also go into the optimizer
+```{r Objective Function}
+# odds ratio:
+r <- 1/200
+oratio <- r*X.est/(1 - X.est)
+
+# objective function - minimize the sum of squared errors
+make_eval_f <- function(pr,psi){
+
+  pr <- pr
+  psi <- psi
+
+  f <- function(theta){
+    psi_hat <- psi
+    # psi matrix - alter the malabo row
+    psi_hat[2,1] <- theta[11]
+    psi_hat[2,2] <- psi_hat[2,2] - theta[11] - theta[12]
+    psi_hat[2,3] <- theta[12]
+    # predicted PfPR
+    pr_hat  <- psi_hat %*% matrix(theta[1:10],ncol=1)
+    # minimize sum of squared errors
+    sum((pr - pr_hat)^2)
+  }
+
+  return(f)
+}
+eval_f <- make_eval_f(oratio,P.ij)
+
+# Gradient of optimizer
+eval_f_grad <- function(theta){
+  nloptr::nl.grad(theta,eval_f)
+}
+```
+### Define constraints
+Includes both lower/upper bound constraints as well as our linear constraints (represented as inequalities).  We will define our linear constraints such that we want each quantity in the output to be positive for now.
+
+Also define the gradient of the constraints
+```{r}
+# lower and upper bounds on the elements of theta:
+lb = c(rep(0,12))
+ub = c(rep(1,10), rep(.4,2))
+
+# linear constraints:
+make_eval_ineq <- function(pr,psi){
+
+  pr <- pr
+  psi <- psi
+
+  f <- function(theta){
+    rbind(
+      # FOI constraint 1
+      theta[1] - 100*theta[2], # h1 - 100 * h2 > 0
+      # FOI constraint 2
+      theta[3] - 100*theta[2], # h3 - 100 * h2 > 0
+      # FOI constraint 3
+      sum(theta[c(5,6,8,9,10)]) - 500*theta[7], # mean on-island h - 100 * malabo h  > 0
+      # psi constraint 1
+      psi[2,2] - theta[11] - theta[12]#,
+      # delta constraint
+      #.8 - theta[11] - theta[12] # force at least 50% of time at home
+      )
+  }
+  return(f)
+}
+eval_ineq <- make_eval_ineq(oratio,P.ij)
+
+# Gradient
+eval_ineq_jac <- function(theta){
+  nloptr::nl.jacobian(theta,eval_ineq)
+}
+```
+
+### Define initial guess
+```{r Initial Guess}
+theta_init <- c(
+  # FOI on h1,h2,h3
+  2e-1,1e-3,2e-1,
+  # FOI in h4 (no constraint)
+  1e-2,
+  # FOI in h5, ... ,h10 (strict constraint)
+  rep(2e-1,2),1e-4,rep(2e-1,3),
+  # deltas
+  3e-1,3e-1)
+
+# Check initial guess
+eval_ineq(theta_init)
+```
+
+
+### Use the optimizer
+```{r Optimize, with SQP}
+opt_slsqp <- nloptr::slsqp(x0 = theta_init,
+                           fn = eval_f,
+                           gr = eval_f_grad,
+                           lower = lb,
+                           upper = ub,
+                           hin = eval_ineq,
+                           hinjac = eval_ineq_jac,
+                           nl.info = TRUE,
+                           control = list(
+                             "maxeval" = 1e4
+                           ))
+```
+
+## Check our answers
+Is the solution plausible?  Do we still have the 
+```{r Verify the Solution}
+params <- with(opt_slsqp, par)
+
+psi.hat <- P.ij
+psi.hat[2,1] <- params[11]
+psi.hat[2,3] <- params[12]
+psi.hat[2,2] <- psi.hat[2,2] - psi.hat[2,1] - psi.hat[2,3]
+
+h.hat <- params[1:10]
+
+cbind(psi.hat %*% h.hat, oratio, psi.hat %*% h.hat - oratio)
+```
+
+```{r}
+h.hat
+```
+```{r}
+psi.hat[1:3,1:3]
+```
+
+```{r}
+eval_ineq(params)
+```
+
+# Challenges:
+
+  1. The above solution is not exactly plausible - preferably we want to have people spending most of their time at home - $\psi[2,2]$ is small compared to $\psi[2,1]$ and $\psi[2,3]$ in the solution we found above.  That being said, it is unclear whether the solution found by the optimizer is becoming stuck in a local minimum.  To figure this out, we would want a systematic way of testing different `x0` vectors that still satisfy our constraints.
+  2. Expanding the problem - this is a 3-area example problem designed to illustrate the types of problems we will have to solve moving forward.  Eventually we will need to solve a very similar problem with a 195 $\times$ 195 matrix, with many more free parameters.  It is possible that there will be so many free parameters that the problem will be underdetermined.  We would still want to find some sort of set of plausible solutions that at the very least satisfy all of the constraints we impose on $\hat{\psi}$ and $\hat{h}$. It is not yet clear that this sort of numerical optimizer would be effective for that.

@@ -12,7 +12,11 @@
 ###############################################################################
 
 rm(list = ls());gc()
-library(MBITES)
+
+.libPaths( c( .libPaths(), "/ihme/malaria_modeling/dtcitron/Rlibs") )
+library(MBITES, lib.loc = "/ihme/malaria_modeling/dtcitron/Rlibs")
+
+
 
 
 ###############################################################################
@@ -80,9 +84,8 @@ mosquitos = data.frame(
 # Run MBITES
 ###############################################################################
 
-# set.seed(42L)
-
-directory <- "/Users/slwu89/Desktop/mbites/trivial/"
+directory <- "/ihme/malaria_modeling/dtcitron/MBITES_demo/trivial"
+#directory <- "/Users/slwu89/Desktop/mbites/trivial/"
 
 # initialize methods
 MBITES_Setup_MBDETES()
@@ -94,8 +97,8 @@ trackBloodHost()
 trackOviposition()
 
 # set parameters
-# PPR <- MBDETES_PrPPRFlight_optim(E = BFAB_PAR()$E)
-# rf <- MBDETES_PrRefeed_optim(G = BFAB_PAR()$G)
+PPR <- MBDETES_PrPPRFlight_optim(E = BFAB_PAR()$E)
+rf <- MBDETES_PrRefeed_optim(G = BFAB_PAR()$G)
 
 # MBITES:::Parameters$set_parameters(Bs_surv = 0.95,Os_surv = 0.95,B_surv = 0.98,O_surv = 0.98,
 #                                    Bs_succeed = 0.99,Os_succeed = 0.99,B_succeed = 0.95,O_succeed = 0.99,
@@ -117,7 +120,7 @@ MBITES_Initialize(mosquitos)
 # run simulation
 set_output(directory = directory,runID = 3)
 
-simulation(tMax = 365*200,pretty = TRUE)
+simulation(tMax = 365*5,pretty = TRUE)
 hardreset()
 
 
@@ -129,11 +132,11 @@ library(jsonlite)
 library(ggplot2)
 
 # where the files can be found
-output_dir <- paste0(directory,"run1")
+output_dir <- paste0(directory,"run3")
 
-mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_1.json"), flatten = TRUE)
+mosquitos_df <- fromJSON(paste0(output_dir,"/mosquito_F_3.json"), flatten = TRUE)
 mosquitos_df <- mosquitos_df[-which(sapply(mosquitos_df$id,is.null)),]
-humans_df <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
+humans_df <- fromJSON(paste0(output_dir,"/human_3.json"), flatten = TRUE)
 humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 
 
