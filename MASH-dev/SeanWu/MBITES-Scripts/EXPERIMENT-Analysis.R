@@ -23,10 +23,10 @@ library(lokern)
 
 # where the files can be found
 # directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
-directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/test/"
+directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/analyzed/"
 lscape_dir <- "/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/"
-# plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
-plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/test/"
+plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
+# plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/test/"
 
 # loop over all experiments
 pb <- txtProgressBar(min = 1,max = 26)
@@ -38,8 +38,9 @@ for(i in 1:26){
   MBITES_basic <- readRDS(paste0(directory,"analysis_run_",run,".rds_basic.rds"))
   MBITES_egg <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialEgg.rds"))
   MBITES_Hvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialVC.rds"))
-  MBITES_Mvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialMosyVC.rds"))
-  MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc,MBITES_Mvc)
+  # MBITES_Mvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialMosyVC.rds"))
+  # MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc,MBITES_Mvc)
+  MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc)
 
   # lifespan/survival function
   pdf(file = paste0(plot_directory,"MBITES_survival_",run,".pdf"),width = 12,height = 8)
@@ -82,13 +83,16 @@ for(i in 1:26){
   # vectorial capacity
   pdf(file = paste0(plot_directory,"MBITES_vc_",run,".pdf"),width = 12,height = 8)
   with(MBITES,{
-    vc <- hist(vc_df$vc,probability = TRUE,breaks = 100,
+    vc_normalized <- vc_df$vc / nrow(vc_df)
+    vc_max <- max(vc_normalized)
+    vc_mean_norm <- mean(vc_normalized)
+    vc <- hist(vc_normalized,probability = TRUE,breaks = 100,
          col = adjustcolor("firebrick3",alpha.f = 0.5),
          xlab = "Secondary Bites", ylab = "Density",
-         main = paste0("MBITES Vectorial Capacity (mean: ",round(vc_mean,2),")"))
-    abline(v = vc_mean,lwd=2.5,lty=2,col="firebrick3")
-    abline(v = max(vc_df$vc),lwd=2.5,lty=2,col=adjustcolor("steelblue",alpha.f = 0.5))
-    text(x = max(vc_df$vc),y=max(vc$density)*0.1,paste0("max: ",max(vc_df$vc)),
+         main = paste0("MBITES Vectorial Capacity (mean: ",round(vc_mean_norm,2),")"))
+    abline(v = vc_mean_norm,lwd=2.5,lty=2,col="firebrick3")
+    abline(v = vc_max,lwd=2.5,lty=2,col=adjustcolor("steelblue",alpha.f = 0.5))
+    text(x = vc_max,y=max(vc$density)*0.1,paste0("max: ",vc_max),
          col=adjustcolor("steelblue",alpha.f = 0.75),adj=1.15)
   })
   dev.off()
@@ -146,68 +150,25 @@ for(i in 1:26){
   dev.off()
 
   # spatial egg dispersion
-
-  # only need to recompute because i forgot to properly assign in the EXPERIMENT-Processing.R script.
-  dmat <- as.matrix(read.csv(paste0(lscape_dir,"DavidSmith/MBITES-Demo/dist_",run,".csv"), header = FALSE))
-
-  # get pairs of eggs
-  spatial_egg_pairs <- Filter(f = function(x){
-    !(is.nan(x$natal) && is.nan(x$dest))
-  },x = MBITES$lifetime_egg$dispersion)
-
-
-  # spatial egg dispersion
-  spatial_egg_pairs <- lapply(spatial_egg_pairs,function(x){
-    out <- NULL
-    i <- x$natal
-    for(j in 1:length(x$dest)){
-      out <- append(out,dmat[i,x$dest[j]])
-    }
-    return(out)
-  })
-  spatial_egg_dist <- do.call(c,spatial_egg_pairs)
-  spatial_egg_dist <- sort(spatial_egg_dist,decreasing = FALSE)
-
-  spatial_egg_bins <- unique(spatial_egg_dist)
-
-
-  # get empirical PDF by summing stuff in the distance bins (takes awhile, use parallel if you can)
-  spatial_egg_PDF_emp <- mclapply(X = spatial_egg_bins,FUN = function(x,spatial_egg_dist){
-    length(spatial_egg_dist[which(fequal(spatial_egg_dist,x))])
-  },spatial_egg_dist=spatial_egg_dist,mc.cores = detectCores()-2)
-  spatial_egg_PDF_emp <- unlist(spatial_egg_PDF_emp) # mclapply outputs lists; coerce to vector
-  # technically its a PMF so we normalize it
-  spatial_egg_PDF_emp <- spatial_egg_PDF_emp/sum(spatial_egg_PDF_emp)
-
-  # get empirical CDF by preforming a cumulative sum over data points in distance bins
-  spatial_egg_CDF_emp <- cumsum(spatial_egg_PDF_emp)
-
-  # smoothed CDF and PDF
-  spatial_egg_CDF_sth <- glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 0,korder = 4,x.out=spatial_egg_bins)
-  spatial_egg_PDF_sth <- glkerns(spatial_egg_bins,spatial_egg_CDF_emp,deriv = 1,korder = 3,x.out=spatial_egg_bins)
-
-
-  # plot
   pdf(file = paste0(plot_directory,"MBITES_spatialegg_",run,".pdf"),width = 12,height = 8)
-  par(mar = c(5, 4, 4, 4) + 0.3)  # Leave space for z axis
-  plot(spatial_egg_CDF_sth$x.out, spatial_egg_CDF_sth$est,type="l",col="firebrick3",lwd=3,
-       ylab="CDF",xlab="Distance",main="Spatial Dispersion of Egg Batches")
-  polygon(x=c(0,spatial_egg_CDF_sth$x.out,tail(spatial_egg_CDF_sth$x.out,1)),
-          y= c(head(spatial_egg_CDF_sth$est,1),spatial_egg_CDF_sth$est,head(spatial_egg_CDF_sth$est,1)),
-          border=NA, col=adjustcolor("firebrick3",alpha.f = 0.5))
-  par(new = TRUE)
-  plot(spatial_egg_PDF_sth$x.out, spatial_egg_PDF_sth$est, type = "l",col="steelblue",lwd=3,
-       axes = FALSE, bty = "n", xlab = "", ylab = "")
-  polygon(c(0,spatial_egg_PDF_sth$x.out), c(0,spatial_egg_PDF_sth$est),
-          border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
-  axis(side=4, at = pretty(range(spatial_egg_PDF_sth$est)))
-  mtext("PDF", side=4, line=3)
-  dev.off()
+  with(MBITES,{
+    par(mar = c(5, 4, 4, 4) + 0.3)  # Leave space for z axis
+    plot(spatial_egg_CDF_sth$x.out, spatial_egg_CDF_sth$est,type="l",col="firebrick3",lwd=3,
+         ylab="CDF",xlab="Distance",main="Spatial Dispersion of Egg Batches")
+    polygon(x=c(0,spatial_egg_CDF_sth$x.out,tail(spatial_egg_CDF_sth$x.out,1)),
+            y= c(head(spatial_egg_CDF_sth$est,1),spatial_egg_CDF_sth$est,head(spatial_egg_CDF_sth$est,1)),
+            border=NA, col=adjustcolor("firebrick3",alpha.f = 0.5))
+    par(new = TRUE)
+    plot(spatial_egg_PDF_sth$x.out, spatial_egg_PDF_sth$est, type = "l",col="steelblue",lwd=3,
+         axes = FALSE, bty = "n", xlab = "", ylab = "")
+    polygon(c(0,spatial_egg_PDF_sth$x.out), c(0,spatial_egg_PDF_sth$est),
+            border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
+    axis(side=4, at = pretty(range(spatial_egg_PDF_sth$est)))
+    mtext("PDF", side=4, line=3)
+    dev.off()
+  })
 
-
-  rm(MBITES,dmat,
-     spatial_egg_pairs,spatial_egg_dist,spatial_egg_bins,
-     spatial_egg_CDF_emp,spatial_egg_PDF_emp,spatial_egg_CDF_sth,spatial_egg_PDF_sth);gc()
+  rm(MBITES);gc()
   setTxtProgressBar(pb,i)
 }
 setTxtProgressBar(pb,i+1)
@@ -287,7 +248,8 @@ library(MBITES)
 library(jsonlite)
 library(Hmisc)
 
-directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+# directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/analyzed/"
 plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
 
 # hold the means
@@ -321,13 +283,23 @@ pb <- txtProgressBar(1,max)
 for(i in 1:max){
 
   run <- as.character(i)
-  MBITES <- readRDS(paste0(directory,"/analysis",run,".rds"))
+  # MBITES <- readRDS(paste0(directory,"/analysis",run,".rds"))
+
+  MBITES_basic <- readRDS(paste0(directory,"analysis_run_",run,".rds_basic.rds"))
+  MBITES_egg <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialEgg.rds"))
+  MBITES_Hvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialVC.rds"))
+  MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc)
 
   # get means
   lifespan_means[i] <- MBITES$surv_mean
   numbloodhost_means[i] <- MBITES$blood_hosts_mean
   feedingcycle_means[i] <- MBITES$blood_interval_mean
-  vc_means[i] <- MBITES$vc_mean
+  # vc correction
+  vc_normalized <- vc_df$vc / nrow(vc_df)
+  vc_max <- max(vc_normalized)
+  vc_mean_norm <- mean(vc_normalized)
+  vc_means[i] <- vc_mean_norm
+  # vc_means[i] <- MBITES$vc_mean
   lifetimeEgg_means[i] <- MBITES$lifetime_egg_mean
   eggrate_means[i] <- MBITES$egg_rate_mean
   bloodrate_means[i] <- MBITES$blood_rate_mean
