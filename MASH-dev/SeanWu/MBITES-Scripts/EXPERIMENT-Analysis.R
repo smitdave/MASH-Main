@@ -38,9 +38,10 @@ for(i in 1:26){
   MBITES_basic <- readRDS(paste0(directory,"analysis_run_",run,".rds_basic.rds"))
   MBITES_egg <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialEgg.rds"))
   MBITES_Hvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialVC.rds"))
+  MBITES_uniqueVC <- readRDS(paste0(directory,"uniqueVC",run,".rds"))
   # MBITES_Mvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialMosyVC.rds"))
   # MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc,MBITES_Mvc)
-  MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc)
+  MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc,MBITES_uniqueVC)
 
   # lifespan/survival function
   pdf(file = paste0(plot_directory,"MBITES_survival_",run,".pdf"),width = 12,height = 8)
@@ -94,6 +95,25 @@ for(i in 1:26){
     abline(v = vc_mean_norm,lwd=2.5,lty=2,col="firebrick3")
     abline(v = vc_max,lwd=2.5,lty=2,col=adjustcolor("steelblue",alpha.f = 0.5))
     text(x = vc_max,y=max(vc$density)*0.1,paste0("max: ",round(vc_max,2)),
+         col=adjustcolor("steelblue",alpha.f = 0.75),adj=1.15)
+  })
+  dev.off()
+
+  # unique secondary host vectorial capacity
+  pdf(file = paste0(plot_directory,"MBITES_vc_unique_",run,".pdf"),width = 12,height = 8)
+  with(MBITES,{
+    vc_normalized_u <- MBITES_uniqueVC / length(MBITES_uniqueVC)
+    vc_normalized_u <- vc_normalized_u / (5*365) # normalize by time
+    vc_max_u <- max(vc_normalized_u)
+    vc_mean_norm_u <- mean(vc_normalized_u)
+    vc_mean_norm_u <- round(vc_mean_norm_u,4)
+    vc_u <- hist(vc_normalized_u,probability = TRUE,breaks = 100,
+               col = adjustcolor("firebrick3",alpha.f = 0.5),
+               xlab = "Secondary Bites", ylab = "Density",
+               main = paste0("MBITES Vectorial Capacity (mean: ",vc_mean_norm_u,")\n(unique secondary hosts)"))
+    abline(v = vc_mean_norm_u,lwd=2.5,lty=2,col="firebrick3")
+    abline(v = vc_max_u,lwd=2.5,lty=2,col=adjustcolor("steelblue",alpha.f = 0.5))
+    text(x = vc_max_u,y=max(vc_u$density)*0.1,paste0("max: ",round(vc_max_u,2)),
          col=adjustcolor("steelblue",alpha.f = 0.75),adj=1.15)
   })
   dev.off()
@@ -259,6 +279,7 @@ lifespan_means <- rep(0,max)
 numbloodhost_means <- rep(0,max)
 feedingcycle_means <- rep(0,max)
 vc_means <- rep(0,max)
+vc_u_means <- rep(0,max)
 lifetimeEgg_means <- rep(0,max)
 eggrate_means <- rep(0,max)
 bloodrate_means <- rep(0,max)
@@ -270,6 +291,7 @@ lifespan_quant <- vector("list",max)
 numbloodhost_quant <- vector("list",max)
 feedingcycle_quant <- vector("list",max)
 vc_quant <- vector("list",max)
+vc_u_quant <- vector("list",max)
 lifetimeEgg_quant <- vector("list",max)
 eggrate_quant <- vector("list",max)
 bloodrate_quant <- vector("list",max)
@@ -289,12 +311,15 @@ for(i in 1:max){
   MBITES_basic <- readRDS(paste0(directory,"analysis_run_",run,".rds_basic.rds"))
   MBITES_egg <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialEgg.rds"))
   MBITES_Hvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialVC.rds"))
+  MBITES_uniqueVC <- readRDS(paste0(directory,"uniqueVC",run,".rds"))
   MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc)
+  MBITES$MBITES_uniqueVC <- MBITES_uniqueVC
 
   # get means
   lifespan_means[i] <- MBITES$surv_mean
   numbloodhost_means[i] <- MBITES$blood_hosts_mean
   feedingcycle_means[i] <- MBITES$blood_interval_mean
+
   # vc correction
   vc_normalized <- MBITES$vc_df$vc / nrow(MBITES$vc_df)
   vc_normalized <- vc_normalized / (5*365) # normalize by time
@@ -302,6 +327,14 @@ for(i in 1:max){
   vc_mean_norm <- mean(vc_normalized)
   vc_means[i] <- vc_mean_norm
   # vc_means[i] <- MBITES$vc_mean
+
+  # unique secondary hosts for vc
+  vc_normalized_u <- MBITES$MBITES_uniqueVC / length(MBITES$MBITES_uniqueVC)
+  vc_normalized_u <- vc_normalized_u / (5*365) # normalize by time
+  vc_max_u <- max(vc_normalized_u)
+  vc_mean_norm_u <- mean(vc_normalized_u)
+  vc_u_means[i] <- vc_mean_norm_u
+
   lifetimeEgg_means[i] <- MBITES$lifetime_egg_mean
   eggrate_means[i] <- MBITES$egg_rate_mean
   bloodrate_means[i] <- MBITES$blood_rate_mean
@@ -313,7 +346,13 @@ for(i in 1:max){
   numbloodhost_quant[[i]] <- quantile(MBITES$blood_hosts$humanHost,probs = q_probs)
   feedingcycle_quant[[i]] <- quantile(MBITES$blood_interval$rest_intervals,probs = q_probs)
   # vc_quant[[i]] <- quantile(MBITES$vc_df$vc,probs = q_probs)
+
+  # vc
   vc_quant[[i]] <- quantile(vc_normalized,probs = q_probs)
+
+  # vc with unique hosts
+  vc_u_quant[[i]] <- quantile(vc_normalized_u,probs = q_probs)
+
   lifetimeEgg_quant[[i]] <- quantile(MBITES$lifetime_egg$lifetime,probs = q_probs)
   eggrate_quant[[i]] <- quantile(MBITES$egg_rate$ages,probs = q_probs)
   bloodrate_quant[[i]] <- quantile(MBITES$blood_rate,probs = q_probs)
@@ -477,6 +516,47 @@ for(i in 1:max){
            y0 = vc_quant[[i]][[3]],
            x1 = (i+0.2),
            y1 = vc_quant[[i]][[3]],
+           col = "grey40",
+           lwd = 2.5,lend=2)
+}
+dev.off()
+
+# vectorial capacity with unique hosts
+maxy <- max(c(sapply(vc_u_quant,max)),vc_u_means)
+pdf(file = paste0(plot_directory,"MBITES_means_vc_unique.pdf"),width = 12,height = 8)
+plot(x = 1:max,
+     y = vc_u_means,
+     pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
+     xlab = "Simulated Landscape",ylab = "Secondary Bites",main = "MBITES Vectorial Capacity\n(unique secondary hosts)",
+     ylim = c(0,
+              ceiling(1e1*maxy)*1e-1
+              ))
+for(i in 1:max){
+  rect(xleft = (i-0.2),
+       ybottom = vc_u_quant[[i]][[1]],
+       xright = (i+0.2),
+       ytop = vc_u_quant[[i]][[5]],
+       border = adjustcolor("firebrick3",alpha.f = 0.75),
+       lwd = 1.5)
+  # lower 25% quantile
+  segments(x0 = (i-0.2),
+           y0 = vc_u_quant[[i]][[2]],
+           x1 = (i+0.2),
+           y1 = vc_u_quant[[i]][[2]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # upper 75% quantile
+  segments(x0 = (i-0.2),
+           y0 = vc_u_quant[[i]][[4]],
+           x1 = (i+0.2),
+           y1 = vc_u_quant[[i]][[4]],
+           col = adjustcolor("steelblue",alpha.f = 0.8),
+           lwd = 2.5,lend=2)
+  # median
+  segments(x0 = (i-0.2),
+           y0 = vc_u_quant[[i]][[3]],
+           x1 = (i+0.2),
+           y1 = vc_u_quant[[i]][[3]],
            col = "grey40",
            lwd = 2.5,lend=2)
 }

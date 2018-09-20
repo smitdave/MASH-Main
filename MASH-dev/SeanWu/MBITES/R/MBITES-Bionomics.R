@@ -484,7 +484,7 @@ Bionomics_UniqueBites <- function(mosquitos,humans,EIP){
         if(length(secondaryBites) > 0){
 
           # add to the primary host's VC
-          VC[[bloodHosts[1]]]$VC = VC[[bloodHosts[1]]]$VC + length(secondaryBites)
+          VC[bloodHosts[1]] = VC[bloodHosts[1]] + length(secondaryBites)
 
         }
       }
