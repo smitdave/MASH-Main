@@ -420,6 +420,89 @@ Bionomics_vectorialCapacity <- function(mosquitos,humans,EIP,spatial=FALSE){
   return(VC)
 }
 
+#' Bionomics: Compute Unique Secondary Bites (derived from human-centric VC)
+#'
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run.
+#' For each human, compute VC as in \code{\link{Bionomics_vectorialCapacity}} but only consider
+#' unique secondary hosts to contribute to a focal hosts's VC.
+#'
+#' @return a list where each element corresponds to a human host.
+#'         Each host has \code{VC}, which is the total number of secondary bites arising from him or her, and
+#'         \code{spatialVC} which is a list of origin/destination pairs tracking dispersion of each initial bite.
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @param humans a data.frame of parsed JSON human output
+#' @param EIP the length of EIP
+#' @param spatial compute spatial dispersion of bites or not
+#' @export
+Bionomics_UniqueBites <- function(mosquitos,humans,EIP){
+
+  # number of humans
+  nhum <- nrow(humans)
+
+  # get only mosquitoes who took more than 1 blood meal and were dead by end of simulation
+  filter <- sapply(mosquitos[,"bloodHosts"],function(x){length(x)>1}) & sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- which(filter)
+
+  # VC
+  VC <- rep(0,nhum)
+
+  # iterate over mosquitoes
+  pb <- txtProgressBar(min = 1,max = length(filter))
+  for(i in filter){
+
+    bloodHosts <- mosquitos[i,"bloodHosts"][[1]]
+    timeFeed <- mosquitos[i,"timeFeed"][[1]]
+    siteFeed <- mosquitos[i,"siteFeed"][[1]]
+    probeAndFeed <- mosquitos[i,"probeAndFeed"][[1]]
+
+    # check for non human hosts
+    if(any(bloodHosts == -1)){
+      nonhuman <- which(bloodHosts==-1)
+      if(length(nonhuman) == length(bloodHosts)){
+        next()
+      } else {
+        bloodHosts <- bloodHosts[-nonhuman]
+        timeFeed <- timeFeed[-nonhuman]
+        siteFeed <- siteFeed[-nonhuman]
+        probeAndFeed <- probeAndFeed[-nonhuman]
+      }
+    }
+
+    # iterate over bites
+    while(length(timeFeed) > 1){
+
+      # only if the bite was a probing AND feeding event
+      # (feeding needs to occur for human -> mosy transmission)
+      if(probeAndFeed[1]){
+
+        # get indices of unique secondary bites
+        pairTimes <- timeFeed[-1] - timeFeed[1]
+        secondaryBites <- which((pairTimes > EIP) & (bloodHosts[-1] != bloodHosts[1]))
+
+        # only if there were secondary bites arising from this bite
+        if(length(secondaryBites) > 0){
+
+          # add to the primary host's VC
+          VC[bloodHosts[1]] = VC[bloodHosts[1]] + length(secondaryBites)
+
+        }
+      }
+
+      # take off the first bite
+      bloodHosts <- bloodHosts[-1]
+      timeFeed <- timeFeed[-1]
+      siteFeed <- siteFeed[-1]
+      probeAndFeed <- probeAndFeed[-1]
+    } # finish iterating over bites
+
+    setTxtProgressBar(pb,i)
+  } # finish iterating over mosquitoes
+  setTxtProgressBar(pb,i+1);cat("\n")
+
+  return(VC)
+}
+
 
 #' Bionomics: Compute Vectorial Capacity (Mosquito-centric)
 #'
