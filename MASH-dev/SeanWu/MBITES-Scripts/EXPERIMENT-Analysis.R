@@ -84,6 +84,7 @@ for(i in 1:26){
   pdf(file = paste0(plot_directory,"MBITES_vc_",run,".pdf"),width = 12,height = 8)
   with(MBITES,{
     vc_normalized <- vc_df$vc / nrow(vc_df)
+    vc_normalized <- vc_normalized / (5*365) # normalize by time
     vc_max <- max(vc_normalized)
     vc_mean_norm <- mean(vc_normalized)
     vc <- hist(vc_normalized,probability = TRUE,breaks = 100,
@@ -92,7 +93,7 @@ for(i in 1:26){
          main = paste0("MBITES Vectorial Capacity (mean: ",round(vc_mean_norm,2),")"))
     abline(v = vc_mean_norm,lwd=2.5,lty=2,col="firebrick3")
     abline(v = vc_max,lwd=2.5,lty=2,col=adjustcolor("steelblue",alpha.f = 0.5))
-    text(x = vc_max,y=max(vc$density)*0.1,paste0("max: ",vc_max),
+    text(x = vc_max,y=max(vc$density)*0.1,paste0("max: ",round(vc_max,2)),
          col=adjustcolor("steelblue",alpha.f = 0.75),adj=1.15)
   })
   dev.off()
@@ -295,7 +296,8 @@ for(i in 1:max){
   numbloodhost_means[i] <- MBITES$blood_hosts_mean
   feedingcycle_means[i] <- MBITES$blood_interval_mean
   # vc correction
-  vc_normalized <- vc_df$vc / nrow(vc_df)
+  vc_normalized <- MBITES$vc_df$vc / nrow(MBITES$vc_df)
+  vc_normalized <- vc_normalized / (5*365) # normalize by time
   vc_max <- max(vc_normalized)
   vc_mean_norm <- mean(vc_normalized)
   vc_means[i] <- vc_mean_norm
@@ -310,7 +312,8 @@ for(i in 1:max){
   lifespan_quant[[i]] <- wtd.quantile(MBITES$surv_tt,MBITES$surv_s,probs = q_probs)
   numbloodhost_quant[[i]] <- quantile(MBITES$blood_hosts$humanHost,probs = q_probs)
   feedingcycle_quant[[i]] <- quantile(MBITES$blood_interval$rest_intervals,probs = q_probs)
-  vc_quant[[i]] <- quantile(MBITES$vc_df$vc,probs = q_probs)
+  # vc_quant[[i]] <- quantile(MBITES$vc_df$vc,probs = q_probs)
+  vc_quant[[i]] <- quantile(vc_normalized,probs = q_probs)
   lifetimeEgg_quant[[i]] <- quantile(MBITES$lifetime_egg$lifetime,probs = q_probs)
   eggrate_quant[[i]] <- quantile(MBITES$egg_rate$ages,probs = q_probs)
   bloodrate_quant[[i]] <- quantile(MBITES$blood_rate,probs = q_probs)
@@ -445,7 +448,9 @@ plot(x = 1:max,
      y = vc_means,
      pch=16,col=adjustcolor("firebrick3",alpha.f = 0.75),
      xlab = "Simulated Landscape",ylab = "Secondary Bites",main = "MBITES Vectorial Capacity",
-     ylim = c(0,ceiling(maxy)))
+     ylim = c(0,
+              ceiling(1e1*maxy)*1e-1
+              ))
 for(i in 1:max){
   rect(xleft = (i-0.2),
        ybottom = vc_quant[[i]][[1]],

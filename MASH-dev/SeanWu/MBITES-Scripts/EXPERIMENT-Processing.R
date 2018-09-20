@@ -263,3 +263,46 @@ for(i in 1:26){
   rm(MBITES,mosquitos_df,humans_df);gc()
   cat("\n")
 }
+
+
+###############################################################################
+# calculate unique secondary bites VC
+###############################################################################
+
+rm(list = ls());gc()
+library(MBITES)
+library(jsonlite)
+
+# where the files can be found
+directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+outdir <- "/Users/slwu89/Desktop/mbites/peridomIHME/analyzed/"
+
+# iterate over all runs
+pb <- txtProgressBar(min = 1,max = 26)
+for(i in 1:26){
+
+  run <- as.character(i)
+
+  mosquitos_df <- fromJSON(paste0(directory,"/mosquito_F_",run,".json"), flatten = TRUE)
+  null_m <- which(sapply(mosquitos_df$id,is.null))
+  if(length(null_m)>0){
+    mosquitos_df <- mosquitos_df[-null_m,]
+  }
+
+  humans_df <- fromJSON(paste0(directory,"/human_",run,".json"),flatten = TRUE)
+  null_h <- which(sapply(humans_df$id,is.null))
+  if(length(null_h)>0){
+    humans_df <- humans_df[-null_h,]
+  }
+
+  vc_unique <- Bionomics_UniqueBites(mosquitos_df,humans_df,EIP=10)
+
+  outfile <- paste0(outdir,"/uniqueVC",run,".rds")
+  cat("writing out to: ",outfile,"\n")
+  saveRDS(object = vc_unique,file = outfile,compress = TRUE)
+
+  rm(vc_unique,mosquitos_df,humans_df);gc()
+  setTxtProgressBar(pb,i)
+}
+setTxtProgressBar(pb,i+1)
+cat("\n")
