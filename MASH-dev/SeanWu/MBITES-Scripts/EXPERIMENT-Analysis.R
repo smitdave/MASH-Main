@@ -33,7 +33,13 @@ pb <- txtProgressBar(min = 1,max = 26)
 for(i in 1:26){
 
   run <- as.character(i)
-  MBITES <- readRDS(paste0(directory,"/analysis",run,".rds"))
+  # MBITES <- readRDS(paste0(directory,"/analysis",run,".rds"))
+  # read in data
+  MBITES_basic <- readRDS(paste0(directory,"analysis_run_",run,".rds_basic.rds"))
+  MBITES_egg <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialEgg.rds"))
+  MBITES_Hvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialVC.rds"))
+  MBITES_Mvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialMosyVC.rds"))
+  MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc,MBITES_Mvc)
 
   # lifespan/survival function
   pdf(file = paste0(plot_directory,"MBITES_survival_",run,".pdf"),width = 12,height = 8)
