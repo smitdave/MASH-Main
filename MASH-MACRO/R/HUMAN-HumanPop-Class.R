@@ -336,3 +336,50 @@ set_TilePointer_HumanPop <- function(TilePointer){
 HumanPop$set(which="public", name="set_TilePointer",
 	value = set_TilePointer_HumanPop, overwrite=TRUE
 )
+
+
+###############################################################################
+# HumanPop: Set tripDuration & tripFrequency
+###############################################################################
+
+#' Set tripDuration
+#'
+#' Set the average duration of trips for each human in the population
+#'
+#' @param tripDuration a numeric vector of length equal to the number of humans
+#'
+set_tripDuration_HumanPop <- function(tripDuration){
+
+  if(length(tripDuration)!=private$N){
+    stop("length of 'tripDuration' must be equal to number of humans")
+  }
+  if(!is(tripDuration,"numeric")){
+    stop("'tripDuration' must be a numeric vector")
+  }
+
+  for(i in 1:private$N){
+    private$pop$get(as.character(i))$set_tripDuration(tripDuration[i])
+  }
+
+}
+
+#' Set tripFrequency
+#'
+#' Set the average frequency of trips for each human in the population
+#'
+#' @param tripFrequency a numeric vector of length equal to the number of humans
+#'
+set_tripDuration_HumanPop <- function(tripFrequency){
+
+  if(length(tripFrequency)!=private$N){
+    stop("length of 'tripFrequency' must be equal to number of humans")
+  }
+  if(!is(tripFrequency,"numeric")){
+    stop("'tripFrequency' must be a numeric vector")
+  }
+
+  for(i in 1:private$N){
+    private$pop$get(as.character(i))$set_tripFrequency(tripFrequency[i])
+  }
+
+}

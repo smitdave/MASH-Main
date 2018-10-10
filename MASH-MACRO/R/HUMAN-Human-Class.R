@@ -111,6 +111,10 @@ Human <- R6::R6Class(classname="Human",
                        # Health & Related
                        bWeight             = numeric(1), # double
 
+                       # movement
+                       tripDuration        = numeric(1),
+                       tripFrequency       = numeric(1),
+
                        # Pathogens
                        Pathogens           = NULL, # see PATHOGEN-XX.hpp
 
@@ -682,3 +686,22 @@ get_history_Human <- function(){
 Human$set(which="public", name="get_history",
 	value=get_history_Human,
 	 overwrite=TRUE)
+
+
+# setters for tripDuration & tripFrequency
+
+set_tripDuration_Human <- function(tripDuration){
+  private$tripDuration = tripDuration
+}
+
+Human$set(which="public", name="set_tripDuration",
+	value=set_tripDuration_Human, overwrite=TRUE
+)
+
+set_tripFrequency_Human <- function(tripFrequency){
+  private$tripFrequency = tripFrequency
+}
+
+Human$set(which="public", name="set_tropFrequency",
+	value=set_tripFrequency_Human, overwrite=TRUE
+)
