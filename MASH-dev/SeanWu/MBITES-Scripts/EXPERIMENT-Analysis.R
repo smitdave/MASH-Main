@@ -251,7 +251,7 @@ for(i in 1:26){
                          grid.border = "black",
                          annotationTrack = c("name","grid"),
                          self.link = 2)
-  title(paste0("Simulated Landscape ",run))
+  # title(paste0("Simulated Landscape ",run))
   dev.off()
 
   rm(mosquitos_df,M);gc()
