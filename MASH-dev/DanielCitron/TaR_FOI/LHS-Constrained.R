@@ -1,87 +1,3 @@
-rm(list=ls());gc()
-npar <- 3
-
-theta <- replicate(n = 3,expr = {
-  list(
-    invCDF = NULL,
-    ARGS = NULL
-  )
-},simplify = FALSE)
-
-theta[[1]]$invCDF = "qunif"
-theta[[1]]$ARGS$min = 5
-theta[[1]]$ARGS$max = 6
-
-theta[[2]]$invCDF = "qunif"
-theta[[2]]$ARGS$min = 10
-theta[[2]]$ARGS$max = 11
-
-theta[[3]]$invCDF = "qnorm"
-theta[[3]]$ARGS$mean = 50
-theta[[3]]$ARGS$sd = 1
-
-
-# make the 'theta' object
-make_theta <- function(d){
-  replicate(n = d,expr = {
-    list(
-      invCDF = NULL,
-      ARGS = NULL
-    )
-  },simplify = FALSE)
-}
-
-# ... : additional args to constraints function
-constrained_lhs <- function(n,theta,constraints = NULL,max=1e3,...){
-  
-  d <- length(theta) # dimension of parameter space
-  theta0 <- sample_lhs(n,d,theta) # initial sample
-  
-  # if unconstrained, return now
-  if(is.null(constraints)){
-    return(theta0)
-  }
-  
-  valid <- apply(X = theta0,MARGIN = 1,FUN = constraints,...)
-  theta0 <- theta0[valid,]
-  
-  i <- 1
-  while(nrow(theta0) < n){
-    if(i %% 100 == 0){
-      cat("iteration ",i,"\n")
-    }
-    if(i > max){
-      cat("exceeded maximum number of attempts, giving up after ",i," tries\n")
-      break()
-    }
-    
-    theta0 <- rbind(theta0,sample_lhs(n,d,theta))
-    valid <- apply(X = theta0,MARGIN = 1,FUN = constraints,...)
-    theta0 <- theta0[valid,]
-    
-    i <- i + 1
-  }
-  
-  return(theta0)
-}
-
-# sample and transform
-sample_lhs <- function(n,d,theta){
-  
-  # generate [0,1] in d-dimension hypercube
-  samp <- lhs::improvedLHS(n = n,k = d)
-
-  for(i in 1:d){
-    # get the ith parameter
-    theta[[i]]$ARGS$p <- as.vector(samp[,i])
-    # transform to bounded space (not (non)linearly constrained space yet)
-    samp[,i] <- do.call(theta[[i]]$invCDF,theta[[i]]$ARGS)
-  }
-  
-  return(samp)
-}
-
-
 # test it out on the TaR problem
 library(MASS)
 
@@ -110,6 +26,10 @@ r = 1/200
 g <- r*X_est/(1-X_est)
 h <- ginv(psi) %*% g
 h
+
+G <- matrix(c(
+  
+))
 
 constr <- function(theta,psi){
   # if any are FALSE, the constraints are violated.
