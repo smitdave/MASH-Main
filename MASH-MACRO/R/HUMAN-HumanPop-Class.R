@@ -363,13 +363,18 @@ set_tripDuration_HumanPop <- function(tripDuration){
 
 }
 
+HumanPop$set(which="public", name="set_tripDuration",
+	value = set_tripDuration_HumanPop, overwrite=TRUE
+)
+
+
 #' Set tripFrequency
 #'
 #' Set the average frequency of trips for each human in the population
 #'
 #' @param tripFrequency a numeric vector of length equal to the number of humans
 #'
-set_tripDuration_HumanPop <- function(tripFrequency){
+set_tripFrequency_HumanPop <- function(tripFrequency){
 
   if(length(tripFrequency)!=private$N){
     stop("length of 'tripFrequency' must be equal to number of humans")
@@ -383,3 +388,7 @@ set_tripDuration_HumanPop <- function(tripFrequency){
   }
 
 }
+
+HumanPop$set(which="public", name="set_tripFrequency",
+	value = set_tripFrequency_HumanPop, overwrite=TRUE
+)
