@@ -79,7 +79,7 @@ Human <- R6::R6Class(classname="Human",
                        # Constructor
                        #################################################
 
-                       initialize = function(myID, houseID = NULL, patchID = NULL, homeHouseID = NULL, homePatchID = NULL, age = NULL, bWeight = NULL){
+                       initialize = function(myID, houseID = NULL, patchID = NULL, homeHouseID = NULL, homePatchID = NULL, age = NULL, bWeight = NULL, tripDuration = NULL, tripFrequency = NULL){
                          private$myID = myID
                          private$Alive = TRUE
                          private$houseID = houseID
@@ -88,6 +88,8 @@ Human <- R6::R6Class(classname="Human",
                          private$homePatchID = homePatchID
                          private$age = age
                          private$bWeight = bWeight
+                         private$tripDuration = tripDuration
+                         private$tripFrequency = tripFrequency
                          private$EventQueue = MASHcpp::HumanEventQ()
                        }
 
@@ -143,7 +145,7 @@ Human <- R6::R6Class(classname="Human",
 #' @param age numeric birthday (negative; simulation begins at 0)
 #' @param bWeight numeric biting weight
 #'
-reset_Human <- function(houseID = NULL, patchID = NULL, homeHouseID = NULL, homePatchID = NULL, age = NULL, bWeight = NULL){
+reset_Human <- function(houseID = NULL, patchID = NULL, homeHouseID = NULL, homePatchID = NULL, age = NULL, bWeight = NULL, tripDuration = NULL, tripFrequency = NULL){
   private$Alive = TRUE
   private$houseID = houseID
   private$patchID = patchID
@@ -151,6 +153,8 @@ reset_Human <- function(houseID = NULL, patchID = NULL, homeHouseID = NULL, home
   private$homePatchID = homePatchID
   private$age = age
   private$bWeight = bWeight
+  private$tripDuration = tripDuration
+  private$tripFrequency = tripFrequency
   private$EventQueue$clearQ()
 }
 

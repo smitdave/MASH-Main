@@ -77,7 +77,16 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
 
                           # id = paste0(i,"_",HumanPop_PAR[[i]]$patchID)
                           id = as.character(i)
-                          human = Human$new(myID=id,houseID=HumanPop_PAR[[i]]$houseID,patchID=HumanPop_PAR[[i]]$patchID,homeHouseID=HumanPop_PAR[[i]]$houseID,homePatchID=HumanPop_PAR[[i]]$patchID,age=HumanPop_PAR[[i]]$age,bWeight=HumanPop_PAR[[i]]$bWeight)
+                          human = Human$new(myID=id,
+                            houseID=HumanPop_PAR[[i]]$houseID,
+                            patchID=HumanPop_PAR[[i]]$patchID,
+                            homeHouseID=HumanPop_PAR[[i]]$houseID,
+                            homePatchID=HumanPop_PAR[[i]]$patchID,
+                            age=HumanPop_PAR[[i]]$age,
+                            bWeight=HumanPop_PAR[[i]]$bWeight,
+                            tripDuration=HumanPop_PAR[[i]]$tripDuration,
+                            tripFrequency=HumanPop_PAR[[i]]$tripFrequency
+                          )
                           human$set_HumansPointer(self)
                           private$pop$assign(key=id,value=human)
 
@@ -120,7 +129,14 @@ HumanPop <- R6::R6Class(classname = "HumanPop",
 #'
 reset_HumanPop <- function(HumanPop_PAR){
   for(i in 1:private$N){
-    private$pop$get(as.character(i))$reset(houseID=HumanPop_PAR[[i]]$houseID,patchID=HumanPop_PAR[[i]]$patchID,homeHouseID=HumanPop_PAR[[i]]$houseID,homePatchID=HumanPop_PAR[[i]]$patchID,age=HumanPop_PAR[[i]]$age,bWeight=HumanPop_PAR[[i]]$bWeight)
+    private$pop$get(as.character(i))$reset(houseID=HumanPop_PAR[[i]]$houseID,
+      patchID=HumanPop_PAR[[i]]$patchID,
+      homeHouseID=HumanPop_PAR[[i]]$houseID,
+      homePatchID=HumanPop_PAR[[i]]$patchID,
+      age=HumanPop_PAR[[i]]$age,
+      bWeight=HumanPop_PAR[[i]]$bWeight,
+      tripDuration=HumanPop_PAR[[i]]$tripDuration,
+      tripFrequency=HumanPop_PAR[[i]]$tripFrequency)
   }
 }
 
@@ -350,15 +366,27 @@ HumanPop$set(which="public", name="set_TilePointer",
 #'
 set_tripDuration_HumanPop <- function(tripDuration){
 
-  if(length(tripDuration)!=private$N){
-    stop("length of 'tripDuration' must be equal to number of humans")
-  }
-  if(!is(tripDuration,"numeric")){
-    stop("'tripDuration' must be a numeric vector")
-  }
+  if(is(tripDuration, "matrix")){
 
-  for(i in 1:private$N){
-    private$pop$get(as.character(i))$set_tripDuration(tripDuration[i])
+    if(nrow(tripDuration)!=private$N){
+      stop("rows of 'tripDuration' must be equal to number of humans")
+    }
+    for (i in 1:private$N){
+      if(!is(tripDuration[i,],"numeric")){
+        stop("'tripDuration' must be a numeric vector")
+      }
+      private$pop$get(as.character(i))$set_tripDuration(tripDuration[i,])
+    }
+  } else {
+    if(length(tripDuration)!=private$N){
+      stop("length of 'tripDuration' must be equal to number of humans")
+    }
+    if(!is(tripDuration,"numeric")){
+      stop("'tripDuration' must be a numeric vector")
+    }
+    for(i in 1:private$N){
+      private$pop$get(as.character(i))$set_tripDuration(tripDuration[i])
+    }
   }
 
 }

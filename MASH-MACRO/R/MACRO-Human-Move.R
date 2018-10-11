@@ -43,7 +43,7 @@ initialize_travel_HumanPop <- function(){
 #'
 initialize_travel_Human <- function(){
   # choose where i go
-  tDest = sample(x = 1:private$TilePointer$get_nPatch(),size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight()) 
+  tDest = sample(x = 1:private$TilePointer$get_nPatch(),size = 1,replace = FALSE,prob = private$TilePointer$get_Patch(private$patchID)$get_travelWeight())
   # choose when i go
   tTrip = private$TilePointer$get_tNow() + rexp(n=1,rate=private$tripFrequency)
 
@@ -104,7 +104,11 @@ takeTrip <- function(tEvent, PAR){
   self$accumulate_bWeightHuman() # increment the biting weight where I go to
 
   # queue up the trip back home
-  tReturn = tEvent + rexp(n=1,rate=1/private$tripDuration)
+  if (length(private$tripDuration) > 1){
+    tReturn = tEvent + rexp(n=1,rate=1/private$tripDuration[PAR$tDest])
+  } else {
+    tReturn = tEvent + rexp(n=1,rate=1/private$tripDuration)
+  }
   self$add2Q_returnHome(tEvent = tReturn, PAR = NULL)
 
 }
