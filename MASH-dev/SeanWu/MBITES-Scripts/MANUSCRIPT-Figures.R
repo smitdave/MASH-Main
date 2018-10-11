@@ -75,7 +75,6 @@ plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
 
 lscapes <- c(1,13,26)
 
-
 pdf(file = paste0(plot_directory,"MBITES_fig6.pdf"),width = 12,height = 8)
 par(mfrow=c(3,2))
 for(i in lscapes){
@@ -85,8 +84,7 @@ for(i in lscapes){
   # read in data
   MBITES_basic <- readRDS(paste0(directory,"analysis_run_",run,".rds_basic.rds"))
   MBITES_egg <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialEgg.rds"))
-  MBITES_Hvc <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialVC.rds"))
-  MBITES <- c(MBITES_basic,MBITES_egg,MBITES_Hvc)
+  MBITES <- c(MBITES_basic,MBITES_egg)
 
   # how 2 plot vc
   with(MBITES,{
@@ -120,7 +118,7 @@ for(i in lscapes){
          col=adjustcolor("steelblue",alpha.f = 0.75),adj=1.15)
   })
 
-  rm(MBITES_basic,MBITES_egg,MBITES_Hvc,MBITES);gc()
+  rm(MBITES_basic,MBITES_egg,MBITES);gc()
 }
 dev.off()
 par(mfrow=c(1,1))
@@ -228,9 +226,8 @@ plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
 
 # loop over all experiments
 margins <- par()$mar
-par(mfrow=c(4,7),mar = rep(0.001,4))
-
 pdf(file = paste0(plot_directory,"MBITES_fig8.pdf"),width = 12,height = 8)
+par(mfrow=c(4,7),mar = rep(0.001,4))
 
 for(i in 1:26){
 
@@ -325,3 +322,196 @@ for(i in 1:max){
 
   setTxtProgressBar(pb,i)
 }
+
+pdf(file = paste0(plot_directory,"MBITES_fig9.pdf"),width = 12,height = 8)
+par(mfrow=c(2,2))
+
+# lifespan
+mean_lf_col <- "firebrick3"
+median_lf_col <- "firebrick3"
+q80_lf_col <- adjustcolor(mean_lf_col,alpha.f = 0.5)
+maxy_lf <- max(sapply(lifespan_quant,max))
+
+plot(x = 1:max,
+     y = lifespan_means,
+     type="l",
+     lty=1,lwd=3,
+     col=mean_lf_col,
+     xlab = "Simulated Landscape",ylab = "Time (Days)",main = "MBITES Lifespan Distribution",
+     ylim = c(0,ceiling(maxy_lf)))
+lines(x = 1:max,y=sapply(lifespan_quant,FUN = function(x){x[["50%"]]}),
+      lty=2,lwd=3,col=median_lf_col)
+polygon(x = c(1:max,max:1),
+        y = c(
+          sapply(lifespan_quant,FUN = function(x){x[["80%"]]}),
+          rev(sapply(lifespan_quant,FUN = function(x){x[["20%"]]}))
+        ),
+        col = q80_lf_col,border = NA)
+
+# blood feeding rate
+mean_bf_col <- "chartreuse4"
+median_bf_col <- "chartreuse4"
+q80_bf_col <- adjustcolor(mean_bf_col,alpha.f = 0.5)
+maxy_bf <- max(sapply(bloodrate_quant,max))
+
+plot(x = 1:max,
+     y = bloodrate_means,
+     type="l",
+     lty=1,lwd=3,
+     col=mean_bf_col,
+     xlab = "Simulated Landscape",ylab = "Age (Days)",main = "MBITES Blood Feeding Rate",
+     ylim = c(0,ceiling(maxy_bf)))
+lines(x = 1:max,y=sapply(bloodrate_quant,FUN = function(x){x[["50%"]]}),
+      lty=2,lwd=3,col=median_bf_col)
+polygon(x = c(1:max,max:1),
+        y = c(
+          sapply(bloodrate_quant,FUN = function(x){x[["80%"]]}),
+          rev(sapply(bloodrate_quant,FUN = function(x){x[["20%"]]}))
+        ),
+        col = q80_bf_col,border = NA)
+
+# feeding cycle duration
+mean_fc_col <- "steelblue"
+median_fc_col <- "steelblue"
+q80_fc_col <- adjustcolor(mean_fc_col,alpha.f = 0.5)
+maxy_fc <-max(sapply(feedingcycle_quant,max))
+
+plot(x = 1:max,
+     y = feedingcycle_means,
+     type="l",
+     lty=1,lwd=3,
+     col=mean_fc_col,
+     xlab = "Simulated Landscape",ylab = "Time (Days)",main = "MBITES Feeding Cycle Duration",
+     ylim = c(0,ceiling(maxy_fc)))
+lines(x = 1:max,y=sapply(feedingcycle_quant,FUN = function(x){x[["50%"]]}),
+      lty=2,lwd=3,col=median_fc_col)
+polygon(x = c(1:max,max:1),
+        y = c(
+          sapply(feedingcycle_quant,FUN = function(x){x[["80%"]]}),
+          rev(sapply(feedingcycle_quant,FUN = function(x){x[["20%"]]}))
+        ),
+        col = q80_fc_col,border = NA)
+
+# number of blood hosts
+mean_bh_col <- "mediumorchid4"
+median_bh_col <- "mediumorchid4"
+q80_bh_col <- adjustcolor(mean_bh_col,alpha.f = 0.5)
+maxy_bh <-max(sapply(numbloodhost_quant,max))
+
+plot(x = 1:max,
+     y = numbloodhost_means,
+     type="l",
+     lty=1,lwd=3,
+     col=mean_bh_col,
+     xlab = "Simulated Landscape",ylab = "Number of Hosts",main = "MBITES Human Blood Hosts",
+     ylim = c(0,ceiling(maxy_bh)))
+lines(x = 1:max,y=sapply(numbloodhost_quant,FUN = function(x){x[["50%"]]}),
+      lty=2,lwd=3,col=median_bh_col)
+polygon(x = c(1:max,max:1),
+        y = c(
+          sapply(numbloodhost_quant,FUN = function(x){x[["80%"]]}),
+          rev(sapply(numbloodhost_quant,FUN = function(x){x[["20%"]]}))
+        ),
+        col = q80_bh_col,border = NA)
+
+dev.off()
+par(mfrow=c(1,1))
+
+
+###############################################################################
+# Figure 10 (changes in VC over landscapes)
+###############################################################################
+
+rm(list = ls());gc()
+library(MBITES)
+library(jsonlite)
+library(Hmisc)
+
+# directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/analyzed/"
+plot_directory <- "/Users/slwu89/Desktop/mbites/peridomIHME/plots/"
+
+# hold the means
+max <- 26
+vc_means <- rep(0,max)
+spatialvc_means <- rep(0,max)
+
+# hold the quantiles
+vc_quant <- vector("list",max)
+spatialvc_quant <- vector("list",max)
+
+# probabilities for quantiles
+q_probs <- c(0.2,0.25,0.5,0.75,0.8)
+
+# iterate through all runs
+pb <- txtProgressBar(1,max)
+for(i in 1:max){
+
+  run <- as.character(i)
+  MBITES_spatial <- readRDS(paste0(directory,"analysis_run_",run,".rds_spatialVC.rds"))
+  MBITES_vc <- readRDS(paste0(directory,"analysis_run_",run,".rds_basic.rds"))
+  MBITES <- c(MBITES_spatial,MBITES_vc)
+
+  # vc correction
+  vc_normalized <- MBITES$vc_df$vc / nrow(MBITES$vc_df)
+  vc_normalized <- vc_normalized / (5*365) # normalize by time
+  vc_max <- max(vc_normalized)
+  vc_mean_norm <- mean(vc_normalized)
+  vc_means[i] <- vc_mean_norm
+
+  # spatial vc
+  spatialvc_means[i] <- weighted.mean(MBITES$spatial_vc_PDF_sth$x.out,MBITES$spatial_vc_PDF_sth$est)
+
+  # vc
+  vc_quant[[i]] <- quantile(vc_normalized,probs = q_probs)
+
+  # spatial vc
+  spatialvc_quant[[i]] <- wtd.quantile(MBITES$spatial_vc_PDF_sth$x.out,MBITES$spatial_vc_PDF_sth$est,probs = q_probs)
+
+  setTxtProgressBar(pb,i)
+}
+rm(MBITES_vc,MBITES_spatial,MBITES);gc()
+
+# VC
+mean_vc_col <- "firebrick3"
+median_vc_col <- "firebrick3"
+q80_vc_col <- adjustcolor(mean_vc_col,alpha.f = 0.5)
+maxy_vc <-max(sapply(vc_quant,max))
+
+plot(x = 1:max,
+     y = vc_means,
+     type="l",
+     lty=1,lwd=3,
+     col=mean_vc_col,
+     xlab = "Simulated Landscape",ylab = "Number of Secondary Bites",main = "MBITES Vectorial Capacity",
+     ylim = c(0,ceiling(maxy_vc*1e1)*1e-1))
+lines(x = 1:max,y=sapply(vc_quant,FUN = function(x){x[["50%"]]}),
+      lty=2,lwd=3,col=median_vc_col)
+polygon(x = c(1:max,max:1),
+        y = c(
+          sapply(vc_quant,FUN = function(x){x[["80%"]]}),
+          rev(sapply(vc_quant,FUN = function(x){x[["20%"]]}))
+        ),
+        col = q80_vc_col,border = NA)
+
+# spatial VC
+mean_svc_col <- "mediumorchid4"
+median_svc_col <- "mediumorchid4"
+q80_svc_col <- adjustcolor(mean_svc_col,alpha.f = 0.5)
+maxy_svc <-max(sapply(spatialvc_quant,max))
+
+plot(x = 1:max,
+     y = spatialvc_means,
+     type="l",
+     lty=1,lwd=3,
+     col=mean_svc_col,
+     xlab = "Simulated Landscape",ylab = "Distance",main = "MBITES Spatial Dispersion of VC",
+     ylim = c(0,ceiling(maxy_svc*1e1)*1e-1))
+lines(x = 1:max,y=sapply(spatialvc_quant,FUN = function(x){x[["50%"]]}),
+      lty=2,lwd=3,col=median_svc_col)
+polygon(x = c(1:max,max:1),
+        y = c(
+          sapply(spatialvc_quant,FUN = function(x){x[["80%"]]}),
+          rev(sapply(spatialvc_quant,FUN = function(x){x[["20%"]]}))
+        ),
+        col = q80_svc_col,border = NA)
