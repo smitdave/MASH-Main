@@ -702,6 +702,6 @@ set_tripFrequency_Human <- function(tripFrequency){
   private$tripFrequency = tripFrequency
 }
 
-Human$set(which="public", name="set_tropFrequency",
+Human$set(which="public", name="set_tripFrequency",
 	value=set_tripFrequency_Human, overwrite=TRUE
 )
