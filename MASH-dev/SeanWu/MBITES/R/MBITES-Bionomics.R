@@ -93,6 +93,91 @@ Bionomics_lifespan <- function(mosquitos) {
   return(data.frame(lifespan=w))
 }
 
+
+###############################################################################
+# mosquito dispersal
+###############################################################################
+
+#' Bionomics: Compute Cumulative Dispersal
+#'
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run and returns a data.frame of mosquito lifespans.
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' Returns a list where each element gives the sites a mosquito visited. If the mosquito
+#' never left the natal site, just return 0 (0 cumulative distance traveled).
+#'
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @export
+Bionomics_cumulativeDisperse <- function(mosquitos){
+
+  # filter out mosquitoes that were still alive at the end of the simulation
+  filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- which(filter)
+  n <- length(filter)
+
+  # store all of the hops a mosquito took
+  hops <- vector(mode="list",length=n)
+
+  pb = txtProgressBar(min = 1, max = n, initial = 0)
+  for(i in 1:n){
+
+    # sites i visited
+    sites <- mosquitos[filter[i],"sites"][[1]]
+    sites <- rle(sites)$values # just when they actually moved
+    if(length(sites)==1){
+      # lived and died here
+      hops[[i]] <- 0
+    } else {
+      hops[[i]] <- sites
+    }
+    setTxtProgressBar(pb,i)
+  }
+  setTxtProgressBar(pb,i+1);cat("\n")
+
+  return(hops)
+}
+
+#' Bionomics: Compute Absolute Dispersal
+#'
+#' Takes in JSON output parsed into a data.frame object from
+#' an MBITES simulation run and returns a data.frame of mosquito lifespans.
+#' Mosquitoes that were still alive at the end of simulation are filtered out.
+#' Returns a list where each element gives the sites a mosquito visited. If the mosquito
+#' never left the natal site, just return 0 (0 cumulative distance traveled).
+#'
+#' @param mosquitos a data.frame of parsed JSON mosquito output
+#' @export
+Bionomics_absoluteDisperse <- function(mosquitos){
+
+  # filter out mosquitoes that were still alive at the end of the simulation
+  filter <- sapply(mosquitos[,"behavior"],function(x){tail(x,1)!="E"})
+  filter <- which(filter)
+  n <- length(filter)
+
+  # store all of the starting and ending points mosquitos had
+  disperse <- vector(mode="list",length=n)
+
+  pb = txtProgressBar(min = 1, max = n, initial = 0)
+  for(i in 1:n){
+
+    # sites i visited
+    sites <- mosquitos[filter[i],"sites"][[1]]
+    start <- sites[1]
+    end <- sites[length(sites)]
+    if(start==end){
+      disperse[[i]] <- 0
+    } else {
+      disperse <- c(start,end)
+    }
+
+    setTxtProgressBar(pb,i)
+  }
+  setTxtProgressBar(pb,i+1);cat("\n")
+
+  return(disperse)
+}
+
+
 ###############################################################################
 # mosquito blood hosts
 ###############################################################################
