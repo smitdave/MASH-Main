@@ -26,3 +26,12 @@ if(plotpdf==TRUE){
     plot.fl(xy.f, l.pointsets[[i]])
   dev.off(dev.cur())
 } 
+
+
+for( i in 1:26){
+  flnm = paste("new.peridom.f", 100+i, ".xyw", sep="")
+  write.table(data.frame(xy.f), flnm, sep = ",")
+  flnm = paste("new.peridom.l", 100+i, ".xyw", sep="")
+  write.table(data.frame(l.pointsets[[i]]), flnm, sep = ",")
+}
+
