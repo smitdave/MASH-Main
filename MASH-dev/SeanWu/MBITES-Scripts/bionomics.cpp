@@ -156,8 +156,8 @@ Rcpp::NumericMatrix Bionomics_StateTransitionCpp(const Rcpp::DataFrame& mosquito
   }
   
   /* check for NaNs */
-  if(Rcpp::any(Rcpp::is_nan(out))){
-    Rcpp::LogicalVector isnan = Rcpp::is_nan(out);
+  if(Rcpp::any(Rcpp::is_nan(out) | Rcpp::is_na(out))){
+    Rcpp::LogicalVector isnan = Rcpp::is_nan(out) | Rcpp::is_na(out);
     out = out[!isnan];
   }
 
@@ -287,3 +287,73 @@ Rcpp::NumericVector Bionomics_absoluteDisperseCpp(const Rcpp::DataFrame& mosquit
   /* return distances */
   return disperse;
 }
+
+
+
+ /* ################################################################################
+  mosquito blood hosts
+################################################################################ */
+
+// [[Rcpp::export]]
+Rcpp::IntegerVector Bionomics_humanBloodHostCpp(const Rcpp::DataFrame& mosquitos, const char* who = "human", bool verbose = true){
+  
+  /* filter out mosquitos that were still alive at the end of the simulation */
+  Rcpp::LogicalVector filter_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["behavior"]),filter_fn);
+  Rcpp::IntegerVector filter = Rcpp::seq(0,filter_bool.size()-1);
+  filter = filter[filter_bool];
+  size_t n =filter.size();
+  
+  /* which type of bloodhosts */
+  size_t type;
+  if(strcmp(who,"human")==0){
+    type = 1;
+  } else if(strcmp(who,"all")==0) {
+    type = 2;
+  } else if(strcmp(who,"zoo")==0){
+    type = 3;
+  } else {
+    Rcpp::stop("'who' argument must be in 'human','all','zoo'; called from 'Bionomics_humanBloodHostCpp'\n ");
+  }
+  
+  /* output */
+  Rcpp::IntegerVector out(n,R_NaN);
+  
+  /* progress bar */
+  Progress pb(filter.size(), verbose);
+  
+  /* elements of dataframe */
+  Rcpp::List bloodHosts_all = mosquitos["bloodHosts"];
+  
+  /* iterate over mosquitos */
+  for(size_t i=0; i<n; i++){
+    
+    Rcpp::IntegerVector bh = Rcpp::as<Rcpp::IntegerVector>(bloodHosts_all[filter[i]]);
+    switch(type){
+      case 1: {
+        Rcpp::LogicalVector h = bh > 0;
+        out[i] = Rcpp::sum(h);
+        break;
+      }
+      case 2: {
+        Rcpp::LogicalVector h = (bh > 0) | (bh == -1);
+        out[i] = Rcpp::sum(h);
+        break;
+      }
+      case 3: {
+        Rcpp::LogicalVector h = bh == -1;
+        out[i] = Rcpp::sum(h);
+        break;
+      }
+    }
+    
+    pb.increment();
+  }
+  
+  /* check for NaNs */
+  if(Rcpp::any(Rcpp::is_nan(out) | Rcpp::is_na(out))){
+    Rcpp::LogicalVector isnan = Rcpp::is_nan(out) | Rcpp::is_na(out);
+    out = out[!isnan];
+  }
+
+  return out;
+};

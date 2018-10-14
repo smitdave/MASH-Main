@@ -178,7 +178,7 @@ Bionomics_absoluteDisperse <- function(mosquitos){
 }
 
 Bionomics_hopsDisperse <- function(){
-  
+
 }
 
 
