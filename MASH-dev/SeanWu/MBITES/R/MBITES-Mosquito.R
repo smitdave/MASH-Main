@@ -70,14 +70,14 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                      private$searchHist[1] = TRUE
 
                      # logging
-                     futile.logger::flog.trace("Mosquito %s being born at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Mosquito %s being born at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
 
                    }, # end constructor
 
                    # begin destructor
                    finalize = function(){
                      # logging
-                     futile.logger::flog.trace("Mosquito %s being killed at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Mosquito %s being killed at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
                    }
 
                  ), # end public members
@@ -180,6 +180,16 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
                      super$initialize(bDay,MBITES:::Parameters$get_defaultState_F(),site,tileID) # construct the base-class parts
 
                      private$energyPreG = MBITES:::Parameters$get_energyPreG()
+
+                     # only search if i need to (or if dispersion makes me go anyway)
+                     private$search = FALSE
+                     switch(private$state,
+                       B = {self$BloodFeedingSearchCheck()},
+                       O = {self$OvipositSearchCheck()},
+                       M = {self$MatingSearchCheck()},
+                       S = {self$SugarSearchCheck()},
+                       {stop("illegal behavioral state: ",private$state,"\n")}
+                     )
 
                    }, # end constructor
 

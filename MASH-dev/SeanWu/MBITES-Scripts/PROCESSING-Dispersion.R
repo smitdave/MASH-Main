@@ -2,7 +2,7 @@
 
 
 
-#
+# process mosquito movement
 
 process_dispersion <- function(job){
 
@@ -37,6 +37,14 @@ process_dispersion <- function(job){
   })
   out$abs_disperse_v <- unlist(out$abs_disperse_v)
 
+  # return(out)
+  saveRDS(object = out,file = paste0(job$outfile,"dispersion",run,".rds"),compress = TRUE)
+}
+
+move <- vector("list",3)
+for(i in 1:3){
+  cat("i: ",i,"\n")
+  move[[i]] <-process_dispersion(jobs[[i]])
 }
 
 # any(sapply(out$cum_disperse[which(sapply(out$cum_disperse,length)==2)],function(x){x[1]==x[2]}))
@@ -68,6 +76,21 @@ l1_svc<- unlist(lapply(eip2_1$vc2,FUN = function(x){
 ))
 
 hist(l1_svc)
+
+l13_svc<- unlist(lapply(eip2_13$vc2,FUN = function(x){
+  if(length(x$spatialVC)>0){
+
+    unlist(lapply(x$spatialVC,function(y){
+      dist <- numeric(length(y$dest))
+      for(i in 1:length(y$dest)){
+        dist[i] <- eip2_1$dmat[y$origin,y$dest[i]]
+      }
+      return(dist)
+    }))
+
+  }
+}
+))
 
 l26_svc<- unlist(lapply(eip2_26$vc2,FUN = function(x){
   if(length(x$spatialVC)>0){

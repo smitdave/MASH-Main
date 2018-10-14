@@ -27,7 +27,7 @@ directory <- "/Users/slwu89/Desktop/mbites/"
 ###############################################################################
 
 # number of sites
-nSite = 55
+nSite = 60
 
 # number of resources
 nFeed = 30
@@ -66,10 +66,11 @@ ix_aqua = resources$aqua
 w_aqua = rgamma(n=nAqua,shape=1,rate=1)
 
 # generate lambda
-lambda_a = 5 # lambda summed across all sites
-lambda_w = rgamma(nAqua, shape=1, scale = 1) # relative weights of sites
-K = lambda_a*lambda_w / sum(lambda_w) # carrying capacity of each site
-lambda = lapply(K,function(x){x*(1+sin(2*pi*(1:365)/365))})
+# lambda_a = 5 # lambda summed across all sites
+# lambda_w = rgamma(nAqua, shape=1, scale = 1) # relative weights of sites
+# K = lambda_a*lambda_w / sum(lambda_w) # carrying capacity of each site
+# lambda = lapply(K,function(x){x*(1+sin(2*pi*(1:365)/365))})
+lambda <- rep(1,nAqua)
 
 # 2d plane
 xy_plane = owin(xrange = c(0,1),yrange = c(0,1))
@@ -258,7 +259,7 @@ MBITES_Initialize(mosquitos)
 
 # run simulation
 set_output(directory = directory,runID = 1)
-simulation(tMax = 365*2,pretty = TRUE)
+simulation(tMax = 365,pretty = TRUE)
 hardreset()
 
 
@@ -277,6 +278,9 @@ mosquitos_df <- mosquitos_df[-which(sapply(mosquitos_df$id,is.null)),]
 humans_df <- fromJSON(paste0(output_dir,"/human_1.json"), flatten = TRUE)
 humans_df <- humans_df[-which(sapply(humans_df$id,is.null)),]
 
+dist <- as.matrix(read.csv(file = paste0(directory,"sites_movement.csv"),
+                  sep = ",",header = F,stringsAsFactors = F,
+                  colClasses = "numeric"))
 
 ###############################################################################
 # basic bionomics
@@ -325,6 +329,36 @@ ggplot() + geom_histogram(data = egg_df, aes(egg), fill = "steelblue", bins = 20
   geom_vline(xintercept = mean_egg,col="firebrick3",size=1.15) +
   ggtitle(paste0("Lifetime Egg Production (mean: ",round(mean_egg,3),")")) + xlab("Eggs") + ylab("Frequency") + theme_bw()
 
+
+###############################################################################
+# dispersion of mosquitos
+###############################################################################
+
+cum_disperse <- Bionomics_cumulativeDisperse(mosquitos_df)
+cum_disperse <- sapply(X = cum_disperse,FUN = function(x){
+  if(length(x)>1){
+    d <- 0
+    for(i in 1:(length(x)-1)){
+      d <- d + dist[x[i],x[i+1]]
+    }
+    return(d)
+  } else {
+    return(0)
+  }
+},USE.NAMES = FALSE)
+
+cum_disperseC <- Bionomics_cumulativeDisperseCpp(mosquitos_df,dist)
+
+abs_disperse <- Bionomics_absoluteDisperse(mosquitos_df)
+abs_disperse <- sapply(X = abs_disperse,FUN = function(x){
+  if(length(x)>1){
+    return(dist[x[1],x[2]])
+  } else {
+    return(0)
+  }
+})
+
+abs_disperseC <- Bionomics_absoluteDisperseCpp(mosquitos_df,dist)
 
 ###############################################################################
 # spatial bionomics: vectorial capacity
