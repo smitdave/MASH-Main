@@ -394,6 +394,13 @@ fequal <- function(x,y){
   abs(x-y) <= .Machine$double.eps
 }
 
+# vcecdf <- ecdf(vc_dist)
+# vc_x <- knots(vcecdf)
+# vc_y <- sapply(vc_x,function(x){
+#   vcecdf(x+(.Machine$double.eps^0.5)) - vcecdf(x-(.Machine$double.eps^0.5))
+# })
+# plot(vc_x,vc_y,pch=16)
+
 # get empirical PDF by summing stuff in the distance bins (takes awhile, use parallel if you can)
 PDF_emp <- mclapply(X = vc_bins,FUN = function(x,vc_dist){
   length(vc_dist[which(fequal(vc_dist,x))])
