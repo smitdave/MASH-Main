@@ -71,7 +71,7 @@ dist <- as.matrix(read.csv(paste0(lscape_dir,"dist_",i,".csv"), header = FALSE))
 
 # state transitions
 sumstat$transitions <- Bionomics_StateTransitionCpp(mosquitos)
-MBITES$transitions <- Bionomics_StateTransition(mosquitos)
+# MBITES$transitions <- Bionomics_StateTransition(mosquitos)
 
 # lifespan
 sumstat$lifespan <- Bionomics_lifespanCpp(mosquitos)
@@ -110,6 +110,9 @@ sumstat$egg_rate <- Bionomics_ovipositionRateCpp(mosquitos)
 MBITES$egg_rate <- Bionomics_ovipositionRate(mosquitos) # R version seems wrong
 
 # vectorial capacity
-
+sumstat$VC <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),EIP = 10,unique = F)
+# MBITES$VC <- Bionomics_vectorialCapacity(mosquitos,humans,EIP = 10)
 
 # vectorial capacity (unique secondary hosts)
+sumstat$VC_unique <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),EIP = 10,unique = T)
+# MBITES$VC_unique <- Bionomics_UniqueBites(mosquitos,humans,EIP = 10)

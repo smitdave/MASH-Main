@@ -608,7 +608,7 @@ bool filter_vc_fn(const Rcpp::IntegerVector& x){
 Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, const Rcpp::NumericMatrix& dist,
   size_t nhum, size_t EIP, bool unique = false, bool verbose = true){
 
-  /* filter out mosquitos that were still alive at the end of the simulation and who took at least 2 blood meal */
+  /* filter out mosquitos that were still alive at the end of the simulation and who took at >= 2 blood meal */
   Rcpp::LogicalVector filter_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["behavior"]),filter_fn);
   Rcpp::LogicalVector filter_vc_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["bloodHosts"]),filter_vc_fn);
 
@@ -642,7 +642,7 @@ Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, cons
     if(Rcpp::is_true(Rcpp::any(bloodHosts == -1))){
       Rcpp::LogicalVector nonhuman = bloodHosts == -1;
       /* if i only fed on non-human hosts, skip me */
-      if(nonhuman.size() == bloodHosts.size()){
+      if(Rcpp::sum(nonhuman) == bloodHosts.size()){
         continue;
       /* get rid of non-human host meals */
       } else {
