@@ -307,9 +307,13 @@ ggplot() + geom_histogram(data = bh, aes(humanHost), fill = "steelblue", bins = 
 bmi <- Bionomics_bloodIntervals(mosquitos_df,who = "human")
 mean_bmi <- mean(bmi$bmIntervals)
 
-ggplot() + geom_histogram(data = bmi, aes(bmIntervals), fill = "steelblue", bins = 20) +
+ggplot() + geom_histogram(data = data.frame(bmi), aes(bmIntervals), fill = "steelblue", bins = 20) +
   geom_vline(xintercept = mean_bmi,col="firebrick3",size=1.15) +
   ggtitle(paste0("Human Blood Meal Interval (mean: ",round(mean_bmi,3),")")) + xlab("Time") + ylab("Frequency") + theme_bw()
+
+# Bionomics_bloodfeedingRate
+bfr <- Bionomics_bloodfeedingRate(mosquitos_df)
+bfr_m <- mean(bfr)
 
 # vectorial capacity
 vc <- Bionomics_vectorialCapacity(mosquitos = mosquitos_df,humans = humans_df,EIP = 10,spatial = T)
