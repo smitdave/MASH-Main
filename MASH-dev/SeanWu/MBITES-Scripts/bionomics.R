@@ -95,7 +95,7 @@ sumstat$human_biterate <- Bionomics_humanBitingProportionCpp(mosquitos)
 # blood feeding rate
 sumstat$blood_rate <- Bionomics_bloodfeedingRateCpp(mosquitos)
 sumstat$blood_rate <- unlist(sumstat$blood_rate)
-MBITES$blood_rate <- Bionomics_bloodfeedingRate(mosquitos) # R version seems wrong
+# MBITES$blood_rate <- Bionomics_bloodfeedingRate(mosquitos) # R version seems wrong (confirmed)
 
 # lifetime egg production
 sumstat$life_egg <- Bionomics_lifetimeOvipositionCpp(mosquitos,dist)
@@ -107,7 +107,7 @@ sumstat$egg_interval <- Bionomics_ovipositionIntervalCpp(mosquitos)
 
 # oviposition rate
 sumstat$egg_rate <- Bionomics_ovipositionRateCpp(mosquitos)
-MBITES$egg_rate <- Bionomics_ovipositionRate(mosquitos) # R version seems wrong
+# MBITES$egg_rate <- Bionomics_ovipositionRate(mosquitos) # R version seems wrong (confirmed)
 
 # vectorial capacity
 sumstat$VC <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),EIP = 10,unique = F)
@@ -116,3 +116,8 @@ sumstat$VC <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),EIP = 1
 # vectorial capacity (unique secondary hosts)
 sumstat$VC_unique <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),EIP = 10,unique = T)
 # MBITES$VC_unique <- Bionomics_UniqueBites(mosquitos,humans,EIP = 10)
+
+# dispersion plots
+vc_dispersion <- smooth_kernels(distances = sumstat$VC$dispersion)
+vc_dispersion_unique <- smooth_kernels(distances = sumstat$VC_unique$dispersion)
+egg_dispersion <- smooth_kernels(distances = sumstat$life_egg$dispersion)
