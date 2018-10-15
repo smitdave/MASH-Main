@@ -121,3 +121,43 @@ sumstat$VC_unique <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),
 vc_dispersion <- smooth_kernels(distances = sumstat$VC$dispersion)
 vc_dispersion_unique <- smooth_kernels(distances = sumstat$VC_unique$dispersion)
 egg_dispersion <- smooth_kernels(distances = sumstat$life_egg$dispersion)
+
+# VC dispersion
+
+# mar <- par()$mar
+#
+# # plot
+# red <- "firebrick3"
+# blue <- "steelblue"
+# redb <- adjustcolor(red,alpha.f = 0.75)
+# redf <- adjustcolor(red,alpha.f = 0.5)
+# blueb <- adjustcolor(blue,alpha.f = 0.75)
+# bluef <- adjustcolor(blue,alpha.f = 0.5)
+# with(vc_dispersion,{
+#
+#   par(mfrow = c(1,2))  # Leave space for z axis
+#
+#   # ECDF/PMF
+#   plot(knots, ecdf(knots),type="l",col=redb,lwd=3,
+#        ylab="CDF",xlab="Distance",main="Secondary Bites Dispersion (empirical)")
+#   polygon(x = c(knots,max(knots),0),y = c(ecdf(knots),min(ecdf(knots)),min(ecdf(knots))),border = NA,col = redf)
+#   par(new = TRUE)
+#   plot(knots, pmf, type = "h",col=blueb,lwd=3,
+#        axes = FALSE, bty = "n", xlab = "", ylab = "")
+#   polygon(x = c(0,knots,max(knots)),y = c(0,pmf,0),border = NA,col = blueb)
+#   axis(side=4, at = pretty(range(pmf)))
+#   mtext("PDF", side=4, line=3)
+#
+#   # CDF/PDF
+#   plot(knots, cdf$est,type="l",col=redb,lwd=3,
+#        ylab="CDF",xlab="Distance",main="Secondary Bites Dispersion (smoothed)")
+#   polygon(x = c(knots,max(knots),0),y = c(cdf$est,min(cdf$est),min(cdf$est)),border = NA,col = redf)
+#   par(new = TRUE)
+#   plot(knots, pdf$est, type = "l",col=blueb,lwd=3,
+#        axes = FALSE, bty = "n", xlab = "", ylab = "")
+#   polygon(x = c(0,knots,max(knots)),y = c(0,pdf$est,0),border = NA,col = blueb)
+#   axis(side=4, at = pretty(range(pdf$est)))
+#   mtext("PDF", side=4, line=3)
+#
+#   par(mfrow=c(1,1))
+# })
