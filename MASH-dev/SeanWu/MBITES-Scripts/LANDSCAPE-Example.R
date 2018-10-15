@@ -432,6 +432,16 @@ mtext("PDF", side=4, line=3)
 # spatial bionomics: egg production
 ###############################################################################
 
+# egg_ecdf <- ecdf(egg_dist)
+# egg_x <- knots(egg_ecdf)
+#
+# egg_epmf <- sapply(egg_x,function(x){
+#   egg_ecdf(x+.Machine$double.eps^0.75) - egg_ecdf(x-.Machine$double.eps^0.75)
+# })
+#
+# weighted.mean(egg_x,egg_epmf)
+# egg_ecdf(egg_x) # use this one for glkerns smoothing.
+
 egg_pairs <- Filter(f = function(x){
   !(is.nan(x$natal) && is.nan(x$dest))
 },x = egg$dispersion)
