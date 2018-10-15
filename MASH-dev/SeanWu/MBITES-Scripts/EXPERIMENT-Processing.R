@@ -306,4 +306,3 @@ for(i in 1:26){
   rm(vc_unique,mosquitos_df,humans_df);gc()
 
 }
-

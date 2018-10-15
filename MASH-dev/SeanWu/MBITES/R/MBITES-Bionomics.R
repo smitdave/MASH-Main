@@ -167,7 +167,7 @@ Bionomics_absoluteDisperse <- function(mosquitos){
     if(start==end){
       disperse[[i]] <- 0
     } else {
-      disperse <- c(start,end)
+      disperse[[i]] <- c(start,end)
     }
 
     setTxtProgressBar(pb,i)
@@ -175,6 +175,10 @@ Bionomics_absoluteDisperse <- function(mosquitos){
   setTxtProgressBar(pb,i+1);cat("\n")
 
   return(disperse)
+}
+
+Bionomics_hopsDisperse <- function(){
+
 }
 
 
