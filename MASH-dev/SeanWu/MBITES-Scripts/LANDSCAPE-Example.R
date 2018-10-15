@@ -432,6 +432,43 @@ mtext("PDF", side=4, line=3)
 # spatial bionomics: egg production
 ###############################################################################
 
+# take a vector of distances and make ECDF,PMF,smoothed CDF, smoothed PDF
+# tol: tolerance when computing PMF
+smooth_kernels <- function(distances, tol = .Machine$double.eps^0.75){
+
+  d_ecdf <- stats::ecdf(distances)
+  d_knots <- stats::knots(d_ecdf)
+
+  d_pmf <- vapply(d_knots, function(x,tol){
+    d_ecdf(x+.Machine$double.eps^0.75) - d_ecdf(x-.Machine$double.eps^0.75)
+  }, numeric(1), tol = tol)
+
+  d_cdf <- lokern::glkerns(d_knots,d_ecdf(d_knots),deriv = 0,korder = 4)
+  d_pdf <- lokern::glkerns(d_knots,d_ecdf(d_knots),deriv = 1,korder = 3)
+
+  return(list(
+    ecdf=d_ecdf,
+    knots=d_knots,
+    pmf=d_pmf,
+    cdf=d_cdf,
+    pdf=d_pdf
+  ))
+}
+
+egg_smooth <- smooth_kernels(egg_dist)
+# plot
+with(egg_smooth,{
+  par(mar = c(5, 4, 4, 4) + 0.3)  # Leave space for z axis
+  plot(cdf$x.out, cdf$est,type="l",col="firebrick3",lwd=3,
+       ylab="CDF",xlab="Distance",main="Spatial Dispersion of Egg Batches")
+  par(new = TRUE)
+  plot(pdf$x.out, pdf$est, type = "l",col="mediumblue",lwd=3,
+       axes = FALSE, bty = "n", xlab = "", ylab = "")
+  axis(side=4, at = pretty(range(pdf$est)))
+  mtext("PDF", side=4, line=3)
+})
+
+
 # egg_ecdf <- ecdf(egg_dist)
 # egg_x <- knots(egg_ecdf)
 #
@@ -472,8 +509,8 @@ PDF_emp <- PDF_emp/sum(PDF_emp)
 CDF_emp <- cumsum(PDF_emp)
 
 # smoothed CDF and PDF
-CDF_sth <- glkerns(egg_bins,CDF_emp,deriv = 0,korder = 4,x.out=vc_bins)
-PDF_sth <- glkerns(egg_bins,CDF_emp,deriv = 1,korder = 3,x.out=vc_bins)
+CDF_sth <- glkerns(egg_bins,CDF_emp,deriv = 0,korder = 4,x.out=egg_bins)
+PDF_sth <- glkerns(egg_bins,CDF_emp,deriv = 1,korder = 3,x.out=egg_bins)
 
 # plot
 par(mar = c(5, 4, 4, 4) + 0.3)  # Leave space for z axis
