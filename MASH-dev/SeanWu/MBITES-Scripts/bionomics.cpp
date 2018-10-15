@@ -9,6 +9,10 @@
 #include <progress.hpp>
 #include <progress_bar.hpp>
 
+/* C++ */
+#include <vector>
+#include <algorithm>
+
 using namespace Rcpp;
 // [[Rcpp::depends(RcppProgress)]]
 // [[Rcpp::plugins(cpp11)]]
@@ -581,7 +585,8 @@ bool filter_vc_fn(const Rcpp::IntegerVector& x){
 }
 
 // [[Rcpp::export]]
-Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, const Rcpp::NumericMatrix& dist, size_t nhum, size_t EIP, bool verbose = true){
+Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, const Rcpp::NumericMatrix& dist,
+  size_t nhum, size_t EIP, bool unique = false, bool verbose = true){
 
   /* filter out mosquitos that were still alive at the end of the simulation and who took at least 2 blood meal */
   Rcpp::LogicalVector filter_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["behavior"]),filter_fn);
@@ -604,7 +609,8 @@ Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, cons
 
   /* iterate over mosquitos */
   Rcpp::IntegerVector VC(nhum,0);
-  Rcpp::NumericVector VC_dispersion;
+  // Rcpp::NumericVector VC_dispersion;
+  std::vector<double> VC_dispersion;
   for(size_t i=0; i<n; i++){
 
     Rcpp::IntegerVector bloodHosts = Rcpp::as<Rcpp::IntegerVector>(bloodHosts_all[filter[i]]);
@@ -637,7 +643,14 @@ Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, cons
 
         /* get indices of secondary bites */
         Rcpp::NumericVector pairTimes = timeFeed[Rcpp::seq(1,timeFeed.size()-1)] - *(timeFeed.begin());
-        Rcpp::LogicalVector secondaryBites = pairTimes > EIP;
+        Rcpp::LogicalVector secondaryBites;
+        if(unique){
+          Rcpp::LogicalVector uniqueSecondary = bloodHosts[Rcpp::seq(1,bloodHosts.size()-1)] != *(bloodHosts.begin());
+          secondaryBites = pairTimes > EIP;
+          secondaryBites = secondaryBites & uniqueSecondary;
+        } else {
+          secondaryBites = pairTimes > EIP;
+        }
 
         /* only if there were secondary bites arising from this bite */
         int nbite = Rcpp::sum(secondaryBites);
@@ -655,8 +668,9 @@ Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, cons
           for(size_t j=0; j<secondaryBitesIx.size(); j++){
             dispersion[j] = dist(siteFeed[0]-1,siteFeed[secondaryBitesIx[j]]-1);
           }
+
           for(auto it = dispersion.begin(); it != dispersion.end(); it++){
-            VC_dispersion.push_back(*it);
+            VC_dispersion.emplace_back(*it);
           }
         }
       }
@@ -675,3 +689,187 @@ Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, cons
   return Rcpp::List::create(Rcpp::Named("VC")=VC,
                             Rcpp::Named("dispersion")=VC_dispersion);
 };
+
+
+/* ################################################################################
+ egg production & oviposition
+################################################################################ */
+
+// [[Rcpp::export]]
+Rcpp::List Bionomics_lifetimeOvipositionCpp(const Rcpp::DataFrame& mosquitos, const Rcpp::NumericMatrix& dist, bool verbose = true){
+
+  /* filter out mosquitos that were still alive at the end of the simulation */
+  Rcpp::LogicalVector filter_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["behavior"]),filter_fn);
+  Rcpp::IntegerVector filter = Rcpp::seq(0,filter_bool.size()-1);
+  filter = filter[filter_bool];
+  size_t n = filter.size();
+
+  /* elements of dataframe */
+  Rcpp::List ovipositionBatchSize_all = mosquitos["ovipositionBatchSize"];
+  Rcpp::List sites_all = mosquitos["sites"];
+  Rcpp::List ovipositionSites_all = mosquitos["ovipositionSites"];
+
+  /* progress bar */
+  Progress pb(n, verbose);
+
+  /* iterate over mosquitos */
+  Rcpp::NumericVector lifeEgg(n);
+  std::vector<double> Egg_dispersion;
+  for(size_t i=0; i<n; i++){
+
+    Rcpp::IntegerVector eggBatch = Rcpp::as<Rcpp::IntegerVector>(ovipositionBatchSize_all[filter[i]]);
+    Rcpp::IntegerVector sites = Rcpp::as<Rcpp::IntegerVector>(sites_all[filter[i]]);
+    Rcpp::IntegerVector oviSites = Rcpp::as<Rcpp::IntegerVector>(ovipositionSites_all[filter[i]]);
+
+    lifeEgg[i] = Rcpp::sum(eggBatch);
+
+    if(lifeEgg[i] > 0){
+      size_t natal = sites[0];
+      for(size_t j=0; j<oviSites.size(); j++){
+        Egg_dispersion.emplace_back(dist(natal-1,oviSites[j]-1));
+      }
+    }
+
+    pb.increment();
+  }
+
+  return Rcpp::List::create(Rcpp::Named("lifetime")=lifeEgg,
+                            Rcpp::Named("dispersion")=Egg_dispersion);
+};
+
+
+/* filter mosquitos */
+bool filter_oviint_fn(const Rcpp::NumericVector& x){
+  if(x.size() > 1){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// [[Rcpp::export]]
+Rcpp::NumericVector Bionomics_ovipositionIntervalCpp(const Rcpp::DataFrame& mosquitos, bool verbose = true){
+
+  /* filter out mosquitos that were still alive at the end of the simulation and who oviposited at least twice */
+  Rcpp::LogicalVector filter_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["behavior"]),filter_fn);
+  Rcpp::LogicalVector filter_ovi_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["ovipositionTimes"]),filter_oviint_fn);
+
+  /* combine into single filter */
+  Rcpp::LogicalVector filter_bool_both = filter_bool & filter_ovi_bool;
+  Rcpp::IntegerVector filter = Rcpp::seq(0,filter_bool_both.size()-1);
+  filter = filter[filter_bool_both];
+  size_t n = filter.size();
+
+  /* elements of dataframe */
+  Rcpp::List ovipositionTimes_all = mosquitos["ovipositionTimes"];
+
+  /* progress bar */
+  Progress pb(n, verbose);
+
+  /* iterate over mosquitos */
+  std::vector<double> interval;
+  for(size_t i=0; i<n; i++){
+
+    Rcpp::NumericVector oviTimes = Rcpp::as<Rcpp::NumericVector>(ovipositionTimes_all[filter[i]]);
+    Rcpp::NumericVector intervalDiff = Rcpp::diff(oviTimes);
+    for(auto it = intervalDiff.begin(); it != intervalDiff.end(); it++){
+      interval.emplace_back(*it);
+    }
+
+    pb.increment();
+  }
+
+  return Rcpp::wrap(interval);
+};
+
+/* filter mosquitos */
+bool filter_ovirate_fn(const Rcpp::NumericVector& x){
+  if(x[0] > 0.0){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/*
+ from: https://stackoverflow.com/questions/838384/reorder-vector-using-a-vector-of-indices/1267878#1267878
+ to reorder a vector 'value_iterator' based on order vector 'order_iterator'
+*/
+template< typename order_iterator, typename value_iterator >
+void reorder( order_iterator order_begin, order_iterator order_end, value_iterator v )  {
+    typedef typename std::iterator_traits< value_iterator >::value_type value_t;
+    typedef typename std::iterator_traits< order_iterator >::value_type index_t;
+    typedef typename std::iterator_traits< order_iterator >::difference_type diff_t;
+
+    diff_t remaining = order_end - 1 - order_begin;
+    for ( index_t s = index_t(), d; remaining > 0; ++ s ) {
+        for ( d = order_begin[s]; d > s; d = order_begin[d] ) ;
+        if ( d == s ) {
+            -- remaining;
+            value_t temp = v[s];
+            while ( d = order_begin[d], d != s ) {
+              std::swap( temp, v[d] );
+                -- remaining;
+            }
+            v[s] = temp;
+        }
+    }
+}
+
+// [[Rcpp::export]]
+Rcpp::List Bionomics_ovipositionRateCpp(const Rcpp::DataFrame& mosquitos, bool verbose = true){
+
+  /* filter out mosquitos that were still alive at the end of the simulation and who oviposited at least once */
+  Rcpp::LogicalVector filter_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["behavior"]),filter_fn);
+  Rcpp::LogicalVector filter_ovi_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["ovipositionTimes"]),filter_ovirate_fn);
+
+  /* combine into single filter */
+  Rcpp::LogicalVector filter_bool_both = filter_bool & filter_ovi_bool;
+  Rcpp::IntegerVector filter = Rcpp::seq(0,filter_bool_both.size()-1);
+  filter = filter[filter_bool_both];
+  size_t n = filter.size();
+
+  /* elements of dataframe */
+  Rcpp::List time_all = mosquitos["time"];
+  Rcpp::List ovipositionBatchSize_all = mosquitos["ovipositionBatchSize"];
+  Rcpp::List ovipositionTimes_all = mosquitos["ovipositionTimes"];
+
+  /* progress bar */
+  Progress pb(n, verbose);
+
+  /* iterate over mosquitos */
+  std::vector<double> ages;
+  std::vector<int> batches;
+  for(size_t i=0; i<n; i++){
+
+    double bday = Rcpp::as<Rcpp::NumericVector>(time_all[filter[i]])[0];
+    Rcpp::IntegerVector batch_sizes = Rcpp::as<Rcpp::IntegerVector>(ovipositionBatchSize_all[filter[i]]);
+    Rcpp::NumericVector batch_times = Rcpp::as<Rcpp::NumericVector>(ovipositionTimes_all[filter[i]]);
+    batch_times = batch_times - bday;
+
+    for(auto it = batch_sizes.begin(); it != batch_sizes.end(); it++){
+      batches.emplace_back(*it);
+    }
+    for(auto it = batch_times.begin(); it != batch_times.end(); it++){
+      ages.emplace_back(*it);
+    }
+
+    pb.increment();
+  }
+
+  /* sort before returning */
+  std::vector<size_t> agesort(ages.size());
+  std::size_t nn(0);
+  std::generate(std::begin(agesort), std::end(agesort), [&]{ return nn++; });
+
+  std::sort(std::begin(agesort),
+            std::end(agesort),
+            [&](int i1, int i2) { return ages[i1] < ages[i2];});
+
+  reorder(agesort.begin(), agesort.end(), batches.begin());
+  reorder(agesort.begin(), agesort.end(), ages.begin());
+
+  return Rcpp::List::create(Rcpp::Named("ages")=Rcpp::wrap(ages),
+                            Rcpp::Named("batches")=Rcpp::wrap(batches));
+
+}
