@@ -370,6 +370,14 @@ Rcpp::IntegerVector Bionomics_humanBloodHostCpp(const Rcpp::DataFrame& mosquitos
  intervals between blood meals & resting periods
 ################################################################################ */
 
+bool filter_bint_fn(const Rcpp::NumericVector& x){
+  if(Rcpp::NumericVector::is_na(x[0])){
+    return false;
+  } else {
+    return true;
+  }
+}
+
 // [[Rcpp::export]]
 Rcpp::List Bionomics_bloodIntervalsCpp(const Rcpp::DataFrame& mosquitos, const char* who = "human", bool verbose = true){
 
@@ -399,7 +407,7 @@ Rcpp::List Bionomics_bloodIntervalsCpp(const Rcpp::DataFrame& mosquitos, const c
   Progress pb(n, verbose);
 
   /* bm intervals for each mosquito */
-  Rcpp::List bm_intervals;
+  Rcpp::List bm_intervals(n);
   for(size_t i=0; i<n; i++){
 
     Rcpp::IntegerVector host = Rcpp::as<Rcpp::IntegerVector>(bloodHosts_all[filter[i]]);
@@ -409,21 +417,27 @@ Rcpp::List Bionomics_bloodIntervalsCpp(const Rcpp::DataFrame& mosquitos, const c
       case 1: {
         Rcpp::LogicalVector h = host > 0;
         if(Rcpp::sum(h) > 1){
-          bm_intervals.push_back(Rcpp::diff(Rcpp::as<Rcpp::NumericVector>(time[h])));
+          bm_intervals[i] = Rcpp::diff(Rcpp::as<Rcpp::NumericVector>(time[h]));
+        } else {
+          bm_intervals[i] = Rcpp::NumericVector::create(NA_REAL);
         }
         break;
       }
       case 2: {
         Rcpp::LogicalVector h = (host > 0) | (host == -1);
         if(Rcpp::sum(h) > 1){
-          bm_intervals.push_back(Rcpp::diff(Rcpp::as<Rcpp::NumericVector>(time[h])));
+          bm_intervals[i] = Rcpp::diff(Rcpp::as<Rcpp::NumericVector>(time[h]));
+        } else {
+          bm_intervals[i] = Rcpp::NumericVector::create(NA_REAL);
         }
         break;
       }
       case 3: {
         Rcpp::LogicalVector h = host == -1;
         if(Rcpp::sum(h) > 1){
-          bm_intervals.push_back(Rcpp::diff(Rcpp::as<Rcpp::NumericVector>(time[h])));
+          bm_intervals[i] = Rcpp::diff(Rcpp::as<Rcpp::NumericVector>(time[h]));
+        } else {
+          bm_intervals[i] = Rcpp::NumericVector::create(NA_REAL);
         }
         break;
       }
@@ -432,7 +446,9 @@ Rcpp::List Bionomics_bloodIntervalsCpp(const Rcpp::DataFrame& mosquitos, const c
     pb.increment();
   }
 
-  return bm_intervals;
+  Rcpp::LogicalVector filterout = Rcpp::sapply(bm_intervals,filter_bint_fn);
+
+  return bm_intervals[filterout];
 }
 
 /* comparator for finding when mosquitos rested */
@@ -465,7 +481,7 @@ Rcpp::List Bionomics_restIntervalsCpp(const Rcpp::DataFrame& mosquitos, bool ver
   Progress pb(n, verbose);
 
   /* bm intervals for each mosquito */
-  Rcpp::List rest_intervals;
+  Rcpp::List rest_intervals(n);
   for(size_t i=0; i<n; i++){
 
     Rcpp::CharacterVector behavior = Rcpp::as<Rcpp::CharacterVector>(behavior_all[filter[i]]);
@@ -474,13 +490,17 @@ Rcpp::List Bionomics_restIntervalsCpp(const Rcpp::DataFrame& mosquitos, bool ver
     /* find out when the mosquito rested */
     Rcpp::LogicalVector rest = cmp_rest(behavior);
     if(Rcpp::sum(rest) > 0){
-      rest_intervals.push_back(Rcpp::diff(Rcpp::as<Rcpp::NumericVector>(time[rest])));
+      rest_intervals[i] = Rcpp::diff(Rcpp::as<Rcpp::NumericVector>(time[rest]));
+    } else {
+      rest_intervals[i] = Rcpp::NumericVector::create(NA_REAL);
     }
 
     pb.increment();
   }
 
-  return rest_intervals;
+  Rcpp::LogicalVector filterout = Rcpp::sapply(rest_intervals,filter_bint_fn);
+
+  return rest_intervals[filterout];
 }
 
 
@@ -588,7 +608,7 @@ bool filter_vc_fn(const Rcpp::IntegerVector& x){
 Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, const Rcpp::NumericMatrix& dist,
   size_t nhum, size_t EIP, bool unique = false, bool verbose = true){
 
-  /* filter out mosquitos that were still alive at the end of the simulation and who took at least 2 blood meal */
+  /* filter out mosquitos that were still alive at the end of the simulation and who took at >= 2 blood meal */
   Rcpp::LogicalVector filter_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["behavior"]),filter_fn);
   Rcpp::LogicalVector filter_vc_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["bloodHosts"]),filter_vc_fn);
 
@@ -622,7 +642,7 @@ Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, cons
     if(Rcpp::is_true(Rcpp::any(bloodHosts == -1))){
       Rcpp::LogicalVector nonhuman = bloodHosts == -1;
       /* if i only fed on non-human hosts, skip me */
-      if(nonhuman.size() == bloodHosts.size()){
+      if(Rcpp::sum(nonhuman) == bloodHosts.size()){
         continue;
       /* get rid of non-human host meals */
       } else {
@@ -860,7 +880,7 @@ Rcpp::List Bionomics_ovipositionRateCpp(const Rcpp::DataFrame& mosquitos, bool v
   /* sort before returning */
   std::vector<size_t> agesort(ages.size());
   std::size_t nn(0);
-  std::generate(std::begin(agesort), std::end(agesort), [&]{ return nn++; });
+  std::generate(agesort.begin(), agesort.end(), [&]{ return nn++; });
 
   std::sort(std::begin(agesort),
             std::end(agesort),
