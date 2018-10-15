@@ -11,6 +11,7 @@
 
 using namespace Rcpp;
 // [[Rcpp::depends(RcppProgress)]]
+// [[Rcpp::plugins(cpp11)]]
 
 
 /* ################################################################################
@@ -553,11 +554,124 @@ Rcpp::List Bionomics_bloodfeedingRateCpp(const Rcpp::DataFrame& mosquitos, bool 
   /* iterate through mosquitos */
   Rcpp::List bfr(n);
   for(size_t i=0; i<n; i++){
+
     double bday = Rcpp::as<Rcpp::NumericVector>(time_all[filter[i]])[0];
     Rcpp::NumericVector feed_ages = Rcpp::as<Rcpp::NumericVector>(timeFeed_all[filter[i]]);
     feed_ages = feed_ages - bday;
     bfr[i] = feed_ages;
+
+    pb.increment();
   }
 
   return bfr;
 }
+
+
+/* ################################################################################
+ vectorial capacity
+################################################################################ */
+
+/* filter mosquitos for blood feeding rate */
+bool filter_vc_fn(const Rcpp::IntegerVector& x){
+  if(x.size() > 1){
+    return true;
+  } else {
+    return false;
+  }
+}
+
+// [[Rcpp::export]]
+Rcpp::List Bionomics_vectorialCapacityCpp(const Rcpp::DataFrame& mosquitos, const Rcpp::NumericMatrix& dist, size_t nhum, size_t EIP, bool verbose = true){
+
+  /* filter out mosquitos that were still alive at the end of the simulation and who took at least 2 blood meal */
+  Rcpp::LogicalVector filter_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["behavior"]),filter_fn);
+  Rcpp::LogicalVector filter_vc_bool = Rcpp::sapply(Rcpp::as<Rcpp::List>(mosquitos["bloodHosts"]),filter_vc_fn);
+
+  /* combine into single filter */
+  Rcpp::LogicalVector filter_bool_both = filter_bool & filter_vc_bool;
+  Rcpp::IntegerVector filter = Rcpp::seq(0,filter_bool_both.size()-1);
+  filter = filter[filter_bool_both];
+  size_t n = filter.size();
+
+  /* elements of dataframe */
+  Rcpp::List bloodHosts_all = mosquitos["bloodHosts"];
+  Rcpp::List timeFeed_all = mosquitos["timeFeed"];
+  Rcpp::List siteFeed_all = mosquitos["siteFeed"];
+  Rcpp::List probeAndFeed_all = mosquitos["probeAndFeed"];
+
+  /* progress bar */
+  Progress pb(n, verbose);
+
+  /* iterate over mosquitos */
+  Rcpp::IntegerVector VC(nhum,0);
+  Rcpp::NumericVector VC_dispersion;
+  for(size_t i=0; i<n; i++){
+
+    Rcpp::IntegerVector bloodHosts = Rcpp::as<Rcpp::IntegerVector>(bloodHosts_all[filter[i]]);
+    Rcpp::NumericVector timeFeed = Rcpp::as<Rcpp::NumericVector>(timeFeed_all[filter[i]]);
+    Rcpp::IntegerVector siteFeed = Rcpp::as<Rcpp::IntegerVector>(siteFeed_all[filter[i]]);
+    Rcpp::LogicalVector probeAndFeed = Rcpp::as<Rcpp::LogicalVector>(probeAndFeed_all[filter[i]]);
+
+    /* check for non-human hosts */
+    if(Rcpp::is_true(Rcpp::any(bloodHosts == -1))){
+      Rcpp::LogicalVector nonhuman = bloodHosts == -1;
+      /* if i only fed on non-human hosts, skip me */
+      if(nonhuman.size() == bloodHosts.size()){
+        continue;
+      /* get rid of non-human host meals */
+      } else {
+        bloodHosts = bloodHosts[!nonhuman];
+        timeFeed = timeFeed[!nonhuman];
+        siteFeed = siteFeed[!nonhuman];
+        probeAndFeed = probeAndFeed[!nonhuman];
+      }
+    }
+
+    /* iterate over bites */
+    while(timeFeed.size() > 1){
+
+      /* only if the bite was a probing and feeding event
+         (feeding needs to occur for human -> mosy transmission)
+      */
+      if(probeAndFeed[0]){
+
+        /* get indices of secondary bites */
+        Rcpp::NumericVector pairTimes = timeFeed[Rcpp::seq(1,timeFeed.size()-1)] - *(timeFeed.begin());
+        Rcpp::LogicalVector secondaryBites = pairTimes > EIP;
+
+        /* only if there were secondary bites arising from this bite */
+        int nbite = Rcpp::sum(secondaryBites);
+        if(nbite > 0){
+
+          /* add to the primary host's VC */
+          VC[bloodHosts[0]-1] += nbite;
+
+          /* get spatial distribution of bites */
+          Rcpp::IntegerVector secondaryBitesIx = Rcpp::seq(0,secondaryBites.size()-1);
+          secondaryBitesIx = secondaryBitesIx[secondaryBites];
+          secondaryBitesIx = secondaryBitesIx + 1;
+
+          Rcpp::NumericVector dispersion(secondaryBitesIx.size());
+          for(size_t j=0; j<secondaryBitesIx.size(); j++){
+            dispersion[j] = dist(siteFeed[0]-1,siteFeed[secondaryBitesIx[j]]-1);
+          }
+          for(auto it = dispersion.begin(); it != dispersion.end(); it++){
+            VC_dispersion.push_back(*it);
+          }
+        }
+      }
+
+      /* take off the first bite */
+      bloodHosts.erase(bloodHosts.begin());
+      timeFeed.erase(timeFeed.begin());
+      siteFeed.erase(siteFeed.begin());
+      probeAndFeed.erase(probeAndFeed.begin());
+    } /* finish iterating over bites */
+
+    pb.increment();
+  }
+
+  // return VC;
+  return Rcpp::List::create(Rcpp::Named("VC")=VC,
+                            Rcpp::Named("dispersion")=VC_dispersion);
+};
