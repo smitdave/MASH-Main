@@ -13,7 +13,7 @@ library(pscl, quietly = TRUE) # Used for fitting the travel model
 library(boot, quietly = TRUE)
 library(MASS, quietly = TRUE)
 library(nnet, quietly = TRUE)
-
+library(rgdal, quietly = TRUE)
 
 ### Source a lot of our data
 
@@ -35,6 +35,13 @@ colnames(times)[2:195] <- sapply(colnames(times)[2:195], FUN = function(s){
 )
 setcolorder(times, c(1,order(as.integer(colnames(times)[2:195]))+1))
 times <- times[order(areaId)]
+
+
+## Visualizations set-up -  These are called when we want to make some maps ####
+# Read in shape files of Bioko Island and the area-level grid
+bioko<-readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/bioko", "bioko_admin1")
+areas_inh<-readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/areas_inh", "areas_inh")
+areasf<-fortify(areas_inh, region = "areaId")
 
 
 ## Merge and combine relevant data
@@ -276,17 +283,18 @@ travel.model.data <- merge(multinom.dat, holder.f, by = "areaId")
 
 ### Calculate TaR matrix
 TaR.1 <- diag(1, nrow = 194+7, ncol = 194+7)
-holder <- travel.model.data[, c("p.off", "p.ban", "p.lub", "p.mal", "p.mok", "p.ria", "p.ure")]*c(10,3,3,3,3,3,3)
 for (i in 1:194){
-  TaR.1[i, (194 + 1):(194 + 7)] <- as.numeric(holder[i,])/(sum(as.numeric(holder[i,])) + travel.model.data$freq.model.fit[i]^(-1))
-  TaR.1[i,i] <- 1 - sum(as.numeric(holder[i,])/(sum(as.numeric(holder[i,])) + travel.model.data$freq.model.fit[i]^(-1)))
+  holder <- as.matrix(travel.model.data[, c("p.off", "p.ban", "p.lub", "p.mal", "p.mok", "p.ria", "p.ure")])
+  num <- holder[i,]*c(10,3,3,3,3,3,3)
+  TaR.1[i, (194 + 1):(194 + 7)] <- as.numeric(num)/(sum(as.numeric(num)) + travel.model.data$freq.model.fit[i]^(-1))
+  TaR.1[i,i] <- 1 - sum(as.numeric(num)/(sum(as.numeric(num)) + travel.model.data$freq.model.fit[i]^(-1)))
 }
 
 # and now calculate FOI
 odds.vector <- r/(1-rho)*pfpr.input/(1-(1+rho*r/eta/(1-rho))*pfpr.input)
 h.1 <- ginv(TaR.1) %*% odds.vector
 travel.model.data$h.1 <- h.1[1:194]
-#hist(h.1[1:194]/b*365, main = "Histogram of Annual EIR")
+
 
 # What do I need to save here?
 # h.1 the FOI vector - this will be used to calculate
@@ -295,13 +303,13 @@ travel.model.data$h.1 <- h.1[1:194]
 # the vector of travel durations vectorized across destinations
 
 # Plots, for reference
-# hist(h.1[1:194]*365/.55)
+# hist(h.1[1:194]/b*365, main = "Histogram of Annual EIR")
 # area.data = merge(areasf, travel.model.data, by.x = "id", by.y = "areaId", all=TRUE)
 # plot.data<-area.data[order(area.data$order), ]
 # p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
 # p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
 # map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = h.1*365/.55), color = NA, size = 0.25) +
-#  scale_fill_gradient(name="FOI (Annual EIR)", low="yellow", high="red", limits=c(0,2.4)) +
+#  scale_fill_gradient(name="FOI (Annual EIR)", low="yellow", high="red", limits=c(0,2.5)) +
 #  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
 #  theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
 #        axis.title.x=element_blank(),
@@ -401,10 +409,9 @@ to.time.e[which(to.time.e <= 1 )] <- 1
 TaR.2 <- diag(1, nrow = 194+7, ncol = 194+7)
 for (i in 1:194){
   holder <- travel.model.data[i, c("p.off", "p.ban", "p.lub", "p.mal", "p.mok", "p.ria", "p.ure")]*c(to.time.e[i],3,3,3,3,3,3)
-  TaR.2[i, (194 + 1):(194 + 7)] <- as.numeric(holder)/(sum(as.numeric(holder)) + freq.model.fit[i]^(-1))
-  TaR.2[i,i] <- 1 - sum(as.numeric(holder)/(sum(as.numeric(holder)) + freq.model.fit[i]^(-1)))
+  TaR.2[i, (194 + 1):(194 + 7)] <- as.numeric(holder)/(sum(as.numeric(holder)) + travel.model.data$freq.model.fit[i]^(-1))
+  TaR.2[i,i] <- 1 - sum(as.numeric(holder)/(sum(as.numeric(holder)) + travel.model.data$freq.model.fit[i]^(-1)))
 }
-
 
 # now that we have a TaR matrix we can try solving for local h a second time:
 odds.vector <- r/(1-rho)*pfpr.input/(1-(1+rho*r/eta/(1-rho))*pfpr.input)
