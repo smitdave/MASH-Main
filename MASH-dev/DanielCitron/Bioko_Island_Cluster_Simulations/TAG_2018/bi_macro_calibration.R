@@ -35,8 +35,9 @@ g = 1 - p # fraction of dying mosquitoes
 peip = p^11 # fraction of mosquitoes who survive incubation period
 fever.pf = 0.1116336
 treat.pf = 0.6025641
+rho = fever.pf*treat.pf
 # output directory
-directory = "BI_Macro_Calibration/"
+directory = "BI_Macro_Calibration/patch_2083_notravel/"
 
 ####
 # Some mathematical checks ahead of time ####
@@ -59,7 +60,8 @@ SimBitePfSI.Setup()
 # Set up Human Population
 ####
 areaIds = sort(travel.model.data$areaId)
-patch_ix = which(areaIds == 273)
+patch_areaId = 2083 #582 #273
+patch_ix = which(areaIds == patch_areaId)
 patch.human.populations <- c(reservoir.data$pop.input[patch_ix], rep(0,7))
 MACRO.Human.Setup(pathogen = "PfSI", tripFrequency = 0, tripDuration = 1) # define tripFreq and tripDur below
 
@@ -69,8 +71,7 @@ MACRO.Human.Setup(pathogen = "PfSI", tripFrequency = 0, tripDuration = 1) # defi
 # Number of patches
 n = 1 + 7 # four areas, with 7 regions for travel
 # Aquatic ecology parameters
-patch.lambda <- c(travel.model.data[areaId==273]$lambda.1, rep(0,7))
-patch.lambda[1] <- lambda.1[patch_ix] ### this is a kluge for now
+patch.lambda <- c(travel.model.data[areaId==patch_areaId]$lambda.1, rep(0,7))
 aquaPar = AquaPop_Emerge.Parameters(nPatch = n,lambda = patch.lambda, seasonality = FALSE)
 # Create the movement matrix ####
 # Needs to have zero diagonals, and all rows normalized
@@ -170,28 +171,83 @@ ggplot(data = t4) +
   xlim(0,730) + ylim(0,300) +
   xlab("Time") + ylab("N")
 
+mean(t4[status == "I" & location==1]$N)
+sd(t4[status == "I" & location==1]$N)
+mean(t4[status == "I" & location==1]$N)/n_humans
+sd(t4[status == "I" & location==1]$N)/n_humans
+
 
 mos.path <- paste0(directory, "/Mosquito_Run0.csv")
 m <- fread(mos.path)
 mean(m[state=="Z"]$patch1)
-mean(m[state=="M"]$patch1)
-patch.lambda[1]*9
+Z[1]
+#mean(m[state=="M"]$patch1)
+#patch.lambda[1]*9
 
-tile$get_Patch(1)
 
 ####
 # Checking on EIR and such for this patch - what does it need to be?  And what inputs am I giving it?
 # At the very least, I should be able to calibrate in the no-travel limit!
 
-# These things match just fine!
-odds.vector[patch_ix]
-r*pfpr[1]/(1-rho)/(1 -(1 + rho*r/eta/(1-rho))*pfpr[1] )
-as.vector(TaR.1[patch_ix,c(patch_ix, 195:201)] ) %*% as.vector(b*eir)
-as.vector(TaR.1[patch_ix,c(patch_ix, 195:201)] ) %*% h.1[c(patch_ix, 195:201)]
 
-# What to check next, then?
-# Possible that our calculation of kappa was wrong: there are no visitors coming here because there are no visitors
-# So the mosquitoes who get infected at the patch of interest never themselves see any new humans
-# Check - kappa would be much smaller in this case - what does that mean?
+####
+# Simulation Ensemble!
+set.seed(0)
+tile = MacroTile$new(nPatch = n,
+                     AquaPar = aquaPar,
+                     PatchPar = patchPar,
+                     MosquitoPar = mosquitoPar,
+                     HumanPar = humanPar,
+                     directory = directory)
+for (i in 1:25){
+  tile$simMacro(tMax = 5*365, PfPAR = pfpr)
+  tile$resetMacro(patchPar, mosquitoPar, humanPar)
+}
+
+directory = "BI_Macro_Calibration/patch_2083/"#"BI_Macro_Calibration/patch_582/"#"BI_Macro_Calibration/patch_273/"#
+human.movement.outputs <- list.files(directory, pattern = "HumanMove_Run*")
+human.pathogen.outputs <- list.files(directory, pattern = "HumanPathogen_Run*")
+
+# Assemble matrix of results
+m <- matrix(NA, ncol = 25, nrow = 3*n*5*365)
+for (i in 1:25){
+  human.pathogen.path <- paste0(directory, "/", human.pathogen.outputs[i], sep = "")
+  human.move.path <- paste0(directory, "/", human.movement.outputs[i], sep = "")
+  t <- SIP.Conversion.Curves(human.pathogen.path, human.move.path, patch.human.populations, 5*365)
+  #paste0("run.",as.character(i))
+  h <- SIP.FULL(t, n, 5*365, status.list = c("S", "I", "P"))
+  m[,i] <- h$N
+}
+
+m.sds <- apply(m, 1, sd)
+m.means <- apply(m, 1, mean)
+h$N.means <- m.means
+h$N.sds <- m.sds
+h.2083 <- h
+#h.582 <- h
+#h.273 <- h
+
+# Now we can plot the mean and standard deviations of the ensemble!
+ggplot(data = h) +
+  geom_line(mapping = aes(x = time, y = N.means, color = status)) +
+  geom_line(mapping = aes(x = time, y = N.means+N.sds, color = status)) +
+  geom_line(mapping = aes(x = time, y = N.means-N.sds, color = status)) +
+  facet_wrap(~location, ncol = 3, labeller = label_parsed) +
+  scale_color_manual(name = "Status",
+                     values = c("#ff0000", "#000cff", "#00ff1d"),
+                     breaks = c("I", "S", "P"),
+                     labels = c("Infected (PR)", "Susceptible", "Protected")) +
+  xlim(0,5*365) + ylim(0,300) +
+  xlab("Time") + ylab("N")
+
+mean(h[time > 1000 & status == "I" & location == 1]$N.means)
+sd(h[time > 1000 & status == "I" & location == 1]$N.means)
+
+plot(h[status == "I", sum(N.means), by = "time"][time > 365])
+
+pfpr[1]*n_humans
+#travel.model.data[areaId==273]$prall_map*travel.model.data[areaId==273]$pop
+#travel.model.data[areaId==582]$prall_map*travel.model.data[areaId==582]$pop
+travel.model.data[areaId==2083]$prall_map*travel.model.data[areaId==2083]$pop
 
 
