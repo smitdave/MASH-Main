@@ -40,7 +40,7 @@ rho = fever.pf*treat.pf
 # Pick an area to simulate ----
 ####
 areaIds = sort(travel.model.data$areaId)
-patch_areaId = 2083 #273 #582 #
+patch_areaId = 2087#2083 #735 #582 #273 #2324#
 # output directory
 directory = paste0("BI_Macro_Calibration/patch_",patch_areaId,"/")
 
@@ -75,7 +75,7 @@ MACRO.Human.Setup(pathogen = "PfSI", tripFrequency = 0, tripDuration = 1) # defi
 # Number of patches
 n = 1 + 7 # four areas, with 7 regions for travel
 # Aquatic ecology parameters
-patch.lambda <- c(travel.model.data[areaId==patch_areaId]$lambda.1, rep(0,7))
+patch.lambda <- c(travel.model.data[areaId==patch_areaId]$lambda.1/.9, rep(0,7)) ### Kluge for now - not sure where the discrepancy comes from...
 aquaPar = AquaPop_Emerge.Parameters(nPatch = n,lambda = patch.lambda, seasonality = FALSE)
 # Create the movement matrix ####
 # Needs to have zero diagonals, and all rows normalized
@@ -156,7 +156,7 @@ tile = MacroTile$new(nPatch = n,
 
 ####
 # Run a single simulation ----
-set.seed(1)
+set.seed(3)
 tile$simMacro(tMax = 730, PfPAR = pfpr)
 
 
@@ -212,7 +212,8 @@ tile = MacroTile$new(nPatch = n,
                      MosquitoPar = mosquitoPar,
                      HumanPar = humanPar,
                      directory = directory)
-for (i in 1:10){
+for (i in 1:25){
+  set.seed(i + 100)
   tile$simMacro(tMax = 5*365, PfPAR = pfpr)
   tile$resetMacro(patchPar, mosquitoPar, humanPar)
 }
@@ -240,6 +241,8 @@ h$N.sds <- m.sds
 #h.582 <- h
 #h.273 <- h
 
+fwrite(h, file = paste0(directory,"combined_results_datatable.csv"))
+
 # Now we can plot the mean and standard deviations of the ensemble!
 ggplot(data = h) +
   geom_line(mapping = aes(x = time, y = N.means, color = status)) +
@@ -254,13 +257,18 @@ ggplot(data = h) +
   xlab("Time") + ylab("N")
 
 # Check baseline PR
-h[time > 1000 & status == "I", sum(N.means), by = time]
-mean(h[time > 1000 & status == "I", sum(N.means), by = time]$V1)
-sd(h[time > 1000 & status == "I", sum(N.means), by = time]$V1)
+h[time > 500 & status == "I", sum(N.means), by = time]
+
+plot(h[status == "I", sum(N.means), by = time])
+
+mean(h[time > 500 & status == "I", sum(N.means), by = time]$V1)
+sd(h[time > 500 & status == "I", sum(N.means), by = time]$V1)
 pfpr[1]*n_humans
 
-pr.actual <- mean(h[time > 1000 & status == "I", sum(N.means), by = time]$V1)/n_humans
+pr.actual <- mean(h[time > 1000 & status == "I", sum(N.means), by = time]$V1)/mean(h[time > 1000 & status %in% c("I","S"), sum(N.means), by = time]$V1)
 pr.actual
+
+
 
 psi.h <- TaR.1[patch_ix, c(patch_ix, c(195:201))] %*% reservoir.data$h.1[c(patch_ix, c(195:201))]
 psi.h/(r/(1-rho) + (1+rho*r/eta/(1-rho))*psi.h)
@@ -269,9 +277,26 @@ pfpr[1]
 # and looking at total FOI -
 r/(1-rho)*pr.actual/(1-(1+rho*r/eta/(1-rho))*pr.actual)
 r/(1-rho)*pfpr[1]/(1-(1+rho*r/eta/(1-rho))*pfpr[1])
+
+#What it should be
 TaR.1[patch_ix, c(patch_ix, c(195:201))] %*% reservoir.data$h.1[c(patch_ix, c(195:201))]
+#What it is in the simulation
+occupancy[2:8] %*% reservoir.data$h.1[c(195:201)] + occupancy[1] * b*a*mean(mos0[time > 1000]$Z)/n_humans
 
+# If we replace the local FOI with what it needs to be?
+occupancy[2:8] %*% reservoir.data$h.1[c(195:201)] + occupancy[1] * travel.model.data[areaId==patch_areaId]$h.1
 
+travel.model.data[areaId==patch_areaId]$m.1*travel.model.data[areaId==patch_areaId]$z.1*a*b
+travel.model.data[areaId==patch_areaId]$h.1
+
+# This is Z
+travel.model.data[areaId==patch_areaId]$z.1*travel.model.data[areaId==patch_areaId]$lambda.1*9
+mean(mos0[time > 1000]$Z)
+
+# Ignorning the home patch? Very close
+# Home patch is the problem here
+TaR.1[patch_ix, c(195:201)] %*% reservoir.data$h.1[c(195:201)]
+occupancy[2:8] %*% reservoir.data$h.1[c(195:201)]
 
 # Check on occupancy
 # See if the fraction of people spending time in different locations matches with the TaR matrix?
@@ -287,3 +312,32 @@ occupancy
 occupancy.sd
 
 TaR.1[patch_ix, c(patch_ix, 195:201)]
+
+
+  
+### Trip times
+trip.times <- c()
+human.movement.outputs <- list.files(directory, pattern = "HumanMove_Run*")
+for (file in human.movement.outputs){
+  move0 <- fread(paste0(directory, file))
+  for (human.ix in 1:n_humans){
+    trip.times <- c(trip.times, 
+                    move0[order(humanID)][humanID==human.ix][(which(move0[order(humanID)][humanID==human.ix]$location == 2) + 1)]$time - 
+                      move0[order(humanID)][humanID==human.ix][which(move0[order(humanID)][humanID==human.ix]$location == 2)]$time)
+  }
+}
+summary(trip.times)
+hist(trip.times)
+
+### Home times
+home.times <- c()
+human.movement.outputs <- list.files(directory, pattern = "HumanMove_Run*")
+for (file in human.movement.outputs){
+  move0 <- fread(paste0(directory, file))
+  for (human.ix in 1:n_humans){
+    home.times <- c(home.times, move0[order(humanID)][humanID==human.ix][which(move0[order(humanID)][humanID==human.ix]$location == 1)+1]$time-move0[order(humanID)][humanID==human.ix][which(move0[order(humanID)][humanID==human.ix]$location == 1)]$time)
+  }
+}
+summary(home.times)
+hist(home.times)
+1/travel.model.data$freq.model.fit[patch_ix]
