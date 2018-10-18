@@ -514,9 +514,9 @@ pop.inputs[194+6] <- sum(travel.model.data[ad2=="Riaba"]$pop)
 pop.inputs[194+7] <- sum(travel.model.data[ad2=="Ureka"]$pop)
 
 
-kappa.1 <- as.vector(pop.inputs*pfpr.input)/(as.vector(pop.inputs)) # sporozoite rate
+kappa.1 <- pfpr.input # parasite rate
 #kappa.1 <- (TaR.1 %*% as.vector(pop.inputs*pfpr.input))/(TaR.1 %*% as.vector(pop.inputs)) # only works if there are visitors, but for this model there are not
-z.1 <- a*c*kappa.1[1:194]/(a*c*kappa.1[1:194] + (1-p))*peip
+z.1 <- a*c*kappa.1[1:194]/(p*a*c*kappa.1[1:194] + (1-p))*peip
 #hist(a*c*pfpr.input[1:194]/(a*c*pfpr.input[1:194] + (1-p))*peip)
 #hist(z.1)
 h.1[which(h.1 < 0)] <- 0
@@ -545,9 +545,9 @@ travel.model.data$z.1 <- z.1
 #         axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
 # map
 
-kappa.2 <- as.vector(pop.inputs*pfpr.input)/(as.vector(pop.inputs)) # sporozoite rate
+kappa.2 <- pfpr.input # parasite rate
 #kappa.2 <- (TaR.2 %*% as.vector(pop.inputs*pfpr.input))/(TaR.2 %*% as.vector(pop.inputs)) # sporozoite rate, if there are visitors
-z.2 <- a*c*kappa.2[1:194]/(a*c*kappa.2[1:194] + (1-p))*peip
+z.2 <- a*c*kappa.2[1:194]/(p*a*c*kappa.2[1:194] + (1-p))*peip
 #hist(a*c*pfpr.input[1:194]/(a*c*pfpr.input[1:194] + (1-p))*peip)
 #hist(z.2)
 h.2[which(h.2 < 0)] <- 0
