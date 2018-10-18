@@ -54,6 +54,36 @@ smooth_kernels <- function(distances, tol = .Machine$double.eps^0.75){
   ))
 }
 
+# plots a smooth kernel (output from 'smooth_kernels' in an aesthetically pleasing way)
+# does not change par() at all; reccomend to call par(mar = c(4.5, 4.5, 2.5, 4.5)) before
+plot_smooth_kernels <- function(kernel, name){
+
+  maxx <- max(kernel$knots)+(0.001*max(kernel$knots))
+  k_mean <- weighted.mean(x = kernel$knots,w = kernel$pmf) # mean from PMF
+
+  # PDF
+  pdf_trunc <- ifelse(kernel$pdf$est < 0,0,kernel$pdf$est)
+  plot(c(0,kernel$knots),
+       c(0,pdf_trunc),
+       type="n",xlab="Distance",ylab="Density")
+  polygon(x = c(0,kernel$knots,maxx),
+          y = c(0,pdf_trunc,0),border = NA,col = adjustcolor("mediumblue",alpha.f = 0.6))
+  mtext(paste0(name," (mean: ",round(k_mean,3),")"),side = 3,line = 0.5,cex=1.25)
+  par(new = TRUE)
+
+  # CDF
+  cdf_trunc <- ifelse(kernel$cdf$est < 0,0,kernel$cdf$est)
+  plot(kernel$knots,
+       cdf_trunc,
+       type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+  lines(x = kernel$knots,
+          y = cdf_trunc,
+          col = adjustcolor("firebrick3",1),lwd=2)
+  axis(side=4, at = pretty(range(cdf_trunc)))
+  mtext("Cumulative Probability", side = 4, line = 2.25)
+
+}
+
 
 ###############################################################################
 # process run(s)
@@ -63,7 +93,7 @@ n <- 26
 sumstat <- vector("list",n)
 
 verbose <- TRUE # if TRUE print out progress  bars in the fn's; o/w just have a global bar
-if(!verbose){
+if(!verbose){s
   pb <- txtProgressBar(1,n)
 }
 

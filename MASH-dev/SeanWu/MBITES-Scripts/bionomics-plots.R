@@ -91,91 +91,139 @@ par(mfrow=c(1,1))
 # Figure 7 (dispersion for landscape 13)
 ###############################################################################
 
-lscape <- 13
-mvmt <- readRDS(paste0(out_dir,"processed_kernels_",run,".rds"))
+l <- 13
+mvmt <- readRDS(paste0(out_dir,"processed_kernels_",l,".rds"))
 
 
-pdf(file = paste0(plots_dir,"MBITES_fig6.pdf"),width = 12,height = 10)
-par(mfrow=c(2,2))
+# pdf(file = paste0(plots_dir,"MBITES_fig6.pdf"),width = 12,height = 10)
 
-# plot spatially-averaged movement kernel
-with(mvmt,{
+# Plot average movement for landscape
 
-  # plot smoothed PDFs
-  par(mar = c(5, 5, 3, 5))
-  alpha <- 0.5
-  maxy <- max(PDF_sth$y)
-  plot(CDF_sth$x.out,PDF_sth$y,type="l",col=adjustcolor("mediumblue",alpha),lwd=3,ylim=c(.Machine$double.eps,maxy),xlim=c(0,4),
-       xlab="Distance",ylab="Density",main="Smoothed Distance Kernel CDF and PDF") # PDF
-  polygon(x = c(0,CDF_sth$x.out,max(CDF_sth$x.out),0),y = c(0,PDF_sth$y,0,0),
-          border = NA,col = adjustcolor("mediumblue",alpha*0.5))
-  par(new = TRUE)
+# PDF
+avg_k_m <- weighted.mean(mvmt$CDF_sth$x.out,mvmt$PDF_sth$y)
+xlim <- c(0,5)
+par(mar = c(4.5, 4.5, 2.5, 4.5),mfrow=c(2,2))
+plot(c(0,mvmt$CDF_sth$x.out,max(mvmt$CDF_sth$x.out),0),
+     c(0,mvmt$PDF_sth$y,0,0),
+     type="n",xlab="Distance",ylab="Density",xlim=xlim
+)
+polygon(x = c(0,mvmt$CDF_sth$x.out,max(mvmt$CDF_sth$x.out),0),
+        y = c(0,mvmt$PDF_sth$y,0,0),
+        border = NA,
+        col = adjustcolor("mediumblue",alpha.f = 0.6))
+mtext(paste0("Spatially Averaged Movement Kernel (mean: ",round(avg_k_m,3),")"),side = 3,line = 0.5,cex=1.25)
+par(new = TRUE)
 
-  # plot smoothed CDFs
-  plot(CDF_sth$x.out,CDF_sth$est,type="l",col=adjustcolor("firebrick3",alpha),lwd=3,xlim=c(0,4), xaxt = "n", yaxt = "n",ylab = "", xlab = "")
-  polygon(x = c(0,CDF_sth$x.out,max(CDF_sth$x.out),0),y = c(0,CDF_sth$est,0,0),
-          border = NA,col = adjustcolor("firebrick3",alpha*0.5))
-  axis(side=4, at = pretty(range(CDF_sth$est)))
-  mtext("Cumulative Probability", side = 4, line = 2.25)
-  par(mar = c(5,4,2,2)) # defaults
-})
-
-# plot site-specific movement kernel(s)
-with(mvmt,{
-
-  nsite <- length(sites)
-
-  # calculate mean of all the smooth CDFs and PDFs
-  cdfs <- sapply(X = sites,function(x){x$CDF_sth$est})
-  cdfs <- ifelse(cdfs<0,0,cdfs)
-  meanCDF <- rowMeans(cdfs)
-  pdfs <- sapply(X = sites,function(x){x$PDF_sth$y})
-  pdfs <- ifelse(pdfs<0,0,pdfs)
-  meanPDF <- rowMeans(pdfs)
-
-  # plot smoothed PDFs
-  alpha <- 0.5
-  maxy <- max(sapply(sites,function(x){max(x$PDF_sth$y)}))
-  maxy <- round(maxy,digits = 2)
-  y <- ifelse(sites[[1]]$PDF_sth$y < 0,0,sites[[1]]$PDF_sth$y)
-  plot(sites[[1]]$PDF_sth$x,y,
-       type="l",col=adjustcolor("mediumblue",alpha),lwd=3,ylim=c(.Machine$double.eps,maxy),xlim=c(0,4),
-       main = "Smoothed Movement PDFs",xlab="Distance",ylab="Density")
-  for(i in 2:nsite){
-    y <- ifelse(sites[[i]]$PDF_sth$y < 0,0,sites[[i]]$PDF_sth$y)
-    lines(sites[[1]]$PDF_sth$x,y,col=adjustcolor("mediumblue",alpha),lwd=3)
-  }
-  lines(sites[[1]]$PDF_sth$x,meanPDF,col=grey(level = 0.1),lwd=3)
-
-  # plot smoothed CDFs
-  y <- ifelse(sites[[1]]$CDF_sth$est < 0,0,sites[[1]]$CDF_sth$est)
-  plot(sites[[1]]$CDF_sth$x.out,y,
-       type="l",col=adjustcolor("firebrick3",alpha),lwd=3,ylim=c(0,1),xlim=c(0,4),
-       main = "Smoothed Movement CDFs",xlab="Distance",ylab="Cumulative Probability")
-  for(i in 2:nsite){
-    y <- ifelse(sites[[i]]$CDF_sth$est < 0,0,sites[[i]]$CDF_sth$est)
-    lines(sites[[i]]$CDF_sth$x.out,y,col=adjustcolor("firebrick3",alpha),lwd=3)
-  }
-  lines(sites[[i]]$CDF_sth$x.out,meanCDF,col=grey(level = 0.1),lwd=3)
-
-})
+# CDF
+plot(c(0,mvmt$CDF_sth$x.out,max(mvmt$CDF_sth$x.out),0),
+     c(0,mvmt$CDF_sth$est,0,0),
+     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "",xlim=xlim
+     )
+lines(x = c(0,mvmt$CDF_sth$x.out),
+      y = c(0,mvmt$CDF_sth$est),
+      col = adjustcolor("firebrick3",1),lwd=2)
+axis(side=4, at = pretty(range(c(0,mvmt$CDF_sth$est))))
+mtext("Cumulative Probability", side = 4, line = 2.25)
+# par(mar = c(5,4,2,2),mfrow=c(1,1)) # defaults
 
 # plot mosquito dispersion
-maxx <- max(sumstat[[1]]$disperse_cum_smooth$knots)+(0.001*max(sumstat[[1]]$disperse_cum_smooth$knots))
-plot(sumstat[[1]]$disperse_cum_smooth$knots,
-     sumstat[[1]]$disperse_cum_smooth$pmf,
-     type="n"
-     )
-polygon(x = c(0,sumstat[[1]]$disperse_cum_smooth$knots,maxx),
-        y = c(0,sumstat[[1]]$disperse_cum_smooth$pmf,0),border = NA,col = "steelblue")
 
+# cumulative dispersion
+maxx <- max(sumstat[[l]]$disperse_cum_smooth$knots)+(0.001*max(sumstat[[l]]$disperse_cum_smooth$knots))
+cum_disp_m <- weighted.mean(x = sumstat[[l]]$disperse_cum_smooth$knots,w = sumstat[[l]]$disperse_cum_smooth$pmf)
+# par(mar = c(4.5, 4.5, 2.5, 4.5),mfrow=c(1,2))
+plot(sumstat[[l]]$disperse_cum_smooth$knots,
+     sumstat[[l]]$disperse_cum_smooth$pdf$est,
+     type="n",xlab="Distance",ylab="Density"
+     )
+mtext(paste0("Cumulative Dispersion (mean: ",round(cum_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
+# PDF
+polygon(x = c(0,sumstat[[l]]$disperse_cum_smooth$knots,maxx),
+        y = c(0,sumstat[[l]]$disperse_cum_smooth$pdf$est,0),border = NA,col = adjustcolor("mediumblue",alpha.f = 0.6))
+par(new = TRUE)
+
+# CDF
+plot(sumstat[[l]]$disperse_cum_smooth$knots,
+     sumstat[[l]]$disperse_cum_smooth$cdf$est,
+     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+lines(x = sumstat[[l]]$disperse_cum_smooth$knots,
+        y = sumstat[[l]]$disperse_cum_smooth$cdf$est,
+        col = adjustcolor("firebrick3",1),lwd=2)
+axis(side=4, at = pretty(range(sumstat[[l]]$disperse_cum_smooth$cdf$est)))
+mtext("Cumulative Probability", side = 4, line = 2.25)
+# par(mar = c(5,4,2,2)) # defaults
+
+# absolute dispersion
+maxx <- max(sumstat[[l]]$disperse_abs_smooth$knots)+(0.001*max(sumstat[[l]]$disperse_abs_smooth$knots))
+abs_disp_m <- weighted.mean(x = sumstat[[l]]$disperse_abs_smooth$knots,w = sumstat[[l]]$disperse_abs_smooth$pmf)
+# par(mar = c(4.5, 4.5, 2.5, 4.5))
+plot(c(0,sumstat[[l]]$disperse_abs_smooth$knots),
+     c(0,ifelse(sumstat[[l]]$disperse_abs_smooth$pdf$est<0,0,sumstat[[l]]$disperse_abs_smooth$pdf$est)),
+     type="n",xlab="Distance",ylab="Density"
+)
+mtext(paste0("Absolute Dispersion (mean: ",round(abs_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
+# PDF
+polygon(x = c(0,sumstat[[l]]$disperse_abs_smooth$knots,maxx),
+        y = c(0,ifelse(sumstat[[l]]$disperse_abs_smooth$pdf$est<0,0,sumstat[[l]]$disperse_abs_smooth$pdf$est),0),border = NA,col = adjustcolor("mediumblue",alpha.f = 0.6))
+par(new = TRUE)
+
+# CDF
+plot(sumstat[[l]]$disperse_abs_smooth$knots,
+     sumstat[[l]]$disperse_abs_smooth$cdf$est,
+     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+lines(x = c(sumstat[[l]]$disperse_abs_smooth$knots),
+      y = c(sumstat[[l]]$disperse_abs_smooth$cdf$est),
+      col = adjustcolor("firebrick3",1),lwd=2)
+axis(side=4, at = pretty(range(c(0,sumstat[[l]]$disperse_abs_smooth$cdf$est))))
+mtext("Cumulative Probability", side = 4, line = 2.25)
+# par(mar = c(5,4,2,2),mfrow=c(1,1)) # defaults
 
 # plot VC dispersion
+maxx <- max(sumstat[[l]]$vc_dispersion$knots)+(0.001*max(sumstat[[l]]$vc_dispersion$knots))
+vc_disp_m <- weighted.mean(x = sumstat[[l]]$vc_dispersion$knots,w = sumstat[[l]]$vc_dispersion$pmf)
+# par(mar = c(4.5, 4.5, 2.5, 4.5),mfrow=c(1,2))
+plot(sumstat[[l]]$vc_dispersion$knots,
+     sumstat[[l]]$vc_dispersion$pdf$est,
+     type="n",xlab="Distance",ylab="Density"
+)
+mtext(paste0("VC Dispersion (mean: ",round(vc_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
+# PDF
+polygon(x = c(0,sumstat[[l]]$vc_dispersion$knots,maxx),
+        y = c(0,sumstat[[l]]$vc_dispersion$pdf$est,0),border = NA,col = adjustcolor("mediumblue",alpha.f = 0.6))
+par(new = TRUE)
 
+# CDF
+plot(sumstat[[l]]$vc_dispersion$knots,
+     sumstat[[l]]$vc_dispersion$cdf$est,
+     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+lines(x = sumstat[[l]]$vc_dispersion$knots,
+      y = sumstat[[l]]$vc_dispersion$cdf$est,
+      col = adjustcolor("firebrick3",1),lwd=2)
+axis(side=4, at = pretty(range(sumstat[[l]]$vc_dispersion$cdf$est)))
+mtext("Cumulative Probability", side = 4, line = 2.25)
+# par(mar = c(5,4,2,2)) # defaults
 
-
-
-dev.off()
-par(mfrow=c(1,2))
-
-
+# # VC dispersion (unique bites)
+# maxx <- max(sumstat[[l]]$vc_dispersion_unique$knots)+(0.001*max(sumstat[[l]]$vc_dispersion_unique$knots))
+# vc_u_disp_m <- weighted.mean(x = sumstat[[l]]$vc_dispersion_unique$knots,w = sumstat[[l]]$vc_dispersion_unique$pmf)
+# par(mar = c(4.5, 4.5, 2.5, 4.5))
+# plot(sumstat[[l]]$vc_dispersion_unique$knots,
+#      sumstat[[l]]$vc_dispersion_unique$pdf$est,
+#      type="n",xlab="Distance",ylab="Density"
+# )
+# mtext(paste0("VC (Unique Hosts) Dispersion (mean: ",round(vc_u_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
+# # PDF
+# polygon(x = c(0,sumstat[[l]]$vc_dispersion_unique$knots,maxx),
+#         y = c(0,sumstat[[l]]$vc_dispersion_unique$pdf$est,0),border = NA,col = adjustcolor("mediumblue",alpha.f = 0.6))
+# par(new = TRUE)
+#
+# # CDF
+# plot(sumstat[[l]]$vc_dispersion_unique$knots,
+#      sumstat[[l]]$vc_dispersion_unique$cdf$est,
+#      type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+# lines(x = sumstat[[l]]$vc_dispersion_unique$knots,
+#       y = sumstat[[l]]$vc_dispersion_unique$cdf$est,
+#       col = adjustcolor("firebrick3",1),lwd=2)
+# axis(side=4, at = pretty(range(sumstat[[l]]$vc_dispersion_unique$cdf$est)))
+# mtext("Cumulative Probability", side = 4, line = 2.25)
+par(mar = c(5,4,2,2),mfrow=c(1,1)) # defaults

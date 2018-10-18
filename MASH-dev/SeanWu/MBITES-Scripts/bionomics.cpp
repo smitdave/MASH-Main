@@ -882,8 +882,8 @@ Rcpp::List Bionomics_ovipositionRateCpp(const Rcpp::DataFrame& mosquitos, bool v
   std::size_t nn(0);
   std::generate(agesort.begin(), agesort.end(), [&]{ return nn++; });
 
-  std::sort(std::begin(agesort),
-            std::end(agesort),
+  std::sort(agesort.begin(),
+            agesort.end(),
             [&](int i1, int i2) { return ages[i1] < ages[i2];});
 
   reorder(agesort.begin(), agesort.end(), batches.begin());
