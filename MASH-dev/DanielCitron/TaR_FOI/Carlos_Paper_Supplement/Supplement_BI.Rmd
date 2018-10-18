@@ -1,0 +1,534 @@
+---
+title: "Supplement_BI"
+author: "Daniel T. Citron"
+date: "10/17/2018"
+output: html_document
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(data.table)
+library(latex2exp)
+library(rootSolve)
+library(raster)
+library(rgdal, quietly = TRUE)
+library(ggplot2, quietly = TRUE)
+```
+
+```{r Set up Creating Maps, include = TRUE}
+## Setup for creating maps:
+# Read in shape files of Bioko Island and the area-level grid
+bioko<-readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/bioko", "bioko_admin1")
+areas_inh<-readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/areas_inh", "areas_inh")
+areasf<-fortify(areas_inh, region = "areaId")
+```
+
+Set working directory:
+```{r}
+setwd("/Users/dtcitron/Documents/MASH/Bioko_Macro/Travel_Model_Fitting/Importations - Carlos Paper")
+```
+
+
+Read in data:
+```{r Read in Data}
+BI <- as.data.table(read.csv("/Users/dtcitron/Documents/MASH/Bioko_Macro/Travel_Model_Fitting/Importations - Carlos Paper/eta.csv"))
+denom <- data.table(read.csv("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_sim_setup_data/bioko_areas.csv"))
+
+BI <- merge(BI, denom[, c("areaId", "pop")], by = "areaId")
+
+pop.total <- sum(BI$pop)
+```
+
+
+# Define functions for co-estimation
+  
+  * The function `Travel2PR` calcualtes $PR=(h+\eta \delta)/(h+\eta \delta+r)$
+  * The function `Travel2h` co-estimates `h` and `eta` (and outputs `h` only), and does this by minimizing the difference between PR and $(h+\eta \delta)/(h+\eta \delta+r)$. Note that this does not always result in an exact solution, but we’ll get as close as we can.
+  * The function `Travel2eta` estimates `eta`. Note that `h` defaults to 0, but that if we plug in `h` using the results from `Travel2h` we get the co-estimated value for `eta`. Note also that `eta` $\propto$ the difference between prevalence among travelers and the local residual transmission - we can only use this to calculate our co-estimate, not either the upper or lower bounds
+  * The function `Travel2TF` estimates the travel fraction once `eta` is known
+
+```{r Define Functions}
+# Solve for PR, based on delta, eta, h
+Travel2PR = function(Xt, Xp, h=0, T=56, r=1/200, eta=NULL){
+  if(is.null(eta)) eta = Travel2eta(Xt, Xp, h, T, r)
+  delta = -log(1-Xt)/T
+  return((eta*delta + h)/(eta*delta + h + r))
+}
+
+Travel2h=function(Xt, Xp, PR, T=56, r=1/200, hmx = 3/365, eta=NULL){
+  geth = function(h){
+    abs(PR - Travel2PR(Xt, Xp, h, T, r, eta))^2#^(1/2)
+  }
+  optimize(geth, c(0,hmx))$min
+}
+
+# Once h is known, need to back solve for eta, this time using PR_L0 = h/(h + r)
+Travel2eta = function(Xt, Xp, h=0, T=56, r=1/200){
+  # Xt :: period prevalence for travel in the last 56 days
+  # Xp :: reported prevalence in travelers
+  LR = h/(h+r) # Local residual PR - equilibrium value when there are no importations
+  prt = function(t){exp(-r*t)}
+  return(T*pmax(Xp-LR,0)/integrate(prt, 0, T)$val) #eta
+}
+
+# Travel Fraction - need eta
+Travel2TF = function(Xt, Xp, PR, h=0, T=56, r=1/200, eta=NULL){
+  tpr = Travel2PR(Xt, Xp, 0, T, r, eta)
+  pmin(tpr/PR, 1)
+}
+```
+
+# Figure: Rate of travel This figure is optional
+```{r }
+BI$delta <- 0
+
+BI$delta <- -log(1 - BI$to_map)/56
+
+hist(BI$delta, main = TeX("Rates of Travel $(\\delta)$"), xlab = TeX("$\\delta$"))
+```
+
+# Setup: define r
+```{r Define r}
+r = 1/200
+```
+
+# Upper bound, lower bound, and coestimated values for `eta` and `delta`
+```{r Eta and Delta estimates}
+# upper
+BI$eta.upper <- pmax((BI$prt_map),0)*56*r/(1 - exp(-56*r))
+BI$h.upper <- 0
+for (i in 1:194){
+  BI$h.upper[[i]] <- Travel2h(BI$to_map[[i]], BI$prt_map[[i]], BI$prall_map[[i]], eta = BI$eta.upper[[i]])
+}
+# lower
+BI$eta.lower <- pmax((BI$prt_map-BI$prall_map),0)*56*r/(1 - exp(-56*r))
+BI$h.lower <- 0
+for (i in 1:194){
+  BI$h.lower[[i]] <- Travel2h(BI$to_map[[i]], BI$prt_map[[i]], BI$prall_map[[i]], eta = BI$eta.lower[[i]])
+}
+# coestimate
+BI$h.co <- 0
+for (i in 1:194){
+  BI$h.co[[i]] <- Travel2h(BI$to_map[[i]], BI$prt_map[[i]], BI$prall_map[[i]])
+}
+BI$eta.co <- 0
+for (i in 1:194){
+  BI$eta.co[[i]] <- Travel2eta(BI$to_map[[i]], BI$prt_map[[i]], h = BI$h.co[[i]])
+}
+```
+
+# Upper bound, lower bound, and coestimated values for travel fraction
+```{r TF estimates}
+# Coestimate TF
+BI$tf.co = rep(0, 194) 
+for (i in 1:194){
+  BI$tf.co[[i]] = Travel2TF(BI$to_map[[i]], BI$prt_map[[i]], BI$prall_map[[i]], eta=BI$eta.co[[i]])
+}
+# Upper TF
+BI$tf.upper <- with(BI, pmin((eta.upper*delta)/(eta.upper*delta + 1/200)/prall_map,1))
+# Lower TF
+BI$tf.lower <- with(BI, pmin((eta.lower*delta)/(eta.lower*delta + 1/200)/prall_map,1))
+```
+
+# Generate Figures
+
+## Figure: TF maps - coestimate, upper, lower
+```{r TF lower, fig.width=6, fig.height=6}
+area.data = merge(areasf, BI, by.x = "id", by.y = "areaId", all=TRUE)
+plot.data<-area.data[order(area.data$order), ]
+p1 = ggplot(data = plot.data, aes(x=long, y=lat, group = group))
+p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
+tf.lower.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.lower), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Travel Fraction (%)\nLower Bound", low="blueviolet", high="white", limits=c(0, 100)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+tf.lower.map
+
+#ggsave("tf_lower_map.pdf", plot = tf.lower.map)
+```
+ 
+```{r TF upper, fig.width=6, fig.height=6}
+tf.upper.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.upper), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Travel Fraction (%)\nUpper Bound", low="blueviolet", high="white", limits=c(0, 100)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+tf.upper.map
+#ggsave("tf_upper_map.pdf", plot = tf.upper.map)
+```
+
+```{r TF co, fig.width=6, fig.height=6}
+tf.co.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.co), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Travel Fraction (%)", low="blueviolet", high="white", limits=c(0, 100)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+tf.co.map
+#ggsave("tf_co_map.pdf", plot = tf.co.map)
+```
+
+## Figure: LR maps - coestimate, upper, lower
+```{r LR upper, fig.width=6, fig.height=6}
+h.upper.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.upper/(h.upper+1/200)), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Local Residual\nTransmission (%)\nUpper Bound",
+                      low="yellow", high="red", limits=c(0, 40)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+h.upper.map
+#ggsave("h_upper_map.pdf", plot = h.upper.map)
+```
+
+```{r LR lower, fig.width=6, fig.height=6}
+h.lower.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.lower/(h.lower+1/200)), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Local Residual\nTransmission (%)\nLower Bound",
+                      low="yellow", high="red", limits=c(0, 40)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+h.lower.map
+#ggsave("h_lower_map.pdf", plot = h.lower.map)
+```
+
+```{r LR co, fig.width=6, fig.height=6}
+h.co.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.co/(h.co+1/200)), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Local Residual\nTransmission (%)",
+                      low="yellow", high="red", limits=c(0, 40)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+h.co.map
+#ggsave("h_co_map.pdf", plot = h.co.map)
+```
+
+(Save plots)
+```{r Save plots, eval=FALSE}
+ggsave("tf_lower_map.pdf", plot = tf.lower.map)
+ggsave("tf_upper_map.pdf", plot = tf.upper.map)
+ggsave("tf_co_map.pdf", plot = tf.co.map)
+
+ggsave("h_upper_map.pdf", plot = h.upper.map)
+ggsave("h_lower_map.pdf", plot = h.lower.map)
+ggsave("h_co_map.pdf", plot = h.co.map)
+```
+
+## Generate Tables
+```{r Table generation}
+# Coestimate
+print("Coestimate")
+c(sum(BI[tf.co >= 1]$pop)/pop.total, sum(BI[tf.co >= 0.8]$pop)/pop.total, sum(BI[tf.co >= 0.5]$pop)/pop.total)
+# Upper
+print("Upper")
+c(sum(BI[tf.upper >= 1]$pop)/pop.total, sum(BI[tf.upper >= 0.8]$pop)/pop.total, sum(BI[tf.upper >= 0.5]$pop)/pop.total)
+# Lower
+print("Lower")
+c(sum(BI[tf.lower >= 1]$pop)/pop.total, sum(BI[tf.lower >= 0.8]$pop)/pop.total, sum(BI[tf.lower >= 0.5]$pop)/pop.total)
+```
+
+## Figure: eta histograms
+This figure is optional
+```{r Eta histogram}
+hist(BI$eta.lower, main = TeX("Eta Lower"), xlab = TeX("$\\eta$"))
+hist(BI$eta.co, main = TeX("Eta Coestimate$"), xlab = TeX("$\\eta$"))
+hist(BI$eta.upper, main = TeX("Eta Upper"), xlab = TeX("$\\eta$"))
+```
+
+## Figure: Travel Fraction Histograms
+First, solve for local FOI
+```{r TF histograms}
+hist(BI$tf.lower, main = TeX("TF Lower"), xlab = TeX("$\\TF$"))
+hist(BI$tf.co, main = TeX("TF Coestimate$"), xlab = TeX("$\\TF$"))
+hist(BI$tf.upper, main = TeX("TF Upper"), xlab = TeX("$\\TF$"))
+```
+
+# Repeating analysis, but this time using travel to EG only
+Denote all variables with this change using .e at the end
+```{r Delta - EG}
+BI$delta.e <- 0
+
+BI$delta.e <- -log(1 - BI$te_map)/56
+
+hist(BI$delta.e, main = TeX("Rates of Travel $(\\delta)$"), xlab = TeX("$\\delta$"))
+```
+
+## Upper bound, lower bound, and coestimated values for `eta` and `delta`
+```{r}
+# upper
+BI$eta.upper.e <- pmax((BI$pre_map),0)*56*r/(1 - exp(-56*r))
+BI$h.upper.e <- 0
+for (i in 1:194){
+  BI$h.upper.e[[i]] <- Travel2h(BI$te_map[[i]], BI$pre_map[[i]], BI$prall_map[[i]], eta = BI$eta.upper.e[[i]])
+}
+# lower
+BI$eta.lower.e <- pmax((BI$pre_map-BI$prall_map),0)*56*r/(1 - exp(-56*r))
+BI$h.lower.e <- 0
+for (i in 1:194){
+  BI$h.lower.e[[i]] <- Travel2h(BI$te_map[[i]], BI$pre_map[[i]], BI$prall_map[[i]], eta = BI$eta.lower.e[[i]])
+}
+# coestimate
+BI$h.co.e <- 0
+for (i in 1:194){
+  BI$h.co.e[[i]] <- Travel2h(BI$te_map[[i]], BI$pre_map[[i]], BI$prall_map[[i]])
+}
+BI$eta.co.e <- 0
+for (i in 1:194){
+  BI$eta.co.e[[i]] <- Travel2eta(BI$te_map[[i]], BI$pre_map[[i]], h = BI$h.co.e[[i]])
+}
+```
+
+## Upper bound, lower bound, and coestimated values for travel fraction
+```{r}
+# Coestimate TF
+BI$tf.co.e = rep(0, 194) 
+for (i in 1:194){
+  BI$tf.co.e[[i]] = Travel2TF(BI$te_map[[i]], BI$pre_map[[i]], BI$prall_map[[i]], eta=BI$eta.co.e[[i]])
+}
+# Upper TF
+BI$tf.upper.e <- with(BI, pmin((eta.upper.e*delta.e)/(eta.upper.e*delta.e + 1/200)/prall_map,1))
+# Lower TF
+BI$tf.lower.e <- with(BI, pmin((eta.lower.e*delta.e)/(eta.lower.e*delta.e + 1/200)/prall_map,1))
+```
+
+
+## Generate figures
+
+### Figure: TF maps - coestimate, upper, lower
+```{r TF lower - EG, fig.width=6, fig.height=6}
+area.data = merge(areasf, BI, by.x = "id", by.y = "areaId", all=TRUE)
+plot.data<-area.data[order(area.data$order), ]
+p1 = ggplot(data = plot.data, aes(x=long, y=lat, group = group))
+p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
+
+tf.lower.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.lower.e), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Travel Fraction (%)\nLower Bound", low="blueviolet", high="white", limits=c(0, 100)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+tf.lower.map.e
+#ggsave("tf_lower_map_e.pdf", plot = tf.lower.map.e)
+```
+
+
+```{r TF upper - EG, fig.width=6, fig.height=6}
+tf.upper.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.upper.e), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Travel Fraction (%)\nUpper Bound", low="blueviolet", high="white", limits=c(0, 100)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+tf.upper.map.e
+#ggsave("tf_upper_map.e.pdf", plot = tf.upper.map.e)
+```
+
+```{r TF coestimate - EG, fig.width=6, fig.height=6}
+tf.co.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.co.e), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Travel Fraction (%)", low="blueviolet", high="white", limits=c(0, 100)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+tf.co.map.e
+#ggsave("tf_co_map_e.pdf", plot = tf.co.map.e)
+```
+
+## Figure: LR maps - coestimate, upper, lower
+
+```{r LR upper - EG, fig.width=6, fig.height=6}
+h.upper.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.upper.e/(h.upper.e+1/200)), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Local Residual\nTransmission (%)\nLower Bound",
+                      low="yellow", high="red", limits=c(0, 40)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+h.upper.map.e
+#ggsave("h_upper_map_e.pdf", plot = h.upper.map.e)
+```
+
+```{r LR lower - EG, fig.width=6, fig.height=6}
+h.lower.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.lower.e/(h.lower.e+1/200)), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Local Residual\nTransmission (%)\nUpper Bound",
+                      low="yellow", high="red", limits=c(0, 40)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+h.lower.map.e
+#ggsave("h_lower_map_e.pdf", plot = h.lower.map.e)
+```
+
+```{r LR coestimate - EG, fig.width=6, fig.height=6}
+h.co.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.co.e/(h.co.e+1/200)), color = NA, size = 0.25) +
+  scale_fill_gradient(name="Local Residual\nTransmission (%)",
+                      low="yellow", high="red", limits=c(0, 40)) +
+  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+  theme(text = element_text(size = 16),
+        axis.line=element_blank(), axis.text.x=element_blank(), 
+        axis.text.y=element_blank(),axis.ticks=element_blank(),
+        axis.title.x=element_blank(),
+        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+h.co.map.e
+#ggsave("h_co_map_e.pdf", plot = h.co.map.e)
+```
+
+(save plots)
+```{r Save Plots - EG, eval = FALSE}
+ggsave("tf_lower_map_e.pdf", plot = tf.lower.map.e)
+ggsave("tf_upper_map_e.pdf", plot = tf.upper.map.e)
+ggsave("tf_co_map_e.pdf", plot = tf.co.map.e)
+
+ggsave("h_upper_map_e.pdf", plot = h.upper.map.e)
+ggsave("h_lower_map_e.pdf", plot = h.lower.map.e)
+ggsave("h_co_map_e.pdf", plot = h.co.map.e)
+```
+
+## Generate Tables
+```{r Table generation - EG}
+# Coestimate
+print("Coestimate")
+c(sum(BI[tf.co.e >= 1]$pop)/pop.total, sum(BI[tf.co.e >= 0.8]$pop)/pop.total, sum(BI[tf.co.e >= 0.5]$pop)/pop.total)
+# Upper
+print("Upper")
+c(sum(BI[tf.upper.e >= 1]$pop)/pop.total, sum(BI[tf.upper.e >= 0.8]$pop)/pop.total, sum(BI[tf.upper.e >= 0.5]$pop)/pop.total)
+# Lower
+print("Lower")
+c(sum(BI[tf.lower.e >= 1]$pop)/pop.total, sum(BI[tf.lower.e >= 0.8]$pop)/pop.total, sum(BI[tf.lower.e >= 0.5]$pop)/pop.total)
+```
+
+
+What’s the mean population-weighted local residual transmission
+```{r}
+#hist(with(BI, h.co.e/(h.co.e + 1/200)))
+#summary(with(BI, h.co.e/(h.co.e + 1/200)))
+
+summary(with(BI, h.co.e/(h.co.e + 1/200)*pop/pop.total))
+summary(with(BI, h.co/(h.co + 1/200)*pop/pop.total))
+
+
+hist(with(BI, h.co.e/(h.co.e + 1/200)*pop/pop.total))
+```
+
+## Figure: Eta Histograms
+This figure is optional
+```{r Eta histograms - EG}
+hist(BI$eta.lower.e, main = TeX("Eta Lower"), xlab = TeX("$\\eta$"))
+hist(BI$eta.co.e, main = TeX("Eta Coestimate$"), xlab = TeX("$\\eta$"))
+hist(BI$eta.upper.e, main = TeX("Eta Upper"), xlab = TeX("$\\eta$"))
+```
+
+## Figure: Travel Fraction Histograms
+First, solve for local FOI
+```{r TF histograms - EG}
+hist(BI$tf.lower.e, main = TeX("TF Lower"), xlab = TeX("$\\TF$"))
+hist(BI$tf.co.e, main = TeX("TF Coestimate$"), xlab = TeX("$\\TF$"))
+hist(BI$tf.upper.e, main = TeX("TF Upper"), xlab = TeX("$\\TF$"))
+```
+
+# Decreasing mean duration of infections
+Recompute everything with r = 1/100
+
+```{r Treatment}
+# upper
+BI$eta.upper.r <- pmax((BI$pre_map),0)*56/100/(1 - exp(-56/100))
+BI$h.upper.r <- 0
+for (i in 1:194){
+  BI$h.upper.r[[i]] <- Travel2h(BI$te_map[[i]], BI$pre_map[[i]], BI$prall_map[[i]], r = 1/100, eta = BI$eta.upper.r[[i]])
+}
+# lower
+BI$eta.lower.r <- pmax((BI$pre_map-BI$prall_map),0)*56/100/(1 - exp(-56/100))
+BI$h.lower.r <- 0
+for (i in 1:194){
+  BI$h.lower.r[[i]] <- Travel2h(BI$te_map[[i]], BI$pre_map[[i]], BI$prall_map[[i]], r = 1/100, eta = BI$eta.lower.r[[i]])
+}
+# coestimate
+BI$h.co.r <- 0
+for (i in 1:194){
+  BI$h.co.r[[i]] <- Travel2h(BI$te_map[[i]], BI$pre_map[[i]], BI$prall_map[[i]], r = 1/100, hmx = 1)
+}
+BI$eta.co.r <- 0
+for (i in 1:194){
+  BI$eta.co.r[[i]] <- Travel2eta(BI$te_map[[i]], BI$pre_map[[i]], h = BI$h.co.r[[i]], r = 1/100)
+}
+BI$tf.co.r <- 0
+for (i in 1:194){
+  BI$tf.co.r[[i]] <- Travel2TF(BI$te_map[[i]], BI$pre_map[[i]], BI$prall_map[[i]], h = BI$h.co.r[[i]], r = 1/100, eta = BI$eta.co.r[[i]])
+}
+
+## These are in Supplement_BI.R
+#plot(with(BI, h.co.e/(h.co.e + 1/200)),
+#     with(BI, h.co.r/(h.co.r + 1/100))
+#)
+#segments(0,0,1,1)
+
+#plot(with(BI, tf.co.e),
+#     with(BI, tf.co.r)
+#     )
+#segments(0,0,1,1)
+```
+
+
+# Last thing: travel heterogeneity?
+To do this analysis, ignore local transmission - effectively in the limit where local transmission is unimportant
+```{r Travel Heterogeneity}
+fac = .5
+BI$delta2 = -log(1 - BI$te_map/fac)/56
+
+## See Supplement_BI.R
+#plot(with(BI, delta.e*eta.co.e/(delta.e*eta.co.e + r)),
+#     with(BI, delta2*eta.co.e/(delta2*eta.co.e + r)*fac))
+#segments(0,0,1,1)
+```
+
+
+# Save outputs
+```{r Save outputs, eval = FALSE}
+holder <- BI[, c("X", "areaId", "to_map", "te_map", "prt_map", "pre_map", "prall_map", 
+                 "eta.co", "eta.lower", "eta.upper", "eta.co.e", "eta.lower.e", "eta.upper.e", 
+                 "h.co", "h.lower", "h.upper", "h.co.e", "h.lower.e", "h.upper.e",
+                 "tf.co", "tf.lower.e", "tf.upper.e", "tf.co.e", "tf.lower.e", "tf.upper.e",
+                 "eta.co.r", "tf.co.r")]
+
+holder$lr.co <- with(BI, h.co/(h.co + 1/200))
+holder$lr.lower <- with(BI, h.lower/(h.lower + 1/200))
+holder$lr.upper <- with(BI, h.upper/(h.upper + 1/200))
+holder$lr.co.e <- with(BI, h.co.e/(h.co.e + 1/200))
+holder$lr.lower.e <- with(BI, h.lower.e/(h.lower.e + 1/200))
+holder$lr.upper.e <- with(BI, h.upper.e/(h.upper.e + 1/200))
+
+write.csv(holder, "lr_tf_surfaces.csv")
+```
+
+
+
