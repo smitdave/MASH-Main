@@ -4,7 +4,8 @@
 \alias{humanPfMOI}
 \title{PfMOI Human Stage Pathogen Class}
 \usage{
-humanPfMOI(b_init = 0.55, c_init = 0.15, chemoprophylaxis_init = FALSE)
+humanPfMOI(b_init = 0.55, c_init = 0.15,
+  chemoprophylaxis_init = FALSE)
 }
 \arguments{
 \item{_PfID}{PfID for this clonal infection}
