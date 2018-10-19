@@ -49,11 +49,11 @@ MacroTile <- R6::R6Class(classname = "MacroTile",
                    # Constructor
                    #################################################
 
-                   initialize = function(nPatch, AquaPar, PatchPar, MosquitoPar, HumanPar, directory){
+                   initialize = function(nPatch, AquaPar, PatchPar, MosquitoPar, HumanPar, directory, runID=0){
 
                      private$nPatch = nPatch
                      private$directory = directory
-                     private$runID = 0
+                     private$runID = runID
 
                      # initialize patches
                      cat("initializing patches\n")
