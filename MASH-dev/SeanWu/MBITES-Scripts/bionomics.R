@@ -21,6 +21,7 @@ rm(list=ls());gc()
 # set up
 script_dir <- "/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/SeanWu/MBITES-Scripts/"
 out_dir <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
+analysis_dir <- "/Users/slwu89/Desktop/mbites/peridomIHME/analyzed/"
 lscape_dir <- "/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/DavidSmith/MBITES-Demo/"
 
 library(Rcpp)
@@ -53,111 +54,127 @@ smooth_kernels <- function(distances, tol = .Machine$double.eps^0.75){
   ))
 }
 
+# plots a smooth kernel (output from 'smooth_kernels' in an aesthetically pleasing way)
+# does not change par() at all; reccomend to call par(mar = c(4.5, 4.5, 2.5, 4.5)) before
+plot_smooth_kernels <- function(kernel, name){
+
+  maxx <- max(kernel$knots)+(0.001*max(kernel$knots))
+  k_mean <- weighted.mean(x = kernel$knots,w = kernel$pmf) # mean from PMF
+
+  # PDF
+  pdf_trunc <- ifelse(kernel$pdf$est < 0,0,kernel$pdf$est)
+  plot(c(0,kernel$knots),
+       c(0,pdf_trunc),
+       type="n",xlab="Distance",ylab="Density")
+  polygon(x = c(0,kernel$knots,maxx),
+          y = c(0,pdf_trunc,0),border = NA,col = adjustcolor("mediumblue",alpha.f = 0.6))
+  mtext(paste0(name," (mean: ",round(k_mean,3),")"),side = 3,line = 0.5,cex=1.25)
+  par(new = TRUE)
+
+  # CDF
+  cdf_trunc <- ifelse(kernel$cdf$est < 0,0,kernel$cdf$est)
+  plot(kernel$knots,
+       cdf_trunc,
+       type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+  lines(x = kernel$knots,
+          y = cdf_trunc,
+          col = adjustcolor("firebrick3",1),lwd=2)
+  axis(side=4, at = pretty(range(cdf_trunc)))
+  mtext("Cumulative Probability", side = 4, line = 2.25)
+
+}
+
 
 ###############################################################################
 # process run(s)
 ###############################################################################
 
-i <- 1
+n <- 26
+sumstat <- vector("list",n)
 
-sumstat <- list()
-MBITES <- list()
+verbose <- TRUE # if TRUE print out progress  bars in the fn's; o/w just have a global bar
+if(!verbose){s
+  pb <- txtProgressBar(1,n)
+}
 
-mosquitos <- fromJSON(paste0(out_dir,"/mosquito_F_",i,".json"), flatten = TRUE)
-mosquitos <- mosquitos[-which(sapply(mosquitos$id,is.null)),]
-humans <- fromJSON(paste0(out_dir,"/human_",i,".json"), flatten = TRUE)
-humans <- humans[-which(sapply(humans$id,is.null)),]
-dist <- as.matrix(read.csv(paste0(lscape_dir,"dist_",i,".csv"), header = FALSE))
+for(i in 1:n){
 
-# state transitions
-sumstat$transitions <- Bionomics_StateTransitionCpp(mosquitos)
-# MBITES$transitions <- Bionomics_StateTransition(mosquitos)
+  # read in data
+  mosquitos <- fromJSON(paste0(out_dir,"/mosquito_F_",i,".json"), flatten = TRUE)
+  mosquitos <- mosquitos[-which(sapply(mosquitos$id,is.null)),]
+  humans <- fromJSON(paste0(out_dir,"/human_",i,".json"), flatten = TRUE)
+  humans <- humans[-which(sapply(humans$id,is.null)),]
+  dist <- as.matrix(read.csv(paste0(lscape_dir,"dist_",i,".csv"), header = FALSE))
 
-# lifespan
-sumstat$lifespan <- Bionomics_lifespanCpp(mosquitos)
-# MBITES$lifespan <- Bionomics_lifespan(mosquitos)
+  # summary statistics
 
-# number of blood hosts
-sumstat$blood_hosts <- Bionomics_humanBloodHostCpp(mosquitos,who = "human")
-# MBITES$blood_hosts <- Bionomics_humanBloodHost(mosquitos,who = "human")
+  # state transitions
+  sumstat[[i]]$transitions <- Bionomics_StateTransitionCpp(mosquitos,verbose = verbose)
 
-# feeding interval
-sumstat$blood_interval <- Bionomics_bloodIntervalsCpp(mosquitos,who = "human")
-sumstat$blood_interval <- unlist(sumstat$blood_interval)
-sumstat$rest_interval <- Bionomics_restIntervalsCpp(mosquitos)
-sumstat$rest_interval <- unlist(sumstat$rest_interval)
-# MBITES$blood_interval <- Bionomics_bloodIntervals(mosquitos,who = "human")
+  # lifespan
+  sumstat[[i]]$lifespan <- Bionomics_lifespanCpp(mosquitos,verbose = verbose)
 
-# hbr (human biting proportion)
-sumstat$human_biterate <- Bionomics_humanBitingProportionCpp(mosquitos)
-# MBITES$human_biterate <- Bionomics_humanBitingProportion(mosquitos)
+  # number of blood hosts
+  sumstat[[i]]$blood_hosts <- Bionomics_humanBloodHostCpp(mosquitos,who = "human",verbose = verbose)
 
-# blood feeding rate
-sumstat$blood_rate <- Bionomics_bloodfeedingRateCpp(mosquitos)
-sumstat$blood_rate <- unlist(sumstat$blood_rate)
-# MBITES$blood_rate <- Bionomics_bloodfeedingRate(mosquitos) # R version seems wrong (confirmed)
+  # feeding interval & resting interval
+  sumstat[[i]]$blood_interval <- Bionomics_bloodIntervalsCpp(mosquitos,who = "human",verbose = verbose)
+  sumstat[[i]]$blood_interval <- unlist(sumstat[[i]]$blood_interval)
+  sumstat[[i]]$rest_interval <- Bionomics_restIntervalsCpp(mosquitos,verbose = verbose)
+  sumstat[[i]]$rest_interval <- unlist(sumstat[[i]]$rest_interval)
 
-# lifetime egg production
-sumstat$life_egg <- Bionomics_lifetimeOvipositionCpp(mosquitos,dist)
-# MBITES$life_egg <- Bionomics_lifetimeOviposition(mosquitos)
+  # hbr (human biting proportion)
+  sumstat[[i]]$human_biterate <- Bionomics_humanBitingProportionCpp(mosquitos,verbose = verbose)
 
-# oviposition interval
-sumstat$egg_interval <- Bionomics_ovipositionIntervalCpp(mosquitos)
-# MBITES$egg_interval <- Bionomics_ovipositionInterval(mosquitos)
+  # blood feeding rate
+  sumstat[[i]]$blood_rate <- Bionomics_bloodfeedingRateCpp(mosquitos,verbose = verbose)
+  sumstat[[i]]$blood_rate <- unlist(sumstat[[i]]$blood_rate)
 
-# oviposition rate
-sumstat$egg_rate <- Bionomics_ovipositionRateCpp(mosquitos)
-# MBITES$egg_rate <- Bionomics_ovipositionRate(mosquitos) # R version seems wrong (confirmed)
+  # lifetime egg production
+  sumstat[[i]]$life_egg <- Bionomics_lifetimeOvipositionCpp(mosquitos,dist,verbose = verbose)
 
-# vectorial capacity
-sumstat$VC <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),EIP = 10,unique = F)
-# MBITES$VC <- Bionomics_vectorialCapacity(mosquitos,humans,EIP = 10)
+  # oviposition interval
+  sumstat[[i]]$egg_interval <- Bionomics_ovipositionIntervalCpp(mosquitos,verbose = verbose)
 
-# vectorial capacity (unique secondary hosts)
-sumstat$VC_unique <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),EIP = 10,unique = T)
-# MBITES$VC_unique <- Bionomics_UniqueBites(mosquitos,humans,EIP = 10)
+  # oviposition rate
+  sumstat[[i]]$egg_rate <- Bionomics_ovipositionRateCpp(mosquitos,verbose = verbose)
 
-# dispersion plots
-vc_dispersion <- smooth_kernels(distances = sumstat$VC$dispersion)
-vc_dispersion_unique <- smooth_kernels(distances = sumstat$VC_unique$dispersion)
-egg_dispersion <- smooth_kernels(distances = sumstat$life_egg$dispersion)
+  # vectorial capacity
+  sumstat[[i]]$VC <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),EIP = 10,unique = F,verbose = verbose)
 
-# VC dispersion
+  # vectorial capacity (unique secondary hosts)
+  sumstat[[i]]$VC_unique <- Bionomics_vectorialCapacityCpp(mosquitos,dist,nrow(humans),EIP = 10,unique = T,verbose = verbose)
 
-# mar <- par()$mar
-#
-# # plot
-# red <- "firebrick3"
-# blue <- "steelblue"
-# redb <- adjustcolor(red,alpha.f = 0.75)
-# redf <- adjustcolor(red,alpha.f = 0.5)
-# blueb <- adjustcolor(blue,alpha.f = 0.75)
-# bluef <- adjustcolor(blue,alpha.f = 0.5)
-# with(vc_dispersion,{
-#
-#   par(mfrow = c(1,2))  # Leave space for z axis
-#
-#   # ECDF/PMF
-#   plot(knots, ecdf(knots),type="l",col=redb,lwd=3,
-#        ylab="CDF",xlab="Distance",main="Secondary Bites Dispersion (empirical)")
-#   polygon(x = c(knots,max(knots),0),y = c(ecdf(knots),min(ecdf(knots)),min(ecdf(knots))),border = NA,col = redf)
-#   par(new = TRUE)
-#   plot(knots, pmf, type = "h",col=blueb,lwd=3,
-#        axes = FALSE, bty = "n", xlab = "", ylab = "")
-#   polygon(x = c(0,knots,max(knots)),y = c(0,pmf,0),border = NA,col = blueb)
-#   axis(side=4, at = pretty(range(pmf)))
-#   mtext("PDF", side=4, line=3)
-#
-#   # CDF/PDF
-#   plot(knots, cdf$est,type="l",col=redb,lwd=3,
-#        ylab="CDF",xlab="Distance",main="Secondary Bites Dispersion (smoothed)")
-#   polygon(x = c(knots,max(knots),0),y = c(cdf$est,min(cdf$est),min(cdf$est)),border = NA,col = redf)
-#   par(new = TRUE)
-#   plot(knots, pdf$est, type = "l",col=blueb,lwd=3,
-#        axes = FALSE, bty = "n", xlab = "", ylab = "")
-#   polygon(x = c(0,knots,max(knots)),y = c(0,pdf$est,0),border = NA,col = blueb)
-#   axis(side=4, at = pretty(range(pdf$est)))
-#   mtext("PDF", side=4, line=3)
-#
-#   par(mfrow=c(1,1))
-# })
+  # dispersion of vc and eggs
+  sumstat[[i]]$vc_dispersion <- smooth_kernels(distances = sumstat[[i]]$VC$dispersion)
+  sumstat[[i]]$vc_dispersion_unique <- smooth_kernels(distances = sumstat[[i]]$VC_unique$dispersion)
+  sumstat[[i]]$egg_dispersion <- smooth_kernels(distances = sumstat[[i]]$life_egg$dispersion)
+
+  # cumulative and absolute dispersal of mosquitos
+  sumstat[[i]]$disperse_cum <- Bionomics_cumulativeDisperseCpp(mosquitos = mosquitos,dist = dist,verbose = verbose)
+  sumstat[[i]]$disperse_abs <- Bionomics_absoluteDisperseCpp(mosquitos = mosquitos,dist = dist,verbose = verbose)
+
+  # smoothed mosquito dispersion
+  sumstat[[i]]$disperse_cum_smooth <- smooth_kernels(distances = sumstat[[i]]$disperse_cum)
+  sumstat[[i]]$disperse_abs_smooth <- smooth_kernels(distances = sumstat[[i]]$disperse_abs)
+
+  # remove data
+  rm(mosquitos,humans,dist);gc()
+
+  if(!verbose){
+    setTxtProgressBar(pb,i)
+  } else {
+    cat("completed run: ",i," of ",n,"\n")
+  }
+}
+
+saveRDS(object = sumstat,file = paste0(analysis_dir,"summary.rds"),compress = TRUE)
+
+
+###############################################################################
+# process landscapes
+###############################################################################
+
+
+# dist_mat <- as.matrix(read.csv(paste0(directory,"DavidSmith/MBITES-Demo/dist_",run,".csv"), header = FALSE))
+# kernel <- as.matrix(read.csv(paste0(directory,"DavidSmith/MBITES-Demo/movement_",run,".csv"), header = FALSE))

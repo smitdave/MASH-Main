@@ -6,7 +6,8 @@
 \title{ELP Class Definition}
 \format{An \code{\link{R6Class}} generator object}
 \usage{
-ELP(alpha_new = 0.1, gamma_new = 0.1, psi_new = 0.01, tGrain_new = 1)
+ELP(alpha_new = 0.1, gamma_new = 0.1, psi_new = 0.01,
+  tGrain_new = 1)
 }
 \description{
 ELP
