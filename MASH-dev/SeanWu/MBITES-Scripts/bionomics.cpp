@@ -595,7 +595,7 @@ Rcpp::List Bionomics_bloodfeedingRateCpp(const Rcpp::DataFrame& mosquitos, bool 
  vectorial capacity
 ################################################################################ */
 
-/* filter mosquitos for blood feeding rate */
+/* filter mosquitos for vectorial capacity */
 bool filter_vc_fn(const Rcpp::IntegerVector& x){
   if(x.size() > 1){
     return true;

@@ -19,6 +19,7 @@
 rm(list=ls());gc()
 
 # set up
+mash_dir <- "/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/"
 script_dir <- "/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/SeanWu/MBITES-Scripts/"
 analysis_dir <- "/Users/slwu89/Desktop/mbites/peridomIHME/analyzed/"
 out_dir <- "/Users/slwu89/Desktop/mbites/peridomIHME/finals/"
@@ -38,9 +39,33 @@ ggcol <- function(n, alpha = 1) {
 # Figure 4 (landscape)
 ###############################################################################
 
+psets <- readRDS(file = paste0(mash_dir,"DavidSmith/MBITES-Demo/periDomesticRaw.rds"))
+margins <- par()$mar
 
+# dwellings, habitats, both
+pset_cols <- c("firebrick3","steelblue","mediumorchid4")
+adjcols <- adjustcolor(pset_cols,alpha.f = 0.5)
+shapes <- c(21,24,23)
 
+for(i in 1:26){
 
+  cat("plotting pointsets for landscape ",i," of 26\n")
+  run <- as.character(i)
+
+  pdf(file = paste0(plots_dir,"MBITES_points",run,".pdf"),width = 12,height = 8)
+  par(mar = rep(0.2,4))
+
+  type_ix <- unname(psets[[i]]$sites[,"type"]+1)
+
+  plot(psets[[i]]$sites[,c("x","y")],
+       pch=shapes[type_ix],
+       bg=adjcols[type_ix],
+       col=grey(0.25),
+       cex=1.5,axes = T,ann=FALSE
+       )
+  dev.off()
+}
+rm(psets);gc()
 
 
 ###############################################################################
@@ -140,7 +165,7 @@ cum_disp_m <- weighted.mean(x = sumstat[[l]]$disperse_cum_smooth$knots,w = sumst
 # par(mar = c(4.5, 4.5, 2.5, 4.5),mfrow=c(1,2))
 plot(sumstat[[l]]$disperse_cum_smooth$knots,
      sumstat[[l]]$disperse_cum_smooth$pdf$est,
-     type="n",xlab="Distance",ylab="Density"
+     type="n",xlab="Distance",ylab="Density",xlim=xlim
      )
 mtext(paste0("Cumulative Dispersion (mean: ",round(cum_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
 # PDF
@@ -151,7 +176,7 @@ par(new = TRUE)
 # CDF
 plot(sumstat[[l]]$disperse_cum_smooth$knots,
      sumstat[[l]]$disperse_cum_smooth$cdf$est,
-     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "",xlim=xlim)
 lines(x = sumstat[[l]]$disperse_cum_smooth$knots,
         y = sumstat[[l]]$disperse_cum_smooth$cdf$est,
         col = adjustcolor("firebrick3",1),lwd=2)
@@ -165,7 +190,7 @@ abs_disp_m <- weighted.mean(x = sumstat[[l]]$disperse_abs_smooth$knots,w = sumst
 # par(mar = c(4.5, 4.5, 2.5, 4.5))
 plot(c(0,sumstat[[l]]$disperse_abs_smooth$knots),
      c(0,ifelse(sumstat[[l]]$disperse_abs_smooth$pdf$est<0,0,sumstat[[l]]$disperse_abs_smooth$pdf$est)),
-     type="n",xlab="Distance",ylab="Density"
+     type="n",xlab="Distance",ylab="Density",xlim=xlim
 )
 mtext(paste0("Absolute Dispersion (mean: ",round(abs_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
 # PDF
@@ -176,7 +201,7 @@ par(new = TRUE)
 # CDF
 plot(sumstat[[l]]$disperse_abs_smooth$knots,
      sumstat[[l]]$disperse_abs_smooth$cdf$est,
-     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "",xlim=xlim)
 lines(x = c(sumstat[[l]]$disperse_abs_smooth$knots),
       y = c(sumstat[[l]]$disperse_abs_smooth$cdf$est),
       col = adjustcolor("firebrick3",1),lwd=2)
@@ -190,7 +215,7 @@ vc_disp_m <- weighted.mean(x = sumstat[[l]]$vc_dispersion$knots,w = sumstat[[l]]
 # par(mar = c(4.5, 4.5, 2.5, 4.5),mfrow=c(1,2))
 plot(sumstat[[l]]$vc_dispersion$knots,
      sumstat[[l]]$vc_dispersion$pdf$est,
-     type="n",xlab="Distance",ylab="Density"
+     type="n",xlab="Distance",ylab="Density",xlim=xlim
 )
 mtext(paste0("VC Dispersion (mean: ",round(vc_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
 # PDF
@@ -201,7 +226,7 @@ par(new = TRUE)
 # CDF
 plot(sumstat[[l]]$vc_dispersion$knots,
      sumstat[[l]]$vc_dispersion$cdf$est,
-     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "")
+     type="n", xaxt = "n", yaxt = "n",ylab = "", xlab = "",xlim=xlim)
 lines(x = sumstat[[l]]$vc_dispersion$knots,
       y = sumstat[[l]]$vc_dispersion$cdf$est,
       col = adjustcolor("firebrick3",1),lwd=2)
@@ -531,7 +556,7 @@ for(i in 1:max){
   setTxtProgressBar(pb,i)
 }
 
-pdf(file = paste0(plots_dir,"MBITES_fig10.pdf"),width = 12,height = 8)
+pdf(file = paste0(plots_dir,"MBITES_fig10.pdf"),width = 12,height = 6)
 par(mar = c(4.5, 4.5, 2, 4.5),mfrow=c(1,2))
 
 # mean VC
@@ -583,4 +608,49 @@ mtext("Distance", side = 2, line = 2.25)
 
 
 par(mar = margins,mfrow=c(1,1))
+dev.off()
+
+
+###############################################################################
+# SI Figure 1 (QSD over states as fn. of landscapes)
+###############################################################################
+
+qsd <- t(sapply(sumstat,function(x){
+  setNames(qsd_dtmc(x$transitions),c("F","B","R","L","O"))
+}))
+
+qsd_cols <- c("firebrick1","firebrick4","mediumorchid3","steelblue1","steelblue4")
+
+pdf(file = paste0(plots_dir,"MBITES_figSI1.pdf"),width = 12,height = 8)
+par(mar = c(4.5, 4.5, 2, 4.5))
+
+plot(x=0:25,y=qsd[,"F"],yaxt="n",ylab="",xlab="",type="l",ylim=c(0,1),col=qsd_cols[1],lwd=2.5)
+text(x = 0,y = qsd[1,"F"],labels = "F",col = qsd_cols[1],pos = 3,cex = 1.15)
+text(x = 0,y = qsd[1,"B"],labels = "B",col = qsd_cols[2],pos = 3,cex = 1.15)
+text(x = 1,y = qsd[1,"R"],labels = "R",col = qsd_cols[3],pos = 3,cex = 1.15)
+text(x = 0,y = qsd[1,"L"],labels = "L",col = qsd_cols[4],pos = 3,cex = 1.15)
+text(x = 0,y = qsd[1,"O"],labels = "O",col = qsd_cols[5],pos = 1,cex = 1.15)
+lines(x = 0:25,
+      y = qsd[,"B"],
+      col = qsd_cols[2],
+      lwd=2.5)
+lines(x = 0:25,
+      y = qsd[,"R"],
+      col = qsd_cols[3],
+      lwd=2.5)
+lines(x = 0:25,
+      y = qsd[,"L"],
+      col = qsd_cols[4],
+      lwd=2.5)
+lines(x = 0:25,
+      y = qsd[,"O"],
+      col = qsd_cols[5],
+      lwd=2.5)
+axis(side=2, at = seq(0,1,by=0.2))
+mtext("Quasi-stationary Distribution", side = 3, line = 0.5,cex=1.25)
+mtext("Percent peri-domestic", side = 1, line = 2)
+mtext("Probability Density", side = 2, line = 2.25)
+
+
+par(mar = margins)
 dev.off()

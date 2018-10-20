@@ -31,6 +31,11 @@ library(jsonlite)
 
 Rcpp::sourceCpp(paste0(script_dir,"bionomics.cpp"))
 
+# compare floats
+fequal <- function(x,y,tol=.Machine$double.eps^0.5){
+  abs(x-y) < tol
+}
+
 # take a vector of distances and make ECDF,PMF,smoothed CDF, smoothed PDF
 # tol: tolerance when computing PMF
 smooth_kernels <- function(distances, tol = .Machine$double.eps^0.75){
@@ -82,6 +87,16 @@ plot_smooth_kernels <- function(kernel, name){
   axis(side=4, at = pretty(range(cdf_trunc)))
   mtext("Cumulative Probability", side = 4, line = 2.25)
 
+}
+
+# calculate QSD (quasi-stationary distribution) for transition matrix P over transient set
+# see eqn 3: Darroch, J. N.; Seneta, E. (1965). "On Quasi-Stationary Distributions in Absorbing Discrete-Time Finite Markov Chains". Journal of Applied Probability. 2 (1): 88–100. doi:10.2307/3211876
+qsd_dtmc <- function(M,abs = c("D")){
+  P <- M[-which(rownames(M) %in% abs),-which(colnames(M) %in% abs)]
+  pi <- c(F=1,B=0,R=0,L=0,O=0)
+  e <- rep(1,5)
+  num <- (pi %*% solve(diag(nrow(P)) - P))
+  num / as.numeric((num %*% e))
 }
 
 
