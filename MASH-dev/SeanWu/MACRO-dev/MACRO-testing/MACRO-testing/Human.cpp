@@ -7,3 +7,8 @@
 //
 
 #include "Human.hpp"
+#include "Event.hpp"
+
+/* move operators */
+human::human(human&&) = default;
+human& human::operator=(human&&) = default;
