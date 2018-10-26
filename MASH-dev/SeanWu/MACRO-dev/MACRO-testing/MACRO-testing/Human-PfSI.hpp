@@ -42,8 +42,14 @@ public:
     void        set_state(const std::string& stateN){ state = stateN; }
     std::string get_state(){ return state; }
     
+    void        set_fever(double feverN){
+        fever = feverN;
+    }
+    double      get_fever(){ return fever; }
+    
 private:
-    std::string state;
+    std::string     state;
+    double          fever;
 };
 
 #endif /* Human_PfSI_hpp */

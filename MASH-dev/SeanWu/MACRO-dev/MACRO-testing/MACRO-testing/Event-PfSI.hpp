@@ -38,5 +38,15 @@ public:
     ~e_pfsi_recover();
 };
 
+/* fever event */
+class e_pfsi_fever : public event {
+public:
+    /* constructor */
+    e_pfsi_fever(double tEvent_, double fever_,human_pfsi* h);
+    
+    /* destructor */
+    ~e_pfsi_fever();
+};
+
 
 #endif /* Event_PfSI_hpp */
