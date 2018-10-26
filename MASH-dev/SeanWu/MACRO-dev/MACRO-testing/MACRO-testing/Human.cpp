@@ -20,13 +20,22 @@ void human::addEvent2Q(const event& e){
 };
 
 void human::rmTagFromQ(const std::string &tag){
-    
+    eventQ.erase(std::remove_if(eventQ.begin(),eventQ.end(),
+                                [tag](const event& e){
+                                    return(tag.compare(e.tag)==0);
+                                }));
 };
 
 void human::fireEvent(){
-    
+    if(eventQ.size() > 0){
+        eventQ.front().eventF(eventQ.front().eventD);
+        eventQ.erase(eventQ.begin());
+    }
 };
 
 void human::printEventQ(){
-    
+    std::cout << "printing human " << id << ", name: " << name << ", event queue: " << std::endl;
+    for(auto it = eventQ.begin(); it != eventQ.end(); it++){
+        it->print();
+    }
 };
