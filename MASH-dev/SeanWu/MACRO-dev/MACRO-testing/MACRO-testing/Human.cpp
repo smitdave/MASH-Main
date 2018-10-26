@@ -12,3 +12,20 @@
 /* move operators */
 human::human(human&&) = default;
 human& human::operator=(human&&) = default;
+
+/* event queue related functions */
+void human::addEvent2Q(const event*){
+    
+};
+
+void human::rmTagFromQ(const std::string &tag){
+    
+};
+
+void human::fireEvent(){
+    
+};
+
+void human::printEventQ(){
+    
+};

@@ -19,7 +19,7 @@ class event {
 public:
     
     /* constructor */
-    event(std::string _tag, double _tEvent, std::function<void()> _eventF, void* _eventD):
+    event(std::string _tag, double _tEvent, std::function<void(const void*)> _eventF, void* _eventD):
     tag(_tag),tEvent(_tEvent),eventF(_eventF),eventD(_eventD) {
         std::cout << "event constructor being called at " << this << std::endl;
     };
@@ -37,11 +37,21 @@ public:
     event(event&) = delete;
     event& operator=(event&) = delete;
     
+    /* print (debugging) */
+    void print(){
+        std::cout << "event -- tag: " << tag << ", tEvent: " << tEvent << std::endl;
+    };
+    
+    /* comparison for sorting */
+    bool operator<(event e) const {
+        return tEvent < e.tEvent;
+    };
+    
     /* information for event */
-    std::string             tag;
-    double                  tEvent;
-    std::function<void()>   eventF;
-    void*                   eventD;
+    std::string                        tag;
+    double                             tEvent;
+    std::function<void(const void*)>   eventF;
+    void*                              eventD; /* pack of data (optional) for eventF function */
     
 };
 

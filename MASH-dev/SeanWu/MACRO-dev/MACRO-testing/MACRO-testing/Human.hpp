@@ -12,6 +12,7 @@
 #include <stdio.h>
 #include <iostream>
 
+#include <string>
 #include <vector>
 
 /* forward declaration */
@@ -21,8 +22,12 @@ class event;
 class human {
 public:
     
-    human(const int id_) : id(id_), alive(true) {};
-    ~human(){};
+    human(const int id_, const std::string name_) : id(id_), name(name_), alive(true) {
+        std::cout << "human " << id << ", name: " << name << " born at " << this << std::endl;
+    };
+    ~human(){
+        std::cout << "human " << id << ", name: " << name << " dying at " << this << std::endl;
+    };
     
     /* move operators */
     human(human&&);
@@ -32,12 +37,19 @@ public:
     human(human&) = delete;
     human& operator=(human&) = delete;
     
+    /* event queue related functions */
+    void addEvent2Q(const event*);
+    void rmTagFromQ(const std::string &tag);
+    void fireEvent();
+    void printEventQ();
+    
 private:
     
     u_int               id; /* my id */
+    std::string         name;
     bool                alive; /* alive? */
     
-    std::vector<event>  eventQ;
+    std::vector<event*>  eventQ;
 };
 
 #endif /* Human_hpp */
