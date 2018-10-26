@@ -18,7 +18,7 @@
 class human_pfsi : public human {
     
     /* events are friends */
-    friend class e_pfsi_infect;
+//    friend class e_pfsi_infect;
     
 public:
     human_pfsi(const int id_, const std::string name_);
