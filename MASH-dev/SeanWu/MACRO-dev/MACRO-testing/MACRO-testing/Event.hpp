@@ -19,15 +19,10 @@ class event {
 public:
     
     /* constructor */
-    event(std::string _tag, double _tEvent, std::function<void(const void*)> _eventF, void* _eventD):
-    tag(_tag),tEvent(_tEvent),eventF(_eventF),eventD(_eventD) {
-        std::cout << "event constructor being called at " << this << std::endl;
-    };
+    event(std::string _tag, double _tEvent, std::function<void(const void*)> _eventF, void* _eventD);
     
     /* destructor */
-    ~event(){
-        std::cout << "event destructor being called at " << this << std::endl;
-    };
+    ~event();
     
 //    /* move operators */
 //    event(event&&);
@@ -54,5 +49,8 @@ public:
     void*                              eventD; /* pack of data (optional) for eventF function */
     
 };
+
+
+
 
 #endif /* Event_hpp */

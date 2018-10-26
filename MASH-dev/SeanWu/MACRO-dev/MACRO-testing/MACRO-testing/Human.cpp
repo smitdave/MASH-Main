@@ -9,7 +9,7 @@
 #include "Human.hpp"
 #include "Event.hpp"
 
-
+/* define virtual destructor is ok */
 human::~human(){
     std::cout << "human " << id << ", name: " << name << " dying at " << this << std::endl;
 };

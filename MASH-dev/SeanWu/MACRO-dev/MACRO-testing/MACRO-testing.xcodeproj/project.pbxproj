@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC0DB6A821839D3400810AF4 /* Event-PfSI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC0DB6A621839D3400810AF4 /* Event-PfSI.cpp */; };
 		CC15DE7221838CF90067681C /* Human-PfSI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC15DE7021838CF90067681C /* Human-PfSI.cpp */; };
 		CC6513B42182604C00F78EF5 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC6513B22182604C00F78EF5 /* Event.cpp */; };
 		CC982A5021821B2D00A3CFE4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC982A4F21821B2D00A3CFE4 /* main.cpp */; };
@@ -26,6 +27,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CC0DB6A621839D3400810AF4 /* Event-PfSI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Event-PfSI.cpp"; sourceTree = "<group>"; };
+		CC0DB6A721839D3400810AF4 /* Event-PfSI.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "Event-PfSI.hpp"; sourceTree = "<group>"; };
 		CC15DE7021838CF90067681C /* Human-PfSI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Human-PfSI.cpp"; sourceTree = "<group>"; };
 		CC15DE7121838CF90067681C /* Human-PfSI.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "Human-PfSI.hpp"; sourceTree = "<group>"; };
 		CC6513B22182604C00F78EF5 /* Event.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
@@ -69,6 +72,8 @@
 				CC982A4F21821B2D00A3CFE4 /* main.cpp */,
 				CC6513B22182604C00F78EF5 /* Event.cpp */,
 				CC6513B32182604C00F78EF5 /* Event.hpp */,
+				CC0DB6A621839D3400810AF4 /* Event-PfSI.cpp */,
+				CC0DB6A721839D3400810AF4 /* Event-PfSI.hpp */,
 				CC982A5621821C5A00A3CFE4 /* Human.cpp */,
 				CC982A5721821C5A00A3CFE4 /* Human.hpp */,
 				CC15DE7021838CF90067681C /* Human-PfSI.cpp */,
@@ -135,6 +140,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC6513B42182604C00F78EF5 /* Event.cpp in Sources */,
+				CC0DB6A821839D3400810AF4 /* Event-PfSI.cpp in Sources */,
 				CC982A5021821B2D00A3CFE4 /* main.cpp in Sources */,
 				CC982A5821821C5A00A3CFE4 /* Human.cpp in Sources */,
 				CC15DE7221838CF90067681C /* Human-PfSI.cpp in Sources */,
