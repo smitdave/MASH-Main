@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CC15DE7221838CF90067681C /* Human-PfSI.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC15DE7021838CF90067681C /* Human-PfSI.cpp */; };
 		CC6513B42182604C00F78EF5 /* Event.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC6513B22182604C00F78EF5 /* Event.cpp */; };
 		CC982A5021821B2D00A3CFE4 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC982A4F21821B2D00A3CFE4 /* main.cpp */; };
 		CC982A5821821C5A00A3CFE4 /* Human.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC982A5621821C5A00A3CFE4 /* Human.cpp */; };
@@ -25,6 +26,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CC15DE7021838CF90067681C /* Human-PfSI.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "Human-PfSI.cpp"; sourceTree = "<group>"; };
+		CC15DE7121838CF90067681C /* Human-PfSI.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = "Human-PfSI.hpp"; sourceTree = "<group>"; };
 		CC6513B22182604C00F78EF5 /* Event.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = Event.cpp; sourceTree = "<group>"; };
 		CC6513B32182604C00F78EF5 /* Event.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = Event.hpp; sourceTree = "<group>"; };
 		CC982A4C21821B2D00A3CFE4 /* MACRO-testing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "MACRO-testing"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -68,6 +71,8 @@
 				CC6513B32182604C00F78EF5 /* Event.hpp */,
 				CC982A5621821C5A00A3CFE4 /* Human.cpp */,
 				CC982A5721821C5A00A3CFE4 /* Human.hpp */,
+				CC15DE7021838CF90067681C /* Human-PfSI.cpp */,
+				CC15DE7121838CF90067681C /* Human-PfSI.hpp */,
 			);
 			path = "MACRO-testing";
 			sourceTree = "<group>";
@@ -132,6 +137,7 @@
 				CC6513B42182604C00F78EF5 /* Event.cpp in Sources */,
 				CC982A5021821B2D00A3CFE4 /* main.cpp in Sources */,
 				CC982A5821821C5A00A3CFE4 /* Human.cpp in Sources */,
+				CC15DE7221838CF90067681C /* Human-PfSI.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

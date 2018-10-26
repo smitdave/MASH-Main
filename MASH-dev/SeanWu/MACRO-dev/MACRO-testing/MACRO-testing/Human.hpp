@@ -20,16 +20,14 @@
 /* forward declaration */
 class event;
 
-/* human class */
+/* human class (abstract base) */
 class human {
 public:
     
     human(const int id_, const std::string name_) : id(id_), name(name_), alive(true) {
         std::cout << "human " << id << ", name: " << name << " born at " << this << std::endl;
     };
-    ~human(){
-        std::cout << "human " << id << ", name: " << name << " dying at " << this << std::endl;
-    };
+    virtual ~human() = 0;
     
     /* move operators */
     human(human&&);
@@ -45,7 +43,7 @@ public:
     void fireEvent();
     void printEventQ();
     
-private:
+protected:
     
     u_int               id; /* my id */
     std::string         name;

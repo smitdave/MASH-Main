@@ -9,6 +9,11 @@
 #include "Human.hpp"
 #include "Event.hpp"
 
+
+human::~human(){
+    std::cout << "human " << id << ", name: " << name << " dying at " << this << std::endl;
+};
+
 /* move operators */
 human::human(human&&) = default;
 human& human::operator=(human&&) = default;
