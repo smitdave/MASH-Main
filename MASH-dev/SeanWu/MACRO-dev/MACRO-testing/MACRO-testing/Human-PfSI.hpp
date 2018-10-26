@@ -17,6 +17,9 @@
 
 class human_pfsi : public human {
     
+    /* events are friends */
+    friend class e_pfsi_infect;
+    
 public:
     human_pfsi(const int id_, const std::string name_);
     ~human_pfsi();
@@ -29,7 +32,15 @@ public:
     human_pfsi(human_pfsi&) = delete;
     human_pfsi& operator=(human_pfsi&) = delete;
     
+    /* print */
+    void print(){
+        human::print();
+        std::cout << "my state is: " << state << std::endl;
+    }
+    
     /* accessors */
+    void        set_state(const std::string& stateN){ state = stateN; }
+    std::string get_state(){ return state; }
     
 private:
     std::string state;

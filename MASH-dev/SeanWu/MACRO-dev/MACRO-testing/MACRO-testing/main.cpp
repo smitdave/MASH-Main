@@ -9,72 +9,29 @@
 #include <iostream>
 #include <vector>
 #include <functional>
+#include <memory>
 
-using namespace std::placeholders;
+#include "Human-PfSI.hpp"
+#include "Event-PfSI.hpp"
 
-#include "Event.hpp"
-
-/* a tiny human class to check on */
-class tinyhuman {
-public:
-    tinyhuman(std::string id_): id(id_), alive(true) {
-        std::cout << "tinyhuman " << id << ", born at " << this << std::endl;
-    };
-    ~tinyhuman(){
-        std::cout << "tinyhuman " << id << ", dying at " << this << std::endl;
-    }
+int main(){
     
-    void set_alive(void* in){
-        bool* life = static_cast<bool*>(in);
-        alive = *life;
-    };
-    void kill(void* in){
-        alive = false;
-    }
-    void print_alive(){
-        std::cout << "tinyhuman " << id << ", alive: " << alive << std::endl;
-    };
-    void print_state(){
-        std::cout << "tinyhuman " << id << ", state: " << state << std::endl;
-    };
+    std::unique_ptr<human_pfsi> bob = std::make_unique<human_pfsi>(1,"bob");
+    std::unique_ptr<human_pfsi> alice = std::make_unique<human_pfsi>(2,"alice");
     
+    bob->print();
+    alice->print();
     
-private:
-    std::string id;
-    bool alive;
-    std::string state;
-};
-
-/* main */
-int main(int argc, const char * argv[]) {
+    alice->addEvent2Q(e_pfsi_infect(1.23,alice.get()));
+    std::cout << " START PRINTING ALICE'S EVENT QUEUE " << std::endl;
+    alice->printEventQ();
+    std::cout << " DONE PRINTING ALICE'S EVENT QUEUE " << std::endl;
     
+    std::cout << " FIRING ALICE'S EVENT QUEUE " << std::endl;
+    alice->fireEvent();
+    alice->print();
     
-    tinyhuman* bob = new tinyhuman("bob");
-    tinyhuman* alice = new tinyhuman("alice");
-    
-    
-    bob->print_alive();
-    
-    bool a = false;
-    void* aa = static_cast<bool*>(&a);
-    bob->set_alive(aa);
-    
-    bob->print_alive();
-    
-    a = true;
-    bob->set_alive(&a);
-    
-    bob->print_alive();
-    
-    bob->kill(nullptr);
-    bob->print_alive();
-    
-    
-
-//    eventQ.push_back();
-    
-    delete bob;
-    delete alice;
-    
+    std::cout << std::endl;
+    std::cout << " STOP PROGRAM " << std::endl;
     return 0;
 }

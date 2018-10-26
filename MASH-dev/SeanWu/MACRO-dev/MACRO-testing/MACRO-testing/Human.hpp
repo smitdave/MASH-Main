@@ -19,6 +19,7 @@
 
 /* forward declaration */
 class event;
+using eventP = std::unique_ptr<event>;
 
 /* human class (abstract base) */
 class human {
@@ -37,8 +38,13 @@ public:
     human(human&) = delete;
     human& operator=(human&) = delete;
     
+    /* print */
+    void print(){
+        std::cout << "human " << id << ", name: " << name << " saying hi!" << std::endl;
+    }
+    
     /* event queue related functions */
-    void addEvent2Q(const event& e);
+    void addEvent2Q(event&& e);
     void rmTagFromQ(const std::string &tag);
     void fireEvent();
     void printEventQ();
@@ -49,7 +55,7 @@ protected:
     std::string         name;
     bool                alive; /* alive? */
     
-    std::vector<event>  eventQ;
+    std::vector<eventP>  eventQ;
 };
 
 #endif /* Human_hpp */

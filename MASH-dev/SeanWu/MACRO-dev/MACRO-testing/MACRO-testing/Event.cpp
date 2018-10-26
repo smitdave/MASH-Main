@@ -9,8 +9,8 @@
 #include "Event.hpp"
 
 /* constructor */
-event::event(std::string _tag, double _tEvent, std::function<void(const void*)> _eventF, void* _eventD):
-tag(_tag),tEvent(_tEvent),eventF(_eventF),eventD(_eventD) {
+event::event(std::string tag_, double tEvent_, std::function<void(const void*)> eventF_, void* eventD_):
+tag(tag_),tEvent(tEvent_),eventF(eventF_),eventD(eventD_) {
     std::cout << "event constructor being called at " << this << std::endl;
 };
 

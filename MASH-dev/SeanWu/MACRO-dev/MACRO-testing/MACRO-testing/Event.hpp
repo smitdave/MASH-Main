@@ -19,18 +19,18 @@ class event {
 public:
     
     /* constructor */
-    event(std::string _tag, double _tEvent, std::function<void(const void*)> _eventF, void* _eventD);
+    event(std::string tag_, double tEvent_, std::function<void(const void*)> eventF_, void* eventD_);
     
     /* destructor */
     ~event();
     
-//    /* move operators */
-//    event(event&&);
-//    event& operator=(event&&);
-//    
-//    /* copy operators */
-//    event(event&);
-//    event& operator=(event&);
+    /* move operators */
+    event(event&&) = default;
+    event& operator=(event&&) = default;
+    
+    /* copy operators */
+    event(event&) = default;
+    event& operator=(event&) = default;
     
     /* print (debugging) */
     void print(){

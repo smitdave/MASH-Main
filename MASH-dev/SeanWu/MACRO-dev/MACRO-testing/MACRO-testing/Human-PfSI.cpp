@@ -8,6 +8,7 @@
 
 #include "Human-PfSI.hpp"
 #include "Event.hpp"
+#include "Event-PfSI.hpp"
 
 human_pfsi::human_pfsi(const int id_, const std::string name_) :
     human(id_,name_), state("S")

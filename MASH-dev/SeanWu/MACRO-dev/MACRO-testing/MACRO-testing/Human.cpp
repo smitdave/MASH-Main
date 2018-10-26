@@ -19,21 +19,21 @@ human::human(human&&) = default;
 human& human::operator=(human&&) = default;
 
 /* event queue related functions */
-void human::addEvent2Q(const event& e){
-    eventQ.emplace_back(e);
+void human::addEvent2Q(event&& e){
+    eventQ.emplace_back(std::make_unique<event>(e));
     std::sort(eventQ.begin(),eventQ.end());
 };
 
 void human::rmTagFromQ(const std::string &tag){
     eventQ.erase(std::remove_if(eventQ.begin(),eventQ.end(),
-                                [tag](const event& e){
-                                    return(tag.compare(e.tag)==0);
+                                [tag](eventP& e){
+                                    return(tag.compare(e->tag)==0);
                                 }));
 };
 
 void human::fireEvent(){
     if(eventQ.size() > 0){
-        eventQ.front().eventF(eventQ.front().eventD);
+        eventQ.front()->eventF(eventQ.front()->eventD);
         eventQ.erase(eventQ.begin());
     }
 };
@@ -41,6 +41,6 @@ void human::fireEvent(){
 void human::printEventQ(){
     std::cout << "printing human " << id << ", name: " << name << ", event queue: " << std::endl;
     for(auto it = eventQ.begin(); it != eventQ.end(); it++){
-        it->print();
+        (*it)->print();
     }
 };
