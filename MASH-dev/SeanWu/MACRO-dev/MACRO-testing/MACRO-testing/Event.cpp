@@ -7,3 +7,12 @@
 //
 
 #include "Event.hpp"
+
+///* move operators */
+//event::event(event&&) = default;
+//event& event::operator=(event&&) = default;
+//
+///* copy operators */
+//event::event(event&) = default;
+//event& event::operator=(event&) = default;
+

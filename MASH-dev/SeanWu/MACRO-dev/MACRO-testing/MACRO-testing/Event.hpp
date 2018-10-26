@@ -29,13 +29,13 @@ public:
         std::cout << "event destructor being called at " << this << std::endl;
     };
     
-    /* move operators */
-    event(event&&) = delete;
-    event& operator=(event&&) = delete;
-    
-    /* copy operators */
-    event(event&) = delete;
-    event& operator=(event&) = delete;
+//    /* move operators */
+//    event(event&&);
+//    event& operator=(event&&);
+//    
+//    /* copy operators */
+//    event(event&);
+//    event& operator=(event&);
     
     /* print (debugging) */
     void print(){

@@ -14,8 +14,9 @@ human::human(human&&) = default;
 human& human::operator=(human&&) = default;
 
 /* event queue related functions */
-void human::addEvent2Q(const event*){
-    
+void human::addEvent2Q(const event& e){
+    eventQ.emplace_back(e);
+    std::sort(eventQ.begin(),eventQ.end());
 };
 
 void human::rmTagFromQ(const std::string &tag){

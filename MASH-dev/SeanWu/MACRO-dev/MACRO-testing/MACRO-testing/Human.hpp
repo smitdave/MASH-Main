@@ -15,6 +15,8 @@
 #include <string>
 #include <vector>
 
+#include <memory>
+
 /* forward declaration */
 class event;
 
@@ -38,7 +40,7 @@ public:
     human& operator=(human&) = delete;
     
     /* event queue related functions */
-    void addEvent2Q(const event*);
+    void addEvent2Q(const event& e);
     void rmTagFromQ(const std::string &tag);
     void fireEvent();
     void printEventQ();
@@ -49,7 +51,7 @@ private:
     std::string         name;
     bool                alive; /* alive? */
     
-    std::vector<event*>  eventQ;
+    std::vector<event>  eventQ;
 };
 
 #endif /* Human_hpp */

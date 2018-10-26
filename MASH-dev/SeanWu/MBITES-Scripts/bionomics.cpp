@@ -893,3 +893,36 @@ Rcpp::List Bionomics_ovipositionRateCpp(const Rcpp::DataFrame& mosquitos, bool v
                             Rcpp::Named("batches")=Rcpp::wrap(batches));
 
 }
+
+
+/* ################################################################################
+ EIR (entomological inoculation rate, units: person^-1 day^-1)
+################################################################################ */
+
+// [[Rcpp::export]]
+Rcpp::NumericVector Bionomics_EIR(const Rcpp::DataFrame& humans, bool verbose = true){
+
+  size_t n = humans.nrow();
+  Rcpp::NumericVector out(n,0.);
+
+  /* elements of dataframe */
+  Rcpp::List bite_times_all = humans["bite_times"];
+
+  /* progress bar */
+  Progress pb(n, verbose);
+
+  /* iterate over humans */
+  for(size_t i=0; i<n; i++){
+
+    Rcpp::NumericVector bite_times = Rcpp::as<Rcpp::NumericVector>(bite_times_all[i]);
+
+    int n_bite = bite_times.size();
+    double time = *(bite_times.end()-1) - *(bite_times.begin());
+
+    out[i] = ((double)n_bite)/time;
+
+    pb.increment();
+  }
+
+  return out;
+}
