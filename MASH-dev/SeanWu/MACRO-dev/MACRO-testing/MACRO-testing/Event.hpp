@@ -19,7 +19,7 @@ class event {
 public:
     
     /* constructor */
-    event(std::string tag_, double tEvent_, std::function<void(const void*)> eventF_, void* eventD_);
+    event(std::string tag_, double tEvent_, std::function<void()> eventF_);
     
     /* destructor */
     ~event();
@@ -45,8 +45,7 @@ public:
     /* information for event */
     std::string                        tag;
     double                             tEvent;
-    std::function<void(const void*)>   eventF;
-    void*                              eventD; /* pack of data (optional) for eventF function */
+    std::function<void()>            eventF;
     
 };
 

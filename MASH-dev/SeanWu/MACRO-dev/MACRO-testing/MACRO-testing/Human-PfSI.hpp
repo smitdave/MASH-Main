@@ -42,9 +42,7 @@ public:
     void        set_state(const std::string& stateN){ state = stateN; }
     std::string get_state(){ return state; }
     
-    void        set_fever(double feverN){
-        fever = feverN;
-    }
+    void        set_fever(const double feverN){ fever = feverN; }
     double      get_fever(){ return fever; }
     
 private:
