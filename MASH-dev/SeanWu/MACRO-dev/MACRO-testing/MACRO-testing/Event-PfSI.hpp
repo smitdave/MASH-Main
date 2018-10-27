@@ -18,6 +18,7 @@ using namespace std::placeholders;
 
 class human_pfsi;
 
+/* infect a human */
 class e_pfsi_infect : public event {
 public:
     /* constructor */
@@ -26,5 +27,26 @@ public:
     /* destructor */
     ~e_pfsi_infect();
 };
+
+/* human recovers */
+class e_pfsi_recover : public event {
+public:
+    /* constructor */
+    e_pfsi_recover(double tEvent_, human_pfsi* h);
+    
+    /* destructor */
+    ~e_pfsi_recover();
+};
+
+/* fever event */
+class e_pfsi_fever : public event {
+public:
+    /* constructor */
+    e_pfsi_fever(double tEvent_, double fever_,human_pfsi* h);
+    
+    /* destructor */
+    ~e_pfsi_fever();
+};
+
 
 #endif /* Event_PfSI_hpp */

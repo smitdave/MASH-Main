@@ -21,7 +21,9 @@ human& human::operator=(human&&) = default;
 /* event queue related functions */
 void human::addEvent2Q(event&& e){
     eventQ.emplace_back(std::make_unique<event>(e));
-    std::sort(eventQ.begin(),eventQ.end());
+    std::sort(eventQ.begin(),eventQ.end(),[](std::unique_ptr<event>& e1, std::unique_ptr<event>& e2){
+        return e1->tEvent < e2->tEvent;
+    });
 };
 
 void human::rmTagFromQ(const std::string &tag){
@@ -33,7 +35,7 @@ void human::rmTagFromQ(const std::string &tag){
 
 void human::fireEvent(){
     if(eventQ.size() > 0){
-        eventQ.front()->eventF(eventQ.front()->eventD);
+        eventQ.front()->eventF();
         eventQ.erase(eventQ.begin());
     }
 };

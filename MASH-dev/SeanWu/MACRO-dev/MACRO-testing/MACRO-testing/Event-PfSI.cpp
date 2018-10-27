@@ -9,20 +9,49 @@
 #include "Event-PfSI.hpp"
 #include "Human-PfSI.hpp"
 
+/* infection event */
+
+/* constructor */
 e_pfsi_infect::e_pfsi_infect(double tEvent_, human_pfsi* h):
-    event("PfSI_infection",tEvent_,std::bind(&human_pfsi::set_state,h,"I"),nullptr)
+    event("PfSI_infection",tEvent_,std::bind(&human_pfsi::set_state,h,"I"))
 {
     std::cout << "e_pfsi_infect constructor being called at " << this << std::endl;
 };
 
-///* constructor */
-//e_pfsi_infect::e_pfsi_infect(std::string tag_, double tEvent_, std::function<void(const void*)> eventF_):
-//    event(tag_,tEvent_,eventF_,nullptr)
-//{
-//    std::cout << "e_pfsi_infect constructor being called at " << this << std::endl;
-//};
-
 /* destructor */
 e_pfsi_infect::~e_pfsi_infect(){
     std::cout << "e_pfsi_infect destructor being called at " << this << std::endl;
+};
+
+
+/* recovery event */
+
+/* constructor */
+e_pfsi_recover::e_pfsi_recover(double tEvent_, human_pfsi* h):
+    event("PfSI_recovery",tEvent_,std::bind(&human_pfsi::set_state,h,"S"))
+{
+    std::cout << "e_pfsi_recover constructor being called at " << this << std::endl;
+};
+
+/* destructor */
+e_pfsi_recover::~e_pfsi_recover(){
+    std::cout << "e_pfsi_recover destructor being called at " << this << std::endl;
+};
+
+/* fever event */
+
+/* constructor */
+e_pfsi_fever::e_pfsi_fever(double tEvent_, double fever_, human_pfsi* h):
+//    event("PFSI_fever",tEvent_,std::bind(&human_pfsi::set_fever,h,fever_))
+    event("PFSI_fever",tEvent_,[h,fever=fever_](){
+        // do other crap if you want.
+        h->set_fever(fever);
+    })
+{ 
+    std::cout << "e_pfsi_fever constructor being called at " << this << std::endl;
+};
+
+/* destructor */
+e_pfsi_fever::~e_pfsi_fever(){
+    std::cout << "e_pfsi_fever destructor being called at " << this << std::endl;
 };

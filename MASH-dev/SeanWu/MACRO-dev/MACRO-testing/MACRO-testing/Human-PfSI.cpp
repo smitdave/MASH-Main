@@ -11,7 +11,7 @@
 #include "Event-PfSI.hpp"
 
 human_pfsi::human_pfsi(const int id_, const std::string name_) :
-    human(id_,name_), state("S")
+    human(id_,name_), state("S"), fever(0)
 {
     std::cout << "human_pfsi birthed at " << this << std::endl;
 };
