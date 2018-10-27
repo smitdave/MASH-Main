@@ -35,7 +35,7 @@ public:
     /* print */
     void print(){
         human::print();
-        std::cout << "my state is: " << state << std::endl;
+        std::cout << "my state is: " << state << ", my fever is: " << fever << std::endl;
     }
     
     /* accessors */

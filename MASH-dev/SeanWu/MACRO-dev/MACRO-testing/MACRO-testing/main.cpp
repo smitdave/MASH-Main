@@ -33,18 +33,18 @@ int main(){
     std::cout << std::endl;
     
     std::cout << " FIRING ALICE'S EVENT QUEUE " << std::endl;
-    std::cout << "alice fever " << alice->get_fever() << std::endl;
     alice->fireEvent();
     alice->print();
     alice->printEventQ();
     alice->fireEvent();
     alice->print();
-    std::cout << "alice fever " << alice->get_fever() << std::endl;
     
     std::cout << " START PRINTING ALICE'S EVENT QUEUE " << std::endl;
     alice->printEventQ();
     std::cout << " DONE PRINTING ALICE'S EVENT QUEUE " << std::endl;
     std::cout << std::endl;
+    
+    bob->print();
     
     std::cout << std::endl;
     std::cout << " STOP PROGRAM " << std::endl;
