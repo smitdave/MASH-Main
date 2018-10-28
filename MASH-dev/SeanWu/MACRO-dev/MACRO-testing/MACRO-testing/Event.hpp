@@ -22,7 +22,7 @@ public:
     event(std::string tag_, double tEvent_, std::function<void()> eventF_);
     
     /* destructor */
-    ~event();
+    virtual ~event();
     
     /* move operators */
     event(event&&) = default;
