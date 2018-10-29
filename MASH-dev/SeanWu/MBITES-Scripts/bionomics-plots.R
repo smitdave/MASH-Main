@@ -654,3 +654,33 @@ mtext("Probability Density", side = 2, line = 2.25)
 
 par(mar = margins)
 dev.off()
+
+
+###############################################################################
+# SI Figure 2 (EIR)
+###############################################################################
+
+library(KernSmooth)
+
+EIRs <- readRDS(file = paste0(analysis_dir,"EIR.rds"))
+
+n <- 26
+
+x <- unlist(mapply(function(eir,i){
+  rep(i,length(eir))
+}, eir=EIRs,i=1:26,SIMPLIFY = F))
+
+y <- unlist(EIRs)
+
+eir_loess <- loess(y ~ x,family="gaussian")
+p_y <- predict(eir_loess,1:26,se=T)
+
+pdf(file = paste0(plots_dir,"MBITES_figSI2.pdf"),width = 12,height = 8)
+plot(x,y,pch=16,col=adjustcolor("mediumorchid3",alpha.f = 0.75),main = "EIR",xlab = "Proportion peri-domestic",ylab="EIR")
+lines(1:26,p_y$fit,lwd=2,col="steelblue")
+polygon(
+  x = c(1:26,26:1),
+  y = c(p_y$fit+(p_y$se.fit*3),rev(p_y$fit-(p_y$se.fit*3))),
+  border = NA,col = adjustcolor("steelblue",0.5)
+)
+dev.off()

@@ -900,8 +900,9 @@ Rcpp::List Bionomics_ovipositionRateCpp(const Rcpp::DataFrame& mosquitos, bool v
 ################################################################################ */
 
 // [[Rcpp::export]]
-Rcpp::NumericVector Bionomics_EIR(const Rcpp::DataFrame& humans, bool verbose = true){
+Rcpp::NumericVector Bionomics_EIR(const Rcpp::DataFrame& humans, const double tStart, const double tEnd, bool verbose = true){
 
+  double time = tEnd - tStart;
   size_t n = humans.nrow();
   Rcpp::NumericVector out(n,0.);
 
@@ -917,9 +918,14 @@ Rcpp::NumericVector Bionomics_EIR(const Rcpp::DataFrame& humans, bool verbose = 
     Rcpp::NumericVector bite_times = Rcpp::as<Rcpp::NumericVector>(bite_times_all[i]);
 
     int n_bite = bite_times.size();
-    double time = *(bite_times.end()-1) - *(bite_times.begin());
+    // double time = *(bite_times.end()-1) - *(bite_times.begin());
 
-    out[i] = ((double)n_bite)/time;
+    double eir = ((double)n_bite)/time;
+    if(!std::isfinite(eir)){
+      out[i] = 0.0;
+    } else {
+      out[i] = eir;
+    }
 
     pb.increment();
   }
