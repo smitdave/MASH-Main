@@ -4,7 +4,8 @@
 \alias{AquaPop_Emerge.Parameters}
 \title{Generate Parameters for Emerge Aquatic Ecology Model}
 \usage{
-AquaPop_Emerge.Parameters(nPatch, lambda, seasonality = TRUE, offset = NULL)
+AquaPop_Emerge.Parameters(nPatch, lambda, seasonality = TRUE,
+  offset = NULL)
 }
 \arguments{
 \item{nPatch}{integer number of patches}

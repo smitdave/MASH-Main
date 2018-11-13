@@ -2,5 +2,6 @@
 
 export(rcpp_hello_world)
 import(Rcpp)
+import(RcppArmadillo)
 import(RcppProgress)
 useDynLib(MACRO)

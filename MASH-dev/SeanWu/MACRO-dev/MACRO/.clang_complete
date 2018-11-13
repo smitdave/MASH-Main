@@ -1,0 +1,7 @@
+-I./inst/include/
+-I./src/
+-I/Library/Frameworks/R.framework/Headers/
+-I/Library/Frameworks/R.framework/Versions/3.5/Resources/library/Rcpp/include
+-I/Library/Frameworks/R.framework/Versions/3.5/Resources/library/RcppArmadillo/include
+-I/Library/Frameworks/R.framework/Versions/3.5/Resources/library/RcppProgress/include
+-std=c++14

@@ -23,10 +23,13 @@ int main(){
     bob->print();
     alice->print();
     
+    
     std::cout << std::endl;
     alice->addEvent2Q(e_pfsi_recover(5.46,alice.get()));
     alice->addEvent2Q(e_pfsi_infect(1.23,alice.get()));
     alice->addEvent2Q(e_pfsi_fever(3.26,10.0,alice.get()));
+    alice->addEvent2Q(e_pfsi_infect(21.32,alice.get()));
+    std::cout << std::endl;
     std::cout << " START PRINTING ALICE'S EVENT QUEUE " << std::endl;
     alice->printEventQ();
     std::cout << " DONE PRINTING ALICE'S EVENT QUEUE " << std::endl;
@@ -38,6 +41,7 @@ int main(){
     alice->printEventQ();
     alice->fireEvent();
     alice->print();
+    std::cout << std::endl;
     
     std::cout << " START PRINTING ALICE'S EVENT QUEUE " << std::endl;
     alice->printEventQ();
@@ -45,6 +49,7 @@ int main(){
     std::cout << std::endl;
     
     bob->print();
+    alice->print();
     
     std::cout << std::endl;
     std::cout << " STOP PROGRAM " << std::endl;

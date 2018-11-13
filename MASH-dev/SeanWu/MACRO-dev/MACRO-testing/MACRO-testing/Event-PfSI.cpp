@@ -43,9 +43,9 @@ e_pfsi_recover::~e_pfsi_recover(){
 /* constructor */
 e_pfsi_fever::e_pfsi_fever(double tEvent_, double fever_, human_pfsi* h):
 //    event("PFSI_fever",tEvent_,std::bind(&human_pfsi::set_fever,h,fever_))
-    event("PFSI_fever",tEvent_,[h,fever=fever_](){
+    event("PFSI_fever",tEvent_,[h,fever_](){
         // do other crap if you want.
-        h->set_fever(fever);
+        h->set_fever(fever_);
     })
 { 
     std::cout << "e_pfsi_fever constructor being called at " << this << std::endl;

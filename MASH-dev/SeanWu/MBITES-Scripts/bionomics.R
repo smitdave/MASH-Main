@@ -187,6 +187,40 @@ saveRDS(object = sumstat,file = paste0(analysis_dir,"summary.rds"),compress = TR
 
 
 ###############################################################################
+# process EIRs
+###############################################################################
+
+n <- 26
+EIRs <- vector("list",n)
+
+verbose <- TRUE # if TRUE print out progress  bars in the fn's; o/w just have a global bar
+if(!verbose){s
+  pb <- txtProgressBar(1,n)
+}
+
+for(i in 1:n){
+
+  # read in data
+  humans <- fromJSON(paste0(out_dir,"/human_",i,".json"), flatten = TRUE)
+  humans <- humans[-which(sapply(humans$id,is.null)),]
+
+
+  EIRs[[i]] <- Bionomics_EIR(humans = humans,tStart = 0,tEnd = (365*5),verbose = verbose)
+
+  # remove data
+  rm(humans);gc()
+
+  if(!verbose){
+    setTxtProgressBar(pb,i)
+  } else {
+    cat("completed run: ",i," of ",n,"\n")
+  }
+}
+
+saveRDS(object = EIRs,file = paste0(analysis_dir,"EIR.rds"),compress = TRUE)
+
+
+###############################################################################
 # process landscapes
 ###############################################################################
 

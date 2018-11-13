@@ -5,7 +5,8 @@
 \title{\code{Human}: Reset Human Between Runs}
 \usage{
 reset_Human(houseID = NULL, patchID = NULL, homeHouseID = NULL,
-  homePatchID = NULL, age = NULL, bWeight = NULL)
+  homePatchID = NULL, age = NULL, bWeight = NULL,
+  tripDuration = NULL, tripFrequency = NULL)
 }
 \arguments{
 \item{houseID}{integer ID of my current house}

@@ -76,13 +76,25 @@ lscapes <- c(1,13,26)
 
 pdf(file = paste0(plots_dir,"MBITES_fig6.pdf"),width = 12,height = 8)
 par(mfrow=c(3,2))
+
+# xlims for all plots should scale to largest
+xup_vc <- max(sapply(sumstat[lscapes],function(x){
+  vc <- x$VC$VC/length(x$VC$VC)
+  vc <- vc / simtime
+  max(vc)
+}))
+
+xup_bh <- max(sapply(sumstat[lscapes],function(x){
+  max(x$blood_hosts)
+}))
+
 for(i in lscapes){
 
   run <- as.character(i)
 
   # how 2 plot vc
-  with(sumstat[[i]],{
-    vc_normalized <- VC$VC / length(VC$VC)
+  # with(sumstat[[i]],{
+    vc_normalized <- sumstat[[i]]$VC$VC / length(sumstat[[i]]$VC$VC)
     vc_normalized <- vc_normalized / simtime # normalize by time
     vc_max <- max(vc_normalized)
     vc_mean_norm <- mean(vc_normalized)
@@ -93,25 +105,27 @@ for(i in lscapes){
     vc <- hist(vc_normalized,probability = TRUE,breaks = 100,
                col = adjustcolor("firebrick3",alpha.f = 0.5),
                xlab = "Secondary Bites", ylab = "Density",
-               main = paste0("MBITES Vectorial Capacity (mean: ",vc_mean_norm_r,")"))
+               main = paste0("MBITES Vectorial Capacity (mean: ",vc_mean_norm_r,")"),
+               xlim = c(0,xup_vc))
     abline(v = vc_mean_norm,lwd=2.5,lty=2,col="firebrick3")
     abline(v = vc_max,lwd=2.5,lty=2,col=adjustcolor("steelblue",alpha.f = 0.5))
     text(x = vc_max,y=max(vc$density)*0.1,paste0("max: ",round(vc_max,2)),
          col=adjustcolor("steelblue",alpha.f = 0.75),adj=1.15)
-  })
+  # })
 
   # num blood hosts
-  with(sumstat[[i]],{
-    blood_hosts_mean <- mean(blood_hosts)
-    hbh <- hist(blood_hosts,probability = TRUE,breaks = 100,
+  # with(sumstat[[i]],{
+    blood_hosts_mean <- mean(sumstat[[i]]$blood_hosts)
+    hbh <- hist(sumstat[[i]]$blood_hosts,probability = TRUE,breaks = 100,
                 col = adjustcolor("firebrick3",alpha.f = 0.5),
                 xlab = "Number of Blood Hosts", ylab = "Density",
-                main = paste0("MBITES Human Blood Hosts (mean: ",round(blood_hosts_mean,2),")"))
+                main = paste0("MBITES Human Blood Hosts (mean: ",round(blood_hosts_mean,2),")"),
+                xlim = c(0,xup_bh))
     abline(v = blood_hosts_mean,lwd=2.5,lty=2,col="firebrick3")
-    abline(v = max(blood_hosts),lwd=2.5,lty=2,col=adjustcolor("steelblue",alpha.f = 0.5))
-    text(x = max(blood_hosts),y=max(hbh$density)*0.1,paste0("max: ",max(blood_hosts)),
+    abline(v = max(sumstat[[i]]$blood_hosts),lwd=2.5,lty=2,col=adjustcolor("steelblue",alpha.f = 0.5))
+    text(x = max(sumstat[[i]]$blood_hosts),y=max(hbh$density)*0.1,paste0("max: ",max(sumstat[[i]]$blood_hosts)),
          col=adjustcolor("steelblue",alpha.f = 0.75),adj=1.15)
-  })
+  # })
 
 }
 dev.off()
@@ -167,7 +181,7 @@ plot(sumstat[[l]]$disperse_cum_smooth$knots,
      sumstat[[l]]$disperse_cum_smooth$pdf$est,
      type="n",xlab="Distance",ylab="Density",xlim=xlim
      )
-mtext(paste0("Cumulative Dispersion (mean: ",round(cum_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
+mtext(paste0("Cumulative Movement (mean: ",round(cum_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
 # PDF
 polygon(x = c(0,sumstat[[l]]$disperse_cum_smooth$knots,maxx),
         y = c(0,sumstat[[l]]$disperse_cum_smooth$pdf$est,0),border = NA,col = adjustcolor("mediumblue",alpha.f = 0.6))
@@ -192,7 +206,7 @@ plot(c(0,sumstat[[l]]$disperse_abs_smooth$knots),
      c(0,ifelse(sumstat[[l]]$disperse_abs_smooth$pdf$est<0,0,sumstat[[l]]$disperse_abs_smooth$pdf$est)),
      type="n",xlab="Distance",ylab="Density",xlim=xlim
 )
-mtext(paste0("Absolute Dispersion (mean: ",round(abs_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
+mtext(paste0("Lifetime Displacement (mean: ",round(abs_disp_m,3),")"),side = 3,line = 0.5,cex=1.25)
 # PDF
 polygon(x = c(0,sumstat[[l]]$disperse_abs_smooth$knots,maxx),
         y = c(0,ifelse(sumstat[[l]]$disperse_abs_smooth$pdf$est<0,0,sumstat[[l]]$disperse_abs_smooth$pdf$est),0),border = NA,col = adjustcolor("mediumblue",alpha.f = 0.6))
@@ -460,9 +474,9 @@ lines(x = 1:26,
     y = sapply(br_quant,function(x){x[["50%"]]}),
     col = adjustcolor(cols[4],1),lwd=2,lty=2)
 axis(side=2, at = pretty(range(c(0,br_means,br_ylim)),n = 8))
-mtext("Blood Feeding Rate", side = 3, line = 0.5,cex=1.25)
+mtext("Blood Feeding by Age", side = 3, line = 0.5,cex=1.25)
 mtext("Percent peri-domestic", side = 1, line = 1.25)
-mtext("Time (days)", side = 2, line = 2.25)
+mtext("Age (days)", side = 2, line = 2.25)
 
 
 # absolute dispersion
@@ -484,7 +498,7 @@ lines(x = 1:26,
     y = sapply(abs_d_quant,function(x){x[["50%"]]}),
     col = adjustcolor(cols[5],1),lwd=2,lty=2)
 axis(side=2, at = pretty(range(c(0,abs_d_means,abs_d_ylim)),n = 8))
-mtext("Absolute Mosquito Dispersion", side = 3, line = 0.5,cex=1.25)
+mtext("Lifetime Displacement", side = 3, line = 0.5,cex=1.25)
 mtext("Percent peri-domestic", side = 1, line = 1.25)
 mtext("Distance", side = 2, line = 2.25)
 
@@ -508,7 +522,7 @@ lines(x = 1:26,
     y = sapply(cum_d_quant,function(x){x[["50%"]]}),
     col = adjustcolor(cols[6],1),lwd=2,lty=2)
 axis(side=2, at = pretty(range(c(0,cum_d_means,cum_d_ylim)),n = 8))
-mtext("Cumulative Mosquito Dispersion", side = 3, line = 0.5,cex=1.25)
+mtext("Cumulative Movement", side = 3, line = 0.5,cex=1.25)
 mtext("Percent peri-domestic", side = 1, line = 1.25)
 mtext("Distance", side = 2, line = 2.25)
 
@@ -653,4 +667,34 @@ mtext("Probability Density", side = 2, line = 2.25)
 
 
 par(mar = margins)
+dev.off()
+
+
+###############################################################################
+# SI Figure 2 (EIR)
+###############################################################################
+
+library(KernSmooth)
+
+EIRs <- readRDS(file = paste0(analysis_dir,"EIR.rds"))
+
+n <- 26
+
+x <- unlist(mapply(function(eir,i){
+  rep(i,length(eir))
+}, eir=EIRs,i=1:26,SIMPLIFY = F))
+
+y <- unlist(EIRs)
+
+eir_loess <- loess(y ~ x,family="gaussian")
+p_y <- predict(eir_loess,1:26,se=T)
+
+pdf(file = paste0(plots_dir,"MBITES_figSI2.pdf"),width = 12,height = 8)
+plot(x,y,pch=16,col=adjustcolor("mediumorchid3",alpha.f = 0.75),main = "EIR",xlab = "Proportion peri-domestic",ylab="EIR")
+lines(1:26,p_y$fit,lwd=2,col="steelblue")
+polygon(
+  x = c(1:26,26:1),
+  y = c(p_y$fit+(p_y$se.fit*3),rev(p_y$fit-(p_y$se.fit*3))),
+  border = NA,col = adjustcolor("steelblue",0.5)
+)
 dev.off()
