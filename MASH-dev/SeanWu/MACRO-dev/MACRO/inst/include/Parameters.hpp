@@ -51,9 +51,7 @@ public:
   };
 
   /* get a value by key */
-  double                                            get_param(const std::string& key){
-    return params.at(key);
-  };
+  double                                            get_param(const std::string& key){ return params.at(key);};
 
 private:
   std::unordered_map<std::string, double>      params;
