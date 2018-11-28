@@ -1,18 +1,19 @@
 /*
- *      __  ______   __________  ____ 
+ *      __  ______   __________  ____
  *     /  |/  /   | / ____/ __ \/ __ \
  *    / /|_/ / /| |/ /   / /_/ / / / /
- *   / /  / / ___ / /___/ _, _/ /_/ / 
- *  /_/  /_/_/  |_\____/_/ |_|\____/  
- * 
+ *   / /  / / ___ / /___/ _, _/ /_/ /
+ *  /_/  /_/_/  |_\____/_/ |_|\____/
+ *
  *  Generic Human Class: humans are specialized by model type
- *  
+ *
  *  Sean Wu
  *  November 2018
  */
 
-#include "Event.hpp"
 #include "Human.hpp"
+#include "Event.hpp"
+#include "Tile.hpp"
 
 /* define virtual destructor is ok */
 human::~human(){
@@ -56,5 +57,13 @@ void human::printEventQ(){
   std::cout << "printing human " << id << ", event queue: " << std::endl;
   for(auto it = eventQ.begin(); it != eventQ.end(); it++){
     (*it)->print();
+  }
+};
+
+
+/* simulation related functions */
+void human::simulate(const double tmax){
+  while(tnow < tileP->get_tnow()){
+    fireEvent();
   }
 };
