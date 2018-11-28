@@ -18,12 +18,12 @@ public:
              const arma::Col<double>& M_, const arma::Col<double>& Y_, const arma::Col<double>& Z_) :
     N(N_), lambda(lambda_), psi(psi_), EIP(EIP_), maxEIP(maxEIP_), P(maxEIP_),
     p(p_), f(f_), Q(Q_), a(f*Q), v(v_),
-    M(M_), Y(Y_), Y0(N_), Z(Z_), ZZ(N_,maxEIP_)
+    M(M_), Y(Y_), Y0(N_), Z(Z_), ZZ(maxEIP_,N_)
   {
     std::cout << "mosquitoRM being born at " << this << std::endl;
 
     /* compute P */
-    unsigned int i = 1;
+    unsigned int i = 0;
     std::generate(P.begin(),P.end(),[&](){ return std::pow(p,++i); });
 
     /* compute ZZ */
@@ -47,6 +47,10 @@ public:
     P.print("printing P");
     ZZ.print("printing ZZ");
   }
+  
+  void aquatic_dynamics();
+  
+  void pop_dynamics();
 
 private:
 
