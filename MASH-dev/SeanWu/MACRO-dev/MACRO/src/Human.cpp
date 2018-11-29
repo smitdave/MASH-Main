@@ -59,11 +59,3 @@ void human::printEventQ(){
     (*it)->print();
   }
 };
-
-
-/* simulation related functions */
-void human::simulate(const double tmax){
-  while(tnow < tileP->get_tnow()){
-    fireEvent();
-  }
-};

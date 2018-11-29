@@ -32,7 +32,7 @@ public:
   virtual ~mosquito() = 0;
 
   /* interface */
-  // virtual void simulate();
+  virtual void simulate() = 0;
 
 protected:
 

@@ -62,7 +62,10 @@ public:
   void printEventQ();
 
   /* simulation related functions */
-  void simulate(const double tmax);
+  virtual void simulate() = 0;
+  void         update_kappa();
+  void         update_EIR();
+  void         queue_bites();
 
 protected:
 
