@@ -25,14 +25,16 @@ class mosquito {
 public:
 
   mosquito(tile* tileP_) : tileP(tileP_) {
+
     #ifdef DEBUG_MACRO
     std::cout << "mosquito born at " << this << std::endl;
     #endif
+    
   };
   virtual ~mosquito() = 0;
 
   /* interface */
-  // virtual void simulate();
+  virtual void simulate() = 0;
 
 protected:
 

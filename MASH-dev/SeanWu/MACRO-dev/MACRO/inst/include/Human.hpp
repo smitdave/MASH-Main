@@ -55,6 +55,10 @@ public:
     std::cout << "human " << id << " saying hi!" << std::endl;
   }
 
+  /* accessors */
+  u_int       get_id(){return id;}
+  bool        get_alive(){return alive;}
+
   /* event queue related functions */
   void addEvent2Q(event&& e);
   void rmTagFromQ(const std::string &tag);
@@ -62,7 +66,10 @@ public:
   void printEventQ();
 
   /* simulation related functions */
-  void simulate(const double tmax);
+  virtual void simulate() = 0;
+  void         update_kappa();
+  void         update_EIR();
+  void         queue_bites();
 
 protected:
 
