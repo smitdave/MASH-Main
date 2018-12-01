@@ -27,7 +27,7 @@
 /* finding stuff */
 #include <algorithm>
 
-/* forward declaration */
+/* forward declarations */
 class human;
 using humanP = std::unique_ptr<human>;
 
@@ -42,6 +42,10 @@ using prngP = std::unique_ptr<prng>;
 
 class logger;
 using loggerP = std::unique_ptr<logger>;
+
+class parameters;
+using parametersP = std::unique_ptr<parameters>;
+
 
 /* tile class definition */
 class tile {
@@ -63,6 +67,7 @@ public:
   /* utility classes */
   prng*                         get_prng();
   logger*                       get_logger();
+  parameters*                   get_params();
 
   /* simulation */
 
@@ -78,6 +83,7 @@ private:
   /* utility classes */
   prngP                         prngPtr;
   loggerP                       loggerPtr;
+  parametersP                   parametersPtr;
 
 };
 
@@ -87,5 +93,6 @@ inline void tile::set_tnow(u_int t){ tnow = t; };
 
 inline prng* tile::get_prng(){return prngPtr.get();};
 inline logger* tile::get_logger(){return loggerPtr.get();};
+inline parameters* tile::get_params(){return parametersPtr.get();};
 
 #endif

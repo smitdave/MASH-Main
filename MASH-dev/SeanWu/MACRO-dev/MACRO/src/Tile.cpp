@@ -11,13 +11,17 @@
  *  November 2018
  */
 
+
+/* state class includes */
 #include "Tile.hpp"
 #include "Patch.hpp"
 #include "Human.hpp"
 #include "Mosquito.hpp"
 
+/* utilty class incldues */
 #include "PRNG.hpp"
 #include "Logger.hpp"
+#include "Parameters.hpp"
 
 /* constructor */
 tile::tile(){
