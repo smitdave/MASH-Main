@@ -10,6 +10,7 @@
 #include <memory>
 #include <algorithm>
 
+/* note tnow should be 0,...,364 as a yearly cycle */
 class mosquitoRM {
 public:
 
@@ -67,7 +68,7 @@ public:
     std::cout << std::endl;
   };
   
-  void pop_dynamics(u_int tnow, arma::Row<double>& kappa){
+  void pop_dynamics(u_int tnow, const arma::Row<double>& kappa){
     
     std::cout << std::endl;
     std::cout << "testing pop_dynamics ... " << std::endl;
@@ -84,7 +85,7 @@ public:
     Z.print("Z after daily dynamics");
     
     /* transmission */
-    Y0 = f * Q * kappa * (M - Y);
+    Y0 = (f * Q * kappa) % (M - Y);
     if(any(Y0 < 0.0)){
       std::replace_if(Y0.begin(), Y0.end(), [](const double y0){
         return y0 < 0.0;
@@ -101,11 +102,15 @@ public:
     /* migration & incubation */
     M = M * psi;
     Y = Y * psi;
-    Z = (Z + ZZ.row(0)) * psi;
+    Z += ZZ.row(0) * psi;
+    
+    M.print("M after migration");
+    Y.print("Y after migration");
+    Z.print("Z after migration");
     
     /* incubating mosquitos */
     ZZ = ZZ_shift * ZZ;
-    ZZ.row(EIP_today-1) += P.at(EIP_today-1) * (psi * Y0);
+    ZZ.row(EIP_today-1) += P.at(EIP_today-1) * (Y0 * psi);
     
     std::cout << std::endl;
     
@@ -137,14 +142,27 @@ private:
 };
 
 /*
-fsfa
-sad
+N <- 10
+lambda <- matrix(rpois(N*365,10),365,N)
+psi <- diag(N)
+EIP <- rep(11,365)
+maxEIP <- 11
+p <- 0.95
+f <- 1/3
+Q <- 0.9
+v <- 20
+M <- rpois(N,1e4)
+Y <- rpois(N,1e3)
+Z <- rpois(N,1e2)
+kappa <- rlnorm(N)
+test_mosyRM(N,lambda,psi,EIP,maxEIP,p,f,Q,v,M,Y,Z,kappa)
  */
 // [[Rcpp::export]]
 void test_mosyRM(const size_t N_, const arma::Mat<double>& lambda_, const arma::Mat<double>& psi_,
                  const arma::Col<size_t>& EIP_, const size_t maxEIP_,
                  const double p_, const double f_, const double Q_, const double v_,
-                 const arma::Row<double>& M_, const arma::Row<double>& Y_, const arma::Row<double>& Z_){
+                 const arma::Row<double>& M_, const arma::Row<double>& Y_, const arma::Row<double>& Z_,
+                 const arma::Row<double>& kappa){
 
   std::unique_ptr<mosquitoRM> mPtr = std::make_unique<mosquitoRM>(N_, lambda_, psi_,
                                                                   EIP_, maxEIP_,
@@ -153,6 +171,24 @@ void test_mosyRM(const size_t N_, const arma::Mat<double>& lambda_, const arma::
   
   mPtr->print();
   mPtr->aquatic_dynamics(0);
-  // mPtr->pop_dynamics(0,)
+  mPtr->pop_dynamics(0,kappa);
 
 };
+
+// [[Rcpp::export]]
+arma::Row<double> test_psiMult(const arma::Mat<double>& psi, const arma::Row<double>& pop){
+  arma::Row<double> out = pop * psi;
+  return out;
+}
+
+// [[Rcpp::export]]
+arma::Mat<double> test_shiftMat(const arma::Mat<double>& Z){
+  
+  arma::Mat<int> Z_shift(Z.n_rows,Z.n_rows);
+  Z_shift.fill(0);
+  Z_shift.submat(0,1,Z.n_rows-2,Z.n_rows-1) = arma::eye<arma::Mat<int> >(Z.n_rows-1,Z.n_rows-1);
+  
+  arma::Mat<double> out;
+  out = Z_shift * Z;
+  return out;
+}

@@ -21,7 +21,7 @@
 /* human_pfsi-specific includes */
 #include <string>
 
-/* base-clasee */
+/* base-class */
 #include "Human.hpp"
 
 class human_pfsi : public human {
