@@ -16,11 +16,7 @@
 
 /* standard includes */
 #include <stdio.h>
-
-/* for std::function and std::bind */
 #include <functional>
-
-using namespace std::placeholders;
 
 #include "Event.hpp"
 

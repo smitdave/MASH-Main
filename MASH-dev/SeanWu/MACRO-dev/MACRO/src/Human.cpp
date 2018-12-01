@@ -14,6 +14,7 @@
 #include "Human.hpp"
 #include "Event.hpp"
 #include "Tile.hpp"
+#include "Patch.hpp"
 
 /* define virtual destructor is ok */
 human::~human(){
@@ -61,9 +62,14 @@ void human::printEventQ(){
 };
 
 
-/* simulation related functions */
-void human::simulate(const double tmax){
-  while(tnow < tileP->get_tnow()){
-    fireEvent();
-  }
+/* biting */
+
+/* decrement the biting weight where i am */
+void human::decrement_bweight(){
+  tileP->get_patch(patch_id)->decrement_bWeightHuman(bweight);
+};
+
+/* accumulate the biting weight where i am */
+void human::accumulate_bweight(){
+  tileP->get_patch(patch_id)->accumulate_bWeightHuman(bweight);
 };
