@@ -29,9 +29,17 @@ public:
     #ifdef DEBUG_MACRO
     std::cout << "mosquito born at " << this << std::endl;
     #endif
-    
+
   };
   virtual ~mosquito() = 0;
+
+  /* move operators */
+  mosquito(mosquito&&);
+  mosquito& operator=(mosquito&&);
+
+  /* copy operators */
+  mosquito(mosquito&) = delete;
+  mosquito& operator=(mosquito&) = delete;
 
   /* interface */
   virtual void simulate() = 0;

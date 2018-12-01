@@ -20,3 +20,7 @@ mosquito::~mosquito(){
   std::cout << "mosquito dying at " << this << std::endl;
   #endif
 };
+
+/* move operators */
+mosquito::mosquito(mosquito&&) = default;
+mosquito& mosquito::operator=(mosquito&&) = default;
