@@ -38,7 +38,7 @@ human_pfsi& human_pfsi::operator=(human_pfsi&&) = default;
 void human_pfsi::simulate(){
 
   /* fire all events that occur on this time step */
-  while(tnow < tileP->get_tnow()){
+  while(eventQ.size() > 0 && eventQ.front()->tEvent < tileP->get_tnow()){
     fireEvent();
   }
 

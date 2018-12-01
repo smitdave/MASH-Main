@@ -38,7 +38,9 @@ int main(){
     std::cout << " FIRING ALICE'S EVENT QUEUE " << std::endl;
     alice->fireEvent();
     alice->print();
-    alice->printEventQ();
+//    alice->printEventQ();
+    alice->fireEvent();
+    alice->print();
     alice->fireEvent();
     alice->print();
     std::cout << std::endl;

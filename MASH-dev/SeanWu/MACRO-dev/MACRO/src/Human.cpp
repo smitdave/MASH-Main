@@ -48,6 +48,7 @@ void human::rmTagFromQ(const std::string &tag){
 /* fire the first event */
 void human::fireEvent(){
   if(eventQ.size() > 0){
+    tnow = eventQ.front()->tEvent; /* update local simulation time */
     eventQ.front()->eventF();
     eventQ.erase(eventQ.begin());
   }
