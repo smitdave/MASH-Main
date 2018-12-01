@@ -23,7 +23,7 @@ mosquito_rm::mosquito_rm(const size_t N_, const arma::Mat<double>& lambda_, cons
            const arma::Row<double>& M_, const arma::Row<double>& Y_, const arma::Row<double>& Z_,
            tile* tileP_) :
            mosquito(tileP_),
-           N(N_), lambda(lambda_), psi(psi_), EIP(EIP_), maxEIP(maxEIP_), P(maxEIP_),
+           N(N_), lambda(lambda_), psi(psi_), EIP(EIP_), maxEIP(maxEIP_), P(maxEIP_), kappa(N_),
            p(p_), f(f_), Q(Q_), a(f*Q), v(v_),
            M(M_), Y(Y_), Y0(N_), Z(Z_), ZZ(maxEIP_,N_), ZZ_shift(maxEIP_,maxEIP_)
 {
@@ -35,6 +35,9 @@ mosquito_rm::mosquito_rm(const size_t N_, const arma::Mat<double>& lambda_, cons
   /* compute P */
   unsigned int i = 0;
   std::generate(P.begin(),P.end(),[&](){ return std::pow(p,++i); });
+
+  /* zero out kappa */
+  kappa.fill(0.0);
 
   /* compute ZZ_shift */
   ZZ_shift.fill(0);
@@ -68,10 +71,55 @@ mosquito_rm& mosquito_rm::operator=(mosquito_rm&&) = default;
 /* simulation interface */
 void mosquito_rm::simulate(){
 
-//   arma::Row<double> lambda_today = lambda.row(tnow);
-// for(size_t i=0; i<M.size(); i++){
-//   // M.at(i) += R::rpois(lambda.at(i));
-//   M.at(i) += lambda_today.at(i);
-// }
+  u_int today = tileP->get_tnow();
+
+  aquatic_dynamics(today);
+  adult_dynamics(today);
+
+};
+
+/* aquatic dynamics */
+void mosquito_rm::aquatic_dynamics(const u_int tnow){
+
+  arma::Row<double> lambda_today = lambda.row(tnow);
+
+  for(size_t i=0; i<M.size(); i++){
+    M.at(i) += tileP->get_prng()->get_rpois(lambda_today.at(i));
+  }
+
+};
+
+/* adult dynamics */
+void mosquito_rm::adult_dynamics(const u_int tnow){
+
+  u_int EIP_today = EIP.at(tnow);
+
+  /* daily dynamics */
+  M = p*M;
+  Y = p*Y;
+  Z = p*Z;
+
+  /* transmission */
+  for(size_t i=0; i<N; i++){
+    kappa.at(i) = tileP->get_patch(i)->get_kappa();
+  }
+  Y0 = (a * kappa) % (M - Y);
+  if(any(Y0 < 0.0)){
+   std::replace_if(Y0.begin(), Y0.end(), [](const double y0){
+     return y0 < 0.0;
+   },0.0);
+  }
+
+  /* newly incubating mosquitos */
+  Y += Y0;
+
+  /* migration & incubation */
+  M = M * psi;
+  Y = Y * psi;
+  Z = (Z + ZZ.row(0)) * psi;
+
+  /* incubating mosquitos */
+  ZZ = ZZ_shift * ZZ;
+  ZZ.row(EIP_today-1) += P.at(EIP_today-1) * (Y0 * psi);
 
 };

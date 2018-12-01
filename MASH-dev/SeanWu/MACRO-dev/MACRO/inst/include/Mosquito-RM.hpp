@@ -50,6 +50,10 @@ public:
 
 private:
 
+  /* private simulation methods */
+  void                    aquatic_dynamics(const u_int tnow);
+  void                    adult_dynamics(const u_int tnow);
+
   size_t                  N; /* number of patches */
   arma::Mat<double>       lambda; /* emergence matrix (365 X N) */
   arma::Mat<double>       psi; /* diffusion matrix (N X N) */
@@ -57,6 +61,7 @@ private:
   arma::Col<size_t>       EIP; /* EIP on each day of the year */
   size_t                  maxEIP;
   arma::Col<double>       P; /* survival over EIP */
+  arma::Row<double>       kappa; /* net infectiousness to mosquitos (1 X N) */
 
   double                  p; /* daily survival */
   double                  f; /* blood feeding rate */

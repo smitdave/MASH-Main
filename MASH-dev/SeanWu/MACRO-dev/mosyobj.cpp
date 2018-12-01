@@ -102,7 +102,7 @@ public:
     /* migration & incubation */
     M = M * psi;
     Y = Y * psi;
-    Z += ZZ.row(0) * psi;
+    Z = (Z + ZZ.row(0)) * psi;
     
     M.print("M after migration");
     Y.print("Y after migration");
@@ -190,5 +190,14 @@ arma::Mat<double> test_shiftMat(const arma::Mat<double>& Z){
   
   arma::Mat<double> out;
   out = Z_shift * Z;
+  return out;
+}
+
+// [[Rcpp::export]]
+arma::Row<double> test_transmission(const double a, const arma::Row<double>& kappa, 
+                                    const arma::Row<double>& M, const arma::Row<double>& Y){
+  
+  arma::Row<double> out;
+  out = (a * kappa) % (M - Y);
   return out;
 }

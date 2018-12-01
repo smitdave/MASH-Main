@@ -52,6 +52,11 @@ public:
 
 
 private:
+
+  void            update_kappa();
+  void            update_EIR();
+  void            queue_bites();
+
   std::string     state;
   double          age;
 };
