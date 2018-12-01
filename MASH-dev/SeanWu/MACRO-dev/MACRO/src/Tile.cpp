@@ -16,6 +16,28 @@
 #include "Human.hpp"
 #include "Mosquito.hpp"
 
+#include "PRNG.hpp"
+#include "Logger.hpp"
+
+/* constructor */
+tile::tile(){
+
+  #ifdef DEBUG_MACRO
+  std::cout << "tile born at " << this << std::endl;
+  #endif
+
+}
+
+/* destructor */
+tile::~tile(){
+
+  #ifdef DEBUG_MACRO
+  std::cout << "tile dying at " << this << std::endl;
+  #endif
+
+};
+
+
 /* accessors */
 patch* tile::get_patch(size_t id){
   return patches.at(id).get();

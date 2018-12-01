@@ -29,6 +29,7 @@ class human;
 ################################################################################ */
 
 class e_move_takeTrip : public event {
+public:
   /* constructor */
   e_move_takeTrip(const double tEvent_, const size_t dest_id, human* h);
 
@@ -42,6 +43,7 @@ class e_move_takeTrip : public event {
 ################################################################################ */
 
 class e_move_returnHome : public event {
+public:
   /* constructor */
   e_move_returnHome(const double tEvent_, human* h);
 

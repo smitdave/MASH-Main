@@ -40,6 +40,9 @@ using patchP = std::unique_ptr<patch>;
 class prng;
 using prngP = std::unique_ptr<prng>;
 
+class logger;
+using loggerP = std::unique_ptr<logger>;
+
 /* tile class definition */
 class tile {
 public:
@@ -47,15 +50,19 @@ public:
   tile();
   ~tile();
 
+
   /* accessors */
   u_int                         get_tnow();
   void                          set_tnow(u_int t);
 
+  /* state classes */
   patch*                        get_patch(size_t id);
   human*                        get_human(u_int id);
   mosquito*                     get_mosquitos();
 
+  /* utility classes */
   prng*                         get_prng();
+  logger*                       get_logger();
 
   /* simulation */
 
@@ -70,6 +77,7 @@ private:
 
   /* utility classes */
   prngP                         prngPtr;
+  loggerP                       loggerPtr;
 
 };
 
@@ -78,6 +86,6 @@ inline u_int tile::get_tnow(){return tnow;};
 inline void tile::set_tnow(u_int t){ tnow = t; };
 
 inline prng* tile::get_prng(){return prngPtr.get();};
-
+inline logger* tile::get_logger(){return loggerPtr.get();};
 
 #endif

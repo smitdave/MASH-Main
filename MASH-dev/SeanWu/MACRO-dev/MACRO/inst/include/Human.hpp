@@ -31,6 +31,8 @@ using eventP = std::unique_ptr<event>;
 
 class tile;
 
+class patch;
+
 /* human class (abstract base) */
 class human {
 public:
@@ -61,6 +63,10 @@ public:
   size_t                get_patch_id();
   void                  set_patch_id(const size_t pid);
   size_t                get_home_patch_id();
+  double                get_trip_duration();
+  double                get_trip_frequency();
+  patch*                get_patch();
+  patch*                get_home_patch();
 
   double                get_bweight();
 
@@ -81,13 +87,18 @@ public:
 
 protected:
 
+  /* basic fields */
   u_int                 id; /* my id */
   bool                  alive; /* alive? */
   double                tnow; /* my local simulation time (time of last jump) */
 
+  /* movement */
   size_t                patch_id;
   size_t                home_patch_id;
+  double                trip_duration;
+  double                trip_frequency;
 
+  /* biting */
   double                bweight; /* my relative biting weight */
 
   std::vector<eventP>   eventQ;
@@ -107,6 +118,9 @@ inline bool human::get_alive(){return alive;}
 inline size_t human::get_patch_id(){return patch_id;};
 inline void human::set_patch_id(const size_t pid){ patch_id = pid; };
 inline size_t human::get_home_patch_id(){return home_patch_id;};
+
+inline double human::get_trip_duration(){return trip_duration;};
+inline double human::get_trip_frequency(){return trip_frequency;};
 
 inline double human::get_bweight(){return bweight;};
 

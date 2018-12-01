@@ -32,7 +32,7 @@ human& human::operator=(human&&) = default;
 /* add an event to my queue */
 void human::addEvent2Q(event&& e){
   eventQ.emplace_back(std::make_unique<event>(e));
-  std::sort(eventQ.begin(),eventQ.end(),[](std::unique_ptr<event>& e1, std::unique_ptr<event>& e2){
+  std::sort(eventQ.begin(),eventQ.end(),[](const std::unique_ptr<event>& e1, const std::unique_ptr<event>& e2){
     return e1->tEvent < e2->tEvent;
   });
 };
@@ -59,6 +59,16 @@ void human::printEventQ(){
   for(auto it = eventQ.begin(); it != eventQ.end(); it++){
     (*it)->print();
   }
+};
+
+
+/* movement */
+patch* human::get_patch(){
+  return tileP->get_patch(patch_id);
+};
+
+patch* human::get_home_patch(){
+  return tileP->get_patch(home_patch_id);
 };
 
 

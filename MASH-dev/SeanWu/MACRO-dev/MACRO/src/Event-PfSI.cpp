@@ -20,16 +20,20 @@
 e_pfsi_infect::e_pfsi_infect(double tEvent_, human_pfsi* h):
   event("PfSI_infection",tEvent_,std::bind(&human_pfsi::set_state,h,"I"))
 {
+
   #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_infect constructor being called at " << this << std::endl;
   #endif
+
 };
 
 /* destructor */
 e_pfsi_infect::~e_pfsi_infect(){
+
   #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_infect destructor being called at " << this << std::endl;
   #endif
+
 };
 
 
@@ -39,12 +43,20 @@ e_pfsi_infect::~e_pfsi_infect(){
 e_pfsi_recover::e_pfsi_recover(double tEvent_, human_pfsi* h):
   event("PfSI_recovery",tEvent_,std::bind(&human_pfsi::set_state,h,"S"))
 {
+
+  #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_recover constructor being called at " << this << std::endl;
+  #endif
+
 };
 
 /* destructor */
 e_pfsi_recover::~e_pfsi_recover(){
+
+  #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_recover destructor being called at " << this << std::endl;
+  #endif
+
 };
 
 /* fever event */
