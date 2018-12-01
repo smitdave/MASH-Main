@@ -55,15 +55,22 @@ public:
   }
   
   void aquatic_dynamics(u_int tnow){
+    std::cout << std::endl;
     std::cout << "testing aquatic_dynamics ... " << std::endl;
-    arma::Col<double> lambda_today = lambda.row(tnow).t();
+    M.print("M before aquatic_dynamics");
+    arma::Row<double> lambda_today = lambda.row(tnow);
     for(size_t i=0; i<M.size(); i++){
       // M.at(i) += R::rpois(lambda.at(i));
-      M.at(i) += lambda.at(i);
+      M.at(i) += lambda_today.at(i);
     }
+    M.print("M after aquatic_dynamics");
+    std::cout << std::endl;
   };
   
-  void pop_dynamics(u_int tnow, arma::Col<double>& kappa){
+  void pop_dynamics(u_int tnow, arma::Row<double>& kappa){
+    
+    std::cout << std::endl;
+    std::cout << "testing pop_dynamics ... " << std::endl;
     
     unsigned int EIP_today = EIP.at(tnow);
     
@@ -71,6 +78,10 @@ public:
     M = p*M;
     Y = p*Y;
     Z = p*Z;
+    
+    M.print("M after daily dynamics");
+    Y.print("Y after daily dynamics");
+    Z.print("Z after daily dynamics");
     
     /* transmission */
     Y0 = f * Q * kappa * (M - Y);
@@ -80,8 +91,12 @@ public:
       },0.0);
     }
     
+    Y0.print("Y0 after daily dynamics");
+    
     /* newly incubating mosquitos */
     Y += Y0;
+    
+    Y.print("Y after newly incubating mosquitos");
     
     /* migration & incubation */
     M = M * psi;
@@ -91,6 +106,8 @@ public:
     /* incubating mosquitos */
     ZZ = ZZ_shift * ZZ;
     ZZ.row(EIP_today-1) += P.at(EIP_today-1) * (psi * Y0);
+    
+    std::cout << std::endl;
     
   };
 
@@ -133,7 +150,9 @@ void test_mosyRM(const size_t N_, const arma::Mat<double>& lambda_, const arma::
                                                                   EIP_, maxEIP_,
                                                                   p_, f_, Q_, v_,
                                                                   M_,Y_, Z_);
-
+  
   mPtr->print();
+  mPtr->aquatic_dynamics(0);
+  // mPtr->pop_dynamics(0,)
 
 };
