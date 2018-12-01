@@ -55,6 +55,10 @@ public:
     std::cout << "human " << id << " saying hi!" << std::endl;
   }
 
+  /* accessors */
+  u_int       get_id(){return id;}
+  bool        get_alive(){return alive;}
+
   /* event queue related functions */
   void addEvent2Q(event&& e);
   void rmTagFromQ(const std::string &tag);
