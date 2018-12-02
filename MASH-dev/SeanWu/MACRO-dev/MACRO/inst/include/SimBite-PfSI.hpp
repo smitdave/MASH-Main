@@ -22,7 +22,25 @@
 
 class human_pfsi;
 
-/* simulated bite */
+
+/* ################################################################################
+ * sample waiting time (hazard functions for events)
+################################################################################ */
+
+double pfsi_ttClearPf(human_pfsi* h); /* duration of infection */
+double psfi_ttInfectionPf(human_pfsi* h); /* duration of latent period */
+double pfsi_ttFeverPf(human_pfsi* h); /* timing of fever event (when does it start relative to infection?) */
+double pfsi_ttTreatPf(human_pfsi* h); /* timing of treatment event (when does it occur relative to infection?) */
+double pfsi_ttSusceptiblePf(human_pfsi* h); /* duration of protection from chemoprophylaxis */
+double pfsi_ttPEWanePf(human_pfsi* h); /* duration of protection by PE vaxx */
+double pfsi_ttGSWanePf(human_pfsi* h); /* duration of protection by GS vaxx */
+
+
+/* ################################################################################
+ * SimBite events
+################################################################################ */
+
+/* simulated infectious bite; tag: PfSI_SimBite */
 class e_pfsi_bite : public event {
 public:
   /* constructor */
