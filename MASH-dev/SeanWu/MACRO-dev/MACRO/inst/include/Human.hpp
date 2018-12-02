@@ -37,7 +37,7 @@ class patch;
 class human {
 public:
 
-  human(const int id_, tile* tileP_) : id(id_), alive(true), tnow(0.0), tileP(tileP_) {
+  human(const int id_, const double bweight_, tile* tileP_) : id(id_), alive(true), tnow(0.0), bweight(bweight_), tileP(tileP_) {
     #ifdef DEBUG_MACRO
     std::cout << "human " << id << " born at " << this << std::endl;
     #endif

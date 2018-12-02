@@ -28,6 +28,7 @@ int main(){
     alice->addEvent2Q(e_pfsi_recover(5.46,alice.get()));
     alice->addEvent2Q(e_pfsi_infect(1.23,alice.get()));
     alice->addEvent2Q(e_pfsi_fever(3.26,10.0,alice.get()));
+    alice->addEvent2Q(e_pfsi_fever(3.26,12.0,alice.get()));
     alice->addEvent2Q(e_pfsi_infect(21.32,alice.get()));
     std::cout << std::endl;
     std::cout << " START PRINTING ALICE'S EVENT QUEUE " << std::endl;

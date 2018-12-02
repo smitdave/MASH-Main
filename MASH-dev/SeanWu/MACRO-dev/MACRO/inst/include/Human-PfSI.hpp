@@ -26,7 +26,7 @@
 
 class human_pfsi : public human {
 public:
-  human_pfsi(const int id_, tile* tileP_, const double age_);
+  human_pfsi(const int id_, const double bweight_, tile* tileP_, const double age_, const bool inf_, const bool chx_);
   ~human_pfsi();
 
   /* move operators */
@@ -65,11 +65,15 @@ private:
   void            update_EIR();
   void            queue_bites();
 
-  bool            infection;
-  bool            chemoprophylaxis;
+  bool            infection; /* indicator variable (S,I) */
+  bool            chemoprophylaxis; /* protected by drugs or not? */
   double          b; /* mosquito -> human transmission efficiency */
   double          c; /* human -> mosquito transmission efficiency */
   double          age;
+
+  double          kappa; /* unnormalized kappa for an individual */
+  double          EIR; /* individual level entomological inoculation rate */
+
 };
 
 #endif /* Human_PfSI_hpp */
