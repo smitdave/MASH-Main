@@ -11,14 +11,17 @@
  *  November 2018
  */
 
+/* PfSI includes */
 #include "Human-PfSI.hpp"
-
-#include "Event.hpp"
 #include "SimBite-PfSI.hpp"
+
+/* other includes */
+#include "Event.hpp"
 #include "Tile.hpp"
 #include "Patch.hpp"
 #include "Mosquito.hpp"
 
+/* utility class includes */
 #include "Parameters.hpp"
 #include "PRNG.hpp"
 
