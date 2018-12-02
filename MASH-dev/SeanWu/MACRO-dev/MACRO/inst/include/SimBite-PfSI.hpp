@@ -52,4 +52,4 @@ public:
 };
 
 
-#endif /* Event_PfSI_hpp */
+#endif /* SimBite_PfSI_hpp */
