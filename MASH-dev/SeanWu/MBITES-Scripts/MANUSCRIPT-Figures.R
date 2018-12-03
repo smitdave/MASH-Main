@@ -28,7 +28,7 @@ margins <- par()$mar
 
 # dwellings, habitats
 cols <- c("firebrick3","steelblue")
-adjcols <- adjustcolor(cols,alpha.f = 0.65)
+adjcols <- adjustcolor(cols,alpha.f = 0.5)
 shapes <- c(21,24)
 
 i <- 13
@@ -54,7 +54,7 @@ par(mar = rep(0.8,4))
 plot(rbind(dwelling_xy[,1:2],habitat_xy[,1:2]),
      pch=c(rep(shapes[1],dwelling_n),rep(shapes[2],habitat_n)),
      bg=c(rep(adjcols[1],dwelling_n),rep(adjcols[2],habitat_n)),
-     col=grey(0.25),
+     col=grey(0.05),
      axes = FALSE,ann=FALSE
 )
 box(which = "plot", lty = "solid")

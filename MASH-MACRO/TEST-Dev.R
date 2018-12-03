@@ -9,8 +9,8 @@ PfSI.Setup()
 SimBitePfSI.Setup()
 MACRO.Human.Setup(pathogen = "PfSI",tripFrequency = 1/28,tripDuration = 14)
 
-directory = "/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/MashMACRO_testing"
-
+# directory = "/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/MashMACRO_testing"
+directory <- "/Users/slwu89/Desktop/macro"
 
 # Number of Patches
 n = 10

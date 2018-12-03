@@ -38,7 +38,7 @@ bionomics <- Bionomics_MBDETES_Approx(mosquitos_df)
 # BEGIN: 4 PANEL PLOT
 ###############################################################################
 
-pdf(file = paste0(plot_directory,"MBITES_MBDETES_compare.pdf"),width = 12,height = 8)
+pdf(file = paste0(plot_directory,"MBITES_MBDETES_compareFinal.pdf"),width = 12,height = 8)
 par(mfrow=c(2,2))
 
 ###############################################################################
@@ -104,7 +104,7 @@ blood_max <- as.numeric(paste0(blood_max_ceiling,"e",strsplit(blood_max,"e")[[1]
 
 # plot
 plot(blood_mbdetes_tt, blood_mbdetes_pdf,type = "l", xlab = "Age (days)", ylab = "Density",
-     main=paste0("Blood Feeding Rate \n MBDETES mean: ",round(blood_mbdetes_mean,2),", MBITES mean: ",round(bionomics$MBITES$dist_blood_mean,2)),
+     main=paste0("Blood Feeding by Age \n MBDETES mean: ",round(blood_mbdetes_mean,2),", MBITES mean: ",round(bionomics$MBITES$dist_blood_mean,2)),
      lwd=2,col="steelblue")
 polygon(c(0, blood_mbdetes_tt), c(0, blood_mbdetes_pdf), border=NA, col=adjustcolor("steelblue",alpha.f = 0.5))
 abline(v = blood_mbdetes_mean,lwd=2.5,lty=2,col="steelblue")

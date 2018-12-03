@@ -4,12 +4,13 @@
 \alias{PfSI.Setup}
 \title{Initialize PfSI MODULE}
 \usage{
-PfSI.Setup(overwrite = TRUE, Pf_c = 0.15, Pf_b = 0.55, DurationPf = 200,
-  LatentPf = 10, FeverPf = 0.3, mnFeverPf = 10, vrFeverPf = 0.1,
-  TreatPf = 0.5, mnTreatPf = 1, mnChemoprophylaxisPf = 32,
-  PEProtectPf = 0.99, peBlockPf = 1, mnPEPf = 270, vrPEPf = 50,
-  GSProtectPf = 1, gsBlockPf = 0.9, mnGSPf = 180, vrGSPf = 20,
-  rdtSensPf = 0.9, rdtSpecPf = 0.1, lmSensPf = 0.9, lmSpecPf = 0.1)
+PfSI.Setup(overwrite = TRUE, Pf_c = 0.15, Pf_b = 0.55,
+  DurationPf = 200, LatentPf = 10, FeverPf = 0.3, mnFeverPf = 10,
+  vrFeverPf = 0.1, TreatPf = 0.5, mnTreatPf = 1,
+  mnChemoprophylaxisPf = 32, PEProtectPf = 0.99, peBlockPf = 1,
+  mnPEPf = 270, vrPEPf = 50, GSProtectPf = 1, gsBlockPf = 0.9,
+  mnGSPf = 180, vrGSPf = 20, rdtSensPf = 0.9, rdtSpecPf = 0.1,
+  lmSensPf = 0.9, lmSpecPf = 0.1)
 }
 \arguments{
 \item{overwrite}{overwrite existing methods and fields?}
