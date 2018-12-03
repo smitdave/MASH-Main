@@ -25,7 +25,7 @@ using eventP = std::unique_ptr<event>;
 class human {
 public:
     
-    human(const int id_, const std::string name_) : id(id_), name(name_), alive(true) {
+    human(const int id_, const std::string name_) : id(id_), name(name_), alive(true), tnow(0.0) {
         std::cout << "human " << id << ", name: " << name << " born at " << this << std::endl;
     };
     virtual ~human() = 0;
@@ -49,11 +49,16 @@ public:
     void fireEvent();
     void printEventQ();
     
+    /* accessors */
+    double              get_tnow(){return tnow;}
+    void                set_tnow(const double t){tnow = t;}
+    
 protected:
     
     u_int               id; /* my id */
     std::string         name;
     bool                alive; /* alive? */
+    double              tnow;
     
     std::vector<eventP>  eventQ;
 };

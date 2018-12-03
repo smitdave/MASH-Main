@@ -78,6 +78,10 @@ void mosquito_rm::simulate(){
 
 };
 
+double mosquito_rm::get_beta(const size_t p){
+  return a * Z.at(p);
+}
+
 /* aquatic dynamics */
 void mosquito_rm::aquatic_dynamics(const u_int tnow){
 

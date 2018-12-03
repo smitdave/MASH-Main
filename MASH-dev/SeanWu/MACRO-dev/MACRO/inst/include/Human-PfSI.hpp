@@ -26,7 +26,7 @@
 
 class human_pfsi : public human {
 public:
-  human_pfsi(const int id_, tile* tileP_, const double age_);
+  human_pfsi(const int id_, const double bweight_, tile* tileP_, const double age_, const bool inf_, const bool chx_);
   ~human_pfsi();
 
   /* move operators */
@@ -40,16 +40,24 @@ public:
   /* print */
   void print(){
     human::print();
-    std::cout << "my state is: " << state << ", my age is: " << age << std::endl;
+    std::cout << "my infection is: " << infection << ", my age is: " << age << std::endl;
   }
 
   /* simulation */
   virtual void simulate();
 
   /* accessors */
-  void        set_state(const std::string& stateN){ state = stateN; }
-  std::string get_state(){ return state; }
+  void        set_infection(const bool inf){ infection = inf; }
+  bool        get_infection(){ return infection; }
 
+  void        set_chemoprophylaxis(const bool chx){ chemoprophylaxis = chx; }
+  bool        get_chemoprophylaxis(){ return chemoprophylaxis; }
+
+  void        set_b(const double b_){ b = b_; }
+  double      get_b(){ return b; }
+
+  void        set_c(const double c_){ c = c_; }
+  double      get_c(){ return c; }
 
 private:
 
@@ -57,8 +65,15 @@ private:
   void            update_EIR();
   void            queue_bites();
 
-  std::string     state;
+  bool            infection; /* indicator variable (S,I) */
+  bool            chemoprophylaxis; /* protected by drugs or not? */
+  double          b; /* mosquito -> human transmission efficiency */
+  double          c; /* human -> mosquito transmission efficiency */
   double          age;
+
+  double          kappa; /* unnormalized kappa for an individual */
+  double          EIR; /* individual level entomological inoculation rate */
+
 };
 
 #endif /* Human_PfSI_hpp */

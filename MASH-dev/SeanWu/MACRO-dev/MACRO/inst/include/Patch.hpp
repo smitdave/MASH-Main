@@ -28,14 +28,14 @@ class tile;
 class patch {
 public:
 
-                        patch(const size_t id_, const arma::Col<double>& move_,
+                        patch(const size_t id_, const arma::Row<double>& move_,
                               const double bWeightZoo_, const double bWeightZootox_,
                               const bool reservoir_, const double res_EIR_, tile* tileP_);
                         ~patch();
 
   /* accessors */
   size_t                get_id(){return id;}
-  arma::Col<double>&    get_move(){return move;}
+  arma::Row<double>&    get_move(){return move;}
   double                get_bWeightHuman(){return bWeightHuman;}
   double                get_bWeightZoo(){return bWeightZoo;}
   double                get_bWeightZootox(){return bWeightZootox;}
@@ -66,7 +66,7 @@ private:
   size_t                id;
 
   /* movement vector */
-  arma::Col<double>     move;
+  arma::Row<double>     move;
 
   /* infection dynamics */
   double                bWeightHuman;

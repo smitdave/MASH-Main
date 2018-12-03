@@ -11,10 +11,36 @@
  *  November 2018
  */
 
+
+/* state class includes */
 #include "Tile.hpp"
 #include "Patch.hpp"
 #include "Human.hpp"
 #include "Mosquito.hpp"
+
+/* utilty class incldues */
+#include "PRNG.hpp"
+#include "Logger.hpp"
+#include "Parameters.hpp"
+
+/* constructor */
+tile::tile(){
+
+  #ifdef DEBUG_MACRO
+  std::cout << "tile born at " << this << std::endl;
+  #endif
+
+}
+
+/* destructor */
+tile::~tile(){
+
+  #ifdef DEBUG_MACRO
+  std::cout << "tile dying at " << this << std::endl;
+  #endif
+
+};
+
 
 /* accessors */
 patch* tile::get_patch(size_t id){
