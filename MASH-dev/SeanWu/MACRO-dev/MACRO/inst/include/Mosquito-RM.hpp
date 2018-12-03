@@ -47,6 +47,7 @@ public:
 
   /* simulation interface */
   virtual void simulate();
+  virtual double get_beta(const size_t p);
 
 private:
 

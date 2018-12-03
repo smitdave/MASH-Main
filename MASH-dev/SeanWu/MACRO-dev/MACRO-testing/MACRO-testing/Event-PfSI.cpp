@@ -13,7 +13,10 @@
 
 /* constructor */
 e_pfsi_infect::e_pfsi_infect(double tEvent_, human_pfsi* h):
-    event("PfSI_infection",tEvent_,std::bind(&human_pfsi::set_state,h,"I"))
+    event("PfSI_infection",tEvent_,[tEvent_,h](){
+        h->set_state("I");
+        h->set_tnow(tEvent_);
+    })
 {
     std::cout << "e_pfsi_infect constructor being called at " << this << std::endl;
 };
@@ -28,7 +31,10 @@ e_pfsi_infect::~e_pfsi_infect(){
 
 /* constructor */
 e_pfsi_recover::e_pfsi_recover(double tEvent_, human_pfsi* h):
-    event("PfSI_recovery",tEvent_,std::bind(&human_pfsi::set_state,h,"S"))
+    event("PfSI_recovery",tEvent_,[tEvent_,h](){
+        h->set_state("S");
+        h->set_tnow(tEvent_);
+    })
 {
     std::cout << "e_pfsi_recover constructor being called at " << this << std::endl;
 };
@@ -42,9 +48,7 @@ e_pfsi_recover::~e_pfsi_recover(){
 
 /* constructor */
 e_pfsi_fever::e_pfsi_fever(double tEvent_, double fever_, human_pfsi* h):
-//    event("PFSI_fever",tEvent_,std::bind(&human_pfsi::set_fever,h,fever_))
     event("PFSI_fever",tEvent_,[h,fever_](){
-        // do other crap if you want.
         h->set_fever(fever_);
     })
 { 
