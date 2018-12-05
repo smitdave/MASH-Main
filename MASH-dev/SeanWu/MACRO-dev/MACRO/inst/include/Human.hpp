@@ -37,7 +37,13 @@ class patch;
 class human {
 public:
 
-  human(const int id_, const double bweight_, tile* tileP_) : id(id_), alive(true), tnow(0.0), bweight(bweight_), tileP(tileP_) {
+  human(const int id_, const size_t home_patch_id_,
+        const double trip_duration_, const double trip_frequency_,
+        const double bweight_, tile* tileP_) :
+    id(id_), alive(true), tnow(0.0),
+    patch_id(home_patch_id_), home_patch_id(home_patch_id_),
+    trip_duration(trip_duration_), trip_frequency(trip_frequency_),
+    bweight(bweight_), tileP(tileP_) {
     #ifdef DEBUG_MACRO
     std::cout << "human " << id << " born at " << this << std::endl;
     #endif

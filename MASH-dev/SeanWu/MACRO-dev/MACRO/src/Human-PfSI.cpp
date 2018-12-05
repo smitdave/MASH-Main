@@ -30,9 +30,15 @@
  * constructor & destructor
 ################################################################################ */
 
-human_pfsi::human_pfsi(const int id_, const double bweight_, tile* tileP_, const double age_, const bool inf_, const bool chx_) :
-  human(id_,bweight_,tileP_),
-  infection(inf_), chemoprophylaxis(chx_), b(0.0), c(0.0), age(age_), kappa(0.0)
+human_pfsi::human_pfsi(const int id_, const size_t home_patch_id_,
+      const double trip_duration_, const double trip_frequency_,
+      const double bweight_, tile* tileP_,
+      /* human_pfsi specific arguments */
+      const double age_, const bool inf_, const bool chx_) :
+  human(id_,home_patch_id_,
+        trip_duration_,trip_frequency_,
+        bweight_,tileP_),
+  infection(inf_), chemoprophylaxis(chx_), b(0.0), c(0.0), age(age_), kappa(0.0), EIR(0.0)
 {
 
   /* transmission efficiencies */
