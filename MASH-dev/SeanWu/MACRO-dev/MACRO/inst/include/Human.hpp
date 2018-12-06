@@ -43,10 +43,13 @@ public:
     id(id_), alive(true), tnow(0.0),
     patch_id(home_patch_id_), home_patch_id(home_patch_id_),
     trip_duration(trip_duration_), trip_frequency(trip_frequency_),
-    bweight(bweight_), tileP(tileP_) {
+    bweight(bweight_), tileP(tileP_)
+  {
+
     #ifdef DEBUG_MACRO
     std::cout << "human " << id << " born at " << this << std::endl;
     #endif
+
   };
   virtual ~human() = 0;
 

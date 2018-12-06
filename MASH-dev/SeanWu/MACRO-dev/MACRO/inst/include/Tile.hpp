@@ -70,6 +70,7 @@ public:
   parameters*                   get_params();
 
   /* simulation */
+  void                          simulation(const u_int tmax);
 
 private:
 

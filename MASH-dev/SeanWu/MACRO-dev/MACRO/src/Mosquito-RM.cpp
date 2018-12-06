@@ -71,7 +71,7 @@ mosquito_rm& mosquito_rm::operator=(mosquito_rm&&) = default;
 /* simulation interface */
 void mosquito_rm::simulate(){
 
-  u_int today = tileP->get_tnow();
+  u_int today = tileP->get_tnow() % 365;
 
   aquatic_dynamics(today);
   adult_dynamics(today);
