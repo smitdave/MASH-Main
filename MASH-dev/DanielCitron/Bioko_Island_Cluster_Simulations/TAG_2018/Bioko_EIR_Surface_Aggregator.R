@@ -39,9 +39,9 @@ times <- times[order(areaId)]
 
 ## Visualizations set-up -  These are called when we want to make some maps ####
 # Read in shape files of Bioko Island and the area-level grid
-bioko<-readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/bioko", "bioko_admin1")
-areas_inh<-readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/areas_inh", "areas_inh")
-areasf<-fortify(areas_inh, region = "areaId")
+bioko <- readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/bioko", "bioko_admin1")
+areas_inh <- readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/areas_inh", "areas_inh")
+areasf <- fortify(areas_inh, region = "areaId")
 
 
 ## Merge and combine relevant data
@@ -324,24 +324,6 @@ travel.model.data$h.1 <- h.1[1:194]
 # source: Bioko_FOI_calculations
 ###
 
-# First disambiguate travel times:
-# Set up weighted travel
-mat.weighted <- matrix(0, nrow = 7, ncol = 195)
-# off-island travel
-mat.weighted[1,195] <- 1
-# baney
-mat.weighted[2, which(areaIds %in% travel.model.data[ad2Baney==1]$areaId)] <- travel.model.data[ad2Baney == 1]$pop/sum(travel.model.data[ad2Baney == 1]$pop)
-# luba
-mat.weighted[3, which(areaIds %in% travel.model.data[ad2Luba==1]$areaId)] <- travel.model.data[ad2Luba == 1]$pop/sum(travel.model.data[ad2Luba == 1]$pop)
-# malabo
-mat.weighted[4, which(areaIds %in% travel.model.data[ad2Malabo==1]$areaId)] <- travel.model.data[ad2Malabo == 1]$pop/sum(travel.model.data[ad2Malabo == 1]$pop)
-# moka
-mat.weighted[5, which(areaIds %in% travel.model.data[ad2Moka==1]$areaId)] <- travel.model.data[ad2Moka == 1]$pop/sum(travel.model.data[ad2Moka == 1]$pop)
-# riaba
-mat.weighted[6, which(areaIds %in% travel.model.data[ad2Riaba==1]$areaId)] <- travel.model.data[ad2Riaba == 1]$pop/sum(travel.model.data[ad2Riaba == 1]$pop)
-# ureka
-mat.weighted[7, which(areaIds %in% travel.model.data[ad2Ureka==1]$areaId)] <- travel.model.data[ad2Ureka == 1]$pop/sum(travel.model.data[ad2Ureka == 1]$pop)
-
 ## Define functions for solving for trip time:
 pr.pos = function(Travel.time, PR, h, r){
   return(PR*exp(-(h + r)*Travel.time) + h/(h+r)*(1 - exp(-(h + r)*Travel.time)))
@@ -439,65 +421,50 @@ travel.model.data$h.2 <- h.2[1:194]
 
 ###
 # SURFACE 3:
-# LOCAL ESTIMATE BASED, FROM THE FIRST BIOKO ISLAND PAPER MODELING
-# source: Supplement_BI.Rmd
-# UPDATE: not included!
+# BASED ON MAP-DERIVED SURFACES OF TRAVEL
+# Same as Surface 1, but with the variable prt_map from Carlos' maps
+# NOTE that we do not use the pre_map - this is because pre_map and prt_maps are not at all tied
+# to one another - it is possible, for instance, that the off-island travel according to pre_map
+# is higher than the total travel according to prt_map.  This, of course, makes no sense at all.
+# Better to simply use prt_map as the total probability of travel, and then use the multinomial
+# travel destination decision model to calculate the second step required for TaR
 ###
-## Define a whole lot of functions, from Dave
-# Solve for PR, based on delta, eta, h
-# Travel2PR = function(Xt, Xp, h=0, T=56, r=1/200, eta=NULL){
-#   if(is.null(eta)) eta = Travel2eta(Xt, Xp, h, T, r)
-#   delta = -log(1-Xt)/T
-#   return((eta*delta + h)/(eta*delta + h + r))
-# }
-# # solve for h by optimizing
-# Travel2h=function(Xt, Xp, PR, T=56, r=1/200, hmx = 3/365, eta=NULL){
-#   geth = function(h){
-#     abs(PR - Travel2PR(Xt, Xp, h, T, r, eta))^2#^(1/2)
-#   }
-#   optimize(geth, c(0,hmx))$min
-# }
-# # Once h is known, need to back solve for eta, this time using PR_L0 = h/(h + r)
-# Travel2eta = function(Xt, Xp, h=0, T=56, r=1/200){
-#   # Xt :: period prevalence for travel in the last 56 days
-#   # Xp :: reported prevalence in travelers
-#   LR = h/(h+r) # Local residual PR - equilibrium value when there are no importations
-#   prt = function(t){exp(-r*t)}
-#   return(T*pmax(Xp-LR,0)/integrate(prt, 0, T)$val) #eta
-# }
-# # Travel Fraction - need eta
-# Travel2TF = function(Xt, Xp, PR, h=0, T=56, r=1/200, eta=NULL){
-#   tpr = Travel2PR(Xt, Xp, 0, T, r, eta)
-#   pmin(tpr/PR, 1)
-# }
-#
-# ## Delta
-# BI$delta.e <- 0
-# BI$delta.e <- -log(1 - BI$te_map)/56
-# # coestimate
-# BI$h.co.e <- 0
-# for (i in 1:194){
-#   BI$h.co.e[[i]] <- Travel2h(BI$te_map[[i]], BI$pre_map[[i]], BI$prall_map[[i]])
-# }
-#
-# travel.model.data <- merge(travel.model.data, BI[, c("areaId", "h.co.e")], by = "areaId")
-# names(travel.model.data)[names(travel.model.data) == "h.co.e"] <- "h.3"
-#summary(BI$h.co.e*365/.55)
-#summary(travel.model.data$h.1*365/.55)
-#summary(travel.model.data$h.2*365/.55)
-#hist(travel.model.data$h.3*365/.55)
 
-#area.data = merge(areasf, travel.model.data, by.x = "id", by.y = "areaId", all=TRUE)
-#plot.data<-area.data[order(area.data$order), ]
-#p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
-#p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
-#map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = h.3*365/.55), color = NA, size = 0.25) +
-#  scale_fill_gradient(name="FOI (Annual EIR)", low="yellow", high="red", limits=c(0,2.4)) +
+# Frequency of travel, using the prt_map
+# Probability of leaving per day
+# (Cf. travel.model.data$freq.model.fit)
+travel.model.data$prt_map.freq <- travel.model.data$prt_map/56
+
+
+### Calculate TaR matrix:
+TaR.3 <- diag(1, nrow = 194+7, ncol = 194+7)
+holder <- as.matrix(travel.model.data[, c("p.off", "p.ban", "p.lub", "p.mal", "p.mok", "p.ria", "p.ure")])
+for (i in 1:194){
+  num <- holder[i,]*c(10,3,3,3,3,3,3)
+  TaR.3[i, (194 + 1):(194 + 7)] <- as.numeric(num)/(sum(as.numeric(num)) + travel.model.data$prt_map.freq[i]^(-1))
+  TaR.3[i,i] <- 1 - sum(as.numeric(num)/(sum(as.numeric(num)) + travel.model.data$prt_map.freq[i]^(-1)))
+}
+
+#$ Calculate FOI
+odds.vector <- r/(1-rho)*pfpr.input/(1-(1+rho*r/eta/(1-rho))*pfpr.input)
+h.3 <- ginv(TaR.3) %*% odds.vector
+travel.model.data$h.3 <- h.3[1:194]
+
+# Plots, for reference
+# hist(h.3[1:194]/b*365, main = "Histogram of Annual EIR")
+# area.data = merge(areasf, travel.model.data, by.x = "id", by.y = "areaId", all=TRUE)
+# plot.data<-area.data[order(area.data$order), ]
+# p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
+# p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
+# map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = h.3*365/.55), color = NA, size = 0.25) +
+#  scale_fill_gradient(name="FOI (Annual EIR)", low="yellow", high="red", limits=c(0,2.5)) +
 #  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
 #  theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
 #        axis.title.x=element_blank(),
 #        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
-#map
+# map
+
+
 
 ### LAMBDA Calculation
 # We do need the TaR matrices to do this
@@ -514,6 +481,7 @@ pop.inputs[194+6] <- sum(travel.model.data[ad2=="Riaba"]$pop)
 pop.inputs[194+7] <- sum(travel.model.data[ad2=="Ureka"]$pop)
 
 
+## Surface 1
 kappa.1 <- pfpr.input # parasite rate
 #kappa.1 <- (TaR.1 %*% as.vector(pop.inputs*pfpr.input))/(TaR.1 %*% as.vector(pop.inputs)) # only works if there are visitors, but for this model there are not
 z.1 <- a*c*kappa.1[1:194]/(p*a*c*kappa.1[1:194] + (1-p))*peip
@@ -545,6 +513,7 @@ travel.model.data$z.1 <- z.1
 #         axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
 # map
 
+## Surface 2
 kappa.2 <- pfpr.input # parasite rate
 #kappa.2 <- (TaR.2 %*% as.vector(pop.inputs*pfpr.input))/(TaR.2 %*% as.vector(pop.inputs)) # sporozoite rate, if there are visitors
 z.2 <- a*c*kappa.2[1:194]/(p*a*c*kappa.2[1:194] + (1-p))*peip
@@ -577,7 +546,39 @@ travel.model.data$z.2 <- z.2
 #         axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
 # map
 
-# Sporozoite rate maps
+## Surface 3
+kappa.3 <- pfpr.input # parasite rate
+z.3 <- a*c*kappa.3[1:194]/(p*a*c*kappa.3[1:194] + (1-p))*peip
+# hist(a*c*pfpr.input[1:194]/(a*c*pfpr.input[1:194] + (1-p))*peip)
+# hist(z.3)
+h.3[which(h.3 < 0)] <- 0
+travel.model.data$pop.home <- travel.model.data$pop*diag(TaR.3)[1:194]
+lambda.3 <- (1-p)/p*h.3[1:194]*travel.model.data$pop.home/a/b/z.3[1:194] ### still haven't gotten this yet...
+travel.model.data$lambda.3 <- lambda.3[1:194]
+travel.model.data$m.3 <- with(travel.model.data, lambda.3*9/pop.home)
+travel.model.data$z.3 <- z.3
+# Map Mean Mosquito population density:
+# area.data = merge(areasf, travel.model.data, by.x = "id", by.y = "areaId", all=TRUE)
+# plot.data<-area.data[order(area.data$order), ]
+# p1 = ggplot(data = plot.data, aes(x=long, y=lat.x, group = group))
+# p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
+# map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = m.3), color = NA, size = 0.25) +
+#  scale_fill_gradient(name="M/H", low="yellow", high="red", limits=c(0, .6)) +
+#  geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+#  theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
+#        axis.title.x=element_blank(),
+#        axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+# map
+# map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = log10(lambda.3+1)), color = NA, size = 0.25) +
+#   scale_fill_gradient(name="Log(Lambda)", low="yellow", high="red", limits=c(0, 3)) +
+#   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+#   theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
+#         axis.title.x=element_blank(),
+#         axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+# map
+
+
+### Sporozoite rate maps
 # map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = z.1), color = NA, size = 0.25) +
 #   scale_fill_gradient(name="SPZ z*", low="yellow", high="red", limits=c(0, .05)) +
 #   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
@@ -592,7 +593,13 @@ travel.model.data$z.2 <- z.2
 #         axis.title.x=element_blank(),
 #         axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
 # map
-
+# map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat.x, group = group, fill = z.3), color = NA, size = 0.25) +
+#   scale_fill_gradient(name="SPZ z*", low="yellow", high="red", limits=c(0, .05)) +
+#   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
+#   theme(axis.line=element_blank(),axis.text.x=element_blank(), axis.text.y=element_blank(),axis.ticks=element_blank(),
+#         axis.title.x=element_blank(),
+#         axis.title.y=element_blank(), panel.background=element_blank(), legend.position=c(0.2, 0.8))
+# map
 
 
 ### Now we save everything
@@ -600,9 +607,10 @@ t <- travel.model.data[, c("areaId", "ad2", "malabo", "pop",
                       "prall_map", "pre_map", "prt_map", "te_map", "to_map", # MAPs maps
                       "prob.model.fit",  "freq.model.fit", # probability of leaving, frequency of leaving = prob/56
                       "p.off", "p.ban" ,"p.lub", "p.mal", "p.mok", "p.ria", "p.ure", # destination probability distribution
-                      "h.1", "h.2", "hloc.e", "to.time.e", # the latter 2 go with h.2
+                      "h.1", "h.2", "h.3", "hloc.e", "to.time.e", # the latter 2 go with h.2
                       "m.1", "lambda.1", "z.1", # using TaR with 10-day trips, these are emergence rates, mosquito pops, and SPZ rate
-                      "m.2", "lambda.2", "z.2" # using TaR with variable trips, these are emergence rates, mosquito pops, and SPZ rate
+                      "m.2", "lambda.2", "z.2", # using TaR with variable trips, these are emergence rates, mosquito pops, and SPZ rate
+                      "m.3", "lambda.3", "z.3" # using TaR with 10-day trips, using the estimated surface for the probability of leaving
                   )]
 fwrite(t, file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/TAG_2018/Bioko_EIR_Surfaces/EIR_surfaces.csv")
 #t.check <- fread(file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/TAG_2018/Bioko_EIR_Surfaces/EIR_surfaces.csv")
@@ -610,6 +618,7 @@ fwrite(t, file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/TAG_2018/Bioko_EIR_
 # Also need to save our TaR matrices:
 write.csv(TaR.1, file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/TAG_2018/Bioko_EIR_Surfaces/TAR1.csv")
 write.csv(TaR.2, file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/TAG_2018/Bioko_EIR_Surfaces/TAR2.csv")
+write.csv(TaR.3, file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/TAG_2018/Bioko_EIR_Surfaces/TAR3.csv")
 #holder <- read.csv(file = "/Users/dtcitron/Documents/MASH/Bioko_Macro/TAG_2018/Bioko_EIR_Surfaces/TAR1.csv")
 #holder <- as.matrix(holder[, 2:202])
 
