@@ -81,6 +81,9 @@ public:
 
   tile*                 get_tile();
 
+  /* initialize movement */
+  virtual void          initialize_movement() = 0;
+
   /* biting */
   void                  decrement_bweight();
   void                  accumulate_bweight();

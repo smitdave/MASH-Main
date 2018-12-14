@@ -13,6 +13,7 @@
 
 /* PfSI includes */
 #include "Human-PfSI.hpp"
+#include "Event-PfSI.hpp"
 #include "SimBite-PfSI.hpp"
 
 /* other includes */
@@ -45,7 +46,23 @@ human_pfsi::human_pfsi(const int id_, const size_t home_patch_id_,
   b = tileP->get_params()->get_param<double>("Pf_b");
   c = tileP->get_params()->get_param<double>("Pf_c");
 
+  /* initialize kappa (my infectiousness to mosquitos) */
   update_kappa();
+
+  /* logically inconsistent to have an individual who is infected AND on chemoprophylaxis (in PfSI) */
+  if(infection && chemoprophylaxis){
+    Rcpp::stop("error: human ",id," cannot both have active infection and under chemoprophylactic protection\n");
+  }
+
+  /* if infected, queue the initial event */
+  if(infection){
+    addEvent2Q(e_pfsi_infect(0.0,this));
+  }
+
+  /* chemoprophylaxis: queue up when protection expires */
+  if(chemoprophylaxis){
+    addEvent2Q(e_pfsi_endchx(0.0,this));
+  }
 
   #ifdef DEBUG_MACRO
   std::cout << "human_pfsi " << " born at " << this << std::endl;
@@ -86,6 +103,13 @@ void human_pfsi::simulate(){
 
 
 /* ################################################################################
+ * initialize movement
+################################################################################ */
+
+void human_pfsi::initialize_movement(){};
+
+
+/* ################################################################################
  * kappa, EIR, biting
 ################################################################################ */
 
@@ -102,8 +126,13 @@ void human_pfsi::update_kappa(){
 /* EIR: rate I am getting bitten by mosquitos right now */
 void human_pfsi::update_EIR(){
 
-  double beta = tileP->get_mosquitos()->get_beta(patch_id);
-  EIR = beta * (bweight / tileP->get_patch(patch_id)->get_bWeightHuman());
+  /* check if in a reservoir */
+  if(tileP->get_patch(patch_id)->get_reservoir()){
+    EIR = tileP->get_patch(patch_id)->get_res_EIR();
+  } else {
+    double beta = tileP->get_mosquitos()->get_beta(patch_id);
+    EIR = beta * (bweight / tileP->get_patch(patch_id)->get_bWeightHuman());
+  }
 
 };
 

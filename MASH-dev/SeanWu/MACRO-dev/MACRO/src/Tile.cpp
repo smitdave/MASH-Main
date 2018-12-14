@@ -24,7 +24,9 @@
 #include "Parameters.hpp"
 
 /* constructor */
-tile::tile(){
+tile::tile() :
+  tnow(0)
+{
 
   #ifdef DEBUG_MACRO
   std::cout << "tile born at " << this << std::endl;

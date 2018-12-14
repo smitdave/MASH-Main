@@ -63,6 +63,9 @@ public:
   void            set_c(const double c_){ c = c_; }
   double          get_c(){ return c; }
 
+  /* initialize movement */
+  virtual void    initialize_movement();
+
 private:
 
   void            update_kappa();
