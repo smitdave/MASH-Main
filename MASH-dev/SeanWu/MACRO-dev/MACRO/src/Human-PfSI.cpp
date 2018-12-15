@@ -16,6 +16,9 @@
 #include "Event-PfSI.hpp"
 #include "SimBite-PfSI.hpp"
 
+/* movement model */
+#include "Event-Move.hpp"
+
 /* other includes */
 #include "Event.hpp"
 #include "Tile.hpp"
@@ -106,7 +109,15 @@ void human_pfsi::simulate(){
  * initialize movement
 ################################################################################ */
 
-void human_pfsi::initialize_movement(){};
+void human_pfsi::initialize_movement(){
+
+  /* queue my first trip */
+  size_t dest_id = tileP->get_prng()->get_rcategorical(get_patch()->get_move());
+  double trip_t = tileP->get_prng()->get_rexp(trip_frequency);
+
+  addEvent2Q(e_move_takeTrip(trip_t,dest_id,this));
+
+};
 
 
 /* ################################################################################

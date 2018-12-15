@@ -59,3 +59,22 @@ human* tile::get_human(u_int id){
 mosquito* tile::get_mosquitos(){
   return mosquitos.get();
 }
+
+
+/* simulation */
+void tile::simulation(const u_int tmax){
+
+  while(tnow < tmax){
+
+    // sim mosquitos
+
+    // wipe out kappa
+
+    // sim humans (they will accumulate kappa in their own method)
+
+    // normalize kappa?
+
+    tnow++;
+  }
+
+}
