@@ -59,6 +59,7 @@ public:
   void                  accumulate_kappa(double k){kappa += k;}
   void                  decrement_kappa(double k){kappa -= k;}
   void                  zero_kappa(){kappa = 0.0;}
+  void                  normalize_kappa();
 
 private:
 

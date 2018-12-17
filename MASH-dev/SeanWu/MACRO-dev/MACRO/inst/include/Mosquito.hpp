@@ -21,6 +21,8 @@
 /* forward declarations */
 class tile;
 
+
+/* abstract base mosquito */
 class mosquito {
 public:
 

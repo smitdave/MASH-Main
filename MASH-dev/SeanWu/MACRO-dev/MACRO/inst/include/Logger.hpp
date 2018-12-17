@@ -12,8 +12,8 @@
  */
 
 
-#ifndef LOGGER_MGDRIVE_EPI
-#define LOGGER_MGDRIVE_EPI
+#ifndef Logger_hpp
+#define Logger_hpp
 
 /* ######################################################################
  # includes and forward declarations
@@ -21,13 +21,13 @@
 
 /* C++ includes */
 #include <fstream>
-#include <vector>
+#include <unordered_map>
 #include <string>
 #include <iostream>
 
 
 /* ######################################################################
- # class declaration
+# class declaration
 ###################################################################### */
 
 class logger {
@@ -54,26 +54,30 @@ public:
   logger& operator=(logger&&) = default;
 
   /* open & close logging streams */
-  void open(const std::string& outfile);
+  void open(const std::string& outfile, const std::string& key);
   void close();
 
   /* return reference to output stream */
-  std::ofstream& get_out(){return logstream;};
+  std::ofstream& get_out(const std::string& key){return logstreams.at(key);};
 
 private:
-
-  std::ofstream logstream;
+  std::unordered_map<std::string, std::ofstream> logstreams;
 
 };
 
+
+/* class methods */
+
 /* open a logging stream */
-void logger::open(const std::string& outfile){
-  logstream.open(outfile);
+inline void logger::open(const std::string& outfile, const std::string& key){
+  logstreams.insert(std::make_pair(key,std::ofstream{outfile}));
 };
 
 /* close streams */
-void logger::close(){
-  logstream.close();
+inline void logger::close(){
+  for(auto& it : logstreams){
+    it.second.close();
+  }
 };
 
 

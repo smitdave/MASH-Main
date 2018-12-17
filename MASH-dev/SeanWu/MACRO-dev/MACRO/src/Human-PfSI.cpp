@@ -28,10 +28,12 @@
 /* utility class includes */
 #include "Parameters.hpp"
 #include "PRNG.hpp"
+#include "Logger.hpp"
 
 
 /* ################################################################################
- * constructor & destructor
+ * constructor & destructor:
+ * note: logging in PfSI is of form: (id,time,state)
 ################################################################################ */
 
 human_pfsi::human_pfsi(const int id_, const size_t home_patch_id_,
@@ -60,6 +62,8 @@ human_pfsi::human_pfsi(const int id_, const size_t home_patch_id_,
   /* if infected, queue the initial event */
   if(infection){
     addEvent2Q(e_pfsi_infect(0.0,this));
+  } else {
+    tileP->get_logger()->get_out("human") << id << "," << 0.0 << "," << "S" << "\n";
   }
 
   /* chemoprophylaxis: queue up when protection expires */

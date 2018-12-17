@@ -64,16 +64,28 @@ mosquito* tile::get_mosquitos(){
 /* simulation */
 void tile::simulation(const u_int tmax){
 
+  /* main simulation loop */
   while(tnow < tmax){
 
-    // sim mosquitos
+    /* simulate mosquitos */
+    mosquitos->simulate();
 
-    // wipe out kappa
+    /* clear kappa so humans can update their personal contributions when they move */
+    for(auto& p : patches){
+      p->zero_kappa();
+    }
 
-    // sim humans (they will accumulate kappa in their own method)
+    /* sim humans (they will accumulate kappa in their simulation method) */
+    for(auto& h : humans){
+      h->simulate();
+    }
 
-    // normalize kappa?
+    /* normalize kappa */
+    for(auto& p : patches){
+      p->normalize_kappa();
+    }
 
+    /* increment time */
     tnow++;
   }
 
