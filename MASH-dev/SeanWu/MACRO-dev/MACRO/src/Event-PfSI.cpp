@@ -11,14 +11,20 @@
  *  November 2018
  */
 
+/* PfSI includes */
 #include "Event-PfSI.hpp"
 #include "SimBite-PfSI.hpp"
 #include "Human-PfSI.hpp"
 
 #include "Tile.hpp"
 
+/* movement model */
+#include "Event-Move.hpp"
+
+/* utility class includes */
 #include "PRNG.hpp"
 #include "Parameters.hpp"
+#include "Logger.hpp"
 
 
 /* ################################################################################
@@ -29,9 +35,14 @@
 e_pfsi_infect::e_pfsi_infect(double tEvent_, human_pfsi* h):
   event("PfSI_infection",tEvent_,[tEvent_,h](){
 
+    /* no superinfection, and chx blocks new infections */
     if(!h->get_infection() && !h->get_chemoprophylaxis()){
 
+      /* i'm not infected */
       h->set_infection(true);
+
+      /* log this event */
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "I" << "\n";
 
       /* queue clearance event */
       double tEnd = tEvent_ + pfsi_ttClearPf(h);
@@ -72,9 +83,14 @@ e_pfsi_infect::~e_pfsi_infect(){
 e_pfsi_recover::e_pfsi_recover(double tEvent_, human_pfsi* h):
   event("PfSI_recovery",tEvent_,[tEvent_,h](){
 
+    /* i can only recover if i'm infected */
     if(h->get_infection()){
       h->rmTagFromQ("PfSI_fever");
       h->set_infection(false);
+
+      /* log this event */
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "S" << "\n";
+
     }
 
   })
@@ -104,6 +120,10 @@ e_pfsi_recover::~e_pfsi_recover(){
 e_pfsi_fever::e_pfsi_fever(double tEvent_, human_pfsi* h):
   event("PfSI_fever",tEvent_,[tEvent_,h](){
 
+    /* log this event */
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "F" << "\n";
+
+    /* if i get a fever, i'll seek treatment with this probability */
     double TreatPf = h->get_tile()->get_params()->get_param<double>("TreatPf");
     if(h->get_tile()->get_prng()->get_runif() < TreatPf){
       double tTreat = tEvent_ + pfsi_ttTreatPf(h);
@@ -137,10 +157,14 @@ e_pfsi_fever::~e_pfsi_fever(){
 e_pfsi_treatment::e_pfsi_treatment(double tEvent_, human_pfsi* h):
   event("PfSI_treatment",tEvent_,[tEvent_,h](){
 
+    /* clear out this infection */
     h->set_infection(false);
     h->rmTagFromQ("PfSI_recovery");
     h->rmTagFromQ("PfSI_endprophylaxis");
     h->set_chemoprophylaxis(true);
+
+    /* log this event */
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "P" << "\n";
 
     /* initiate a period of protection from chemoprophylaxis */
     double tSusceptible = tEvent_ + pfsi_ttSusceptiblePf(h);
@@ -173,7 +197,11 @@ e_pfsi_treatment::~e_pfsi_treatment(){
 e_pfsi_endchx::e_pfsi_endchx(double tEvent_, human_pfsi* h):
   event("PfSI_endprophylaxis",tEvent_,[tEvent_,h](){
 
+    /* chx protection ends */
     h->set_chemoprophylaxis(false);
+
+    /* log this event */
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "P2S" << "\n";
 
   })
 {
@@ -202,15 +230,21 @@ e_pfsi_endchx::~e_pfsi_endchx(){
 e_pfsi_pevaxx::e_pfsi_pevaxx(double tEvent_, const bool treat, human_pfsi* h):
   event("PfSI_PEVaxx",tEvent_,[tEvent_,treat,h](){
 
+    /* check if vaxx fails (vaxx efficacy) */
     double PEProtectPf = h->get_tile()->get_params()->get_param<double>("PEProtectPf");
     if(h->get_tile()->get_prng()->get_runif() < PEProtectPf){
 
+      /* lower my probability to get infected by mosquitos */
       double b =  h->get_tile()->get_params()->get_param<double>("Pf_b");
       double peBlockPf = h->get_tile()->get_params()->get_param<double>("peBlockPf");
       h->set_b(b * (1.0 - peBlockPf));
 
       h->rmTagFromQ("PfSI_PEWane");
 
+      /* log this event */
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "PEvaxx" << "\n";
+
+      /* queue the vaxx wane event */
       double tWane = tEvent_ + pfsi_ttPEWanePf(h);
       h->addEvent2Q(e_pfsi_pewane(tWane,h));
     }
@@ -223,6 +257,9 @@ e_pfsi_pevaxx::e_pfsi_pevaxx(double tEvent_, const bool treat, human_pfsi* h):
       h->rmTagFromQ("PfSI_recovery");
       h->rmTagFromQ("PfSI_endprophylaxis");
       h->set_chemoprophylaxis(true);
+
+      /* log this event */
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "P" << "\n";
 
       /* initiate a period of protection from chemoprophylaxis */
       double tSusceptible = tEvent_ + pfsi_ttSusceptiblePf(h);
@@ -256,8 +293,12 @@ e_pfsi_pevaxx::~e_pfsi_pevaxx(){
 e_pfsi_pewane::e_pfsi_pewane(double tEvent_, human_pfsi* h):
   event("PfSI_PEWane",tEvent_,[tEvent_,h](){
 
+    /* vaxx protection wanes */
     double b =  h->get_tile()->get_params()->get_param<double>("Pf_b");
     h->set_b(b);
+
+    /* log this event */
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "PEwane" << "\n";
 
   })
 {
@@ -286,15 +327,21 @@ e_pfsi_pewane::~e_pfsi_pewane(){
 e_pfsi_gsvaxx::e_pfsi_gsvaxx(double tEvent_, const bool treat, human_pfsi* h):
   event("PfSI_GSVaxx",tEvent_,[tEvent_,treat,h](){
 
+    /* check if vaxx fails (vaxx efficacy) */
     double GSProtectPf = h->get_tile()->get_params()->get_param<double>("GSProtectPf");
     if(h->get_tile()->get_prng()->get_runif() < GSProtectPf){
 
-      double c =  h->get_tile()->get_params()->get_param<double>("Pf_c");
+      /* lower my probability to infect mosquitos */
+      double c = h->get_tile()->get_params()->get_param<double>("Pf_c");
       double gsBlockPf = h->get_tile()->get_params()->get_param<double>("gsBlockPf");
       h->set_c(c * (1.0 - gsBlockPf));
 
       h->rmTagFromQ("PfSI_GSWane");
 
+      /* log this event */
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "GSvaxx" << "\n";
+
+      /* queue the vaxx wane event */
       double tWane = tEvent_ + pfsi_ttGSWanePf(h);
       h->addEvent2Q(e_pfsi_gswane(tWane,h));
     }
@@ -307,6 +354,9 @@ e_pfsi_gsvaxx::e_pfsi_gsvaxx(double tEvent_, const bool treat, human_pfsi* h):
       h->rmTagFromQ("PfSI_recovery");
       h->rmTagFromQ("PfSI_endprophylaxis");
       h->set_chemoprophylaxis(true);
+
+      /* log this event */
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "P" << "\n";
 
       /* initiate a period of protection from chemoprophylaxis */
       double tSusceptible = tEvent_ + pfsi_ttSusceptiblePf(h);
@@ -340,8 +390,12 @@ e_pfsi_gsvaxx::~e_pfsi_gsvaxx(){
 e_pfsi_gswane::e_pfsi_gswane(double tEvent_, human_pfsi* h):
   event("PfSI_GSWane",tEvent_,[tEvent_,h](){
 
+    /* vaxx protection wanes */
     double c =  h->get_tile()->get_params()->get_param<double>("Pf_c");
     h->set_c(c);
+
+    /* log this event */
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "GSwane" << "\n";
 
   })
 {

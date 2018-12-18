@@ -11,12 +11,22 @@
  *  November 2018
  */
 
+/* movement model */
 #include "Mosquito-RM.hpp"
+
+/* model includes */
 #include "Tile.hpp"
 #include "Patch.hpp"
-#include "PRNG.hpp"
 
-/* constructor */
+/* utility class includes */
+#include "PRNG.hpp"
+#include "Logger.hpp"
+
+
+/* ################################################################################
+ * construtor & destructor
+################################################################################ */
+
 mosquito_rm::mosquito_rm(const size_t N_, const arma::Mat<double>& lambda_, const arma::Mat<double>& psi_,
            const arma::Col<size_t>& EIP_, const size_t maxEIP_,
            const double p_, const double f_, const double Q_, const double v_,
@@ -25,7 +35,7 @@ mosquito_rm::mosquito_rm(const size_t N_, const arma::Mat<double>& lambda_, cons
            mosquito(tileP_),
            N(N_), lambda(lambda_), psi(psi_), EIP(EIP_), maxEIP(maxEIP_), P(maxEIP_), kappa(N_),
            p(p_), f(f_), Q(Q_), a(f*Q), v(v_),
-           M(M_), Y(Y_), Y0(N_), Z(Z_), ZZ(maxEIP_,N_), ZZ_shift(maxEIP_,maxEIP_)
+           M(M_), Y(Y_), Y0(N_), Z(Z_), ZZ(maxEIP_,N_), ZZ_shift(maxEIP_,maxEIP_), patches(N_)
 {
 
   #ifdef MACRO_DEBUG
@@ -53,6 +63,9 @@ mosquito_rm::mosquito_rm(const size_t N_, const arma::Mat<double>& lambda_, cons
   /* zero out Y0 */
   Y0.fill(0.0);
 
+  /* integer sequence of patches (just for writing output) */
+  std::generate(patches.begin(), patches.end(), [n = 1] () mutable { return n++; });
+
 };
 
 /* destructor */
@@ -68,19 +81,91 @@ mosquito_rm::~mosquito_rm(){
 mosquito_rm::mosquito_rm(mosquito_rm&&) = default;
 mosquito_rm& mosquito_rm::operator=(mosquito_rm&&) = default;
 
-/* simulation interface */
+
+/* ################################################################################
+ * interface
+################################################################################ */
+
+/* simulation */
 void mosquito_rm::simulate(){
 
-  u_int today = tileP->get_tnow();
+  /* absolute time and day of the year */
+  u_int t_abs = tileP->get_tnow();
+  u_int today = t_abs % 365;
 
+  /* simulation */
   aquatic_dynamics(today);
   adult_dynamics(today);
 
+  /* logging */
+  
+  /* write M */
+  tileP->get_logger()->get_stream("mosquito") << today << ",M,";
+  for(auto it = M.begin(); it != M.end()-1; it++){
+    tileP->get_logger()->get_stream("mosquito") << *it << ",";
+  }
+  tileP->get_logger()->get_stream("mosquito") << *(M.end()-1) << "\n";
+
+  /* write Y */
+  tileP->get_logger()->get_stream("mosquito") << today << ",Y,";
+  for(auto it = Y.begin(); it != Y.end()-1; it++){
+    tileP->get_logger()->get_stream("mosquito") << *it << ",";
+  }
+  tileP->get_logger()->get_stream("mosquito") << *(Y.end()-1) << "\n";
+
+  /* write Z */
+  tileP->get_logger()->get_stream("mosquito") << today << ",Z,";
+  for(auto it = Z.begin(); it != Z.end()-1; it++){
+    tileP->get_logger()->get_stream("mosquito") << *it << ",";
+  }
+  tileP->get_logger()->get_stream("mosquito") << *(Z.end()-1) << "\n";
+
 };
 
+/* number of infectious bites */
 double mosquito_rm::get_beta(const size_t p){
   return a * Z.at(p);
 }
+
+/* initialize logging */
+void mosquito_rm::initialize_logging(){
+
+  u_int tnow = tileP->get_tnow();
+
+  /* format: patch,1,2,3,... */
+  tileP->get_logger()->get_stream("mosquito") << "time,state,patch,";
+  for(size_t i=0; i<patches.size()-1; i++){
+    tileP->get_logger()->get_stream("mosquito") << patches[i] << ",";
+  }
+  tileP->get_logger()->get_stream("mosquito") << patches.back() << "\n";
+
+  /* write M */
+  tileP->get_logger()->get_stream("mosquito") << tnow << ",M,";
+  for(auto it = M.begin(); it != M.end()-1; it++){
+    tileP->get_logger()->get_stream("mosquito") << *it << ",";
+  }
+  tileP->get_logger()->get_stream("mosquito") << *(M.end()-1) << "\n";
+
+  /* write Y */
+  tileP->get_logger()->get_stream("mosquito") << tnow << ",Y,";
+  for(auto it = Y.begin(); it != Y.end()-1; it++){
+    tileP->get_logger()->get_stream("mosquito") << *it << ",";
+  }
+  tileP->get_logger()->get_stream("mosquito") << *(Y.end()-1) << "\n";
+
+  /* write Z */
+  tileP->get_logger()->get_stream("mosquito") << tnow << ",Z,";
+  for(auto it = Z.begin(); it != Z.end()-1; it++){
+    tileP->get_logger()->get_stream("mosquito") << *it << ",";
+  }
+  tileP->get_logger()->get_stream("mosquito") << *(Z.end()-1) << "\n";
+
+}
+
+
+/* ################################################################################
+ * RM-specific methods
+################################################################################ */
 
 /* aquatic dynamics */
 void mosquito_rm::aquatic_dynamics(const u_int tnow){

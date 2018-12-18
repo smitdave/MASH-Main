@@ -5,7 +5,7 @@
  *   / /  / / ___ / /___/ _, _/ /_/ /
  *  /_/  /_/_/  |_\____/_/ |_|\____/
  *
- *  Patch: a cell in a tile (conditional on stuff in the tile, the humans & mosquitos are independent)
+ *  Patch: a cell in a tile (conditional on stuff in the patch, the humans & mosquitos are independent)
  *
  *  Sean Wu
  *  November 2018
@@ -59,6 +59,7 @@ public:
   void                  accumulate_kappa(double k){kappa += k;}
   void                  decrement_kappa(double k){kappa -= k;}
   void                  zero_kappa(){kappa = 0.0;}
+  void                  normalize_kappa();
 
 private:
 

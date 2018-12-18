@@ -26,7 +26,11 @@
 
 class human_pfsi : public human {
 public:
-  human_pfsi(const int id_, const double bweight_, tile* tileP_, const double age_, const bool inf_, const bool chx_);
+  human_pfsi(const int id_, const size_t home_patch_id_,
+        const double trip_duration_, const double trip_frequency_,
+        const double bweight_, tile* tileP_,
+        /* human_pfsi specific arguments */
+        const double age_, const bool inf_, const bool chx_);
   ~human_pfsi();
 
   /* move operators */
@@ -44,20 +48,23 @@ public:
   }
 
   /* simulation */
-  virtual void simulate();
+  virtual void    simulate();
 
   /* accessors */
-  void        set_infection(const bool inf){ infection = inf; }
-  bool        get_infection(){ return infection; }
+  void            set_infection(const bool inf){ infection = inf; }
+  bool            get_infection(){ return infection; }
 
-  void        set_chemoprophylaxis(const bool chx){ chemoprophylaxis = chx; }
-  bool        get_chemoprophylaxis(){ return chemoprophylaxis; }
+  void            set_chemoprophylaxis(const bool chx){ chemoprophylaxis = chx; }
+  bool            get_chemoprophylaxis(){ return chemoprophylaxis; }
 
-  void        set_b(const double b_){ b = b_; }
-  double      get_b(){ return b; }
+  void            set_b(const double b_){ b = b_; }
+  double          get_b(){ return b; }
 
-  void        set_c(const double c_){ c = c_; }
-  double      get_c(){ return c; }
+  void            set_c(const double c_){ c = c_; }
+  double          get_c(){ return c; }
+
+  /* initialize movement */
+  virtual void    initialize_movement();
 
 private:
 

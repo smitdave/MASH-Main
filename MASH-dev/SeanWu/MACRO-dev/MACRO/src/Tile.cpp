@@ -24,7 +24,9 @@
 #include "Parameters.hpp"
 
 /* constructor */
-tile::tile(){
+tile::tile() :
+  tnow(0)
+{
 
   #ifdef DEBUG_MACRO
   std::cout << "tile born at " << this << std::endl;
@@ -56,4 +58,35 @@ human* tile::get_human(u_int id){
 
 mosquito* tile::get_mosquitos(){
   return mosquitos.get();
+}
+
+
+/* simulation */
+void tile::simulation(const u_int tmax){
+
+  /* main simulation loop */
+  while(tnow < tmax){
+
+    /* simulate mosquitos */
+    mosquitos->simulate();
+
+    /* clear kappa so humans can update their personal contributions when they move */
+    for(auto& p : patches){
+      p->zero_kappa();
+    }
+
+    /* sim humans (they will accumulate kappa in their simulation method) */
+    for(auto& h : humans){
+      h->simulate();
+    }
+
+    /* normalize kappa */
+    for(auto& p : patches){
+      p->normalize_kappa();
+    }
+
+    /* increment time */
+    tnow++;
+  }
+
 }

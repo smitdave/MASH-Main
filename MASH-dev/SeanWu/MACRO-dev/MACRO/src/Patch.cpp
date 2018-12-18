@@ -5,7 +5,7 @@
  *   / /  / / ___ / /___/ _, _/ /_/ /
  *  /_/  /_/_/  |_\____/_/ |_|\____/
  *
- *  Patch: a cell in a tile (conditional on stuff in the tile, the humans & mosquitos are independent)
+ *  Patch: a cell in a tile (conditional on stuff in the patch, the humans & mosquitos are independent)
  *
  *  Sean Wu
  *  November 2018
@@ -34,4 +34,14 @@ patch::~patch(){
   std::cout << "patch " << id << " dying at " << this << std::endl;
   #endif
 
+}
+
+/* normalize kappa */
+void patch::normalize_kappa(){
+  /* no divide by zero errors; also no need to calc kappa for 'reservoir' patches */
+  if((bWeightHuman + bWeightZoo + bWeightZootox) > 0. && !reservoir){
+    kappa = kappa / (bWeightHuman + bWeightZoo + bWeightZootox);
+  } else {
+    kappa = 0;
+  }
 }

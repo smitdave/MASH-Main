@@ -13,7 +13,11 @@
 
 /* PfSI includes */
 #include "Human-PfSI.hpp"
+#include "Event-PfSI.hpp"
 #include "SimBite-PfSI.hpp"
+
+/* movement model */
+#include "Event-Move.hpp"
 
 /* other includes */
 #include "Event.hpp"
@@ -24,22 +28,54 @@
 /* utility class includes */
 #include "Parameters.hpp"
 #include "PRNG.hpp"
+#include "Logger.hpp"
 
 
 /* ################################################################################
- * constructor & destructor
+ * constructor & destructor:
+ * note: logging in PfSI is of form: (id,time,state)
 ################################################################################ */
 
-human_pfsi::human_pfsi(const int id_, const double bweight_, tile* tileP_, const double age_, const bool inf_, const bool chx_) :
-  human(id_,bweight_,tileP_),
-  infection(inf_), chemoprophylaxis(chx_), b(0.0), c(0.0), age(age_), kappa(0.0)
+human_pfsi::human_pfsi(const int id_, const size_t home_patch_id_,
+      const double trip_duration_, const double trip_frequency_,
+      const double bweight_, tile* tileP_,
+      /* human_pfsi specific arguments */
+      const double age_, const bool inf_, const bool chx_) :
+  human(id_,home_patch_id_,
+        trip_duration_,trip_frequency_,
+        bweight_,tileP_),
+  infection(inf_), chemoprophylaxis(chx_), b(0.0), c(0.0), age(age_), kappa(0.0), EIR(0.0)
 {
 
   /* transmission efficiencies */
   b = tileP->get_params()->get_param<double>("Pf_b");
   c = tileP->get_params()->get_param<double>("Pf_c");
 
+  /* initialize kappa (my infectiousness to mosquitos) */
   update_kappa();
+
+  /* logically inconsistent to have an individual who is infected AND on chemoprophylaxis (in PfSI) */
+  if(infection && chemoprophylaxis){
+    Rcpp::stop("error: human ",id," cannot both have active infection and under chemoprophylactic protection\n");
+  }
+
+  /* if infected, queue the initial event */
+  if(infection){
+
+    addEvent2Q(e_pfsi_infect(0.0,this));
+
+  } else {
+
+    /* log this event */
+    u_int tnow = tileP->get_tnow();
+    tileP->get_logger()->get_stream("human_inf") << id << "," << tnow << "," << "S" << "\n";
+
+  }
+
+  /* chemoprophylaxis: queue up when protection expires */
+  if(chemoprophylaxis){
+    addEvent2Q(e_pfsi_endchx(0.0,this));
+  }
 
   #ifdef DEBUG_MACRO
   std::cout << "human_pfsi " << " born at " << this << std::endl;
@@ -80,6 +116,21 @@ void human_pfsi::simulate(){
 
 
 /* ################################################################################
+ * initialize movement
+################################################################################ */
+
+void human_pfsi::initialize_movement(){
+
+  /* queue my first trip */
+  size_t dest_id = tileP->get_prng()->get_rcategorical(get_patch()->get_move());
+  double trip_t = tileP->get_prng()->get_rexp(trip_frequency);
+
+  addEvent2Q(e_move_takeTrip(trip_t,dest_id,this));
+
+};
+
+
+/* ################################################################################
  * kappa, EIR, biting
 ################################################################################ */
 
@@ -96,8 +147,13 @@ void human_pfsi::update_kappa(){
 /* EIR: rate I am getting bitten by mosquitos right now */
 void human_pfsi::update_EIR(){
 
-  double beta = tileP->get_mosquitos()->get_beta(patch_id);
-  EIR = beta * (bweight / tileP->get_patch(patch_id)->get_bWeightHuman());
+  /* check if in a reservoir */
+  if(tileP->get_patch(patch_id)->get_reservoir()){
+    EIR = tileP->get_patch(patch_id)->get_res_EIR();
+  } else {
+    double beta = tileP->get_mosquitos()->get_beta(patch_id);
+    EIR = beta * (bweight / tileP->get_patch(patch_id)->get_bWeightHuman());
+  }
 
 };
 

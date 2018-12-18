@@ -18,9 +18,11 @@
 
 /* define virtual destructor is ok */
 human::~human(){
+
   #ifdef MACRO_DEBUG
   std::cout << "human " << id << " dying at " << this << std::endl;
   #endif
+  
 };
 
 /* move operators */
