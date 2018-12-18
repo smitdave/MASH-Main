@@ -10,4 +10,4 @@ Description: One paragraph description of what the
 License: GPL (>= 2)
 Imports: Rcpp (>= 0.12.19), RcppArmadillo, RcppProgress
 LinkingTo: Rcpp (>= 0.12.19), RcppArmadillo, RcppProgress
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1

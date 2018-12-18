@@ -14,6 +14,9 @@
 #ifndef Tile_hpp
 #define Tile_hpp
 
+/* Rcpp */
+#include <RcppArmadillo.h>
+
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
@@ -51,7 +54,11 @@ using parametersP = std::unique_ptr<parameters>;
 class tile {
 public:
 
-  tile();
+  tile(const uint_least32_t seed,
+       const Rcpp::List& human_pars,
+       const Rcpp::List& mosquito_pars,
+       const Rcpp::List& patch_pars
+  );
   ~tile();
 
 

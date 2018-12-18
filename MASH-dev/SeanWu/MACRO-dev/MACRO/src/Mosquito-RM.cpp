@@ -98,7 +98,7 @@ void mosquito_rm::simulate(){
   adult_dynamics(today);
 
   /* logging */
-  
+
   /* write M */
   tileP->get_logger()->get_stream("mosquito") << today << ",M,";
   for(auto it = M.begin(); it != M.end()-1; it++){

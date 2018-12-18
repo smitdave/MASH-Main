@@ -18,14 +18,55 @@
 #include "Human.hpp"
 #include "Mosquito.hpp"
 
+/* event class includes */
+#include "Event.hpp"
+
 /* utilty class incldues */
 #include "PRNG.hpp"
 #include "Logger.hpp"
 #include "Parameters.hpp"
 
+/*
+  TO-DO:
+  * check that the 'normalize_kappa' in Patch.cpp is right
+  * set up factory method for Mosquito
+  * set up factory method for Human
+*/
+
 /* constructor */
-tile::tile() :
-  tnow(0)
+tile::tile(const uint_least32_t seed,
+     const Rcpp::List& human_pars,
+     const Rcpp::List& mosquito_pars,
+     const Rcpp::List& patch_pars
+) :
+
+  /* tile's own data members */
+  tnow(0),
+
+  /* state space classes */
+  humans(human_pars.size()),
+  // mosquitos(std::make_unique<>(_Args &&__args...)),
+  //
+  // Rcpp::as<size_t>(mosquito_pars["N"]),
+  // Rcpp::as<arma::Mat<double> >(mosquito_pars["lambda"]),
+  // Rcpp::as<arma::Mat<double> >(mosquito_pars["psi"]),
+  // Rcpp::as<arma::Col<double> >(mosquito_pars["EIP"]),
+  // Rcpp::as<size_t>(mosquito_pars["maxEIP"]),
+  // Rcpp::as<double>(mosquito_pars["p"]),
+  // Rcpp::as<double>(mosquito_pars["f"]),
+  // Rcpp::as<double>(mosquito_pars["Q"]),
+  // Rcpp::as<double>(mosquito_pars["v"]),
+  // Rcpp::as<arma::Row<double> >(mosquito_pars["M"]),
+  // Rcpp::as<arma::Row<double> >(mosquito_pars["Y"]),
+  // Rcpp::as<arma::Row<double> >(mosquito_pars["Z"]),
+  // this
+  patches(patch_pars.size()),
+
+  /* construct utility classes */
+  prngPtr(std::make_unique<prng>(seed)),
+  loggerPtr(std::make_unique<logger>()),
+  parametersPtr(std::make_unique<parameters>(50))
+
 {
   /*
   what needs to happen:
@@ -38,6 +79,8 @@ tile::tile() :
     1. initialize patches (this is easy; no inheritance)
     2. initialize mosquito
     3. initialize humans
+
+    after these are all done, then we can initialize vaccinations (if present)
   */
 
   #ifdef DEBUG_MACRO
