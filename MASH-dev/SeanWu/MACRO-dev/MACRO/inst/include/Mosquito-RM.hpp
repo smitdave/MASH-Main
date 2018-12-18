@@ -17,6 +17,8 @@
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
+#include <vector>
+#include <algorithm>
 
 /* RcppArmadillo */
 #include <RcppArmadillo.h>
@@ -48,6 +50,7 @@ public:
   /* simulation interface */
   virtual void simulate();
   virtual double get_beta(const size_t p);
+  virtual void initialize_logging();
 
 private:
 
@@ -77,6 +80,9 @@ private:
   arma::Row<double>       Z; /* infectious mosquitos */
   arma::Mat<double>       ZZ; /* incubating mosquitos */
   arma::Mat<int>          ZZ_shift; /* matrix to shift ZZ up */
+
+  /* integer sequence of patches (just for writing output) */
+  std::vector<int>        patches;
 
 };
 

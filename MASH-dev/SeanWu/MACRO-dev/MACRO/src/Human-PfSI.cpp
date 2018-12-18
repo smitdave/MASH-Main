@@ -61,9 +61,15 @@ human_pfsi::human_pfsi(const int id_, const size_t home_patch_id_,
 
   /* if infected, queue the initial event */
   if(infection){
+
     addEvent2Q(e_pfsi_infect(0.0,this));
+
   } else {
-    tileP->get_logger()->get_out("human") << id << "," << 0.0 << "," << "S" << "\n";
+
+    /* log this event */
+    u_int tnow = tileP->get_tnow();
+    tileP->get_logger()->get_stream("human_inf") << id << "," << tnow << "," << "S" << "\n";
+
   }
 
   /* chemoprophylaxis: queue up when protection expires */

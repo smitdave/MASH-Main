@@ -46,6 +46,7 @@ public:
   /* interface */
   virtual void simulate() = 0;
   virtual double get_beta(const size_t p) = 0; /* beta: number of infectious bites mosquitos produce today in patch p; in RM models it is a*Z */
+  virtual void initialize_logging() = 0;
 
 protected:
 

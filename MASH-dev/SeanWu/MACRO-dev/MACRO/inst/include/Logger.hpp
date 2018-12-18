@@ -58,7 +58,7 @@ public:
   void close();
 
   /* return reference to output stream */
-  std::ofstream& get_out(const std::string& key){return logstreams.at(key);};
+  std::ofstream& get_stream(const std::string& key){return logstreams.at(key);};
 
 private:
   std::unordered_map<std::string, std::ofstream> logstreams;
@@ -66,7 +66,9 @@ private:
 };
 
 
-/* class methods */
+/* ######################################################################
+# class methods
+###################################################################### */
 
 /* open a logging stream */
 inline void logger::open(const std::string& outfile, const std::string& key){
