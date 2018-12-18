@@ -76,6 +76,7 @@ e_move_returnHome::e_move_returnHome(const double tEvent_, human* h) :
     size_t home_id = h->get_home_patch_id();
     h->get_tile()->get_logger()->get_stream("human_move") << h->get_id() << "," << tEvent_ << ",returnHome," << home_id << "\n";
 
+    /* i come home */
     h->decrement_bweight(); /* decrement the biting weight where I came from */
     h->set_patch_id(home_id); /* move */
     h->accumulate_bweight(); /* accumulate the biting weight where I go */

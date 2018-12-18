@@ -27,6 +27,18 @@
 tile::tile() :
   tnow(0)
 {
+  /*
+  what needs to happen:
+    utility classes are constructed in the member initializer list
+    1. PRNG
+    2. logger
+    3. parameters
+
+    we dont do anything with the model state pointers yet. those get done in the constructor body
+    1. initialize patches (this is easy; no inheritance)
+    2. initialize mosquito
+    3. initialize humans
+  */
 
   #ifdef DEBUG_MACRO
   std::cout << "tile born at " << this << std::endl;
