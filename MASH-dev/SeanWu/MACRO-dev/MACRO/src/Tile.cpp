@@ -11,7 +11,6 @@
  *  November 2018
  */
 
-
 /* state class includes */
 #include "Tile.hpp"
 #include "Patch.hpp"
@@ -37,7 +36,9 @@
 tile::tile(const uint_least32_t seed,
      const Rcpp::List& human_pars,
      const Rcpp::List& mosquito_pars,
-     const Rcpp::List& patch_pars
+     const Rcpp::List& patch_pars,
+     const Rcpp::List& log_streams,
+     const Rcpp::List& vaxx_events
 ) :
 
   /* tile's own data members */
@@ -45,21 +46,7 @@ tile::tile(const uint_least32_t seed,
 
   /* state space classes */
   humans(human_pars.size()),
-  // mosquitos(std::make_unique<>(_Args &&__args...)),
-  //
-  // Rcpp::as<size_t>(mosquito_pars["N"]),
-  // Rcpp::as<arma::Mat<double> >(mosquito_pars["lambda"]),
-  // Rcpp::as<arma::Mat<double> >(mosquito_pars["psi"]),
-  // Rcpp::as<arma::Col<double> >(mosquito_pars["EIP"]),
-  // Rcpp::as<size_t>(mosquito_pars["maxEIP"]),
-  // Rcpp::as<double>(mosquito_pars["p"]),
-  // Rcpp::as<double>(mosquito_pars["f"]),
-  // Rcpp::as<double>(mosquito_pars["Q"]),
-  // Rcpp::as<double>(mosquito_pars["v"]),
-  // Rcpp::as<arma::Row<double> >(mosquito_pars["M"]),
-  // Rcpp::as<arma::Row<double> >(mosquito_pars["Y"]),
-  // Rcpp::as<arma::Row<double> >(mosquito_pars["Z"]),
-  // this
+  mosquitos(mosquito::factory(mosquito_pars,this)),
   patches(patch_pars.size()),
 
   /* construct utility classes */
@@ -82,6 +69,55 @@ tile::tile(const uint_least32_t seed,
 
     after these are all done, then we can initialize vaccinations (if present)
   */
+
+  /* construct patches */
+  Progress pp(patch_pars.size(), true);
+  std::cout << "begin constructing patches" << std::endl;
+  for(size_t i=0; i<patch_pars.size(); i++){
+    Rcpp::List p_par = Rcpp::as<Rcpp::List>(patch_pars[i]);
+    patches.emplace_back(std::make_unique<patch>(p_par,this));
+    pp.increment();
+  }
+
+  /* construct human population */
+  Progress ph(human_pars.size(), true);
+  std::cout << "begin constructing human population" << std::endl;
+  for(size_t i=0; i<human_pars.size(); i++){
+    Rcpp::List h_par = Rcpp::as<Rcpp::List>(human_pars[i]);
+    humans.emplace_back(human::factory(h_par,this));
+    ph.increment();
+  }
+
+  /* set up logging */
+  std::cout << "begin initializing logging streams" << std::endl;
+  for(size_t i=0; i<log_streams.size(); i++){
+    Rcpp::List log = Rcpp::as<Rcpp::List>(log_streams[i]);
+    loggerPtr->open(
+      Rcpp::as<std::string>(log["outfile"]),
+      Rcpp::as<std::string>(log["key"])
+    );
+  }
+
+  /* initialize vaccinations */
+  std::cout << "begin initializing vaccinations" << std::endl;
+  if(vaxx_events.size() > 0){
+
+    Progress pv(vaxx_events.size(), true);
+    for(size_t i=0; i<vaxx_events.size(); i++){
+
+      /* this vaccination 'packet' */
+      Rcpp::List vaxx = Rcpp::as<Rcpp::List>(vaxx_events[i]);
+
+      /* get its intended recipient */
+      u_int id = Rcpp::as<u_int>(vaxx["id"]);
+      auto h = std::find_if(humans.begin(), humans.end(), [id](const std::unique_ptr<human>& hh){
+        return hh->get_id() == id;
+      });
+      h->get()->addVaxx2Q(vaxx);
+
+      pv.increment();
+    }
+  }
 
   #ifdef DEBUG_MACRO
   std::cout << "tile born at " << this << std::endl;

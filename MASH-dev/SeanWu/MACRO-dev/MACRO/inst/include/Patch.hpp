@@ -28,9 +28,12 @@ class tile;
 class patch {
 public:
 
-                        patch(const size_t id_, const arma::Row<double>& move_,
-                              const double bWeightZoo_, const double bWeightZootox_,
-                              const bool reservoir_, const double res_EIR_, tile* tileP_);
+                        // patch(const size_t id_, const arma::Row<double>& move_,
+                        //       const double bWeightZoo_, const double bWeightZootox_,
+                        //       const bool reservoir_, const double res_EIR_, tile* tileP_);
+                        patch(const Rcpp::List& patch_pars,
+                          tile* tileP_
+                        );
                         ~patch();
 
   /* accessors */

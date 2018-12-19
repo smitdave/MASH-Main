@@ -2,9 +2,9 @@
 % Please edit documentation in R/Human-PfSI.R
 \name{pevaxx_pfsi_conpars}
 \alias{pevaxx_pfsi_conpars}
-\title{Human-PfSI: Make parameters for a PE vaccination event}
+\title{Human-PfSI: Make parameters for a vaccination event}
 \usage{
-pevaxx_pfsi_conpars(id, t, treat)
+pevaxx_pfsi_conpars(id, t, treat, type)
 }
 \arguments{
 \item{id}{an integer id of a human to recieve vaccination}
@@ -14,7 +14,7 @@ pevaxx_pfsi_conpars(id, t, treat)
 \item{treat}{a logical vector indicating if treatment is to accompany vaccinations}
 }
 \description{
-Make a parameter list for a PE (sporozoite-blocking) vaccination event.
+Make a parameter list for a PE (sporozoite-blocking) vaccination event or GS (gametocyte-killing) vaccination event.
 The entire parameters list for the population will be a list of size equal
 to the number of people to recieve vaccination, each element of which is the output
 of this function.

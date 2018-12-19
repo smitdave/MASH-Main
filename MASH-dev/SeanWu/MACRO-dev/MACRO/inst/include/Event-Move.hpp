@@ -6,6 +6,7 @@
  *  /_/  /_/_/  |_\____/_/ |_|\____/
  *
  *  Events to handle human movement (trips)
+ *  Requires logging stream 'human_move'
  *
  *  Sean Wu
  *  November 2018

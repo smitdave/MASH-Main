@@ -17,6 +17,9 @@
 /* Rcpp */
 #include <RcppArmadillo.h>
 
+/* RcppProgress */
+#include "progress.hpp"
+
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
@@ -57,7 +60,9 @@ public:
   tile(const uint_least32_t seed,
        const Rcpp::List& human_pars,
        const Rcpp::List& mosquito_pars,
-       const Rcpp::List& patch_pars
+       const Rcpp::List& patch_pars,
+       const Rcpp::List& log_streams,
+       const Rcpp::List& vaxx_events
   );
   ~tile();
 

@@ -44,6 +44,7 @@ human_pfsi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bwe
   }
 
   list(
+    model = "PfSI",
     id = as.integer(id),
     home_patch_id = as.integer(home_patch_id),
     trip_duration = as.numeric(trip_duration),
@@ -93,9 +94,9 @@ check_human_pfsi_conpars <- function(par){
 #   PfSI vaccination events
 ################################################################################
 
-#' Human-PfSI: Make parameters for a PE vaccination event
+#' Human-PfSI: Make parameters for a vaccination event
 #'
-#' Make a parameter list for a PE (sporozoite-blocking) vaccination event.
+#' Make a parameter list for a PE (sporozoite-blocking) vaccination event or GS (gametocyte-killing) vaccination event.
 #' The entire parameters list for the population will be a list of size equal
 #' to the number of people to recieve vaccination, each element of which is the output
 #' of this function.
@@ -105,7 +106,7 @@ check_human_pfsi_conpars <- function(par){
 #' @param treat a logical vector indicating if treatment is to accompany vaccinations
 #'
 #' @export
-pevaxx_pfsi_conpars <- function(id,t,treat){
+pevaxx_pfsi_conpars <- function(id,t,treat,type){
 
   if(!is.numeric(t) | any(t < 0)){
     stop("time of pevaxx event must be a vector of positive floats")
@@ -123,10 +124,15 @@ pevaxx_pfsi_conpars <- function(id,t,treat){
     stop("length of 't' (time of vaxx event vector) must be same as 'treat' (treatment to accompany vaxx vector)")
   }
 
+  if(!(type %in% c("PE","GS"))){
+    stop("vaccine 'type' must be PE (sporozoite-blocking) or GS (gametocyte-killing)")
+  }
+
   list(
     id = as.integer(id),
     n = length(t),
     tEvent = as.numeric(t),
-    treat = as.logical(treat)
+    treat = as.logical(treat),
+    type = as.character(type)
   )
 }

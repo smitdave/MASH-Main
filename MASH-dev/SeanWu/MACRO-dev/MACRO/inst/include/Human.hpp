@@ -14,6 +14,9 @@
 #ifndef Human_hpp
 #define Human_hpp
 
+/* Rcpp includes */
+#include <RcppArmadillo.h>
+
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
@@ -37,6 +40,7 @@ class patch;
 class human {
 public:
 
+  /* constructor & destructor */
   human(const int id_, const size_t home_patch_id_,
         const double trip_duration_, const double trip_frequency_,
         const double bweight_, tile* tileP_) :
@@ -52,6 +56,9 @@ public:
 
   };
   virtual ~human() = 0;
+
+  /* factory method */
+  static std::unique_ptr<human> factory(const Rcpp::List& human_pars, tile* tileP_);
 
   /* move operators */
   human(human&&);
@@ -81,9 +88,6 @@ public:
 
   tile*                 get_tile();
 
-  /* initialize movement */
-  virtual void          initialize_movement() = 0;
-
   /* biting */
   void                  decrement_bweight();
   void                  accumulate_bweight();
@@ -94,8 +98,10 @@ public:
   void                  fireEvent();
   void                  printEventQ();
 
-  /* simulation related functions */
+  /* interface */
+  virtual void          initialize_movement() = 0;
   virtual void          simulate() = 0;
+  virtual void          addVaxx2Q(const Rcpp::List& vaxx) = 0;
 
 protected:
 
