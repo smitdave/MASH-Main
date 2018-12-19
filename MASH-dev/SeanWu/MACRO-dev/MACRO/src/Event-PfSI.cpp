@@ -286,7 +286,7 @@ e_pfsi_pevaxx::~e_pfsi_pevaxx(){
 
 
 /* ################################################################################
- * PE vaccination (sporozoite-blocking vaccination); tag: PfSI_PEVaxx
+ * PE vaccination (sporozoite-blocking vaccination); tag: PfSI_PEWane
 ################################################################################ */
 
 /* constructor */

@@ -6,6 +6,7 @@
  *  /_/  /_/_/  |_\____/_/ |_|\____/
  *
  *  PfSI Event class
+ *  Requires logging stream 'human_inf'
  *
  *  Sean Wu
  *  November 2018

@@ -14,9 +14,15 @@
 #ifndef Mosquito_hpp
 #define Mosquito_hpp
 
+/* Rcpp includes */
+#include <RcppArmadillo.h>
+
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
+
+/* to return a base-class pointer from the factory */
+#include <memory>
 
 /* forward declarations */
 class tile;
@@ -26,6 +32,7 @@ class tile;
 class mosquito {
 public:
 
+  /* constructor & destructor */
   mosquito(tile* tileP_) : tileP(tileP_) {
 
     #ifdef DEBUG_MACRO
@@ -42,6 +49,9 @@ public:
   /* copy operators */
   mosquito(mosquito&) = delete;
   mosquito& operator=(mosquito&) = delete;
+
+  /* factory method */
+  static std::unique_ptr<mosquito> factory(const Rcpp::List& mosquito_pars, tile* tileP_);
 
   /* interface */
   virtual void simulate() = 0;

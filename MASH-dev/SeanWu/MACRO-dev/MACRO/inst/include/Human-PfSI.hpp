@@ -14,6 +14,9 @@
 #ifndef Human_PfSI_hpp
 #define Human_PfSI_hpp
 
+/* Rcpp includes */
+#include <RcppArmadillo.h>
+
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
@@ -26,11 +29,12 @@
 
 class human_pfsi : public human {
 public:
-  human_pfsi(const int id_, const size_t home_patch_id_,
-        const double trip_duration_, const double trip_frequency_,
-        const double bweight_, tile* tileP_,
-        /* human_pfsi specific arguments */
-        const double age_, const bool inf_, const bool chx_);
+  // human_pfsi(const int id_, const size_t home_patch_id_,
+  //       const double trip_duration_, const double trip_frequency_,
+  //       const double bweight_, tile* tileP_,
+  //       /* human_pfsi specific arguments */
+  //       const double age_, const bool inf_, const bool chx_);
+  human_pfsi(const Rcpp::List& human_pars, tile* tileP_);
   ~human_pfsi();
 
   /* move operators */
@@ -65,6 +69,9 @@ public:
 
   /* initialize movement */
   virtual void    initialize_movement();
+
+  /* other implementation */
+  virtual void    addVaxx2Q(const Rcpp::List& vaxx);
 
 private:
 

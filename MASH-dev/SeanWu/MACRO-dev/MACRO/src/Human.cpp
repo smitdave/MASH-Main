@@ -11,10 +11,15 @@
  *  November 2018
  */
 
-#include "Human.hpp"
 #include "Event.hpp"
+#include "Human.hpp"
 #include "Tile.hpp"
 #include "Patch.hpp"
+
+
+/* ################################################################################
+ * boilerplate (constructor & destructor)
+################################################################################ */
 
 /* define virtual destructor is ok */
 human::~human(){
@@ -22,14 +27,37 @@ human::~human(){
   #ifdef MACRO_DEBUG
   std::cout << "human " << id << " dying at " << this << std::endl;
   #endif
-  
+
 };
 
 /* move operators */
 human::human(human&&) = default;
 human& human::operator=(human&&) = default;
 
-/* event queue related functions */
+
+/* ################################################################################
+ * derived class factory
+################################################################################ */
+
+#include "Human-PfSI.hpp"
+
+std::unique_ptr<human> human::factory(const Rcpp::List& human_pars, tile* tileP_){
+
+  /* check what model we need to make */
+  std::string model(Rcpp::as<std::string>(human_pars["model"]));
+
+  /* make a derived class */
+  if(model.compare("PfSI") == 0){
+    return std::make_unique<human_pfsi>(human_pars,tileP_);
+  } else {
+    Rcpp::stop("invalid 'model' field in 'human_pars'\n");
+  }
+};
+
+
+/* ################################################################################
+ * event queue
+################################################################################ */
 
 /* add an event to my queue */
 void human::addEvent2Q(event&& e){
@@ -65,7 +93,10 @@ void human::printEventQ(){
 };
 
 
-/* movement */
+/* ################################################################################
+ * movement
+################################################################################ */
+
 patch* human::get_patch(){
   return tileP->get_patch(patch_id);
 };
@@ -75,7 +106,9 @@ patch* human::get_home_patch(){
 };
 
 
-/* biting */
+/* ################################################################################
+ * biting
+################################################################################ */
 
 /* decrement the biting weight where i am */
 void human::decrement_bweight(){
