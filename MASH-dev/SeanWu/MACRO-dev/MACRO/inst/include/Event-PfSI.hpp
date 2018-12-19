@@ -15,14 +15,17 @@
 #ifndef Event_PfSI_hpp
 #define Event_PfSI_hpp
 
-/* standard includes */
-#include <stdio.h>
+/* Rcpp includes */
+#include <RcppArmadillo.h>
+
+/* C++ includes */
 #include <functional>
 
 /* base class include */
 #include "Event.hpp"
 
 class human_pfsi;
+class parameters;
 
 
 /* ################################################################################
@@ -124,5 +127,6 @@ public:
   /* destructor */
   ~e_pfsi_gswane();
 };
+
 
 #endif /* Event_PfSI_hpp */

@@ -187,7 +187,7 @@ void human_pfsi::initialize_movement(){
  * vaccination
 ################################################################################ */
 
-void human_pfsi::addVaxx2Q(const Rcpp::List &vaxx){
+void human_pfsi::addVaxx2Q(const Rcpp::List& vaxx){
 
   /* pull out information */
   std::string vaxx_t(Rcpp::as<std::string>(vaxx["type"]));

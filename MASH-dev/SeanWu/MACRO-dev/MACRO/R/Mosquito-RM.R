@@ -33,10 +33,10 @@
 #' @param Z initial conditions of infectious female mosquito populations (N patches)
 #'
 #' @export
-human_pfsi_conpars <- function(
+mosquito_rm_conpars <- function(
   N, lambda, psi,
   EIP,
-  p, f, Q, v,
+  p = 0.9, f = 0.3, Q = 0.9, v = 20,
   M, Y, Z)
 {
 

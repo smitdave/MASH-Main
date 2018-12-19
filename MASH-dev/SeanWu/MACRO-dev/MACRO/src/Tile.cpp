@@ -37,6 +37,7 @@ tile::tile(const uint_least32_t seed,
      const Rcpp::List& human_pars,
      const Rcpp::List& mosquito_pars,
      const Rcpp::List& patch_pars,
+     const Rcpp::List& model_pars,
      const Rcpp::List& log_streams,
      const Rcpp::List& vaxx_events
 ) :
@@ -62,6 +63,9 @@ tile::tile(const uint_least32_t seed,
     2. logger
     3. parameters
 
+    now the body of the construtor fires up:
+    1. we need to init parameters object (humans and patches need their info)
+
     we dont do anything with the model state pointers yet. those get done in the constructor body
     1. initialize patches (this is easy; no inheritance)
     2. initialize mosquito
@@ -69,6 +73,9 @@ tile::tile(const uint_least32_t seed,
 
     after these are all done, then we can initialize vaccinations (if present)
   */
+
+  /* initialize parameters */
+  parametersPtr->init_params(model_pars);
 
   /* construct patches */
   Progress pp(patch_pars.size(), true);
@@ -155,6 +162,9 @@ mosquito* tile::get_mosquitos(){
 /* simulation */
 void tile::simulation(const u_int tmax){
 
+  std::cout << "begin simulation" << std::endl;
+  Progress ps(tmax, true);
+
   /* main simulation loop */
   while(tnow < tmax){
 
@@ -178,6 +188,15 @@ void tile::simulation(const u_int tmax){
 
     /* increment time */
     tnow++;
+    ps.increment();
+
+    /* check abort */
+    if(Progress::check_abort()){
+      loggerPtr->close();
+      Rcpp::stop("user abort detected: exiting program");
+    }
   }
+
+  std::cout << "end simulation" << std::endl;
 
 }
