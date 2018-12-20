@@ -10,7 +10,7 @@
  *  Sean Wu
  *  November 2018
  */
-// #include "Debug.hpp"
+
 /* state class includes */
 #include "Tile.hpp"
 #include "Patch.hpp"
@@ -28,9 +28,17 @@
 /*
   TO-DO:
   * check that the 'normalize_kappa' in Patch.cpp is right
-  * set up factory method for Mosquito
-  * set up factory method for Human
+  * make event's destructor pure virtual and check no bugs
+  *     > appears not possible? then the comparison operator doesn't work.
+  DONE:
+  * DONE! set up factory method for Mosquito
+  * DONE! set up factory method for Human
 */
+
+
+/* ################################################################################
+ * class boilerplate
+################################################################################ */
 
 /* constructor */
 tile::tile(const uint_least32_t seed,
@@ -46,9 +54,7 @@ tile::tile(const uint_least32_t seed,
   tnow(0),
 
   /* state space classes */
-  // humans(human_pars.size()),
   mosquitos(mosquito::factory(mosquito_pars,this)),
-  // patches(patch_pars.size()),
 
   /* construct utility classes */
   prngPtr(std::make_unique<prng>(seed)),
@@ -56,27 +62,9 @@ tile::tile(const uint_least32_t seed,
   parametersPtr(std::make_unique<parameters>(50))
 
 {
-  /*
-  what needs to happen:
-    utility classes are constructed in the member initializer list
-    1. PRNG
-    2. logger
-    3. parameters
-
-    now the body of the construtor fires up:
-    1. we need to init parameters object (humans and patches need their info)
-
-    we dont do anything with the model state pointers yet. those get done in the constructor body
-    1. initialize patches (this is easy; no inheritance)
-    2. initialize mosquito
-    3. initialize humans
-
-    after these are all done, then we can initialize vaccinations (if present)
-  */
 
   /* initialize parameters */
   parametersPtr->init_params(model_pars);
-  // std::cout << "test getting a par: "
 
   /* set up logging */
   std::cout << "begin initializing logging streams" << std::endl;
@@ -89,44 +77,25 @@ tile::tile(const uint_least32_t seed,
     );
   }
 
-
   /* construct patches */
-  // patches.clear();
-  // Progress pp(patch_pars.size(), true);
   std::cout << "begin constructing patches" << std::endl;
+  patches.reserve(patch_pars.size());
   for(size_t i=0; i<patch_pars.size(); i++){
     Rcpp::List p_par = Rcpp::as<Rcpp::List>(patch_pars[i]);
     patches.emplace_back(std::make_unique<patch>(p_par,this));
-    // pp.increment();
   }
 
-  // for(auto const& p : patches){
-  //   p->print();
-  // }
-  std::cout << "print patch" << std::endl;
-  patches.at(0).get()->print();
-
   /* construct human population */
-  // Progress ph(human_pars.size(), true);
   std::cout << "begin constructing human population" << std::endl;
-  // std::cout << "human pop size: " << human_pars.size() << std::endl;
+  humans.reserve(human_pars.size());
   for(size_t i=0; i<human_pars.size(); i++){
     Rcpp::List h_par = Rcpp::as<Rcpp::List>(human_pars[i]);
     humans.emplace_back(human::factory(h_par,this));
-    // ph.increment();
-    // std::cout << " next human --------- " << std::endl;
   }
-  //
-  // std::cout << "print the eventQ of all humans" << std::endl;
-  // for(auto& h : humans){
-  //   h->printEventQ();
-  // }
 
   /* initialize vaccinations */
   std::cout << "begin initializing vaccinations" << std::endl;
   if(vaxx_events.size() > 0){
-
-    // Progress pv(vaxx_events.size(), true);
     for(size_t i=0; i<vaxx_events.size(); i++){
 
       /* this vaccination 'packet' */
@@ -139,7 +108,6 @@ tile::tile(const uint_least32_t seed,
       });
       h->get()->addVaxx2Q(vaxx);
 
-      // pv.increment();
     }
   }
 
@@ -165,9 +133,11 @@ tile::~tile(){
 };
 
 
-/* accessors */
+/* ################################################################################
+ * accessors
+################################################################################ */
+
 patch* tile::get_patch(size_t id){
-  // return patches.at(id).get();
   auto h = std::find_if(patches.begin(), patches.end(), [id](const patchP& pp){
     return pp->get_id() == id;
   });
@@ -186,7 +156,10 @@ mosquito* tile::get_mosquitos(){
 }
 
 
-/* simulation */
+/* ################################################################################
+ * simulation algorithm
+################################################################################ */
+
 void tile::simulation(const u_int tmax){
 
   /* initialize logging */
@@ -197,26 +170,21 @@ void tile::simulation(const u_int tmax){
 
   /* main simulation loop */
   while(tnow < tmax){
-    // std::cout << "tnow: " << tnow << std::endl;
 
     /* simulate mosquitos */
-    // std::cout << "sim mosquitos" << std::endl;
     mosquitos->simulate();
 
     /* clear kappa so humans can update their personal contributions when they move */
-    // std::cout << "clear kappa" << std::endl;
     for(auto& p : patches){
       p->zero_kappa();
     }
 
     /* sim humans (they will accumulate kappa in their simulation method) */
-    // std::cout << "sim humans" << std::endl;
     for(auto& h : humans){
       h->simulate();
     }
 
     /* normalize kappa */
-    // std::cout << "normalize kappa" << std::endl;
     for(auto& p : patches){
       p->normalize_kappa();
     }
@@ -232,11 +200,5 @@ void tile::simulation(const u_int tmax){
     }
   }
 
-  // std::cout << "see everyone's event queue" << std::endl;
-  // for(auto& h : humans){
-  //   h->printEventQ();
-  // }
-
   std::cout << "end simulation" << std::endl;
-
 }

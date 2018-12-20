@@ -10,7 +10,7 @@
  *  Sean Wu
  *  November 2018
  */
-// #include "Debug.hpp"
+
 /* PfSI includes */
 #include "Human-PfSI.hpp"
 #include "Event-PfSI.hpp"
@@ -32,8 +32,7 @@
 
 
 /* ################################################################################
- * constructor & destructor:
- * note: logging in PfSI is of form: (id,time,state)
+ * class boilerplate
 ################################################################################ */
 
 /* constructor */
@@ -58,8 +57,6 @@ human_pfsi::human_pfsi(
   b = tileP->get_params()->get_param<double>("Pf_b");
   c = tileP->get_params()->get_param<double>("Pf_c");
 
-  // std::cout << "b: " << b << " c: " << c << " kappa: " << kappa << std::endl;
-
   /* initialize the biting weight where i am at time = 0 */
   accumulate_bweight();
 
@@ -75,21 +72,14 @@ human_pfsi::human_pfsi(
 
   /* if infected, queue the initial event */
   if(infection_t0){
-    std::cout << "adding infection " << std::endl;
     addEvent2Q(e_pfsi_infect(0.0,this));
-
   } else {
-    // std::cout << "no infection; logging event " << std::endl;
-    /* log this event */
     u_int tnow = tileP->get_tnow();
-    // std::cout << "tnow: " << tnow << std::endl;
     tileP->get_logger()->get_stream("human_inf") << id << "," << tnow << "," << "S" << "\n";
-
   }
 
   /* chemoprophylaxis: queue up when protection expires */
   if(chemoprophylaxis){
-    // std::cout << "adding chemoprophylaxis " << std::endl;
     addEvent2Q(e_pfsi_endchx(0.0,this));
   }
 
@@ -117,22 +107,17 @@ human_pfsi& human_pfsi::operator=(human_pfsi&&) = default;
 void human_pfsi::simulate(){
 
   /* fire all events that occur on this time step */
-  // std::cout << "human " << id << " is firing event queue! " << std::endl;
   while(eventQ.size() > 0 && eventQ.front()->tEvent < tileP->get_tnow()){
-    // std::cout << "--- firing event: " << eventQ.front()->tag << " --- at event time: " << eventQ.front()->tEvent << std::endl;
     fireEvent();
   }
 
   /* update kappa (my infectiousness to mosquitos) */
-  // std::cout << "update_kappa" << std::endl;
   update_kappa();
 
   /* update my EIR */
-  // std::cout << "update_EIR" << std::endl;
   update_EIR();
 
   /* queue bites */
-  // std::cout << "queue_bites" << std::endl;
   queue_bites();
 };
 
@@ -184,45 +169,29 @@ void human_pfsi::update_kappa(){
 
   double inf = static_cast<double>(infection);
   kappa = inf * c * bweight;
-  // std::cout << "inf: " << inf << ", c: " << c << ", bweight: " << bweight << std::endl;
-  // std::cout << "kappa again: " << kappa << std::endl;
-  // std::cout << "im trying to access patch: " << patch_id << std::endl;
   tileP->get_patch(patch_id)->accumulate_kappa(kappa);
-  // std::cout << "exiting update_kappa" << std::endl;
 };
 
 /* EIR: rate I am getting bitten by mosquitos right now */
 void human_pfsi::update_EIR(){
-
-  // std::cout << "update EIR, im in patch: " << patch_id << std::endl;
 
   /* check if in a reservoir */
   if(tileP->get_patch(patch_id)->get_reservoir()){
     EIR = tileP->get_patch(patch_id)->get_res_EIR();
   } else {
     double beta = tileP->get_mosquitos()->get_beta(patch_id);
-    // std::cout << "beta here: " << beta << std::endl;
-    // std::cout << "bWeightHuman here: " << tileP->get_patch(patch_id)->get_bWeightHuman() << std::endl;
     EIR = std::fmax(0.0,beta * (bweight / tileP->get_patch(patch_id)->get_bWeightHuman()));
-    // std::cout << "my EIR: " << EIR << std::endl;
   }
-
-  // std::cout << "EIR " << EIR << std::endl;
 
 };
 
 /* queue bites for tomorrow based on my EIR */
 void human_pfsi::queue_bites(){
 
-  // std::cout << "queue_bites" << std::endl;
-
   int nBites = tileP->get_prng()->get_rpois(EIR);
-
-  // std::cout << "nBites: " << nBites << std::endl;
 
   if(nBites > 0){
     double tnow = tileP->get_tnow();
-    // std::cout << " ----------------------------- assigning bites, tnow: " << tnow << " -----------------------------  " << std::endl;
     for(size_t i=0; i<nBites; i++){
       addEvent2Q(e_pfsi_bite(tnow,this));
     }

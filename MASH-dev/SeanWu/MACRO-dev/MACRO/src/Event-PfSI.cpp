@@ -10,7 +10,7 @@
  *  Sean Wu
  *  November 2018
  */
-// #include "Debug.hpp"
+
 /* PfSI includes */
 #include "Event-PfSI.hpp"
 #include "SimBite-PfSI.hpp"
@@ -34,11 +34,9 @@
 /* constructor */
 e_pfsi_infect::e_pfsi_infect(double tEvent_, human_pfsi* h):
   event("PfSI_infection",tEvent_,[tEvent_,h](){
-    // std::cout << "PfSI_infection firing at " << tEvent_ << " in human " << h->get_id() << std::endl;
-    // std::cout << "inf? " << h->get_infection() << " chx? " << h->get_chemoprophylaxis() << std::endl;
     /* no superinfection, and chx blocks new infections */
     if(!h->get_infection() && !h->get_chemoprophylaxis()){
-      // std::cout << "infecting the human" << std::endl;
+
       /* i'm not infected */
       h->set_infection(true);
 

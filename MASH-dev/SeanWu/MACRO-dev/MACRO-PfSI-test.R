@@ -69,7 +69,7 @@ check_human_pfsi_conpars(human_pars)
 # source("/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/SeanWu/MACRO-dev/MACRO-PfSI-test.R")
 
 run_macro(seed = seed,
-          tmax = 20L,
+          tmax = 50L,
           human_pars = human_pars,
           mosquito_pars = mosy_pars,
           patch_pars = patch_pars,
