@@ -25,12 +25,20 @@ patchPar = lapply(X = 1:n,FUN = function(i){
   list(
     bWeightZoo = 0,
     bWeightZootox = 0,
-    travelWeight = moveMat[i,]
+    travelWeight = moveMat[i,],
+    reservoir = FALSE,
+    resEIR = NULL
   )
 })
 
+
+
+
 # MOSQUITO PARAMTERS
-mosquitoPar = list(model="RM", M=rep(450),EIP = rep(11,365),p=0.9, f=0.3, Q=0.9, v=20, psi = diag(n))
+mosquitoPar = list(model="RM", M=rep(450),EIP = rep(11,365),
+                   Y = 0, Z = 0,
+                   p=0.9, f=0.3, Q=0.9, v=20, psi = diag(n))
+
 
 # HUMAN PARAMETERS
 # Number of humans in each patch
@@ -52,7 +60,9 @@ humanPar = lapply(X = 1:n_humans,function(i){
     homeHouseID = home_id[i],
     homePatchID = patch_id[i],
     age = human_ages[i],
-    bWeight = human_bWeight[i]
+    bWeight = human_bWeight[i],
+    tripDuration = c(1),# this is if we use TaR matrix 1
+    tripFrequency = 1/1000000
 
   )
 })
@@ -61,7 +71,12 @@ humanPar = lapply(X = 1:n_humans,function(i){
 pfpr = rep(0.9,n)
 
 # GENERATE TILE
-tile = MacroTile$new(nPatch = n,AquaPar = aquaPar,PatchPar = patchPar,MosquitoPar = mosquitoPar,HumanPar = humanPar,directory = directory)
+tile = MacroTile$new(nPatch = n,
+                     AquaPar = aquaPar,
+                     PatchPar = patchPar,
+                     MosquitoPar = mosquitoPar,
+                     HumanPar = humanPar,
+                     directory = directory)
 
 # RUN AN ENSEMBLE OF SIMULATIONS
 nrun = 100
