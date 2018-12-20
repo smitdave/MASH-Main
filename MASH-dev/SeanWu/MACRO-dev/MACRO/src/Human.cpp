@@ -69,10 +69,12 @@ void human::addEvent2Q(event&& e){
 
 /* remove future queued events */
 void human::rmTagFromQ(const std::string &tag){
+  std::cout << "calling rmTagFromQ with tag " << tag << std::endl;
+  printEventQ();
   eventQ.erase(std::remove_if(eventQ.begin(),eventQ.end(),
                               [tag](eventP& e){
                                 return(tag.compare(e->tag)==0);
-                              }));
+                              }),eventQ.end());
 };
 
 /* fire the first event */

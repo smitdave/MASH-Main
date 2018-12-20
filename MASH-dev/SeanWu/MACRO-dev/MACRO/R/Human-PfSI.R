@@ -20,7 +20,8 @@
 #' Human-PfSI: Individual Constructor Parameters
 #'
 #' Generates a single named list with parameters to construct a single
-#' 'human_pfsi' object (see inst/include/Human-PfSI.hpp for constructor parameters)
+#' 'human_pfsi' object (see inst/include/Human-PfSI.hpp for constructor parameters).
+#' Be aware that all 'id' related fields should be considered 0-indexed (especially the home patch).
 #'
 #' @param id integer id of this person
 #' @param home_patch_id the id of their home patch
@@ -35,7 +36,7 @@
 human_pfsi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bweight,age,inf,chx){
 
   # check pars
-  if(inf & chx){
+  if(all(inf,chx)){
     stop(paste0("human: ",id," cannot both have active infection and be under chemoprophylactic protection\n"))
   }
 

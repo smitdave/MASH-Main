@@ -15,8 +15,6 @@
 #ifndef Event_hpp
 #define Event_hpp
 
-#include "Debug.hpp"
-
 /* standard includes */
 #include <stdio.h>
 #include <iostream>

@@ -25,8 +25,8 @@ public:
     std::cout << "mosquitoRM being born at " << this << std::endl;
 
     /* compute P */
-    unsigned int i = 0;
-    std::generate(P.begin(),P.end(),[&](){ return std::pow(p,++i); });
+    // unsigned int i = 0;
+    std::generate(P.begin(),P.end(),[this->p,i = 0]() mutable { return std::pow(p,++i); });
     
     /* compute ZZ_shift */
     ZZ_shift.fill(0);

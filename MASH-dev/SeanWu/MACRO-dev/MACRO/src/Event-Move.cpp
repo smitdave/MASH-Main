@@ -10,7 +10,7 @@
  *  Sean Wu
  *  November 2018
  */
-
+// #include "Debug.hpp"
 /* model includes */
 #include "Human.hpp"
 #include "Tile.hpp"

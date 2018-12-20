@@ -26,5 +26,6 @@ human_pfsi_conpars(id, home_patch_id, trip_duration, trip_frequency,
 }
 \description{
 Generates a single named list with parameters to construct a single
-'human_pfsi' object (see inst/include/Human-PfSI.hpp for constructor parameters)
+'human_pfsi' object (see inst/include/Human-PfSI.hpp for constructor parameters).
+Be aware that all 'id' related fields should be considered 0-indexed (especially the home patch).
 }

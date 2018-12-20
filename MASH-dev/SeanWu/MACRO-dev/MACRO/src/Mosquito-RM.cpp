@@ -10,7 +10,7 @@
  *  Sean Wu
  *  November 2018
  */
-
+// #include "Debug.hpp"
 /* movement model */
 #include "Mosquito-RM.hpp"
 
@@ -191,10 +191,10 @@ void mosquito_rm::initialize_logging(){
 
   /* format: patch,1,2,3,... */
   tileP->get_logger()->get_stream("mosquito") << "time,state,patch,";
-  for(size_t i=0; i<patches.size()-1; i++){
+  for(size_t i=0; i<N-1; i++){
     tileP->get_logger()->get_stream("mosquito") << patches[i] << ",";
   }
-  tileP->get_logger()->get_stream("mosquito") << patches.back() << "\n";
+  tileP->get_logger()->get_stream("mosquito") << N-1 << "\n";
 
   /* write M */
   tileP->get_logger()->get_stream("mosquito") << tnow << ",M,";
