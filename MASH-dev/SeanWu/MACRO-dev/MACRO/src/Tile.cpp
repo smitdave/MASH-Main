@@ -232,10 +232,10 @@ void tile::simulation(const u_int tmax){
     }
   }
 
-  std::cout << "see everyone's event queue" << std::endl;
-  for(auto& h : humans){
-    h->printEventQ();
-  }
+  // std::cout << "see everyone's event queue" << std::endl;
+  // for(auto& h : humans){
+  //   h->printEventQ();
+  // }
 
   std::cout << "end simulation" << std::endl;
 

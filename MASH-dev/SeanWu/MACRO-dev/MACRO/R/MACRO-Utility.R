@@ -36,15 +36,25 @@ match.call.defaults <- function(...) {
 #'
 #' @param val numeric or integer value
 #' @param name name of the parameter
+#' @param fixtype if \code{NULL} the function tries to figure out if you want this parameter to be an \code{int} or a \code{double} in C++, otherwise use the provided input
 #'
 #' @export
-pars_obj <- function(val,name){
+pars_obj <- function(val,name,fixtype = NULL){
 
   type <- NULL
-  if(val %% 1 == 0){
-    type <- 0L # integer flag
+
+  if(is.null(fixtype)){
+
+    if(val %% 1 == 0){
+      type <- 0L # integer flag
+    } else {
+      type <- 1L # double flag
+    }
+
   } else {
-    type <- 1L # double flag
+
+    type <- fixtype
+
   }
 
   list(
