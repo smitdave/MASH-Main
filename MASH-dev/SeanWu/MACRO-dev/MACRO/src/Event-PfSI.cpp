@@ -41,7 +41,7 @@ e_pfsi_infect::e_pfsi_infect(double tEvent_, human_pfsi* h):
       h->set_infection(true);
 
       /* log this event */
-      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "I" << "\n";
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",I," << h->get_patch_id() << "\n";
 
       /* queue clearance event */
       double tEnd = tEvent_ + pfsi_ttClearPf(h);
@@ -88,7 +88,7 @@ e_pfsi_recover::e_pfsi_recover(double tEvent_, human_pfsi* h):
       h->set_infection(false);
 
       /* log this event */
-      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "S" << "\n";
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",S," << h->get_patch_id() << "\n";
 
     }
 
@@ -120,7 +120,7 @@ e_pfsi_fever::e_pfsi_fever(double tEvent_, human_pfsi* h):
   event("PfSI_fever",tEvent_,[tEvent_,h](){
 
     /* log this event */
-    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "F" << "\n";
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",F," << h->get_patch_id() << "\n";
 
     /* if i get a fever, i'll seek treatment with this probability */
     double TreatPf = h->get_tile()->get_params()->get_param<double>("TreatPf");
@@ -163,7 +163,7 @@ e_pfsi_treatment::e_pfsi_treatment(double tEvent_, human_pfsi* h):
     h->set_chemoprophylaxis(true);
 
     /* log this event */
-    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "P" << "\n";
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",P," << h->get_patch_id() << "\n";
 
     /* initiate a period of protection from chemoprophylaxis */
     double tSusceptible = tEvent_ + pfsi_ttSusceptiblePf(h);
@@ -200,7 +200,7 @@ e_pfsi_endchx::e_pfsi_endchx(double tEvent_, human_pfsi* h):
     h->set_chemoprophylaxis(false);
 
     /* log this event */
-    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "P2S" << "\n";
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",P2S," << h->get_patch_id() << "\n";
 
   })
 {
@@ -241,7 +241,7 @@ e_pfsi_pevaxx::e_pfsi_pevaxx(double tEvent_, const bool treat, human_pfsi* h):
       h->rmTagFromQ("PfSI_PEWane");
 
       /* log this event */
-      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "PEvaxx" << "\n";
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",PEvaxx," << h->get_patch_id() << "\n";
 
       /* queue the vaxx wane event */
       double tWane = tEvent_ + pfsi_ttPEWanePf(h);
@@ -258,7 +258,7 @@ e_pfsi_pevaxx::e_pfsi_pevaxx(double tEvent_, const bool treat, human_pfsi* h):
       h->set_chemoprophylaxis(true);
 
       /* log this event */
-      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "P" << "\n";
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",P," << h->get_patch_id() << "\n";
 
       /* initiate a period of protection from chemoprophylaxis */
       double tSusceptible = tEvent_ + pfsi_ttSusceptiblePf(h);
@@ -297,7 +297,7 @@ e_pfsi_pewane::e_pfsi_pewane(double tEvent_, human_pfsi* h):
     h->set_b(b);
 
     /* log this event */
-    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "PEwane" << "\n";
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",PEwane," << h->get_patch_id() << "\n";
 
   })
 {
@@ -338,7 +338,7 @@ e_pfsi_gsvaxx::e_pfsi_gsvaxx(double tEvent_, const bool treat, human_pfsi* h):
       h->rmTagFromQ("PfSI_GSWane");
 
       /* log this event */
-      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "GSvaxx" << "\n";
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",GSvaxx," << h->get_patch_id() << "\n";
 
       /* queue the vaxx wane event */
       double tWane = tEvent_ + pfsi_ttGSWanePf(h);
@@ -355,7 +355,7 @@ e_pfsi_gsvaxx::e_pfsi_gsvaxx(double tEvent_, const bool treat, human_pfsi* h):
       h->set_chemoprophylaxis(true);
 
       /* log this event */
-      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "P" << "\n";
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",P," << h->get_patch_id() << "\n";
 
       /* initiate a period of protection from chemoprophylaxis */
       double tSusceptible = tEvent_ + pfsi_ttSusceptiblePf(h);
@@ -394,7 +394,7 @@ e_pfsi_gswane::e_pfsi_gswane(double tEvent_, human_pfsi* h):
     h->set_c(c);
 
     /* log this event */
-    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << "GSwane" << "\n";
+    h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",GSwane," << h->get_patch_id() << "\n";
 
   })
 {

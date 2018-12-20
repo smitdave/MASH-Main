@@ -75,7 +75,7 @@ human_pfsi::human_pfsi(
     addEvent2Q(e_pfsi_infect(0.0,this));
   } else {
     u_int tnow = tileP->get_tnow();
-    tileP->get_logger()->get_stream("human_inf") << id << "," << tnow << "," << "S" << "\n";
+    tileP->get_logger()->get_stream("human_inf") << id << "," << tnow << ",S," << patch_id << "\n";
   }
 
   /* chemoprophylaxis: queue up when protection expires */
