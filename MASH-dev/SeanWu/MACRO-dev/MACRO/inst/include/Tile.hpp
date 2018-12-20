@@ -61,6 +61,7 @@ public:
        const Rcpp::List& human_pars,
        const Rcpp::List& mosquito_pars,
        const Rcpp::List& patch_pars,
+       const Rcpp::List& model_pars,
        const Rcpp::List& log_streams,
        const Rcpp::List& vaxx_events
   );

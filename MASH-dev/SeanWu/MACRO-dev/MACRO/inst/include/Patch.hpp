@@ -46,6 +46,9 @@ public:
   bool                  get_reservoir(){return reservoir;}
   double                get_res_EIR(){return res_EIR;}
 
+  /* debug */
+  void                  print();
+
   /* increments */
   void                  accumulate_bWeightHuman(double b){bWeightHuman += b;}
   void                  decrement_bWeightHuman(double b){bWeightHuman -= b;}
@@ -59,7 +62,10 @@ public:
   void                  decrement_bWeightZootox(double b){bWeightZootox -= b;}
   void                  zero_bWeightZootox(){bWeightZootox = 0.0;}
 
-  void                  accumulate_kappa(double k){kappa += k;}
+  void                  accumulate_kappa(double k){
+    // std::cout << "im patch: " << id << " and accumulate kappa is being called; my kappa is now: " << kappa <<" and the input is k: " << k << std::endl;
+    kappa += k;
+  }
   void                  decrement_kappa(double k){kappa -= k;}
   void                  zero_kappa(){kappa = 0.0;}
   void                  normalize_kappa();

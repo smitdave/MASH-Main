@@ -19,6 +19,7 @@
 #' Please note that 'N' (number of patches) may not be the same as the total number of patches
 #' constructed in the tile object, due to the existence of reservoir patches. However the
 #' first 1,...,N patches should be non-reservoir patches (simulated explicitly).
+#' This model needs a log stream with name 'mosquito'.
 #'
 #' @param N integer number of patches
 #' @param lambda numeric matrix (365 x N) describing emergence rate by day of year and patch
@@ -33,10 +34,10 @@
 #' @param Z initial conditions of infectious female mosquito populations (N patches)
 #'
 #' @export
-human_pfsi_conpars <- function(
+mosquito_rm_conpars <- function(
   N, lambda, psi,
   EIP,
-  p, f, Q, v,
+  p = 0.9, f = 0.3, Q = 0.9, v = 20,
   M, Y, Z)
 {
 

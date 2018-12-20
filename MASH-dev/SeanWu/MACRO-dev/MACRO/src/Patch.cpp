@@ -10,7 +10,7 @@
  *  Sean Wu
  *  November 2018
  */
-
+// #include "Debug.hpp"
 #include "Patch.hpp"
 #include "Tile.hpp"
 
@@ -36,6 +36,7 @@ patch::patch(
   move(Rcpp::as<arma::Row<double> >(patch_pars["move"])),
   bWeightZoo(Rcpp::as<double>(patch_pars["bWeightZoo"])),
   bWeightZootox(Rcpp::as<double>(patch_pars["bWeightZootox"])),
+  kappa(0.0),
   reservoir(Rcpp::as<bool>(patch_pars["reservoir"])),
   res_EIR(Rcpp::as<double>(patch_pars["res_EIR"])),
   tileP(tileP_)
@@ -44,6 +45,8 @@ patch::patch(
   #ifdef DEBUG_MACRO
   std::cout << "patch " << id << " born at " << this << std::endl;
   #endif
+
+  print();
 
 };
 
@@ -54,6 +57,11 @@ patch::~patch(){
   #endif
 
 }
+
+/* debug */
+void patch::print(){
+  std::cout << "patch: " << id << ", with kappa: " << kappa << ", bWeightHuman: " << bWeightHuman << ", reservoir: " << reservoir << ", res_EIR: " << res_EIR << std::endl;
+};
 
 /* normalize kappa */
 void patch::normalize_kappa(){

@@ -10,7 +10,7 @@
  *  Sean Wu
  *  November 2018
  */
-
+// #include "Debug.hpp"
 #include "SimBite-PfSI.hpp"
 #include "Human-PfSI.hpp"
 #include "Event-PfSI.hpp"
@@ -81,10 +81,16 @@ double pfsi_ttGSWanePf(human_pfsi* h){
 e_pfsi_bite::e_pfsi_bite(double tEvent_, human_pfsi* h):
   event("PfSI_SimBite",tEvent_,[tEvent_,h](){
 
+    // std::cout << "inside sim bite of human: " << h->get_id() << std::endl;
+
     /* transmission efficiency */
     double b = h->get_b();
+    // std::cout << "b: " << b << std::endl;
+    // std::cout << "try to get runif " << h->get_tile()->get_prng()->get_runif() << std::endl;
     if(h->get_tile()->get_prng()->get_runif() < b){
+      // std::cout << "sampling tInfStart" << std::endl;
       double tInfStart = tEvent_ + psfi_ttInfectionPf(h);
+      // std::cout << "infection of this person successful, the go to infected from latent period at: " << tInfStart << std::endl;
       h->addEvent2Q(e_pfsi_infect(tInfStart,h));
     }
 

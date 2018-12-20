@@ -1,17 +1,17 @@
 /*
- *      __  ______   __________  ____ 
+ *      __  ______   __________  ____
  *     /  |/  /   | / ____/ __ \/ __ \
  *    / /|_/ / /| |/ /   / /_/ / / / /
- *   / /  / / ___ / /___/ _, _/ /_/ / 
- *  /_/  /_/_/  |_\____/_/ |_|\____/  
- * 
+ *   / /  / / ___ / /___/ _, _/ /_/ /
+ *  /_/  /_/_/  |_\____/_/ |_|\____/
+ *
  *  Generic Event Class: events occur on humans;
  *  and are specialized for each model (eg PfSI, PfMOI, etc.)
- *  
+ *
  *  Sean Wu
  *  November 2018
  */
-
+// #include "Debug.hpp"
 #include "Event.hpp"
 
 /* constructor */
