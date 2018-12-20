@@ -18,7 +18,7 @@
 
 
 /* ################################################################################
- * boilerplate (constructor & destructor)
+ * class boilerplate
 ################################################################################ */
 
 /* define virtual destructor is ok */
@@ -39,8 +39,10 @@ human& human::operator=(human&&) = default;
  * derived class factory
 ################################################################################ */
 
+/* derived classes the factory needs to know about */
 #include "Human-PfSI.hpp"
 
+/* factory method */
 std::unique_ptr<human> human::factory(const Rcpp::List& human_pars, tile* tileP_){
 
   /* check what model we need to make */
@@ -69,8 +71,6 @@ void human::addEvent2Q(event&& e){
 
 /* remove future queued events */
 void human::rmTagFromQ(const std::string &tag){
-  std::cout << "calling rmTagFromQ with tag " << tag << std::endl;
-  printEventQ();
   eventQ.erase(std::remove_if(eventQ.begin(),eventQ.end(),
                               [tag](eventP& e){
                                 return(tag.compare(e->tag)==0);

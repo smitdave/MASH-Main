@@ -10,11 +10,16 @@
  *  Sean Wu
  *  November 2018
  */
-// #include "Debug.hpp"
+
 #include "Mosquito.hpp"
 #include "Tile.hpp"
 
-/* define virtual destructor is ok; ensures base class parts get destroyed */
+
+/* ################################################################################
+ * class boilerplate
+################################################################################ */
+
+/* virtual destructor so inheritance works properly */
 mosquito::~mosquito(){
   #ifdef MACRO_DEBUG
   std::cout << "mosquito dying at " << this << std::endl;
@@ -30,13 +35,7 @@ mosquito& mosquito::operator=(mosquito&&) = default;
  * derived class factory
 ################################################################################ */
 
-/*
-  * this include is in a weird place;
-  * but i think it is more legible if we put the derived classes
-  * we need the factory to handle here; if a better solution exists
-  * it should be implemented
-*/
-
+/* derived classes the factory needs to know about */
 #include "Mosquito-RM.hpp"
 
 /* factory method */

@@ -10,7 +10,7 @@
 *  Sean Wu
 *  November 2018
 */
-// #include "Debug.hpp"
+
 #include "PRNG.hpp"
 
 
@@ -102,6 +102,7 @@ int prng::get_rbinom(const int n, const double p){
 * discrete random multivariate sampling
 ################################################################################ */
 
+/* generic discrete distribution */
 int prng::get_rcategorical(const arma::Row<double>& prob){
  std::discrete_distribution<int>rcategorical(prob.begin(),prob.end());
  return rcategorical(rng);

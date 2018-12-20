@@ -24,8 +24,8 @@
 /* base class include */
 #include "Event.hpp"
 
+/* forward includes */
 class human_pfsi;
-class parameters;
 
 
 /* ################################################################################

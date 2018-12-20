@@ -29,6 +29,7 @@
  * class interface
 ################################################################################ */
 
+/* class definition */
 class parameters {
 public:
 

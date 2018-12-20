@@ -63,7 +63,7 @@ pfsi_parameters <- function(
     args <- args[-1]
     out <- vector("list",length(args))
     for(i in 1:length(args)){
-      out[[i]] <- pars_obj(val = args[[i]],name = names(args[i]))
+      out[[i]] <- pars_obj(val = args[[i]],name = names(args[i]), fixtype = 1L)
     }
 
     return(out)

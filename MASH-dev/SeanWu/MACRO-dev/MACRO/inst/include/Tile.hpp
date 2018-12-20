@@ -101,7 +101,7 @@ private:
 
 };
 
-/* accessors */
+/* inlined accessors */
 inline u_int tile::get_tnow(){return tnow;};
 inline void tile::set_tnow(u_int t){ tnow = t; };
 

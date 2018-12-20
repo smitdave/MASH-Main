@@ -33,11 +33,6 @@ class mosquito_rm : public mosquito {
 public:
 
   /* constructor & destructor */
-  // mosquito_rm(const size_t N_, const arma::Mat<double>& lambda_, const arma::Mat<double>& psi_,
-  //            const arma::Col<size_t>& EIP_, const size_t maxEIP_,
-  //            const double p_, const double f_, const double Q_, const double v_,
-  //            const arma::Row<double>& M_, const arma::Row<double>& Y_, const arma::Row<double>& Z_,
-  //            tile* tileP_);
   mosquito_rm(const Rcpp::List& mosquito_pars,
              tile* tileP_);
   ~mosquito_rm();
@@ -83,9 +78,6 @@ private:
   arma::Row<double>       Z; /* infectious mosquitos */
   arma::Mat<double>       ZZ; /* incubating mosquitos */
   arma::Mat<int>          ZZ_shift; /* matrix to shift ZZ up */
-
-  /* integer sequence of patches (just for writing output) */
-  std::vector<int>        patches;
 
 };
 

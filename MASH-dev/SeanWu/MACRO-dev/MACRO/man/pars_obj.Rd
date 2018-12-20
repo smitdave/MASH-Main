@@ -4,12 +4,14 @@
 \alias{pars_obj}
 \title{Utility: Make a Parameter Object for C++ Initialization}
 \usage{
-pars_obj(val, name)
+pars_obj(val, name, fixtype = NULL)
 }
 \arguments{
 \item{val}{numeric or integer value}
 
 \item{name}{name of the parameter}
+
+\item{fixtype}{if \code{NULL} the function tries to figure out if you want this parameter to be an \code{int} or a \code{double} in C++, otherwise use the provided input}
 }
 \description{
 Take a parameter and transform into a package (named list) so it can

@@ -27,13 +27,13 @@
 /* base-class */
 #include "Human.hpp"
 
+
+/* ################################################################################
+ * human-PfSI derived class
+################################################################################ */
+
 class human_pfsi : public human {
 public:
-  // human_pfsi(const int id_, const size_t home_patch_id_,
-  //       const double trip_duration_, const double trip_frequency_,
-  //       const double bweight_, tile* tileP_,
-  //       /* human_pfsi specific arguments */
-  //       const double age_, const bool inf_, const bool chx_);
   human_pfsi(const Rcpp::List& human_pars, tile* tileP_);
   ~human_pfsi();
 

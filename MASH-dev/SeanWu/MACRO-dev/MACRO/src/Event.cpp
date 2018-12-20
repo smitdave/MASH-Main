@@ -11,8 +11,13 @@
  *  Sean Wu
  *  November 2018
  */
-// #include "Debug.hpp"
+
 #include "Event.hpp"
+
+
+/* ################################################################################
+ * class boilerplate
+################################################################################ */
 
 /* constructor */
 event::event(std::string tag_, double tEvent_, std::function<void()> eventF_):

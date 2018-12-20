@@ -28,10 +28,6 @@ move <- matrix(c(0,1,1,0),byrow = T,n,n)
 
 patch_pars <- patches_parameters(move = move,bWeightZoo = rep(0,n),bWeightZootox = rep(0,n),reservoir = rep(F,n),res_EIR = rep(0,n))
 pfsi_pars <- pfsi_parameters()
-# for now, consider them all doubles
-for(i in 1:length(pfsi_pars)){
-  pfsi_pars[[i]]$type <- 1L
-}
 mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(1,nrow = 365,ncol = n),
                                  psi = diag(n),rep(11,365),M = rep(500,n),Y = rep(10,n),Z = rep(2,n))
 vaxx_pars <- list()
@@ -73,7 +69,7 @@ check_human_pfsi_conpars(human_pars)
 # source("/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/SeanWu/MACRO-dev/MACRO-PfSI-test.R")
 
 run_macro(seed = seed,
-          tmax = 20L,
+          tmax = 50L,
           human_pars = human_pars,
           mosquito_pars = mosy_pars,
           patch_pars = patch_pars,
