@@ -69,6 +69,10 @@ patches_parameters <- function(move,bWeightZoo,bWeightZootox,reservoir,res_EIR){
     stop("matrix 'move' must be a row-normalized stochastic matrix")
   }
 
+  if(any(diag(move) > 0)){
+    warnings("non-zero diagonal elements detected in 'move' matrix; make sure you really want this!")
+  }
+
   n <- nrow(move)
   id <- as.integer(0:(n-1))
 

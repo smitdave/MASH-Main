@@ -35,6 +35,7 @@ if(!dir.exists(path)){
 
 # pfsi parameters
 pfsi_pars <- pfsi_parameters()
+# pfsi_pars <- pfsi_parameters(DurationPf = 200,LatentPf = 0,FeverPf = 0,TreatPf = 0)
 
 # patchs
 n <- 1
@@ -64,7 +65,7 @@ check_human_pfsi_conpars(human_pars)
 vaxx_pars <- list()
 
 # run ensemble
-nrun <- 1000
+nrun <- 100
 tsteps <- 2000
 pb <- txtProgressBar(min = 1,max = nrun)
 for(i in 1:nrun){
@@ -92,6 +93,89 @@ for(i in 1:nrun){
             verbose = FALSE)
  setTxtProgressBar(pb,i) 
 }
+
+# CALCULATE STATISTICS OF THE ENSEMBLE
+M.data = matrix(0, nrow = nrun, ncol = tsteps)
+Y.data = matrix(0, nrow = nrun, ncol = tsteps)
+Z.data = matrix(0, nrow = nrun, ncol = tsteps)
+files = list.files(path = path, pattern= "mosy_*")
+for (i in 1:nrun){
+  file = files[i]
+  moshist<- read.csv(paste0(path, "/", file))
+  M <- moshist$patch1[moshist$state == "M"]
+  Y <- moshist$patch1[moshist$state == "Y"]
+  Z <- moshist$patch1[moshist$state == "Z"]
+  # Save mos data
+  M.data[i,] <- M[-1]
+  Y.data[i,] <- Y[-1]
+  Z.data[i,] <- Z[-1]
+}
+M.mean <- sapply(X = 1:tsteps, FUN = function(X){return(mean(M.data[,X]))})
+Y.mean <- sapply(X = 1:tsteps, FUN = function(X){return(mean(Y.data[,X]))})
+Z.mean <- sapply(X = 1:tsteps, FUN = function(X){return(mean(Z.data[,X]))})
+
+M.std <- sapply(X = 1:tsteps, FUN = function(X){return(sd(M.data[,X]))})
+Y.std <- sapply(X = 1:tsteps, FUN = function(X){return(sd(Y.data[,X]))})
+Z.std <- sapply(X = 1:tsteps, FUN = function(X){return(sd(Z.data[,X]))})
+
+I.data = matrix(0, nrow = nrun, ncol = tsteps+1)
+files = list.files(path = path, pattern= "h_inf*")
+for (j in 1:nrun) {
+  p <- read.csv(paste0(path, "/", files[j]),stringsAsFactors = F)
+  e <- table(data.frame(time = ceiling(p$time), event = p$event))
+  h <- matrix(0, nrow = tsteps+1, ncol = 2)
+  for (i in 1:nrow(e)){
+    tIndex <- as.numeric(rownames(e))[i] + 1
+    h[tIndex,1] <- e[i,1] # infecteds
+    h[tIndex,2] <- e[i,2] # susceptibles
+  }
+  I.data[j,] = append(cumsum(h[1,1]), cumsum(h[1,1]) + cumsum(h[-1,1]) - cumsum(h[-1,2]))
+}
+I.data.mean <- sapply(X = 1:tsteps, FUN = function(X){return(mean(I.data[,X]))})
+I.data.std <- sapply(X = 1:tsteps, FUN = function(X){return(sd(I.data[,X]))})
+
+# write output
+out <- data.frame(M = M.mean, Y = Y.mean, Z = Z.mean, I = I.data.mean,
+                  Ms = M.std, Ys = Y.std, Zs = Z.std, Is = I.data.std)
+
+
+par(mfrow=c(1,2))
+
+h_col <- "firebrick3"
+m_col <- "steelblue"
+
+# compare humans
+plot(x = 1:nrow(out),y = out[,"I"],lwd = 2,col = h_col,main = "Human infection prevalence",type="l",
+     ylim = c(floor(min(out[,"I"] - out[,"Is"])),ceiling(max(out[,"I"] + out[,"Is"]))),
+     xlab = "Time",ylab = "Count")
+polygon(x = c(1:nrow(out), rev(1:nrow(out))),
+        y = c(out[,"I"] - out[,"Is"], 
+              rev(out[,"I"] + out[,"Is"])),
+        col =  adjustcolor(h_col, alpha.f = 0.5), border = NA)
+
+
+# compare mosquitos
+plot(x = 1:nrow(out),y = out[,"M"],type = "l",col = m_col,lwd = 2,lty = 1,main= "Mosquito State Variables",
+     ylim = c(0,(max(out[,"M"]))+10),
+     xlab = "Time",ylab = "Count")
+polygon(x = c(1:nrow(out), rev(1:nrow(out))),
+        y = c(out[,"M"] - out[,"Ms"], 
+              rev(out[,"M"] + out[,"Ms"])),
+        col =  adjustcolor(m_col, alpha.f = 0.25), border = NA)
+
+lines(x = 1:nrow(out),y = out[,"Y"],col = m_col,lwd = 2,lty = 2)
+polygon(x = c(1:nrow(out), rev(1:nrow(out))),
+        y = c(out[,"Y"] - out[,"Ys"], 
+              rev(out[,"Y"] + out[,"Ys"])),
+        col =  adjustcolor(m_col, alpha.f = 0.25), border = NA)
+
+lines(x = 1:nrow(out),y = out[,"Z"],col = m_col,lwd = 2,lty = 3)
+polygon(x = c(1:nrow(out), rev(1:nrow(out))),
+        y = c(out[,"Z"] - out[,"Zs"], 
+              rev(out[,"Z"] + out[,"Zs"])),
+        col =  adjustcolor(m_col, alpha.f = 0.25), border = NA)
+
+par(mfrow=c(1,1))
 
 
 ################################################################################
