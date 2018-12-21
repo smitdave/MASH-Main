@@ -330,6 +330,8 @@ out_CPP <- fread(file = paste0(dir_CPP,"ensemble_average_data.csv"))
 # 
 # par(mfrow=c(1,1))
 
+par(mfrow=c(1,2))
+
 # compare humans
 plot(x = 1:nrow(out_CPP),y = out_CPP[,"I"][[1]],lwd = 2,col = "red",main = "humans C++: red, R: blue",type="l",
      ylim = c(floor(min(out_CPP[,"I"][[1]] - out_CPP[,"Is"][[1]])),ceiling(max(out_CPP[,"I"][[1]] + out_CPP[,"Is"][[1]]))),
@@ -346,7 +348,8 @@ polygon(x = c(1:nrow(out_R), rev(1:nrow(out_R))),
 
 # compare mosquitos
 plot(x = 1:nrow(out_CPP),y = out_CPP[,"M"][[1]],type = "l",col = "red",lwd = 2,lty = 1,main= "mosquitos C++:red, R:blue",
-     ylim = c(0,(max(out_CPP[,"M"][[1]]))+10))
+     ylim = c(0,(max(out_CPP[,"M"][[1]]))+10),
+     xlab = "Time",ylab = "Count")
 polygon(x = c(1:nrow(out_CPP), rev(1:nrow(out_CPP))),
         y = c(out_CPP[,"M"][[1]] - out_CPP[,"Ms"][[1]], 
               rev(out_CPP[,"M"][[1]] + out_CPP[,"Ms"][[1]])),
@@ -381,3 +384,5 @@ polygon(x = c(1:nrow(out_R), rev(1:nrow(out_R))),
         y = c(out_R[,"Z"][[1]] - out_R[,"Zs"][[1]], 
               rev(out_R[,"Z"][[1]] + out_R[,"Zs"][[1]])),
         col =  adjustcolor("blue", alpha.f = 0.25), border = NA)
+
+par(mfrow=c(1,1))
