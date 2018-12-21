@@ -32,7 +32,7 @@ oneDay_popDynamics_Mosquito_RM <- function(){
   kappa = private$TilePointer$get_Patches()$apply(tag="get_kappa",returnVal=TRUE)
   kappa = unlist(kappa[order(as.numeric(names(kappa)))], use.names = FALSE)
   # number of newly infected mosquitoes
-  private$Y0 = private$f * private$Q * unlist(kappa,use.names = FALSE) * (private$M - private$Y)
+  private$Y0 = (1 - exp(-1 * private$f * private$Q * unlist(kappa,use.names = FALSE))) * (private$M - private$Y)
   if(any(private$Y0<0)){
     private$Y0[which(private$Y0<0)] = 0
   }
