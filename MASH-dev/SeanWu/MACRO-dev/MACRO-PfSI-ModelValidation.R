@@ -169,16 +169,16 @@ library(MACRO) # C++ package
 
 # Define the directory for the output:
 directory <- "/Users/slwu89/Desktop/macro_validation_CPP/"
-# if(!dir.exists(directory)){
-#   dir.create(directory)
-# } else {
-#   files <- list.files(directory)
-#   if(length(files) > 0){
-#     for(f in files){
-#       file.remove(paste0(directory,f))
-#     }
-#   }
-# }
+if(!dir.exists(directory)){
+  dir.create(directory)
+} else {
+  files <- list.files(directory)
+  if(length(files) > 0){
+    for(f in files){
+      file.remove(paste0(directory,f))
+    }
+  }
+}
 
 seed <- 0L
 
@@ -213,12 +213,11 @@ check_human_pfsi_conpars(human_pars)
 vaxx_pars <- list()
 
 # run ensemble
-nrun <- 100
+nrun <- 1000
 tsteps <- 2000
 system.time(for (i in 1:nrun){
   
-  seed <- floor(abs(100000000*abs(log(i))))
-  
+  seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31)
   
   log_pars <- list()
   h_move <- paste0(directory,"h_move_",i,".csv")

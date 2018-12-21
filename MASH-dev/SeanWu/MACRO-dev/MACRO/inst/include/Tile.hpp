@@ -63,7 +63,8 @@ public:
        const Rcpp::List& patch_pars,
        const Rcpp::List& model_pars,
        const Rcpp::List& log_streams,
-       const Rcpp::List& vaxx_events
+       const Rcpp::List& vaxx_events,
+       const bool        verbose_
   );
   ~tile();
 
@@ -88,6 +89,7 @@ public:
 private:
 
   u_int                         tnow;
+  bool                          verbose;
 
   /* state space (agents & environment) */
   std::vector<humanP>           humans;

@@ -13,9 +13,10 @@
 #' @param model_pars a list of parameter objects (see \code{\link{pars_obj}}) to initialize parameters object (see inst/include/Parameters.hpp for details)
 #' @param log_streams a list giving the output file and name of each logging stream (please ensure that you have provided the right logging stream names for the model(s) you wish to run)
 #' @param vaxx_events a list of vaccination events on the human population (for no vaccination events, pass an empty list, \code{list()})
+#' @param verbose print information to console?
 #'
 #' @export
-run_macro <- function(seed, tmax, human_pars, mosquito_pars, patch_pars, model_pars, log_streams, vaxx_events) {
-    invisible(.Call('_MACRO_run_macro', PACKAGE = 'MACRO', seed, tmax, human_pars, mosquito_pars, patch_pars, model_pars, log_streams, vaxx_events))
+run_macro <- function(seed, tmax, human_pars, mosquito_pars, patch_pars, model_pars, log_streams, vaxx_events, verbose = TRUE) {
+    invisible(.Call('_MACRO_run_macro', PACKAGE = 'MACRO', seed, tmax, human_pars, mosquito_pars, patch_pars, model_pars, log_streams, vaxx_events, verbose))
 }
 
