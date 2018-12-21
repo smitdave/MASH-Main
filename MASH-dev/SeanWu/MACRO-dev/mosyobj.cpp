@@ -25,8 +25,8 @@ public:
     std::cout << "mosquitoRM being born at " << this << std::endl;
 
     /* compute P */
-    // unsigned int i = 0;
-    std::generate(P.begin(),P.end(),[this->p,i = 0]() mutable { return std::pow(p,++i); });
+    unsigned int i = 0;
+    std::generate(P.begin(),P.end(),[&](){ return std::pow(p,++i); });
     
     /* compute ZZ_shift */
     ZZ_shift.fill(0);
@@ -53,6 +53,10 @@ public:
     P.print("printing P");
     ZZ.print("printing ZZ");
     ZZ_shift.print("printing ZZ_shift");
+    M.print("printing M");
+    Y.print("printing Y");
+    Z.print("printing Z");
+    Y0.print("printing Y0");
   }
   
   void aquatic_dynamics(u_int tnow){
@@ -141,7 +145,32 @@ private:
   arma::Mat<int>          ZZ_shift;
 };
 
-/*
+
+// [[Rcpp::export]]
+void test_mosyRM(const size_t N_, const arma::Mat<double>& lambda_, const arma::Mat<double>& psi_,
+                 const arma::Col<size_t>& EIP_, const size_t maxEIP_,
+                 const double p_, const double f_, const double Q_, const double v_,
+                 const arma::Row<double>& M_, const arma::Row<double>& Y_, const arma::Row<double>& Z_,
+                 const arma::Row<double>& kappa){
+
+  std::unique_ptr<mosquitoRM> mPtr = std::make_unique<mosquitoRM>(N_, lambda_, psi_,
+                                                                  EIP_, maxEIP_,
+                                                                  p_, f_, Q_, v_,
+                                                                  M_,Y_, Z_);
+  
+  Rcpp::Rcout << "------ check output ------" << std::endl;
+  mPtr->print();
+  Rcpp::Rcout << " ------ run aquatic dynamics ------" << std::endl;
+  mPtr->aquatic_dynamics(0);
+  Rcpp::Rcout << "------ run population dynamics ------" << std::endl;
+  mPtr->pop_dynamics(0,kappa);
+  Rcpp::Rcout << "------ check output ------" << std::endl;
+  mPtr->print();
+  
+};
+
+/*** R
+set.seet(42)
 N <- 10
 lambda <- matrix(rpois(N*365,10),365,N)
 psi <- diag(N)
@@ -156,48 +185,64 @@ Y <- rpois(N,1e3)
 Z <- rpois(N,1e2)
 kappa <- rlnorm(N)
 test_mosyRM(N,lambda,psi,EIP,maxEIP,p,f,Q,v,M,Y,Z,kappa)
- */
-// [[Rcpp::export]]
-void test_mosyRM(const size_t N_, const arma::Mat<double>& lambda_, const arma::Mat<double>& psi_,
-                 const arma::Col<size_t>& EIP_, const size_t maxEIP_,
-                 const double p_, const double f_, const double Q_, const double v_,
-                 const arma::Row<double>& M_, const arma::Row<double>& Y_, const arma::Row<double>& Z_,
-                 const arma::Row<double>& kappa){
 
-  std::unique_ptr<mosquitoRM> mPtr = std::make_unique<mosquitoRM>(N_, lambda_, psi_,
-                                                                  EIP_, maxEIP_,
-                                                                  p_, f_, Q_, v_,
-                                                                  M_,Y_, Z_);
-  
-  mPtr->print();
-  mPtr->aquatic_dynamics(0);
-  mPtr->pop_dynamics(0,kappa);
+# run it in R to make sure C++ is okay
+ZZ <- t(matrix(data=Z*(1-p),nrow=N,ncol=maxEIP))
+P <- p^c(1:maxEIP)
+a <- f*Q
 
-};
+# aquatic dynamics
+lambda_today <- lambda[1,]
+M <- M + lambda_today
 
-// [[Rcpp::export]]
-arma::Row<double> test_psiMult(const arma::Mat<double>& psi, const arma::Row<double>& pop){
-  arma::Row<double> out = pop * psi;
-  return out;
+# population dynamics
+EIP_today <- EIP[1]
+
+M <- p*M
+Y <- p*Y
+Z <- p*Z
+
+Y0 <- f*Q*kappa*(M - Y)
+if(any(Y0 < 0)){
+  Y0[which(Y0 < 0)] <- 0
 }
 
-// [[Rcpp::export]]
-arma::Mat<double> test_shiftMat(const arma::Mat<double>& Z){
-  
-  arma::Mat<int> Z_shift(Z.n_rows,Z.n_rows);
-  Z_shift.fill(0);
-  Z_shift.submat(0,1,Z.n_rows-2,Z.n_rows-1) = arma::eye<arma::Mat<int> >(Z.n_rows-1,Z.n_rows-1);
-  
-  arma::Mat<double> out;
-  out = Z_shift * Z;
-  return out;
-}
+Y <- Y + Y0
 
-// [[Rcpp::export]]
-arma::Row<double> test_transmission(const double a, const arma::Row<double>& kappa, 
-                                    const arma::Row<double>& M, const arma::Row<double>& Y){
-  
-  arma::Row<double> out;
-  out = (a * kappa) % (M - Y);
-  return out;
-}
+M <- as.vector(matrix(M,nrow=1) %*% psi)
+Y <- as.vector(matrix(Y,nrow=1) %*% psi)
+Z <- as.vector(matrix(Z + ZZ[1,],nrow=1) %*% psi)
+
+ZZ[-maxEIP,] <- ZZ[-1,]
+ZZ[maxEIP,] <- 0
+
+ZZ[EIP_today,] <- ZZ[EIP_today,] + P[EIP_today] * as.vector(psi %*% Y0)
+
+*/
+
+// // [[Rcpp::export]]
+// arma::Row<double> test_psiMult(const arma::Mat<double>& psi, const arma::Row<double>& pop){
+//   arma::Row<double> out = pop * psi;
+//   return out;
+// }
+// 
+// // [[Rcpp::export]]
+// arma::Mat<double> test_shiftMat(const arma::Mat<double>& Z){
+//   
+//   arma::Mat<int> Z_shift(Z.n_rows,Z.n_rows);
+//   Z_shift.fill(0);
+//   Z_shift.submat(0,1,Z.n_rows-2,Z.n_rows-1) = arma::eye<arma::Mat<int> >(Z.n_rows-1,Z.n_rows-1);
+//   
+//   arma::Mat<double> out;
+//   out = Z_shift * Z;
+//   return out;
+// }
+// 
+// // [[Rcpp::export]]
+// arma::Row<double> test_transmission(const double a, const arma::Row<double>& kappa, 
+//                                     const arma::Row<double>& M, const arma::Row<double>& Y){
+//   
+//   arma::Row<double> out;
+//   out = (a * kappa) % (M - Y);
+//   return out;
+// }

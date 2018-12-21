@@ -66,6 +66,7 @@ human_pfsi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bwe
 #'
 #' @export
 check_human_pfsi_conpars <- function(par){
+  
   # check one human
   check_one <- function(x){
     with(x,{
