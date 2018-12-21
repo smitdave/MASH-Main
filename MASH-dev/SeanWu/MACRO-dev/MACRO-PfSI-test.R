@@ -48,11 +48,11 @@ log_pars <- list()
 log_pars[[1]] <- list(outfile = "/Users/slwu89/Desktop/macro/h_move.csv",key = "human_move", 
                       header = paste0(c("humanID","time","event","location"),collapse = ","))
 log_pars[[2]] <- list(outfile = "/Users/slwu89/Desktop/macro/h_inf.csv",key = "human_inf",
-                      header = paste0(c("humanID","time","event"),collapse = ","))
+                      header = paste0(c("humanID","time","event","location"),collapse = ","))
 log_pars[[3]] <- list(outfile = "/Users/slwu89/Desktop/macro/mosy.csv",key = "mosquito",
                       header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
 
-nh <- 4L
+nh <- 400L
 pfpr <- c(1,0.1)
 inf_bool <- c(sample(x = c(T,F),size = nh/2,replace = T,prob = c(pfpr[1],1-pfpr[1])),
               sample(x = c(T,F),size = nh/2,replace = T,prob = c(pfpr[2],1-pfpr[2])))
