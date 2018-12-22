@@ -5,7 +5,7 @@
 \title{Run a MACRO Simulation}
 \usage{
 run_macro(seed, tmax, human_pars, mosquito_pars, patch_pars, model_pars,
-  log_streams, vaxx_events)
+  log_streams, vaxx_events, verbose = TRUE)
 }
 \arguments{
 \item{seed}{a non-negative integer seed for the prng (the 'mt19937' implementation of the Mersenne Twister is used; see \url{http://www.cplusplus.com/reference/random/mt19937/})}
@@ -23,6 +23,8 @@ run_macro(seed, tmax, human_pars, mosquito_pars, patch_pars, model_pars,
 \item{log_streams}{a list giving the output file and name of each logging stream (please ensure that you have provided the right logging stream names for the model(s) you wish to run)}
 
 \item{vaxx_events}{a list of vaccination events on the human population (for no vaccination events, pass an empty list, \code{list()})}
+
+\item{verbose}{print information to console?}
 }
 \description{
 write me!

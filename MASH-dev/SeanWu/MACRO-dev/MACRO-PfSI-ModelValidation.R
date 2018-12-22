@@ -169,16 +169,16 @@ library(MACRO) # C++ package
 
 # Define the directory for the output:
 directory <- "/Users/slwu89/Desktop/macro_validation_CPP/"
-# if(!dir.exists(directory)){
-#   dir.create(directory)
-# } else {
-#   files <- list.files(directory)
-#   if(length(files) > 0){
-#     for(f in files){
-#       file.remove(paste0(directory,f))
-#     }
-#   }
-# }
+if(!dir.exists(directory)){
+  dir.create(directory)
+} else {
+  files <- list.files(directory)
+  if(length(files) > 0){
+    for(f in files){
+      file.remove(paste0(directory,f))
+    }
+  }
+}
 
 seed <- 0L
 
@@ -213,12 +213,11 @@ check_human_pfsi_conpars(human_pars)
 vaxx_pars <- list()
 
 # run ensemble
-nrun <- 100
+nrun <- 1000
 tsteps <- 2000
 system.time(for (i in 1:nrun){
   
-  seed <- floor(abs(100000000*abs(log(i))))
-  
+  seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31)
   
   log_pars <- list()
   h_move <- paste0(directory,"h_move_",i,".csv")
@@ -330,6 +329,8 @@ out_CPP <- fread(file = paste0(dir_CPP,"ensemble_average_data.csv"))
 # 
 # par(mfrow=c(1,1))
 
+par(mfrow=c(1,2))
+
 # compare humans
 plot(x = 1:nrow(out_CPP),y = out_CPP[,"I"][[1]],lwd = 2,col = "red",main = "humans C++: red, R: blue",type="l",
      ylim = c(floor(min(out_CPP[,"I"][[1]] - out_CPP[,"Is"][[1]])),ceiling(max(out_CPP[,"I"][[1]] + out_CPP[,"Is"][[1]]))),
@@ -346,7 +347,8 @@ polygon(x = c(1:nrow(out_R), rev(1:nrow(out_R))),
 
 # compare mosquitos
 plot(x = 1:nrow(out_CPP),y = out_CPP[,"M"][[1]],type = "l",col = "red",lwd = 2,lty = 1,main= "mosquitos C++:red, R:blue",
-     ylim = c(0,(max(out_CPP[,"M"][[1]]))+10))
+     ylim = c(0,(max(out_CPP[,"M"][[1]]))+10),
+     xlab = "Time",ylab = "Count")
 polygon(x = c(1:nrow(out_CPP), rev(1:nrow(out_CPP))),
         y = c(out_CPP[,"M"][[1]] - out_CPP[,"Ms"][[1]], 
               rev(out_CPP[,"M"][[1]] + out_CPP[,"Ms"][[1]])),
@@ -381,3 +383,5 @@ polygon(x = c(1:nrow(out_R), rev(1:nrow(out_R))),
         y = c(out_R[,"Z"][[1]] - out_R[,"Zs"][[1]], 
               rev(out_R[,"Z"][[1]] + out_R[,"Zs"][[1]])),
         col =  adjustcolor("blue", alpha.f = 0.25), border = NA)
+
+par(mfrow=c(1,1))
