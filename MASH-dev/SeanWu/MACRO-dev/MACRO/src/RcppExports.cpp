@@ -7,8 +7,8 @@
 using namespace Rcpp;
 
 // run_macro
-void run_macro(const uint_least32_t seed, const u_int tmax, const Rcpp::List& human_pars, const Rcpp::List& mosquito_pars, const Rcpp::List& patch_pars, const Rcpp::List& model_pars, const Rcpp::List& log_streams, const Rcpp::List& vaxx_events);
-RcppExport SEXP _MACRO_run_macro(SEXP seedSEXP, SEXP tmaxSEXP, SEXP human_parsSEXP, SEXP mosquito_parsSEXP, SEXP patch_parsSEXP, SEXP model_parsSEXP, SEXP log_streamsSEXP, SEXP vaxx_eventsSEXP) {
+void run_macro(const uint_least32_t seed, const u_int tmax, const Rcpp::List& human_pars, const Rcpp::List& mosquito_pars, const Rcpp::List& patch_pars, const Rcpp::List& model_pars, const Rcpp::List& log_streams, const Rcpp::List& vaxx_events, const bool verbose);
+RcppExport SEXP _MACRO_run_macro(SEXP seedSEXP, SEXP tmaxSEXP, SEXP human_parsSEXP, SEXP mosquito_parsSEXP, SEXP patch_parsSEXP, SEXP model_parsSEXP, SEXP log_streamsSEXP, SEXP vaxx_eventsSEXP, SEXP verboseSEXP) {
 BEGIN_RCPP
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< const uint_least32_t >::type seed(seedSEXP);
@@ -19,13 +19,26 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< const Rcpp::List& >::type model_pars(model_parsSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type log_streams(log_streamsSEXP);
     Rcpp::traits::input_parameter< const Rcpp::List& >::type vaxx_events(vaxx_eventsSEXP);
-    run_macro(seed, tmax, human_pars, mosquito_pars, patch_pars, model_pars, log_streams, vaxx_events);
+    Rcpp::traits::input_parameter< const bool >::type verbose(verboseSEXP);
+    run_macro(seed, tmax, human_pars, mosquito_pars, patch_pars, model_pars, log_streams, vaxx_events, verbose);
     return R_NilValue;
+END_RCPP
+}
+// Util_PfSI_State
+Rcpp::DataFrame Util_PfSI_State(const Rcpp::DataFrame& out);
+RcppExport SEXP _MACRO_Util_PfSI_State(SEXP outSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< const Rcpp::DataFrame& >::type out(outSEXP);
+    rcpp_result_gen = Rcpp::wrap(Util_PfSI_State(out));
+    return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_MACRO_run_macro", (DL_FUNC) &_MACRO_run_macro, 8},
+    {"_MACRO_run_macro", (DL_FUNC) &_MACRO_run_macro, 9},
+    {"_MACRO_Util_PfSI_State", (DL_FUNC) &_MACRO_Util_PfSI_State, 1},
     {NULL, NULL, 0}
 };
 

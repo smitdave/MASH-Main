@@ -34,21 +34,24 @@
 //' @param model_pars a list of parameter objects (see \code{\link{pars_obj}}) to initialize parameters object (see inst/include/Parameters.hpp for details)
 //' @param log_streams a list giving the output file and name of each logging stream (please ensure that you have provided the right logging stream names for the model(s) you wish to run)
 //' @param vaxx_events a list of vaccination events on the human population (for no vaccination events, pass an empty list, \code{list()})
+//' @param verbose print information to console?
 //'
 //' @export
 // [[Rcpp::export]]
 void run_macro(
      const uint_least32_t seed,
-     const u_int tmax,
-     const Rcpp::List& human_pars,
-     const Rcpp::List& mosquito_pars,
-     const Rcpp::List& patch_pars,
-     const Rcpp::List& model_pars,
-     const Rcpp::List& log_streams,
-     const Rcpp::List& vaxx_events)
+     const u_int          tmax,
+     const Rcpp::List&    human_pars,
+     const Rcpp::List&    mosquito_pars,
+     const Rcpp::List&    patch_pars,
+     const Rcpp::List&    model_pars,
+     const Rcpp::List&    log_streams,
+     const Rcpp::List&    vaxx_events,
+     const bool           verbose = true
+   )
 {
 
-  std::unique_ptr<tile> tileP = std::make_unique<tile>(seed,human_pars,mosquito_pars,patch_pars,model_pars,log_streams,vaxx_events);
+  std::unique_ptr<tile> tileP = std::make_unique<tile>(seed,human_pars,mosquito_pars,patch_pars,model_pars,log_streams,vaxx_events,verbose);
 
   tileP->simulation(tmax);
 

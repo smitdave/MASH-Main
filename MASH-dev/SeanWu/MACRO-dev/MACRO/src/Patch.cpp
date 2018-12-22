@@ -62,7 +62,7 @@ void patch::print(){
 
 void patch::normalize_kappa(){
   /* no divide by zero errors; also no need to calc kappa for 'reservoir' patches */
-  if(((bWeightHuman + bWeightZoo + bWeightZootox) > 0.0) && (!reservoir)){
+  if((bWeightHuman > 0.0) && (!reservoir)){
     kappa = kappa / (bWeightHuman + bWeightZoo + bWeightZootox);
   } else {
     kappa = 0;

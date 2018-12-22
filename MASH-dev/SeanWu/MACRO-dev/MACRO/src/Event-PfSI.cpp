@@ -37,7 +37,7 @@ e_pfsi_infect::e_pfsi_infect(double tEvent_, human_pfsi* h):
     /* no superinfection, and chx blocks new infections */
     if(!h->get_infection() && !h->get_chemoprophylaxis()){
 
-      /* i'm not infected */
+      /* i'm now infected */
       h->set_infection(true);
 
       /* log this event */
