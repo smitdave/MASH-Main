@@ -66,7 +66,7 @@ human_pfsi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bwe
 #'
 #' @export
 check_human_pfsi_conpars <- function(par){
-  
+
   # check one human
   check_one <- function(x){
     with(x,{
@@ -106,6 +106,7 @@ check_human_pfsi_conpars <- function(par){
 #' @param id an integer id of a human to recieve vaccination
 #' @param t a numeric vector giving times of vaccination events
 #' @param treat a logical vector indicating if treatment is to accompany vaccinations
+#' @param type "PE" (sporozoite-blocking) or "GS" (gametocyte-killing)
 #'
 #' @export
 pevaxx_pfsi_conpars <- function(id,t,treat,type){
@@ -118,7 +119,7 @@ pevaxx_pfsi_conpars <- function(id,t,treat,type){
     stop("treatment must be a logical vector")
   }
 
-  if(!is.integer(id) | (id < 0)){
+  if(id < 0){
     stop("id must be a positive integer value")
   }
 
