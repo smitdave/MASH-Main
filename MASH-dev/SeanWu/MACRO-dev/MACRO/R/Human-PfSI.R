@@ -109,9 +109,9 @@ check_human_pfsi_conpars <- function(par){
 #' @param type "PE" (sporozoite-blocking) or "GS" (gametocyte-killing)
 #'
 #' @export
-pevaxx_pfsi_conpars <- function(id,t,treat,type){
+vaccination_pfsi_conpars <- function(id,t,treat,type){
 
-  if(!is.numeric(t) | any(t < 0)){
+  if(!is.numeric(t) | t < 0){
     stop("time of pevaxx event must be a vector of positive floats")
   }
 
@@ -123,17 +123,12 @@ pevaxx_pfsi_conpars <- function(id,t,treat,type){
     stop("id must be a positive integer value")
   }
 
-  if(length(t) != length(treat)){
-    stop("length of 't' (time of vaxx event vector) must be same as 'treat' (treatment to accompany vaxx vector)")
-  }
-
   if(!(type %in% c("PE","GS"))){
     stop("vaccine 'type' must be PE (sporozoite-blocking) or GS (gametocyte-killing)")
   }
 
   list(
     id = as.integer(id),
-    n = length(t),
     tEvent = as.numeric(t),
     treat = as.logical(treat),
     type = as.character(type)
