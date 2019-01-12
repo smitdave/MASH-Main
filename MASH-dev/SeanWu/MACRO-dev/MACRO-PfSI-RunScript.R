@@ -50,7 +50,7 @@ mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(50,nrow = 365,ncol = n),
 nh <- rep(500,n)
 pfpr <- rep(0.5,n)
 
-inf_bool <- c(sample(x = c(T,F),size = nh,replace = T,prob = c(pfpr[1],1-pfpr[1])))
+init_state <- c(sample(x = c("I","S"),size = nh,replace = T,prob = c(pfpr[1],1-pfpr[1])))
 patch_id <- rep(0,nh)
 bweights <- rep(1,nh)
 
@@ -58,11 +58,36 @@ human_pars <- vector("list",nh)
 for(i in 1:nh){
   human_pars[[i]] <- human_pfsi_conpars(id = i-1,home_patch_id = patch_id[i],
                                         trip_duration = 1,trip_frequency = 1/1000000,bweight = bweights[i],
-                                        age = 20,inf = inf_bool[i],chx = F)
+                                        age = 20,state = init_state[i])
 }
 check_human_pfsi_conpars(human_pars)
 
 vaxx_pars <- list()
+
+# run single trajectory
+seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31)
+
+log_pars <- list()
+h_move <- paste0(path,"h_move.csv")
+log_pars[[1]] <- list(outfile = h_move,key = "human_move",
+                      header = paste0(c("humanID","time","event","location"),collapse = ","))
+h_inf <- paste0(path,"h_inf.csv")
+log_pars[[2]] <- list(outfile = h_inf,key = "human_inf",
+                      header = paste0(c("humanID","time","state0","state1","location"),collapse = ","))
+mosy <- paste0(path,"mosy.csv")
+log_pars[[3]] <- list(outfile = mosy,key = "mosquito",
+                      header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
+
+run_macro(seed = seed,
+          tmax = 500,
+          human_pars = human_pars,
+          mosquito_pars = mosy_pars,
+          patch_pars = patch_pars,
+          model_pars = pfsi_pars,
+          log_streams = log_pars,
+          vaxx_events = vaxx_pars,
+          verbose = TRUE)
+
 
 # run ensemble
 nrun <- 100

@@ -25,6 +25,7 @@ run_macro <- function(seed, tmax, human_pars, mosquito_pars, patch_pars, model_p
 #' Take output of PfSI human infection logging and return a day by day state space data frame.
 #'
 #' @param out raw output of PfSI in \code{\link{data.frame}} format
+#' @param dt size of time step to aggregate continuous time output
 #'
 #' @export
 Util_PfSI_State <- function(out) {

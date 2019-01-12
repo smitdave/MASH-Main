@@ -8,6 +8,8 @@ Util_PfSI_State(out)
 }
 \arguments{
 \item{out}{raw output of PfSI in \code{\link{data.frame}} format}
+
+\item{dt}{size of time step to aggregate continuous time output}
 }
 \description{
 Take output of PfSI human infection logging and return a day by day state space data frame.

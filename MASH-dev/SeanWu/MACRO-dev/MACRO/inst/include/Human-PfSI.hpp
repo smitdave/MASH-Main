@@ -48,18 +48,21 @@ public:
   /* print */
   void print(){
     human::print();
-    std::cout << "my infection is: " << infection << ", my age is: " << age << std::endl;
+    std::cout << "my state is: " << state << ", my age is: " << age << std::endl;
   }
 
   /* simulation */
   virtual void    simulate();
 
   /* accessors */
-  void            set_infection(const bool inf){ infection = inf; }
-  bool            get_infection(){ return infection; }
+  void            set_state(std::string s){ state = s; }
+  std::string&    get_state(){ return state; }
 
-  void            set_chemoprophylaxis(const bool chx){ chemoprophylaxis = chx; }
-  bool            get_chemoprophylaxis(){ return chemoprophylaxis; }
+  // void            set_infection(const bool inf){ infection = inf; }
+  // bool            get_infection(){ return infection; }
+  //
+  // void            set_chemoprophylaxis(const bool chx){ chemoprophylaxis = chx; }
+  // bool            get_chemoprophylaxis(){ return chemoprophylaxis; }
 
   void            set_b(const double b_){ b = b_; }
   double          get_b(){ return b; }
@@ -79,8 +82,10 @@ private:
   void            update_EIR();
   void            queue_bites();
 
-  bool            infection; /* indicator variable (S,I) */
-  bool            chemoprophylaxis; /* protected by drugs or not? */
+  std::string     state; /* S,I,P */
+
+  // bool            infection; /* indicator variable (S,I) */
+  // bool            chemoprophylaxis; /* protected by drugs or not? */
   double          b; /* mosquito -> human transmission efficiency */
   double          c; /* human -> mosquito transmission efficiency */
   double          age;
