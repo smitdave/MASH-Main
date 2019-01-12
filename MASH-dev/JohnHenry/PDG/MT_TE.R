@@ -34,7 +34,7 @@ for(i in 1:334){
 
 ### compare average gametocyte levels to average proportion of infected mosquitoes
 TEmu = rowMeans(TE,na.rm=T)
-GTmu = rowMeans(Gt,na.rm=T)
+GTmu = rowMeans(G,na.rm=T)
 PTmu = rowMeans(Pt,na.rm=T)
 
 rowVar = function(m){
@@ -60,7 +60,7 @@ ccf(PTmu,GTmu,type="correlation",lag.max=20)
 TEmu[which(is.na(TEmu))]=0
 
 Mprime = Mosq[which(is.na(Mosq)==F)]
-Gtprime = Gt[which(is.na(Mosq)==F)]
+Gtprime = as.numeric(Gt[which(is.na(Mosq)==F)])
 ##log10 gametocyte count vs % of mosquitoes infected from bitting from them
 plot(log10(Gtprime),Mprime/100,ylab="Proportion of Feeding Mosquitoes Infected",xlab="log10 Gametocyte Density per cmm")
 title(main="Transmission Efficiency as a Function of Gametocyte Density")
@@ -86,6 +86,10 @@ logGT6mu = log10(mean(10^logGT6[which(logGT6>0)]))
 beta7 = Mprime[which(log10(Gtprime) > 3.5)]/100
 logGT7 = pmax(log10(Gtprime)[which(log10(Gtprime) > 3.5)],0)
 logGT7mu = log10(mean(10^logGT7[which(logGT7>0)]))
+
+betaRange = function(xmin){
+  Mprime[which(log10(Gtprime) > xmin & log10(Gtprime) <= xmin+1)]/100
+}
 
 x = seq(0,1,.01)
 

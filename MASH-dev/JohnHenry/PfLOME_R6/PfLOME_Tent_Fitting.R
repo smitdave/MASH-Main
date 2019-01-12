@@ -120,9 +120,7 @@ tent_test = function(){
   plot(x,tent,type="l",ylab="log10 Parasites per microliter",xlab="days",ylim=c(-1,6))
   abline(h=log10(50))
   abline(h=log10(5000),col="red")
+  pars = c(MZ0,peak,peakTime,duration)
+  return(pars)
 }
-
-
-
-tent_test()
 
