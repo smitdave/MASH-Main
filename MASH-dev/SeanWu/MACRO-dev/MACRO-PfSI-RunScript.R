@@ -34,8 +34,8 @@ if(!dir.exists(path)){
 }
 
 # pfsi parameters
-pfsi_pars <- pfsi_parameters()
-# pfsi_pars <- pfsi_parameters(DurationPf = 200,LatentPf = 0,FeverPf = 0,TreatPf = 0)
+# pfsi_pars <- pfsi_parameters()
+pfsi_pars <- pfsi_parameters(DurationPf = 200,LatentPf = 0,FeverPf = 0,TreatPf = 0)
 
 # patchs
 n <- 1
