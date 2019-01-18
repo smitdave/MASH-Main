@@ -14,7 +14,153 @@
 
 
 ################################################################################
-# initial tests
+# initial tests (single run)
+################################################################################
+
+rm(list=ls());gc()
+library(MACRO)
+
+# output files
+path <- "/Users/slwu89/Desktop/macro/"
+if(!dir.exists(path)){
+  dir.create(path)
+} else {
+  files <- list.files(path)
+  if(length(files) > 0){
+    for(f in files){
+      file.remove(paste0(path,f))
+    }
+  }
+}
+
+
+# pfsi parameters
+pfsi_pars <- pfsi_parameters()
+# pfsi_pars <- pfsi_parameters(DurationPf = 200,LatentPf = 0,FeverPf = 0,TreatPf = 0)
+
+# patchs
+n <- 1
+move <- diag(n)
+patch_pars <- patches_parameters(move = move,bWeightZoo = rep(0,n),bWeightZootox = rep(0,n),reservoir = rep(F,n),res_EIR = rep(0,n))
+
+# mosquitos
+mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(50,nrow = 365,ncol = n),
+                                 psi = diag(n),EIP = rep(11,365),M = rep(450,n),Y = rep(0,n),Z = rep(0,n))
+
+# humans
+nh <- rep(500,n)
+pfpr <- rep(0.5,n)
+
+init_state <- c(sample(x = c("I","S"),size = nh,replace = T,prob = c(pfpr[1],1-pfpr[1])))
+patch_id <- rep(0,nh)
+bweights <- rep(1,nh)
+
+human_pars <- vector("list",nh)
+for(i in 1:nh){
+  human_pars[[i]] <- human_pfsi_conpars(id = i-1,home_patch_id = patch_id[i],
+                                        trip_duration = 1,trip_frequency = 1/1000000,bweight = bweights[i],
+                                        age = 20,state = init_state[i])
+}
+check_human_pfsi_conpars(human_pars)
+
+vaxx_pars <- list()
+
+# run single trajectory
+seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31)
+
+log_pars <- list()
+h_move <- paste0(path,"h_move.csv")
+log_pars[[1]] <- list(outfile = h_move,key = "human_move",
+                      header = paste0(c("humanID","time","event","location"),collapse = ","))
+h_inf <- paste0(path,"h_inf.csv")
+log_pars[[2]] <- list(outfile = h_inf,key = "human_inf",
+                      header = paste0(c("humanID","time","state0","state1","location"),collapse = ","))
+mosy <- paste0(path,"mosy.csv")
+log_pars[[3]] <- list(outfile = mosy,key = "mosquito",
+                      header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
+
+run_macro(seed = seed,
+          tmax = 500,
+          human_pars = human_pars,
+          mosquito_pars = mosy_pars,
+          patch_pars = patch_pars,
+          model_pars = pfsi_pars,
+          log_streams = log_pars,
+          vaxx_events = vaxx_pars,
+          verbose = TRUE)
+
+# process output
+h_inf <- read.csv(file = log_pars[[2]]$outfile,stringsAsFactors = FALSE)
+
+time <- h_inf$time
+state0 <- h_inf$state0
+state1 <- h_inf$state1
+
+t_sort <- order(time)
+
+time <- time[t_sort]
+state0 <- state0[t_sort]
+state1 <- state1[t_sort]
+
+tmax <- ceiling(tail(time,1))
+
+state_init <- c("S"=0,"I"=0,"P"=0,"F"=0,"PEvaxx"=0,"GSvaxx"=0,"PEwane"=0,"GSwane"=0)
+
+i <- 1
+while(time[i] <= 0){
+  state_init[state1[i]] <- state_init[state1[i]] + 1
+  i <- i + 1
+}
+
+# fill the rest of the matrix with these states
+states <- matrix(0,byrow = T,nrow=tmax+1,ncol = 8,dimnames = list(0:tmax,c("S","I","P","F","PEvaxx","GSvaxx","PEwane","GSwane")))
+states[1,] <- state_init
+
+time <- time[i:length(time)]
+state0 <- state0[i:length(state0)]
+state1 <- state1[i:length(state1)]
+
+# aggregate over days
+for(i in 1:(nrow(states)-1)){
+  
+  # to update for this time step, modify the state from the previous step
+  states[(i+1),c("S","I","P")] <- states[i,c("S","I","P")]
+  
+  # get the stuff that happens in this time step
+  ix <- which(time < i & time >= (i-1))
+  
+  # events occured
+  if(length(ix) > 0){
+    
+    # check for point events
+    ix_p <- which(state0[ix] == "_")
+    
+    if(length(ix_p) > 0){
+      for(j in ix_p){
+        states[(i+1),state1[ix][j]] <- states[(i+1),state1[ix][j]] + 1
+      }
+    }
+    
+    # check for jump events
+    ix_t <- which(state0[ix] != "_")
+    
+    if(length(ix_t) > 0){
+      for(j in ix_t){
+        
+        states[(i+1),state0[ix][j]] <- states[(i+1),state0[ix][j]] - 1
+        states[(i+1),state1[ix][j]] <- states[(i+1),state1[ix][j]] + 1
+        
+      }
+    }
+  }
+}
+
+matplot(states[,1:3],type="l",lwd=2,col=c("blue","red","green"),lty=1)
+
+
+
+################################################################################
+# initial tests (ensemble)
 ################################################################################
 
 rm(list=ls())
