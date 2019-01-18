@@ -80,14 +80,14 @@ log_pars[[3]] <- list(outfile = mosy,key = "mosquito",
                       header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
 
 run_macro(seed = seed,
-          tmax = 500,
+          tmax = 1e3,
           human_pars = human_pars,
           mosquito_pars = mosy_pars,
           patch_pars = patch_pars,
           model_pars = pfsi_pars,
           log_streams = log_pars,
           vaxx_events = vaxx_pars,
-          verbose = TRUE)
+          verbose = F)
 
 # process output
 h_inf <- read.csv(file = log_pars[[2]]$outfile,stringsAsFactors = FALSE)
@@ -156,6 +156,10 @@ for(i in 1:(nrow(states)-1)){
 }
 
 matplot(states[,1:3],type="l",lwd=2,col=c("blue","red","green"),lty=1)
+
+mosy_out <- read.csv(file = mosy,stringsAsFactors = FALSE)
+
+mosy_out$patch2 <- mosy_out$patch1 + rpois(n = nrow(mosy_out),lambda = 2)
 
 
 
