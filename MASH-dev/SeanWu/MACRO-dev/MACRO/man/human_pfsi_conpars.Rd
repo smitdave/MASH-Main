@@ -5,7 +5,7 @@
 \title{Human-PfSI: Individual Constructor Parameters}
 \usage{
 human_pfsi_conpars(id, home_patch_id, trip_duration, trip_frequency,
-  bweight, age, inf, chx)
+  bweight, age, state)
 }
 \arguments{
 \item{id}{integer id of this person}
@@ -20,9 +20,7 @@ human_pfsi_conpars(id, home_patch_id, trip_duration, trip_frequency,
 
 \item{age}{numeric age (not currently used)}
 
-\item{inf}{logical (start simulation infected or not)}
-
-\item{chx}{logical (start simulation with chemoprophylactic protection or not)}
+\item{state}{initial state (must be character in 'S': susceptible, 'I': infected/infectious, 'P': chemoprophylaxis)}
 }
 \description{
 Generates a single named list with parameters to construct a single

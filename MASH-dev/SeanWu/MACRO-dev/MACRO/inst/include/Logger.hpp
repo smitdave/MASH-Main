@@ -63,7 +63,7 @@ public:
 
 private:
   std::unordered_map<std::string, std::ofstream>   logstreams;
-  std::vector<std::string>                         headers;
+  // std::vector<std::string>                         headers;
 
 };
 
@@ -74,6 +74,7 @@ private:
 
 /* open a logging stream */
 inline void logger::open(const std::string& outfile, const std::string& key, const std::string& header){
+  // std::cout << "opening a log stream; outfile: " << outfile << " key: " << key << " header: " << header << "\n";
   logstreams.insert(std::make_pair(key,std::ofstream{outfile}));
   logstreams.at(key) << header << "\n";
 };

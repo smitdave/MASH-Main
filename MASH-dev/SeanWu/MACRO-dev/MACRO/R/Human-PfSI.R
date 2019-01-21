@@ -29,21 +29,10 @@
 #' @param trip_frequency numeric value; average rate at which they make trips away from home
 #' @param bweight numeric value; biting weight to this person (relative to others in a patch; should have mean 1)
 #' @param age numeric age (not currently used)
-#' @param inf logical (start simulation infected or not)
-#' @param chx logical (start simulation with chemoprophylactic protection or not)
+#' @param state initial state (must be character in 'S': susceptible, 'I': infected/infectious, 'P': chemoprophylaxis)
 #'
 #' @export
-human_pfsi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bweight,age,inf,chx){
-
-  # check pars
-  if(all(inf,chx)){
-    stop(paste0("human: ",id," cannot both have active infection and be under chemoprophylactic protection\n"))
-  }
-
-  if(((id %% 1) != 0) | ((home_patch_id %% 1) != 0)){
-    stop(paste0("human: ",id," must have integer valued 'id' 'home_patch_id'\n"))
-  }
-
+human_pfsi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bweight,age,state){
   list(
     model = "PfSI",
     id = as.integer(id),
@@ -52,8 +41,7 @@ human_pfsi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bwe
     trip_frequency = as.numeric(trip_frequency),
     bweight = as.numeric(bweight),
     age = as.numeric(age),
-    inf = as.logical(inf),
-    chx = as.logical(chx)
+    state = as.character(state)
   )
 }
 
@@ -76,11 +64,8 @@ check_human_pfsi_conpars <- function(par){
       if(((id %% 1) != 0) | ((home_patch_id %% 1) != 0)){
         stop(paste0("human: ",id," must have integer valued 'id' 'home_patch_id'\n"))
       }
-      if(!is.logical(inf) | !is.logical(chx)){
-        stop(paste0("human: ",id," must have boolean valued 'inf' and 'chx' parameters\n"))
-      }
-      if(inf & chx){
-        stop(paste0("human: ",id," cannot both have active infection and be under chemoprophylactic protection\n"))
+      if(!(state %in% c("S","I","P"))){
+        stop(paste0("human: ",id," needs an initial state in ('S','I','P')\n"))
       }
       if(any(c(trip_duration,trip_frequency,bweight,age) < 0) | any(!is.numeric(c(trip_duration,trip_frequency,bweight,age)))){
         stop(paste0("human: ",id," 'trip_duration', 'trip_frequency', 'bweight', 'age' must all be positive floating point values\n"))
