@@ -186,9 +186,9 @@ h_inf_out <- array(data = 0,dim = c(nbin,nstate,nrun),
 
 # iterate over runs
 h_inf_files <- list.files(path = path, pattern= "h_inf*")
-pb <- txtProgressBar(min = 1,max = length(files))
-for(i in 1:length(files)){
-  file <- files[i]
+pb <- txtProgressBar(min = 1,max = length(h_inf_files))
+for(i in 1:length(h_inf_files)){
+  file <- h_inf_files[i]
   h_inf_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
   h_inf_out[,,as.character(i)] <- pfsi_human_output(h_inf = h_inf_csv,tmax = tsteps,dx = dx,pb = FALSE)
   setTxtProgressBar(pb = pb,value = i)
