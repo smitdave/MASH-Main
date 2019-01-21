@@ -19,9 +19,12 @@
 #' This function ignores information on location.
 #'
 #' @param h_inf a \code{data.frame} read in by \code{read.csv(file = path,stringsAsFactors = FALSE)}
+#' @param tmax the maximum runtime of the simulation that is being processed
+#' @param dx size of time bin (must be an integer greater than 0)
+#' @param pb if \code{TRUE} show a progress bar
 #'
 #' @export
-pfsi_human_output <- function(h_inf){
+pfsi_human_output <- function(h_inf, tmax, dx = 1, pb = TRUE){
 
   time <- h_inf$time
   state0 <- h_inf$state0
@@ -33,7 +36,7 @@ pfsi_human_output <- function(h_inf){
   state0 <- state0[t_sort]
   state1 <- state1[t_sort]
 
-  tmax <- ceiling(tail(time,1))
+  # tmax <- ceiling(tail(time,1))
 
   state_init <- c("S"=0,"I"=0,"P"=0,"F"=0,"PEvaxx"=0,"GSvaxx"=0,"PEwane"=0,"GSwane"=0)
 
@@ -43,8 +46,11 @@ pfsi_human_output <- function(h_inf){
     i <- i + 1
   }
 
+  # vector of time bins
+  time_dx <- c(0,seq(from=1,to=tmax+1,by=dx))
+
   # fill the rest of the matrix with these states
-  states <- matrix(0,byrow = T,nrow=tmax+1,ncol = 8,dimnames = list(0:tmax,c("S","I","P","F","PEvaxx","GSvaxx","PEwane","GSwane")))
+  states <- matrix(0,byrow = T,nrow=length(time_dx),ncol = 8,dimnames = list(time_dx,c("S","I","P","F","PEvaxx","GSvaxx","PEwane","GSwane")))
   states[1,] <- state_init
 
   time <- time[i:length(time)]
@@ -52,13 +58,17 @@ pfsi_human_output <- function(h_inf){
   state1 <- state1[i:length(state1)]
 
   # aggregate over days
-  for(i in 1:(nrow(states)-1)){
+  n <- nrow(states)-1
+  if(pb){
+    pb <- txtProgressBar(min = 1,max = n)
+  }
+  for(i in 1:n){
 
     # to update for this time step, modify the state from the previous step
     states[(i+1),c("S","I","P")] <- states[i,c("S","I","P")]
 
-    # get the stuff that happens in this time step
-    ix <- which(time < i & time >= (i-1))
+    # get the stuff that happens in this time bin
+    ix <- which(time < time_dx[i] & time >= time_dx[i-1])
 
     # events occured
     if(length(ix) > 0){
@@ -83,6 +93,9 @@ pfsi_human_output <- function(h_inf){
 
         }
       }
+    }
+    if(pb){
+      setTxtProgressBar(pb = pb,value = i)
     }
   }
 

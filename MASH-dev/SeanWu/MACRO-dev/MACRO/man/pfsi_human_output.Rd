@@ -4,10 +4,16 @@
 \alias{pfsi_human_output}
 \title{PfSI: Process Human Infection Output}
 \usage{
-pfsi_human_output(h_inf)
+pfsi_human_output(h_inf, tmax, dx = 1, pb = TRUE)
 }
 \arguments{
 \item{h_inf}{a \code{data.frame} read in by \code{read.csv(file = path,stringsAsFactors = FALSE)}}
+
+\item{tmax}{the maximum runtime of the simulation that is being processed}
+
+\item{dx}{size of time bin (must be an integer greater than 0)}
+
+\item{pb}{if \code{TRUE} show a progress bar}
 }
 \description{
 After reading in the .csv output for the \code{human_inf} logging, bin humans
