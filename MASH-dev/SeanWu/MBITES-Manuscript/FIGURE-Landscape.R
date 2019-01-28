@@ -63,8 +63,7 @@ for(i in 1:length(lscapes_ix)){
          col = cols[lscapes[[l]]$sites[,"type"]+1])
   text(x = 6.5,y = 11.35,labels = titles[i], cex = 1.45)
   legend(x = "topleft",
-         fill = adjcols,
-         border = cols,
+         pt.bg = adjcols,
          col = cols,
          pch = shapes,
          legend = c("Haunts","Habitats","Both"),
