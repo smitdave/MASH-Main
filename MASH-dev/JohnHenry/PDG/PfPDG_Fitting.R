@@ -214,21 +214,20 @@ lines(10^seq(1,5,.01),.047*10^(1.048*seq(1,5,.01)))
 ############################################################ ACTUAL power laws for mean/variance
 
 
-rv = rowVars(M,na.rm=T)
+
 rv = rep(0,dim(M)[1])
 for(i in 1:dim(M)[1]){
   rv[i] = var(M[i,],na.rm=T)
 }
 rm = rowMeans(M,na.rm=T)
-plot(log10(rv),type="l",xlim=c(0,500),xlab="Days Since First Detectable",ylab="log10 Parasites per microL")
-abline(h=log10(88))
+plot(rv,type="l",xlim=c(0,500),xlab="Days Since First Detectable",ylab="log10 Parasites per microL")
 title(main="Daily Variance of Parasite Densities")
-abline(h=log10(5),lty=2)
 
 rv[which(rv==0)]=NaN
 rm[which(rm==0)]=NaN
-logrm = log10(rm)
-mv = lm(log10(rv)~logrm)
+rm = log10(rm)
+rv = log10(rv)
+mv = lm(rv~rm)
 fmv = function(x){
   mv$coefficients[[1]]+mv$coefficients[[2]]*x
 }
@@ -236,9 +235,10 @@ fmv = function(x){
 ###
 ###
 #### Mean/Variance relationship for Asexual parasitemia
-plot(log10(rm),log10(rv),xlab="log10 Mean Parasite Density",ylab="log10 Variance of Parasite Density")
+plot(rm,rv,xlab="log10 Mean Parasite Density",ylab="log10 Variance of Parasite Density")
 #lines(seq(-1,10,.01),fmv(seq(-1,10,.01)),col="blue")
 title(main="Mean-Variance Power Law for Asexual Parasites")
+lines(seq(1,5,.01),fmv(seq(1,5,.01)))
 
 plot(mv$residuals,xlab="Days",ylab="Residual")
 title(main="Plot of Residuals from Asexual Mean-Variance Power Law")
@@ -247,7 +247,6 @@ title("Histogram of Residuals from Asexual Mean-Variance Power Law")
 qqnorm((mv$residuals-mean(mv$residuals))/sqrt(var(mv$residuals)))
 lines(seq(-4,4,.1),seq(-4,4,.1))
 
-grv = rowVars(G,na.rm=T)
 grv = rep(0,dim(G)[1])
 for(i in 1:dim(G)[1]){
   grv[i] = var(G[i,],na.rm=T)
@@ -277,7 +276,7 @@ qqnorm((gmv$residuals-mean(gmv$residuals))/sqrt(var(gmv$residuals)))
 lines(seq(-4,4,.1),seq(-4,4,.1))
 
 ccf(rm,grm,na.action = na.contiguous,main="Cross-Correlation between Asexual and Gametocyte Densities",ylab="CCF")
-plot(log10(rm)[1:(length(rm)-8)],log10(grm)[9:length(rm)],xlab="Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
+plot(log10(rm)[1:(length(rm)-8)],log10(grm)[9:length(rm)],xlab="Lagged log10 Mean Asexual Parasite Densities per microL",ylab="log10 Mean Gametocyte Densities",main="Lagged Gametocyte Production")
 rmd = log10(rm)[1:(length(rm)-8)]
 rmd[which(is.infinite(rmd))] = NaN
 grmd = log10(grm)[9:length(rm)]
