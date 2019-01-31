@@ -25,19 +25,6 @@
 #include "Logger.hpp"
 #include "Parameters.hpp"
 
-/*
-  TO-DO:
-  * heterogeneity in c; instead of setting infection = T/F, just move c
-  * change how we store state in PfSI to just a single string (S,I,P)
-  * investigate possibility to have a central logging mechanism that decides how to log events
-  * check that the 'normalize_kappa' in Patch.cpp is right
-  DONE:
-  * DONE! set up factory method for Mosquito
-  * DONE! set up factory method for Human
-  * DONE! make event's destructor pure virtual and check no bugs
-  *     > appears not possible? then the comparison operator doesn't work.
-*/
-
 
 /* ################################################################################
  * class boilerplate
@@ -168,7 +155,7 @@ mosquito* tile::get_mosquitos(){
 void tile::simulation(const u_int tmax){
 
   /* initialize logging */
-  mosquitos->initialize_logging();
+  // mosquitos->initialize_logging();
 
   if(verbose){std::cout << "begin simulation" << std::endl;}
   Progress ps(tmax, verbose);

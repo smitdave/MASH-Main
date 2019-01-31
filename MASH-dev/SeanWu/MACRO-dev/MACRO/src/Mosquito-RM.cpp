@@ -102,8 +102,8 @@ mosquito_rm& mosquito_rm::operator=(mosquito_rm&&) = default;
 void mosquito_rm::simulate(){
 
   /* absolute time and day of the year */
-  u_int t_abs = tileP->get_tnow();
-  u_int today = t_abs % 365;
+  u_int tnow = tileP->get_tnow();
+  u_int today = tnow % 365;
 
   /* simulation */
   aquatic_dynamics(today);
@@ -112,21 +112,21 @@ void mosquito_rm::simulate(){
   /* logging */
 
   /* write M */
-  tileP->get_logger()->get_stream("mosquito") << today << ",M,";
+  tileP->get_logger()->get_stream("mosquito") << tnow << ",M,";
   for(auto it = M.begin(); it != M.end()-1; it++){
     tileP->get_logger()->get_stream("mosquito") << *it << ",";
   }
   tileP->get_logger()->get_stream("mosquito") << *(M.end()-1) << "\n";
 
   /* write Y */
-  tileP->get_logger()->get_stream("mosquito") << today << ",Y,";
+  tileP->get_logger()->get_stream("mosquito") << tnow << ",Y,";
   for(auto it = Y.begin(); it != Y.end()-1; it++){
     tileP->get_logger()->get_stream("mosquito") << *it << ",";
   }
   tileP->get_logger()->get_stream("mosquito") << *(Y.end()-1) << "\n";
 
   /* write Z */
-  tileP->get_logger()->get_stream("mosquito") << today << ",Z,";
+  tileP->get_logger()->get_stream("mosquito") << tnow << ",Z,";
   for(auto it = Z.begin(); it != Z.end()-1; it++){
     tileP->get_logger()->get_stream("mosquito") << *it << ",";
   }

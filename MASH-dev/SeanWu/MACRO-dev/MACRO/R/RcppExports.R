@@ -20,14 +20,3 @@ run_macro <- function(seed, tmax, human_pars, mosquito_pars, patch_pars, model_p
     invisible(.Call('_MACRO_run_macro', PACKAGE = 'MACRO', seed, tmax, human_pars, mosquito_pars, patch_pars, model_pars, log_streams, vaxx_events, verbose))
 }
 
-#' Utility: Discretize PfSI Event Output to Daily Jump Process
-#'
-#' Take output of PfSI human infection logging and return a day by day state space data frame.
-#'
-#' @param out raw output of PfSI in \code{\link{data.frame}} format
-#'
-#' @export
-Util_PfSI_State <- function(out) {
-    .Call('_MACRO_Util_PfSI_State', PACKAGE = 'MACRO', out)
-}
-

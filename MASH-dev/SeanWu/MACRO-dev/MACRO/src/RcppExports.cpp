@@ -24,21 +24,9 @@ BEGIN_RCPP
     return R_NilValue;
 END_RCPP
 }
-// Util_PfSI_State
-Rcpp::DataFrame Util_PfSI_State(const Rcpp::DataFrame& out);
-RcppExport SEXP _MACRO_Util_PfSI_State(SEXP outSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< const Rcpp::DataFrame& >::type out(outSEXP);
-    rcpp_result_gen = Rcpp::wrap(Util_PfSI_State(out));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_MACRO_run_macro", (DL_FUNC) &_MACRO_run_macro, 9},
-    {"_MACRO_Util_PfSI_State", (DL_FUNC) &_MACRO_Util_PfSI_State, 1},
     {NULL, NULL, 0}
 };
 
