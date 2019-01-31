@@ -60,7 +60,7 @@ pfsi_human_output <- function(h_inf, tmax, dx = 1, pb = TRUE){
   # aggregate over days
   n <- nrow(states)-1
   if(pb){
-    pb <- txtProgressBar(min = 1,max = n)
+    pbx <- txtProgressBar(min = 1,max = n)
   }
   for(i in 1:n){
 
@@ -95,7 +95,7 @@ pfsi_human_output <- function(h_inf, tmax, dx = 1, pb = TRUE){
       }
     }
     if(pb){
-      setTxtProgressBar(pb = pb,value = i)
+      setTxtProgressBar(pb = pbx,value = i)
     }
   }
 

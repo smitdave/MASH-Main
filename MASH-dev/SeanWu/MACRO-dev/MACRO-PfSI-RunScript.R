@@ -91,7 +91,7 @@ run_macro(seed = seed,
 
 # process output
 h_inf_csv <- read.csv(file = log_pars[[2]]$outfile,stringsAsFactors = FALSE)
-h_inf_out <- pfsi_human_output(h_inf_csv,dx = 10)
+h_inf_out <- pfsi_human_output(h_inf = h_inf_csv,dx = 10,tmax = 1e4,pb = T)
 
 
 ################################################################################
