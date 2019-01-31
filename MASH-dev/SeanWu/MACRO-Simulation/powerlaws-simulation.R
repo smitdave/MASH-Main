@@ -294,6 +294,7 @@ par(mfrow=c(3,1), mar =c(5,4,1,2))
 plotResidErr(tororo, "Tororo")
 plotResidErr(kanungu, "Kanungu")
 plotResidErr(jinja, "Jinja")
+par(mfrow=c(1,1))
 
 
 ################################################################################
