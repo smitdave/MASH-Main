@@ -50,8 +50,9 @@ pfsi_human_output <- function(h_inf, tmax, dx = 1, pb = TRUE){
   time_dx <- c(0,seq(from=1,to=tmax+1,by=dx))
 
   # fill the rest of the matrix with these states
-  states <- matrix(0,byrow = T,nrow=length(time_dx),ncol = 8,dimnames = list(time_dx,c("S","I","P","F","PEvaxx","GSvaxx","PEwane","GSwane")))
-  states[1,] <- state_init
+  states <- matrix(0,byrow = T,nrow=length(time_dx),ncol = 9,dimnames = list(time_dx,c("time","S","I","P","F","PEvaxx","GSvaxx","PEwane","GSwane")))
+  states[1,2:ncol(states)] <- state_init
+  states[,1] <- time_dx
 
   time <- time[i:length(time)]
   state0 <- state0[i:length(state0)]
