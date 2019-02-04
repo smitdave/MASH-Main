@@ -42,16 +42,16 @@ lf_means <- rep(0,max)
 nbh_means <- rep(0,max)
 fc_means <- rep(0,max)
 br_means <- rep(0,max)
-abs_d_means <- rep(0,max)
-cum_d_means <- rep(0,max)
+# abs_d_means <- rep(0,max)
+# cum_d_means <- rep(0,max)
 
 # hold the quantiles
 lf_quant <- vector("list",max)
 nbh_quant <- vector("list",max)
 fc_quant <- vector("list",max)
 br_quant <- vector("list",max)
-abs_d_quant <- vector("list",max)
-cum_d_quant <- vector("list",max)
+# abs_d_quant <- vector("list",max)
+# cum_d_quant <- vector("list",max)
 
 # probabilities for quantiles
 q_probs <- c(0.2,0.25,0.5,0.75,0.8)
@@ -71,9 +71,9 @@ for(i in 1:max){
   fc_means[i] <- mean(sumstat[[i]]$blood_interval)
   br_means[i] <- mean(sumstat[[i]]$blood_rate)
   
-  # means of dispersion
-  abs_d_means[i] <- mean(sumstat[[i]]$disperse_abs)
-  cum_d_means[i] <- mean(sumstat[[i]]$disperse_cum)
+  # # means of dispersion
+  # abs_d_means[i] <- mean(sumstat[[i]]$disperse_abs)
+  # cum_d_means[i] <- mean(sumstat[[i]]$disperse_cum)
   
   # get quantiles
   lf_quant[[i]] <- wtd.quantile(lf_tt,lf_surv,probs = q_probs)
@@ -81,9 +81,9 @@ for(i in 1:max){
   fc_quant[[i]] <- quantile(sumstat[[i]]$blood_interval,probs = q_probs)
   br_quant[[i]] <- quantile(sumstat[[i]]$blood_rate,probs = q_probs)
   
-  # quantiles of dispersion
-  abs_d_quant[[i]] <- quantile(sumstat[[i]]$disperse_abs,probs = q_probs)
-  cum_d_quant[[i]] <- quantile(sumstat[[i]]$disperse_cum,probs = q_probs)
+  # # quantiles of dispersion
+  # abs_d_quant[[i]] <- quantile(sumstat[[i]]$disperse_abs,probs = q_probs)
+  # cum_d_quant[[i]] <- quantile(sumstat[[i]]$disperse_cum,probs = q_probs)
   
   setTxtProgressBar(pb,i)
 }
@@ -94,9 +94,9 @@ for(i in 1:max){
 ###############################################################################
 
 # plot parameters
-cols <- ggcol(n = 6)
-pdf(file = here("figures/BionomicsPeridom.pdf"),width = 12,height = 12)
-par(mar = c(4.5, 4.5, 2, 4.5),mfrow=c(3,2))
+cols <- ggcol(n = 4)
+pdf(file = here("figures/BionomicsPeridom.pdf"),width = 12,height = 10)
+par(mar = c(4.5, 4.5, 2, 4.5),mfrow=c(2,2))
 
 xaxt <- floor(seq(from=1,to=26,length.out = 5))
 xaxt_lab <- seq(from=0,to=1,length.out = 5)
@@ -201,54 +201,54 @@ mtext("Percent peri-domestic", side = 1, line = 2.5)
 mtext("Age (days)", side = 2, line = 2.25)
 
 
-# absolute dispersion
-abs_d_ylim <- c(min(c(unlist(abs_d_quant)),abs_d_means),max(c(abs_d_means,unlist(abs_d_quant))))
-abs_d_25 <- sapply(abs_d_quant,function(x){x[["25%"]]})
-abs_d_75 <- sapply(abs_d_quant,function(x){x[["75%"]]})
-plot(abs_d_means,
-     type="l", xaxt = "n", yaxt = "n",ylab = "", xlab = "",ylim = abs_d_ylim
-)
-polygon(
-  x = c(1:26,26:1),
-  y = c(abs_d_75,rev(abs_d_25)),
-  border = NA,col = adjustcolor(cols[5],0.5)
-)
-lines(x = 1:26,
-      y = abs_d_means,
-      col = adjustcolor(cols[5],1),lwd=2)
-lines(x = 1:26,
-      y = sapply(abs_d_quant,function(x){x[["50%"]]}),
-      col = adjustcolor(cols[5],1),lwd=2,lty=2)
-axis(side=2, at = pretty(range(c(0,abs_d_means,abs_d_ylim)),n = 8))
-axis(side = 1,at = xaxt,labels = xaxt_lab)
-mtext("Lifetime Displacement", side = 3, line = 0.5,cex=1.25)
-mtext("Percent peri-domestic", side = 1, line = 2.5)
-mtext("Distance", side = 2, line = 2.25)
-
-
-# cumulative dispersion
-cum_d_ylim <- c(min(c(unlist(cum_d_quant)),cum_d_means),max(c(cum_d_means,unlist(cum_d_quant))))
-cum_d_25 <- sapply(cum_d_quant,function(x){x[["25%"]]})
-cum_d_75 <- sapply(cum_d_quant,function(x){x[["75%"]]})
-plot(cum_d_means,
-     type="l", xaxt = "n", yaxt = "n",ylab = "", xlab = "",ylim = cum_d_ylim
-)
-polygon(
-  x = c(1:26,26:1),
-  y = c(cum_d_75,rev(cum_d_25)),
-  border = NA,col = adjustcolor(cols[6],0.5)
-)
-lines(x = 1:26,
-      y = cum_d_means,
-      col = adjustcolor(cols[6],1),lwd=2)
-lines(x = 1:26,
-      y = sapply(cum_d_quant,function(x){x[["50%"]]}),
-      col = adjustcolor(cols[6],1),lwd=2,lty=2)
-axis(side=2, at = pretty(range(c(0,cum_d_means,cum_d_ylim)),n = 8))
-axis(side = 1,at = xaxt,labels = xaxt_lab)
-mtext("Cumulative Movement", side = 3, line = 0.5,cex=1.25)
-mtext("Percent peri-domestic", side = 1, line = 2.5)
-mtext("Distance", side = 2, line = 2.25)
+# # absolute dispersion
+# abs_d_ylim <- c(min(c(unlist(abs_d_quant)),abs_d_means),max(c(abs_d_means,unlist(abs_d_quant))))
+# abs_d_25 <- sapply(abs_d_quant,function(x){x[["25%"]]})
+# abs_d_75 <- sapply(abs_d_quant,function(x){x[["75%"]]})
+# plot(abs_d_means,
+#      type="l", xaxt = "n", yaxt = "n",ylab = "", xlab = "",ylim = abs_d_ylim
+# )
+# polygon(
+#   x = c(1:26,26:1),
+#   y = c(abs_d_75,rev(abs_d_25)),
+#   border = NA,col = adjustcolor(cols[5],0.5)
+# )
+# lines(x = 1:26,
+#       y = abs_d_means,
+#       col = adjustcolor(cols[5],1),lwd=2)
+# lines(x = 1:26,
+#       y = sapply(abs_d_quant,function(x){x[["50%"]]}),
+#       col = adjustcolor(cols[5],1),lwd=2,lty=2)
+# axis(side=2, at = pretty(range(c(0,abs_d_means,abs_d_ylim)),n = 8))
+# axis(side = 1,at = xaxt,labels = xaxt_lab)
+# mtext("Lifetime Displacement", side = 3, line = 0.5,cex=1.25)
+# mtext("Percent peri-domestic", side = 1, line = 2.5)
+# mtext("Distance", side = 2, line = 2.25)
+# 
+# 
+# # cumulative dispersion
+# cum_d_ylim <- c(min(c(unlist(cum_d_quant)),cum_d_means),max(c(cum_d_means,unlist(cum_d_quant))))
+# cum_d_25 <- sapply(cum_d_quant,function(x){x[["25%"]]})
+# cum_d_75 <- sapply(cum_d_quant,function(x){x[["75%"]]})
+# plot(cum_d_means,
+#      type="l", xaxt = "n", yaxt = "n",ylab = "", xlab = "",ylim = cum_d_ylim
+# )
+# polygon(
+#   x = c(1:26,26:1),
+#   y = c(cum_d_75,rev(cum_d_25)),
+#   border = NA,col = adjustcolor(cols[6],0.5)
+# )
+# lines(x = 1:26,
+#       y = cum_d_means,
+#       col = adjustcolor(cols[6],1),lwd=2)
+# lines(x = 1:26,
+#       y = sapply(cum_d_quant,function(x){x[["50%"]]}),
+#       col = adjustcolor(cols[6],1),lwd=2,lty=2)
+# axis(side=2, at = pretty(range(c(0,cum_d_means,cum_d_ylim)),n = 8))
+# axis(side = 1,at = xaxt,labels = xaxt_lab)
+# mtext("Cumulative Movement", side = 3, line = 0.5,cex=1.25)
+# mtext("Percent peri-domestic", side = 1, line = 2.5)
+# mtext("Distance", side = 2, line = 2.25)
 
 par(gpars)
 dev.off()
