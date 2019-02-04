@@ -18,6 +18,7 @@
 
 rm(list=ls());gc()
 library(MACRO)
+library(data.table)
 library(tidyr)
 
 # output files
@@ -43,7 +44,7 @@ patch_pars <- patches_parameters(move = move,bWeightZoo = rep(0,n),bWeightZootox
 
 # mosquitos
 mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(73.1869,nrow = 365,ncol = n),
-                                 psi = diag(n),EIP = rep(11,365),M = rep(450,n),Y = rep(0,n),Z = rep(0,n))
+                                 psi = diag(n),EIP = rep(11,365),M = rep(658.68,n),Y = rep(36.92,n),Z = rep(11.59,n))
 
 # humans
 nh <- rep(2000,n)
@@ -64,7 +65,7 @@ check_human_pfsi_conpars(human_pars)
 vaxx_pars <- list()
 
 # run ensemble
-nrun <- 1e2
+nrun <- 1e4
 tsteps <- 5e3
 pb <- txtProgressBar(min = 1,max = nrun)
 for(i in 1:nrun){
@@ -97,25 +98,34 @@ for(i in 1:nrun){
 dx <- 1
 
 # iterate over runs
+sum_stat_array <- array(data = 0,dim = c(tsteps,4,nrun))
 h_inf_files <- list.files(path = path, pattern= "h_inf*")
 mosy_files <- list.files(path = path, pattern= "mosy*")
 pb <- txtProgressBar(min = 1,max = length(h_inf_files))
 for(i in 1:length(h_inf_files)){
   # read in and process human file
   file <- h_inf_files[i]
-  h_inf_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
+  # h_inf_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
+  h_inf_csv <- fread(file = paste0(path,file))
   h_inf_out <- pfsi_human_output(h_inf = h_inf_csv,tmax = tsteps,dx = dx,pb = FALSE)
   
   # read in and process mosquito files
   file <- mosy_files[i]
-  mosy_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
+  # mosy_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
+  mosy_csv <- fread(file = paste0(path,file))
   mosy_out <- spread(data = mosy_csv,key = state,value = patch1)
   
   # merge & write output
   out_merge <- merge(x = mosy_out,y = h_inf_out,by = "time",all.x = FALSE)[,c("time","M","Y","Z","I")]
+  sum_stat_array[,,i] <- as.matrix(out_merge[,-1])
   write.table(x = out_merge,file = paste0(path,"output",i,".csv"),dec = ".",sep = ",",col.names = TRUE,row.names = FALSE)
   setTxtProgressBar(pb = pb,value = i)
 }
+
+means <- apply(X = sum_stat_array,MARGIN = c(1,2),FUN = mean)
+sds <- apply(X = sum_stat_array,MARGIN = c(1,2),FUN = sd)
+write.table(x = means,file = paste0(path,"sim_means.csv"),dec = ".",sep = ",",col.names = c("M","Y","Z","I"),row.names = FALSE)
+write.table(x = sds,file = paste0(path,"sim_sds.csv"),dec = ".",sep = ",",col.names = c("M","Y","Z","I"),row.names = FALSE)
 
 
 ################################################################################
@@ -124,6 +134,7 @@ for(i in 1:length(h_inf_files)){
 
 rm(list=ls());gc()
 library(MACRO)
+library(data.table)
 library(tidyr)
 
 # output files
@@ -149,7 +160,7 @@ patch_pars <- patches_parameters(move = move,bWeightZoo = rep(0,n),bWeightZootox
 
 # mosquitos
 mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(73.1869,nrow = 365,ncol = n),
-                                 psi = diag(n),EIP = rep(11,365),M = rep(450,n),Y = rep(0,n),Z = rep(0,n))
+                                 psi = diag(n),EIP = rep(11,365),M = rep(658.68,n),Y = rep(36.92,n),Z = rep(11.59,n))
 
 # humans
 nh <- rep(2000,n)
@@ -170,7 +181,7 @@ check_human_pfsi_conpars(human_pars)
 vaxx_pars <- list()
 
 # run ensemble
-nrun <- 1e2
+nrun <- 1e4
 tsteps <- 5e3
 pb <- txtProgressBar(min = 1,max = nrun)
 for(i in 1:nrun){
@@ -203,22 +214,31 @@ for(i in 1:nrun){
 dx <- 1
 
 # iterate over runs
+sum_stat_array <- array(data = 0,dim = c(tsteps,4,nrun))
 h_inf_files <- list.files(path = path, pattern= "h_inf*")
 mosy_files <- list.files(path = path, pattern= "mosy*")
 pb <- txtProgressBar(min = 1,max = length(h_inf_files))
 for(i in 1:length(h_inf_files)){
   # read in and process human file
   file <- h_inf_files[i]
-  h_inf_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
+  # h_inf_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
+  h_inf_csv <- fread(file = paste0(path,file))
   h_inf_out <- pfsi_human_output(h_inf = h_inf_csv,tmax = tsteps,dx = dx,pb = FALSE)
   
   # read in and process mosquito files
   file <- mosy_files[i]
-  mosy_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
+  # mosy_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
+  mosy_csv <- fread(file = paste0(path,file))
   mosy_out <- spread(data = mosy_csv,key = state,value = patch1)
   
   # merge & write output
   out_merge <- merge(x = mosy_out,y = h_inf_out,by = "time",all.x = FALSE)[,c("time","M","Y","Z","I")]
+  sum_stat_array[,,i] <- as.matrix(out_merge[,-1])
   write.table(x = out_merge,file = paste0(path,"output",i,".csv"),dec = ".",sep = ",",col.names = TRUE,row.names = FALSE)
   setTxtProgressBar(pb = pb,value = i)
 }
+
+means <- apply(X = sum_stat_array,MARGIN = c(1,2),FUN = mean)
+sds <- apply(X = sum_stat_array,MARGIN = c(1,2),FUN = sd)
+write.table(x = means,file = paste0(path,"sim_means.csv"),dec = ".",sep = ",",col.names = c("M","Y","Z","I"),row.names = FALSE)
+write.table(x = sds,file = paste0(path,"sim_sds.csv"),dec = ".",sep = ",",col.names = c("M","Y","Z","I"),row.names = FALSE)
