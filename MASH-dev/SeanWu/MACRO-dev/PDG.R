@@ -23,18 +23,6 @@ Ptmu = log(c(0,8,10,12,11.5,11,10.5,10,9.5,9,8.5,8,7.5,7,7,7)) ## mean of lognor
 Ptvar = rep(.1,16) 
 Pf <- rpois(n = 16,lambda = 10)
 
-# set.seed(42)
-# Pt <- Pt0
-# for(i in 1:pfAges){
-#   if(Pf[i] > 0){
-#     cat("i: ",i," Pt: ",Pt,"\n")
-#     Pt = log10(10^Pt + sum(10^(min(rlnorm(Pf[i],Ptmu[i],Ptvar[i]),13))))
-#   }
-# }
-# cat("Pt: ",Pt,"\n")
-# 
-# set.seed(42)
-# checkPt(Ptmu = Ptmu,Ptvar = Ptvar,Pf = Pf,Pt0 = Pt0)
 
 # john henry's example
 source("/Users/slwu89/Desktop/git/MASH-Main/MASH-dev/JohnHenry/PDG/PDG.R")
