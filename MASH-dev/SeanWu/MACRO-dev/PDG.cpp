@@ -104,7 +104,6 @@ public:
   };
 
   void age_Infections(){
-    std::cout << "calling age_Infections" << std::endl;
 
     /* removes from final category at a particular rate, relatively small */
     Pf.at(pfAges-1) = Pf.at(pfAges-1) - Rcpp::sum(Rcpp::rbinom(Pf.at(pfAges-1),1,pfdr));
@@ -113,11 +112,9 @@ public:
     /* shifts to next age group */
     Pf = A * Pf;
 
-    Pf.print("Pf");
   };
 
   void update_Pt(){
-    std::cout << "calling update_Pt" << std::endl;
 
     Pt = 0.0;
 
@@ -137,11 +134,9 @@ public:
     /* include immune effect; this is a stub; here we just discount Pt by at most 99 percent */
     Pt = std::log10((1.0 - .99 * Imm)*std::pow(10,Pt));
 
-    std::cout << "Pt: " << Pt << std::endl;
   };
 
   void update_Gt(){
-    std::cout << "calling update_Gt" << std::endl;
 
     /*
       multiply previous Pt by the average Gt created per Pt, log scaling
@@ -162,7 +157,6 @@ public:
       Gt = NAN;
     }
 
-    std::cout << "Gt: " << Gt << std::endl;
   };
 
   void update_MOI(){
