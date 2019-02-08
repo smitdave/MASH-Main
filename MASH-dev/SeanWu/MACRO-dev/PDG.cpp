@@ -1,3 +1,10 @@
+/* ################################################################################
+#
+#   Testing PDG (simple standalone c++ conversion)
+#   Based on the R code in John Henry's dev folder
+#
+################################################################################ */
+
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp14)]]
 #include <RcppArmadillo.h>
@@ -10,29 +17,6 @@
 
 /* for NAN macro and mathematical fn's */
 #include <math.h>
-
-
-// [[Rcpp::export]]
-arma::Mat<int> ageMatrix(const int size){
-  arma::Mat<int> A = arma::zeros<arma::Mat<int> >(size,size);
-  A.diag(-1).ones();
-  A.at(size-1,size-1) = 1;
-  return A;
-}
-
-// [[Rcpp::export]]
-double checkPt(const std::vector<double>& Ptmu, const std::vector<double>& Ptvar, const arma::Col<int>& Pf, const double Pt0){
-  double Pt = Pt0;
-  std::cout << "Pt: " << Pt << std::endl;
-  /* pull from all of the age-specific distributions, sum to get total Pt; limit tails of dist'ns */
-  for(size_t i=0; i<Pf.size(); i++){
-    if(Pf.at(i) > 0){
-      std::cout << "i: " << i << " Pt: " << Pt << std::endl;
-      Pt = std::log10(std::pow(10,Pt) + std::pow(10,std::min( (double)Rcpp::min(Rcpp::rlnorm(Pf.at(i),Ptmu.at(i),Ptvar.at(i))) , 13.0)));
-    }
-  }
-  return Pt;
-}
 
 
 /* NOTE: in R, NaN is used to stop tracking Pt and Gt */
@@ -127,7 +111,6 @@ public:
 
     /* don't care about very small numbers of parasites */
     if(Pt < 1.0){
-      // Pt = -1.0;
       Pt = NAN;
     }
 
@@ -261,3 +244,26 @@ Rcpp::List runPDG(const size_t tmax, const std::vector<double>& Ptmu, const std:
                      Rcpp::Named("immCounter") = Rcpp::wrap(hptr->get_immCounter())
                    );
 }
+
+
+// // [[Rcpp::export]]
+// arma::Mat<int> ageMatrix(const int size){
+//   arma::Mat<int> A = arma::zeros<arma::Mat<int> >(size,size);
+//   A.diag(-1).ones();
+//   A.at(size-1,size-1) = 1;
+//   return A;
+// }
+// 
+// // [[Rcpp::export]]
+// double checkPt(const std::vector<double>& Ptmu, const std::vector<double>& Ptvar, const arma::Col<int>& Pf, const double Pt0){
+//   double Pt = Pt0;
+//   std::cout << "Pt: " << Pt << std::endl;
+//   /* pull from all of the age-specific distributions, sum to get total Pt; limit tails of dist'ns */
+//   for(size_t i=0; i<Pf.size(); i++){
+//     if(Pf.at(i) > 0){
+//       std::cout << "i: " << i << " Pt: " << Pt << std::endl;
+//       Pt = std::log10(std::pow(10,Pt) + std::pow(10,std::min( (double)Rcpp::min(Rcpp::rlnorm(Pf.at(i),Ptmu.at(i),Ptvar.at(i))) , 13.0)));
+//     }
+//   }
+//   return Pt;
+// }
