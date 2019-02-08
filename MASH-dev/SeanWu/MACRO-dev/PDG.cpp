@@ -1,3 +1,10 @@
+/* ################################################################################
+#
+#   Testing PDG (simple standalone c++ conversion)
+#   Based on the R code in John Henry's dev folder
+#
+################################################################################ */
+
 // [[Rcpp::depends(RcppArmadillo)]]
 // [[Rcpp::plugins(cpp14)]]
 #include <RcppArmadillo.h>
@@ -10,29 +17,6 @@
 
 /* for NAN macro and mathematical fn's */
 #include <math.h>
-
-
-// [[Rcpp::export]]
-arma::Mat<int> ageMatrix(const int size){
-  arma::Mat<int> A = arma::zeros<arma::Mat<int> >(size,size);
-  A.diag(-1).ones();
-  A.at(size-1,size-1) = 1;
-  return A;
-}
-
-// [[Rcpp::export]]
-double checkPt(const std::vector<double>& Ptmu, const std::vector<double>& Ptvar, const arma::Col<int>& Pf, const double Pt0){
-  double Pt = Pt0;
-  std::cout << "Pt: " << Pt << std::endl;
-  /* pull from all of the age-specific distributions, sum to get total Pt; limit tails of dist'ns */
-  for(size_t i=0; i<Pf.size(); i++){
-    if(Pf.at(i) > 0){
-      std::cout << "i: " << i << " Pt: " << Pt << std::endl;
-      Pt = std::log10(std::pow(10,Pt) + std::pow(10,std::min( (double)Rcpp::min(Rcpp::rlnorm(Pf.at(i),Ptmu.at(i),Ptvar.at(i))) , 13.0)));
-    }
-  }
-  return Pt;
-}
 
 
 /* NOTE: in R, NaN is used to stop tracking Pt and Gt */
@@ -104,7 +88,6 @@ public:
   };
 
   void age_Infections(){
-    std::cout << "calling age_Infections" << std::endl;
 
     /* removes from final category at a particular rate, relatively small */
     Pf.at(pfAges-1) = Pf.at(pfAges-1) - Rcpp::sum(Rcpp::rbinom(Pf.at(pfAges-1),1,pfdr));
@@ -113,11 +96,9 @@ public:
     /* shifts to next age group */
     Pf = A * Pf;
 
-    Pf.print("Pf");
   };
 
   void update_Pt(){
-    std::cout << "calling update_Pt" << std::endl;
 
     Pt = 0.0;
 
@@ -130,18 +111,15 @@ public:
 
     /* don't care about very small numbers of parasites */
     if(Pt < 1.0){
-      // Pt = -1.0;
       Pt = NAN;
     }
 
     /* include immune effect; this is a stub; here we just discount Pt by at most 99 percent */
     Pt = std::log10((1.0 - .99 * Imm)*std::pow(10,Pt));
 
-    std::cout << "Pt: " << Pt << std::endl;
   };
 
   void update_Gt(){
-    std::cout << "calling update_Gt" << std::endl;
 
     /*
       multiply previous Pt by the average Gt created per Pt, log scaling
@@ -162,7 +140,6 @@ public:
       Gt = NAN;
     }
 
-    std::cout << "Gt: " << Gt << std::endl;
   };
 
   void update_MOI(){
@@ -267,3 +244,26 @@ Rcpp::List runPDG(const size_t tmax, const std::vector<double>& Ptmu, const std:
                      Rcpp::Named("immCounter") = Rcpp::wrap(hptr->get_immCounter())
                    );
 }
+
+
+// // [[Rcpp::export]]
+// arma::Mat<int> ageMatrix(const int size){
+//   arma::Mat<int> A = arma::zeros<arma::Mat<int> >(size,size);
+//   A.diag(-1).ones();
+//   A.at(size-1,size-1) = 1;
+//   return A;
+// }
+// 
+// // [[Rcpp::export]]
+// double checkPt(const std::vector<double>& Ptmu, const std::vector<double>& Ptvar, const arma::Col<int>& Pf, const double Pt0){
+//   double Pt = Pt0;
+//   std::cout << "Pt: " << Pt << std::endl;
+//   /* pull from all of the age-specific distributions, sum to get total Pt; limit tails of dist'ns */
+//   for(size_t i=0; i<Pf.size(); i++){
+//     if(Pf.at(i) > 0){
+//       std::cout << "i: " << i << " Pt: " << Pt << std::endl;
+//       Pt = std::log10(std::pow(10,Pt) + std::pow(10,std::min( (double)Rcpp::min(Rcpp::rlnorm(Pf.at(i),Ptmu.at(i),Ptvar.at(i))) , 13.0)));
+//     }
+//   }
+//   return Pt;
+// }
