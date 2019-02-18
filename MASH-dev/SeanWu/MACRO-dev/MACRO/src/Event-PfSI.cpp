@@ -252,13 +252,13 @@ e_pfsi_pevaxx::e_pfsi_pevaxx(double tEvent_, const bool treat, human_pfsi* h):
     /* if treatment accompanies vaccination */
     if(treat){
 
+      /* log this event */
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << h->get_state() << ",P," << h->get_patch_id() << "\n";
+
       /* copied from e_pfsi_treatment */
       h->set_state("P");
       h->rmTagFromQ("PfSI_recovery");
       h->rmTagFromQ("PfSI_endprophylaxis");
-
-      /* log this event */
-      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << h->get_state() << ",P," << h->get_patch_id() << "\n";
 
       /* initiate a period of protection from chemoprophylaxis */
       double tSusceptible = tEvent_ + pfsi_ttSusceptiblePf(h);
@@ -349,13 +349,13 @@ e_pfsi_gsvaxx::e_pfsi_gsvaxx(double tEvent_, const bool treat, human_pfsi* h):
     /* if treatment accompanies vaccination */
     if(treat){
 
+      /* log this event */
+      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << h->get_state() << ",P," << h->get_patch_id() << "\n";
+
       /* copied from e_pfsi_treatment */
       h->set_state("P");
       h->rmTagFromQ("PfSI_recovery");
       h->rmTagFromQ("PfSI_endprophylaxis");
-
-      /* log this event */
-      h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << "," << h->get_state() << ",P," << h->get_patch_id() << "\n";
 
       /* initiate a period of protection from chemoprophylaxis */
       double tSusceptible = tEvent_ + pfsi_ttSusceptiblePf(h);
