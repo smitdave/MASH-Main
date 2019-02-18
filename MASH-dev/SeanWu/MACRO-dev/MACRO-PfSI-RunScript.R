@@ -64,6 +64,11 @@ for(i in 1:nh){
 check_human_pfsi_conpars(human_pars)
 
 vaxx_pars <- list()
+# vaccinations
+# vaxx_id <- sample(x = 0:(nh-1),size = nh*0.25,replace = F)
+# vaxx_pars <- lapply(X = vaxx_id,FUN = function(id){
+#   vaccination_pfsi_conpars(id = id,t = 5e2,treat = T,type = "PE")
+# })
 
 # run single trajectory
 seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31)
