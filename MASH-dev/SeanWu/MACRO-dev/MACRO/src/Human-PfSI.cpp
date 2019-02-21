@@ -181,6 +181,7 @@ void human_pfsi::update_EIR(){
   /* check if in a reservoir */
   if(tileP->get_patch(patch_id)->get_reservoir()){
     EIR = tileP->get_patch(patch_id)->get_res_EIR();
+    EIR *= bweight; /* TAKE THIS OUT LATER */
   } else {
     double beta = tileP->get_mosquitos()->get_beta(patch_id);
     EIR = std::fmax(0.0,beta * (bweight / tileP->get_patch(patch_id)->get_bWeightHuman()));

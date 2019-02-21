@@ -70,6 +70,10 @@ with(data.plot,{
   print(c(a,b))
 })
 
+gamma_t <- MASS::fitdistr(x = tororo$w,densfun = "gamma")
+gamma_k <- MASS::fitdistr(x = kanungu$w,densfun = "gamma")
+gamma_j <- MASS::fitdistr(x = jinja$w,densfun = "gamma")
+
 
 ################################################################################
 #   MACRO simulations: Kanungu
@@ -107,7 +111,8 @@ nh_house <- nh_house_k <- 1e3
 nh <- nh_house*n
 
 patch_id <- rep(1:n,each=nh_house)-1
-bweights <- rep(1,nh)
+# bweights <- rep(1,nh)
+bweights <- rgamma(n = nh,shape = gamma_k$estimate[["shape"]],rate = gamma_k$estimate[["rate"]])
 
 human_pars <- vector("list",nh)
 for(i in 1:nh){
@@ -178,7 +183,8 @@ nh_house <- nh_house_t <- 1e3
 nh <- nh_house*n
 
 patch_id <- rep(1:n,each=nh_house)-1
-bweights <- rep(1,nh)
+# bweights <- rep(1,nh)
+bweights <- rgamma(n = nh,shape = gamma_t$estimate[["shape"]],rate = gamma_t$estimate[["rate"]])
 
 human_pars <- vector("list",nh)
 for(i in 1:nh){
@@ -249,7 +255,8 @@ nh_house <- nh_house_j <- 1e3
 nh <- nh_house*n
 
 patch_id <- rep(1:n,each=nh_house)-1
-bweights <- rep(1,nh)
+# bweights <- rep(1,nh)
+bweights <- rgamma(n = nh,shape = gamma_j$estimate[["shape"]],rate = gamma_j$estimate[["rate"]])
 
 human_pars <- vector("list",nh)
 for(i in 1:nh){
@@ -328,21 +335,20 @@ points(log(EIR_j), ar_j_14, col = adj_cols[3], pch=jpc)
 year_rate_k <- sapply(X = unique(out_k$location),FUN = function(id){
   sum(out_k$state0=="S" & out_k$state1=="I" & out_k$location==id)
 })
-aeff_k = EIR_k/year_rate_k
+aeff_k <- (EIR_k*365)/year_rate_k
 
 year_rate_t <- sapply(X = unique(out_t$location),FUN = function(id){
   sum(out_t$state0=="S" & out_t$state1=="I" & out_t$location==id)
 })
-aeff_t = EIR_t/year_rate_t
+aeff_t <- (EIR_t*365)/year_rate_t
 
 year_rate_j <- sapply(X = unique(out_j$location),FUN = function(id){
   sum(out_j$state0=="S" & out_j$state1=="I" & out_j$location==id)
 })
-aeff_j = EIR_j/year_rate_j
+aeff_j <- (EIR_j*365)/year_rate_j
 
-# 14-day attack rates
 plot(c(EIR_k*365,(EIR_t*365)[-which.max(aeff_t)],EIR_j*365),c(aeff_k,aeff_t[-which.max(aeff_t)],aeff_j), type = "n", 
-     xlab = "aEIR", ylab = "Inefficiency (aEIR : aFOI)",main = "Exposure vs. Infection")
+     xlab = "aEIR", ylab = "Inefficiency (aEIR : aFOI)",main = "Exposure vs. Infection", log = "xy")
 legend(x = "topleft",fill = site_cols,legend = c("Kunungu","Tororo","Jinja"))
 
 points(EIR_k*365, aeff_k, col = adj_cols[1], pch=kpc)
