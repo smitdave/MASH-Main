@@ -70,9 +70,12 @@ with(data.plot,{
   print(c(a,b))
 })
 
-gamma_t <- MASS::fitdistr(x = tororo$w,densfun = "gamma")
-gamma_k <- MASS::fitdistr(x = kanungu$w,densfun = "gamma")
-gamma_j <- MASS::fitdistr(x = jinja$w,densfun = "gamma")
+# gamma_t <- MASS::fitdistr(x = tororo$w,densfun = "gamma")
+lnorm_t <- MASS::fitdistr(x = tororo$w,densfun = "log-normal")
+# gamma_k <- MASS::fitdistr(x = kanungu$w,densfun = "gamma")
+lnorm_k <- MASS::fitdistr(x = kanungu$w,densfun = "log-normal")
+# gamma_j <- MASS::fitdistr(x = jinja$w,densfun = "gamma")
+lnorm_j <- MASS::fitdistr(x = jinja$w,densfun = "log-normal")
 
 
 ################################################################################
@@ -112,7 +115,8 @@ nh <- nh_house*n
 
 patch_id <- rep(1:n,each=nh_house)-1
 # bweights <- rep(1,nh)
-bweights <- rgamma(n = nh,shape = gamma_k$estimate[["shape"]],rate = gamma_k$estimate[["rate"]])
+# bweights <- rgamma(n = nh,shape = gamma_k$estimate[["shape"]],rate = gamma_k$estimate[["rate"]])
+bweights <- rlnorm(n = nh,meanlog = lnorm_k$estimate[["meanlog"]],sdlog = lnorm_k$estimate[["sdlog"]])
 
 human_pars <- vector("list",nh)
 for(i in 1:nh){
@@ -184,7 +188,8 @@ nh <- nh_house*n
 
 patch_id <- rep(1:n,each=nh_house)-1
 # bweights <- rep(1,nh)
-bweights <- rgamma(n = nh,shape = gamma_t$estimate[["shape"]],rate = gamma_t$estimate[["rate"]])
+# bweights <- rgamma(n = nh,shape = gamma_t$estimate[["shape"]],rate = gamma_t$estimate[["rate"]])
+bweights <- rlnorm(n = nh,meanlog = lnorm_t$estimate[["meanlog"]],sdlog = lnorm_t$estimate[["sdlog"]])
 
 human_pars <- vector("list",nh)
 for(i in 1:nh){
@@ -256,7 +261,8 @@ nh <- nh_house*n
 
 patch_id <- rep(1:n,each=nh_house)-1
 # bweights <- rep(1,nh)
-bweights <- rgamma(n = nh,shape = gamma_j$estimate[["shape"]],rate = gamma_j$estimate[["rate"]])
+# bweights <- rgamma(n = nh,shape = gamma_j$estimate[["shape"]],rate = gamma_j$estimate[["rate"]])
+bweights <- rlnorm(n = nh,meanlog = lnorm_j$estimate[["meanlog"]],sdlog = lnorm_j$estimate[["sdlog"]])
 
 human_pars <- vector("list",nh)
 for(i in 1:nh){
