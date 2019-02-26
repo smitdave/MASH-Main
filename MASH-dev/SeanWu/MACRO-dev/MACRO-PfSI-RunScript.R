@@ -48,7 +48,7 @@ mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(50,nrow = 365,ncol = n),
                                  psi = diag(n),EIP = rep(11,365),M = rep(450,n),Y = rep(0,n),Z = rep(0,n))
 
 # humans
-nh <- rep(500,n)
+nh <- rep(10,n)
 pfpr <- rep(0.5,n)
 
 init_state <- c(sample(x = c("I","S"),size = nh,replace = T,prob = c(pfpr[1],1-pfpr[1])))
@@ -64,6 +64,11 @@ for(i in 1:nh){
 check_human_pfsi_conpars(human_pars)
 
 vaxx_pars <- list()
+# vaccinations
+vaxx_id <- sample(x = 0:(nh-1),size = nh*0.5,replace = F)
+vaxx_pars <- lapply(X = vaxx_id,FUN = function(id){
+  vaccination_pfsi_conpars(id = id,t = 50,treat = T,type = "PE")
+})
 
 # run single trajectory
 seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31)
@@ -80,7 +85,7 @@ log_pars[[3]] <- list(outfile = mosy,key = "mosquito",
                       header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
 
 run_macro(seed = seed,
-          tmax = 1e4,
+          tmax = 1e2,
           human_pars = human_pars,
           mosquito_pars = mosy_pars,
           patch_pars = patch_pars,
@@ -91,7 +96,7 @@ run_macro(seed = seed,
 
 # process output
 h_inf_csv <- read.csv(file = log_pars[[2]]$outfile,stringsAsFactors = FALSE)
-h_inf_out <- pfsi_human_output(h_inf = h_inf_csv,dx = 10,tmax = 1e4,pb = T)
+h_inf_out <- pfsi_human_output(h_inf = h_inf_csv,dx = 10,tmax = 1e2,pb = T)
 
 
 ################################################################################
@@ -143,6 +148,11 @@ for(i in 1:nh){
 check_human_pfsi_conpars(human_pars)
 
 vaxx_pars <- list()
+# vaccinations
+# vaxx_id <- sample(x = 0:(nh-1),size = nh*0.25,replace = F)
+# vaxx_pars <- lapply(X = vaxx_id,FUN = function(id){
+#   vaccination_pfsi_conpars(id = id,t = 5e2,treat = T,type = "PE")
+# })
 
 # run ensemble
 nrun <- 1e2
@@ -190,7 +200,8 @@ pb <- txtProgressBar(min = 1,max = length(h_inf_files))
 for(i in 1:length(h_inf_files)){
   file <- h_inf_files[i]
   h_inf_csv <- read.csv(file = paste0(path,file),stringsAsFactors = FALSE)
-  h_inf_out[,,as.character(i)] <- pfsi_human_output(h_inf = h_inf_csv,tmax = tsteps,dx = dx,pb = FALSE)
+  out_i <- pfsi_human_output(h_inf = h_inf_csv,tmax = tsteps,dx = dx,pb = FALSE)
+  h_inf_out[,,as.character(i)] <- out_i[,-1]
   setTxtProgressBar(pb = pb,value = i)
 }
 
