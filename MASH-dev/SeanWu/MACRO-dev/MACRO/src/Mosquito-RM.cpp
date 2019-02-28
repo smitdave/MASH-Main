@@ -178,7 +178,11 @@ void mosquito_rm::aquatic_dynamics(const u_int tnow){
   arma::Row<double> lambda_today = lambda.row(tnow);
 
   for(size_t i=0; i<M.size(); i++){
-    M.at(i) += tileP->get_prng()->get_rpois(lambda_today.at(i));
+    if(lambda_today.at(i) > 0.0){
+      M.at(i) += tileP->get_prng()->get_rpois(lambda_today.at(i));
+    } else {
+      M.at(i) += 0;
+    }
   }
 
 };
