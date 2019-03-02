@@ -41,6 +41,9 @@ public:
   bool                  get_reservoir(){return reservoir;}
   double                get_res_EIR(){return res_EIR;}
 
+  /* JUST FOR PRISM DATA */
+  double                get_res_EIR_prism(const size_t t){return res_EIR_prism[t];}
+
   /* debug */
   void                  print();
 
@@ -80,6 +83,10 @@ private:
   bool                  reservoir;
   double                res_EIR;
 
+  /* JUST FOR PRISM DATA */
+  std::vector<double>                res_EIR_prism;
+  /* END PRISM DATA STUFF */
+  
   /* tile pointer */
   tile*                 tileP;
 
