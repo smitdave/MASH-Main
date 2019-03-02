@@ -18,5 +18,7 @@ pfsi_human_output(h_inf, tmax, dx = 1, pb = TRUE)
 \description{
 After reading in the .csv output for the \code{human_inf} logging, bin humans
 by states with a resolution of one day for analysis and plotting.
-This function ignores information on location.
+This function ignores information on location. Each time bin contains
+all events that occured from the time label on the previous bin until
+right before the label on that bin.
 }
