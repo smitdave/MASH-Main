@@ -110,7 +110,7 @@ mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(0,nrow = 365,ncol = n),
                                  psi = diag(n),EIP = rep(11,365),M = rep(0,n),Y = rep(0,n),Z = rep(0,n))
 
 # humans
-nh_house <- nh_house_k <- 1e3
+nh_house <- nh_house_k <- sum(data.plot$site=="Kanungu")
 nh <- nh_house*n
 
 patch_id <- rep(1:n,each=nh_house)-1
@@ -142,7 +142,7 @@ log_pars[[3]] <- list(outfile = mosy,key = "mosquito",
                       header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
 
 run_macro(seed = seed,
-          tmax = 365,
+          tmax = 1260,
           human_pars = human_pars,
           mosquito_pars = mosy_pars,
           patch_pars = patch_pars,
@@ -183,7 +183,7 @@ mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(0,nrow = 365,ncol = n),
                                  psi = diag(n),EIP = rep(11,365),M = rep(0,n),Y = rep(0,n),Z = rep(0,n))
 
 # humans
-nh_house <- nh_house_t <- 1e3
+nh_house <- nh_house_t <- sum(data.plot$site=="Tororo")
 nh <- nh_house*n
 
 patch_id <- rep(1:n,each=nh_house)-1
@@ -215,7 +215,7 @@ log_pars[[3]] <- list(outfile = mosy,key = "mosquito",
                       header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
 
 run_macro(seed = seed,
-          tmax = 365,
+          tmax = 1260,
           human_pars = human_pars,
           mosquito_pars = mosy_pars,
           patch_pars = patch_pars,
@@ -256,7 +256,7 @@ mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(0,nrow = 365,ncol = n),
                                  psi = diag(n),EIP = rep(11,365),M = rep(0,n),Y = rep(0,n),Z = rep(0,n))
 
 # humans
-nh_house <- nh_house_j <- 1e3
+nh_house <- nh_house_j <- sum(data.plot$site=="Jinja")
 nh <- nh_house*n
 
 patch_id <- rep(1:n,each=nh_house)-1
@@ -288,7 +288,7 @@ log_pars[[3]] <- list(outfile = mosy,key = "mosquito",
                       header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
 
 run_macro(seed = seed,
-          tmax = 365,
+          tmax = 1260,
           human_pars = human_pars,
           mosquito_pars = mosy_pars,
           patch_pars = patch_pars,
