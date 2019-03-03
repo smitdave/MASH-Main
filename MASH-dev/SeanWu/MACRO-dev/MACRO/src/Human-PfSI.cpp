@@ -204,8 +204,8 @@ void human_pfsi::queue_bites(){
 
   /* THIS STUFF IS JUST TO RUN THE PRISM DATA */
   size_t t = tileP->get_tnow();
-  // double lambda = tileP->get_prng()->get_gamma(size, (1 - prob) / prob); /* .ff functions */
-  double lambda = tileP->get_prng()->get_gamma(EIR, k[t]/EIR); /* .gg functions */
+  // double lambda = tileP->get_prng()->get_gamma(size, (1 - prob) / prob); /* .gg functions */
+  double lambda = tileP->get_prng()->get_gamma(k[t], EIR/k[t]); /* .ff functions */
   int nBites = tileP->get_prng()->get_rpois(lambda);
   /* END PRISM DATA STUFF */
 
