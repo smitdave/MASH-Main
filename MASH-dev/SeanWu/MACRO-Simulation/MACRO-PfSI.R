@@ -16,17 +16,22 @@ rm(list=ls());gc()
 library(here)
 library(MACRO)
 
-# read in data
-tororo <- read.table(here("data/TOROROnew.txt"), header=T)
-jinja <- read.table (here("data/JINJAnew.txt"), header=T)
-kanungu <- read.table(here("data/KANUNGUnew.txt"), header=T)
+# # read in data
+# tororo <- read.table(here("data/TOROROnew.txt"), header=T)
+# jinja <- read.table (here("data/JINJAnew.txt"), header=T)
+# kanungu <- read.table(here("data/KANUNGUnew.txt"), header=T)
 
 
 ################################################################################
-#   14-day attack rate simulation: Kanungu
+#   read in data
 ################################################################################
 
+dat_ff <- readRDS("/Users/slwu89/Dropbox/data_ff.rds")
 
+
+################################################################################
+#   MACRO simulations: Tororo
+################################################################################
 
 
 # ################################################################################

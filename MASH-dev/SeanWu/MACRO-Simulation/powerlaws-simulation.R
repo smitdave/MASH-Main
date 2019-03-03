@@ -340,7 +340,7 @@ fitE.k = function(DTA){with(DTA,{
     a=log(dnbinom(obs,mu=Sd*w,size=k))
     -sum(a)
   }
-  optimize(f=dlik, interval = c(0,1))$minimum
+  optimize(f=dlik, interval = c(0,5e2))$minimum
 })}
 
 J.k = fitE.k(jinja)
@@ -808,167 +808,167 @@ plotSimXI.ff(ff.T, ff.K, ff.J)
 #   Sensitivity Analysis
 ################################################################################
 
-ggT=gg.T
-#ggT = gg.J
-#ggT = gg.K
-T0 = simAttacks.gg(TTSd[1:1260],Tw,ggT, SR=TTz)
-T0a = simAttacks.gg(TTSd[1:1260]*0+mean(TTSd[1:1260]),Tw,ggT, SR=TTz)
-T0b = simAttacks.gg(TTSd[1:1260]*0+mean(TTSd[1:1260]),0,ggT, SR=TTz)
-T0c = simAttacks.gg(TTSd[1:1260],0,ggT, SR=TTz)
-
-ggK = gg.K
-#ggK = gg.T
-#ggK = gg.J
-K0 = simAttacks.gg(KKSd[1:1260],Kw,ggK, SR=KKz)
-K0a = simAttacks.gg(KKSd[1:1260]*0+mean(KKSd[1:1260]),Kw,ggK, SR=KKz)
-K0b = simAttacks.gg(KKSd[1:1260]*0+mean(KKSd[1:1260]),0,ggK, SR=KKz)
-K0c = simAttacks.gg(KKSd[1:1260],0,ggK, SR=KKz)
-
-ggJ = gg.J
-#ggJ = gg.K
-#ggJ = gg.T
-J0 = simAttacks.gg(JJSd[1:1260],Jw,ggJ, SR=JJz)
-J0a = simAttacks.gg(JJSd[1:1260]*0+mean(JJSd[1:1260]),Jw,ggJ, SR=JJz)
-J0b = simAttacks.gg(JJSd[1:1260]*0+mean(JJSd[1:1260]),0,ggJ, SR=JJz)
-J0c = simAttacks.gg(JJSd[1:1260],Jw,ggJ, SR=JJz)
-
-ratios = function(X0,X0a,X0b,X0c){
-  base=mean(X0$aeff)
-  a=mean(X0a$aeff)
-  b=mean(X0b$aeff)
-  c=mean(X0c$aeff)
-  c(ES = mean(X0$aeff), a=a/base, b=base, c=c/base)
-}
-
-ratios(T0, T0a, T0b, T0c)
-ratios(K0, K0a, K0b, K0c)
-ratios(J0, J0a, J0b, J0c)
+# ggT=gg.T
+# #ggT = gg.J
+# #ggT = gg.K
+# T0 = simAttacks.gg(TTSd[1:1260],Tw,ggT, SR=TTz)
+# T0a = simAttacks.gg(TTSd[1:1260]*0+mean(TTSd[1:1260]),Tw,ggT, SR=TTz)
+# T0b = simAttacks.gg(TTSd[1:1260]*0+mean(TTSd[1:1260]),0,ggT, SR=TTz)
+# T0c = simAttacks.gg(TTSd[1:1260],0,ggT, SR=TTz)
+# 
+# ggK = gg.K
+# #ggK = gg.T
+# #ggK = gg.J
+# K0 = simAttacks.gg(KKSd[1:1260],Kw,ggK, SR=KKz)
+# K0a = simAttacks.gg(KKSd[1:1260]*0+mean(KKSd[1:1260]),Kw,ggK, SR=KKz)
+# K0b = simAttacks.gg(KKSd[1:1260]*0+mean(KKSd[1:1260]),0,ggK, SR=KKz)
+# K0c = simAttacks.gg(KKSd[1:1260],0,ggK, SR=KKz)
+# 
+# ggJ = gg.J
+# #ggJ = gg.K
+# #ggJ = gg.T
+# J0 = simAttacks.gg(JJSd[1:1260],Jw,ggJ, SR=JJz)
+# J0a = simAttacks.gg(JJSd[1:1260]*0+mean(JJSd[1:1260]),Jw,ggJ, SR=JJz)
+# J0b = simAttacks.gg(JJSd[1:1260]*0+mean(JJSd[1:1260]),0,ggJ, SR=JJz)
+# J0c = simAttacks.gg(JJSd[1:1260],Jw,ggJ, SR=JJz)
+# 
+# ratios = function(X0,X0a,X0b,X0c){
+#   base=mean(X0$aeff)
+#   a=mean(X0a$aeff)
+#   b=mean(X0b$aeff)
+#   c=mean(X0c$aeff)
+#   c(ES = mean(X0$aeff), a=a/base, b=base, c=c/base)
+# }
+# 
+# ratios(T0, T0a, T0b, T0c)
+# ratios(K0, K0a, K0b, K0c)
+# ratios(J0, J0a, J0b, J0c)
 
 
 
 
 # make data for PfSI
 
-oneHouse.gg = function(Sd, Qw, gg, SR=0.0062, b=0.55){
-  w=if(Qw==0){1}else{rgamma(1,Qw,Qw)}
-  xi = gg(Sd*w)
-  rnbinom(1260, size=Sd*w*xi*SR*b, prob=xi/(1+xi))
-}
+# oneHouse.gg = function(Sd, Qw, gg, SR=0.0062, b=0.55){
+#   w=if(Qw==0){1}else{rgamma(1,Qw,Qw)}
+#   xi = gg(Sd*w)
+#   rnbinom(1260, size=Sd*w*xi*SR*b, prob=xi/(1+xi))
+# }
 
 
 
 
 
-# gg data (size,prob)
-N <- 1e4
-
-# TORORO
-w_T <- rgamma(N,Tw,Tw)
-
-xi_T <- lapply(X = w_T,FUN = function(w){
-  gg.T(TTSd*w)
-})
-
-size_T <- lapply(X = 1:1260,FUN = function(i){
-  TTSd*w_T[i]*xi_T[[i]]*TTz
-})
-
-prob_T <- lapply(X = xi_T,FUN = function(xi){
-  xi/(1+xi)
-})
-
-# KUNUNGU
-w_K <- rgamma(N,Kw,Kw)
-
-xi_K <- lapply(X = w_K,FUN = function(w){
-  gg.K(KKSd*w)
-})
-
-size_K <- lapply(X = 1:1260,FUN = function(i){
-  KKSd*w_K[i]*xi_K[[i]]*KKz
-})
-
-prob_K <- lapply(X = xi_K,FUN = function(xi){
-  xi/(1+xi)
-})
-
-# JINJA
-w_J <- rgamma(N,Jw,Jw)
-
-xi_J <- lapply(X = w_J,FUN = function(w){
-  gg.J(JJSd*w)
-})
-
-size_J <- lapply(X = 1:1260,FUN = function(i){
-  JJSd*w_J[i]*xi_J[[i]]*JJz
-})
-
-prob_J <- lapply(X = xi_J,FUN = function(xi){
-  xi/(1+xi)
-})
-
-data_gg <- list(
-  w_T = w_T,
-  xi_T = xi_T,
-  size_T = size_T,
-  prob_T = prob_T,
-  w_K = w_K,
-  xi_K = xi_K,
-  size_K = size_K,
-  prob_K = prob_K,
-  w_J = w_J,
-  xi_J = xi_J,
-  size_J = size_J,
-  prob_J = prob_J
-)
-
-saveRDS(object = data_gg,file = here("data_gg.rds"))
-
-# ff data (mu,size)
-
-# TORORO
-w_T <- rgamma(N,Tw,Tw)
-
-k_T <- lapply(X = w_T,FUN = function(w){
-  ff.T(TTSd*w)
-})
-
-mu_T <- lapply(X = 1:1260,FUN = function(i){
-  TTSd*w_T[i]*TTz
-})
-
-# KUNUNGU
-w_K <- rgamma(N,Kw,Kw)
-
-k_K <- lapply(X = w_K,FUN = function(w){
-  ff.K(KKSd*w)
-})
-
-mu_K <- lapply(X = 1:1260,FUN = function(i){
-  KKSd*w_K[i]*KKz
-})
-
-# JINJA
-w_J <- rgamma(N,Jw,Jw)
-
-k_J <- lapply(X = w_J,FUN = function(w){
-  ff.J(JJSd*w)
-})
-
-mu_J <- lapply(X = 1:1260,FUN = function(i){
-  JJSd*w_J[i]*JJz
-})
-
-data_ff <- list(
-  w_T = w_T,
-  k_T = k_T,
-  mu_T = mu_T,
-  w_K = w_K,
-  k_K = k_K,
-  mu_K = mu_K,
-  w_J = w_J,
-  k_J = k_J,
-  mu_J = mu_J
-)
-
-saveRDS(object = data_ff,file = here("data_ff.rds"))
+# # gg data (size,prob)
+# N <- 1e4
+# 
+# # TORORO
+# w_T <- rgamma(N,Tw,Tw)
+# 
+# xi_T <- lapply(X = w_T,FUN = function(w){
+#   gg.T(TTSd*w)
+# })
+# 
+# size_T <- lapply(X = 1:1260,FUN = function(i){
+#   TTSd*w_T[i]*xi_T[[i]]*TTz
+# })
+# 
+# prob_T <- lapply(X = xi_T,FUN = function(xi){
+#   xi/(1+xi)
+# })
+# 
+# # KUNUNGU
+# w_K <- rgamma(N,Kw,Kw)
+# 
+# xi_K <- lapply(X = w_K,FUN = function(w){
+#   gg.K(KKSd*w)
+# })
+# 
+# size_K <- lapply(X = 1:1260,FUN = function(i){
+#   KKSd*w_K[i]*xi_K[[i]]*KKz
+# })
+# 
+# prob_K <- lapply(X = xi_K,FUN = function(xi){
+#   xi/(1+xi)
+# })
+# 
+# # JINJA
+# w_J <- rgamma(N,Jw,Jw)
+# 
+# xi_J <- lapply(X = w_J,FUN = function(w){
+#   gg.J(JJSd*w)
+# })
+# 
+# size_J <- lapply(X = 1:1260,FUN = function(i){
+#   JJSd*w_J[i]*xi_J[[i]]*JJz
+# })
+# 
+# prob_J <- lapply(X = xi_J,FUN = function(xi){
+#   xi/(1+xi)
+# })
+# 
+# data_gg <- list(
+#   w_T = w_T,
+#   xi_T = xi_T,
+#   size_T = size_T,
+#   prob_T = prob_T,
+#   w_K = w_K,
+#   xi_K = xi_K,
+#   size_K = size_K,
+#   prob_K = prob_K,
+#   w_J = w_J,
+#   xi_J = xi_J,
+#   size_J = size_J,
+#   prob_J = prob_J
+# )
+# 
+# saveRDS(object = data_gg,file = here("data_gg.rds"))
+# 
+# # ff data (mu,size)
+# 
+# # TORORO
+# w_T <- rgamma(N,Tw,Tw)
+# 
+# k_T <- lapply(X = w_T,FUN = function(w){
+#   ff.T(TTSd*w)
+# })
+# 
+# mu_T <- lapply(X = 1:1260,FUN = function(i){
+#   TTSd*w_T[i]*TTz
+# })
+# 
+# # KUNUNGU
+# w_K <- rgamma(N,Kw,Kw)
+# 
+# k_K <- lapply(X = w_K,FUN = function(w){
+#   ff.K(KKSd*w)
+# })
+# 
+# mu_K <- lapply(X = 1:1260,FUN = function(i){
+#   KKSd*w_K[i]*KKz
+# })
+# 
+# # JINJA
+# w_J <- rgamma(N,Jw,Jw)
+# 
+# k_J <- lapply(X = w_J,FUN = function(w){
+#   ff.J(JJSd*w)
+# })
+# 
+# mu_J <- lapply(X = 1:1260,FUN = function(i){
+#   JJSd*w_J[i]*JJz
+# })
+# 
+# data_ff <- list(
+#   w_T = w_T,
+#   k_T = k_T,
+#   mu_T = mu_T,
+#   w_K = w_K,
+#   k_K = k_K,
+#   mu_K = mu_K,
+#   w_J = w_J,
+#   k_J = k_J,
+#   mu_J = mu_J
+# )
+# 
+# saveRDS(object = data_ff,file = here("data_ff.rds"))
