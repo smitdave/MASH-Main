@@ -439,7 +439,7 @@ make_jinja <- function(N, which = 1){
 #   MACRO simulations: Tororo
 ################################################################################
 
-N <- 1e1
+N <- 1e4
 tdat_gg <- make_tororo(N = N,which = 1)
 
 # output files
