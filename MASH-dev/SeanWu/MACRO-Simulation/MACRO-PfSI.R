@@ -359,6 +359,9 @@ tsim_gg <- sapply(X = 1:N,FUN = function(i){
 
 # tsim_gg_melt <- melt(tsim_gg[,1:1e2])
 # colnames(tsim_gg_melt) <- c("Day","Replicate","EIR")
+# ggplot(data=tsim_gg_melt) + 
+#   geom_line(aes(x=Day,group=Replicate,y=EIR),color="firebrick3",alpha=0.05) +
+#   theme_bw()
 
 tsim_gg_mean <- rowMeans(tsim_gg)
 tsim_gg_quant <- t(apply(X = tsim_gg,MARGIN = 1,FUN = function(x){
