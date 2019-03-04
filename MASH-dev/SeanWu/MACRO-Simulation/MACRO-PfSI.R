@@ -343,9 +343,55 @@ make_jinja <- function(N, which = 1){
   return(dat)
 }
 
+library(reshape2)
+library(ggplot2)
 
 tdat_gg <- make_tororo(N = 1e4,which = 1)
 tdat_ff <- make_tororo(N = 1e4,which = 2)
+
+# xi
+tsim_gg <- sapply(X = 1:1e4,FUN = function(i){
+  rnbinom(n = 1260,size = tdat_gg$size[[i]],prob = tdat_gg$prob[[i]])
+})
+
+tsim_gg_melt <- melt(tsim_gg[,1:1e2])
+colnames(tsim_gg_melt) <- c("Day","Replicate","EIR")
+# 
+# ggplot() +
+#   geom_line(data = tsim_gg_melt,aes(x=Day,y=EIR,group=Replicate),color="firebrick3",alpha=0.05) +
+#   theme_bw()
+
+tsim_gg_mean <- rowMeans(tsim_gg)
+tsim_gg_quant <- t(apply(X = tsim_gg,MARGIN = 1,FUN = function(x){
+  quantile(x,probs=c(0.025,0.975))
+}))
+tsim_gg_dat <- data.frame(Day=1:1260,low=tsim_gg_quant[,1],high=tsim_gg_quant[,2],mean=tsim_gg_mean)
+
+ggplot(data = tsim_gg_dat) +
+  geom_line(aes(x=Day,y=mean),color="firebrick3") +
+  geom_ribbon(aes(x=Day,ymin=low,ymax=high),fill="firebrick3",alpha=0.25) +
+  theme_bw() +
+  ylab("EIR") +
+  ggtitle("Simulated Tororo Data",subtitle = "(size,prob) parameterization (xi)")
+
+# k
+tsim_ff <- sapply(X = 1:1e4,FUN = function(i){
+  rnbinom(n = 1260,mu = tdat_ff$mu[[i]],size = tdat_ff$k[[i]])
+})
+
+tsim_ff_mean <- rowMeans(tsim_ff)
+tsim_ff_quant <- t(apply(X = tsim_ff,MARGIN = 1,FUN = function(x){
+  quantile(x,probs=c(0.025,0.975))
+}))
+tsim_ff_dat <- data.frame(Day=1:1260,low=tsim_ff_quant[,1],high=tsim_ff_quant[,2],mean=tsim_ff_mean)
+
+ggplot(data = tsim_ff_dat) +
+  geom_line(aes(x=Day,y=mean),color="firebrick3") +
+  geom_ribbon(aes(x=Day,ymin=low,ymax=high),fill="firebrick3",alpha=0.25) +
+  theme_bw() +
+  ylab("EIR") +
+  ggtitle("Simulated Tororo Data",subtitle = "(mu,size) parameterization (k)")
+
 
 # dat_ff <- readRDS("/Users/slwu89/Dropbox/data_ff.rds")
 
