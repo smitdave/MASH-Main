@@ -42,7 +42,7 @@ public:
   double                get_res_EIR(){return res_EIR;}
 
   /* JUST FOR PRISM DATA */
-  double                get_res_EIR_prism(const size_t t){return res_EIR_prism[t];}
+  double                get_EIR_size(const size_t t){return EIR_size[t];}
 
   /* debug */
   void                  print();
@@ -84,9 +84,9 @@ private:
   double                res_EIR;
 
   /* JUST FOR PRISM DATA */
-  std::vector<double>                res_EIR_prism;
+  std::vector<double>                EIR_size; /* size parameter of negbinom (size,prob) */
   /* END PRISM DATA STUFF */
-  
+
   /* tile pointer */
   tile*                 tileP;
 

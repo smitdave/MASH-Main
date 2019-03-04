@@ -48,13 +48,13 @@ human_pfsi::human_pfsi(
         tileP_),
   state("S"),
   /* THIS STUFF IS JUST TO RUN THE PRISM DATA */
-  k(Rcpp::as<std::vector<double> >(human_pars["k"])),
+  k(Rcpp::as< std::vector<double> >(human_pars["k"])),
   /* END PRISM DATA STUFF */
   b(0.0), c(0.0),
   age(Rcpp::as<double>(human_pars["age"])),
   kappa(0.0), EIR(0.0)
 {
-
+  std::cout << "making human_pfsi: " << id << "\n";
   std::string state_t0(Rcpp::as<std::string>(human_pars["state"]));
 
   /* transmission efficiencies */
@@ -187,7 +187,7 @@ void human_pfsi::update_EIR(){
 
     /* THIS STUFF IS JUST TO RUN THE PRISM DATA */
     size_t t = tileP->get_tnow();
-    EIR = tileP->get_patch(patch_id)->get_res_EIR_prism(t);
+    EIR = tileP->get_patch(patch_id)->get_EIR_size(t);
     /* END PRISM DATA STUFF */
 
   } else {
@@ -204,8 +204,8 @@ void human_pfsi::queue_bites(){
 
   /* THIS STUFF IS JUST TO RUN THE PRISM DATA */
   size_t t = tileP->get_tnow();
-  // double lambda = tileP->get_prng()->get_gamma(size, (1 - prob) / prob); /* .gg functions */
-  double lambda = tileP->get_prng()->get_gamma(k[t], EIR/k[t]); /* .ff functions */
+  double lambda = tileP->get_prng()->get_gamma(EIR, (1.0 - k[t]) / k[t]); /* .gg functions */
+  // double lambda = tileP->get_prng()->get_gamma(k[t], EIR/k[t]); /* .ff functions */
   int nBites = tileP->get_prng()->get_rpois(lambda);
   /* END PRISM DATA STUFF */
 

@@ -33,7 +33,7 @@ patch::patch(
   reservoir(Rcpp::as<bool>(patch_pars["reservoir"])),
   res_EIR(Rcpp::as<double>(patch_pars["res_EIR"])),
   /* THIS STUFF IS JUST TO RUN THE PRISM DATA */
-  res_EIR_prism(Rcpp::as<std::vector<double> >(patch_pars["res_EIR_prism"])),
+  EIR_size(Rcpp::as<std::vector<double> >(patch_pars["EIR_size"])),
   /* END PRISM DATA STUFF */
   tileP(tileP_)
 {
