@@ -667,9 +667,72 @@ run_macro(seed = seed,
 #   analyze output
 ################################################################################
 
+N <- 1e4
+blocks <- seq(from=0,to=1260,by=14)
+
 out_k <- read.csv(file = paste0(path_k,"h_inf.csv"),stringsAsFactors = FALSE)
 out_t <- read.csv(file = paste0(path_t,"h_inf.csv"),stringsAsFactors = FALSE)
 out_j <- read.csv(file = paste0(path_j,"h_inf.csv"),stringsAsFactors = FALSE)
+
+ibi_k <- rep(0,length(blocks)-1)
+ibi_t <- rep(0,length(blocks)-1)
+ibi_j <- rep(0,length(blocks)-1)
+
+# get number of attacks over 2 week blocks (summed over people)
+for(i in 2:length(blocks)){
+
+  # kanungu
+  ibi_k[i-1] <- nrow(out_k[(out_k$time > blocks[i-1]) &  (out_k$time <= blocks[i]) & (out_k$state0 == "S") & (out_k$state1 == "I"),])
+
+  # tororo
+  ibi_t[i-1] <- nrow(out_t[(out_t$time > blocks[i-1]) &  (out_t$time <= blocks[i]) & (out_t$state0 == "S") & (out_t$state1 == "I"),])
+
+  # jinja
+  ibi_j[i-1] <- nrow(out_j[(out_j$time > blocks[i-1]) &  (out_j$time <= blocks[i]) & (out_j$state0 == "S") & (out_j$state1 == "I"),])
+
+}
+
+foi_k <- ibi_k/N/14
+foi_t <- ibi_t/N/14
+foi_j <- ibi_j/N/14
+
+ar_k <- 1 - (N-ibi_k)/N
+ar_t <- 1 - (N-ibi_t)/N
+ar_j <- 1 - (N-ibi_j)/N
+
+foi_est_k <- -log(1-ar_k)/14
+foi_est_t <- -log(1-ar_t)/14
+foi_est_j <- -log(1-ar_j)/14
+
+aeff_k <- foi_k/foi_est_k
+aeff_t <- foi_t/foi_est_t
+aeff_j <- foi_j/foi_est_j
+
+wks <- 1:90
+par(mfrow = c(2,2), mar = c(5,4,2,1))
+
+plot (wks, foi_t, type = "l", col = "darkred", lwd=2,  xaxt = "n", xlab = "Time (Years)", ylab = "daily FOI (simulated)")
+lines(wks, foi_est_t, col = "darkred", lwd=2, lty = 2)
+axis(1, c(1,366,731,1096)/14, c(0,1,2,3))
+mtext("a) Tororo",line=1,at=0)
+
+plot (wks, foi_k, type = "l", col = "darkblue", lwd=2,  xaxt = "n", xlab = "Time (Years)", ylab = "daily FOI (simulated)")
+lines(wks, foi_est_k, col = "darkblue", lwd=2, lty = 2)
+axis(1, c(1,366,731,1096)/14, c(0,1,2,3))
+mtext("b) Kanungu",line=1,at=0)
+
+plot (wks, foi_j, type = "l", col = "darkgreen", lwd=2,  xaxt = "n", xlab = "Time (Years)", ylab = "daily FOI (simulated)")
+lines(wks, foi_est_j, col = "darkgreen", lwd=2, lty = 2)
+axis(1, c(1,366,731,1096)/14, c(0,1,2,3))
+mtext("c) Jinja",line=1,at=0)
+
+plot (wks, foi_t, type = "l", lwd=2, xlab = "Time (Years)", ylab = "daily FOI (simulated)", xaxt = "n", col = "darkred", log="y")
+lines(wks, foi_k, lwd=2, col = "darkblue")
+lines(wks, foi_j, lwd=2, col = "darkgreen")
+mtext("d)",line=1,at=0)
+axis(1, c(1,366,731,1096)/14, c(0,1,2,3))
+
+par(mfrow=c(1,1))
 
 
 # ################################################################################
