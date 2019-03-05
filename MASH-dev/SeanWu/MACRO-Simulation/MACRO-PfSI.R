@@ -519,7 +519,7 @@ N <- 1e4
 kdat_gg <- make_kanungu(N = N,which = 1)
 
 # output files
-path <- path_t <- "/Users/slwu89/Desktop/macro-kanungu/"
+path <- path_k <- "/Users/slwu89/Desktop/macro-kanungu/"
 if(!dir.exists(path)){
   dir.create(path)
 } else {
@@ -595,7 +595,7 @@ N <- 1e4
 jdat_gg <- make_jinja(N = N,which = 1)
 
 # output files
-path <- path_t <- "/Users/slwu89/Desktop/macro-jinja/"
+path <- path_j <- "/Users/slwu89/Desktop/macro-jinja/"
 if(!dir.exists(path)){
   dir.create(path)
 } else {
@@ -661,6 +661,15 @@ run_macro(seed = seed,
           log_streams = log_pars,
           vaxx_events = vaxx_pars,
           verbose = TRUE)
+
+
+################################################################################
+#   analyze output
+################################################################################
+
+out_k <- read.csv(file = paste0(path_k,"h_inf.csv"),stringsAsFactors = FALSE)
+out_t <- read.csv(file = paste0(path_t,"h_inf.csv"),stringsAsFactors = FALSE)
+out_j <- read.csv(file = paste0(path_j,"h_inf.csv"),stringsAsFactors = FALSE)
 
 
 # ################################################################################
