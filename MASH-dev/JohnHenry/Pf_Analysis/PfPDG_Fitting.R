@@ -3,7 +3,7 @@ library(vioplot)
 library(matrixStats)
 library(stinepack)
 
-MT_PT_NP <- read_excel("~/GitHub/MASH-Main/MASH-dev/JohnHenry/PDG/MT_PT_NP.xlsx")
+MT_PT_NP <- read_excel("~/GitHub/MASH-Main/MASH-Main/MASH-dev/JohnHenry/PDG/MT_PT_NP.xlsx")
 M = as.matrix(MT_PT_NP)
 
 MT_GT_NP <- read_excel("~/Malaria Data Files/MT_GT_NP.xlsx")

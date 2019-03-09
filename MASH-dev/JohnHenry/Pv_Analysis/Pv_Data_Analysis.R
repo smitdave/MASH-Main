@@ -41,7 +41,7 @@ for(i in 1:336){
 }
 
 ## histogram of duration of infection; appears to have multiple modes
-hist(PvDur,breaks=25,freq=F)
+hist(PvDur,breaks=25,freq=F,xlab="Days",main="Histogram of the Duration of Infection")
 
 
 gamma_fit = fitdist(PvDur,distr="gamma", method="mle")
@@ -86,11 +86,16 @@ plot(xf,abs(fft(pdf/(1-cdf)-mu)),xlim=c(0,.2))
 plot(pdf/(1-cdf)-mu,ylim=c(-.1,.14))
 lines(x,.015*sin(pi*(x-20)/45))
 
+x = seq(0,400)
+hist(PvDur,breaks=25,freq=F,xlab="Days",main="Duration of Pv Infection",ylim=c(0,.02))
+shift = 14
+lines(x,.015*(sin(pi*(x-shift)/45)+1)*exp(-.015*(45/pi*cos(pi*(x-shift)/45)+x)),type="l")
+
 ################### Asexual Parasitemia ##########################
 
 
 MVP = log10(rowMeans(t(VP),na.rm=T))
-plot(MVP,type="l",,xlab="Days",ylab="Mean Pv Density",main="Daily Mean Pv Density Conditioned on Persistent Infection")
+plot(MVP,type="l",xlab="Days",ylab="Mean Pv Density",main="Daily Mean Pv Density Conditioned on Persistent Infection")
 
 rowVars = function (x,na.rm = TRUE) {
   sqr = function(x) x * x
@@ -132,11 +137,11 @@ for(i in 1:335){
 }
 
 MVG = log10(rowMeans(t(VG),na.rm=T))
-plot(MVP,type="l")
-lines(MVG,lty=2)
+plot(MVP,type="l",xlab="Days",ylab="log10 Parasite Density per cmm",main="Average Asexual and Gametocyte Densities Conditioned on Infection")
+lines(MVG,lty=2,col="red")
 
-lag = 7
-plot(MVP[(lag+1):400],MVG[1:(400-lag)])
+#lag = 7
+#plot(MVP[(lag+1):400],MVG[1:(400-lag)])
 
 ccf = rep(0,15)
 for(i in 1:15){
@@ -149,7 +154,8 @@ for(i in 1:15){
   
 }
 
-plot(0:14,ccf,xlab="Delay (in Days)",ylab="correlation")
+plot(0:14,ccf,xlab="Delay (in Days)",ylab="correlation",type="l")
+
 
 VVG = log10(rowVars(t(VG)))
 plot(MVG,VVG)
@@ -187,7 +193,7 @@ MVTE = rowMeans(t(VTE),na.rm=T)/100
 plot(MVG,type="l")
 lines(MVTE,lty=2)
 
-plot(MVG,MVTE)
+plot(MVG,MVTE,xlab="log10 Mean Gametocyte Density",ylab="Proportion of Infected Mosquitoes",main="Transmission Efficiency for Given Gametocytemia")
 
 smoothedTE = function(x){
   y = rep(0,length(x))
@@ -199,7 +205,7 @@ smoothedTE = function(x){
 
 z = seq(0,2.5,.1)
 y = smoothedTE(z)
-plot(z+.25,y,xlab="log10 Gametocyte Density",ylab="Transmission Efficiency",ylim=c(0,1))
+plot(z+.25,y,xlab="log10 Gametocyte Density",ylab="Transmission Efficiency",ylim=c(0,1),main="Mean Transmission Efficiency for Given Gametocytemia")
 
 sigfit = nls(y~p1*exp(p2*(z+.25))/(p3+exp(p2*(z+.25))),start=list(p1=1,p2=1,p3=.5))
 p1=.5003
@@ -209,3 +215,53 @@ lines(z+.25, p1*exp(p2*(z+.25))/(p3+exp(p2*(z+.25))))
 
 VVTE = rowVars(t(VTE),na.rm=T)
 plot(MVTE,VVTE)
+
+
+############## Fever from Asexual Parasitemia
+
+
+split = rep(0,335)
+j = 1
+for(i in 1:35199){
+  if(Vivax$meta_patient_id[i]!=Vivax$meta_patient_id[i+1]){
+    split[j] = i
+    j = j+1
+  }
+}
+split = c(0,split)
+M = max(abs(diff(split)))
+VFever = matrix(nrow=336,ncol=M)
+
+for(i in 1:335){
+  temp = Vivax$fever[(split[i]+1):split[i+1]]
+  ### remove unreasonably high temps (>115 F, current world record)
+  temp[which(temp>115)] = NaN
+  ### remove one measurement of fever below 90 F
+  temp[which(temp<90)] = NaN
+  pad = rep(NaN,M-length(temp))
+  temp = c(temp,pad)
+  VFever[i,] = temp
+}
+
+MVFever = rowMeans(t(VFever),na.rm=T)
+plot(MVFever,type="l",xlab="Days",ylab="Mean Temperature Given Fever",main="Average Fever by Day")
+
+#plot(MVP,MVFever)
+
+feverData = which(!is.na(MVP) & !is.na(MVFever))
+MVPComp = MVP[feverData]
+MVFeverComp = MVFever[feverData]
+
+plot(MVPComp,MVFeverComp,xlab="Mean P. vivax Asexual Density",ylab="Mean Recorded Temperature",main="Fever Risk for a Given Parasite Density")
+
+FeverDays = 0*VFever
+for(i in 1:335){
+  FeverDays[i,] = as.numeric(!is.na(VFever[i,]))
+}
+
+PFever = rowMeans(t(FeverDays),na.rm=T)
+plot(MVP/max(MVP,na.rm=T),type="l",ylim=c(0,1))
+lines(PFever,lty=2)
+
+plot(MVP,log10(PFever/(1-PFever)),xlab="log10 Parasite Density",ylab="log10 Odds Ratio of Fever",xlim=c(1.5,4.5))
+

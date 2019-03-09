@@ -1,4 +1,4 @@
-fever <- read_excel("~/GitHub/MASH-Main/MASH-dev/JohnHenry/PDG/Fever.xlsx")
+fever <- read_excel("~/GitHub/MASH-Main/MASH-dev/MASH-dev/JohnHenry/PDG/Fever.xlsx")
 fever = as.matrix(fever)
 dots = which(fever=='.')
 fever[dots] = NaN
@@ -32,7 +32,7 @@ BinaryFever = (Fever>37)
 PropFever = rowMeans(BinaryFever,na.rm=T)
 plot(PropFever[1:365],type="l",ylim=c(0,1),xlab="Days Since Patency", ylab="Proportion with Fever",main="Daily Prevalence of Fever Conditioned on Infection")
 
-plot(log10(rm[1:365]),type="l",ylim=c(0,5))
+plot(rm[1:365],type="l",ylim=c(0,5))
 lines(PropFever[1:365])
 ccf(PropFever[1:200],log10(rm[1:200]))
 cor(PropFever[1:200],log10(rm[1:200]))
@@ -47,3 +47,23 @@ logrm = log10(rm[1:200])
 logodd[which(is.infinite(logodd))]=NaN
 oddfit = lm(logodd~logrm)
 lines(seq(2,4.5,.01),-2.8475+.8762*seq(2,4.5,.01))
+
+
+############################# Severity of Fever, Given a Fever is Present
+
+FeverF = 9/5*Fever+32
+
+FeverF[which(FeverF<90)]=NaN
+
+MFeverF = rowMeans(t(FeverF),na.rm=T)
+plot(MFeverF,type="l",xlab="Days",ylab="Temperature (Degrees Fahrenheit)",main="Mean Temperature Given Fever")
+hist(MFeverF,freq=F,xlab="Temperature (Degrees Fahrenheit)",main="Temperature Given Fever")
+muhat = mean(MFeverF,na.rm=T)
+sigmahat = var(MFeverF,na.rm=T)
+temp = seq(100,106,.1)
+lines(temp,dnorm(temp,mean=muhat,sd = sqrt(sigmahat)))
+
+qqnorm((MFeverF-muhat)/sqrt(sigmahat))
+lines(seq(-3,3,.1),seq(-3,3,.1))
+
+
