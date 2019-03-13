@@ -33,6 +33,11 @@ PDGHuman <- R6Class("PDGHuman",
 
                      private$fever = 0
                      private$feverThresh = 8
+                     
+                     private$TE = 0
+                     private$TEHalf = 1
+                     private$TESlope = 1
+                     private$TEMax = 1
 
                      private$history = list()
 
@@ -62,10 +67,11 @@ PDGHuman <- R6Class("PDGHuman",
                      self$update_Imm()
                      self$update_Gt()
 
-                     ## these update respectively Pf, Pt, MOI
+                     ## these update respectively Pf, Pt, MOI, TE
                      self$age_Infections()
                      self$update_Pt()
                      self$update_MOI()
+                     self$update_TE()
 
                      self$update_History()
 
@@ -143,6 +149,13 @@ PDGHuman <- R6Class("PDGHuman",
                      ## sigmoidal conversion of counter to immune effect
                      private$Imm = self$sigmoid(private$immCounter,private$immHalf,private$immSlope)
 
+                   },
+                   
+                   update_TE = function(){
+                     
+                     ## scaled sigmoid signal; Gametocytes assumed to encode TE
+                     private$TE = private$TEMax*sigmoidexp(private$Gt,private$TEHalf,private$TESlope)
+                     
                    },
 
                    update_History = function(){
@@ -224,10 +237,15 @@ PDGHuman <- R6Class("PDGHuman",
                    ################# extra functions #################
 
 
-                   ## sigmoid function
+                   ## polynomial sigmoid function
                    sigmoid = function(x,xhalf,b){
                      (x/xhalf)^b/((x/xhalf)^b+1)
                    },
+                   
+                   ## exponential sigmoid function
+                   sigmoidexp = function(x,xhalf,b){
+                     exp(x*b)/(exp(x*b)+exp(xhalf*b))
+                   }
 
                    ## creates tridiagonal matrix, used to create aging matrix
                    tridiag = function(upper, lower, main) {
@@ -286,6 +304,12 @@ PDGHuman <- R6Class("PDGHuman",
                    ## Health
                    fever = NULL, ## fever, can be binary or graded (if graded, need sigmoid params)
                    feverThresh = NULL, ## fever threshhold, for binary fever (related to Pt)
+                   
+                   ## Infectivity
+                   TE = NULL, ## transmission efficiency
+                   TEHalf = NULL, ## half maximum transmission efficiency, sigmoid param
+                   TESlope = NULL, ## slope of gametocyte to TE conversion, sigmoid param
+                   TEMax = NULL, ## maximum transmission efficiency, sigmoid scaling
 
                    ## history
                    history = NULL ## list containing past densities, immunity, etc

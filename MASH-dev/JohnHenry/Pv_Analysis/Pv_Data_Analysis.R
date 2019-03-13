@@ -158,7 +158,7 @@ plot(0:14,ccf,xlab="Delay (in Days)",ylab="correlation",type="l")
 
 
 VVG = log10(rowVars(t(VG)))
-plot(MVG,VVG)
+plot(MVG,VVG,xlab="log10 Mean P. vivax Gametocytemia",ylab="log10 Variance P. vivax Gametocytemia",main="Mean-Variance Powerlaw for P. vivax Gametocytes")
 
 MVG[which(is.infinite(MVG))] = NaN
 MVP[which(is.infinite(MVP))] = NaN
@@ -182,7 +182,7 @@ split = c(0,split)
 M = max(abs(diff(split)))
 VTE = matrix(nrow=336,ncol=M)
 
-for(i in 1:335){
+for(i in 1:336){
   temp = Vivax$mosquitoes[(split[i]+1):split[i+1]]
   pad = rep(NaN,M-length(temp))
   temp = c(temp,pad)
@@ -190,8 +190,8 @@ for(i in 1:335){
 }
 VTE[which(VTE==max(Vivax$mosquitoes,na.rm=T))] = NaN
 MVTE = rowMeans(t(VTE),na.rm=T)/100
-plot(MVG,type="l")
-lines(MVTE,lty=2)
+plot(MVG/max(MVG,na.rm=T),type="l",ylim=c(0,1))
+lines(MVTE,lty=2,col="green")
 
 plot(MVG,MVTE,xlab="log10 Mean Gametocyte Density",ylab="Proportion of Infected Mosquitoes",main="Transmission Efficiency for Given Gametocytemia")
 
@@ -253,6 +253,35 @@ MVPComp = MVP[feverData]
 MVFeverComp = MVFever[feverData]
 
 plot(MVPComp,MVFeverComp,xlab="Mean P. vivax Asexual Density",ylab="Mean Recorded Temperature",main="Fever Risk for a Given Parasite Density")
+feverfit = lm(MVFeverComp ~ MVPComp)
+x = seq(1.5,4.5,.1)
+m = feverfit$coefficients[2]
+b = feverfit$coefficients[1]
+lines(x,m*x+b)
+
+smoothedFever = function(x){
+  y = rep(0,length(x))
+  for(i in 1:length(x)){
+    y[i] = mean(MVFever[which(MVPComp>=x[i] & MVPComp < (x[i]+.2))],na.rm=T)
+  }
+  return(y)
+}
+
+## granger causality
+x = seq(.9,3.6,.1)+.1
+y = (smoothedFever(x)-min(smoothedFever(x),na.rm=T))/(max(smoothedFever(x),na.rm=T)-min(smoothedFever(x),na.rm=T))
+plot(x,y,xlab="log10 Asexual Parasite Density",ylab="Average Fever",main="Averaged Fever Given Parasitemia",ylim=c(0,1))
+sigfit = nls(y~p1*exp(p2*(x))/(p3+exp(p2*(x))),start=list(p1=1.1,p2=.8,p3=2))
+p1=1.116
+p2=2.065
+p3=308.913
+SigmaFever = p1*exp(p2*(x))/(p3+exp(p2*(x)))*(max(smoothedFever(x),na.rm=T)-min(smoothedFever(x),na.rm=T))+min(smoothedFever(x),na.rm=T)
+
+plot(x,smoothedFever(x))
+lines(x, SigmaFever)
+
+plot(MVPComp,MVFeverComp)
+lines(x,SigmaFever)
 
 FeverDays = 0*VFever
 for(i in 1:335){
@@ -264,4 +293,4 @@ plot(MVP/max(MVP,na.rm=T),type="l",ylim=c(0,1))
 lines(PFever,lty=2)
 
 plot(MVP,log10(PFever/(1-PFever)),xlab="log10 Parasite Density",ylab="log10 Odds Ratio of Fever",xlim=c(1.5,4.5))
-
+plot(MVP,PFever,xlab="log10 Parasite Density",ylab="Probability of Fever")

@@ -14,7 +14,6 @@ plot(log10(M[,n]),type="l",xlim=c(0,300),ylim=c(0,5),xlab="Days",ylab="log10 Par
 lines(log10(G[,n]),type="l",xlim=c(0,300),ylim=c(0,5),col="red")
 title(main="Example Infection")
 
-M[which(M==0)] = NaN
 rm = rowMeans(M,na.rm=T)
 
 ##
