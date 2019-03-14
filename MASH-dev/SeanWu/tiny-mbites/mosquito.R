@@ -21,12 +21,22 @@ make_mosquito <- function(bday, site, state, search){
   mosy$state <- state
   mosy$statenext <- state
   mosy$fail <- 0L
+  mosy$mated <- FALSE
+  mosy$gravid <- FALSE
 
   # energetics and survival
   mosy$starved <- FALSE
   mosy$energy <- 1
   mosy$mature <- FALSE
   mosy$damage <- 0
+  mosy$energyPreG <- 0
+
+  # bloodfeeding & oogenesis
+  mosy$hostID <- integer(1)
+  mosy$bmSize <- 0
+  mosy$batch <- 0
+  mosy$eggT <- Inf
+  mosy$eggP <- 0
 
   # history
 
@@ -56,6 +66,7 @@ make_history <- function(n = 20, feed = FALSE){
     hist$probefeed <- logical(n)
   }
 
+  list2env(hist,hash=TRUE)
 }
 
 # basic history tracking
@@ -63,6 +74,28 @@ track_history <- function(mosy){
 
   mosy$hist$nevent <- mosy$hist$nevent + 1L
 
-  n <- length()
+  nevent <- mosy$hist$nevent
+  n <- length(mosy$hist$time)
+  if(mosy$hist$nevent > n){
+    mosy$hist$time <- c(mosy$hist$time,numeric(n))
+    mosy$hist$site <- c(mosy$hist$site,integer(n))
+    mosy$hist$state <- c(mosy$hist$state,character(n))
+  }
+
+  mosy$hist$time[nevent] <- mosy$tnext
+  mosy$hist$site[nevent] <- mosy$site
+  mosy$hist$state[nevent] <- mosy$state # càdlàg process; state wont update until tnow=tnext
+
+}
+
+# track feeding
+track_probe <- function(mosy){
+
+  mosy$hist$nfeed <- mosy$hist$nfeed + 1L
+
+  n <- length(mosy$hist$feedtime)
+  if(mosy$hist$nfeed > n){
+
+  }
 
 }
