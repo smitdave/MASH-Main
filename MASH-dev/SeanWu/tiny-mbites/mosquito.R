@@ -31,6 +31,7 @@ make_mosquito <- function(bday, site, state, search){
   # history
 
 
+  track_history(mosy) # track the emergence of this mosquito
 
   list2env(mosy,hash=TRUE)
 }
@@ -48,6 +49,20 @@ make_history <- function(n = 20, feed = FALSE){
   hist$cod <- character(1) # for mosquito autopsies (cod: cause of death)
 
   if(feed){
-    hist$feedt <-
+    hist$nfeed <- 0L
+    hist$feedtime <- numeric(n)
+    hist$feedsite <- integer(n)
+    hist$feedhost <- integer(n)
+    hist$probefeed <- logical(n)
   }
+
+}
+
+# basic history tracking
+track_history <- function(mosy){
+
+  mosy$hist$nevent <- mosy$hist$nevent + 1L
+
+  n <- length()
+
 }
