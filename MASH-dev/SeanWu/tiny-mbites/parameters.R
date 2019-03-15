@@ -10,6 +10,12 @@ make_parameters <- function(
 
   out <- list()
 
+  out$time_BFSB <- time_BFSB
+  out$time_BFAB <- time_BFAB
+  out$time_ELSB <- time_ELSB
+  out$time_ELAB <- time_ELAB
+  out$time_ppr <- time_ppr
+
 
   list2env(out,hash=TRUE)
 }

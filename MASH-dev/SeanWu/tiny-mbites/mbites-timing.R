@@ -3,19 +3,19 @@ timing <- function(mosy){
 
   switch(mosy$state,
     F = {
-      r <- get("parameters",.GlobalEnv)$get_time_BFSB()
+      r <- get("parameters",.GlobalEnv)$time_BFSB
       mosy$tnext <- mosy$tnow + rexp(n=1,rate=r)
     },
     B = {
-      r <- get("parameters",.GlobalEnv)$get_time_BFAB()
+      r <- get("parameters",.GlobalEnv)$time_BFAB
       mosy$tnext <- mosy$tnow + rexp(n=1,rate=r)
     },
     L = {
-      r <- get("parameters",.GlobalEnv)$get_time_ELSB()
+      r <- get("parameters",.GlobalEnv)$time_ELSB
       mosy$tnext <- mosy$tnow + rexp(n=1,rate=r)
     },
     O = {
-      r <- get("parameters",.GlobalEnv)$get_time_ELAB()
+      r <- get("parameters",.GlobalEnv)$time_ELAB
       mosy$tnext <- mosy$tnow + rexp(n=1,rate=r)
     },
     # M = {self$activity_MAB()},
@@ -31,6 +31,6 @@ timing <- function(mosy){
 # pseudo-state (such that we can imagine actually setting tnext, then as soon as
 # we leave this function we instantly set tnow = tnext)
 timing_ppr <- function(mosy){
-  r <- get("parameters",.GlobalEnv)$get_time_ppr()
+  r <- get("parameters",.GlobalEnv)$time_ppr
   mosy$tnow <- mosy$tnow + rexp(n=1,rate=r)
 }

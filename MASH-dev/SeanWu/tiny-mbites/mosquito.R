@@ -38,6 +38,7 @@ make_mosquito <- function(bday, site, state, search){
   mosy$eggP <- 0
 
   # history
+  mosy$hist <- make_history()
 
 
   track_history(mosy) # track the emergence of this mosquito
@@ -75,7 +76,7 @@ track_history <- function(mosy){
 
   nevent <- mosy$hist$nevent
   n <- length(mosy$hist$time)
-  if(mosy$hist$nevent > n){
+  if(nevent > n){
     mosy$hist$time <- c(mosy$hist$time,numeric(n))
     mosy$hist$site <- c(mosy$hist$site,integer(n))
     mosy$hist$state <- c(mosy$hist$state,character(n))
@@ -87,14 +88,48 @@ track_history <- function(mosy){
 
 }
 
-# track feeding
+# track probing
 track_probe <- function(mosy){
 
   mosy$hist$nfeed <- mosy$hist$nfeed + 1L
 
+  nfeed <- mosy$hist$nfeed
   n <- length(mosy$hist$feedtime)
-  if(mosy$hist$nfeed > n){
-
+  if(nfeed > n){
+    mosy$hist$feedtime <- c(mosy$hist$feedtime,numeric(n))
+    mosy$hist$feedsite <- c(mosy$hist$feedsite,integer(n))
+    mosy$hist$feedhost <- c(mosy$hist$feedhost,integer(n))
+    mosy$hist$probefeed <- c(mosy$hist$probefeed,logical(n))
   }
+
+  mosy$hist$feedtime[nfeed] <- mosy$tnow
+  mosy$hist$feedsite[nfeed] <- mosy$hist$site[mosy$hist$nevent]
+  mosy$hist$feedhost[nfeed] <- mosy$hostID
+  mosy$hist$probefeed[nfeed] <- FALSE
+
+}
+
+# track feeding
+track_feed <- function(mosy){
+  mosy$hist$probefeed[nfeed] <- TRUE
+}
+
+# track resting
+track_rest <- function(mosy){
+
+  mosy$hist$nevent <- mosy$hist$nevent + 1L
+
+  nevent <- mosy$hist$nevent
+  n <- length(mosy$hist$time)
+  if(nevent > n){
+    mosy$hist$time <- c(mosy$hist$time,numeric(n))
+    mosy$hist$site <- c(mosy$hist$site,integer(n))
+    mosy$hist$state <- c(mosy$hist$state,character(n))
+  }
+
+  # add rest to history (use tnow because it is updated in timing_ppr)
+  mosy$hist$time[private$nEvent] <- mosy$tnow
+  mosy$hist$site[private$nEvent] <- mosy$hist$site[nevent-1L]
+  mosy$hist$state[private$nEvent] <- "R"
 
 }
