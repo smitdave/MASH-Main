@@ -6,7 +6,6 @@ make_mosquito <- function(bday, site, state, search){
 
   # basic parameters
   mosy$id <- get("globals",.GlobalEnv)$get_mosy_id()
-  mosy$alive <- TRUE
 
   # location
   mosy$site <- site
@@ -84,7 +83,7 @@ track_history <- function(mosy){
 
   mosy$hist$time[nevent] <- mosy$tnext
   mosy$hist$site[nevent] <- mosy$site
-  mosy$hist$state[nevent] <- mosy$state # càdlàg process; state wont update until tnow=tnext
+  mosy$hist$state[nevent] <- mosy$statenext
 
 }
 
