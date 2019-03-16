@@ -22,6 +22,7 @@ make_mosquito <- function(bday, site, state, search){
   mosy$fail <- 0L
   mosy$mated <- FALSE
   mosy$gravid <- FALSE
+  mosy$bloodfed <- FALSE
 
   # energetics and survival
   mosy$starved <- FALSE
@@ -33,6 +34,7 @@ make_mosquito <- function(bday, site, state, search){
   # bloodfeeding & oogenesis
   mosy$hostID <- integer(1)
   mosy$bmSize <- 0
+  mosy$habitatID <- integer(1)
   mosy$batch <- 0
   mosy$eggT <- Inf
   mosy$eggP <- 0
