@@ -11,6 +11,11 @@
 #
 ###############################################################################
 
+
+###############################################################################
+# MBITES: main simulation loop
+###############################################################################
+
 # main simulation loop for ABM
 # tnow = get("globals",.GlobalEnv)$get_tnow()
 MBITES <- function(mosy,tnow){
@@ -40,10 +45,11 @@ MBITES <- function(mosy,tnow){
     # survival
     survival(mosy)
 
-    # oogenesis & refeeding
+    # oogenesis
     oogenesis(mosy)
 
-    #
+    # update states
+    updatestate(mosy)
 
     # search
     checkleave(mosy)
@@ -56,7 +62,88 @@ MBITES <- function(mosy,tnow){
   }
 }
 
-# activity bouts
+
+###############################################################################
+# logic to sample the "statenext" (where I jump to in behavioral state space next)
+###############################################################################
+
+# update the next state
+updatestate <- function(mosy){
+  if(mosy$starved){
+    mosy$statenext <- "S"
+  } else {
+    if(mosy$gravid){
+      refeed(mosy)
+    } else {
+      mosy$statenext <- "B"
+    }
+  }
+}
+
+# this is described as "frustration" in the manuscript
+boutfail_check <- function(mosy){
+  # check failure
+  if(mosy$fail > 0){
+    p <- get("parameters",.GlobalEnv)$boutFail_p
+    if(runif(1) < p){
+      mosy$search <- TRUE
+    }
+  }
+}
+
+# check leave
+checkleave <- function(mosy){
+
+  # if failure has occured, check for frustration (just leave)
+  boutfail_check(mosy)
+
+  # if the mosquito isn't primed to search, make sure it has what it needs
+  if(!mosy$search){
+    switch(mosy$statenext,
+      B = {
+        if(!get("landscape",.GlobalEnv)[[mosy$site]]$has_f){
+          mosy$search <- TRUE
+          mosy$statenext <- "F"
+        } else {
+          p <- get("parameters",.GlobalEnv)$disperse
+          if(runif(1) < p){
+            mosy$search <- TRUE
+            mosy$statenext <- "F"
+          }
+        }
+      },
+      O = {
+        if(!get("landscape",.GlobalEnv)[[mosy$site]]$has_l){
+          mosy$search <- TRUE
+          mosy$statenext <- "L"
+        } else {
+          p <- get("parameters",.GlobalEnv)$disperse
+          if(runif(1) < p){
+            mosy$search <- TRUE
+            mosy$statenext <- "L"
+          }
+        }
+      }
+    )
+  } else {
+    switch(mosy$statenext,
+      B = {
+        mosy$search <- TRUE
+        mosy$statenext <- "F"
+      },
+      O = {
+        mosy$search <- TRUE
+        mosy$statenext <- "L"
+      }
+    )
+  }
+
+}
+
+
+###############################################################################
+# Activity bouts
+###############################################################################
 
 # the blood feeding search bout
 activity_BFSB <- function(mosy){
@@ -70,7 +157,7 @@ activity_BFSB <- function(mosy){
   # if successful, i'll try to blood feed next time
   p <- get("parameters",.GlobalEnv)$BFAB_succeed
   if(runif(1) < p){
-    mosy$statenext <- "B"
+    mosy$search <- FALSE
   }
 
 }
@@ -97,7 +184,7 @@ activity_BFAB <- function(mosy){
   }
 
   # check if the mosquito managed to blood feed
-  if(mosy$bloodfed){
+  if(!mosy$bloodfed){
     mosy$fail <- mosy$fail + 1L
   } else {
     mosy$fail <- 0L
@@ -118,7 +205,7 @@ activity_ELSB <- function(mosy){
   # if successful, i'll try to oviposit next time
   p <- get("parameters",.GlobalEnv)$ELSB_succeed
   if(runif(1) < p){
-    mosy$statenext <- "O"
+    mosy$search <- FALSE
   }
 
 }
@@ -141,29 +228,29 @@ activity_ELAB <- function(){
       stop("mosquito ",mosy$id," has illegal habitatID value: ",mosy$habitatID,"\n")
     }
 
-    mosy$fail <- 0L
+  }
 
-  } else {
+  if(mosy$gravid){
     mosy$fail <- mosy$fail + 1L
+  } else {
+    mosy$fail <- 0L
   }
 
 }
 
 # the post-prandial resting (pseudo)bout
 activity_ppr <- function(mosy){
-  if(mosy$statenext != "D"){
 
-    # ppr is a short pseudo-bout; so we update the time
-    timing_ppr(mosy)
+  # ppr is a short pseudo-bout; so we update the time
+  timing_ppr(mosy)
 
-    # track_rest(mosy) # if you want
-    p <- survive_ppr(mosy)
-    if(runif(1) < p){
-      mosy$statenext <- "D"
-      mosy$hist$cod <- "ppr"
-    }
-
+  # track_rest(mosy) # if you want
+  p <- survive_ppr(mosy)
+  if(runif(1) < p){
+    mosy$statenext <- "D"
+    mosy$hist$cod <- "ppr"
   }
+
 }
 
 # P(survive the post-prandial rest)
@@ -172,30 +259,3 @@ survive_ppr <- function(bm){
   ppr_b = get("parameters",.GlobalEnv)$ppr_b
   exp(ppr_a * bm)/(ppr_b + exp(ppr_a * bm))
 }
-
-
-
-### checkleave needs to combine the functionality of 'mbites_boutFailCheck' and 'checkForResources'
-
-# mbites_boutFailCheck <- function(){
-#   # if no failures, return FALSE
-#   if(private$boutFail < 1){
-#     return(FALSE)
-#   # start checking failure distribution
-#   } else {
-#     # because each time probability to leave is a bernoulli trial, the overall P(leave on kth failure) ~ geometric(p)
-#     # success! I leave.
-#     if(runif(1) < MBITES:::Parameters$get_boutFail_p()){
-#       return(TRUE)
-#     # fail! I stay.
-#     } else {
-#       return(FALSE)
-#     }
-#   }
-# }
-#
-# frustrated <- function(mosy){
-#   if(mosy$fail == 0){
-#
-#   }
-# }

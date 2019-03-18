@@ -16,6 +16,8 @@ make_parameters <- function(
   feedH                   = 1,
   surviveZ                = 1,
   feedZ                   = 1,
+  # disperse
+  disperse = 0,
   # blood meal size
   bm_a                 = 7.5,
   bm_b                 = 2.5,
@@ -48,17 +50,23 @@ make_parameters <- function(
   S_b                  = 10, # mbites_pEnergySurvival
   # wing tattering
   ttsz_p               = 0.5, # wing tattering (size of damage)
-ttsz_a               = 5,
-ttsz_b               = 95,
-
-ttr_a                = 15, # wing tattering (probability of death)
-ttr_b                = 500,
-
-# senescence
-sns_a                = 0.085, # senescence parameters
-sns_b                = 100, # senescence parameters
-
-
+  ttsz_a               = 5,
+  ttsz_b               = 95,
+  ttr_a                = 15, # wing tattering (probability of death)
+  ttr_b                = 500,
+  # senescence
+  sns_a                = 0.085, # senescence parameters
+  sns_b                = 100, # senescence parameters
+  # oogenesis
+  bs_m = 50,
+  bs_sd = 5,
+  maxBatch = 60,
+  bloodPerEgg = 0.05,
+  emt_m                = 3, # mean of normally dist. maturation time
+  emt_sd               = 1, # sd of normally dist. maturation time
+  # refeeding
+  rf_a                 = 10, # refeeding probability
+  rf_b                 = 3,
 
 
 
@@ -84,6 +92,9 @@ sns_b                = 100, # senescence parameters
   out$feedH <- feedH
   out$surviveZ <- surviveZ
   out$feedZ <- feedZ
+
+  # disperse
+  out$disperse <- disperse
 
   # blood meal size
   out$bm_a <- bm_a
@@ -121,6 +132,18 @@ sns_b                = 100, # senescence parameters
   # senescence
   out$sns_a <- sns_a
   out$sns_b <- sns_b
+
+  # oogenesis
+  out$bs_m <- bs_m
+  out$bs_sd <- bs_sd
+  out$maxBatch <- maxBatch
+  out$bloodPerEgg <- bloodPerEgg
+  out$emt_m <- emt_m
+  out$emt_sd <- emt_sd
+
+  # refeeding
+  out$rf_a <- rf_a
+  out$rf_b <- rf_b
 
   # return a hash table
   list2env(out,hash=TRUE)

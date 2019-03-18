@@ -8,7 +8,12 @@ choosehabitat <- function(mosy){
 }
 
 layeggs_emerge <- function(mosy){
+
   mosy$gravid <- FALSE
   mosy$batch <- 0
   mosy$statenext <- "B"
+
+  # set these flags to very large numbers
+  mosy$eggT <- 2e16
+  mosy$eggP <- 2e16
 }

@@ -19,6 +19,7 @@ make_mosquito <- function(bday, site, state, search){
   # behavioral state parameters
   mosy$state <- state
   mosy$statenext <- state
+  mosy$search <- FALSE
   mosy$fail <- 0L
   mosy$mated <- FALSE
   mosy$gravid <- FALSE

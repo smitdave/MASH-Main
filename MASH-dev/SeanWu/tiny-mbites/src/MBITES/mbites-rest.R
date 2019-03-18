@@ -15,7 +15,7 @@ restingspot <- function(mosy){
 
   if(mosy$statenext != "D"){
 
-    if(mosy$state == "B" & mosy$fail == 0){
+    if(mosy$state == "B" & mosy$bloodfed){
       activity_ppr(mosy) # mbites-bout.R
     }
 
