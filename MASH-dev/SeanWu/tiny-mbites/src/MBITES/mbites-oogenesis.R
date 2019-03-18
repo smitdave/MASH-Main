@@ -47,13 +47,15 @@ checkEggMaturation_time <- function(mosy){
 
 }
 
-# rEggMaturationTime <- function(){
-#   emt_m <- get("parameters",.GlobalEnv)$emt_m
-#   emt_sd <- get("parameters",.GlobalEnv)$emt_sd
-#   max(0,rnorm(1,emt_m,emt_sd))
-# }
+rEggMaturationTime_norm <- function(){
+  emt_m <- get("parameters",.GlobalEnv)$emt_m
+  emt_sd <- get("parameters",.GlobalEnv)$emt_sd
+  max(0,rnorm(1,emt_m,emt_sd))
+}
 
-rEggMaturationTime <- function(){0}
+rEggMaturationTime_0 <- function(){0}
+
+rEggMaturationTime <- rEggMaturationTime_0
 
 # provision-to-maturation
 eggBatch_provision <- function(mosy){
