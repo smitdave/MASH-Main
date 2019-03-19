@@ -294,3 +294,4 @@ lines(PFever,lty=2)
 
 plot(MVP,log10(PFever/(1-PFever)),xlab="log10 Parasite Density",ylab="log10 Odds Ratio of Fever",xlim=c(1.5,4.5))
 plot(MVP,PFever,xlab="log10 Parasite Density",ylab="Probability of Fever")
+

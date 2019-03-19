@@ -14,30 +14,40 @@ PDGHuman <- R6Class("PDGHuman",
                      private$sex = sex
                      private$locH = locH ## location (human)
 
-                     private$pfAges = 16 ## 16 age categories of infection, for example
+                     private$pfAges = 26 ## 26 age categories of infection, fortnights for a full year plus one latent stage
                      private$Pf = rep(0,private$pfAges)
                      private$Pt = NaN
                      private$Gt = NaN
-                     private$ggr = .01 ## about .01 Gt produced per Pt
-                     private$gdk = .7 ## about 70 percent of Gt die over 1-2 weeks (halflife around 10 days)
-                     private$pfdr = .005 # .5 percent attrition rate of "old" infections - pf death rate
+                     private$pgm = 1.184 ## slope of log10 asexual-to-gametocyte power law
+                     private$pgb = -2.004 ## y-intercept of log10 asexual-to-gametocyte power law
+                     private$gm = 1.652 ## slope of log10 mean-variance power law for gametocytes
+                     private$gb = 1.662 ## y intercept of log10 mean-variance power law for gametocytes
+                     
+                     #private$ggr = .01 ## about .01 Gt produced per Pt
+                     
+                     private$gdk = log10(.7) ## about 70 percent of Gt die over 2 weeks (halflife around 10 days); this determines lingering gametocyte densities if asexuals disappear first
+                     private$pfdr = .05 ## small rate at which old infections are removed ***** This is still an unknown parameter *****
+                     private$pfpatency = 1-exp(-.1385412) # probability an infection enters subpatent phase within next fortnight
                      private$A = self$ageMatrix(private$pfAges)
-                     private$Ptmu = log(c(0,8,10,12,11.5,11,10.5,10,9.5,9,8.5,8,7.5,7,7,7)) ## mean of lognormal densities for ages 1:pfAges; must be of length pfAges
-                     private$Ptvar = rep(.1,16) ## var of " "; must be of length pfAges
-
+                     private$Ptmu = c(0,4.304,3.586,3.373,3.276,3.165,3.043,2.8,2.67,2.517,2.393,2.266,2.05,1.99,2.005,1.818,1.280,.897,1.309,.804,1.22,.553,.671,.561,.1719,1.494,1.199) ## mean of densities for ages 1:pfAges; must be of length pfAges
+                     private$Ptvar = (1.63*private$Ptmu+1.688) ## var of " "; must be of length pfAges. Here using power law relationship between mean and variance
+                     private$MOI = 0 ## multiplicity of infection, initially set to 0
+                     
                      private$Imm = 0
                      private$immCounter = 0
                      private$immHalf = 4
                      private$immSlope = 3
                      private$immThresh = 7.5
 
-                     private$fever = 0
-                     private$feverThresh = 8
+                     private$pFever = 0
+                     private$feverHalf = 3.5246
+                     private$feverSlope = 3.038
+                     private$feverMax = .8835
                      
                      private$TE = 0
-                     private$TEHalf = 1
-                     private$TESlope = 1
-                     private$TEMax = 1
+                     private$TEHalf = 2.3038
+                     private$TESlope = 3.5524
+                     private$TEMax = .4242
 
                      private$history = list()
 
@@ -49,6 +59,7 @@ PDGHuman <- R6Class("PDGHuman",
 
                    infect_Human = function(nInfections=1){
                       private$Pf[1] = private$Pf[1]+nInfections
+                      private$MOI = private$MOI+1
                     },
 
                    clear_All_Pathogens = function(){
@@ -63,15 +74,16 @@ PDGHuman <- R6Class("PDGHuman",
 
                    update_Human = function(){
 
-                     ## these use old value of Pt, so must be computed first
-                     self$update_Imm()
-                     self$update_Gt()
+                     ## this uses old value of Pt, so must be computed first
+                     ## self$update_Imm() ## turning off immunity for now
 
                      ## these update respectively Pf, Pt, MOI, TE
                      self$age_Infections()
                      self$update_Pt()
+                     self$update_Gt()
                      self$update_MOI()
                      self$update_TE()
+                     self$update_pFever()
 
                      self$update_History()
 
@@ -80,8 +92,18 @@ PDGHuman <- R6Class("PDGHuman",
                    age_Infections = function(){
 
                      ## removes from final category at a particular rate, relatively small
-                     private$Pf[private$pfAges] = max(private$Pf[private$pfAges] - sum(rbinom(private$Pf[private$pfAges],1,private$pfdr)),0)
+                     if(private$Pf[private$pfAges] > 0){
+                        private$Pf[private$pfAges] = max(private$Pf[private$pfAges] - sum(rbinom(private$Pf[private$pfAges],1,private$pfdr)),0)
+                     }
 
+                     ## some proportion of patent infections move into subpatent phase; each independent
+                     if(((private$MOI - private$Pf[private$pfAges]-private$Pf[1]) > 0)& (sum(private$Pf,na.rm=T) > 0) ){ ## we want to only move them into subpatency AFTER the intrinsic incubation period & first fortnight of infection
+                        term = rbinom(private$MOI-private$Pf[private$pfAges],1,private$pfpatency)   ## how many patent cohorts to "terminate"
+                        subs = rmultinom(1,term,private$Pf/sum(private$Pf,na.rm=T)) ## which age cohorts are being removed
+                        private$Pf = private$Pf - subs ## remove the newly subpatent infections
+                        private$Pf[private$pfAges] = private$Pf[private$pfAges]+sum(subs) ## add the subpatent infections to oldest age group
+                     }
+                     
                      ## shifts to next age group
                      private$Pf = private$A %*% private$Pf
 
@@ -94,41 +116,62 @@ PDGHuman <- R6Class("PDGHuman",
                      ## pull from all of the age-specific distributions, sum to get total Pt; limit tails of dist'ns
                      for(i in 1:private$pfAges){
                        if(private$Pf[i] > 0){
-                          private$Pt = log10(10^private$Pt + sum(10^(min(rlnorm(private$Pf[i],private$Ptmu[i],private$Ptvar[i]),13))))
+                          private$Pt = log10(10^private$Pt + sum(10^(rnorm(private$Pf[i],private$Ptmu[i],sqrt(private$Ptvar[i])/10)))) ## this shifts and reverses the lognormal
                        }
                      }
 
                      ## don't care about very small numbers of parasites
-                     if(private$Pt < 1){
-                       private$Pt = NaN
+                     if(private$Pt < 0){
+                        private$Pt = NaN
                      }
 
                      ## include immune effect
                      ## this is a stub; here we just discount Pt by at most 99 percent
                      private$Pt = log10((1-.99*private$Imm)*10^private$Pt)
+                     
+                     if(private$MOI == 0){
+                       private$Pt = NaN
+                     }
 
 
                    },
 
                    update_Gt = function(){
-
+                    
+                     ## OLD ALGORITHM
+                     
                      ## multiply previous Pt by the average Gt created per Pt, log scaling
                      ## sequestration/delay handled by the large (1-2 wk) time steps
-                     if(is.na(private$Pt)==F){
-                        private$Gt = ifelse(is.na(private$Gt), log10(private$ggr*10^private$Pt), log10((1-private$gdk)*10^private$Gt + private$ggr*10^private$Pt))
-                        if(is.na(private$Gt)==F){
-                          if(private$Gt < 3){
-                            private$Gt = NaN
-                          }
-                        }
+                     #if(is.na(private$Pt)==F){
+                     #    private$Gt = ifelse(is.na(private$Gt), log10(private$ggr*10^private$Pt), log10((1-private$gdk)*10^private$Gt + private$ggr*10^private$Pt))
+                     #    if(is.na(private$Gt)==F){
+                     #      if(private$Gt < 3){
+                     #        private$Gt = NaN
+                     #      }
+                     #    }
+                     # }
+                     #if(is.na(private$Pt)){
+                     # private$Gt = log10((1-private$gdk)*10^private$Gt)
+                     # if(is.na(private$Gt)==F){
+                     #   if(private$Gt < 3){
+                     #     private$Gt = NaN
+                     #   }
+                     # }
+                     # }
+                     
+                     ## NEW ALGORITHM
+                     
+                     ## use power law to translate from Pt to Gt; add unbiased noise to account for mean-variance power law in gametocytes
+                     if((sum(private$Pt,na.rm=T) > 0) ){
+                       private$Gt = private$pgm*private$Pt + private$pgb
+                       private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt + rnorm(1,0,sqrt(private$Gt*private$gm + private$gb)/14), NaN)
                      }
-                     if(is.na(private$Pt)){
-                       private$Gt = log10((1-private$gdk)*10^private$Gt)
-                       if(is.na(private$Gt)==F){
-                         if(private$Gt < 3){
-                           private$Gt = NaN
-                         }
-                       }
+                     if(sum(private$Pt,na.rm=T) == 0){
+                       private$Gt = private$Gt + private$gdk
+                       private$Gt = private$Gt + rnorm(1,0,sqrt(private$Gt*private$gm + private$gb)/14)
+                     }
+                     if(sum(private$Gt,na.rm=T) < .5){
+                       private$Gt = NaN
                      }
 
                    },
@@ -136,7 +179,7 @@ PDGHuman <- R6Class("PDGHuman",
                    update_MOI = function(){
 
                      ## add total active infections in each age category
-                     private$MOI = sum(private$Pf)
+                     private$MOI = sum(private$Pf,na.rm=T)
 
                    },
 
@@ -154,8 +197,14 @@ PDGHuman <- R6Class("PDGHuman",
                    update_TE = function(){
                      
                      ## scaled sigmoid signal; Gametocytes assumed to encode TE
-                     private$TE = private$TEMax*sigmoidexp(private$Gt,private$TEHalf,private$TESlope)
+                     private$TE = private$TEMax*self$sigmoidexp(private$Gt,private$TEHalf,private$TESlope)
                      
+                   },
+                   
+                   update_pFever = function(){
+                     
+                     private$pFever = private$feverMax*self$sigmoidexp(private$Pt,private$feverHalf,private$feverSlope)
+                       
                    },
 
                    update_History = function(){
@@ -164,6 +213,8 @@ PDGHuman <- R6Class("PDGHuman",
                      private$history$Pt = c(private$history$Pt,private$Pt)
                      private$history$Gt = c(private$history$Gt,private$Gt)
                      private$history$Pf = c(private$history$Pf,private$Pf)
+                     private$history$TE = c(private$history$TE,private$TE)
+                     private$history$pFever = c(private$history$pFever,private$pFever)
                      private$history$Imm = c(private$history$Imm,private$Imm)
                      private$history$immCounter = c(private$history$immCounter,private$immCounter)
 
@@ -205,12 +256,12 @@ PDGHuman <- R6Class("PDGHuman",
                      private$locH = newlocH
                    },
 
-                   get_fever = function(){
-                     private$fever
+                   get_pFever = function(){
+                     private$pFever
                    },
 
-                   set_fever = function(newFever){
-                     private$fever = newFever
+                   set_pFever = function(newpFever){
+                     private$pFever = newpFever
                    },
 
                    get_Pf = function(){
@@ -227,6 +278,10 @@ PDGHuman <- R6Class("PDGHuman",
 
                    get_MOI = function(){
                      private$MOI
+                   },
+                   
+                   get_TE = function(){
+                     private$TE
                    },
 
                    get_history = function(){
@@ -245,7 +300,7 @@ PDGHuman <- R6Class("PDGHuman",
                    ## exponential sigmoid function
                    sigmoidexp = function(x,xhalf,b){
                      exp(x*b)/(exp(x*b)+exp(xhalf*b))
-                   }
+                   },
 
                    ## creates tridiagonal matrix, used to create aging matrix
                    tridiag = function(upper, lower, main) {
@@ -288,11 +343,16 @@ PDGHuman <- R6Class("PDGHuman",
                    A = NULL, ## aging matrix (shifts pf)
                    Pt = NULL, ## asexual parasite count
                    Gt = NULL, ## gametocyte count
-                   ggr = NULL, ## "gametocyte growth rate" (per asexual rate of Gt production)
-                   gdk = NULL, ## "gametocyte decay rate" (death rate of Gt)
+                   #ggr = NULL, ## "gametocyte growth rate" (per asexual rate of Gt production)
+                   gdk = NULL, ## "gametocyte decay rate" (death rate of Gt in absence of Pt)
+                   pgm = NULL, ## slope of log10 Asexual to Gametocyte density function (power law)
+                   pgb = NULL, ## y-intercept of log10 Asexual to Gametocyte density function (power law)
+                   gm = NULL, ## slope of log10 mean-variance power law for gametocytes
+                   gb = NULL, ## y intercept of log10 mean-variance power law for gametocytes
                    Ptmu = NULL, ## vector of means of dist'ns of Pt for different age categories
                    Ptvar = NULL, ## " " variances " "
                    MOI = NULL, ## multiplicity of infection, sum of vector pf
+                   pfpatency = NULL, ## rate at which infections leave patency, become subpatent infection
 
                    ## Immunity
                    Imm = NULL, ## normalized immune strength
@@ -302,8 +362,10 @@ PDGHuman <- R6Class("PDGHuman",
                    immThresh = NULL, ## immunogenic threshhold, based on Pt
 
                    ## Health
-                   fever = NULL, ## fever, can be binary or graded (if graded, need sigmoid params)
-                   feverThresh = NULL, ## fever threshhold, for binary fever (related to Pt)
+                   pFever = NULL, ## probability of fever; probability seeking treatment should be related to number of febrile days
+                   feverHalf = NULL, ## half maximum prob of fever, sigmoid param
+                   feverSlope = NULL, ## slope of prob of fever conversion, sigmoid param
+                   feverMax = NULL, ## maximum prob of fever, sigmoid scaling param
                    
                    ## Infectivity
                    TE = NULL, ## transmission efficiency

@@ -41,7 +41,7 @@ lines(dexp(n,lambdaF))
 
 
 
-########################## Parasite Densities, tracked fortnightly with final density around 1 year (26 fortnights)
+########################## Parasite Densities, tracked fortnightly with final density around 2 years (52 fortnights)
 
 
 
@@ -68,6 +68,15 @@ m = mvfit$coefficients[2]
 x = seq(-2,5,.1)
 lines(x,m*x+b)
 
+
+
+#################################### Shape of Dist'n of Asexuals
+
+
+LWP = log10(WP)
+LWP[which(is.infinite(LWP))] = NaN
+vioplot(LWP[1,],LWP[2,],LWP[3,],LWP[4,],LWP[5,],LWP[6,],LWP[7,],LWP[8,],LWP[9,],LWP[10,])
+vioplot(LWP[11,],LWP[12,],LWP[13,],LWP[14,],LWP[15,],LWP[16,],LWP[17,],LWP[18,],LWP[19,],LWP[20,])
 
 
 #################################### Fever Signals from Asexuals
@@ -106,6 +115,7 @@ plot(log10(MP),FeverFNM,xlab="log10 Asexual Parasite Densities",ylab="Body Tempe
 hist(FeverFNM)
 ## compare to full dataset, is normally distributed:
 hist(5/9*(MFeverF-32),freq=F,xlab="Temperature (Degrees Celsius)",main="Temperature Given Fever")
+qqnorm(5/9*(MFeverF-32))
 ## for a given parasite density, calculate probability of fever; if fever present, draw from normal dist'n
 
 
@@ -135,14 +145,35 @@ for(i in 1:52){
   VTE[i] = var(WTE[i,],na.rm=T)
 }
 
+plot(log10(MG),log10(VG),xlab="log10 Mean Gametocyte Density",ylab="log10 Variance of Gametocyte Density",main="Gametocyte Mean-Variance Power Law")
+lmG = lm(log10(VG[1:26])~log10(MG[1:26]))
+b = 1.662
+m = 1.652
+x = seq(-3,3,.1)
+lines(x,m*x+b)
+
 plot(log10(MG),xlab="Fortnights Since Infection",ylab="log10 Parasite Density",xlim=c(0,30),type="l",ylim=c(-3,5),col="red",main="Fortnightly Average Parasite Densities")
 lines(log10(MP))
 ## asexual-gametocyte relationship
+plot(log10(MP[4:30]),log10(MG[3:29]))
 plot(log10(MP),log10(MG),xlab="log10 Asexual Parasite Density",ylab="log10 Gametocyte Density",main="Mean Asexual and Gametocyte Densities Power Law")
-ccf(MP[1:28],MG[1:28],lag.max=5)
-## note here the ccf shows a lag-dependence of one fortnight
+ccf(MP[4:28],MG[4:28],lag.max=5)
+ccf(log10(MP[4:28]),log10(MG[4:28]),lag.max=5)
+ccf(MP,MG,lag.max=5)
+ccf(log10(MP[1:28]),log10(MG[1:28]),lag.max=5)
+## note here the ccf shows a lag-dependence of one fortnight for original data, but not log-transformed data...
+## this is due to the first couple fortnights of infection where there does seem to be a lag and parasite densities
+## are very high, so they dominate the correlation calculation for the non-transformed data. This is confirmed
+## when omitting the first couple fortnights of data and any lag dependence is lost; 
+## however, this may still suggest that there is a lagged dependence
+## but the lag itself follows a distribution and causes the lag dependence to become diffuse.
 
-
+lmPG = lm(log10(MG[1:26])~log10(MP[1:26]))
+b = -2.004
+m = 1.184
+plot(log10(MP),log10(MG))
+x = seq(-1,5,.1)
+lines(x,m*x+b)
 
 #################################### TE Signals from Gametocytes
 
@@ -168,9 +199,9 @@ for(i in 1:52){
 LMG = log10(MG)
 plot(LMG,MTE,xlim=c(-2,4),ylim=c(0,1),xlab="log10 Gametocyte Density",ylab="Transmission Efficiency",main="Transmission Efficiency for Given Gametocyte Density")
 TEfit = nls(MTE~p1*exp(p2*(LMG))/(exp(p2*p3)+exp(p2*LMG)),start=list(p1=.9,p2=3,p3=3))
-p1 = .4242
-p2 = 3.5524
-p3 = 2.3038
+TEmax = .4242
+TEslope = 3.5524
+TEhalf = 2.3038
 x = seq(-2,4,.1)
-lines(x,p1*exp(p2*x)/(exp(p2*p3)+exp(p2*x)))
+lines(x,TEmax*exp(TEslope*x)/(exp(TEslope*TEhalf)+exp(TEslope*x)))
 
