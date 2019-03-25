@@ -129,8 +129,11 @@ for(i in 7:12){
 }
 par(mfrow=c(1,1))
 
+plot(shape/rate^2,type="l")
+plot(diff(shape/rate^2,1),type="l")
+acf(diff(shape/rate^2,1))
 
-plot(maxp-shape/rate,shape/rate^2,main="Mean vs Variance of Fitted Distributions")
+hist(diff(shape/rate^2,1),freq=F,breaks=10)
 
 #gam1 = fitdist(rLWP[1,],distr="gamma",method="mme")
 #x=seq(0,5,.1)
@@ -232,6 +235,7 @@ plot(log10(MP),log10(MG))
 x = seq(-1,5,.1)
 lines(x,m*x+b)
 
+P2GVar = var(lmPG$residuals)
 #################################### TE Signals from Gametocytes
 
 
