@@ -3,8 +3,8 @@ source('PDG.R')
 human = PDGHuman$new()
 human$infect_Human()
 
-par(mfrow=c(2,1))
-Nfortnights = 20
+
+Nfortnights = 30
 for(t in seq(1:Nfortnights)){
   human$update_Human()
 #  if(rbinom(1,1,.01)==1){
@@ -17,10 +17,13 @@ Gt = human$get_history()$Gt
 Imm = human$get_history()$Imm
 pFever = human$get_history()$pFever
 
-plot(pFever,type="l")
+par(mfrow=c(2,1))
+plot(Pt,type="l",ylim=c(0,5),xlab="fortnights",ylab="log10 Parasite Densities per microliter")
+plot(pFever,type="l",ylim=c(0,1),xlab="fortnights")
+par(mfrow=c(1,1))
 
 par(mfrow=c(2,1))
-plot(seq(1:20),Pt,type="l",xlab="fortnights",ylab="log10 Parasite Densities per microliter",ylim=c(0,5))
+plot(seq(1:Nfortnights),Pt,type="l",xlab="fortnights",ylab="log10 Parasite Densities per microliter",ylim=c(0,5))
 lines(Gt,lty=2,col="red")
 title(main="Example PDG Parasite Densities")
 

@@ -14,7 +14,7 @@ PDGHuman <- R6Class("PDGHuman",
                      private$sex = sex
                      private$locH = locH ## location (human)
 
-                     private$pfAges = 26 ## 26 age categories of infection, fortnights for a full year plus one latent stage
+                     private$pfAges = 28 ## 26 age categories of infection, fortnights for a full year plus one latent stage and one subpatent stage
                      private$Pf = rep(0,private$pfAges)
                      private$Pt = NaN
                      private$Gt = NaN
@@ -26,18 +26,19 @@ PDGHuman <- R6Class("PDGHuman",
                      #private$ggr = .01 ## about .01 Gt produced per Pt
                      
                      private$gdk = log10(.7) ## about 70 percent of Gt die over 2 weeks (halflife around 10 days); this determines lingering gametocyte densities if asexuals disappear first
-                     private$pfdr = .05 ## small rate at which old infections are removed ***** This is still an unknown parameter *****
+                     private$pfdr = .1 ## small rate at which old infections are removed
+                     ## ***** ^^^^^ This is still an unknown parameter *****
                      private$pfpatency = 1-exp(-.1385412) # probability an infection enters subpatent phase within next fortnight
                      private$A = self$ageMatrix(private$pfAges)
-                     private$Ptmu = c(0,4.304,3.586,3.373,3.276,3.165,3.043,2.8,2.67,2.517,2.393,2.266,2.05,1.99,2.005,1.818,1.280,.897,1.309,.804,1.22,.553,.671,.561,.1719,1.494,1.199) ## mean of densities for ages 1:pfAges; must be of length pfAges
+                     private$Ptmu = c(0,4.304,3.586,3.373,3.276,3.165,3.043,2.8,2.67,2.517,2.393,2.266,2.05,1.99,2.005,1.818,1.280,.897,1.309,.804,1.22,.553,.671,.561,.1719,1.494,1.199,.5) ## mean of densities for ages 1:pfAges; must be of length pfAges
                      private$Ptvar = (1.63*private$Ptmu+1.688) ## var of " "; must be of length pfAges. Here using power law relationship between mean and variance
                      private$MOI = 0 ## multiplicity of infection, initially set to 0
                      
                      private$Imm = 0
                      private$immCounter = 0
-                     private$immHalf = 4
-                     private$immSlope = 3
-                     private$immThresh = 7.5
+                     private$immHalf = 3.5246
+                     private$immSlope = 3.038
+                     private$immThresh = 2
 
                      private$pFever = 0
                      private$feverHalf = 3.5246
@@ -48,6 +49,11 @@ PDGHuman <- R6Class("PDGHuman",
                      private$TEHalf = 2.3038
                      private$TESlope = 3.5524
                      private$TEMax = .4242
+                     
+                     private$LMHalf = 2
+                     private$LMSlope = 3
+                     private$LMMax = .9
+                     private$LMMin = .05
 
                      private$history = list()
 
@@ -116,13 +122,8 @@ PDGHuman <- R6Class("PDGHuman",
                      ## pull from all of the age-specific distributions, sum to get total Pt; limit tails of dist'ns
                      for(i in 1:private$pfAges){
                        if(private$Pf[i] > 0){
-                          private$Pt = log10(10^private$Pt + sum(10^(rnorm(private$Pf[i],private$Ptmu[i],sqrt(private$Ptvar[i])/10)))) ## this shifts and reverses the lognormal
+                          private$Pt = log10(10^private$Pt + sum(10^(rnorm(private$Pf[i],private$Ptmu[i],sqrt(private$Ptvar[i])/10)),na.rm=T))
                        }
-                     }
-
-                     ## don't care about very small numbers of parasites
-                     if(private$Pt < 0){
-                        private$Pt = NaN
                      }
 
                      ## include immune effect
@@ -162,16 +163,13 @@ PDGHuman <- R6Class("PDGHuman",
                      ## NEW ALGORITHM
                      
                      ## use power law to translate from Pt to Gt; add unbiased noise to account for mean-variance power law in gametocytes
-                     if((sum(private$Pt,na.rm=T) > 0) ){
+                     if((sum(private$Pf,na.rm=T) > 0) ){
                        private$Gt = private$pgm*private$Pt + private$pgb
                        private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt + rnorm(1,0,sqrt(private$Gt*private$gm + private$gb)/14), NaN)
                      }
-                     if(sum(private$Pt,na.rm=T) == 0){
+                     if(sum(private$Pf,na.rm=T) == 0){
                        private$Gt = private$Gt + private$gdk
                        private$Gt = private$Gt + rnorm(1,0,sqrt(private$Gt*private$gm + private$gb)/14)
-                     }
-                     if(sum(private$Gt,na.rm=T) < .5){
-                       private$Gt = NaN
                      }
 
                    },
@@ -205,6 +203,14 @@ PDGHuman <- R6Class("PDGHuman",
                      
                      private$pFever = private$feverMax*self$sigmoidexp(private$Pt,private$feverHalf,private$feverSlope)
                        
+                   },
+                   
+                   ## light microscopy - a function that can be called from the human object, will calculate a probability of testing positive using
+                   ## asexual densities, then pull a random number with that probability of success. Returns 0/1 for negative/positive
+                   LM = function(){
+                     p = (private$LMMAx-private$LMMin)*self$sigmoidexp(private$Pt,private$LMHalf,private$LMSlope)+private$LMMin
+                     test = rbinom(1,1,p)
+                     return(test)
                    },
 
                    update_History = function(){
@@ -372,6 +378,12 @@ PDGHuman <- R6Class("PDGHuman",
                    TEHalf = NULL, ## half maximum transmission efficiency, sigmoid param
                    TESlope = NULL, ## slope of gametocyte to TE conversion, sigmoid param
                    TEMax = NULL, ## maximum transmission efficiency, sigmoid scaling
+                   
+                   ## Diagnostics - Light Microscopy
+                   LMHalf = NULL, ## Asexual density that gives 50 percent change of testing positive by Light Microscopy
+                   LMSlope = NULL, ## slope of sigmoid converting Asexual density to probability of testing positive
+                   LMMax = NULL, ## maximum probability of testing positive; 1 - (type 2 error + type 1 error)
+                   LMMin = NULL, ## minimum probability of testing postiive; type 1 error
 
                    ## history
                    history = NULL ## list containing past densities, immunity, etc

@@ -35,7 +35,7 @@ lamfit = lm(y[1:15]~x[1:15]+0)
 lambdaF = lamfit$coefficients
 lines(x,x*lambdaF)
 
-hist(N/14,freq=F,main="Histogram of Surviving Patent Infections",xlab="Fortnights")
+hist(N/14,freq=F,main="Histogram of Surviving Patent Infections",xlab="Fortnights",breaks=15)
 n = seq(0,30)
 lines(dexp(n,lambdaF))
 
@@ -78,6 +78,63 @@ LWP[which(is.infinite(LWP))] = NaN
 vioplot(LWP[1,],LWP[2,],LWP[3,],LWP[4,],LWP[5,],LWP[6,],LWP[7,],LWP[8,],LWP[9,],LWP[10,])
 vioplot(LWP[11,],LWP[12,],LWP[13,],LWP[14,],LWP[15,],LWP[16,],LWP[17,],LWP[18,],LWP[19,],LWP[20,])
 
+maxp = seq(1,26)
+for(i in 1:26){
+  maxp[i] = max(LWP[i,],na.rm=T)
+}
+rLWP = maxp-LWP[1:26,]
+hist(rLWP[1,],freq=F,ylim=c(0,1))
+
+shape = rep(0,26)
+rate = rep(0,26)
+for(i in 1:26){
+  temp = rLWP[i,]
+  data = temp[which(!is.na(temp))]
+  gam = fitdist(data,distr="gamma",method="mme")
+  shape[i] = gam$estimate[1]
+  rate[i] = gam$estimate[2]
+}
+
+## this shows the mean and variance of the fitted distributions over time - this is mean and variance of log-transformed data
+plot(maxp-shape/rate,xlab="fortnights",ylab="log10 Asexual Parasite Density",ylim=c(0,4),type="l",main="Mean and Variance of Fitted Gammas")
+lines(shape/rate^2,lty=2)
+
+plot(maxp-shape/rate,shape/rate^2) ## no strong sign of power law
+
+## this shows the mean and variance of the data - this is log10 of the mean and variance of the data directly (exchange log and expectation)
+plot(log10(MP[1:26]),type="l",ylim=c(0,10))
+lines(log10(VP[1:26]),lty=2)
+
+plot(log10(MP[1:26]),log10(VP[1:26])) ## clear power law
+
+## this shows fitted distributions to histograms of parasite density for first 6 fortnights
+par(mfrow=c(2,3))
+for(i in 1:6){
+  is = as.character(i)
+  title = c("Density at fortnight ", is)
+  hist(LWP[i,],freq=F,main=title,xlab="log10 Parasite Density",ylab="Probability Density",xlim=c(-1,5.5),ylim=c(0,.85))
+  x = seq(0,5,.1)
+  lines(maxp[i]-x,dgamma(x,shape=shape[i],rate=rate[i]))
+}
+par(mfrow=c(1,1))
+
+## "" "" for fortnights 7-12
+par(mfrow=c(2,3))
+for(i in 7:12){
+  is = as.character(i)
+  title = c("Density at fortnight ", is)
+  hist(LWP[i,],freq=F,main=title,xlab="log10 Density",ylab="Probability Density",xlim=c(-1,5.5),ylim=c(0,.85))
+  x = seq(0,5,.1)
+  lines(maxp[i]-x,dgamma(x,shape=shape[i],rate=rate[i]))
+}
+par(mfrow=c(1,1))
+
+
+plot(maxp-shape/rate,shape/rate^2,main="Mean vs Variance of Fitted Distributions")
+
+#gam1 = fitdist(rLWP[1,],distr="gamma",method="mme")
+#x=seq(0,5,.1)
+#lines(x,dgamma(x,4.64,4.01))
 
 #################################### Fever Signals from Asexuals
 
