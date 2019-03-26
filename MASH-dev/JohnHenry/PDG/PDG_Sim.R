@@ -31,8 +31,9 @@ TE = human$get_history()$TE
 plot(TE,ylim=c(0,1),main="Transmission Efficiency",xlab="fortnights")
 par(mfrow=c(1,1))
 
-plot(Pt>4,xlab="weeks",ylab="Fever Status")
-title(main="Example Fever Status (Binary State)")
+
+#plot(Pt>4,xlab="weeks",ylab="Fever Status")
+#title(main="Example Fever Status (Binary State)")
 #plot(seq(1:Nweeks),Imm,type="l",ylim=c(0,1),xlab="Weeks",ylab="Immune Level")
 #title(main="Immunity During Example Infection")
 

@@ -95,6 +95,9 @@ for(i in 1:26){
   rate[i] = gam$estimate[2]
 }
 
+plot(shape,type="l")
+lines(rate,lty=2)
+
 ## this shows the mean and variance of the fitted distributions over time - this is mean and variance of log-transformed data
 plot(maxp-shape/rate,xlab="fortnights",ylab="log10 Asexual Parasite Density",ylim=c(0,4),type="l",main="Mean and Variance of Fitted Gammas")
 lines(shape/rate^2,lty=2)

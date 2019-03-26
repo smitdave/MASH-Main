@@ -20,6 +20,7 @@ PDGHuman <- R6Class("PDGHuman",
                      private$Gt = NaN
                      private$pgm = 1.184 ## slope of log10 asexual-to-gametocyte power law
                      private$pgb = -2.004 ## y-intercept of log10 asexual-to-gametocyte power law
+                     private$pgv = .2704 ## sample variance of residuals of asexual-to-gametocyte power law fit
                      private$gm = 1.652 ## slope of log10 mean-variance power law for gametocytes
                      private$gb = 1.662 ## y intercept of log10 mean-variance power law for gametocytes
                      
@@ -144,7 +145,7 @@ PDGHuman <- R6Class("PDGHuman",
                      ## use power law to translate from Pt to Gt; add unbiased noise due to uncertainty in P2G fit
                      if((sum(private$Pf,na.rm=T) > 0) ){
                        private$Gt = private$pgm*private$Pt + private$pgb
-                       private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt+rnorm(1,0,sqrt(.2704)), NaN)
+                       private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt+rnorm(1,0,sqrt(private$pgv)), NaN)
                      }
                      if(sum(private$Pf,na.rm=T) == 0){
                        private$Gt = private$Gt + private$gdk
@@ -339,6 +340,7 @@ PDGHuman <- R6Class("PDGHuman",
                    Ptrate = NULL, ## " " rate "
                    MOI = NULL, ## multiplicity of infection, sum of vector pf
                    pfpatency = NULL, ## rate at which infections leave patency, become subpatent infection
+                   pgv = NULL, ## variance associated with asexual-to-gametocyte translation (power law)
 
                    ## Immunity
                    Imm = NULL, ## normalized immune strength
