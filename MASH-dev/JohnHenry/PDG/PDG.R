@@ -24,10 +24,8 @@ PDGHuman <- R6Class("PDGHuman",
                      private$gm = 1.652 ## slope of log10 mean-variance power law for gametocytes
                      private$gb = 1.662 ## y intercept of log10 mean-variance power law for gametocytes
                      
-                     #private$ggr = .01 ## about .01 Gt produced per Pt
-                     
                      private$gdk = log10(.7) ## about 70 percent of Gt die over 2 weeks (halflife around 10 days); this determines lingering gametocyte densities if asexuals disappear first
-                     private$pfdr = .1 ## small rate at which old infections are removed
+                     private$pfdr = .1 ## small rate at which old infections are removed (this sets a 10 percent chance per fortnight of clearing subpatent infection; this is by wild unmotivated assumption, not fitted)
                      ## ***** ^^^^^ This is still an unknown parameter *****
                      private$pfpatency = 1-exp(-.1385412) # probability an infection enters subpatent phase within next fortnight
                      private$A = self$ageMatrix(private$pfAges)
@@ -188,7 +186,10 @@ PDGHuman <- R6Class("PDGHuman",
                    ## light microscopy - a function that can be called from the human object, will calculate a probability of testing positive using
                    ## asexual densities, then pull a random number with that probability of success. Returns 0/1 for negative/positive
                    LM = function(){
-                     p = (private$LMMAx-private$LMMin)*self$sigmoidexp(private$Pt,private$LMHalf,private$LMSlope)+private$LMMin
+                     p = 0
+                     if(private$Pt>0){
+                        p = (private$LMMAx-private$LMMin)*self$sigmoidexp(private$Pt,private$LMHalf,private$LMSlope)+private$LMMin 
+                     }
                      test = rbinom(1,1,p)
                      return(test)
                    },
