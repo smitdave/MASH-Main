@@ -33,11 +33,11 @@ finish = proc.time()
 SimTime = finish-start
 
 # input is population size, years to simulate, number of infections to initiate at outset, and the outputs you want
-PDGMOISim = function(P,Years,MOI=1,PfPR=T,Pt=T){
+PDGMOISim = function(P,Years,MOI=1,Pt=T,Gt=T,TE=F,Fever=F){
   
   output = list()
   if(Pt==T){
-    output$Pt = matrix(0,nrow=,ncol=)
+    output$Pt = matrix(0,nrow=26*Years,ncol=P)
   }
   
   for(j in 1:P){
@@ -49,11 +49,10 @@ PDGMOISim = function(P,Years,MOI=1,PfPR=T,Pt=T){
       human$update_Human()
     }
   
-  if(PfPR==T){
-    output$
-  }
   if(Pt==T){
+    output$Pt[,i] = human$get_history$PfPR
+  }
     
   }
-  }
+  return(output)
 }

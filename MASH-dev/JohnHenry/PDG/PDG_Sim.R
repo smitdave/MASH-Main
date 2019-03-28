@@ -1,5 +1,6 @@
 source('PDG.R')
 
+
 human = PDGHuman$new()
 human$infect_Human()
 
