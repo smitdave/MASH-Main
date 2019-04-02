@@ -14,7 +14,7 @@ PDGHuman <- R6Class("PDGHuman",
                      private$sex = sex
                      private$locH = locH ## location (human)
 
-                     private$pfAges = 28 ## 28 age categories of infection, fortnights for a full year plus one latent stage and one subpatent stage
+                     private$pfAges = 27 ## 28 age categories of infection, fortnights for a full year plus one latent stage and one subpatent stage
                      private$Pf = rep(0,private$pfAges)
                      private$Pt = NaN
                      private$Gt = NaN
@@ -25,15 +25,18 @@ PDGHuman <- R6Class("PDGHuman",
                      private$gb = 1.662 ## y intercept of log10 mean-variance power law for gametocytes
                      
                      private$gdk = log10(.7) ## about 70 percent of Gt die over 2 weeks (halflife around 10 days); this determines lingering gametocyte densities if asexuals disappear first
-                     private$pfdr = .35 ## small rate at which old infections are removed (this sets a 10 percent chance per fortnight of clearing subpatent infection; this is by wild unmotivated assumption, not fitted)
+                     private$pfdr = .75 ## small rate at which old infections are removed (this sets a 10 percent chance per fortnight of clearing subpatent infection; this is by wild unmotivated assumption, not fitted)
                      ## ***** ^^^^^ This is still an unknown parameter *****
-                     private$pfpatency = 1-exp(-.1285) # probability an infection enters subpatent phase within next fortnight
+                     private$pfpatency = 1-exp(-.1385) # probability an infection enters subpatent phase within next fortnight
                      private$A = self$ageMatrix(private$pfAges)
                      private$MOI = 0 ## multiplicity of infection, initially set to 0
                      ## set max densities, and shape-rate parameters for log gamma dist'ns
-                     private$Ptmax = c(0,5.210246,4.573131,4.373306,4.218014,4.079337,4.157638,3.805582,3.821811,3.827757,3.467524,3.740757,3.349316,3.732802,3.652580,3.231724,2.567026,2.283804,2.929233,1.962211,2.944931,1.851258,2.193125,2.309303,1.564271,3.205746,2.719204,2)
-                     private$Ptshape = c(0,4.639315,2.275418,2.258965,2.311616,2.474827,3.176543,2.943449,3.419812,4.387235,2.755179,5.014499,4.114957,8.849801,6.918817,4.470316,3.726024,4.332549,4.547252,1.829113,5.378781,1.581417,1.094105,1.000000,1.030259,2.641712,2.991721,1)
-                     private$Ptrate = c(0,4.008275,1.539217,1.612759,1.756409,1.907544,2.034369,1.949314,2.043045,2.571400,1.800733,2.482635,2.385546,3.573325,3.135033,2.244577,2.825106,3.004125,2.390421,2.198324,2.916877,1.992531,1.051514,1.572928,1.460975,1.294750,2.077740,1)
+                     private$Ptmax = c(0,5.210246,4.573131,4.373306,4.218014,4.079337,4.157638,3.805582,3.821811,3.827757,3.467524,3.740757,3.349316,3.732802,3.652580,3.231724,2.567026,2.283804,2.929233,1.962211,2.944931,1.851258,2.193125,2.309303,1.564271,3.205746,2.719204,1.915100)
+                     #smoothed: c(0,5.210246,4.492700,4.385300,4.277900,4.170500,4.063100,3.955700,3.848300,3.740900,3.633500,3.526100,3.418700,3.311300,3.203900,3.096500,2.989100,2.881700,2.774300,2.666900,2.559500,2.452100,2.344700,2.237300,2.129900,2.022500,1.915100,1.915100)
+                     private$Ptshape = c(0,4.639315,2.275418,2.258965,2.311616,2.474827,3.176543,2.943449,3.419812,4.387235,2.755179,5.014499,4.114957,8.849801,6.918817,4.470316,3.726024,4.332549,4.547252,1.829113,5.378781,1.581417,1.094105,1.000000,1.030259,2.641712,2.991721,5.007464)
+                     #smoothed: c(0,4.639315,2.714693,2.796321,2.879157,2.963203,3.048457,3.134921,3.222594,3.311476,3.401567,3.492868,3.585377,3.679095,3.774023,3.870160,3.967505,4.066060,4.165824,4.266797,4.368979,4.472371,4.576971,4.682781,4.789799,4.898027,5.007464,5.007464)
+                     private$Ptrate = c(0,4.008275,1.539217,1.612759,1.756409,1.907544,2.034369,1.949314,2.043045,2.571400,1.800733,2.482635,2.385546,3.573325,3.135033,2.244577,2.825106,3.004125,2.390421,2.198324,2.916877,1.992531,1.051514,1.572928,1.460975,1.294750,2.077740,2.618999)
+                     #smoothed: c(0,4.008275,1.928354,1.957131,1.985908,2.014685,2.043462,2.072239,2.101016,2.129793,2.158569,2.187346,2.216123,2.244900,2.273677,2.302454,2.331231,2.360008,2.388784,2.417561,2.446338,2.475115,2.503892,2.532669,2.561446,2.590223,2.618999,2.618999)
                      
                      private$Imm = 0
                      private$immCounter = 0

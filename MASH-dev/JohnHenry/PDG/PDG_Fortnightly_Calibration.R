@@ -69,7 +69,6 @@ x = seq(-2,5,.1)
 lines(x,m*x+b)
 
 
-
 #################################### Shape of Dist'n of Asexuals
 
 
@@ -101,6 +100,74 @@ lines(rate,lty=2)
 ## this shows the mean and variance of the fitted distributions over time - this is mean and variance of log-transformed data
 plot(maxp-shape/rate,xlab="fortnights",ylab="log10 Asexual Parasite Density",ylim=c(0,4),type="l",main="Mean and Variance of Fitted Gammas")
 lines(shape/rate^2,lty=2)
+
+var = mean(shape[2:26]/rate[2:26]^2)
+abline(h=var)
+
+##################### SMOOTHED Max and Mean of Dist'n of Asexuals ##########################
+##################### Note: This fitting provided worse output... ##########################
+
+plot(maxp[2:26],maxp[2:26]-shape[2:26]/rate[2:26],main="Max vs Mean of Asexual Densities")
+maxplow = maxp[which(maxp<3)]
+maxphigh = maxp[which(maxp>=3)]
+meanlow = maxp[which(maxp<3)]-shape[which(maxp<3)]/rate[which(maxp<3)]
+meanhigh = maxp[which(maxp>=3)]-shape[which(maxp>=3)]/rate[which(maxp>=3)]
+
+max2meanlow = lm(meanlow[2:length(meanlow)]~maxplow[2:length(meanlow)])
+max2meanhigh = lm(meanhigh[2:length(meanlow)]~maxphigh[2:length(meanlow)])
+blow = max2meanlow$coefficients[1]
+mlow = max2meanlow$coefficients[2]
+bhigh = max2meanhigh$coefficients[1]
+mhigh = max2meanhigh$coefficients[2]
+
+max2mean = function(maxp){
+  meanp = rep(0,length(maxp))
+  #meanp = pmax(blow+mlow*maxp,bhigh+mhigh*maxp)
+  meanp = bhigh+mhigh*maxp
+}
+x = seq(0,6,.1)
+lines(x,max2mean(x))
+
+plot(maxp,ylim=c(0,5.5),xlab="Fortnights",ylab="Max and Mean of Gamma Distributed Asexual Densities")
+maxPt = seq(1,26)
+maxPt[1] = maxp[1]
+weights = exp(-(2:26)*.138)/exp(-2*.138)
+lm(maxp[2:26] ~ seq(2,26),weights = weights)
+maxb = 4.7075
+maxm = -.1074
+maxPt[2:26] = maxb+maxm*seq(2,26)
+lines(1:26,maxPt)
+points(maxp-shape/rate,pch=10)
+lines(c(maxp[1]-shape[1]/rate[1],max2mean(maxPt[2:26])))
+
+abline(h=log10(10),lty=2)
+abline(h=log10(50),lty=2)
+
+
+mupt = c(maxp[1]-shape[1]/rate[1],max2mean(maxPt[2:26]))
+plot(1:26,mupt,type="l",main="Mean & Variance Over Duration of Infection")
+varpt = shape/rate^2
+vars = c(varpt[1],rep(mean(varpt[2:26]),25))
+lines(1:26,vars,lty=2)
+
+alpha = (maxPt-mupt)^2/vars
+beta = (maxPt-mupt)/vars
+plot(1:26,alpha,type="l",ylim=c(0,5),main="Shape and Rate Estimates")
+lines(1:26,beta,lty=2)
+
+
+
+
+
+
+plot(shape[2:26]/rate[2:26]^2)
+hist(shape[2:26]/rate[2:26]^2,breaks=10,freq=F)
+fitdist(shape[2:26]/rate[2:26]^2,dist="gamma")
+eshape = 9.9266
+erate = 13.597
+s = seq(0,2,.01)
+lines(s,dgamma(s,shape=eshape,rate=erate))
+
 
 plot(maxp-shape/rate,shape/rate^2) ## no strong sign of power law
 
