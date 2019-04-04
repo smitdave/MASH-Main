@@ -256,6 +256,7 @@ Pt[which(Pt==0)]=NaN
 
 ################## Part 6: Comparison, Take 2 (...or should I say Take 3?)
 
+hist(Pt[1,]/50*100,freq=F,main="Histogram of the Mean % Parasitemia in the First Fortnight",xlab="Percent Parasitemia",ylab="Probability Density")
 
 hist(Pt[1,],xlim=c(0,5.5))
 LPtSample = matrix(NaN,nrow = 52,ncol = 100000)
@@ -272,8 +273,20 @@ gshape3 = 3.6156
 grate3 = .2695
 t = seq(0,30,.1)
 lines(t,dgamma(t,shape=gshape3,rate=grate3))
+Active = Pt>log10(80)
+## active defines those which are **possibly** detectable by microscopy, using the empirical lower
+## bound of ~about~ 80 per microliter. However, we need to continue to process this through
+## a bernoulli filter with a probability of detection an increasing function of parasite density
+sigmoid = function(Pt,Half,slope,max,min){
+  (max-min)*(Pt/Half)^slope/(1+(Pt/Half)^slope)+min
+}
+threshDetec = log10(80)
+pmicro = matrix(NaN,nrow=52,ncol=5000)
+for(i in 1:52){
+  pmicro[i,which(Pt[i,]>threshDetec)] = sigmoid(Pt[i,which(Pt[i,]>threshDetec)],Half=log10(150),slope=10,max=1,min=0)
+}
+plot(rowMeans(pmicro,na.rm=T),type="l",ylim=c(0,1),main="Probability of Detection By Microscopy, Given Theoretically Detectable Parasitemia",xlab="Fortnights Since Infection",ylab="Probability of Detection")
 
-Active = Pt>log10(250)## defining average point of "reliable" detectability by microscopy
 Dur = rep(0,P)
 for(i in 1:P){
   Dur[i] = max(which(Active[,i]==T))-1
@@ -287,7 +300,9 @@ par(mfrow=c(1,1))
 
 
 plot(t,dgamma(t,shape=gshape3,rate=grate3),type="l",ylim=c(0,.1),xlab="Duration (Fortnights)",ylab="Probability Density",main="Fitted Distributions for Duration of Patent Infection, MOI=3")
+abline(v=gshape3/grate3)
 lines(t,dgamma(t,shape=shape3sim,rate=rate3sim),col="blue")
+abline(v=shape3sim/rate3sim,col="blue")
 
 
 

@@ -281,12 +281,12 @@ PDGHuman <- R6Class("PDGHuman",
                    ################# extra functions #################
 
 
-                   ## polynomial sigmoid function
+                   ## polynomial sigmoid function, defined over nonnegative real line
                    sigmoid = function(x,xhalf,b){
                      (x/xhalf)^b/((x/xhalf)^b+1)
                    },
                    
-                   ## exponential sigmoid function
+                   ## exponential sigmoid function, defined over whole real line
                    sigmoidexp = function(x,xhalf,b){
                      exp(x*b)/(exp(x*b)+exp(xhalf*b))
                    },
