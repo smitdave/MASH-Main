@@ -61,15 +61,15 @@ $$
 
 We pick these particular definitions for the different prevalence terms because it is straightforward to sum them together to get the total prevalence overall:
 $$
-PR = PR_{v+} + PR_{v-} + PR_{o} = \frac{X_{v+} + X_{v-} + X_{o}}{H}
+PR = PR_{v+} + PR_{v-} + PR_{o} = \frac{X_{v+} + X_{v-} + X_{o}}{H_{tot}}
 $$
 
 We can now write down a variation on the Ross-Macdonald equations that incorporates the different subgroups, those for whom the vaccine works and those for whom it does not work:
 $$
 \begin{split}
   & \frac{d X_{v+}}{dt} = b_v EIR \left(H_{v+} - X_{v+} \right) - rX_{v+}\\
-  & \frac{d X_{v-}}{dt} = b_v EIR \left(H_{v-} - X_{v-} \right) - rX_{v-}\\
-  & \frac{d X_{o}}{dt} = b_v EIR \left(H_{o} - X_{o} \right) - rX_{o}\\
+  & \frac{d X_{v-}}{dt} = b EIR \left(H_{v-} - X_{v-} \right) - rX_{v-}\\
+  & \frac{d X_{o}}{dt} = b EIR \left(H_{o} - X_{o} \right) - rX_{o}\\
   & \frac{d Z}{dt} = ac \frac{X_{v+} + X_{v-} + X_{o}}{H} \left(e^{-gn} - Z \right) -gZ\\
   & EIR = maZ \\
 \end{split}
