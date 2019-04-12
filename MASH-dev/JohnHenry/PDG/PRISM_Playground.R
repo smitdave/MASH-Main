@@ -313,9 +313,9 @@ par(mfrow=c(1,1))
 
 ######### Compare Sample Sizes
 par(mfrow=c(1,2))
-plot(age,log10(healthyFemaleHbN),type="l",ylim=c(0,3),ylab="Sample Sizes of Hb Concentration (g/dl)",xlab="age (in years)",main="SD Hb Healthy Vs Infected Females")
+plot(age,log10(healthyFemaleHbN),type="l",ylim=c(0,3),ylab="Sample Sizes of Hb Concentration (g/dl)",xlab="age (in years)",main="Sample Size of Healthy Vs Infected Females")
 lines(age,log10(infectedFemaleHbN),col="red")
-plot(age,log10(healthyMaleHbN),type="l",ylim=c(0,3),ylab="Sample Sizes of Hb Concentration (g/dl)",xlab="age (in years)",main="SD Hb Healthy Vs Infected Males")
+plot(age,log10(healthyMaleHbN),type="l",ylim=c(0,3),ylab="Sample Sizes of Hb Concentration (g/dl)",xlab="age (in years)",main="Sample Size of Healthy Vs Infected Males")
 lines(age,log10(infectedMaleHbN),type="l",col="red")
 par(mfrow=c(1,1))
 
@@ -419,3 +419,87 @@ ageInfected = seq(.5+1/24,10.5-1/24,1/12)
 plot(ageInfected,log10(maxPD),type="l",ylim=c(0,6))
 lines(ageInfected,log10(muPD),type="l")
 lines(ageInfected,log10(medPD),type="l",col="blue")
+
+
+
+
+
+################## Difference in Anemia
+#Healthy Male
+MildHM = mean(pnorm(11,mean=mf(ageSub,Hb0HM,aHM,bHM),sd=1.1277))-mean(pnorm(10,mean=mf(ageSub,Hb0HM,aHM,bHM),sd=1.1277))
+ModHM = mean(pnorm(10,mean=mf(ageSub,Hb0HM,aHM,bHM),sd=1.1277))-mean(pnorm(7,mean=mf(ageSub,Hb0HM,aHM,bHM),sd=1.1277))
+SevHM = mean(pnorm(7,mean=mf(ageSub,Hb0HM,aHM,bHM),sd=1.1277))
+AnemHM = MildHM+ModHM+SevHM
+
+#Infected Male
+MildIM = mean(pnorm(11,mean=mf(ageSub,Hb0IM,aIM,bIM),sd=1.3425))-mean(pnorm(10,mean=mf(ageSub,Hb0IM,aIM,bIM),sd=1.3425))
+ModIM = mean(pnorm(10,mean=mf(ageSub,Hb0IM,aIM,bIM),sd=1.3425))-mean(pnorm(7,mean=mf(ageSub,Hb0IM,aIM,bIM),sd=1.3425))
+SevIM = mean(pnorm(7,mean=mf(ageSub,Hb0IM,aIM,bIM),sd=1.3425))
+AnemIM = MildIM+ModIM+SevIM
+
+#Healthy Female
+MildHF = mean(pnorm(11,mean=mf(ageSub,Hb0HF,aHF,bHF),sd=1.1801))-mean(pnorm(10,mean=mf(ageSub,Hb0HF,aHF,bHF),sd=1.1801))
+ModHF = mean(pnorm(10,mean=mf(ageSub,Hb0HF,aHF,bHF),sd=1.1801))-mean(pnorm(7,mean=mf(ageSub,Hb0HF,aHF,bHF),sd=1.1801))
+SevHF = mean(pnorm(7,mean=mf(ageSub,Hb0HF,aHF,bHF),sd=1.1801))
+AnemHF = MildHF+ModHF+SevHF
+
+#Infected Female
+MildIF = mean(pnorm(11,mean=mf(ageSub,Hb0IF,aIF,bIF),sd=1.5016))-mean(pnorm(10,mean=mf(ageSub,Hb0IF,aIF,bIF),sd=1.5016))
+ModIF = mean(pnorm(10,mean=mf(ageSub,Hb0IF,aIF,bIF),sd=1.5016))-mean(pnorm(7,mean=mf(ageSub,Hb0IF,aIF,bIF),sd=1.5016))
+SevIF = mean(pnorm(7,mean=mf(ageSub,Hb0IF,aIF,bIF),sd=1.5016))
+AnemIF = MildIF+ModIF+SevIF
+
+
+Severity= c('Mild','Moderate','Severe','Total')
+HealthyMale = c(MildHM,ModHM,SevHM,AnemHM)
+InfectedMale = c(MildIM,ModIM,SevIM,AnemIM)
+HealthyFemale = c(MildHF,ModHF,SevHF,AnemHF)
+InfectedFemale = c(MildIF,ModIF,SevIF,AnemIF)
+compare=matrix(c(HealthyMale,InfectedMale,HealthyFemale,InfectedFemale),nrow=4)
+barplot(t(compare),beside=T)
+
+
+par(mfrow=c(2,2))
+plot(PRISM$age[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))]*12,PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))],xlab="Age (in Months)",ylab="Hb Concentration (g/dl)",ylim=c(5,18))
+HealthyNeonateHb = PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))]
+HealthyNeonateAge = PRISM$age[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))]*12
+nls(HealthyNeonateHb~a/b*(1-exp(-b*HealthyNeonateAge))+Hb0*exp(-b*HealthyNeonateAge),start=list(a=.2,b=.05,Hb0=16))
+aHN = 16.992
+bHN = 1.671
+Hb0HN = 15.368
+Nage = seq(0,6,.01)
+lines(Nage,aHN/bHN*(1-exp(-bHN*Nage))+Hb0HN*exp(-bHN*Nage),col="blue")
+hist(HealthyNeonateHb,freq=F,xlim=c(5,15))
+
+HealthyNeonateSex = PRISM$gender[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))]=='Male'
+HealthyNeonateSex=as.numeric(HealthyNeonateSex)
+
+### Healthy Neonates By Sex
+plot(HealthyNeonateAge[which(HealthyNeonateSex==1)],HealthyNeonateHb[which(HealthyNeonateSex==1)],ylim=c(6,18))
+points(HealthyNeonateAge[which(HealthyNeonateSex==0)],HealthyNeonateHb[which(HealthyNeonateSex==0)],ylim=c(6,18),col="red")
+
+
+plot(PRISM$age[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]*12,PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)],xlab="Age (in Months)",ylim=c(5,18))
+InfectedNeonateHb = PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]
+InfectedNeonateAge = PRISM$age[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]*12
+nls(InfectedNeonateHb~a/b*(1-exp(-b*InfectedNeonateAge))+Hb0*exp(-b*InfectedNeonateAge),start=list(a=.2,b=.02,Hb0=14))
+aIN = 32.108
+bIN = 3.571
+Hb0IN = 115.186
+muIN = mean(InfectedNeonateHb)
+lines(Nage,aIN/bIN*(1-exp(-bIN*Nage))+Hb0IN*exp(-bIN*Nage),col="red")
+abline(h=muIN,col="green")
+hist(InfectedNeonateHb,freq=F,xlim=c(5,15))
+par(mfrow=c(1,1))
+
+InfectedNeonateSex = PRISM$gender[which(PRISM$age<.5 & PRISM$hb<100 & PRISM$parsdens>0)]=='Male'
+InfectedNeonateSex = as.numeric(InfectedNeonateSex)
+
+
+### Infected Neonates By Sex
+plot(InfectedNeonateAge[which(InfectedNeonateSex==1)],InfectedNeonateHb[which(InfectedNeonateSex==1)],xlim=c(0,6))
+points(InfectedNeonateAge[which(InfectedNeonateSex==0)],InfectedNeonateHb[which(InfectedNeonateSex==0)],col="red")
+
+NeonateAge = PRISM$age[which(PRISM$age<.5&PRISM$hb<100)]
+NeonateInfectionStatus = c(rep(0,length(HealthyNeonateHb)),rep(1,length(InfectedNeonateHb)))
+t.test(c(HealthyNeonateHb,InfectedNeonateHb)~NeonateInfectionStatus)
