@@ -54,7 +54,7 @@ human_pfsi::human_pfsi(
   age(Rcpp::as<double>(human_pars["age"])),
   kappa(0.0), EIR(0.0)
 {
-  std::cout << "making human_pfsi: " << id << "\n";
+  // std::cout << "making human_pfsi: " << id << "\n";
   std::string state_t0(Rcpp::as<std::string>(human_pars["state"]));
 
   /* transmission efficiencies */

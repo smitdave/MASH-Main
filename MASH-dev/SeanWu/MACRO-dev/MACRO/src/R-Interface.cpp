@@ -50,7 +50,7 @@ void run_macro(
      const bool           verbose = true
    )
 {
-  std::cout << "entered the run_macro function!\n";
+  // std::cout << "entered the run_macro function!\n";
   std::unique_ptr<tile> tileP = std::make_unique<tile>(seed,human_pars,mosquito_pars,patch_pars,model_pars,log_streams,vaxx_events,verbose);
 
   tileP->simulation(tmax);
