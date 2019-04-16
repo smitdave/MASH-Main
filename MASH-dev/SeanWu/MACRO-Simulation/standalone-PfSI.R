@@ -68,11 +68,11 @@ interp <- function(y1,yn,n){
 fillGaps <- function(dd, Sd){
   ix0 <- which(diff(dd)>1)
   gap <- diff(dd)[ix0]
-  
+
   ddnew <- min(dd):max(dd)
   Sdnew <- 0*ddnew
   Sdnew[dd] <- Sd
-  
+
   for(i in 1:length(ix0)){
     #if(i==172 & ix0[i] ==574) browser()
     d0 <- dd[ix0[i]]
@@ -81,7 +81,7 @@ fillGaps <- function(dd, Sd){
     yn <- Sd[ix0[i]+1]
     nn <- gap[i]
     vals <- interp(y0,yn,nn)
-    
+
     Sdnew[d0+1:nn] <- interp(y0,yn,nn)
   }
   list(dd=ddnew,Sd=Sdnew)
@@ -241,11 +241,11 @@ gg.J <- function(mu){gg.mu(mu,J.g)}
 
 # which: 1 for prob (xi: gg), 2 for size (k: ff)
 make_tororo <- function(N, which = 1){
-  
+
   dat <- list()
-  
+
   if(which==1){
-    
+
     dat$w <- rgamma(N,Tw,Tw)
     dat$xi <- lapply(dat$w,function(w){
       gg.T(TTSd*w)
@@ -256,9 +256,9 @@ make_tororo <- function(N, which = 1){
     dat$prob <- lapply(dat$xi,function(xi){
       xi/(1 + xi)
     })
-    
+
   } else if(which==2){
-    
+
     dat$w <- rgamma(N,Tw,Tw)
     dat$k <- lapply(dat$w,function(w){
       ff.T(TTSd*w)
@@ -266,20 +266,20 @@ make_tororo <- function(N, which = 1){
     dat$mu <- lapply(1:N,function(i){
       TTSd*dat$w[[i]]*TTz
     })
-    
+
   } else {
     stop("wrong 'else'")
   }
-  
+
   return(dat)
 }
 
 make_kanungu <- function(N, which = 1){
-  
+
   dat <- list()
-  
+
   if(which==1){
-    
+
     dat$w <- rgamma(N,Kw,Kw)
     dat$xi <- lapply(dat$w,function(w){
       gg.K(KKSd*w)
@@ -290,9 +290,9 @@ make_kanungu <- function(N, which = 1){
     dat$prob <- lapply(dat$xi,function(xi){
       xi/(1 + xi)
     })
-    
+
   } else if(which==2){
-    
+
     dat$w <- rgamma(N,Kw,Kw)
     dat$k <- lapply(dat$w,function(w){
       ff.K(KKSd*w)
@@ -300,20 +300,20 @@ make_kanungu <- function(N, which = 1){
     dat$mu <- lapply(1:N,function(i){
       KKSd*dat$w[[i]]*KKz
     })
-    
+
   } else {
     stop("wrong 'else'")
   }
-  
+
   return(dat)
 }
 
 make_jinja <- function(N, which = 1){
-  
+
   dat <- list()
-  
+
   if(which==1){
-    
+
     dat$w <- rgamma(N,Jw,Jw)
     dat$xi <- lapply(dat$w,function(w){
       gg.J(JJSd*w)
@@ -324,9 +324,9 @@ make_jinja <- function(N, which = 1){
     dat$prob <- lapply(dat$xi,function(xi){
       xi/(1 + xi)
     })
-    
+
   } else if(which==2){
-    
+
     dat$w <- rgamma(N,Jw,Jw)
     dat$k <- lapply(dat$w,function(w){
       ff.J(JJSd*w)
@@ -334,11 +334,11 @@ make_jinja <- function(N, which = 1){
     dat$mu <- lapply(1:N,function(i){
       JJSd*dat$w[[i]]*JJz
     })
-    
+
   } else {
     stop("wrong 'else'")
   }
-  
+
   return(dat)
 }
 
@@ -440,12 +440,94 @@ ggplot() +
 
 library(Rcpp)
 
+N <- 1e4
+
+tdat_gg <- make_tororo(N = N,which = 1)
+
 sourceCpp(here::here("tiny-pfsi.cpp"))
 
-out <- tiny_pfsi(tmax = 1260,nh = N,init = sample(x = c("S","I"),size = N,replace = T,prob = c(0.9,0.1)),
+pfpr <- 0.05
+
+out <- tiny_pfsi(tmax = 1260,nh = N,init = sample(x = c("S","I"),size = N,replace = T,prob = c(1-pfpr,pfpr)),
                  EIR_size = tdat_gg$size,EIR_prob = tdat_gg$prob,pb = T)
 
-par(mfrow=c(1,2))
-matplot(out$states,type="l")
-matplot(out$bites,type="l",lty=1)
-par(mfrow=c(1,1))
+
+df_bite <- data.frame(time=1:nrow(out$bites),mean=rowMeans(out$bites),
+                      low=apply(out$bites,1,function(x){quantile(x,probs = c(0.025))}),
+                      high=apply(out$bites,1,function(x){quantile(x,probs = c(0.975))}))
+
+df_pf <- data.frame(time=1:nrow(out$states),
+                    pfpr=out$states[,2] / rowSums(out$states),
+                    foi=out$foi)
+
+ggplot(data = df_bite) +
+  geom_line(aes(x=time,y=mean),color="firebrick3") +
+  geom_ribbon(aes(x=time,ymin=low,ymax=high),fill="firebrick3",alpha=0.25) +
+  scale_y_continuous(trans = scales::log1p_trans()) +
+  ylab("EIR") +
+  theme_bw()
+
+ggplot(data = df_pf[-1,]) +
+  geom_line(aes(x=time,y=foi),color="firebrick3") +
+  theme_bw()
+
+
+
+
+
+
+################################################################################
+#   PRISM burnin
+################################################################################
+
+N <- 1e3
+nrep <- 1e3
+
+library(doSNOW)
+library(foreach)
+library(parallel)
+
+# set up cluster and source the file on each core
+cl <- makeSOCKcluster(4)
+registerDoSNOW(cl)
+clusterEvalQ(cl,{
+  Rcpp::sourceCpp(here::here("tiny-pfsi.cpp"))
+})
+
+# progress bar
+pb <- txtProgressBar(max=nrep, style=3)
+progress <- function(n) setTxtProgressBar(pb, n)
+opts <- list(progress=progress)
+
+# loop over repetitions
+burnin <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
+
+  iter <- setNames(object = rep(0,3),nm = c("Tororo","Kanungu","Jinja"))
+
+  dat <- make_tororo(N = N,which = 1)
+  out <- tiny_pfsi(tmax = 365*3,nh = N,init = rep("S",N),
+                   EIR_size = dat$size,EIR_prob = dat$prob,pb = FALSE)
+
+  iter[["Tororo"]] <- out$states[nrow(out$states),2] / sum(out$states[nrow(out$states),])
+
+  dat <- make_kanungu(N = N,which = 1)
+  out <- tiny_pfsi(tmax = 365*3,nh = N,init = rep("S",N),
+                   EIR_size = dat$size,EIR_prob = dat$prob,pb = FALSE)
+
+  iter[["Kanungu"]] <- out$states[nrow(out$states),2] / sum(out$states[nrow(out$states),])
+
+  dat <- make_jinja(N = N,which = 1)
+  out <- tiny_pfsi(tmax = 365*3,nh = N,init = rep("S",N),
+                   EIR_size = dat$size,EIR_prob = dat$prob,pb = FALSE)
+
+  iter[["Jinja"]] <- out$states[nrow(out$states),2] / sum(out$states[nrow(out$states),])
+  
+  iter
+}
+
+close(pb)
+stopCluster(cl);rm(cl);gc()
+
+ggplot(data=melt(burnin)) +
+  geom_boxplot(aes(Var2,value,fill=Var2),alpha=0.5) +
+  theme_bw()

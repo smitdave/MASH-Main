@@ -6,7 +6,7 @@
  *  /_/  /_/_/  |_\____/_/ |_|\____/
  *
  *  A very simple version for the PRISM data
- *  Stand-alone PfSI with no mosquitos (EIR is forcing)
+ *  Stand-alone PfMOI with no mosquitos (EIR is forcing)
  *
 ################################################################################ */
 
@@ -30,24 +30,26 @@
 static unsigned int tnow_global = 0;
 
 /* global parameters */
-static double DurationPf = 200.0;
+static double DurationPf = 200.0; // for simple infection
 static double b = 0.55;
+static double sigma = 1.0; // sigma > 1: competition (faster clearance), 0 < sigma < 1: facilitation (slower clearance)
 
 
 /* ################################################################################
 * sample waiting time (hazard functions for events)
 ################################################################################ */
 
-/* duration of infection */
-double pfsi_ttClearPf(){
- double recover = R::rexp(DurationPf);
- return recover;
+/* clearance of one clonal strain */
+double pfmoi_ttClear(const int MOI){
+ double rho = (1.0/DurationPf) * std::pow(MOI,sigma);
+ return R::rexp(1.0/rho);;
 };
 
 /* no latent period */
-double psfi_ttInfectionPf(){
+double pfmoi_ttLatent(){
   return 0;
 }
+
 
 /* ################################################################################
  * generic event class (abstract base)
@@ -90,42 +92,42 @@ public:
 
 
 /* ################################################################################
-* PfSI event declarations
+* PfMOI event declarations
 ################################################################################ */
 
 /* need to forward declare events here */
 class human;
 
-/* simulated infectious bite; tag: PfSI_SimBite */
-class e_pfsi_bite : public event {
+/* simulated infectious bite; tag: PfMOI_SimBite */
+class e_pfmoi_bite : public event {
 public:
   /* constructor */
-  e_pfsi_bite(double tEvent_, human* h);
+  e_pfmoi_bite(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_bite(){};
+  ~e_pfmoi_bite(){};
 
 };
 
-/* start a PfSI infection; tag: PfSI_infection */
-class e_pfsi_infect : public event {
+/* start a PfMOI infection; tag: PfMOI_infection */
+class e_pfmoi_infect : public event {
 public:
   /* constructor */
-  e_pfsi_infect(double tEvent_, human* h);
+  e_pfmoi_infect(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_infect(){};
+  ~e_pfmoi_infect(){};
 };
 
 
-/* end a PfSI infection; tag: PfSI_recovery */
-class e_pfsi_recover : public event {
+/* clear a PfMOI infection; tag: PfMOI_clearance */
+class e_pfmoi_clear : public event {
 public:
   /* constructor */
-  e_pfsi_recover(double tEvent_, human* h);
+  e_pfmoi_clear(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_recover(){};
+  ~e_pfmoi_clear(){};
 };
 
 
@@ -141,10 +143,10 @@ public:
 
   /* constructor & destructor */
   human(const int id_, const std::vector<double>& EIR_size_, const std::vector<double>& EIR_prob_, const std::string init, Rcpp::IntegerVector* const foi_ptr) :
-    id(id_), tnow(0.0), state("S"), EIR_size(EIR_size_), EIR_prob(EIR_prob_), foi_hist(foi_ptr), bites(0) {
-      if(init.compare("I") == 0){
-        addEvent2Q(e_pfsi_infect(0.0,this));
-      }
+    id(id_), tnow(0.0), MOI(0), EIR_size(EIR_size_), EIR_prob(EIR_prob_), foi_hist(foi_ptr), bites(0) {
+      // if(init.compare("I") == 0){
+      //   addEvent2Q(e_pfsi_infect(0.0,this));
+      // }
     };
   ~human(){};
 
@@ -163,12 +165,13 @@ public:
   u_int                 get_id(){return id;};
   double                get_tnow(){return tnow;};
 
-  std::string           get_state(){return state;};
-  void                  set_state(const std::string s){state = s;};
+  unsigned int          get_MOI(){return MOI;};
+  void                  inc_MOI(){MOI++;};
+  void                  dec_MOI(){MOI--;};
+
   int                   get_bites(){return bites;};
 
   Rcpp::IntegerVector*  get_foi_hist(){return foi_hist;};
-
 
   /* event queue related functions */
   void                  addEvent2Q(event&& e);
@@ -183,7 +186,7 @@ private:
   /* basic fields */
   u_int                 id;     /* my id */
   double                tnow;   /* my local simulation time (time of last jump) */
-  std::string           state;
+  unsigned int          MOI;    /* multiplicity of infection (number of genotypically distinct clones) */
 
   std::vector<eventP>   eventQ;
 
@@ -194,7 +197,7 @@ private:
   /* pointer to the vector that keeps track of when new infections happen */
   Rcpp::IntegerVector*  foi_hist;
 
-  /* history */
+  /* number of potentially infectious bites i got today */
   int                   bites;
 
   /* called by simulate */
@@ -234,57 +237,51 @@ void human::fireEvent(){
 
 
 /* ################################################################################
- * PfSI events
+ * PfMOI events
 ################################################################################ */
 
 /* simulated biting event */
-e_pfsi_bite::e_pfsi_bite(double tEvent_, human* h):
-  event("PfSI_SimBite",tEvent_,[tEvent_,h](){
+e_pfmoi_bite::e_pfmoi_bite(double tEvent_, human* h):
+  event("PfMOI_SimBite",tEvent_,[tEvent_,h](){
     /* transmission efficiency */
     if(R::runif(0.0, 1.0) < b){
-      double tInfStart = tEvent_ + psfi_ttInfectionPf();
-      h->addEvent2Q(e_pfsi_infect(tInfStart,h));
+      double tInfStart = tEvent_ + pfmoi_ttLatent();
+      h->addEvent2Q(e_pfmoi_infect(tInfStart,h));
     }
 
   })
 {};
 
 /* infection */
-e_pfsi_infect::e_pfsi_infect(double tEvent_, human* h):
-  event("PfSI_infection",tEvent_,[tEvent_,h](){
+e_pfmoi_infect::e_pfmoi_infect(double tEvent_, human* h):
+  event("PfMOI_infection",tEvent_,[tEvent_,h](){
 
-    /* no superinfection, and chx blocks new infections */
-    if(h->get_state().compare("S") == 0){
+    /* invaded by a new clonal infection */
+    h->inc_MOI();
 
-      /* i'm now infected */
-      h->set_state("I");
+    /* track hist */
+    h->get_foi_hist()->at(tnow_global) += 1;
 
-      /* track hist */
-      h->get_foi_hist()->at(tnow_global) += 1;
-
-      /* queue clearance event */
-      double tEnd = tEvent_ + pfsi_ttClearPf();
-      h->addEvent2Q(e_pfsi_recover(tEnd,h));
-    }
+    /* queue clearance event */
+    double tEnd = tEvent_ + pfmoi_ttClear(h->get_MOI());
+    h->addEvent2Q(e_pfmoi_clear(tEnd,h));
 
   })
 {};
 
 /* recovery */
-e_pfsi_recover::e_pfsi_recover(double tEvent_, human* h):
- event("PfSI_recovery",tEvent_,[tEvent_,h](){
+e_pfmoi_clear::e_pfmoi_clear(double tEvent_, human* h):
+  event("PfMOI_clearance",tEvent_,[tEvent_,h](){
 
-   /* i can only recover if i'm infected */
-   if(h->get_state().compare("I") == 0){
-     h->set_state("S");
-   }
+    /* MOI -= 1 */
+    h->dec_MOI();
 
- })
+  })
 {};
 
 
 /* ################################################################################
- * PfSI simulation loop
+ * PfMOI simulation loop
 ################################################################################ */
 
 void human::simulate(){
@@ -310,92 +307,92 @@ void human::queue_bites(){
 
   if(bites > 0){
     for(size_t i=0; i<bites; i++){
-      addEvent2Q(e_pfsi_bite(tnow_global,this));
+      addEvent2Q(e_pfmoi_bite(tnow_global,this));
     }
   }
 
 };
 
 
-/* ################################################################################
- * Run a simulation from R
-################################################################################ */
-
-/* human pointer */
-using humanP = std::unique_ptr<human>;
-
-// [[Rcpp::export]]
-Rcpp::List tiny_pfsi(const unsigned int tmax,
-                     const size_t nh,
-                     const Rcpp::StringVector init,
-                     const Rcpp::List EIR_size,
-                     const Rcpp::List EIR_prob,
-                     const bool pb){
-
-  /* checks */
-  if(nh != EIR_size.size() || nh != EIR_prob.size()){
-    Rcpp::stop("number of humans to simulate must be same as length of EIR size and prob lists");
-  }
-
-  /* global clock */
-  tnow_global = 0;
-
-  /* output matrix */
-  Rcpp::IntegerMatrix out_mat(tmax,2);
-  Rcpp::IntegerMatrix out_bites(tmax,nh);
-  Rcpp::IntegerVector out_foi(tmax);
-
-  /* set up our ensemble of people */
-  std::vector<humanP> humans;
-  humans.reserve(nh);
-  for(size_t i=0; i<nh; i++){
-
-    humans.emplace_back(std::make_unique<human>(
-      i,
-      Rcpp::as<std::vector<double> >(EIR_size.at(i)),
-      Rcpp::as<std::vector<double> >(EIR_prob.at(i)),
-      Rcpp::as< std::string >(init(i)),
-      &out_foi
-    ));
-
-  }
-
-  /* track progress */
-  Progress progbar(tmax, pb);
-
-  /* run simulation */
-  while(tnow_global < tmax){
-
-    if(Progress::check_abort()){
-      Rcpp::stop("user abort detected");
-    };
-
-    /* sim humans */
-    for(auto& h : humans){
-      h->simulate();
-    }
-
-    /* write output */
-    for(auto& h : humans){
-
-      /* write bites */
-      out_bites.at(tnow_global,h->get_id()) = h->get_bites();
-
-      /* write states */
-      if(h->get_state().compare("S") == 0){
-        out_mat.at(tnow_global,0) += 1;
-      } else {
-        out_mat.at(tnow_global,1) += 1;
-      }
-    }
-
-    progbar.increment();
-    tnow_global++;
-  }
-
-  /* return a list */
-  return Rcpp::List::create(Rcpp::Named("states") = out_mat,
-                            Rcpp::Named("bites") = out_bites,
-                            Rcpp::Named("foi") = out_foi
-                          );
-};
+// /* ################################################################################
+//  * Run a simulation from R
+// ################################################################################ */
+//
+// /* human pointer */
+// using humanP = std::unique_ptr<human>;
+//
+// // [[Rcpp::export]]
+// Rcpp::List tiny_pfmoi(const unsigned int tmax,
+//                      const size_t nh,
+//                      const Rcpp::StringVector init,
+//                      const Rcpp::List EIR_size,
+//                      const Rcpp::List EIR_prob,
+//                      const bool pb){
+//
+//   /* checks */
+//   if(nh != EIR_size.size() || nh != EIR_prob.size()){
+//     Rcpp::stop("number of humans to simulate must be same as length of EIR size and prob lists");
+//   }
+//
+//   /* global clock */
+//   tnow_global = 0;
+//
+//   /* output matrix */
+//   Rcpp::IntegerMatrix out_mat(tmax,2);
+//   Rcpp::IntegerMatrix out_bites(tmax,nh);
+//   Rcpp::IntegerVector out_foi(tmax);
+//
+//   /* set up our ensemble of people */
+//   std::vector<humanP> humans;
+//   humans.reserve(nh);
+//   for(size_t i=0; i<nh; i++){
+//
+//     humans.emplace_back(std::make_unique<human>(
+//       i,
+//       Rcpp::as<std::vector<double> >(EIR_size.at(i)),
+//       Rcpp::as<std::vector<double> >(EIR_prob.at(i)),
+//       Rcpp::as< std::string >(init(i)),
+//       &out_foi
+//     ));
+//
+//   }
+//
+//   /* track progress */
+//   Progress progbar(tmax, pb);
+//
+//   /* run simulation */
+//   while(tnow_global < tmax){
+//
+//     if(Progress::check_abort()){
+//       Rcpp::stop("user abort detected");
+//     };
+//
+//     /* sim humans */
+//     for(auto& h : humans){
+//       h->simulate();
+//     }
+//
+//     /* write output */
+//     for(auto& h : humans){
+//
+//       /* write bites */
+//       out_bites.at(tnow_global,h->get_id()) = h->get_bites();
+//
+//       /* write states */
+//       if(h->get_state().compare("S") == 0){
+//         out_mat.at(tnow_global,0) += 1;
+//       } else {
+//         out_mat.at(tnow_global,1) += 1;
+//       }
+//     }
+//
+//     progbar.increment();
+//     tnow_global++;
+//   }
+//
+//   /* return a list */
+//   return Rcpp::List::create(Rcpp::Named("states") = out_mat,
+//                             Rcpp::Named("bites") = out_bites,
+//                             Rcpp::Named("foi") = out_foi
+//                           );
+// };
