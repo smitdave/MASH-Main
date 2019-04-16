@@ -629,21 +629,36 @@ blocks <- seq(from=1,to=1260,by=14)
 
 ibi_t <- rep(0,length(blocks)-1)
 
+foi_t <- rep(0,length(blocks)-1)
+ar_t <- rep(0,length(blocks)-1)
+foi_est_t <- rep(0,length(blocks)-1)
+aeff_t <- rep(0,length(blocks)-1)
+
 # get number of attacks over 2 week blocks (summed over people)
 for(i in 2:length(blocks)){
   
-  # tororo
+  # total number of S->I transitions over this block
   ibi_t[i-1] <- nrow(out_t[(out_t$time > blocks[i-1]) &  (out_t$time <= blocks[i]) & (out_t$state0 == "S") & (out_t$state1 == "I"),])
   
+  # mean number of susceptibles over this block
+  S_block <- mean(h_inf_out[(h_inf_out[,"time"] > blocks[i-1]) & (h_inf_out[,"time"] <= blocks[i]),"S"])
+  
+  foi_t[i-1] <- ibi_t[i-1]/S_block/14
+  
+  ar_t[i-1] <- min(1 - (S_block-ibi_t[i-1])/S_block,1)
+  
+  foi_est_t[i-1] <- -log(1-ar_t[i-1])/14
+  
+  aeff_t[i-1] <- foi_t[i-1]/foi_est_t[i-1]
 }
 
-foi_t <- ibi_t/N/14
-
-ar_t <- 1 - (N-ibi_t)/N
-
-foi_est_t <- -log(1-ar_t)/14
-
-aeff_t <- foi_t/foi_est_t
+# foi_t <- ibi_t/N/14
+# 
+# ar_t <- 1 - (N-ibi_t)/N
+# 
+# foi_est_t <- -log(1-ar_t)/14
+# 
+# aeff_t <- foi_t/foi_est_t
 
 wks <- seq_along(ibi_t)
 
