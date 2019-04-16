@@ -333,8 +333,8 @@ Rcpp::List tiny_pfsi(const unsigned int tmax,
                      const bool pb){
 
   /* checks */
-  if(nh != EIR_size.size() || nh != EIR_prob.size()){
-    Rcpp::stop("number of humans to simulate must be same as length of EIR size and prob lists");
+  if(nh != EIR_size.size() || nh != EIR_prob.size() || nh != init.size()){
+    Rcpp::stop("number of humans to simulate must be same as length of the input data");
   }
 
   /* global clock */
