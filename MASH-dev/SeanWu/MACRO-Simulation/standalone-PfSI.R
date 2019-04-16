@@ -346,7 +346,7 @@ library(reshape2)
 library(ggplot2)
 library(scales)
 
-N <- 1e4
+N <- 1e3
 
 tdat_gg <- make_tororo(N = N,which = 1)
 # tdat_ff <- make_tororo(N = N,which = 2)
@@ -438,55 +438,14 @@ ggplot() +
 #   a tiny little state space ABM
 ################################################################################
 
-make_person <- function(site,which){
-  
-  # my personal biting history
-  person <- NULL
-  switch(EXPR = site,
-         tororo = {
-           person <- make_tororo(N = 1,which = which)
-         },
-         kanungu = {
-           person <- make_kanungu(N = 1,which = which)
-         },
-         jinja = {
-           person <- make_jinja(N = 1,which = which)
-         },
-         {stop("incorrect site")})
-  
-  # state space
-  person$state <- person$state_next <- "S"
-  person$time <- person$time_next <- 0
-  
-  # RM parameters
-  person$r <- 1/200
-  person$b <- 0.55
-  list2env(person,hash = TRUE)
-}
+library(Rcpp)
 
-sim_person <- function(t){
-  while(person$time_next < t){
-    
-    person$time <- person$time_next
-    person$state <- person$state_next
-    
-    if(person$state == "S"){
-      
-      n <- tdat_gg$size[[i]]
-      p <- tdat_gg$prob[[i]]
-      mu <- n*(1-p)/p
-      k <- -(mu*p)/(p-1)
-      rnbinom(n = 1260,mu = mu,size = k)
-      
-      
-    }
-    
-    
-    
-  }
-}
+sourceCpp(here::here("tiny-pfsi.cpp"))
 
+out <- tiny_pfsi(tmax = 1260,nh = N,init = sample(x = c("S","I"),size = N,replace = T,prob = c(0.9,0.1)),
+                 EIR_size = tdat_gg$size,EIR_prob = tdat_gg$prob,pb = T)
 
-pop <- replicate(n = 1e4,expr = make_person(site = "tororo",which = 1),simplify = FALSE)
-
-
+par(mfrow=c(1,2))
+matplot(out$states,type="l")
+matplot(out$bites,type="l",lty=1)
+par(mfrow=c(1,1))

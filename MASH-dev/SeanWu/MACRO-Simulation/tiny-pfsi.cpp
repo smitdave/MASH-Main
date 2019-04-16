@@ -15,6 +15,10 @@
 
 // [[Rcpp::plugins(cpp14)]]
 
+// [[Rcpp::depends(RcppProgress)]]
+#include <progress.hpp>
+#include <progress_bar.hpp>
+
 /* STL includes */
 #include <string>
 #include <functional>
@@ -23,7 +27,7 @@
 
 
 /* global simulation time */
-static unsigned int tnow = 0;
+static unsigned int tnow_global = 0;
 
 /* global parameters */
 static double DurationPf = 200.0;
@@ -36,7 +40,8 @@ static double b = 0.55;
 
 /* duration of infection */
 double pfsi_ttClearPf(){
- double recover = R::rexp(1.0/DurationPf);
+ double recover = R::rexp(DurationPf);
+ // std::cout << "ttClearPf random number: " << recover << "\n";
  return recover;
 };
 
@@ -136,8 +141,8 @@ class human {
 public:
 
   /* constructor & destructor */
-  human(const int id_, const int simlen, const std::vector<double>& EIR_size_, const std::vector<double>& EIR_prob_, const std::string init) :
-    id(id_), tnow(0.0), state("S"), EIR_size(EIR_size_), EIR_prob(EIR_prob_), bites(simlen,-1) {
+  human(const int id_, const std::vector<double>& EIR_size_, const std::vector<double>& EIR_prob_, const std::string init) :
+    id(id_), tnow(0.0), state("S"), EIR_size(EIR_size_), EIR_prob(EIR_prob_), bites(0) {
       if(init.compare("I") == 0){
         addEvent2Q(e_pfsi_infect(0.0,this));
       }
@@ -161,6 +166,7 @@ public:
 
   std::string           get_state(){return state;};
   void                  set_state(const std::string s){state = s;};
+  int                   get_bites(){return bites;};
 
 
   /* event queue related functions */
@@ -171,7 +177,7 @@ public:
   /* interface */
   void                  simulate();
 
-protected:
+private:
 
   /* basic fields */
   u_int                 id; /* my id */
@@ -185,7 +191,7 @@ protected:
   std::vector<double>   EIR_prob;
 
   /* history */
-  std::vector<int>      bites;
+  int                   bites;
 
   /* called by simulate */
   void                  queue_bites();
@@ -233,6 +239,8 @@ void human::fireEvent(){
 e_pfsi_bite::e_pfsi_bite(double tEvent_, human* h):
   event("PfSI_SimBite",tEvent_,[tEvent_,h](){
 
+    // std::cout << "simbite occuring to " << h->get_id() << "\n";
+
     /* transmission efficiency */
     if(R::runif(0.0, 1.0) < b){
       double tInfStart = tEvent_ + psfi_ttInfectionPf();
@@ -249,11 +257,18 @@ e_pfsi_infect::e_pfsi_infect(double tEvent_, human* h):
     /* no superinfection, and chx blocks new infections */
     if(h->get_state().compare("S") == 0){
 
+      // std::cout << "infection occuring to " << h->get_id() << " at time " << tnow_global << "\n";
+
       /* i'm now infected */
       h->set_state("I");
 
+      // std::cout << "checking my state  " << h->get_state() << "\n";
+
       /* queue clearance event */
       double tEnd = tEvent_ + pfsi_ttClearPf();
+
+      // std::cout << "it will clear at  " <<tEnd<< "\n";
+
       h->addEvent2Q(e_pfsi_recover(tEnd,h));
 
     }
@@ -280,8 +295,10 @@ e_pfsi_recover::e_pfsi_recover(double tEvent_, human* h):
 
 void human::simulate(){
 
+  // std::cout << "simulating:  " << id << "\n";
+
   /* fire all events that occur on this time step */
-  while(eventQ.size() > 0 && eventQ.front()->tEvent < tnow){
+  while(eventQ.size() > 0 && eventQ.front()->tEvent < tnow_global){
     fireEvent();
   }
 
@@ -293,18 +310,22 @@ void human::simulate(){
 
 void human::queue_bites(){
 
+  // std::cout << "queue_bites occuring to " << id << "\n";
+
   /* parameters of nbinom biting */
-  double size = EIR_size.at(tnow);
-  double prob = EIR_prob.at(tnow);
+  double size = EIR_size.at(tnow_global);
+  double prob = EIR_prob.at(tnow_global);
 
-  int nbites = (int)R::rnbinom(size, prob);
+  // std::cout << "size: " << size << " prob: " << prob << "\n";
 
-  /* track how many bites i get today */
-  bites.at(tnow) = nbites;
 
-  if(nbites > 0){
-    for(size_t i=0; i<nbites; i++){
-      addEvent2Q(e_pfsi_bite(tnow,this));
+  bites = (int)R::rnbinom(size, prob);
+
+  // std::cout << "they got  " << bites << " many bites\n";
+
+  if(bites > 0){
+    for(size_t i=0; i<bites; i++){
+      addEvent2Q(e_pfsi_bite(tnow_global,this));
     }
   }
 
@@ -321,14 +342,17 @@ using humanP = std::unique_ptr<human>;
 // [[Rcpp::export]]
 Rcpp::List tiny_pfsi(const unsigned int tmax,
                      const size_t nh,
-                     const Rcpp::StringVector init, 
+                     const Rcpp::StringVector init,
                      const Rcpp::List EIR_size,
-                     const Rcpp::List EIR_prob){
+                     const Rcpp::List EIR_prob,
+                     const bool pb){
 
   /* checks */
   if(nh != EIR_size.size() || nh != EIR_prob.size()){
     Rcpp::stop("number of humans to simulate must be same as length of EIR size and prob lists");
   }
+
+  tnow_global = 0;
 
   /* set up our ensemble of people */
   std::vector<humanP> humans;
@@ -338,7 +362,6 @@ Rcpp::List tiny_pfsi(const unsigned int tmax,
 
     humans.emplace_back(std::make_unique<human>(
       i,
-      tmax,
       Rcpp::as<std::vector<double> >(EIR_size.at(i)),
       Rcpp::as<std::vector<double> >(EIR_prob.at(i)),
       Rcpp::as< std::string >(init(i))
@@ -346,13 +369,54 @@ Rcpp::List tiny_pfsi(const unsigned int tmax,
 
   }
 
+  /* output matrix */
+  Rcpp::IntegerMatrix out_mat(tmax,2);
+  Rcpp::IntegerMatrix out_bites(tmax,nh);
+
+  /* track progress */
+  Progress progbar(tmax, pb);
+
   /* run simulation */
-  while(tnow < tmax){
+  while(tnow_global < tmax){
 
+    if(Progress::check_abort()){
+      Rcpp::stop("user abort detected");
+    };
 
-    tnow++;
+    /* sim humans */
+    for(auto& h : humans){
+      h->simulate();
+    }
+
+    /* write output */
+    for(auto& h : humans){
+
+      /* write bites */
+      out_bites.at(tnow_global,h->get_id()) = h->get_bites();
+
+      /* write states */
+      // std::cout << "writing states .. " << h->get_state() << "\n";
+      // std::string mystate = h->get_state();
+      // std::cout << "mystate: " << mystate  << " i'm " << h->get_id() << " and its time: " << tnow_global << "\n";
+      if(h->get_state().compare("S") == 0){
+        out_mat.at(tnow_global,0) += 1;
+      } else {
+        // std::cout << "INFECTED\n";
+        out_mat.at(tnow_global,1) += 1;
+      }
+    }
+
+    progbar.increment();
+    tnow_global++;
   }
 
-  Rcpp::List out;
-  return out;
+  // // debug
+  // std::vector<double> test = Rcpp::as<std::vector<double> >(EIR_size.at(0));
+  // for(auto it : test){
+  //   std::cout << it << " - ";
+  // }
+
+  /* return a list */
+  return Rcpp::List::create(Rcpp::Named("states") = out_mat,
+                            Rcpp::Named("bites") = out_bites);
 };
