@@ -472,10 +472,6 @@ ggplot(data = df_pf[-1,]) +
   theme_bw()
 
 
-
-
-
-
 ################################################################################
 #   PRISM burnin
 ################################################################################
@@ -521,13 +517,92 @@ burnin <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
                    EIR_size = dat$size,EIR_prob = dat$prob,pb = FALSE)
 
   iter[["Jinja"]] <- out$states[nrow(out$states),2] / sum(out$states[nrow(out$states),])
-  
+
   iter
 }
 
 close(pb)
 stopCluster(cl);rm(cl);gc()
 
+pfpr_means <- colMeans(burnin)
+
 ggplot(data=melt(burnin)) +
   geom_boxplot(aes(Var2,value,fill=Var2),alpha=0.5) +
+  theme_bw()
+
+
+################################################################################
+#   PRISM simulation
+################################################################################
+
+N <- 1e4
+tdat_gg <- make_tororo(N = N,which = 1)
+pfpr <- pfpr_means[["Tororo"]]
+
+out <- tiny_pfsi(tmax = 1260,nh = N,init = sample(x = c("S","I"),size = N,replace = T,prob = c(1-pfpr,pfpr)),
+                 EIR_size = tdat_gg$size,EIR_prob = tdat_gg$prob,pb = T)
+
+df_bite <- data.frame(time=1:nrow(out$bites),mean=rowMeans(out$bites),
+                      low=apply(out$bites,1,function(x){quantile(x,probs = c(0.025))}),
+                      high=apply(out$bites,1,function(x){quantile(x,probs = c(0.975))}))
+
+df_pf <- data.frame(time=1:nrow(out$states),
+                    pfpr=out$states[,2] / rowSums(out$states),
+                    foi=out$foi,
+                    scale_foi=out$foi/out$states[,1]
+                    )
+
+# ggplot(data = df_bite) +
+#   geom_line(aes(x=time,y=mean),color="firebrick3") +
+#   geom_ribbon(aes(x=time,ymin=low,ymax=high),fill="firebrick3",alpha=0.25) +
+#   scale_y_continuous(trans = scales::log1p_trans()) +
+#   ylab("EIR") +
+#   theme_bw()
+
+ggplot(data = df_pf[-(1:2),]) +
+  geom_line(aes(x=time,y=scale_foi),color="firebrick3") +
+  theme_bw()
+
+
+# run some ensemble sims
+library(doSNOW)
+library(foreach)
+library(parallel)
+
+nrep <- 2e2
+rm(tiny_pfsi)
+
+# set up cluster and source the file on each core
+cl <- makeSOCKcluster(4)
+registerDoSNOW(cl)
+clusterEvalQ(cl,{
+  Rcpp::sourceCpp(here::here("tiny-pfsi.cpp"))
+})
+
+# progress bar
+pb <- txtProgressBar(max=nrep, style=3)
+progress <- function(n) setTxtProgressBar(pb, n)
+opts <- list(progress=progress)
+
+# loop over repetitions
+sim_tororo <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
+
+  N <- 1e4
+  dat <- make_tororo(N = N,which = 1)
+  pfpr <- pfpr_means[["Tororo"]]
+
+  out <- tiny_pfsi(tmax = 1260,nh = N,init = sample(x = c("S","I"),size = N,replace = T,prob = c(1-pfpr,pfpr)),
+                   EIR_size = dat$size,EIR_prob = dat$prob,pb = T)
+
+
+  data.frame(iter=rep(i,nrow(out$states)),
+             time=1:nrow(out$states),
+             scale_foi=out$foi/out$states[,1])
+}
+
+close(pb)
+stopCluster(cl);rm(cl);gc()
+
+ggplot(data = sim_tororo[sim_tororo$time!=c(1,2),]) +
+  geom_line(aes(x=time,y=scale_foi,group=iter),alpha=0.05) +
   theme_bw()

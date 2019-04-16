@@ -142,11 +142,13 @@ class human {
 public:
 
   /* constructor & destructor */
-  human(const int id_, const std::vector<double>& EIR_size_, const std::vector<double>& EIR_prob_, const std::string init, Rcpp::IntegerVector* const foi_ptr) :
+  human(const int id_, const std::vector<double>& EIR_size_, const std::vector<double>& EIR_prob_, const int moi, Rcpp::IntegerVector* const foi_ptr) :
     id(id_), tnow(0.0), MOI(0), EIR_size(EIR_size_), EIR_prob(EIR_prob_), foi_hist(foi_ptr), bites(0) {
-      // if(init.compare("I") == 0){
-      //   addEvent2Q(e_pfsi_infect(0.0,this));
-      // }
+      if(moi > 0){
+        for(size_t i=0; i<moi; i++){
+          addEvent2Q(e_pfmoi_infect(0.0,this));
+        }
+      }
     };
   ~human(){};
 
@@ -314,85 +316,81 @@ void human::queue_bites(){
 };
 
 
-// /* ################################################################################
-//  * Run a simulation from R
-// ################################################################################ */
-//
-// /* human pointer */
-// using humanP = std::unique_ptr<human>;
-//
-// // [[Rcpp::export]]
-// Rcpp::List tiny_pfmoi(const unsigned int tmax,
-//                      const size_t nh,
-//                      const Rcpp::StringVector init,
-//                      const Rcpp::List EIR_size,
-//                      const Rcpp::List EIR_prob,
-//                      const bool pb){
-//
-//   /* checks */
-//   if(nh != EIR_size.size() || nh != EIR_prob.size()){
-//     Rcpp::stop("number of humans to simulate must be same as length of EIR size and prob lists");
-//   }
-//
-//   /* global clock */
-//   tnow_global = 0;
-//
-//   /* output matrix */
-//   Rcpp::IntegerMatrix out_mat(tmax,2);
-//   Rcpp::IntegerMatrix out_bites(tmax,nh);
-//   Rcpp::IntegerVector out_foi(tmax);
-//
-//   /* set up our ensemble of people */
-//   std::vector<humanP> humans;
-//   humans.reserve(nh);
-//   for(size_t i=0; i<nh; i++){
-//
-//     humans.emplace_back(std::make_unique<human>(
-//       i,
-//       Rcpp::as<std::vector<double> >(EIR_size.at(i)),
-//       Rcpp::as<std::vector<double> >(EIR_prob.at(i)),
-//       Rcpp::as< std::string >(init(i)),
-//       &out_foi
-//     ));
-//
-//   }
-//
-//   /* track progress */
-//   Progress progbar(tmax, pb);
-//
-//   /* run simulation */
-//   while(tnow_global < tmax){
-//
-//     if(Progress::check_abort()){
-//       Rcpp::stop("user abort detected");
-//     };
-//
-//     /* sim humans */
-//     for(auto& h : humans){
-//       h->simulate();
-//     }
-//
-//     /* write output */
-//     for(auto& h : humans){
-//
-//       /* write bites */
-//       out_bites.at(tnow_global,h->get_id()) = h->get_bites();
-//
-//       /* write states */
-//       if(h->get_state().compare("S") == 0){
-//         out_mat.at(tnow_global,0) += 1;
-//       } else {
-//         out_mat.at(tnow_global,1) += 1;
-//       }
-//     }
-//
-//     progbar.increment();
-//     tnow_global++;
-//   }
-//
-//   /* return a list */
-//   return Rcpp::List::create(Rcpp::Named("states") = out_mat,
-//                             Rcpp::Named("bites") = out_bites,
-//                             Rcpp::Named("foi") = out_foi
-//                           );
-// };
+/* ################################################################################
+ * Run a simulation from R
+################################################################################ */
+
+/* human pointer */
+using humanP = std::unique_ptr<human>;
+
+// [[Rcpp::export]]
+Rcpp::List tiny_pfmoi(const unsigned int tmax,
+                     const size_t nh,
+                     const Rcpp::IntegerVector init,
+                     const Rcpp::List EIR_size,
+                     const Rcpp::List EIR_prob,
+                     const bool pb){
+
+  /* checks */
+  if(nh != EIR_size.size() || nh != EIR_prob.size()){
+    Rcpp::stop("number of humans to simulate must be same as length of EIR size and prob lists");
+  }
+
+  /* global clock */
+  tnow_global = 0;
+
+  /* output matrix */
+  Rcpp::IntegerMatrix out_mat(tmax,nh);
+  Rcpp::IntegerMatrix out_bites(tmax,nh);
+  Rcpp::IntegerVector out_foi(tmax);
+
+  /* set up our ensemble of people */
+  std::vector<humanP> humans;
+  humans.reserve(nh);
+  for(size_t i=0; i<nh; i++){
+
+    humans.emplace_back(std::make_unique<human>(
+      i,
+      Rcpp::as<std::vector<double> >(EIR_size.at(i)),
+      Rcpp::as<std::vector<double> >(EIR_prob.at(i)),
+      init.at(i),
+      &out_foi
+    ));
+
+  }
+
+  /* track progress */
+  Progress progbar(tmax, pb);
+
+  /* run simulation */
+  while(tnow_global < tmax){
+
+    if(Progress::check_abort()){
+      Rcpp::stop("user abort detected");
+    };
+
+    /* sim humans */
+    for(auto& h : humans){
+      h->simulate();
+    }
+
+    /* write output */
+    for(auto& h : humans){
+
+      /* write bites */
+      out_bites.at(tnow_global,h->get_id()) = h->get_bites();
+
+      /* write MOI */
+      out_mat.at(tnow_global,h->get_id()) = h->get_MOI();
+    }
+
+    progbar.increment();
+    tnow_global++;
+  }
+
+  /* return a list */
+  return Rcpp::List::create(Rcpp::Named("MOI") = out_mat,
+                            Rcpp::Named("bites") = out_bites,
+                            Rcpp::Named("foi") = out_foi
+                          );
+};
