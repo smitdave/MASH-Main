@@ -43,34 +43,53 @@ ggplot(data = df_bite) +
   ylab("EIR") +
   theme_bw()
 
-# df_bite_ind <- melt(simout$bites)
-# 
-# ggplot(data = df_bite_ind) +
-#   geom_line(aes(x=Var1,y=value,group=Var2),alpha=0.05) +
-#   theme_bw() +
-#   ylab("EIR")
+df_foi <- data.frame(time=seq_along(simout$foi[-1]),
+                     foi_scale=simout$foi[-1]/N
+                     )
 
+ggplot(data = df_foi) +
+  geom_line(aes(x=time,y=foi_scale)) +
+  theme_bw()
 
+# run some ensemble sims
+library(doSNOW)
+library(foreach)
+library(parallel)
 
-# pfpr <- 0.05
-# 
-# out <- tiny_pfsi(tmax = 1260,nh = N,init = sample(x = c("S","I"),size = N,replace = T,prob = c(1-pfpr,pfpr)),
-#                  EIR_size = tdat_gg$size,EIR_prob = tdat_gg$prob,pb = T)
-# 
-# 
+nrep <- 5e2
+rm(tiny_pfmoi);gc() # otherwise the cluster cores will pull null symbols
 
-# 
-# df_pf <- data.frame(time=1:nrow(out$states),
-#                     pfpr=out$states[,2] / rowSums(out$states),
-#                     foi=out$foi)
-# 
-# ggplot(data = df_bite) +
-#   geom_line(aes(x=time,y=mean),color="firebrick3") +
-#   geom_ribbon(aes(x=time,ymin=low,ymax=high),fill="firebrick3",alpha=0.25) +
-#   scale_y_continuous(trans = scales::log1p_trans()) +
-#   ylab("EIR") +
-#   theme_bw()
-# 
-# ggplot(data = df_pf[-1,]) +
-#   geom_line(aes(x=time,y=foi),color="firebrick3") +
-#   theme_bw()
+# set up cluster and source the file on each core
+cl <- makeSOCKcluster(4)
+registerDoSNOW(cl)
+clusterEvalQ(cl,{
+  Rcpp::sourceCpp(here::here("tiny-pfmoi.cpp"))
+})
+
+# progress bar
+pb <- txtProgressBar(max=nrep, style=3)
+progress <- function(n){setTxtProgressBar(pb, n)}
+opts <- list(progress=progress)
+
+# loop over repetitions
+simout_rep <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
+  
+  N <- 1e3
+  simdat <- make_tororo(N = N,which = 1)
+  
+  pfmoi <- rep(0L,N)
+  
+  simout <- tiny_pfmoi(tmax = 1260,nh = N,init = pfmoi,
+                       EIR_size = simdat$size,EIR_prob = simdat$prob,pb = TRUE)
+  
+  data.frame(time=seq_along(simout$foi[-1]),
+             iter=rep(i,length(simout$foi[-1])),
+             foi_scale=simout$foi[-1]/N)
+}
+
+close(pb)
+stopCluster(cl);rm(cl);gc()
+
+ggplot(data = simout_rep) +
+  geom_line(aes(x=time,y=foi_scale,group=iter),alpha=0.05) +
+  theme_bw()
