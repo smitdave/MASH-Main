@@ -282,11 +282,21 @@ simout2_j <- tiny_pfmoi(tmax = 1260,nh = N,init = pfmoi,
 aEIR_t <- colSums(simout2_t$bites)/(1260/365)
 aFOI_t <- colSums(simout2_t$MOI)/(1260/365)
 
+aFOI_ar_t <- -log(1 - rowSums(simout2_t$ar)/N)
+aFOI_ar_t <- mean(aFOI_ar_t)*365
+
 aEIR_k <- colSums(simout2_k$bites)/(1260/365)
 aFOI_k <- colSums(simout2_k$MOI)/(1260/365)
 
+aFOI_ar_k <- -log(1 - rowSums(simout2_k$ar)/N)
+aFOI_ar_k <- mean(aFOI_ar_k)*365
+
 aEIR_j <- colSums(simout2_j$bites)/(1260/365)
 aFOI_j <- colSums(simout2_j$MOI)/(1260/365)
+
+aFOI_ar_j <- -log(1 - rowSums(simout2_j$ar)/N)
+aFOI_ar_j <- mean(aFOI_ar_j)*365
+
 
 # # transmission inefficiency vs. aEIR
 # aEIR_t <- sapply(unique(simout_t$iter),function(x){unique(simout_t[simout_t$iter==x,"aEIR"])})
@@ -301,10 +311,12 @@ aFOI_j <- colSums(simout2_j$MOI)/(1260/365)
 aeff_df <- data.frame(
   aEIR = c(aEIR_t,aEIR_k,aEIR_j),
   aFOI = c(aFOI_t,aFOI_k,aFOI_j),
+  aFOI_ar = c(aFOI_ar_t,aFOI_ar_k,aFOI_ar_t),
   site = rep(c("Tororo","Kanungu","Jinja"),each = length(aEIR_t))
 )
 
-aeff_df$aeff <- aeff_df$aEIR / aeff_df$aFOI
+# aeff_df$aeff <- aeff_df$aEIR / aeff_df$aFOI
+aeff_df$aeff <- aeff_df$aEIR / aeff_df$aFOI_ar
 
 plot(x = aeff_df$aEIR,y = aeff_df$aeff,type = "n",log = "xy")
 points(x = aeff_df[aeff_df$site=="Tororo",c("aEIR","aeff")],col=adjustcolor("darkred",alpha.f = 0.05),pch=16)
