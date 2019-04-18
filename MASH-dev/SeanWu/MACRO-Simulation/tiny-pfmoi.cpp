@@ -7,6 +7,8 @@
  *
  *  A very simple version for the PRISM data
  *  Stand-alone PfMOI with no mosquitos (EIR is forcing)
+ *  Sean Wu (slwu89@berkeley.edu)
+ *  April 2019
  *
 ################################################################################ */
 
@@ -28,6 +30,9 @@
 
 /* global simulation time */
 static unsigned int tnow_global = 0;
+
+/* "Temporal Window of Indifference to Contingent Events" */
+static const unsigned int twice = 1;
 
 /* global parameters */
 static double DurationPf = 200.0; // for simple infection
@@ -142,8 +147,9 @@ class human {
 public:
 
   /* constructor & destructor */
-  human(const int id_, const std::vector<double>& EIR_size_, const std::vector<double>& EIR_prob_, const int moi, Rcpp::IntegerVector* const foi_ptr) :
-    id(id_), tnow(0.0), MOI(0), EIR_size(EIR_size_), EIR_prob(EIR_prob_), foi_hist(foi_ptr), bites(0) {
+  human(const int id_, const std::vector<double>& EIR_size_, const std::vector<double>& EIR_prob_, const int moi,
+        Rcpp::IntegerVector* const foi_ptr, Rcpp::IntegerMatrix* const ar_ptr) :
+    id(id_), tnow(0.0), MOI(0), EIR_size(EIR_size_), EIR_prob(EIR_prob_), foi_hist(foi_ptr), ar_hist(ar_ptr), bites(0) {
       if(moi > 0){
         for(size_t i=0; i<moi; i++){
           addEvent2Q(e_pfmoi_infect(0.0,this));
@@ -174,6 +180,7 @@ public:
   int                   get_bites(){return bites;};
 
   Rcpp::IntegerVector*  get_foi_hist(){return foi_hist;};
+  Rcpp::IntegerMatrix*  get_ar_hist(){return ar_hist;}
 
   /* event queue related functions */
   void                  addEvent2Q(event&& e);
@@ -198,6 +205,9 @@ private:
 
   /* pointer to the vector that keeps track of when new infections happen */
   Rcpp::IntegerVector*  foi_hist;
+
+  /* pointer to the vector that keeps track of when attacks happen */
+  Rcpp::IntegerMatrix*  ar_hist;
 
   /* number of potentially infectious bites i got today */
   int                   bites;
@@ -264,6 +274,11 @@ e_pfmoi_infect::e_pfmoi_infect(double tEvent_, human* h):
     /* track hist */
     h->get_foi_hist()->at(tnow_global) += 1;
 
+    /* track attacks: if i have >= 1 attack today, track it */
+    if(h->get_ar_hist()->at(tnow_global,h->get_id()) == 0){
+      h->get_ar_hist()->at(tnow_global,h->get_id()) = 1;
+    }
+
     /* queue clearance event */
     double tEnd = tEvent_ + pfmoi_ttClear(h->get_MOI());
     h->addEvent2Q(e_pfmoi_clear(tEnd,h));
@@ -288,13 +303,13 @@ e_pfmoi_clear::e_pfmoi_clear(double tEvent_, human* h):
 
 void human::simulate(){
 
-  /* fire all events that occur on this time step */
-  while(eventQ.size() > 0 && eventQ.front()->tEvent < tnow_global){
-    fireEvent();
-  }
-
   /* queue bites */
   queue_bites();
+
+  /* fire all events that occur on this time step [tnow_global,tnow_global + twice) */
+  while(eventQ.size() > 0 && eventQ.front()->tEvent < (tnow_global + twice)){
+    fireEvent();
+  }
 
 };
 
@@ -343,6 +358,7 @@ Rcpp::List tiny_pfmoi(const unsigned int tmax,
   Rcpp::IntegerMatrix out_mat(tmax,nh);
   Rcpp::IntegerMatrix out_bites(tmax,nh);
   Rcpp::IntegerVector out_foi(tmax);
+  Rcpp::IntegerMatrix out_ar(tmax,nh); /* for est. attack rates */
 
   /* set up our ensemble of people */
   std::vector<humanP> humans;
@@ -354,7 +370,8 @@ Rcpp::List tiny_pfmoi(const unsigned int tmax,
       Rcpp::as<std::vector<double> >(EIR_size.at(i)),
       Rcpp::as<std::vector<double> >(EIR_prob.at(i)),
       init.at(i),
-      &out_foi
+      &out_foi,
+      &out_ar
     ));
 
   }
@@ -385,12 +402,13 @@ Rcpp::List tiny_pfmoi(const unsigned int tmax,
     }
 
     progbar.increment();
-    tnow_global++;
+    tnow_global += twice;
   }
 
   /* return a list */
   return Rcpp::List::create(Rcpp::Named("MOI") = out_mat,
                             Rcpp::Named("bites") = out_bites,
-                            Rcpp::Named("foi") = out_foi
+                            Rcpp::Named("foi") = out_foi,
+                            Rcpp::Named("ar") = out_ar
                           );
 };
