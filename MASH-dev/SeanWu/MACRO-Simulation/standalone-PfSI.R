@@ -256,7 +256,7 @@ progress <- function(n){setTxtProgressBar(pb, n)}
 opts <- list(progress=progress)
 
 # loop over repetitions
-simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
+simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
   N <- 1e4
   simdat <- make_jinja(N = N,which = 1)
