@@ -148,9 +148,17 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
   }
 
+  # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,h_theory=h_theory,aeff=aeff)
+  # annual metrics
+  aEIR <- sum(simout$bites)/(1260/365)/N
+
+  # annual FOI
+  aFOI <- sum(simout$foi)/(1260/365)/N
+
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,
+             aeff=aeff,aEIR=aEIR,aFOI=aFOI)
 }
 
 close(pb)
@@ -161,7 +169,6 @@ stopCluster(cl);rm(cl);gc()
 # ensemble simulation run for Kanungu
 ################################################################################
 
-nrep <- 1e3
 rm(tiny_pfmoi);gc() # otherwise the cluster cores will pull null symbols
 
 # set up cluster and source the file on each core
@@ -227,9 +234,17 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
   }
 
+  # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,h_theory=h_theory,aeff=aeff)
+  # annual metrics
+  aEIR <- sum(simout$bites)/(1260/365)/N
+
+  # annual FOI
+  aFOI <- sum(simout$foi)/(1260/365)/N
+
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,
+             aeff=aeff,aEIR=aEIR,aFOI=aFOI)
 }
 
 close(pb)
@@ -240,7 +255,6 @@ stopCluster(cl);rm(cl);gc()
 # ensemble simulation run for Jinja
 ################################################################################
 
-nrep <- 1e3
 rm(tiny_pfmoi);gc() # otherwise the cluster cores will pull null symbols
 
 # set up cluster and source the file on each core
@@ -306,9 +320,17 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
   }
 
+  # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,h_theory=h_theory,aeff=aeff)
+  # annual metrics
+  aEIR <- sum(simout$bites)/(1260/365)/N
+
+  # annual FOI
+  aFOI <- sum(simout$foi)/(1260/365)/N
+
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,
+             aeff=aeff,aEIR=aEIR,aFOI=aFOI)
 }
 
 close(pb)
