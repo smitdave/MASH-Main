@@ -469,26 +469,27 @@ bHN = 1.671
 Hb0HN = 15.368
 Nage = seq(0,6,.01)
 lines(Nage,aHN/bHN*(1-exp(-bHN*Nage))+Hb0HN*exp(-bHN*Nage),col="blue")
+abline(h=aHN/bHN,col="blue",lty=2)
 hist(HealthyNeonateHb,freq=F,xlim=c(5,15))
 
 HealthyNeonateSex = PRISM$gender[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))]=='Male'
 HealthyNeonateSex=as.numeric(HealthyNeonateSex)
 
 ### Healthy Neonates By Sex
-plot(HealthyNeonateAge[which(HealthyNeonateSex==1)],HealthyNeonateHb[which(HealthyNeonateSex==1)],ylim=c(6,18))
-points(HealthyNeonateAge[which(HealthyNeonateSex==0)],HealthyNeonateHb[which(HealthyNeonateSex==0)],ylim=c(6,18),col="red")
+#plot(HealthyNeonateAge[which(HealthyNeonateSex==1)],HealthyNeonateHb[which(HealthyNeonateSex==1)],ylim=c(6,18))
+#points(HealthyNeonateAge[which(HealthyNeonateSex==0)],HealthyNeonateHb[which(HealthyNeonateSex==0)],ylim=c(6,18),col="red")
 
 
-plot(PRISM$age[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]*12,PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)],xlab="Age (in Months)",ylim=c(5,18))
+plot(PRISM$age[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]*12,PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)],xlab="Age (in Months)",ylim=c(5,18),xlim=c(0,6))
 InfectedNeonateHb = PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]
 InfectedNeonateAge = PRISM$age[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]*12
-nls(InfectedNeonateHb~a/b*(1-exp(-b*InfectedNeonateAge))+Hb0*exp(-b*InfectedNeonateAge),start=list(a=.2,b=.02,Hb0=14))
-aIN = 32.108
-bIN = 3.571
-Hb0IN = 115.186
+nls(InfectedNeonateHb~a/b*(1-exp(-b*InfectedNeonateAge))+Hb0HN*exp(-b*InfectedNeonateAge),start=list(a=.2,b=.02))
+aIN = 10.019
+bIN = 1.119
+Hb0IN = Hb0HN
 muIN = mean(InfectedNeonateHb)
 lines(Nage,aIN/bIN*(1-exp(-bIN*Nage))+Hb0IN*exp(-bIN*Nage),col="red")
-abline(h=muIN,col="green")
+abline(h=aIN/bIN,col="red",lty=2)
 hist(InfectedNeonateHb,freq=F,xlim=c(5,15))
 par(mfrow=c(1,1))
 
@@ -503,3 +504,35 @@ points(InfectedNeonateAge[which(InfectedNeonateSex==0)],InfectedNeonateHb[which(
 NeonateAge = PRISM$age[which(PRISM$age<.5&PRISM$hb<100)]
 NeonateInfectionStatus = c(rep(0,length(HealthyNeonateHb)),rep(1,length(InfectedNeonateHb)))
 t.test(c(HealthyNeonateHb,InfectedNeonateHb)~NeonateInfectionStatus)
+
+
+
+############### Full Model
+
+
+HbModel = function(age,sex,IS){
+  ageNeonate = age[which(age<.5)]
+  ageChild = age[which(age>=.5)]-.5
+  if(IS=='Healthy'){
+    HbNeonate = aHN/bHN*(1-exp(-bHN*ageNeonate*12))+Hb0HN*exp(-bHN*ageNeonate*12)
+    aChild = ifelse(sex=='Male',aHM,aHF)
+    bChild = ifelse(sex=='Male',bHM,bHF)
+    Hb0Child = aHN/bHN
+    HbChild = aChild/bChild*(1-exp(-bChild*ageChild))+Hb0Child*exp(-bChild*ageChild)
+    return(c(HbNeonate,HbChild))
+  }
+  if(IS=='Infected'){
+    HbNeonate = aIN/bIN*(1-exp(-bIN*ageNeonate*12))+Hb0IN*exp(-bIN*ageNeonate*12)
+    aChild = ifelse(sex=='Male',aIM,aIF)
+    bChild = ifelse(sex=='Male',bIM,bIF)
+    Hb0Child = aIN/bIN
+    HbChild = aChild/bChild*(1-exp(-bChild*ageChild))+Hb0Child*exp(-bChild*ageChild)
+    return(c(HbNeonate,HbChild))
+  }
+}
+
+x = seq(0,8,1/12)
+plot(x,HbModel(x,'Male','Healthy'),type="l",ylim=c(9,12))
+lines(x,HbModel(x,'Female','Healthy'),lty=2)
+lines(x,HbModel(x,'Male','Infected'),col="red")
+lines(x,HbModel(x,'Female','Infected'),col="red",lty=2)

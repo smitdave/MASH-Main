@@ -3,13 +3,13 @@ library(vioplot)
 library(matrixStats)
 library(stinepack)
 
-MT_PT_NP <- read_excel("~/GitHub/MASH-Main/MASH-Main/MASH-dev/JohnHenry/PDG/MT_PT_NP.xlsx")
+MT_PT_NP <- read_xlsx("~/GitHub/MASH-Main/MASH-Main/MASH-dev/JohnHenry/PDG/MT_PT_NP.xlsx")
 M = as.matrix(MT_PT_NP)
 
 MT_GT_NP <- read_excel("~/Malaria Data Files/MT_GT_NP.xlsx")
 G = as.matrix(MT_GT_NP)
 
-n = sample(1:333,1)
+n = sample(1:334,1)
 plot(log10(M[,n]),type="l",xlim=c(0,300),ylim=c(0,5),xlab="Days",ylab="log10 Parasite Density per microliter")
 lines(log10(G[,n]),type="l",xlim=c(0,300),ylim=c(0,5),col="red")
 title(main="Example Infection")
@@ -31,19 +31,19 @@ lines(log10(rmg),col="red")
 
 ccf(rm[4:225],rmg[4:225],lag.max=20,type="correlation")
 plot(log10(rm[1:233]),type="l",ylim=c(0,5))
-lines(log10(rmg[8:240]),col="red")
+lines(log10(rmg[9:241]),col="red")
 
 rms = rm[1:233]
-rmgs = rmg[8:240]
+rmgs = rmg[9:241]
 plot(log10(rms),log10(rmgs),xlab="Lagged Asexuals",ylab="Gametocytes")
 
 #hist(log10(M[100,]))
-hist(log10(colMeans(M[1:7,],na.rm=T)),breaks=10,xlim=c(0,5.5))
-hist(log10(colMeans(M[30:36,],na.rm=T)),breaks=10,xlim=c(0,5.5))
-hist(log10(colMeans(M[70:76,],na.rm=T)),breaks=10,xlim=c(0,5.5))
-hist(log10(colMeans(M[110:116,],na.rm=T)),breaks=10,xlim=c(0,5.5))
-hist(log10(colMeans(M[160:166,],na.rm=T)),breaks=10,xlim=c(0,5.5))
-hist(log10(colMeans(M[200:206,],na.rm=T)),breaks=8,xlim=c(0,5.5))
+hist(log10(colMeans(M[1:7,],na.rm=T)),breaks=20,xlim=c(0,5.5))
+hist(log10(colMeans(M[30:36,],na.rm=T)),breaks=20,xlim=c(0,5.5))
+hist(log10(colMeans(M[70:76,],na.rm=T)),breaks=20,xlim=c(0,5.5))
+hist(log10(colMeans(M[110:116,],na.rm=T)),breaks=20,xlim=c(0,5.5))
+hist(log10(colMeans(M[160:166,],na.rm=T)),breaks=20,xlim=c(0,5.5))
+hist(log10(colMeans(M[200:206,],na.rm=T)),breaks=10,xlim=c(0,5.5))
 
 MV = matrix(0,nrow=30,ncol=length(M[1,]))
 for(i in 1:30){
@@ -71,31 +71,33 @@ title(main = "Violin Plot of Monthly Mean Gametocyte Densities", xlab="Months Po
 abline(h=log10(88))
 abline(h=log10(8),lty=2)
 
-mu = rep(0,30)
-N = rep(0,30)
-for(i in 1:29){
-  mu[i] = log10(mean(colMeans(M[((i-1)*7+1):(i*7),],na.rm=T),na.rm=T))
-  #N[i] = sum(colMeans(M[((i-1)*7+1):(i*7),],na.rm=T)>0,na.rm=T)
+mu = rep(0,250)
+SampleN = rep(0,250)
+for(i in 1:250){
+  mu[i] = log10(mean(M[i,],na.rm=T))
+  SampleN[i] = sum(M[i,]>0,na.rm=T)
 }
-N = rep(0,333)
-for(i in 1:333){
+N = rep(0,334)
+for(i in 1:334){
   position = which(!is.na(M[,i]))
   nonzero = which(M[,i]>0)
   N[i] = max(intersect(position,nonzero))
 }
-mu[30] = log10(mean(colMeans(M[((29)*7+1):nrow(M),],na.rm=T),na.rm=T))
+#mu[30] = log10(mean(colMeans(M[((29)+1):nrow(M),],na.rm=T),na.rm=T))
 #N[30] = sum(colMeans(M[((29)*7+1):nrow(M),],na.rm=T)>0,na.rm=T)
 
 N = sort(N)
 
-Nweeks = rep(0,59)
-for(i in 1:59){
-  Nweeks[i] = tail(cumsum(N<(7*i)),1)
-}
-Nweeks = Nweeks/333
-plot(log(1-Nweeks),type="s")
+SampleN = rep(0,250)
 
-y = log(1-Nweeks)[1:50]
+Ndays = rep(0,250)
+for(i in 1:251){
+  Ndays[i] = tail(cumsum(N<i),1)
+}
+Ndays = Ndays/334
+plot(Ndays,log(1-Ndays),type="s")
+
+y = log(1-Ndays)[1:250]
 x = 1:length(y)
 surv = lm(y~x+0)
 summary(surv)
@@ -104,45 +106,48 @@ lambda = -surv$coefficients[[1]]
 plot(1:length(y),y)
 lines(seq(0,length(y),.1),-lambda*seq(0,length(y),.1))
 
-plot(1:length(Nweeks),1-Nweeks,xlab="Weeks",ylab="Proportion of Persisting Infections")
-lines(seq(0,length(Nweeks),.1),exp(-lambda*seq(0,length(Nweeks),.1)))
+plot(1:length(Ndays),1-Ndays,xlab="Weeks",ylab="Proportion of Persisting Infections")
+lines(seq(0,length(Ndays),.1),exp(-lambda*seq(0,length(Ndays),.1)))
 
 CDFsurv = function(x){
   1-exp(-lambda*x)
 }
 
-plot(1:length(Nweeks),Nweeks,type="s")
+plot(1:length(Ndays),Ndays,type="s")
 
-t = 0:100
+t = 0:250
 lines(t,CDFsurv(t))
 
-data = Nweeks
-ks.test(data,CDFsurv)
 
 hist(N,breaks=30)
 
-s = rep(0,30)
-for(i in 1:29){
-  s[i] = log10(var(colMeans(M[((i-1)*7+1):(i*7),],na.rm=T),na.rm=T))
+s = rep(0,30*7)
+for(i in 1:250){
+  s[i] = log10(var(M[i,],na.rm=T))
 }
-s[30] = log10(var(colMeans(M[(29*7+1):nrow(M),],na.rm=T),na.rm=T))
+#s[30] = log10(var(colMeans(M[(29+1):nrow(M),],na.rm=T),na.rm=T))
 
 f = splinefun(mu,method="fmm")
-plot(0:29,mu,ylim=c(0,5),xlab="Weeks Since First Detection",ylab="log10 Parasites / microliter")
-lines(seq(0,29,.01),f(seq(1,30,.01)),lty=2)
+plot(1:250,mu,ylim=c(0,5),xlab="Days Since First Detection",ylab="log10 Parasites / microliter")
+lines(seq(1,250,.01),f(seq(1,250,.01)),lty=2)
 abline(h=log10(88))
 
 var = s
-lines(0:29,sqrt(var),lty=2)
+lines(1:250,sqrt(var),lty=2)
 
 fit = lm(var~mu)
+fitWeighted = lm(var~mu,weights=sqrt(SampleN))
 lin = function(x){
   fit$coefficients[[1]] + fit$coefficients[[2]]*x
+}
+linWeighted = function(x){
+  fitWeighted$coefficients[[1]] + fitWeighted$coefficients[[2]]*x
 }
 
 plot(mu,var,xlab="Mean of log10 Parasites per microliter",ylab="Variance of log10 Parasites per microliter")
 x = seq(0,5,.01)
 lines(x,lin(x))
+lines(x,linWeighted(x),col="blue")
 abline(v=log10(88),lty=2)
 title(main="Mean-Variance Power Law for Asexual Parasitemia")
 
@@ -155,32 +160,30 @@ me = mean(resid)
 se = var(resid)
 residNorm = (resid-me)/sqrt(se)
 hist(residNorm,breaks=50)
-qqnorm(y=residNorm)
-lines(seq(-2,2,.01),seq(-2,2,.01))
 
 
 #### gametocytes
 
-gmu = rep(0,30)
-for(i in 1:29){
-  gmu[i] = log10(mean(colMeans(G[((i-1)*7+1):(i*7),],na.rm=T),na.rm=T))
+gmu = rep(0,250)
+for(i in 1:250){
+  gmu[i] = log10(mean(G[i,],na.rm=T))
 }
-gmu[30] = log10(mean(colMeans(G[(29*7+1):nrow(G),],na.rm=T),na.rm=T))
 
 g = splinefun(gmu,method="fmm")
-plot(0:29,gmu,ylim=c(-.2,5),xlab="Weeks Since First Detection",ylab="Mean log10 Parasites / microliter")
-lines(seq(0,29,.01),g(seq(1,30,.01)),lty=2,col="red")
-points(0:29,mu)
-lines(seq(0,29,.01),f(seq(1,30,.01)),lty=2)
+plot(1:250,gmu,ylim=c(-.2,5),xlab="Weeks Since First Detection",ylab="Mean log10 Parasites / microliter")
+lines(seq(1,250,.01),g(seq(1,250,.01)),lty=2,col="red")
+points(1:250,mu)
+lines(seq(1,250,.01),f(seq(1,250,.01)),lty=2)
 title(main="Mean Parasitemia Profile, Conditioned on Persistence")
 
 
-gs = rep(0,30)
-for(i in 1:30){
-  gs[i] = log10(var(colMeans(G[((i-1)*7+1):(i*7),],na.rm=T),na.rm=T))
+gs = rep(0,250)
+for(i in 1:250){
+  gs[i] = log10(var(G[i,],na.rm=T))
+  gs[which(is.infinite(gs))]=NaN
 }
 
-gfit = lm(gs~gmu)
+gfit = lm(gs[which(!is.na(gmu))]~gmu[which(!is.na(gmu))])
 glin = function(x){
   gfit$coefficients[[1]]+gfit$coefficients[[2]]*x
 }
@@ -190,6 +193,7 @@ title(main="Mean-Variance Power Law for Gametocytemia")
 
 plot(gfit$residuals)
 gresidNorm = (gfit$residuals-mean(gfit$residuals))/(sqrt(var(gfit$residuals)))
+hist(gfit$residuals,breaks=20)
 qqnorm(gresidNorm)
 lines(seq(-2,2,.1),seq(-2,2,.1))
 
@@ -275,7 +279,7 @@ qqnorm((gmv$residuals-mean(gmv$residuals))/sqrt(var(gmv$residuals)))
 lines(seq(-4,4,.1),seq(-4,4,.1))
 
 ccf(rm,grm,na.action = na.contiguous,main="Cross-Correlation between Asexual and Gametocyte Densities",ylab="CCF")
-plot(log10(rm)[1:(length(rm)-8)],log10(grm)[9:length(rm)],xlab="Lagged log10 Mean Asexual Parasite Densities per microL",ylab="log10 Mean Gametocyte Densities",main="Lagged Gametocyte Production")
+plot(rm[1:200],log10(grm[9:208]),xlab="Lagged log10 Mean Asexual Parasite Densities per microL",ylab="log10 Mean Gametocyte Densities",main="Lagged Gametocyte Production")
 rmd = log10(rm)[1:(length(rm)-8)]
 rmd[which(is.infinite(rmd))] = NaN
 grmd = log10(grm)[9:length(rm)]
@@ -517,5 +521,31 @@ acf(diff(na.stinterp(R[1:150,n])))
 pacf(diff(na.stinterp(R[,n])))
 
 
-################
 
+
+###################################### Tweedie Distribution Investigation
+
+Tlam = function(mu,var,p){
+  mu^(2-p)/((2-p)*var)
+}
+
+Talpha = function(mu,var,p){
+  (2-p)/(p-1)
+}
+
+Tbeta = function(mu,var,p){
+  mu^(1-p)/((p-1)*var)
+}
+
+plot(log10(Tlam(10^mu,10^var,1.732)*(Talpha(10^mu,10^var,1.732)/Tbeta(10^mu,10^var,1.732))))
+plot(log10(diff(Tlam(10^mu,10^var,1.732))))
+plot(log10(diff(Talpha(10^mu,10^var,1.732)/Tbeta(10^mu,10^var,1.732))))
+plot(log10(diff(Tbeta(10^mu,10^var,1.732))))
+plot(log(Talpha(10^mu,10^var,1.732)/Tbeta(10^mu,10^var,1.732)))
+GDay = which(!is.na(log10(diff(Tlam(mu,var,1.732)))))
+#lm(log(diff(Tlam(mu,var,1.732)))[GDay]~GDay)
+#Day = seq(0,250,.1)
+#lines(Day,-17.14840+.04865*Day)
+
+plot(log(Tlam(mu,var,1.732)),main="Frequency of Bursting Events per Day")
+plot(log(Talpha(mu,var,1.732)/Tbeta(mu,var,1.732)),main="Number of Merozoites Released per Bursting Event")

@@ -1,4 +1,4 @@
-fever <- read_excel("~/GitHub/MASH-Main/MASH-dev/MASH-dev/JohnHenry/PDG/Fever.xlsx")
+fever <- read_excel("Fever.xlsx")
 fever = as.matrix(fever)
 dots = which(fever=='.')
 fever[dots] = NaN
