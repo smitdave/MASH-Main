@@ -30,7 +30,7 @@ library(doSNOW)
 library(foreach)
 library(parallel)
 
-nrep <- 1e2
+nrep <- 1e1
 rm(tiny_pfmoi);gc() # otherwise the cluster cores will pull null symbols
 
 # set up cluster and source the file on each core
@@ -75,7 +75,7 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
     block_t <- (blocks[t]+1):blocks[t+1]
 
     # FOI
-    h_hat[t] <- sum(simout$foi[block_t])/14/N
+    h_hat[t] <- sum(simout$foi[block_t,])/14/N
 
     # attack rate
     AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
@@ -88,14 +88,7 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  # annual metrics
-  aEIR <- sum(simout$bites)/(1260/365)/N
-
-  # annual FOI
-  aFOI <- sum(simout$foi)/(1260/365)/N
-
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,
-             aeff=aeff,aEIR=aEIR,aFOI=aFOI)
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff)
 }
 
 close(pb)
@@ -148,7 +141,7 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
     block_t <- (blocks[t]+1):blocks[t+1]
 
     # FOI
-    h_hat[t] <- sum(simout$foi[block_t])/14/N
+    h_hat[t] <- sum(simout$foi[block_t,])/14/N
 
     # attack rate
     AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
@@ -161,14 +154,7 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  # annual metrics
-  aEIR <- sum(simout$bites)/(1260/365)/N
-
-  # annual FOI
-  aFOI <- sum(simout$foi)/(1260/365)/N
-
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,
-             aeff=aeff,aEIR=aEIR,aFOI=aFOI)
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff)
 }
 
 close(pb)
@@ -221,7 +207,7 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
     block_t <- (blocks[t]+1):blocks[t+1]
 
     # FOI
-    h_hat[t] <- sum(simout$foi[block_t])/14/N
+    h_hat[t] <- sum(simout$foi[block_t,])/14/N
 
     # attack rate
     AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
@@ -234,14 +220,7 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  # annual metrics
-  aEIR <- sum(simout$bites)/(1260/365)/N
-
-  # annual FOI
-  aFOI <- sum(simout$foi)/(1260/365)/N
-
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,
-             aeff=aeff,aEIR=aEIR,aFOI=aFOI)
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff)
 }
 
 close(pb)
@@ -252,6 +231,7 @@ stopCluster(cl);rm(cl);gc()
 # combine and plot the results
 ################################################################################
 
+# transmission inefficiency over time
 simout_t$site <- rep("Tororo",nrow(simout_t))
 simout_k$site <- rep("Kanungu",nrow(simout_k))
 simout_j$site <- rep("Jinja",nrow(simout_j))
@@ -271,6 +251,71 @@ ggplot(data = simout) +
 
 
 ################################################################################
+# Simultion runs for aEIR:aFOI v. aEIR plot
+# just need one run for each site
+################################################################################
+
+sourceCpp(here::here("tiny-pfmoi.cpp"))
+N <- 1e4
+pfmoi <- rep(0L,N)
+
+# tororo
+simdat_t <- make_tororo(N = N,which = 1)
+simout2_t <- tiny_pfmoi(tmax = 1260,nh = N,init = pfmoi,
+                        EIR_size = simdat_t$size,EIR_prob = simdat_t$prob,pb = TRUE)
+
+# aEIR_t <- colSums(simout2_t$bites)/(1260/365)
+
+
+
+
+simdat_k <- make_kanungu(N = N,which = 1)
+simout2_k <- tiny_pfmoi(tmax = 1260,nh = N,init = pfmoi,
+                        EIR_size = simdat_k$size,EIR_prob = simdat_k$prob,pb = TRUE)
+
+simdat_j <- make_jinja(N = N,which = 1)
+simout2_j <- tiny_pfmoi(tmax = 1260,nh = N,init = pfmoi,
+                        EIR_size = simdat_j$size,EIR_prob = simdat_j$prob,pb = TRUE)
+
+
+
+aEIR_t <- colSums(simout2_t$bites)/(1260/365)
+aFOI_t <- colSums(simout2_t$MOI)/(1260/365)
+
+aEIR_k <- colSums(simout2_k$bites)/(1260/365)
+aFOI_k <- colSums(simout2_k$MOI)/(1260/365)
+
+aEIR_j <- colSums(simout2_j$bites)/(1260/365)
+aFOI_j <- colSums(simout2_j$MOI)/(1260/365)
+
+# # transmission inefficiency vs. aEIR
+# aEIR_t <- sapply(unique(simout_t$iter),function(x){unique(simout_t[simout_t$iter==x,"aEIR"])})
+# aFOI_t <- sapply(unique(simout_t$iter),function(x){unique(simout_t[simout_t$iter==x,"aFOI"])})
+# 
+# aEIR_k <- sapply(unique(simout_k$iter),function(x){unique(simout_k[simout_k$iter==x,"aEIR"])})
+# aFOI_k <- sapply(unique(simout_k$iter),function(x){unique(simout_k[simout_k$iter==x,"aFOI"])})
+# 
+# aEIR_j <- sapply(unique(simout_j$iter),function(x){unique(simout_j[simout_j$iter==x,"aEIR"])})
+# aFOI_j <- sapply(unique(simout_j$iter),function(x){unique(simout_j[simout_j$iter==x,"aFOI"])})
+
+aeff_df <- data.frame(
+  aEIR = c(aEIR_t,aEIR_k,aEIR_j),
+  aFOI = c(aFOI_t,aFOI_k,aFOI_j),
+  site = rep(c("Tororo","Kanungu","Jinja"),each = length(aEIR_t))
+)
+
+aeff_df$aeff <- aeff_df$aEIR / aeff_df$aFOI
+
+plot(x = aeff_df$aEIR,y = aeff_df$aeff,type = "n",log = "xy")
+points(x = aeff_df[aeff_df$site=="Tororo",c("aEIR","aeff")],col=adjustcolor("darkred",alpha.f = 0.05),pch=16)
+points(x = aeff_df[aeff_df$site=="Kanungu",c("aEIR","aeff")],col=adjustcolor("darkgreen",alpha.f = 0.05),pch=16)
+points(x = aeff_df[aeff_df$site=="Jinja",c("aEIR","aeff")],col=adjustcolor("darkblue",alpha.f = 0.05),pch=16)
+
+# aEIR_aFOI_df$aeff <- aEIR_aFOI_df$aEIR/aEIR_aFOI_df$aFOI
+
+
+
+###############################################################################
 # run a single site
 ################################################################################
 

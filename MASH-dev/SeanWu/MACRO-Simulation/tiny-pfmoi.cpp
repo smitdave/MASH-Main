@@ -148,7 +148,7 @@ public:
 
   /* constructor & destructor */
   human(const int id_, const std::vector<double>& EIR_size_, const std::vector<double>& EIR_prob_, const int moi,
-        Rcpp::IntegerVector* const foi_ptr, Rcpp::IntegerMatrix* const ar_ptr) :
+        Rcpp::IntegerMatrix* const foi_ptr, Rcpp::IntegerMatrix* const ar_ptr) :
     id(id_), tnow(0.0), MOI(0), EIR_size(EIR_size_), EIR_prob(EIR_prob_), foi_hist(foi_ptr), ar_hist(ar_ptr), bites(0) {
       if(moi > 0){
         for(size_t i=0; i<moi; i++){
@@ -179,7 +179,7 @@ public:
 
   int                   get_bites(){return bites;};
 
-  Rcpp::IntegerVector*  get_foi_hist(){return foi_hist;};
+  Rcpp::IntegerMatrix*  get_foi_hist(){return foi_hist;};
   Rcpp::IntegerMatrix*  get_ar_hist(){return ar_hist;}
 
   /* event queue related functions */
@@ -204,7 +204,7 @@ private:
   std::vector<double>   EIR_prob;
 
   /* pointer to the vector that keeps track of when new infections happen */
-  Rcpp::IntegerVector*  foi_hist;
+  Rcpp::IntegerMatrix*  foi_hist;
 
   /* pointer to the vector that keeps track of when attacks happen */
   Rcpp::IntegerMatrix*  ar_hist;
@@ -272,7 +272,7 @@ e_pfmoi_infect::e_pfmoi_infect(double tEvent_, human* h):
     h->inc_MOI();
 
     /* track hist */
-    h->get_foi_hist()->at(tnow_global) += 1;
+    h->get_foi_hist()->at(tnow_global,h->get_id()) += 1;
 
     /* track attacks: if i have >= 1 attack today, track it */
     if(h->get_ar_hist()->at(tnow_global,h->get_id()) == 0){
@@ -357,7 +357,7 @@ Rcpp::List tiny_pfmoi(const unsigned int tmax,
   /* output matrix */
   Rcpp::IntegerMatrix out_mat(tmax,nh);
   Rcpp::IntegerMatrix out_bites(tmax,nh);
-  Rcpp::IntegerVector out_foi(tmax);
+  Rcpp::IntegerMatrix out_foi(tmax,nh);
   Rcpp::IntegerMatrix out_ar(tmax,nh); /* for est. attack rates */
 
   /* set up our ensemble of people */
