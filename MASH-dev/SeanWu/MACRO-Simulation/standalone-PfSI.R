@@ -329,20 +329,20 @@ ggplot(data = simout) +
   ggtitle("PfSI") +
   theme_bw()
 
-# FOI normalized by S
-simout$aeffS <- simout$h_hatS/simout$h_tilde
-
-ggplot(data = simout) +
-  geom_line(aes(x=time,y=aeffS,color=site,group=interaction(iter,site)),alpha=0.15) +
-  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkgreen",Jinja="darkblue")) +
-  # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
-  guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
-  scale_y_log10(breaks = c(2.2, 4.4, 9.5),labels = c("1.7:1","2.7:1","7.4:1")) +
-  scale_x_continuous(breaks = (0:3)*26,labels = as.character(0:3)) +
-  ylab("Transmission Efficiency") +
-  xlab("Time (Years)") +
-  ggtitle("PfSI") +
-  theme_bw()
+# # FOI normalized by S
+# simout$aeffS <- simout$h_hatS/simout$h_tilde
+# 
+# ggplot(data = simout) +
+#   geom_line(aes(x=time,y=aeffS,color=site,group=interaction(iter,site)),alpha=0.15) +
+#   scale_color_manual(values = c(Tororo="darkred",Kanungu="darkgreen",Jinja="darkblue")) +
+#   # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
+#   guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
+#   scale_y_log10(breaks = c(2.2, 4.4, 9.5),labels = c("1.7:1","2.7:1","7.4:1")) +
+#   scale_x_continuous(breaks = (0:3)*26,labels = as.character(0:3)) +
+#   ylab("Transmission Efficiency") +
+#   xlab("Time (Years)") +
+#   ggtitle("PfSI") +
+#   theme_bw()
 
 
 ################################################################################
@@ -387,3 +387,5 @@ ggplot(data = ineff_df) +
   scale_y_continuous(trans = scales::log1p_trans()) +
   scale_x_continuous(trans = scales::log1p_trans()) +
   theme_bw()
+
+# plot(x=ineff_df$aEIR,y=ineff_df$eff,col=as.factor(ineff_df$site),log="xy",pch=16)
