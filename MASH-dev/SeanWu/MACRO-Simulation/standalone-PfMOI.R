@@ -301,10 +301,10 @@ aFOI_ar_j <- mean(aFOI_ar_j)*365
 # # transmission inefficiency vs. aEIR
 # aEIR_t <- sapply(unique(simout_t$iter),function(x){unique(simout_t[simout_t$iter==x,"aEIR"])})
 # aFOI_t <- sapply(unique(simout_t$iter),function(x){unique(simout_t[simout_t$iter==x,"aFOI"])})
-# 
+#
 # aEIR_k <- sapply(unique(simout_k$iter),function(x){unique(simout_k[simout_k$iter==x,"aEIR"])})
 # aFOI_k <- sapply(unique(simout_k$iter),function(x){unique(simout_k[simout_k$iter==x,"aFOI"])})
-# 
+#
 # aEIR_j <- sapply(unique(simout_j$iter),function(x){unique(simout_j[simout_j$iter==x,"aEIR"])})
 # aFOI_j <- sapply(unique(simout_j$iter),function(x){unique(simout_j[simout_j$iter==x,"aFOI"])})
 

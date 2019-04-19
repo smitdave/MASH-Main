@@ -146,7 +146,7 @@ public:
 
   /* constructor & destructor */
   human(const int id_, const std::vector<double>& EIR_size_, const std::vector<double>& EIR_prob_, const std::string init,
-        Rcpp::IntegerVector* const foi_ptr, Rcpp::IntegerMatrix* const ar_ptr) :
+        Rcpp::IntegerMatrix* const foi_ptr, Rcpp::IntegerMatrix* const ar_ptr) :
     id(id_), tnow(0.0), state("S"), EIR_size(EIR_size_), EIR_prob(EIR_prob_), foi_hist(foi_ptr), ar_hist(ar_ptr), bites(0) {
       if(init.compare("I") == 0){
         addEvent2Q(e_pfsi_infect(0.0,this));
@@ -173,7 +173,7 @@ public:
   void                  set_state(const std::string s){state = s;};
   int                   get_bites(){return bites;};
 
-  Rcpp::IntegerVector*  get_foi_hist(){return foi_hist;};
+  Rcpp::IntegerMatrix*  get_foi_hist(){return foi_hist;};
   Rcpp::IntegerMatrix*  get_ar_hist(){return ar_hist;}
 
 
@@ -199,7 +199,7 @@ private:
   std::vector<double>   EIR_prob;
 
   /* pointer to the vector that keeps track of when new infections happen */
-  Rcpp::IntegerVector*  foi_hist;
+  Rcpp::IntegerMatrix*  foi_hist;
 
   /* pointer to the vector that keeps track of when attacks happen */
   Rcpp::IntegerMatrix*  ar_hist;
@@ -250,8 +250,14 @@ void human::fireEvent(){
 /* simulated biting event */
 e_pfsi_bite::e_pfsi_bite(double tEvent_, human* h):
   event("PfSI_SimBite",tEvent_,[tEvent_,h](){
+
     /* transmission efficiency */
     if(R::runif(0.0, 1.0) < b){
+
+      /* track foi: regardless of if this bite actually causes new inf. event */
+      h->get_foi_hist()->at(tnow_global,h->get_id()) += 1;
+
+      /* start a PfSI infection */
       double tInfStart = tEvent_ + psfi_ttInfectionPf();
       h->addEvent2Q(e_pfsi_infect(tInfStart,h));
     }
@@ -269,13 +275,8 @@ e_pfsi_infect::e_pfsi_infect(double tEvent_, human* h):
       /* i'm now infected */
       h->set_state("I");
 
-      /* track hist */
-      h->get_foi_hist()->at(tnow_global) += 1;
-
-      /* track attacks: if i have >= 1 attack today, track it */
-      if(h->get_ar_hist()->at(tnow_global,h->get_id()) == 0){
-        h->get_ar_hist()->at(tnow_global,h->get_id()) = 1;
-      }
+      /* track attacks: if i experience a new infection, track it */
+      h->get_ar_hist()->at(tnow_global,h->get_id()) = 1;
 
       /* queue clearance event */
       double tEnd = tEvent_ + pfsi_ttClearPf();
@@ -355,11 +356,11 @@ Rcpp::List tiny_pfsi(const unsigned int tmax,
   /* global clock */
   tnow_global = 0;
 
-  /* output matrix */
-  Rcpp::IntegerMatrix out_states(tmax,nh);
-  Rcpp::IntegerMatrix out_bites(tmax,nh);
-  Rcpp::IntegerVector out_foi(tmax);
-  Rcpp::IntegerMatrix out_ar(tmax,nh); /* for est. attack rates */
+  /* simulation output */
+  Rcpp::IntegerMatrix out_states(tmax,nh); /* needed for denominators (S and I by people) */
+  Rcpp::IntegerMatrix out_bites(tmax,nh); /* gives the EIR for each (day x person) */
+  Rcpp::IntegerMatrix out_foi(tmax,nh); /* gives the number of infectious challenges recieved (day x person) */
+  Rcpp::IntegerMatrix out_ar(tmax,nh); /* boolean: tells when a new inf occurs in the pop */
 
   /* set up our ensemble of people */
   std::vector<humanP> humans;

@@ -255,8 +255,14 @@ void human::fireEvent(){
 /* simulated biting event */
 e_pfmoi_bite::e_pfmoi_bite(double tEvent_, human* h):
   event("PfMOI_SimBite",tEvent_,[tEvent_,h](){
+
     /* transmission efficiency */
     if(R::runif(0.0, 1.0) < b){
+
+      /* track hist */
+      h->get_foi_hist()->at(tnow_global,h->get_id()) += 1;
+
+      /* start a PfMOI infection */
       double tInfStart = tEvent_ + pfmoi_ttLatent();
       h->addEvent2Q(e_pfmoi_infect(tInfStart,h));
     }
@@ -270,9 +276,6 @@ e_pfmoi_infect::e_pfmoi_infect(double tEvent_, human* h):
 
     /* invaded by a new clonal infection */
     h->inc_MOI();
-
-    /* track hist */
-    h->get_foi_hist()->at(tnow_global,h->get_id()) += 1;
 
     /* track attacks: if i have >= 1 attack today, track it */
     if(h->get_ar_hist()->at(tnow_global,h->get_id()) == 0){
@@ -354,7 +357,7 @@ Rcpp::List tiny_pfmoi(const unsigned int tmax,
   /* global clock */
   tnow_global = 0;
 
-  /* output matrix */
+  /* simulation output */
   Rcpp::IntegerMatrix out_mat(tmax,nh);
   Rcpp::IntegerMatrix out_bites(tmax,nh);
   Rcpp::IntegerMatrix out_foi(tmax,nh);
