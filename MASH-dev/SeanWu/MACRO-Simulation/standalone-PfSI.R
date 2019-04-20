@@ -383,9 +383,15 @@ ineff_df <- data.frame(
 ineff_df$eff <- ineff_df$aEIR / ineff_df$aFOI
 
 ggplot(data = ineff_df) +
-  geom_jitter(aes(x=aEIR,y=eff,color=site),alpha=0.15) +
+  geom_jitter(aes(x=aEIR,y=eff,color=site),alpha=0.05) +
   scale_y_continuous(trans = scales::log1p_trans()) +
   scale_x_continuous(trans = scales::log1p_trans()) +
+  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkgreen",Jinja="darkblue")) +
+  # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
+  guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
   theme_bw()
 
+# llm=lm(log(ineff_df$eff[is.finite(ineff_df$eff)])~log(ineff_df$aEIR[is.finite(ineff_df$eff)]))
+# a = exp(coef(llm)[1])
+# b = coef(llm)[2]
 # plot(x=ineff_df$aEIR,y=ineff_df$eff,col=as.factor(ineff_df$site),log="xy",pch=16)
