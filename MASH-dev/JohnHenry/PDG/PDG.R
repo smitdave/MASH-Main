@@ -7,7 +7,7 @@ PDGHuman <- R6Class("PDGHuman",
 
                    ## Initialization of Components
 
-                   initialize = function(ixH = NA, age = NA, sex = NA, locH = NA){
+                   initialize = function(ixH = NA, age = NA, sex = NA, locH = NA, dt = NA){
 
                      private$ixH = ixH ## id number
                      private$age = age
@@ -42,7 +42,8 @@ PDGHuman <- R6Class("PDGHuman",
                      private$immCounter = 0
                      private$immHalf = 3.5246
                      private$immSlope = 3.038
-                     private$immThresh = 2
+                     private$immThresh = 0
+                     private$immP = 0
 
                      private$pFever = 0
                      private$feverHalf = 3.5246
@@ -94,6 +95,8 @@ PDGHuman <- R6Class("PDGHuman",
                      self$update_MOI()
                      self$update_TE()
                      self$update_pFever()
+                     
+                     self$update_Age(dt)
 
                      self$update_History()
 
@@ -118,7 +121,7 @@ PDGHuman <- R6Class("PDGHuman",
                      private$Pf = private$A %*% private$Pf
 
                    },
-
+                   
                    update_Pt = function(){
 
                      private$Pt = 0
@@ -163,8 +166,8 @@ PDGHuman <- R6Class("PDGHuman",
 
                    update_Imm = function(){
 
-                     ## count up if above threshhold parasite density, down if below
-                     private$immCounter = ifelse(private$Pt < private$immThresh | is.nan(private$Pt), max(private$immCounter-.1,0), min(private$immCounter+1,10))
+                     ## count up at random rate proportional to Pt, down by geometric if below
+                     private$immCounter = ifelse(private$Pt < private$immThresh | is.nan(private$Pt), max(private$immCounter-1,0), private$immCounter+rgeom(1,immP))
                      ## ensures nonnegative-definiteness of counters
                      private$immCounter = max(0,private$immCounter)
                      ## sigmoidal conversion of counter to immune effect
@@ -183,6 +186,10 @@ PDGHuman <- R6Class("PDGHuman",
                      
                      private$pFever = private$feverMax*self$sigmoidexp(private$Pt,private$feverHalf,private$feverSlope)
                        
+                   },
+                   
+                   update_Age = function(dt){
+                     private$age = private$age+dt
                    },
                    
                    ## light microscopy - a function that can be called from the human object, will calculate a probability of testing positive using
@@ -206,6 +213,7 @@ PDGHuman <- R6Class("PDGHuman",
                      private$history$pFever = c(private$history$pFever,private$pFever)
                      private$history$Imm = c(private$history$Imm,private$Imm)
                      private$history$immCounter = c(private$history$immCounter,private$immCounter)
+                     private$history$age = c(private$history$age,private$age)
 
                    },
 

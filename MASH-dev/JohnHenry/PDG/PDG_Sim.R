@@ -3,11 +3,11 @@ source('PDG.R')
 
 human = PDGHuman$new()
 human$infect_Human()
-
+dt = 1/26
 
 Nfortnights = 30
 for(t in seq(1:Nfortnights)){
-  human$update_Human()
+  human$update_Human(dt=dt)
 }
 
 Pt = human$get_history()$Pt
