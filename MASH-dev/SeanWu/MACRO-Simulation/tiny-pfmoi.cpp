@@ -317,6 +317,7 @@ void human::simulate(){
 };
 
 
+/* negative binomial biting */
 void human::queue_bites(){
 
   /* parameters of nbinom biting */

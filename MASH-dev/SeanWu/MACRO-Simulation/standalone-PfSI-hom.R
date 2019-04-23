@@ -316,7 +316,12 @@ simout_t$site <- rep("Tororo",nrow(simout_t))
 simout_k$site <- rep("Kanungu",nrow(simout_k))
 simout_j$site <- rep("Jinja",nrow(simout_j))
 
+simout_t$h_tilde[!is.finite(simout_t$h_tilde)] <- NA
+simout_k$h_tilde[!is.finite(simout_k$h_tilde)] <- NA
+simout_j$h_tilde[!is.finite(simout_j$h_tilde)] <- NA
+
 simout <- rbind(simout_t,simout_k,simout_j)
+simout$aeff <- simout$aeff + 2e-6
 
 fig4a <- ggplot(data = simout_t) +
   geom_line(aes(x=time,y=h_hat,group=iter),color="darkred",alpha=0.15) +
