@@ -333,6 +333,20 @@ void human::queue_bites(){
 
 };
 
+// /* Poisson biting */
+// void human::queue_bites(){
+//
+//   bites = (int)R::rpois(EIR_size.at(tnow_global));
+//
+//   if(bites > 0){
+//     for(size_t i=0; i<bites; i++){
+//       addEvent2Q(e_pfsi_bite(tnow_global,this));
+//     }
+//   }
+//
+// };
+
+
 
 /* ################################################################################
  * Run a simulation from R
