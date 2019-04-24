@@ -315,27 +315,14 @@ void human::simulate(){
 
 };
 
-// /* negative binomial biting */
-// void human::queue_bites(){
-//
-//   /* parameters of nbinom biting */
-//   double size = EIR_size.at(tnow_global);
-//   double prob = EIR_prob.at(tnow_global);
-//
-//   bites = (int)R::rnbinom(size, prob);
-//
-//   if(bites > 0){
-//     for(size_t i=0; i<bites; i++){
-//       addEvent2Q(e_pfsi_bite(tnow_global,this));
-//     }
-//   }
-//
-// };
-
-/* Poisson biting */
+/* negative binomial biting */
 void human::queue_bites(){
 
-  bites = (int)R::rpois(EIR_size.at(tnow_global));
+  /* parameters of nbinom biting */
+  double size = EIR_size.at(tnow_global);
+  double prob = EIR_prob.at(tnow_global);
+
+  bites = (int)R::rnbinom(size, prob);
 
   if(bites > 0){
     for(size_t i=0; i<bites; i++){
@@ -344,6 +331,19 @@ void human::queue_bites(){
   }
 
 };
+
+// /* Poisson biting */
+// void human::queue_bites(){
+//
+//   bites = (int)R::rpois(EIR_size.at(tnow_global));
+//
+//   if(bites > 0){
+//     for(size_t i=0; i<bites; i++){
+//       addEvent2Q(e_pfsi_bite(tnow_global,this));
+//     }
+//   }
+//
+// };
 
 
 /* ################################################################################

@@ -341,7 +341,7 @@ void human::queue_bites(){
 //
 //   if(bites > 0){
 //     for(size_t i=0; i<bites; i++){
-//       addEvent2Q(e_pfsi_bite(tnow_global,this));
+//       addEvent2Q(e_pfmoi_bite(tnow_global,this));
 //     }
 //   }
 //
