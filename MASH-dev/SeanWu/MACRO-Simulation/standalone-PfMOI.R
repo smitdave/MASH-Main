@@ -286,7 +286,7 @@ ggsave(filename = here::here("figures/pfmoi_4.pdf"),plot = fig4,device = "pdf",w
 ################################################################################
 
 # run sims
-N <- 1e3
+N <- 1e4
 pfmoi <- rep(0L,N)
 Rcpp::sourceCpp(here::here("tiny-pfmoi.cpp"))
 
@@ -320,7 +320,8 @@ ineff_df <- data.frame(
 ineff_df$eff <- ineff_df$aEIR / ineff_df$aFOI
 
 fig2 <- ggplot(data = ineff_df[is.finite(ineff_df$eff) & is.finite(ineff_df$aEIR),]) +
-  geom_jitter(aes(x=aEIR,y=eff,color=site),alpha=0.15,width = 0.15, height = 0.15) +
+  geom_jitter(aes(x=aEIR,y=eff,color=site),alpha=0.025,width = 0.15, height = 0.15) +
+  # geom_point(aes(x=eir,y=aeff,color=site),alpha=0.5,data=data.plot,shape=17,size=2.5) +
   scale_y_continuous(trans = scales::log1p_trans(),breaks = c(1/2, 2, 10, 50, 1e2, 1e3),labels = c("1:2","2:1","10:1","50:1","100:1","1000:1")) +
   scale_x_continuous(trans = scales::log1p_trans(),breaks = 10^(0:3)) +
   scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
@@ -329,6 +330,7 @@ fig2 <- ggplot(data = ineff_df[is.finite(ineff_df$eff) & is.finite(ineff_df$aEIR
   guides(colour = FALSE) +
   ylab("Inefficiency (aEIR : aFOI)") +
   xlab("Annual EIR") +
+  ggtitle("PfMOI") +
   theme_bw()
 
 ggsave(filename = here::here("figures/pfmoi_2.pdf"),plot = fig2,device = "pdf",width = 10,height = 8)
