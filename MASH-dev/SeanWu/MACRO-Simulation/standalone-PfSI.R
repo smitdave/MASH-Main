@@ -111,6 +111,9 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # aggregate data into 2-week blocks
   blocks <- seq(from=0,to=1260,by=14)
 
+  # EIR
+  EIR <- rep(0,length(blocks)-1)
+
   # FOI
   h_hat <- h_hatS <-rep(0,length(blocks)-1)
 
@@ -125,6 +128,9 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
     # aggregate over this
     block_t <- (blocks[t]+1):blocks[t+1]
+
+    # EIR
+    EIR[t] <- sum(simout$bites[block_t,])/14/N
 
     # standardize by the number of susceptibles at the start of this 2-wk block
     block_sus <- simout$states[block_t[1],] == 0
@@ -147,16 +153,9 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   aeff <- h_hat/h_tilde
 
   data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff)
-
-  # # annual metrics
-  # aEIR <- sum(simout$bites)/(1260/365)/N
-  #
-  # # annual FOI
-  # aFOI <- sum(simout$foi)/(1260/365)/N
-  #
-  # data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,
-  #            aeff=aeff,aEIR=aEIR,aFOI=aFOI)
 }
+
+# saveRDS(object = simout_t,file = here::here("sim/PfSI_het_t.rds"))
 
 close(pb)
 stopCluster(cl);rm(cl);gc()
@@ -192,6 +191,9 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # aggregate data into 2-week blocks
   blocks <- seq(from=0,to=1260,by=14)
 
+  # EIR
+  EIR <- rep(0,length(blocks)-1)
+
   # FOI
   h_hat <- h_hatS <-rep(0,length(blocks)-1)
 
@@ -206,6 +208,9 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
     # aggregate over this
     block_t <- (blocks[t]+1):blocks[t+1]
+
+    # EIR
+    EIR[t] <- sum(simout$bites[block_t,])/14/N
 
     # standardize by the number of susceptibles at the start of this 2-wk block
     block_sus <- simout$states[block_t[1],] == 0
@@ -229,6 +234,8 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
   data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff)
 }
+
+# saveRDS(object = simout_k,file = here::here("sim/PfSI_het_k.rds"))
 
 close(pb)
 stopCluster(cl);rm(cl);gc()
@@ -264,6 +271,9 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # aggregate data into 2-week blocks
   blocks <- seq(from=0,to=1260,by=14)
 
+  # EIR
+  EIR <- rep(0,length(blocks)-1)
+
   # FOI
   h_hat <- h_hatS <-rep(0,length(blocks)-1)
 
@@ -278,6 +288,9 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
     # aggregate over this
     block_t <- (blocks[t]+1):blocks[t+1]
+
+    # EIR
+    EIR[t] <- sum(simout$bites[block_t,])/14/N
 
     # standardize by the number of susceptibles at the start of this 2-wk block
     block_sus <- simout$states[block_t[1],] == 0
@@ -302,6 +315,8 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff)
 }
 
+# saveRDS(object = simout_j,file = here::here("sim/PfSI_het_j.rds"))
+
 close(pb)
 stopCluster(cl);rm(cl);gc()
 
@@ -317,51 +332,53 @@ simout_j$site <- rep("Jinja",nrow(simout_j))
 
 simout <- rbind(simout_t,simout_k,simout_j)
 
-fig4a <- ggplot(data = simout_t) +
-  geom_line(aes(x=time,y=h_hat,group=iter),color="darkred",alpha=0.15) +
-  geom_line(aes(x=time,y=h_tilde,group=iter),color="firebrick3",alpha=0.15) +
-  scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
-  ylab("daily FOI (simulated)") +
-  ggtitle("b) PfSI: Tororo") +
-  theme_bw()
+saveRDS(object = simout,file = here::here("sim/PfSI_het.rds"))
 
-fig4b <- ggplot(data = simout_k) +
-  geom_line(aes(x=time,y=h_hat,group=iter),color="darkblue",alpha=0.15) +
-  geom_line(aes(x=time,y=h_tilde,group=iter),color="steelblue",alpha=0.15) +
-  scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
-  ylab("daily FOI (simulated)") +
-  ggtitle("b) PfSI: Kanungu") +
-  theme_bw()
-
-fig4c <- ggplot(data = simout_j) +
-  geom_line(aes(x=time,y=h_hat,group=iter),color="darkgreen",alpha=0.15) +
-  geom_line(aes(x=time,y=h_tilde,group=iter),color="forestgreen",alpha=0.15) +
-  scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
-  ylab("daily FOI (simulated)") +
-  ggtitle("c) PfSI: Jinja") +
-  theme_bw() 
-
-# transmission efficiency (4D: FOI normalized by N
-fig4d <- ggplot(data = simout) +
-  geom_line(aes(x=time,y=aeff,color=site,group=interaction(iter,site)),alpha=0.15) +
-  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
-  # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
-  # guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
-  guides(colour = FALSE) +
-  scale_y_log10(breaks = c(2.2, 4.4, 9.5),labels = c("1.7:1","2.7:1","7.4:1")) +
-  scale_x_continuous(breaks = (0:3)*26,labels = as.character(0:3)) +
-  ylab("Transmission Efficiency") +
-  xlab("Time (Years)") +
-  ggtitle("d)") +
-  theme_bw()
-
-fig4 <- grid.arrange(fig4a,fig4b,fig4c,fig4d,nrow=2,ncol=2)
-
-ggsave(filename = here::here("figures/pfsi_4.pdf"),plot = fig4,device = "pdf",width = 12,height = 10)
+# fig4a <- ggplot(data = simout_t) +
+#   geom_line(aes(x=time,y=h_hat,group=iter),color="darkred",alpha=0.15) +
+#   geom_line(aes(x=time,y=h_tilde,group=iter),color="firebrick3",alpha=0.15) +
+#   scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
+#   ylab("daily FOI (simulated)") +
+#   ggtitle("b) PfSI: Tororo") +
+#   theme_bw()
+#
+# fig4b <- ggplot(data = simout_k) +
+#   geom_line(aes(x=time,y=h_hat,group=iter),color="darkblue",alpha=0.15) +
+#   geom_line(aes(x=time,y=h_tilde,group=iter),color="steelblue",alpha=0.15) +
+#   scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
+#   ylab("daily FOI (simulated)") +
+#   ggtitle("b) PfSI: Kanungu") +
+#   theme_bw()
+#
+# fig4c <- ggplot(data = simout_j) +
+#   geom_line(aes(x=time,y=h_hat,group=iter),color="darkgreen",alpha=0.15) +
+#   geom_line(aes(x=time,y=h_tilde,group=iter),color="forestgreen",alpha=0.15) +
+#   scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
+#   ylab("daily FOI (simulated)") +
+#   ggtitle("c) PfSI: Jinja") +
+#   theme_bw()
+#
+# # transmission efficiency (4D: FOI normalized by N
+# fig4d <- ggplot(data = simout) +
+#   geom_line(aes(x=time,y=aeff,color=site,group=interaction(iter,site)),alpha=0.15) +
+#   scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+#   # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
+#   # guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
+#   guides(colour = FALSE) +
+#   scale_y_log10(breaks = c(2.2, 4.4, 9.5),labels = c("1.7:1","2.7:1","7.4:1")) +
+#   scale_x_continuous(breaks = (0:3)*26,labels = as.character(0:3)) +
+#   ylab("Transmission Efficiency") +
+#   xlab("Time (Years)") +
+#   ggtitle("d)") +
+#   theme_bw()
+#
+# fig4 <- grid.arrange(fig4a,fig4b,fig4c,fig4d,nrow=2,ncol=2)
+#
+# ggsave(filename = here::here("figures/pfsi_4.pdf"),plot = fig4,device = "pdf",width = 12,height = 10)
 
 # # FOI normalized by S
 # simout$aeffS <- simout$h_hatS/simout$h_tilde
-# 
+#
 # ggplot(data = simout) +
 #   geom_line(aes(x=time,y=aeffS,color=site,group=interaction(iter,site)),alpha=0.15) +
 #   scale_color_manual(values = c(Tororo="darkred",Kanungu="darkgreen",Jinja="darkblue")) +
@@ -412,21 +429,23 @@ ineff_df <- data.frame(
 )
 ineff_df$eff <- ineff_df$aEIR / ineff_df$aFOI
 
-fig2 <- ggplot(data = ineff_df[is.finite(ineff_df$eff) & is.finite(ineff_df$aEIR),]) +
-  geom_jitter(aes(x=aEIR,y=eff,color=site),alpha=0.025,width = 0.15, height = 0.15) +
-  # geom_point(aes(x=eir,y=aeff,color=site),alpha=0.5,data=data.plot,shape=17,size=2.5) +
-  scale_y_continuous(trans = scales::log1p_trans(),breaks = c(1/2, 2, 10, 50, 1e2, 1e3),labels = c("1:2","2:1","10:1","50:1","100:1","1000:1")) +
-  scale_x_continuous(trans = scales::log1p_trans(),breaks = 10^(0:3)) +
-  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
-  # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
-  # guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
-  guides(colour = FALSE) +
-  ylab("Inefficiency (aEIR : aFOI)") +
-  xlab("Annual EIR") +
-  ggtitle("PfSI") +
-  theme_bw()
+saveRDS(object = ineff_df,file = here::here("sim/PfSI_het_ineff.rds"))
 
-ggsave(filename = here::here("figures/pfsi_2.pdf"),plot = fig2,device = "pdf",width = 10,height = 8)
+# fig2 <- ggplot(data = ineff_df[is.finite(ineff_df$eff) & is.finite(ineff_df$aEIR),]) +
+#   geom_jitter(aes(x=aEIR,y=eff,color=site),alpha=0.025,width = 0.15, height = 0.15) +
+#   # geom_point(aes(x=eir,y=aeff,color=site),alpha=0.5,data=data.plot,shape=17,size=2.5) +
+#   scale_y_continuous(trans = scales::log1p_trans(),breaks = c(1/2, 2, 10, 50, 1e2, 1e3),labels = c("1:2","2:1","10:1","50:1","100:1","1000:1")) +
+#   scale_x_continuous(trans = scales::log1p_trans(),breaks = 10^(0:3)) +
+#   scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+#   # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
+#   # guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
+#   guides(colour = FALSE) +
+#   ylab("Inefficiency (aEIR : aFOI)") +
+#   xlab("Annual EIR") +
+#   ggtitle("PfSI") +
+#   theme_bw()
+#
+# ggsave(filename = here::here("figures/pfsi_2.pdf"),plot = fig2,device = "pdf",width = 10,height = 8)
 
 # llm=lm(log(ineff_df$eff[is.finite(ineff_df$eff)])~log(ineff_df$aEIR[is.finite(ineff_df$eff)]))
 # a = exp(coef(llm)[1])
