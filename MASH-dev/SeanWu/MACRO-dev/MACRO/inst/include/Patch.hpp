@@ -41,6 +41,9 @@ public:
   bool                  get_reservoir(){return reservoir;}
   double                get_res_EIR(){return res_EIR;}
 
+  /* JUST FOR PRISM DATA */
+  double                get_EIR_size(const size_t t){return EIR_size[t];}
+
   /* debug */
   void                  print();
 
@@ -79,6 +82,10 @@ private:
   /* infection reservoir? */
   bool                  reservoir;
   double                res_EIR;
+
+  /* JUST FOR PRISM DATA */
+  std::vector<double>                EIR_size; /* size parameter of negbinom (size,prob) */
+  /* END PRISM DATA STUFF */
 
   /* tile pointer */
   tile*                 tileP;

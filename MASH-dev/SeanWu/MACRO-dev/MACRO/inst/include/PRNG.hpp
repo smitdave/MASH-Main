@@ -37,6 +37,7 @@ public:
 
     /* continuous random univariate sampling */
     double                                 get_runif();
+    double                                 get_gamma(const double shape, const double scale);
     double                                 get_rexp(const double rate);
     double                                 get_rnorm(const double mean, const double sd);
     double                                 get_rlnorm(const double meanlog, const double sdlog);

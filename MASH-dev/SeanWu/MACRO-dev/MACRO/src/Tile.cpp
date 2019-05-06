@@ -54,7 +54,7 @@ tile::tile(const uint_least32_t seed,
   parametersPtr(std::make_unique<parameters>(50))
 
 {
-
+  // std::cout << "initializing paramters!\n";
   /* initialize parameters */
   parametersPtr->init_params(model_pars);
 
