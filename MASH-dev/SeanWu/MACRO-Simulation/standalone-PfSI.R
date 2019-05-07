@@ -430,24 +430,3 @@ ineff_df <- data.frame(
 ineff_df$eff <- ineff_df$aEIR / ineff_df$aFOI
 
 saveRDS(object = ineff_df,file = here::here("sim/PfSI_het_ineff.rds"))
-
-# fig2 <- ggplot(data = ineff_df[is.finite(ineff_df$eff) & is.finite(ineff_df$aEIR),]) +
-#   geom_jitter(aes(x=aEIR,y=eff,color=site),alpha=0.025,width = 0.15, height = 0.15) +
-#   # geom_point(aes(x=eir,y=aeff,color=site),alpha=0.5,data=data.plot,shape=17,size=2.5) +
-#   scale_y_continuous(trans = scales::log1p_trans(),breaks = c(1/2, 2, 10, 50, 1e2, 1e3),labels = c("1:2","2:1","10:1","50:1","100:1","1000:1")) +
-#   scale_x_continuous(trans = scales::log1p_trans(),breaks = 10^(0:3)) +
-#   scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
-#   # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
-#   # guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
-#   guides(colour = FALSE) +
-#   ylab("Inefficiency (aEIR : aFOI)") +
-#   xlab("Annual EIR") +
-#   ggtitle("PfSI") +
-#   theme_bw()
-#
-# ggsave(filename = here::here("figures/pfsi_2.pdf"),plot = fig2,device = "pdf",width = 10,height = 8)
-
-# llm=lm(log(ineff_df$eff[is.finite(ineff_df$eff)])~log(ineff_df$aEIR[is.finite(ineff_df$eff)]))
-# a = exp(coef(llm)[1])
-# b = coef(llm)[2]
-# plot(x=ineff_df$aEIR,y=ineff_df$eff,col=as.factor(ineff_df$site),log="xy",pch=16)

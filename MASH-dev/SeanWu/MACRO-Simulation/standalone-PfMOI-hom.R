@@ -63,40 +63,40 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
   # EIR
   EIR <- rep(0,length(blocks)-1)
-  
+
   # FOI
   h_hat <-rep(0,length(blocks)-1)
-  
+
   # attack rate
   AR <-rep(0,length(blocks)-1)
-  
+
   # estimated FOI
   h_tilde <-rep(0,length(blocks)-1)
-  
+
   # loop over blocks
   for(t in 1:(length(blocks)-1)){
-    
+
     # aggregate over this
     block_t <- (blocks[t]+1):blocks[t+1]
-    
+
     # EIR
     EIR[t] <- sum(simout$bites[block_t,])/14/N
-    
+
     # FOI
     h_hat[t] <- sum(simout$foi[block_t,])/14/N
-    
+
     # attack rate
     AR[t] <- ifelse(sum(simout$ar[block_t,]) == 0,0,(table(apply(simout$ar[block_t,],2,max)) / N)[["1"]])
     # AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
-    
+
     # estimated FOI
     h_tilde[t] <- -log(1 - AR[t])/14
-    
+
   }
-  
+
   # transmission efficiency
   aeff <- h_hat/h_tilde
-  
+
   data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
@@ -353,22 +353,3 @@ ineff_df <- data.frame(
 ineff_df$eff <- ineff_df$aEIR / ineff_df$aFOI
 
 saveRDS(object = ineff_df,file = here::here("sim/PfMOI_hom_ineff.rds"))
-
-# fig2 <- ggplot(data = ineff_df[is.finite(ineff_df$eff) & is.finite(ineff_df$aEIR),]) +
-#   geom_jitter(aes(x=aEIR,y=eff,color=site),alpha=0.15,width = 0.15, height = 0.15) +
-#   scale_y_continuous(trans = scales::log1p_trans(),breaks = c(1/2, 2, 10, 50, 1e2, 1e3),labels = c("1:2","2:1","10:1","50:1","100:1","1000:1")) +
-#   scale_x_continuous(trans = scales::log1p_trans(),breaks = 10^(0:3)) +
-#   scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
-#   # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
-#   # guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
-#   guides(colour = FALSE) +
-#   ylab("Inefficiency (aEIR : aFOI)") +
-#   xlab("Annual EIR") +
-#   theme_bw()
-#
-# ggsave(filename = here::here("figures/pfmoi_2_hom.pdf"),plot = fig2,device = "pdf",width = 10,height = 8)
-
-# llm=lm(log(ineff_df$eff[is.finite(ineff_df$eff)])~log(ineff_df$aEIR[is.finite(ineff_df$eff)]))
-# a = exp(coef(llm)[1])
-# b = coef(llm)[2]
-# plot(x=ineff_df$aEIR,y=ineff_df$eff,col=as.factor(ineff_df$site),log="xy",pch=16)
