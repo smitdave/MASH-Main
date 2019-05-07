@@ -85,7 +85,7 @@ pfpr_means <- c(Tororo=0.0001001316,Kanungu=0.0001014503,Jinja=0.0001090688)
 ################################################################################
 
 nrep <- 1e2
-rm(tiny_pfmoi);gc() # otherwise the cluster cores will pull null symbols
+rm(tiny_pfsi);gc() # otherwise the cluster cores will pull null symbols
 
 # set up cluster and source the file on each core
 cl <- makeSOCKcluster(4)
@@ -152,7 +152,7 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff)
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_t,file = here::here("sim/PfSI_het_t.rds"))
@@ -165,7 +165,7 @@ stopCluster(cl);rm(cl);gc()
 # ensemble simulation run for Kanungu
 ################################################################################
 
-rm(tiny_pfmoi);gc() # otherwise the cluster cores will pull null symbols
+rm(tiny_pfsi);gc() # otherwise the cluster cores will pull null symbols
 
 # set up cluster and source the file on each core
 cl <- makeSOCKcluster(4)
@@ -232,7 +232,7 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff)
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_k,file = here::here("sim/PfSI_het_k.rds"))
@@ -245,7 +245,7 @@ stopCluster(cl);rm(cl);gc()
 # ensemble simulation run for Jinja
 ################################################################################
 
-rm(tiny_pfmoi);gc() # otherwise the cluster cores will pull null symbols
+rm(tiny_pfsi);gc() # otherwise the cluster cores will pull null symbols
 
 # set up cluster and source the file on each core
 cl <- makeSOCKcluster(4)
@@ -312,7 +312,7 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff)
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_j,file = here::here("sim/PfSI_het_j.rds"))

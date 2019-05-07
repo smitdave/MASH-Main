@@ -153,7 +153,7 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff)
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_t,file = here::here("sim/PfSI_hom_t.rds"))
@@ -233,7 +233,7 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff)
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_k,file = here::here("sim/PfSI_hom_k.rds"))
@@ -313,7 +313,7 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff)
+  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_j,file = here::here("sim/PfSI_hom_j.rds"))

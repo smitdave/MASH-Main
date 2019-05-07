@@ -102,47 +102,88 @@ pfmoi_het_ts <- readRDS(file = here::here("sim/PfMOI_het.rds"))
 pfsi_hom_ts <- readRDS(file = here::here("sim/PfSI_hom.rds"))
 pfsi_het_ts <- readRDS(file = here::here("sim/PfSI_het.rds"))
 
+# pfmoi
+plot_pfmoi_EIR <- ggplot(data = pfmoi_het_ts) +
+  geom_line(aes(x=time,y=EIR,color=site,group=interaction(site,iter)),alpha=0.05) +
+  scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
+  scale_y_continuous(trans = scales::log1p_trans()) +
+  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+  guides(color = FALSE) +
+  theme_bw()
 
+plot_pfmoi_FOI <- ggplot(data = pfmoi_het_ts) +
+  geom_line(aes(x=time,y=h_hat,color=site,group=interaction(site,iter)),alpha=0.05) +
+  geom_line(aes(x=time,y=h_tilde,color=site,group=interaction(site,iter)),linetype=2,alpha=0.05) +
+  scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
+  scale_y_continuous(trans = scales::log1p_trans()) +
+  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+  guides(color = FALSE) +
+  ylab("FOI") +
+  theme_bw()
 
+plot_pfmoi_aeff <- ggplot(data = pfmoi_het_ts) +
+  geom_line(aes(x=time,y=aeff,color=site,group=interaction(site,iter)),alpha=0.05) +
+  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+  scale_y_log10(breaks = c(2.2, 4.4, 9.5),labels = c("1.7:1","2.7:1","7.4:1")) +
+  scale_x_continuous(breaks = (0:3)*26,labels = as.character(0:3)) +
+  guides(colour = FALSE) +
+  ylab("Transmission Efficiency") +
+  xlab("Time (Years)") +
+  theme_bw()
 
-# fig4a <- ggplot(data = simout_t) +
-#   geom_line(aes(x=time,y=h_hat,group=iter),color="darkred",alpha=0.15) +
-#   geom_line(aes(x=time,y=h_tilde,group=iter),color="firebrick3",alpha=0.15) +
-#   scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
-#   ylab("daily FOI (simulated)") +
-#   ggtitle("b) PfSI: Tororo") +
-#   theme_bw()
-#
-# fig4b <- ggplot(data = simout_k) +
-#   geom_line(aes(x=time,y=h_hat,group=iter),color="darkblue",alpha=0.15) +
-#   geom_line(aes(x=time,y=h_tilde,group=iter),color="steelblue",alpha=0.15) +
-#   scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
-#   ylab("daily FOI (simulated)") +
-#   ggtitle("b) PfSI: Kanungu") +
-#   theme_bw()
-#
-# fig4c <- ggplot(data = simout_j) +
-#   geom_line(aes(x=time,y=h_hat,group=iter),color="darkgreen",alpha=0.15) +
-#   geom_line(aes(x=time,y=h_tilde,group=iter),color="forestgreen",alpha=0.15) +
-#   scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
-#   ylab("daily FOI (simulated)") +
-#   ggtitle("c) PfSI: Jinja") +
-#   theme_bw()
-#
-# # transmission efficiency (4D: FOI normalized by N
-# fig4d <- ggplot(data = simout) +
-#   geom_line(aes(x=time,y=aeff,color=site,group=interaction(iter,site)),alpha=0.15) +
-#   scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
-#   # scale_color_manual(values = c(Tororo="firebrick3",Kanungu="steelblue",Jinja="darkorchid3")) +
-#   # guides(colour = guide_legend(override.aes = list(alpha = 1,size = 2))) +
-#   guides(colour = FALSE) +
-#   scale_y_log10(breaks = c(2.2, 4.4, 9.5),labels = c("1.7:1","2.7:1","7.4:1")) +
-#   scale_x_continuous(breaks = (0:3)*26,labels = as.character(0:3)) +
-#   ylab("Transmission Efficiency") +
-#   xlab("Time (Years)") +
-#   ggtitle("d)") +
-#   theme_bw()
-#
-# fig4 <- grid.arrange(fig4a,fig4b,fig4c,fig4d,nrow=2,ncol=2)
-#
-# ggsave(filename = here::here("figures/pfsi_4.pdf"),plot = fig4,device = "pdf",width = 12,height = 10)
+plot_pfmoi_hom <- ggplot(data = pfmoi_hom_ts) +
+  geom_line(aes(x=time,y=aeff,color=site,group=interaction(site,iter)),alpha=0.05) +
+  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+  # scale_y_log10(breaks = c(2.2, 4.4, 9.5),labels = c("1.7:1","2.7:1","7.4:1")) +
+  scale_x_continuous(breaks = (0:3)*26,labels = as.character(0:3)) +
+  guides(colour = FALSE) +
+  ylab("Transmission Efficiency") +
+  xlab("Time (Years)") +
+  theme_bw()
+
+plot_pfmoi_ts <- grid.arrange(plot_pfmoi_EIR,plot_pfmoi_FOI,plot_pfmoi_aeff,plot_pfmoi_hom,nrow=4)
+
+ggsave(filename = here::here("figures/ts_pfmoi_4.pdf"),plot = plot_pfmoi_ts,device = "pdf",width = 10,height = 14)
+
+# pfsi
+plot_pfsi_EIR <- ggplot(data = pfsi_het_ts) +
+  geom_line(aes(x=time,y=EIR,color=site,group=interaction(site,iter)),alpha=0.05) +
+  scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
+  scale_y_continuous(trans = scales::log1p_trans()) +
+  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+  guides(color = FALSE) +
+  theme_bw()
+
+plot_pfsi_FOI <- ggplot(data = pfsi_het_ts) +
+  geom_line(aes(x=time,y=h_hat,color=site,group=interaction(site,iter)),alpha=0.05) +
+  geom_line(aes(x=time,y=h_tilde,color=site,group=interaction(site,iter)),linetype=2,alpha=0.05) +
+  scale_x_continuous(breaks = (0:3)*26,labels = 0:3,name = "Time (Years)") +
+  scale_y_continuous(trans = scales::log1p_trans()) +
+  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+  guides(color = FALSE) +
+  ylab("FOI") +
+  theme_bw()
+
+plot_pfsi_aeff <- ggplot(data = pfsi_het_ts) +
+  geom_line(aes(x=time,y=aeff,color=site,group=interaction(site,iter)),alpha=0.05) +
+  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+  scale_y_log10(breaks = c(2.2, 4.4, 9.5),labels = c("1.7:1","2.7:1","7.4:1")) +
+  scale_x_continuous(breaks = (0:3)*26,labels = as.character(0:3)) +
+  guides(colour = FALSE) +
+  ylab("Transmission Efficiency") +
+  xlab("Time (Years)") +
+  theme_bw()
+
+plot_pfsi_hom <- ggplot(data = pfsi_hom_ts) +
+  geom_line(aes(x=time,y=aeff,color=site,group=interaction(site,iter)),alpha=0.05) +
+  scale_color_manual(values = c(Tororo="darkred",Kanungu="darkblue",Jinja="darkgreen")) +
+  # scale_y_log10(breaks = c(2.2, 4.4, 9.5),labels = c("1.7:1","2.7:1","7.4:1")) +
+  scale_x_continuous(breaks = (0:3)*26,labels = as.character(0:3)) +
+  guides(colour = FALSE) +
+  ylab("Transmission Efficiency") +
+  xlab("Time (Years)") +
+  theme_bw()
+
+plot_pfsi_ts <- grid.arrange(plot_pfsi_EIR,plot_pfsi_FOI,plot_pfsi_aeff,plot_pfsi_hom,nrow=4)
+
+ggsave(filename = here::here("figures/ts_pfsi_4.pdf"),plot = plot_pfsi_ts,device = "pdf",width = 10,height = 14)
