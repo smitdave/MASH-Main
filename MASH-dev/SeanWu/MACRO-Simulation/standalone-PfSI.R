@@ -23,6 +23,9 @@ library(scales)
 source(here::here("data/sampledata.R"))
 b <- 0.55
 
+# time-step to discretize output for fig2
+DELTAT <- 1
+
 
 ################################################################################
 #   PfSI model needs to burn-in the number of S/I individuals
@@ -109,7 +112,7 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
                        EIR_size = simdat$size,EIR_prob = simdat$prob,pb = FALSE)
 
   # aggregate data into 2-week blocks
-  blocks <- seq(from=0,to=1260,by=14)
+  blocks <- seq(from=0,to=1260,by=DELTAT)
 
   # EIR
   EIR <- rep(0,length(blocks)-1)
@@ -130,7 +133,7 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
     block_t <- (blocks[t]+1):blocks[t+1]
 
     # EIR
-    EIR[t] <- sum(simout$bites[block_t,])/14/N
+    EIR[t] <- sum(simout$bites[block_t,])/DELTAT/N
 
     # standardize by the number of susceptibles at the start of this 2-wk block
     block_sus <- simout$states[block_t[1],] == 0
@@ -138,21 +141,28 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
     S_ix <- which(block_sus)
 
     # FOI (using both denominators)
-    h_hat[t] <- sum(simout$foi[block_t,])/14/N
-    h_hatS[t] <- sum(simout$foi[block_t,])/14/N_S
+    h_hat[t] <- sum(simout$foi[block_t,])/DELTAT/N
+    h_hatS[t] <- sum(simout$foi[block_t,])/DELTAT/N_S
+    
+    # attack rate
+    if(DELTAT == 1){
+      AR[t] <- sum(simout$ar[block_t,S_ix] > 0) / N_S
+    } else {
+      AR[t] <- 1 - (sum(apply(simout$ar[block_t,S_ix],2,function(x){all(x==0)})) / N_S)
+    }
 
     # attack rate (only count amongst proportion of people who started this 2-wk block susceptible)
-    AR[t] <- 1 - (sum(apply(simout$ar[block_t,S_ix],2,function(x){all(x==0)})) / N_S)
+    # AR[t] <- 1 - (sum(apply(simout$ar[block_t,S_ix],2,function(x){all(x==0)})) / N_S)
 
     # estimated FOI
-    h_tilde[t] <- -log(1 - AR[t])/14
+    h_tilde[t] <- -log(1 - AR[t])/DELTAT
 
   }
 
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
+  data.frame(iter=rep(i,length(EIR)),time=blocks[-1],h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_t,file = here::here("sim/PfSI_het_t.rds"))
@@ -189,50 +199,57 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
                        EIR_size = simdat$size,EIR_prob = simdat$prob,pb = FALSE)
 
   # aggregate data into 2-week blocks
-  blocks <- seq(from=0,to=1260,by=14)
-
+  blocks <- seq(from=0,to=1260,by=DELTAT)
+  
   # EIR
   EIR <- rep(0,length(blocks)-1)
-
+  
   # FOI
   h_hat <- h_hatS <-rep(0,length(blocks)-1)
-
+  
   # attack rate
   AR <-rep(0,length(blocks)-1)
-
+  
   # estimated FOI
   h_tilde <-rep(0,length(blocks)-1)
-
+  
   # loop over blocks
   for(t in 1:(length(blocks)-1)){
-
+    
     # aggregate over this
     block_t <- (blocks[t]+1):blocks[t+1]
-
+    
     # EIR
-    EIR[t] <- sum(simout$bites[block_t,])/14/N
-
+    EIR[t] <- sum(simout$bites[block_t,])/DELTAT/N
+    
     # standardize by the number of susceptibles at the start of this 2-wk block
     block_sus <- simout$states[block_t[1],] == 0
     N_S <- sum(block_sus)
     S_ix <- which(block_sus)
-
+    
     # FOI (using both denominators)
-    h_hat[t] <- sum(simout$foi[block_t,])/14/N
-    h_hatS[t] <- sum(simout$foi[block_t,])/14/N_S
-
+    h_hat[t] <- sum(simout$foi[block_t,])/DELTAT/N
+    h_hatS[t] <- sum(simout$foi[block_t,])/DELTAT/N_S
+    
+    # attack rate
+    if(DELTAT == 1){
+      AR[t] <- sum(simout$ar[block_t,S_ix] > 0) / N_S
+    } else {
+      AR[t] <- 1 - (sum(apply(simout$ar[block_t,S_ix],2,function(x){all(x==0)})) / N_S)
+    }
+    
     # attack rate (only count amongst proportion of people who started this 2-wk block susceptible)
-    AR[t] <- 1 - (sum(apply(simout$ar[block_t,S_ix],2,function(x){all(x==0)})) / N_S)
-
+    # AR[t] <- 1 - (sum(apply(simout$ar[block_t,S_ix],2,function(x){all(x==0)})) / N_S)
+    
     # estimated FOI
-    h_tilde[t] <- -log(1 - AR[t])/14
-
+    h_tilde[t] <- -log(1 - AR[t])/DELTAT
+    
   }
-
+  
   # transmission efficiency
   aeff <- h_hat/h_tilde
-
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
+  
+  data.frame(iter=rep(i,length(EIR)),time=blocks[-1],h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_k,file = here::here("sim/PfSI_het_k.rds"))
@@ -269,50 +286,57 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
                        EIR_size = simdat$size,EIR_prob = simdat$prob,pb = FALSE)
 
   # aggregate data into 2-week blocks
-  blocks <- seq(from=0,to=1260,by=14)
-
+  blocks <- seq(from=0,to=1260,by=DELTAT)
+  
   # EIR
   EIR <- rep(0,length(blocks)-1)
-
+  
   # FOI
   h_hat <- h_hatS <-rep(0,length(blocks)-1)
-
+  
   # attack rate
   AR <-rep(0,length(blocks)-1)
-
+  
   # estimated FOI
   h_tilde <-rep(0,length(blocks)-1)
-
+  
   # loop over blocks
   for(t in 1:(length(blocks)-1)){
-
+    
     # aggregate over this
     block_t <- (blocks[t]+1):blocks[t+1]
-
+    
     # EIR
-    EIR[t] <- sum(simout$bites[block_t,])/14/N
-
+    EIR[t] <- sum(simout$bites[block_t,])/DELTAT/N
+    
     # standardize by the number of susceptibles at the start of this 2-wk block
     block_sus <- simout$states[block_t[1],] == 0
     N_S <- sum(block_sus)
     S_ix <- which(block_sus)
-
+    
     # FOI (using both denominators)
-    h_hat[t] <- sum(simout$foi[block_t,])/14/N
-    h_hatS[t] <- sum(simout$foi[block_t,])/14/N_S
-
+    h_hat[t] <- sum(simout$foi[block_t,])/DELTAT/N
+    h_hatS[t] <- sum(simout$foi[block_t,])/DELTAT/N_S
+    
+    # attack rate
+    if(DELTAT == 1){
+      AR[t] <- sum(simout$ar[block_t,S_ix] > 0) / N_S
+    } else {
+      AR[t] <- 1 - (sum(apply(simout$ar[block_t,S_ix],2,function(x){all(x==0)})) / N_S)
+    }
+    
     # attack rate (only count amongst proportion of people who started this 2-wk block susceptible)
-    AR[t] <- 1 - (sum(apply(simout$ar[block_t,S_ix],2,function(x){all(x==0)})) / N_S)
-
+    # AR[t] <- 1 - (sum(apply(simout$ar[block_t,S_ix],2,function(x){all(x==0)})) / N_S)
+    
     # estimated FOI
-    h_tilde[t] <- -log(1 - AR[t])/14
-
+    h_tilde[t] <- -log(1 - AR[t])/DELTAT
+    
   }
-
+  
   # transmission efficiency
   aeff <- h_hat/h_tilde
-
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,h_hatS=h_hatS,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
+  
+  data.frame(iter=rep(i,length(EIR)),time=blocks[-1],h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_j,file = here::here("sim/PfSI_het_j.rds"))
