@@ -68,6 +68,8 @@ Gtprime = as.numeric(Gt[which(is.na(Mosq)==F)])
 plot(log10(Gtprime),Mprime/100,ylab="Proportion of Feeding Mosquitoes Infected",xlab="log10 Gametocyte Density per cmm")
 title(main="Transmission Efficiency as a Function of Gametocyte Density")
 
+par(mfrow=c(2,2))
+
 beta1 = Mprime[which(log10(Gtprime) <= 1)]/100
 logGT1 = pmax(log10(Gtprime)[which(log10(Gtprime) <= 1)],0)
 logGT1mu = log10(mean(10^logGT1[which(logGT1>0)]))
@@ -144,6 +146,8 @@ b7 = beta7fit$estimate[2]
 hist(beta7,breaks=50,freq=F)
 lines(x,dbeta(x,a7,b7))
 beta7var = a7*b7/((a7+b7)^2*(a7+b7+1))
+
+par(mfrow=c(1,1))
 
 betaMeans = c(a1/(a1+b1),a2/(a2+b2),a3/(a3+b3),a4/(a4+b4),a5/(a5+b5),a6/(a6+b6),a7/(a7+b7))
 betaVars = c(beta1var,beta2var,beta3var,beta4var,beta5var,beta6var,beta7var)
@@ -254,7 +258,7 @@ w = seq(0,5,.01)
 plot(z,muz,xlim=c(0,4.5),ylim=c(0,.9),ylab="Proportion of Mosquitoes Infected", xlab="log10 Gametocyte Density per Microliter", main="Transmission Efficiency")
 lines(w,sigmoidTE(w,p1,p2,p3))
 
-abline(h = p1)
+abline(h = p1,lty=2)
 
 resid = muz - sigmoidTE(z,p1,p2,p3)
 hist(resid,breaks = 10)

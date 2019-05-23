@@ -14,7 +14,9 @@ plot(log10(M[,n]),type="l",xlim=c(0,300),ylim=c(0,5),xlab="Days",ylab="log10 Par
 lines(log10(G[,n]),type="l",xlim=c(0,300),ylim=c(0,5),col="red")
 title(main="Example Infection")
 
-rm = rowMeans(M,na.rm=T)
+MP = M
+MP[which(MP==0)] = NaN
+rm = rowMeans(MP,na.rm=T)
 
 ##
 ##
@@ -25,42 +27,49 @@ plot(log10(rm),type="l",xlim=c(0,365),xlab="Days Since First Detectable",ylab="l
 title(main="Daily Mean Parasite Densities")
 #abline(h=log10(5),lty=2)
 
-G[which(G==0)] = NaN
-rmg = rowMeans(G,na.rm=T)
+GP = G
+GP[which(GP==0)] = NaN
+rmg = rowMeans(GP,na.rm=T)
 lines(log10(rmg),col="red")
 
-ccf(rm[4:225],rmg[4:225],lag.max=20,type="correlation")
+ccf(rm[4:225],rmg[4:225],lag.max=25,type="correlation",ylim=c(0,1),ylab="Correlation",xlab="Lag (Days)", main="CCF of Asexuals to Gametocytes")
+abline(h=1)
 plot(log10(rm[1:233]),type="l",ylim=c(0,5))
 lines(log10(rmg[9:241]),col="red")
+plot(log10(rm[4:200]),log10(rmg[12:208]),xlab="log10 Asexual Densities (Parasites per Microliter), 8 Days Lagged",ylab="log10 Gametocyte Densities (Parasites per Microliter)",main="Comparison of Lagged Asexxual to Gametocyte Densities")
 
 rms = rm[1:233]
 rmgs = rmg[9:241]
 plot(log10(rms),log10(rmgs),xlab="Lagged Asexuals",ylab="Gametocytes")
+#pgpl = lm(log10(rmgs)~log10(rms))
+#ttt = seq(-2,5,.01)
+#lines(ttt,pgpl$coefficients[1]+pgpl$coefficients[2]*ttt)
 
 #hist(log10(M[100,]))
-hist(log10(colMeans(M[1:7,],na.rm=T)),breaks=20,xlim=c(0,5.5))
-hist(log10(colMeans(M[30:36,],na.rm=T)),breaks=20,xlim=c(0,5.5))
-hist(log10(colMeans(M[70:76,],na.rm=T)),breaks=20,xlim=c(0,5.5))
-hist(log10(colMeans(M[110:116,],na.rm=T)),breaks=20,xlim=c(0,5.5))
-hist(log10(colMeans(M[160:166,],na.rm=T)),breaks=20,xlim=c(0,5.5))
-hist(log10(colMeans(M[200:206,],na.rm=T)),breaks=10,xlim=c(0,5.5))
+hist(log10(colMeans(MP[1:7,],na.rm=T)),breaks=15,xlim=c(0,5.5))
+hist(log10(colMeans(MP[30:36,],na.rm=T)),breaks=15,xlim=c(0,5.5))
+hist(log10(colMeans(MP[70:76,],na.rm=T)),breaks=10,xlim=c(0,5.5))
+hist(log10(colMeans(MP[110:116,],na.rm=T)),breaks=10,xlim=c(0,5.5))
+hist(log10(colMeans(MP[160:166,],na.rm=T)),breaks=10,xlim=c(0,5.5))
+hist(log10(colMeans(MP[200:206,],na.rm=T)),breaks=5,xlim=c(0,5.5))
 
 MV = matrix(0,nrow=30,ncol=length(M[1,]))
+MV[which(MV==0)] = NaN
 for(i in 1:30){
-  MV[i,] = colMeans(M[(30*(i-1)+1):(30*i),],na.rm=T)
+  MV[i,] = colMeans(MP[(30*(i-1)+1):(30*i),],na.rm=T)
 }
 
 MV[which(MV==0)] = NaN
 
 vioplot(log10(na.omit(MV[1,])),log10(na.omit(MV[2,])),log10(na.omit(MV[3,])),log10(na.omit(MV[4,])),log10(na.omit(MV[5,])),log10(na.omit(MV[6,])),log10(na.omit(MV[7,])),
         ylim=c(0,5.2),col="lightblue")
-title(main = "Violin Plot of Monthly Mean Patent Asexual Parasite Densities", xlab="Months Post-Infection",ylab="Mean log10 Parasite Density per microliter")
-abline(h=log10(88))
+title(main = "Violin Plot of Monthly Mean Patent Asexual Parasite Densities", xlab="Months Post-Infection",ylab="log10 Mean Parasite Density per microliter")
+abline(h=log10(88),lty=2)
 abline(h=log10(8),lty=2)
 
 GV = matrix(0,nrow=30,ncol=length(G[1,]))
 for(i in 1:30){
-  GV[i,] = colMeans(G[(30*(i-1)+1):(30*i),],na.rm=T)
+  GV[i,] = colMeans(GP[(30*(i-1)+1):(30*i),],na.rm=T)
 }
 
 GV[which(GV==0)] = NaN
@@ -113,11 +122,12 @@ CDFsurv = function(x){
   1-exp(-lambda*x)
 }
 
-plot(1:length(Ndays),Ndays,type="s")
+plot(1:length(Ndays),Ndays,type="s",xlab="Days",ylab="Probability",main="Duration of Infection, Empirical and Exponential CDFs")
 
 t = 0:250
 lines(t,CDFsurv(t))
 
+ks.test(Ndays,pexp)
 
 hist(N,breaks=30)
 
@@ -148,7 +158,8 @@ plot(mu,var,xlab="Mean of log10 Parasites per microliter",ylab="Variance of log1
 x = seq(0,5,.01)
 lines(x,lin(x))
 lines(x,linWeighted(x),col="blue")
-abline(v=log10(88),lty=2)
+#abline(v=log10(88),lty=2)
+#abline(v=log10(8))
 title(main="Mean-Variance Power Law for Asexual Parasitemia")
 
 
@@ -292,8 +303,8 @@ lines(seq(-1,5,.01),fg(seq(-1,5,.01)))
 
 ##restrict to larger than ~88 parasites per microliter for both gametocytes and asexuals
 
-rmdp = rmd[which(grmd>2.3)]
-grmdp = grmd[which(grmd>2.3)]
+rmdp = 10^rmd[which(grm>1.8)]
+grmdp = grmd[which(grm>1.8)]
 plot(rmdp,grmdp,xlab="8 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
 title(main="Lagged Power Law Relationship")
 ptgtp = lm(grmdp~rmdp)
@@ -340,7 +351,7 @@ fgpl = function(x){
     return(y)
 }
 
-plot(rmd,grmd,xlab="9 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
+plot(log10(rm[12:208]),log10(grm[4:200]),xlab="9 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
 title(main="Lagged Power Law Relationship")
 lines(seq(-1,5,.01),fgpl(seq(-1,5,.01)))
 

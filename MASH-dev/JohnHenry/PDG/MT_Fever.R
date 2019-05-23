@@ -32,12 +32,24 @@ BinaryFever = (Fever>37)
 PropFever = rowMeans(BinaryFever,na.rm=T)
 plot(PropFever[1:365],type="l",ylim=c(0,1),xlab="Days Since Patency", ylab="Proportion with Fever",main="Daily Prevalence of Fever Conditioned on Infection")
 
-plot(rm[1:365],type="l",ylim=c(0,5))
+plot(log10(rm[1:365]),type="l",ylim=c(0,5))
 lines(PropFever[1:365])
 ccf(PropFever[1:200],log10(rm[1:200]))
 cor(PropFever[1:200],log10(rm[1:200]))
-plot(log10(rm[1:200]),PropFever[1:200])
-plot(log10(rm[1:200]),PropFever[1:200]/(1-PropFever[1:200]),xlab="Log10 Mean Asexual Densities",ylab="Odds Ratio of Fever",main="Odds Ratio of Fever for Given Mean Parasite Density")
+plot(log10(rm[1:200]),PropFever[1:200],xlab="log10 Mean Asexual Densities",ylab="Proability of Fever",main="Probability of Fever Given Asexual Parasite Density")
+
+aa = log10(rm[1:200])
+bb = PropFever[1:200]
+sigfitfev = nls(bb~p1*exp(p2*aa)/(p3+exp(p2*aa)),start=list(p1=.5,p2=.5,p3=10))
+p1 = .8953
+p2 = 3.449
+p3 = 5.819*10^4
+sigmoidFev = function(x,p1,p2,p3){
+  p1*exp(p2*x)/(p3+exp(p2*x))
+}
+lines(seq(1,5,.01),sigmoidFev(seq(1,5,.01),p1,p2,p3))
+
+plot(log10(rm[1:200]),log10(PropFever[1:200]/(1-PropFever[1:200])),xlab="Log10 Mean Asexual Densities",ylab="Odds Ratio of Fever",main="Odds Ratio of Fever for Given Mean Parasite Density")
 
 plot(log10(rm[1:200]),log10(PropFever[1:200]/(1-PropFever[1:200])),xlab="Log10 Mean Asexual Density", ylab="log10 Odds Ratio of Fever", main="Log Odds Ratio of Fever for Given Mean Parasite Density")
 
@@ -57,13 +69,14 @@ FeverF[which(FeverF<90)]=NaN
 
 MFeverF = rowMeans(t(FeverF),na.rm=T)
 plot(MFeverF,type="l",xlab="Days",ylab="Temperature (Degrees Fahrenheit)",main="Mean Temperature Given Fever")
+plot(log10(rm)[1:200],MFeverF[1:200],xlab="log10 Asexual Density",ylab="Temperature (Degrees F) Given Fever",main="Asexual Parsite Densities vs Fever Severity")
 hist(MFeverF,freq=F,xlab="Temperature (Degrees Fahrenheit)",main="Temperature Given Fever")
 muhat = mean(MFeverF,na.rm=T)
 sigmahat = var(MFeverF,na.rm=T)
 temp = seq(100,106,.1)
 lines(temp,dnorm(temp,mean=muhat,sd = sqrt(sigmahat)))
 
-qqnorm((MFeverF-muhat)/sqrt(sigmahat))
+qqnorm((MFeverF-muhat)/sqrt(sigmahat),main="Normal Q-Q Plot for Fever Severity")
 lines(seq(-3,3,.1),seq(-3,3,.1))
 
 

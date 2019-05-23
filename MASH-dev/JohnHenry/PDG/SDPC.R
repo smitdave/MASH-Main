@@ -1,11 +1,12 @@
 
-Tmax = 2000
-Reps = 100000
+Tmax = 10000
+Reps = 1000
 xd = matrix(rep(0,Tmax*Reps),nrow=Tmax,ncol=Reps)
-x0 = 50
+x0 = 100
 xd[1,] = x0
-lambdaB = 10
-lambdaD = 4
+lambdaB = 8
+lambdaD = 2
+epsilon = .01
 pB = lambdaB/(lambdaB+lambdaD)
 
 ## This is for the population; this is what Anderson showed
@@ -22,10 +23,14 @@ for(i in 1:(Tmax-1)){
   pB = lambdaB/(lambdaB+lambdaD)
   B = rbinom(1,1,pB)
   if(B==1){
-    xd[i+1,] = xd[i,] + rgamma(Reps,lambdaB,lambdaD)
+#    xd[i+1,] = xd[i,] + rgamma(Reps,15,2)
+    for(j in 1:Reps){
+      N = rpois(1,lambdaB)
+      xd[i+1,j] = xd[i,j] + ifelse(N==0,0,sum(rgamma(N,15,2)))
+    }
   }
   if(B==0){
-    xd[i+1,] = rbeta(Reps,lambdaB,lambdaD)*xd[i,]
+    xd[i+1,] = min(abs(rnorm(1,1-pB,sqrt(pB*(1-pB)))),1)*xd[i,]#rbeta(Reps,lambdaB,lambdaD)*xd[i,]
   }
 }
 
@@ -33,7 +38,7 @@ for(i in 1:(Tmax-1)){
 ## plot one trajectory to see it makes sense
 
 plot(xd[,1],type="l")
-hist(xd[,1],breaks=30)
+hist(xd[,1],breaks=50)
 hist(log10(xd[,1]),breaks=30)
 
 plot(log10(xd[,1]),type="l")
@@ -61,8 +66,8 @@ for(i in 1:Tmax){
 plot(mud,type="l")
 plot(log10(mud),type="l")
 plot(log10(mud),log10(vard))
-pl = lm(log10(vard[2:1000])~log10(mud[2:1000]))
-t = seq(0,3,.01)
+pl = lm(log10(vard[6:Tmax])~log10(mud[6:Tmax]))
+t = seq(-5,5,.01)
 lines(t,pl$coefficients[1]+pl$coefficients[2]*t)
 hist(pl$residuals,freq=F,breaks=20)
 hist(10^pl$residuals,freq=F,breaks=20)

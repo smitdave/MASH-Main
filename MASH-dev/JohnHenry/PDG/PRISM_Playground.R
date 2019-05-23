@@ -1,4 +1,5 @@
 PRISM <- read.csv('PRISM_Data.csv',header=TRUE)
+library('fitdistrplus')
 
 ## Parasite Density Detected
 PD = PRISM$parsdens
@@ -12,7 +13,7 @@ max(Hb,na.rm=T)
 Hb[which(Hb>25)] = NaN
 
 
-plot(log10(PD),Hb,ylim=c(5,15),xlab="Parasite Denisty",ylab="Hemoglobin Reading")
+plot(log10(PD),Hb,ylim=c(5,15),xlab="Parasite Denisty",ylab="Hemoglobin Reading",main="Hb Concentration as a Function of Parasitemia")
 abline(h=c(7,10,11))
 
 muHb = rep(0,140)
@@ -23,7 +24,7 @@ for(i in 0:139){
   muHb[i+1] = mean(Hbi,na.rm=T)
 }
 ss = seq(2,5.475,.025)
-plot(ss,muHb,xlab="Log10 Parasite Density",ylab="Hb Measurement",main="Hemoglobin as a Function of Parasitemia")
+plot(ss,muHb,xlab="Log10 Parasite Density",ylab="Hb Measurement",main="Hemoglobin as a Function of Parasitemia (Rolling Average)")
 
 lm(muHb~ss)
 lines(ss,-.135*ss+10.381)
@@ -74,7 +75,7 @@ pnorm(7,mean=infectedMu,sd=infectedSd)
 
 plot(t,dnorm(t,healthyMu,healthySd),type="l",xlim=c(4,16),ylim=c(0,.35),xlab="Measured Hb",ylab="Probability Density",main="Hb Measurements Stratified by Infection Status")
 lines(t,dnorm(t,infectedMu,infectedSd),col="red")
-
+abline(v=c(7,10,11),lty=2)
 
 ################# Stratify by Sex
 
@@ -85,18 +86,47 @@ infectedMaleHb = HbInfected[which(BinSex==1)]
 infectedFemaleHb = HbInfected[which(BinSex==0)]
 
 par(mfrow=c(2,2))
-hist(healthyMaleHb,freq=F,xlim=c(5,15),ylim=c(0,.35),breaks=30)
-abline(v=c(7,10,11))
-hist(healthyFemaleHb,freq=F,xlim=c(5,15),ylim=c(0,.35),breaks=30)
-abline(v=c(7,10,11))
-hist(infectedMaleHb,freq=F,xlim=c(5,15),ylim=c(0,.35),breaks=30)
-abline(v=c(7,10,11))
-hist(infectedFemaleHb,freq=F,xlim=c(5,15),ylim=c(0,.35),breaks=30)
-abline(v=c(7,10,11))
+hist(healthyMaleHb,freq=F,xlim=c(5,15),ylim=c(0,.35),breaks=30,xlab="Measured Hb (g/dl)",main="Healthy Males")
+abline(v=c(7,10,11),col='blue')
+hist(healthyFemaleHb,freq=F,xlim=c(5,15),ylim=c(0,.35),breaks=30,xlab="Measured Hb (g/dl)",main="Healthy Females")
+abline(v=c(7,10,11),col='pink')
+hist(infectedMaleHb,freq=F,xlim=c(5,15),ylim=c(0,.35),breaks=30,xlab="Measured Hb (g/dl)",main="Infected Males")
+abline(v=c(7,10,11),col='blue')
+hist(infectedFemaleHb,freq=F,xlim=c(5,15),ylim=c(0,.35),breaks=30,xlab="Measured Hb (g/dl)",main="Infected Females")
+abline(v=c(7,10,11),col='pink')
 par(mfrow=c(1,1))
 
 maleHb = Hb[which(BinSex==1)]
 femaleHb = Hb[which(BinSex==0)]
+
+
+healthyFitMale = fitdist(healthyMaleHb[which(!is.na(healthyMaleHb))],distr="norm",method="mle")
+healthyFitFemale = fitdist(healthyFemaleHb[which(!is.na(healthyFemaleHb))],distr="norm",method="mle")
+infectedFitMale = fitdist(infectedMaleHb[which(!is.na(infectedMaleHb))],distr="norm",method="mle")
+infectedFitFemale = fitdist(infectedFemaleHb[which(!is.na(infectedFemaleHb))], distr="norm",method="mle")
+
+HMmu = healthyFitMale$estimate[1]
+HMsd = healthyFitMale$estimate[2]
+HFmu = healthyFitFemale$estimate[1]
+HFsd = healthyFitFemale$estimate[2]
+IMmu = infectedFitMale$estimate[1]
+IMsd = infectedFitMale$estimate[2]
+IFmu = infectedFitFemale$estimate[1]
+IFsd = infectedFitFemale$estimate[2]
+
+par(mfrow=c(2,1))
+plot(t,dnorm(t,HMmu,HMsd),type="l",col="blue",xlab="Measured Hb",ylab="Probability",xlim=c(4,16),main="Healthy Males and Females")
+lines(t,dnorm(t,HFmu,HFsd),type="l",col="pink")
+plot(t,dnorm(t,IMmu,IMsd),type="l",col="blue",xlim=c(4,16),main="Infected Males and Females",xlab="Measured Hb",ylab="Probability")
+lines(t,dnorm(t,IFmu,IFsd),type="l",col="pink")
+par(mfrow=c(1,1))
+
+par(mfrow=c(2,2))
+hist(PRISM$age[which(PRISM$gender=='Male'&BinMicro==0)],breaks=50,freq=F,xlab='Age (in Years)',main="Healthy  Males")
+hist(PRISM$age[which(PRISM$gender=='Female'&BinMicro==0)],breaks=50,freq=F,xlab='Age (in Years)',main='Healthy Females')
+hist(PRISM$age[which(PRISM$gender=='Male'&BinMicro==1)],breaks=50,freq=F,xlab='Age (in Years)',main="Infected Males")
+hist(PRISM$age[which(PRISM$gender=='Female'&BinMicro==1)],breaks=50,freq=F,xlab='Age (in Years)',main="Infected Females")
+par(mfrow=c(1,1))
 
 ##Difference by Infection Status in Males
 t.test(maleHb~BinMicro[which(BinSex==1)])
@@ -241,7 +271,7 @@ par(mfrow=c(2,2))
 hist(healthyFemaleHb[which(healthyFemaleAge<2)],main="Healthy Females Under 2",xlim=c(6,15),freq=F,ylim=c(0,.45),xlab="Hb Concentration (g/dl)")
 hist(healthyFemaleHb[which(healthyFemaleAge>=2 & healthyFemaleAge<4)],main="Healthy Females Between 2 and 4",xlim=c(6,15),freq=F,ylim=c(0,.45),xlab="Hb Concentration (g/dl)")
 hist(healthyFemaleHb[which(healthyFemaleAge>=4 & healthyFemaleAge<6)],main="Healthy Females Between 4 and 6",xlim=c(6,15),freq=F,ylim=c(0,.45),xlab="Hb Concentration (g/dl)")
-hist(healthyFemaleHb[which(healthyFemaleAge>=6 & healthyFemaleAge<8)],main="Healthy Females Between 6 and 8",xlim=c(6,15),freq=F,ylim=c(0,.45),xlab="Hb Concentration (g/dl)")
+hist(healthyFemaleHb[which(healthyFemaleAge>=6 & healthyFemaleAge<8)],main="Healthy Females Between 6 and 8",xlim=c(6,15),freq=F,ylim=c(0,.45),xlab="Hb Concentration (g/dl)",breaks=5)
 par(mfrow=c(1,1))
 
 par(mfrow=c(2,2))
@@ -255,7 +285,7 @@ par(mfrow=c(2,2))
 hist(healthyMaleHb[which(healthyMaleAge<2)],main="Healthy Males Under 2",xlim=c(6,15),freq=F,ylim=c(0,.45),breaks=20,xlab="Hb Concentration (g/dl)")
 hist(healthyMaleHb[which(healthyMaleAge>=2 & healthyMaleAge<4)],main="Healthy Males Between 2 and 4",xlim=c(6,15),freq=F,ylim=c(0,.45),xlab="Hb Concentration (g/dl)")
 hist(healthyMaleHb[which(healthyMaleAge>=4 & healthyMaleAge<6)],main="Healthy Males Between 4 and 6",xlim=c(6,15),freq=F,ylim=c(0,.45),xlab="Hb Concentration (g/dl)")
-hist(healthyMaleHb[which(healthyMaleAge>=6 & healthyMaleAge<8)],main="Healthy Males Between 6 and 8",xlim=c(6,15),freq=F,ylim=c(0,.45),xlab="Hb Concentration (g/dl)")
+hist(healthyMaleHb[which(healthyMaleAge>=6 & healthyMaleAge<8)],main="Healthy Males Between 6 and 8",xlim=c(6,15),freq=F,ylim=c(0,.45),xlab="Hb Concentration (g/dl)",breaks=5)
 par(mfrow=c(1,1))
 
 par(mfrow=c(2,2))
@@ -369,7 +399,7 @@ abline(h=c(10,11),lty=2)
 par(mfrow=c(1,1))
 
 
-plot(ageSub,mf(ageSub,Hb0HF,aHF,bHF)-mf(ageSub,Hb0IF,aIF,bIF),type="l",col="red",ylim=c(0,1),xlab="Age (in Years)",ylab="Drop in Mean Hb Concentration (g/dl)",main="Difference in Mean Hb Concentration by Infection Status")
+plot(ageSub,mf(ageSub,Hb0HF,aHF,bHF)-mf(ageSub,Hb0IF,aIF,bIF),type="l",col="pink",ylim=c(0,1),xlab="Age (in Years)",ylab="Drop in Mean Hb Concentration (g/dl)",main="Drop in Mean Hb Concentration With Infection by Sex")
 lines(ageSub,mf(ageSub,Hb0HM,aHM,bHM)-mf(ageSub,Hb0IM,aIM,bIM),col="blue")
 lines(ageSub,(mf(ageSub,Hb0HF,aHF,bHF)-mf(ageSub,Hb0IF,aIF,bIF))-(mf(ageSub,Hb0HM,aHM,bHM)-mf(ageSub,Hb0IM,aIM,bIM)),lty=2)
 ## This is explained by the difference in baseline healthy Hb levels by sex
@@ -459,8 +489,7 @@ compare=matrix(c(HealthyMale,InfectedMale,HealthyFemale,InfectedFemale),nrow=4)
 barplot(t(compare),beside=T)
 
 
-par(mfrow=c(2,2))
-plot(PRISM$age[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))]*12,PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))],xlab="Age (in Months)",ylab="Hb Concentration (g/dl)",ylim=c(5,18))
+plot(PRISM$age[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))]*12,PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))],xlab="Age (in Months)",ylab="Hb Concentration (g/dl)",ylim=c(5,18),main="Healthy Infants")
 HealthyNeonateHb = PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))]
 HealthyNeonateAge = PRISM$age[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$parsdens)|PRISM$parsdens==0))]*12
 nls(HealthyNeonateHb~a/b*(1-exp(-b*HealthyNeonateAge))+Hb0*exp(-b*HealthyNeonateAge),start=list(a=.2,b=.05,Hb0=16))
@@ -476,11 +505,14 @@ HealthyNeonateSex = PRISM$gender[which(PRISM$age<.5&PRISM$hb<100&(is.na(PRISM$pa
 HealthyNeonateSex=as.numeric(HealthyNeonateSex)
 
 ### Healthy Neonates By Sex
-#plot(HealthyNeonateAge[which(HealthyNeonateSex==1)],HealthyNeonateHb[which(HealthyNeonateSex==1)],ylim=c(6,18))
-#points(HealthyNeonateAge[which(HealthyNeonateSex==0)],HealthyNeonateHb[which(HealthyNeonateSex==0)],ylim=c(6,18),col="red")
+plot(HealthyNeonateAge[which(HealthyNeonateSex==1)],HealthyNeonateHb[which(HealthyNeonateSex==1)],ylim=c(6,18))
+points(HealthyNeonateAge[which(HealthyNeonateSex==0)],HealthyNeonateHb[which(HealthyNeonateSex==0)],ylim=c(6,18),col="red")
 
+### Infected Neonates By Sex - no apparent outstanding difference
+plot(InfectedNeonateAge[which(InfectedNeonateSex==1)],InfectedNeonateHb[which(InfectedNeonateSex==1)],xlim=c(0,6),ylim=c(4,18))
+points(InfectedNeonateAge[which(InfectedNeonateSex==0)],InfectedNeonateHb[which(InfectedNeonateSex==0)],col="red")
 
-plot(PRISM$age[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]*12,PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)],xlab="Age (in Months)",ylim=c(5,18),xlim=c(0,6))
+plot(PRISM$age[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]*12,PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)],ylim=c(5,18),xlim=c(0,6),xlab="Age (in Months)",ylab="Hb Concentration (g/dl)",main="Infected Infants")
 InfectedNeonateHb = PRISM$hb[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]
 InfectedNeonateAge = PRISM$age[which(PRISM$age<.5&PRISM$hb<100&PRISM$parsdens>0)]*12
 nls(InfectedNeonateHb~a/b*(1-exp(-b*InfectedNeonateAge))+Hb0HN*exp(-b*InfectedNeonateAge),start=list(a=.2,b=.02))
@@ -532,7 +564,13 @@ HbModel = function(age,sex,IS){
 }
 
 x = seq(0,8,1/12)
-plot(x,HbModel(x,'Male','Healthy'),type="l",ylim=c(9,12))
-lines(x,HbModel(x,'Female','Healthy'),lty=2)
-lines(x,HbModel(x,'Male','Infected'),col="red")
-lines(x,HbModel(x,'Female','Infected'),col="red",lty=2)
+plot(x,HbModel(x,'Male','Healthy'),type="l",ylim=c(9,12),xlab="Age (in Years)",ylab="Mean Hemoglobin Concentration (g/dl)",main="Hemoglobin Concentration by Age and Infection Status",col='blue')
+lines(x,HbModel(x,'Female','Healthy'),col='red')
+lines(x,HbModel(x,'Male','Infected'),col="blue")
+lines(x,HbModel(x,'Female','Infected'),col="red")
+
+
+
+################ Hemoglobinopathy data
+
+#PRISMHbPath <- read.csv('PRISMHbPath.csv',header=TRUE)
