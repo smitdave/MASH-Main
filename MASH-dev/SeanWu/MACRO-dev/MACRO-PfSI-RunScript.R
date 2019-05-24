@@ -132,7 +132,7 @@ mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(50,nrow = 365,ncol = n),
                                  psi = diag(n),EIP = rep(11,365),M = rep(450,n),Y = rep(0,n),Z = rep(0,n))
 
 # humans
-nh <- rep(500,n)
+nh <- rep(1e4,n)
 pfpr <- rep(0.5,n)
 
 init_state <- c(sample(x = c("I","S"),size = nh,replace = T,prob = c(pfpr[1],1-pfpr[1])))
