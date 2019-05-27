@@ -23,7 +23,7 @@ PDGHuman <- R6Class("PDGHuman",
                      private$pgv = .2704 ## sample variance of residuals of asexual-to-gametocyte power law fit
                      private$gm = 1.652 ## slope of log10 mean-variance power law for gametocytes
                      private$gb = 1.662 ## y intercept of log10 mean-variance power law for gametocytes
-                     
+
                      private$gdk = log10(.7) ## about 70 percent of Gt die over 2 weeks (halflife around 10 days); this determines lingering gametocyte densities if asexuals disappear first
                      private$pfdr = .75 ## small rate at which old infections are removed (this sets a 10 percent chance per fortnight of clearing subpatent infection; this is by wild unmotivated assumption, not fitted)
                      ## ***** ^^^^^ This is still an unknown parameter *****
@@ -37,7 +37,7 @@ PDGHuman <- R6Class("PDGHuman",
                      #smoothed: c(0,4.639315,2.714693,2.796321,2.879157,2.963203,3.048457,3.134921,3.222594,3.311476,3.401567,3.492868,3.585377,3.679095,3.774023,3.870160,3.967505,4.066060,4.165824,4.266797,4.368979,4.472371,4.576971,4.682781,4.789799,4.898027,5.007464,5.007464)
                      private$Ptrate = c(0,4.008275,1.539217,1.612759,1.756409,1.907544,2.034369,1.949314,2.043045,2.571400,1.800733,2.482635,2.385546,3.573325,3.135033,2.244577,2.825106,3.004125,2.390421,2.198324,2.916877,1.992531,1.051514,1.572928,1.460975,1.294750,2.077740,2.618999)
                      #smoothed: c(0,4.008275,1.928354,1.957131,1.985908,2.014685,2.043462,2.072239,2.101016,2.129793,2.158569,2.187346,2.216123,2.244900,2.273677,2.302454,2.331231,2.360008,2.388784,2.417561,2.446338,2.475115,2.503892,2.532669,2.561446,2.590223,2.618999,2.618999)
-                     
+
                      private$Imm = 0
                      private$immCounter = 0
                      private$immHalf = 3.5246
@@ -49,12 +49,12 @@ PDGHuman <- R6Class("PDGHuman",
                      private$feverHalf = 3.5246
                      private$feverSlope = 3.038
                      private$feverMax = .8835
-                     
+
                      private$TE = 0
                      private$TEHalf = 2.3038
                      private$TESlope = 3.5524
                      private$TEMax = .4242
-                     
+
                      private$LMHalf = 2
                      private$LMSlope = 3
                      private$LMMax = .9
@@ -95,7 +95,7 @@ PDGHuman <- R6Class("PDGHuman",
                      self$update_MOI()
                      self$update_TE()
                      self$update_pFever()
-                     
+
                      self$update_Age(dt)
 
                      self$update_History()
@@ -116,12 +116,12 @@ PDGHuman <- R6Class("PDGHuman",
                         private$Pf = private$Pf - subs ## remove the newly subpatent infections
                         private$Pf[private$pfAges] = private$Pf[private$pfAges]+sum(subs) ## add the subpatent infections to oldest age group
                      }
-                     
+
                      ## shifts to next age group
                      private$Pf = private$A %*% private$Pf
 
                    },
-                   
+
                    update_Pt = function(){
 
                      private$Pt = 0
@@ -136,7 +136,7 @@ PDGHuman <- R6Class("PDGHuman",
                      ## include immune effect
                      ## this is a stub; here we just discount Pt by at most 99 percent
                      private$Pt = log10((1-.99*private$Imm)*10^private$Pt)
-                     
+
                      if(private$MOI == 0){
                        private$Pt = NaN
                      }
@@ -145,7 +145,7 @@ PDGHuman <- R6Class("PDGHuman",
                    },
 
                    update_Gt = function(){
-                     
+
                      ## use power law to translate from Pt to Gt; add unbiased noise due to uncertainty in P2G fit
                      if((sum(private$Pf,na.rm=T) > 0) ){
                        private$Gt = private$pgm*private$Pt + private$pgb
@@ -174,30 +174,30 @@ PDGHuman <- R6Class("PDGHuman",
                      private$Imm = self$sigmoid(private$immCounter,private$immHalf,private$immSlope)
 
                    },
-                   
+
                    update_TE = function(){
-                     
+
                      ## scaled sigmoid signal; Gametocytes assumed to encode TE
                      private$TE = private$TEMax*self$sigmoidexp(private$Gt,private$TEHalf,private$TESlope)
-                     
+
                    },
-                   
+
                    update_pFever = function(){
-                     
+
                      private$pFever = private$feverMax*self$sigmoidexp(private$Pt,private$feverHalf,private$feverSlope)
-                       
+
                    },
-                   
+
                    update_Age = function(dt){
                      private$age = private$age+dt
                    },
-                   
+
                    ## light microscopy - a function that can be called from the human object, will calculate a probability of testing positive using
                    ## asexual densities, then pull a random number with that probability of success. Returns 0/1 for negative/positive
                    LM = function(){
                      p = 0
                      if(private$Pt>0){
-                        p = (private$LMMAx-private$LMMin)*self$sigmoidexp(private$Pt,private$LMHalf,private$LMSlope)+private$LMMin 
+                        p = (private$LMMAx-private$LMMin)*self$sigmoidexp(private$Pt,private$LMHalf,private$LMSlope)+private$LMMin
                      }
                      test = rbinom(1,1,p)
                      return(test)
@@ -276,7 +276,7 @@ PDGHuman <- R6Class("PDGHuman",
                    get_MOI = function(){
                      private$MOI
                    },
-                   
+
                    get_TE = function(){
                      private$TE
                    },
@@ -293,7 +293,7 @@ PDGHuman <- R6Class("PDGHuman",
                    sigmoid = function(x,xhalf,b){
                      (x/xhalf)^b/((x/xhalf)^b+1)
                    },
-                   
+
                    ## exponential sigmoid function, defined over whole real line
                    sigmoidexp = function(x,xhalf,b){
                      exp(x*b)/(exp(x*b)+exp(xhalf*b))
@@ -365,13 +365,13 @@ PDGHuman <- R6Class("PDGHuman",
                    feverHalf = NULL, ## half maximum prob of fever, sigmoid param
                    feverSlope = NULL, ## slope of prob of fever conversion, sigmoid param
                    feverMax = NULL, ## maximum prob of fever, sigmoid scaling param
-                   
+
                    ## Infectivity
                    TE = NULL, ## transmission efficiency
                    TEHalf = NULL, ## half maximum transmission efficiency, sigmoid param
                    TESlope = NULL, ## slope of gametocyte to TE conversion, sigmoid param
                    TEMax = NULL, ## maximum transmission efficiency, sigmoid scaling
-                   
+
                    ## Diagnostics - Light Microscopy
                    LMHalf = NULL, ## Asexual density that gives 50 percent change of testing positive by Light Microscopy
                    LMSlope = NULL, ## slope of sigmoid converting Asexual density to probability of testing positive
