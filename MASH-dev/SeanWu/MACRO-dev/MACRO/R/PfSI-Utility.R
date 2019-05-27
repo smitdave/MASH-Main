@@ -29,6 +29,8 @@
 #' 
 pfsi_human_output <- function(h_inf, tmax, dx = 1, pb = TRUE){
   
+  nh <- length(unique(h_inf$humanID))
+  
   time <- h_inf$time
   state0 <- h_inf$state0
   state1 <- h_inf$state1
@@ -42,13 +44,17 @@ pfsi_human_output <- function(h_inf, tmax, dx = 1, pb = TRUE){
   # tmax <- ceiling(tail(time,1))
   
   state_init <- c("S"=0,"I"=0,"P"=0,"F"=0,"PEvaxx"=0,"GSvaxx"=0,"PEwane"=0,"GSwane"=0)
-  
+    
+  state_init["S"] <- nh
   i <- 1
   while(time[i] <= 0){
-    state_init[state1[i]] <- state_init[state1[i]] + 1
+    if(state1[i] != "S"){
+      state_init["S"] <- state_init["S"] - 1
+      state_init[state1[i]] <- state_init[state1[i]] + 1
+    }
     i <- i + 1
   }
-  
+
   # vector of time bins
   # time_dx <- c(0,seq(from=1,to=tmax+1,by=dx))
   time_dx <- c(0,seq(from=dx,to=(tmax+dx),by=dx))

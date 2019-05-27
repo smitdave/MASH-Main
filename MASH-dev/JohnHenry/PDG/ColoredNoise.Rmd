@@ -1,0 +1,70 @@
+---
+title: "Colored Noise"
+author: "John M Henry"
+date: "April 22, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## White Noise
+
+The first type of noise most people encounter is white noise. For white noise, every point in time has a draw from a normally distributed random variable. An example of temporal white noise is as follows:
+
+```{r White noise, echo=FALSE}
+t = seq(1,1000)
+W = rnorm(1000,0,1)
+plot(t,W,type="l")
+```
+
+This figure is a bit busy, but we can also take a 'frequency' perspective by looking at a histogram of the same data:
+
+```{r}
+hist(W,freq=F)
+```
+
+Because there was no trend in the data (the expectation of all of the Gaussians was 0), this histogram gives us an idea of what distribution we're pulling from at each time step: the standard bell curve.
+
+Since these were all independent draws of a normal distribution, we would expect no temporal autocorrelation to be present. Let's check this with the acf:
+
+```{r ACF of White Noise}
+acf(W,lag.max=10)
+```
+
+We see that the correlation structure is about zero everywhere except at a lag of 0, showing that distinct time points are uncorrelated.
+
+It is often useful to decompose a signal into its power spectrum, that is the normalized square of the modulus of the fourier transform. This describes the intensity of each frequency contained in the signal. For white noise, the power spectrum is constant:
+
+```{r Power Spectrum of White Noise}
+f = seq(1,500)/1000
+plot(f,Mod(fft(W/1000)[1:500]^2),ylab='Power Density',xlab="Frequency",ylim=c(0,1))
+abline(h=mean(Mod(fft(W/1000)[1:500])^2),lty=2)
+```
+
+This plot shows a constant power density relative to frequency, that is the expectation is flat. It gets a small contribution from every frequency, so no single part of the power density appears higher than any other part. This is the main characteristic of white noise.
+
+Now from how we generated white noise, it's clear that the distribution which characterizes this is the Gaussian. Due to the central limit theorem, this is often a good choice of distribution for the sample mean of a population. This implicitly makes the assumption that individuals in the population are always facing the same distribution of forces which has a central tendency, that is it is mean-reverting. This corresponds to an Ornstein-Uhlenbeck process, which has a Gaussian quasistationary distribution; that is, individuals are still moving, but the population distribution is constant. In discrete time, the process can be described by
+
+\begin{equation}
+x_{n+1} = x_n + \alpha (\mu - x_n) + \sigma W_t
+\end{equation}
+
+This equation shows that the next time step has a positive expectation when $x_n$ is below the expectation $\mu$, and a negative expectation when it's above. The factor $\alpha$ describes how strongly the points are pulled toward the mean. The 'noise' term $W_t$ is what is pushing the individuals away from the attractor $\mu$, with a strength proportional to $\sigma$. This explains why in the long run, the probability an individual is at a point x in space is given by a Gaussian with mean $\mu$ and variance $\sigma^2$.
+
+In continuous time, it converges to the following stochastic differential equation (SDE):
+
+\begin{equation}
+dx = \alpha (\mu-x)dt + \sigma dW
+\end{equation}
+
+One very useful property of the class of Gaussians is they are invariant under convolution and scaling; this implies the weighted average of Gaussians is again a Gaussian. So if a population of 100 has a summed height of M and summed variance V, we can decompose the distribution into the sum of 100 distributions with mean M/100 and variance V/100. That is, we can take the sample mean and it would again be Gaussian. This is true for any population of size N, and any distribution with the property of being decomposed into the sum of N identical copies of itself for any natural number N is called an 'infinitely divisible' distribution. Other examples of infinitely divisible distributions include Poisson, Negative Binomial, Gamma, and Cauchy distributions.
+
+## Pink Noise
+
+Now that we have an idea of what white noise is and what its properties are, we will introduce another distribution with many analogous properties: the Compound Poisson-Gamma (CPG) distribution.
+
+
+
+

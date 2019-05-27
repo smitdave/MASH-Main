@@ -54,7 +54,7 @@ tile::tile(const uint_least32_t seed,
   parametersPtr(std::make_unique<parameters>(50))
 
 {
-
+  // std::cout << "initializing paramters!\n";
   /* initialize parameters */
   parametersPtr->init_params(model_pars);
 
@@ -153,9 +153,6 @@ mosquito* tile::get_mosquitos(){
 ################################################################################ */
 
 void tile::simulation(const u_int tmax){
-
-  /* initialize logging */
-  // mosquitos->initialize_logging();
 
   if(verbose){std::cout << "begin simulation" << std::endl;}
   Progress ps(tmax, verbose);

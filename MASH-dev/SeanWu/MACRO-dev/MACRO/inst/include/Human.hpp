@@ -57,7 +57,7 @@ public:
     trip_duration(trip_duration_), trip_frequency(trip_frequency_),
     bweight(bweight_), tileP(tileP_)
   {
-
+    // std::cout << "made base human: " << id << "\n";
     #ifdef DEBUG_MACRO
     std::cout << "human " << id << " born at " << this << std::endl;
     #endif

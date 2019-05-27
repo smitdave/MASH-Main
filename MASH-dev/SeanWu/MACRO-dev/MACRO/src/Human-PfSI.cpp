@@ -47,13 +47,14 @@ human_pfsi::human_pfsi(
         Rcpp::as<double>(human_pars["bweight"]),
         tileP_),
   state("S"),
-  // infection(false),
-  // chemoprophylaxis(Rcpp::as<bool>(human_pars["chx"])),
+  /* THIS STUFF IS JUST TO RUN THE PRISM DATA */
+  k(Rcpp::as< std::vector<double> >(human_pars["k"])),
+  /* END PRISM DATA STUFF */
   b(0.0), c(0.0),
   age(Rcpp::as<double>(human_pars["age"])),
   kappa(0.0), EIR(0.0)
 {
-
+  // std::cout << "making human_pfsi: " << id << "\n";
   std::string state_t0(Rcpp::as<std::string>(human_pars["state"]));
 
   /* transmission efficiencies */
@@ -66,38 +67,16 @@ human_pfsi::human_pfsi(
   /* initialize kappa (my infectiousness to mosquitos) */
   update_kappa();
 
-  /* logically inconsistent to have an individual who is infected AND on chemoprophylaxis (in PfSI) */
-  /* need to have individuals be uninfected at baseline otherwise initial event won't work (no superinfection) */
-  // bool infection_t0 = Rcpp::as<bool>(human_pars["inf"]);
-  // if(infection_t0 && chemoprophylaxis){
-  //   Rcpp::stop("error: human ",id," cannot both have active infection and under chemoprophylactic protection\n");
-  // }
-
-  // /* if infected, queue the initial event */
-  // if(infection_t0){
-  //   addEvent2Q(e_pfsi_infect(0.0,this));
-  // } else {
-  //   u_int tnow = tileP->get_tnow();
-  //   tileP->get_logger()->get_stream("human_inf") << id << "," << tnow << ",S," << patch_id << "\n";
-  // }
-  //
-  // /* chemoprophylaxis: queue up when protection expires */
-  // if(chemoprophylaxis){
-  //   addEvent2Q(e_pfsi_endchx(0.0,this));
-  // }
-  // std::cout << "im human " << id << "with state: " << state << " getting ready to add events " << "\n";
   /* susceptible */
   if(state_t0.compare("S") == 0){
-    // std::cout << "human: " << id << " initially S" << "\n";
     tileP->get_logger()->get_stream("human_inf") << id << ",0.0,S,S," << patch_id << "\n";
   /* infected & infectious */
   } else if(state_t0.compare("I") == 0){
-    // std::cout << "human: " << id << " initially I" << "\n";
     addEvent2Q(e_pfsi_infect(0.0,this));
   /* chemoprophylactic protection */
   } else if(state_t0.compare("P") == 0){
-    // std::cout << "human: " << id << " initially P" << "\n";
     addEvent2Q(e_pfsi_treatment(0.0,this));
+  /* bad input */
   } else {
     Rcpp::stop("error: human ",id," has been provided with invalid 'state' argument\n");
   }
@@ -186,12 +165,17 @@ void human_pfsi::addVaxx2Q(const Rcpp::List& vaxx){
 /* unnormalized kappa for an individual */
 void human_pfsi::update_kappa(){
 
-  // double inf = static_cast<double>(infection);
-  kappa = 0.0;
-  if(state.compare("I") == 0){
-    kappa = c * bweight;
+  /* only calculate kappa if i'm not in a reservoir */
+  if(!tileP->get_patch(patch_id)->get_reservoir()){
+
+    kappa = 0.0;
+    if(state.compare("I") == 0){
+      kappa = c * bweight;
+    }
+    tileP->get_patch(patch_id)->accumulate_kappa(kappa);
+
   }
-  tileP->get_patch(patch_id)->accumulate_kappa(kappa);
+
 };
 
 /* EIR: rate I am getting bitten by mosquitos right now */
@@ -199,7 +183,13 @@ void human_pfsi::update_EIR(){
 
   /* check if in a reservoir */
   if(tileP->get_patch(patch_id)->get_reservoir()){
-    EIR = tileP->get_patch(patch_id)->get_res_EIR();
+    // EIR = tileP->get_patch(patch_id)->get_res_EIR();
+
+    /* THIS STUFF IS JUST TO RUN THE PRISM DATA */
+    size_t t = tileP->get_tnow();
+    EIR = tileP->get_patch(patch_id)->get_EIR_size(t);
+    /* END PRISM DATA STUFF */
+
   } else {
     double beta = tileP->get_mosquitos()->get_beta(patch_id);
     EIR = std::fmax(0.0,beta * (bweight / tileP->get_patch(patch_id)->get_bWeightHuman()));
@@ -210,7 +200,14 @@ void human_pfsi::update_EIR(){
 /* queue bites for tomorrow based on my EIR */
 void human_pfsi::queue_bites(){
 
-  int nBites = tileP->get_prng()->get_rpois(EIR);
+  // int nBites = tileP->get_prng()->get_rpois(EIR);
+
+  /* THIS STUFF IS JUST TO RUN THE PRISM DATA */
+  size_t t = tileP->get_tnow();
+  double lambda = tileP->get_prng()->get_gamma(EIR, (1.0 - k[t]) / k[t]); /* .gg functions */
+  // double lambda = tileP->get_prng()->get_gamma(k[t], EIR/k[t]); /* .ff functions */
+  int nBites = tileP->get_prng()->get_rpois(lambda);
+  /* END PRISM DATA STUFF */
 
   if(nBites > 0){
     double tnow = tileP->get_tnow();

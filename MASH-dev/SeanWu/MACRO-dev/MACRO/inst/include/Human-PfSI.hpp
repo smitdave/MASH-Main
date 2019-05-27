@@ -58,12 +58,6 @@ public:
   void            set_state(std::string s){ state = s; }
   std::string&    get_state(){ return state; }
 
-  // void            set_infection(const bool inf){ infection = inf; }
-  // bool            get_infection(){ return infection; }
-  //
-  // void            set_chemoprophylaxis(const bool chx){ chemoprophylaxis = chx; }
-  // bool            get_chemoprophylaxis(){ return chemoprophylaxis; }
-
   void            set_b(const double b_){ b = b_; }
   double          get_b(){ return b; }
 
@@ -84,8 +78,10 @@ private:
 
   std::string     state; /* S,I,P */
 
-  // bool            infection; /* indicator variable (S,I) */
-  // bool            chemoprophylaxis; /* protected by drugs or not? */
+  /* THIS STUFF IS JUST TO RUN THE PRISM DATA */
+  std::vector<double>          k;
+  /* END PRISM DATA STUFF */
+
   double          b; /* mosquito -> human transmission efficiency */
   double          c; /* human -> mosquito transmission efficiency */
   double          age;

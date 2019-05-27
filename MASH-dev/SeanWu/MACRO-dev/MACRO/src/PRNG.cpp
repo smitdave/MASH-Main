@@ -40,6 +40,11 @@ double prng::get_runif(){
  return runif(rng);
 };
 
+double prng::get_gamma(const double shape, const double scale){
+  std::gamma_distribution<double> rgamma(shape,scale);
+  return rgamma(rng);
+};
+
 double prng::get_rexp(const double rate){
  std::exponential_distribution<double>rexp(rate);
  return rexp(rng);
