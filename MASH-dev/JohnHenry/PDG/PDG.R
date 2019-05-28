@@ -90,8 +90,8 @@ PDGHuman <- R6Class("PDGHuman",
 
                      ## these update respectively Pf, Pt, MOI, TE
                      self$age_Infections()
-                     self$update_Pt()
                      self$update_Gt()
+                     self$update_Pt()
                      self$update_MOI()
                      self$update_TE()
                      self$update_pFever()
@@ -116,7 +116,7 @@ PDGHuman <- R6Class("PDGHuman",
                         # only draw the random number if there's infections to move and more than one total
                         if(term > 0){
                           if(sum(private$Pf) > 1){
-                            subs = as.vector(extraDistr::rmvhyper(nn = 1,n = private$Pf,k = term))
+                            subs = as.vector(extraDistr::rmvhyper(nn = 1,n = as.vector(private$Pf),k = term))
                             private$Pf = private$Pf - subs ## remove the newly subpatent infections
                             private$Pf[private$pfAges] = private$Pf[private$pfAges]+sum(subs) ## add the subpatent infections to oldest age group  
                           } else {

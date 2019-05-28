@@ -2,7 +2,7 @@ source('PDG.R')
 
 
 human = PDGHuman$new()
-human$infect_Human()
+human$infect_Human(5)
 dt = 1/26
 
 Nfortnights = 30
