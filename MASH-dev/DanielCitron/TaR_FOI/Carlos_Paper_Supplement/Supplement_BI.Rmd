@@ -8,6 +8,8 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+# Set working directory
+knitr::opts_knit$set(root.dir = "/Users/dtcitron/Documents/Publications/Human Mobility Bioko/Figures")
 
 library(data.table)
 library(latex2exp)
@@ -15,6 +17,7 @@ library(rootSolve)
 library(raster)
 library(rgdal, quietly = TRUE)
 library(ggplot2, quietly = TRUE)
+library(viridis)
 ```
 
 ```{r Set up Creating Maps, include = TRUE}
@@ -23,11 +26,6 @@ library(ggplot2, quietly = TRUE)
 bioko<-readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/bioko", "bioko_admin1")
 areas_inh<-readOGR("/Users/dtcitron/Documents/MASH/MASH-Main/MASH-dev/DanielCitron/Bioko_Island_Cluster_Simulations/BI_maps/areas_inh", "areas_inh")
 areasf<-fortify(areas_inh, region = "areaId")
-```
-
-Set working directory:
-```{r}
-setwd("/Users/dtcitron/Documents/MASH/Bioko_Macro/Travel_Model_Fitting/Importations - Carlos Paper")
 ```
 
 
@@ -141,7 +139,8 @@ plot.data<-area.data[order(area.data$order), ]
 p1 = ggplot(data = plot.data, aes(x=long, y=lat, group = group))
 p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
 tf.lower.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.lower), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Travel Fraction (%)\nLower Bound", low="blueviolet", high="white", limits=c(0, 100)) +
+  scale_fill_viridis(name="Travel Fraction (%)\nLower Bound", limits=c(0, 100), option="cividis") + 
+#  scale_fill_gradient(name="Travel Fraction (%)\nLower Bound", low="blueviolet", high="white", limits=c(0, 100)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -155,7 +154,8 @@ tf.lower.map
  
 ```{r TF upper, fig.width=6, fig.height=6}
 tf.upper.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.upper), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Travel Fraction (%)\nUpper Bound", low="blueviolet", high="white", limits=c(0, 100)) +
+  scale_fill_viridis(name="Travel Fraction (%)\nUpper Bound", limits=c(0, 100), option="cividis") + 
+#  scale_fill_gradient(name="Travel Fraction (%)\nUpper Bound", low="blueviolet", high="white", limits=c(0, 100)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -168,7 +168,8 @@ tf.upper.map
 
 ```{r TF co, fig.width=6, fig.height=6}
 tf.co.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.co), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Travel Fraction (%)", low="blueviolet", high="white", limits=c(0, 100)) +
+  scale_fill_viridis(name="Travel Fraction (%)", limits=c(0, 100), option="cividis") + 
+#  scale_fill_gradient(name="Travel Fraction (%)", low="blueviolet", high="white", limits=c(0, 100)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -182,8 +183,9 @@ tf.co.map
 ## Figure: LR maps - coestimate, upper, lower
 ```{r LR upper, fig.width=6, fig.height=6}
 h.upper.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.upper/(h.upper+1/200)), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Local Residual\nTransmission (%)\nUpper Bound",
-                      low="yellow", high="red", limits=c(0, 40)) +
+  scale_fill_viridis(name="Local Residual\nTransmission (%)\nLower Bound", limits=c(0, 40), option="plasma") +
+#  scale_fill_gradient(name="Local Residual\nTransmission (%)\nUpper Bound",
+#                      low="yellow", high="red", limits=c(0, 40)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -196,8 +198,9 @@ h.upper.map
 
 ```{r LR lower, fig.width=6, fig.height=6}
 h.lower.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.lower/(h.lower+1/200)), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Local Residual\nTransmission (%)\nLower Bound",
-                      low="yellow", high="red", limits=c(0, 40)) +
+  scale_fill_viridis(name="Local Residual\nTransmission (%)\nUpper Bound", limits=c(0, 40), option="plasma") +
+#  scale_fill_gradient(name="Local Residual\nTransmission (%)\nUpper Bound",
+#                      low="yellow", high="red", limits=c(0, 40)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -210,8 +213,9 @@ h.lower.map
 
 ```{r LR co, fig.width=6, fig.height=6}
 h.co.map <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.co/(h.co+1/200)), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Local Residual\nTransmission (%)",
-                      low="yellow", high="red", limits=c(0, 40)) +
+  scale_fill_viridis(name="Local Residual\nTransmission (%)", limits=c(0, 40), option="plasma") +
+#  scale_fill_gradient(name="Local Residual\nTransmission (%)",
+#                      low="yellow", high="red", limits=c(0, 40)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -224,6 +228,9 @@ h.co.map
 
 (Save plots)
 ```{r Save plots, eval=FALSE}
+# No idea how setting paths works in R, so might as well try to fix this in the right location?
+#setwd("/Users/dtcitron/Documents/Publications/Human Mobility Bioko/Figures")
+
 ggsave("tf_lower_map.pdf", plot = tf.lower.map)
 ggsave("tf_upper_map.pdf", plot = tf.upper.map)
 ggsave("tf_co_map.pdf", plot = tf.co.map)
@@ -321,7 +328,8 @@ p1 = ggplot(data = plot.data, aes(x=long, y=lat, group = group))
 p2 = p1 + geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill="grey", size = 0.25)
 
 tf.lower.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.lower.e), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Travel Fraction (%)\nLower Bound", low="blueviolet", high="white", limits=c(0, 100)) +
+  scale_fill_viridis(name="Travel Fraction (%)\nLower Bound", limits=c(0, 100), option="cividis") + 
+#  scale_fill_gradient(name="Travel Fraction (%)\nLower Bound", low="blueviolet", high="white", limits=c(0, 100)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -335,7 +343,8 @@ tf.lower.map.e
 
 ```{r TF upper - EG, fig.width=6, fig.height=6}
 tf.upper.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.upper.e), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Travel Fraction (%)\nUpper Bound", low="blueviolet", high="white", limits=c(0, 100)) +
+  scale_fill_viridis(name="Travel Fraction (%)\nUpper Bound", limits=c(0, 100), option="cividis") + 
+#  scale_fill_gradient(name="Travel Fraction (%)\nUpper Bound", low="blueviolet", high="white", limits=c(0, 100)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -348,7 +357,8 @@ tf.upper.map.e
 
 ```{r TF coestimate - EG, fig.width=6, fig.height=6}
 tf.co.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*tf.co.e), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Travel Fraction (%)", low="blueviolet", high="white", limits=c(0, 100)) +
+  scale_fill_viridis(name="Travel Fraction (%)", limits=c(0, 100), option="cividis") + 
+#  scale_fill_gradient(name="Travel Fraction (%)", low="blueviolet", high="white", limits=c(0, 100)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -360,11 +370,11 @@ tf.co.map.e
 ```
 
 ## Figure: LR maps - coestimate, upper, lower
-
 ```{r LR upper - EG, fig.width=6, fig.height=6}
 h.upper.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.upper.e/(h.upper.e+1/200)), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Local Residual\nTransmission (%)\nLower Bound",
-                      low="yellow", high="red", limits=c(0, 40)) +
+  scale_fill_viridis(name="Local Residual\nTransmission (%)\nLower Bound", limits=c(0, 40), option="plasma") +
+#  scale_fill_gradient(name="Local Residual\nTransmission (%)\nLower Bound",
+#                      low="yellow", high="red", limits=c(0, 40)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -377,8 +387,9 @@ h.upper.map.e
 
 ```{r LR lower - EG, fig.width=6, fig.height=6}
 h.lower.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.lower.e/(h.lower.e+1/200)), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Local Residual\nTransmission (%)\nUpper Bound",
-                      low="yellow", high="red", limits=c(0, 40)) +
+  scale_fill_viridis(name="Local Residual\nTransmission (%)\nUpper Bound", limits=c(0, 40), option="plasma") +
+#  scale_fill_gradient(name="Local Residual\nTransmission (%)\nUpper Bound",
+#                      low="yellow", high="red", limits=c(0, 40)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
@@ -391,8 +402,9 @@ h.lower.map.e
 
 ```{r LR coestimate - EG, fig.width=6, fig.height=6}
 h.co.map.e <- p2 + geom_polygon(data = plot.data, aes(x = long, y = lat, group = group, fill = 100*h.co.e/(h.co.e+1/200)), color = NA, size = 0.25) +
-  scale_fill_gradient(name="Local Residual\nTransmission (%)",
-                      low="yellow", high="red", limits=c(0, 40)) +
+  scale_fill_viridis(name="Local Residual\nTransmission (%)", limits=c(0, 40), option="plasma") +
+  #scale_fill_gradient(name="Local Residual\nTransmission (%)",
+  #                    low="yellow", high="red", limits=c(0, 40)) +
   geom_polygon(data = bioko, aes(x = long, y = lat, group = group), color = "black", fill=NA, size = 0.25) +
   theme(text = element_text(size = 16),
         axis.line=element_blank(), axis.text.x=element_blank(), 
