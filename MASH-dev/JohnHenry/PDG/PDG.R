@@ -106,15 +106,25 @@ PDGHuman <- R6Class("PDGHuman",
 
                      ## removes from final category at a particular rate, relatively small
                      if(private$Pf[private$pfAges] > 0){
-                        private$Pf[private$pfAges] = max(private$Pf[private$pfAges] - sum(rbinom(private$Pf[private$pfAges],1,private$pfdr)),0)
+                        private$Pf[private$pfAges] = max(private$Pf[private$pfAges] - sum(rbinom(n = 1,size = private$Pf[private$pfAges],prob = private$pfdr)),0)
                      }
 
                      ## some proportion of patent infections move into subpatent phase; each independent
                      if(((private$MOI - private$Pf[private$pfAges]-private$Pf[1]) > 0)& (sum(private$Pf,na.rm=T) > 0) ){ ## we want to only move them into subpatency AFTER the intrinsic incubation period & first fortnight of infection
-                        term = rbinom(private$MOI-private$Pf[private$pfAges],1,private$pfpatency)   ## how many patent cohorts to "terminate"
-                        subs = rmultinom(1,term,private$Pf/sum(private$Pf,na.rm=T)) ## which age cohorts are being removed
-                        private$Pf = private$Pf - subs ## remove the newly subpatent infections
-                        private$Pf[private$pfAges] = private$Pf[private$pfAges]+sum(subs) ## add the subpatent infections to oldest age group
+                        term = rbinom(n = 1,size = private$MOI-private$Pf[private$pfAges],prob = private$pfpatency)   ## how many patent cohorts to "terminate"
+                        # subs = rmultinom(1,term,private$Pf/sum(private$Pf,na.rm=T)) ## which age cohorts are being removed
+                        # only draw the random number if there's infections to move and more than one total
+                        if(term > 0){
+                          if(sum(private$Pf) > 1){
+                            subs = as.vector(extraDistr::rmvhyper(nn = 1,n = private$Pf,k = term))
+                            private$Pf = private$Pf - subs ## remove the newly subpatent infections
+                            private$Pf[private$pfAges] = private$Pf[private$pfAges]+sum(subs) ## add the subpatent infections to oldest age group  
+                          } else {
+                          # in this case there's only 1 infection, move it directly to the end
+                            private$Pf <- private$Pf*0
+                            private$Pf[private$pfAges] <- 1
+                          }
+                        }
                      }
                      
                      ## shifts to next age group
