@@ -83,7 +83,7 @@ PDGHuman <- R6Class("PDGHuman",
                    ########## Update Functions #########
 
 
-                   update_Human = function(){
+                   update_Human = function(dt){
 
                      ## this uses old value of Pt, so must be computed first
                      ## self$update_Imm() ## turning off immunity for now
@@ -359,6 +359,7 @@ PDGHuman <- R6Class("PDGHuman",
                    immSlope = NULL, ## slope of immune conversion, sigmoid param
                    immCounter = NULL, ## counts up if Pt > PtThresh, down otherwise
                    immThresh = NULL, ## immunogenic threshhold, based on Pt
+                   immP = NULL,
 
                    ## Health
                    pFever = NULL, ## probability of fever; probability seeking treatment should be related to number of febrile days
