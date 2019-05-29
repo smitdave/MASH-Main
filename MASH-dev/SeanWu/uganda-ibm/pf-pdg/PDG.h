@@ -18,10 +18,43 @@
 /* for NAN macro and mathematical fn's */
 #include <cmath>
 
-
 /* NOTE: in R, NaN is used to stop tracking Pt and Gt */
 
-/* the human class */
+/* PDG requires a multivariate hypergeometric random number, which we adapt the algorithm from Agner Fog here (cite him!) */
+// destination: array to fill the drawn "balls"
+// source: number of "balls" in each "urn"
+// n: number of draws to take
+// k: number of "urns"
+void rmhyper(int* destination, int const* source, int n, int k){
+  int sum, x, y;
+  size_t i;
+  if(n < 0 || k < 0){Rcpp::stop("Invalid parameters of distribution");}
+
+  // total number of "balls"
+  for(i = 0, sum = 0; i < k; i++){
+    y = source[i];
+    if(y < 0){Rcpp::stop("Cannot have a negative number of balls in an urn");}
+    sum += y;
+  }
+  if(n > sum){Rcpp::stop("Distribution undefined for n > sum");}
+
+  for(i=0; i<k-1; i++){
+    // generate ouput by calling rhyper k-1 times
+    y = source[i];
+    x = (int)R::rhyper((double)y,(double)sum-y,(double)n);
+    n -= x;
+    sum -= y;
+    destination[i] = x;
+  }
+  // get the last one
+  destination[i] = n;
+};
+
+
+/* ################################################################################
+#   PDG human class
+################################################################################ */
+
 class PDG_human {
 public:
 
@@ -91,7 +124,7 @@ private:
 
   // Immunity
   double            Imm; /* normalized immune strength */
-  double            immCounter; /* counts up if Pt > PtThresh, down otherwise */
+  int               immCounter; /* counts up if Pt > PtThresh, down otherwise */
   static double     immHalf; /* half maximum immunity, sigmoid param */
   static double     immSlope; /* slope of immune conversion, sigmoid param */
   static double     immThresh; /* immunogenic threshhold, based on Pt */
@@ -114,6 +147,10 @@ private:
   static double     LMSlope; /* slope of sigmoid converting Asexual density to probability of testing positive */
   static double     LMMax; /* maximum probability of testing positive; 1 - (type 2 error + type 1 error) */
   static double     LMMin; /* minimum probability of testing postiive; type 1 error */
+
+  // special functions
+  static double     sigmoid(const double x, const double xhalf, const double b); /* polynomial sigmoid function, defined over nonnegative real line */
+  static double     sigmoidexp(const double x, const double xhalf, const double b); /* exponential sigmoid function, defined over whole real line */
 
 };
 
@@ -159,3 +196,12 @@ double PDG_human::LMHalf = 2.;
 double PDG_human::LMSlope = 3.;
 double PDG_human::LMMax = 0.9;
 double PDG_human::LMMin = 0.05;
+
+// special functions
+double PDG_human::sigmoid(const double x, const double xhalf, const double b){
+  return std::pow((x/xhalf),b) / (std::pow((x/xhalf),b) + 1.);
+};
+
+double PDG_human::sigmoidexp(const double x, const double xhalf, const double b){
+  return std::exp(x*b)/(std::exp(x*b)+std::exp(xhalf*b));
+};
