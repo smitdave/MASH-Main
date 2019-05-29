@@ -270,7 +270,7 @@ void PDG_human::update_TE(){
   if(isnan(Gt)){
     TE = 0.;
   } else {
-    TE = TEMax + sigmoidexp(Gt, TEHalf, TESlope);
+    TE = TEMax * sigmoidexp(Gt, TEHalf, TESlope);
   }
 
 };
