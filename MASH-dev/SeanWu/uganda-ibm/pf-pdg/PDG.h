@@ -21,7 +21,6 @@
 /* NOTE: in R, NaN is used to stop tracking Pt and Gt */
 
 /* PDG requires a multivariate hypergeometric random number, which we adapt the algorithm from Agner Fog here (cite him!) */
-
 // destination: array to fill the drawn "balls"
 // source: number of "balls" in each "urn"
 // n: number of draws to take
@@ -51,7 +50,11 @@ void rmhyper(int* destination, int const* source, int n, int k){
   destination[i] = n;
 };
 
-/* the human class */
+
+/* ################################################################################
+#   PDG human class
+################################################################################ */
+
 class PDG_human {
 public:
 
@@ -121,7 +124,7 @@ private:
 
   // Immunity
   double            Imm; /* normalized immune strength */
-  double            immCounter; /* counts up if Pt > PtThresh, down otherwise */
+  int               immCounter; /* counts up if Pt > PtThresh, down otherwise */
   static double     immHalf; /* half maximum immunity, sigmoid param */
   static double     immSlope; /* slope of immune conversion, sigmoid param */
   static double     immThresh; /* immunogenic threshhold, based on Pt */
@@ -144,6 +147,10 @@ private:
   static double     LMSlope; /* slope of sigmoid converting Asexual density to probability of testing positive */
   static double     LMMax; /* maximum probability of testing positive; 1 - (type 2 error + type 1 error) */
   static double     LMMin; /* minimum probability of testing postiive; type 1 error */
+
+  // special functions
+  static double     sigmoid(const double x, const double xhalf, const double b); /* polynomial sigmoid function, defined over nonnegative real line */
+  static double     sigmoidexp(const double x, const double xhalf, const double b); /* exponential sigmoid function, defined over whole real line */
 
 };
 
@@ -189,3 +196,12 @@ double PDG_human::LMHalf = 2.;
 double PDG_human::LMSlope = 3.;
 double PDG_human::LMMax = 0.9;
 double PDG_human::LMMin = 0.05;
+
+// special functions
+double PDG_human::sigmoid(const double x, const double xhalf, const double b){
+  return std::pow((x/xhalf),b) / (std::pow((x/xhalf),b) + 1.);
+};
+
+double PDG_human::sigmoidexp(const double x, const double xhalf, const double b){
+  return std::exp(x*b)/(std::exp(x*b)+std::exp(xhalf*b));
+};

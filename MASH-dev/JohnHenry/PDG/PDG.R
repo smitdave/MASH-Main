@@ -89,8 +89,8 @@ PDGHuman <- R6Class("PDGHuman",
                      ## self$update_Imm() ## turning off immunity for now
 
                      ## these update respectively Pf, Pt, MOI, TE
-                     self$age_Infections()
                      self$update_Gt()
+                     self$age_Infections()
                      self$update_Pt()
                      self$update_MOI()
                      self$update_TE()
@@ -158,12 +158,23 @@ PDGHuman <- R6Class("PDGHuman",
                      
                      ## use power law to translate from Pt to Gt; add unbiased noise due to uncertainty in P2G fit
                      if((sum(private$Pf,na.rm=T) > 0) ){
-                       private$Gt = private$pgm*private$Pt + private$pgb
-                       private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt+rnorm(1,0,sqrt(private$pgv)), NaN)
-                     }
-                     if(sum(private$Pf,na.rm=T) == 0){
+                       if(is.na(private$Pt) | is.nan(private$Pt)){
+                         private$Gt <- NaN
+                       } else {
+                         private$Gt = private$pgm*private$Pt + private$pgb
+                         private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt+rnorm(1,0,sqrt(private$pgv)), NaN)
+                       }
+                       # private$Gt = private$pgm*private$Pt + private$pgb
+                       # private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt+rnorm(1,0,sqrt(private$pgv)), NaN)
+  
+                       
+                     } else {
                        private$Gt = private$Gt + private$gdk
                      }
+                     # if(sum(private$Pf,na.rm=T) == 0){
+                     #   # private$Gt = max(private$Gt + private$gdk,0)
+                     #   private$Gt = private$Gt + private$gdk
+                     # }
 
                    },
 

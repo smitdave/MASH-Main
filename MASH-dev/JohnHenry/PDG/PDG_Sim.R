@@ -1,6 +1,6 @@
 source('PDG.R')
 
-
+# set.seed(534)
 human = PDGHuman$new()
 human$infect_Human(5)
 dt = 1/26
@@ -15,10 +15,12 @@ Gt = human$get_history()$Gt
 Imm = human$get_history()$Imm
 pFever = human$get_history()$pFever
 
-par(mfrow=c(2,1))
-plot(Pt,type="l",ylim=c(0,5),xlab="fortnights",ylab="log10 Parasite Densities per microliter")
-plot(pFever,type="l",ylim=c(0,1),xlab="fortnights")
-par(mfrow=c(1,1))
+immCounter = human$get_history()$immCounter
+
+# par(mfrow=c(2,1))
+# plot(Pt,type="l",ylim=c(0,5),xlab="fortnights",ylab="log10 Parasite Densities per microliter")
+# plot(pFever,type="l",ylim=c(0,1),xlab="fortnights")
+# par(mfrow=c(1,1))
 
 par(mfrow=c(2,1))
 plot(seq(1:Nfortnights),Pt,type="l",xlab="fortnights",ylab="log10 Parasite Densities per microliter",ylim=c(0,5))

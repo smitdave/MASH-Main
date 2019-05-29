@@ -83,15 +83,15 @@ PDGHuman <- R6Class("PDGHuman",
                    ########## Update Functions #########
 
 
-                   update_Human = function(){
+                   update_Human = function(dt){
 
                      ## this uses old value of Pt, so must be computed first
                      ## self$update_Imm() ## turning off immunity for now
 
                      ## these update respectively Pf, Pt, MOI, TE
+                     self$update_Gt()
                      self$age_Infections()
                      self$update_Pt()
-                     self$update_Gt()
                      self$update_MOI()
                      self$update_TE()
                      self$update_pFever()
@@ -106,15 +106,25 @@ PDGHuman <- R6Class("PDGHuman",
 
                      ## removes from final category at a particular rate, relatively small
                      if(private$Pf[private$pfAges] > 0){
-                        private$Pf[private$pfAges] = max(private$Pf[private$pfAges] - sum(rbinom(private$Pf[private$pfAges],1,private$pfdr)),0)
+                        private$Pf[private$pfAges] = max(private$Pf[private$pfAges] - sum(rbinom(n = 1,size = private$Pf[private$pfAges],prob = private$pfdr)),0)
                      }
 
                      ## some proportion of patent infections move into subpatent phase; each independent
                      if(((private$MOI - private$Pf[private$pfAges]-private$Pf[1]) > 0)& (sum(private$Pf,na.rm=T) > 0) ){ ## we want to only move them into subpatency AFTER the intrinsic incubation period & first fortnight of infection
-                        term = rbinom(private$MOI-private$Pf[private$pfAges],1,private$pfpatency)   ## how many patent cohorts to "terminate"
-                        subs = rmultinom(1,term,private$Pf/sum(private$Pf,na.rm=T)) ## which age cohorts are being removed
-                        private$Pf = private$Pf - subs ## remove the newly subpatent infections
-                        private$Pf[private$pfAges] = private$Pf[private$pfAges]+sum(subs) ## add the subpatent infections to oldest age group
+                        term = rbinom(n = 1,size = private$MOI-private$Pf[private$pfAges],prob = private$pfpatency)   ## how many patent cohorts to "terminate"
+                        # subs = rmultinom(1,term,private$Pf/sum(private$Pf,na.rm=T)) ## which age cohorts are being removed
+                        # only draw the random number if there's infections to move and more than one total
+                        if(term > 0){
+                          if(sum(private$Pf) > 1){
+                            subs = as.vector(extraDistr::rmvhyper(nn = 1,n = as.vector(private$Pf),k = term))
+                            private$Pf = private$Pf - subs ## remove the newly subpatent infections
+                            private$Pf[private$pfAges] = private$Pf[private$pfAges]+sum(subs) ## add the subpatent infections to oldest age group
+                          } else {
+                          # in this case there's only 1 infection, move it directly to the end
+                            private$Pf <- private$Pf*0
+                            private$Pf[private$pfAges] <- 1
+                          }
+                        }
                      }
 
                      ## shifts to next age group
@@ -148,12 +158,23 @@ PDGHuman <- R6Class("PDGHuman",
 
                      ## use power law to translate from Pt to Gt; add unbiased noise due to uncertainty in P2G fit
                      if((sum(private$Pf,na.rm=T) > 0) ){
-                       private$Gt = private$pgm*private$Pt + private$pgb
-                       private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt+rnorm(1,0,sqrt(private$pgv)), NaN)
-                     }
-                     if(sum(private$Pf,na.rm=T) == 0){
+                       if(is.na(private$Pt) | is.nan(private$Pt)){
+                         private$Gt <- NaN
+                       } else {
+                         private$Gt = private$pgm*private$Pt + private$pgb
+                         private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt+rnorm(1,0,sqrt(private$pgv)), NaN)
+                       }
+                       # private$Gt = private$pgm*private$Pt + private$pgb
+                       # private$Gt = ifelse((private$Gt*private$gm + private$gb)>0, private$Gt+rnorm(1,0,sqrt(private$pgv)), NaN)
+
+
+                     } else {
                        private$Gt = private$Gt + private$gdk
                      }
+                     # if(sum(private$Pf,na.rm=T) == 0){
+                     #   # private$Gt = max(private$Gt + private$gdk,0)
+                     #   private$Gt = private$Gt + private$gdk
+                     # }
 
                    },
 
@@ -197,7 +218,7 @@ PDGHuman <- R6Class("PDGHuman",
                    LM = function(){
                      p = 0
                      if(private$Pt>0){
-                        p = (private$LMMAx-private$LMMin)*self$sigmoidexp(private$Pt,private$LMHalf,private$LMSlope)+private$LMMin
+                        p = (private$LMMax-private$LMMin)*self$sigmoidexp(private$Pt,private$LMHalf,private$LMSlope)+private$LMMin
                      }
                      test = rbinom(1,1,p)
                      return(test)
@@ -359,6 +380,7 @@ PDGHuman <- R6Class("PDGHuman",
                    immSlope = NULL, ## slope of immune conversion, sigmoid param
                    immCounter = NULL, ## counts up if Pt > PtThresh, down otherwise
                    immThresh = NULL, ## immunogenic threshhold, based on Pt
+                   immP = NULL,
 
                    ## Health
                    pFever = NULL, ## probability of fever; probability seeking treatment should be related to number of febrile days
