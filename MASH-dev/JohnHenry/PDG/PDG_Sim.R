@@ -1,6 +1,6 @@
 source('PDG.R')
 
-# set.seed(534)
+set.seed(534)
 human = PDGHuman$new()
 human$infect_Human(5)
 dt = 1/26

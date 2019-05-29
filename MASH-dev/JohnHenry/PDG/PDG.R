@@ -70,7 +70,8 @@ PDGHuman <- R6Class("PDGHuman",
 
                    infect_Human = function(nInfections=1){
                       private$Pf[1] = private$Pf[1]+nInfections
-                      private$MOI = private$MOI+1
+                      # private$MOI = private$MOI+1
+                      private$MOI = sum(private$Pf)
                     },
 
                    clear_All_Pathogens = function(){

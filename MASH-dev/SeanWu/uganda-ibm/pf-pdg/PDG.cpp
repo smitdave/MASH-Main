@@ -7,6 +7,97 @@
 
 #include "PDG.h"
 
+/* PDG requires a multivariate hypergeometric random number, which we adapt the algorithm from Agner Fog here (cite him!) */
+// destination: array to fill the drawn "balls"
+// source: number of "balls" in each "urn"
+// n: number of draws to take
+// k: number of "urns"
+void rmhyper(int* destination, int const* source, int n, int k){
+  int sum, x, y;
+  size_t i;
+  if(n < 0 || k < 0){Rcpp::stop("Invalid parameters of distribution");}
+
+  // total number of "balls"
+  for(i = 0, sum = 0; i < k; i++){
+    y = source[i];
+    if(y < 0){Rcpp::stop("Cannot have a negative number of balls in an urn");}
+    sum += y;
+  }
+  if(n > sum){Rcpp::stop("Distribution undefined for n > sum");}
+
+  for(i=0; i<k-1; i++){
+    // generate ouput by calling rhyper k-1 times
+    y = source[i];
+    x = (int)R::rhyper((double)y,(double)sum-y,(double)n);
+    n -= x;
+    sum -= y;
+    destination[i] = x;
+  }
+  // get the last one
+  destination[i] = n;
+};
+
+
+/* ################################################################################
+#   PDG static members
+################################################################################ */
+
+size_t PDG_human::global_ixH = 0;
+
+size_t PDG_human::pfAges = 27;
+double PDG_human::pfdr = 0.75;
+
+double PDG_human::gdk = std::log10(0.7);
+
+double PDG_human::pgm = 1.184;
+double PDG_human::pgb = -2.004;
+
+double PDG_human::gm = 1.652;
+double PDG_human::gb = 1.662;
+
+std::vector<double> PDG_human::Ptmax = {0.,5.210246,4.573131,4.373306,4.218014,4.079337,4.157638,3.805582,3.821811,3.827757,3.467524,3.740757,3.349316,3.732802,3.652580,3.231724,2.567026,2.283804,2.929233,1.962211,2.944931,1.851258,2.193125,2.309303,1.564271,3.205746,2.719204,1.915100};
+std::vector<double> PDG_human::Ptshape = {0.,4.639315,2.275418,2.258965,2.311616,2.474827,3.176543,2.943449,3.419812,4.387235,2.755179,5.014499,4.114957,8.849801,6.918817,4.470316,3.726024,4.332549,4.547252,1.829113,5.378781,1.581417,1.094105,1.000000,1.030259,2.641712,2.991721,5.007464};
+std::vector<double> PDG_human::Ptrate = {0.,4.008275,1.539217,1.612759,1.756409,1.907544,2.034369,1.949314,2.043045,2.571400,1.800733,2.482635,2.385546,3.573325,3.135033,2.244577,2.825106,3.004125,2.390421,2.198324,2.916877,1.992531,1.051514,1.572928,1.460975,1.294750,2.077740,2.618999};
+
+double PDG_human::pfpatency = 1. - std::exp(-0.1385);
+double PDG_human::pgv = 0.2704;
+
+// Immunity
+double PDG_human::immHalf = 3.5246;
+double PDG_human::immSlope = 3.038;
+double PDG_human::immThresh = 0.;
+double PDG_human::immP = 0.;
+
+// Health
+double PDG_human::feverHalf = 3.5246;
+double PDG_human::feverSlope = 3.038;
+double PDG_human::feverMax = .8835;
+
+// Infectivity
+double PDG_human::TEHalf = 2.3038;
+double PDG_human::TESlope = 3.5524;
+double PDG_human::TEMax = .4242;
+
+// Diagnostics - Light Microscopy
+double PDG_human::LMHalf = 2.;
+double PDG_human::LMSlope = 3.;
+double PDG_human::LMMax = 0.9;
+double PDG_human::LMMin = 0.05;
+
+// special functions
+double PDG_human::sigmoid(const double x, const double xhalf, const double b){
+  return std::pow((x/xhalf),b) / (std::pow((x/xhalf),b) + 1.);
+};
+
+double PDG_human::sigmoidexp(const double x, const double xhalf, const double b){
+  return std::exp(x*b)/(std::exp(x*b)+std::exp(xhalf*b));
+};
+
+
+/* ################################################################################
+#   PDG implementation
+################################################################################ */
+
 // constructor & destructor
 PDG_human::PDG_human(const double age_, const bool sex_) :
   ixH(global_ixH),
@@ -27,7 +118,7 @@ PDG_human::~PDG_human(){};
 // infection methods
 void PDG_human::begin_infection(size_t nInfections){
   Pf[0] += nInfections;
-  MOI += 1;
+  MOI = std::accumulate(Pf.begin(),Pf.end(),0);
 };
 
 void PDG_human::clear_infections(){
@@ -91,7 +182,7 @@ void PDG_human::age_infections(){
   }
 
   // shift all cohorts to the next age group
-  for(size_t i=pfAges-1; i>=0; i--){
+  for(int i=pfAges-1; i>=0; i--){
     if(i == pfAges-1){
       Pf[i] += Pf[i-1];
     } else if(i == 0){
