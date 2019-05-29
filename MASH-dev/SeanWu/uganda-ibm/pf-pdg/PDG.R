@@ -70,7 +70,8 @@ PDGHuman <- R6Class("PDGHuman",
 
                    infect_Human = function(nInfections=1){
                       private$Pf[1] = private$Pf[1]+nInfections
-                      private$MOI = private$MOI+1
+                      # private$MOI = private$MOI+1
+                      private$MOI = sum(private$Pf)
                     },
 
                    clear_All_Pathogens = function(){
@@ -218,7 +219,7 @@ PDGHuman <- R6Class("PDGHuman",
                    LM = function(){
                      p = 0
                      if(private$Pt>0){
-                        p = (private$LMMax-private$LMMin)*self$sigmoidexp(private$Pt,private$LMHalf,private$LMSlope)+private$LMMin
+                        p = (private$LMMAx-private$LMMin)*self$sigmoidexp(private$Pt,private$LMHalf,private$LMSlope)+private$LMMin
                      }
                      test = rbinom(1,1,p)
                      return(test)
