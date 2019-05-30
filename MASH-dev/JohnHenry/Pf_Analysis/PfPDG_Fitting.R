@@ -17,6 +17,21 @@ title(main="Example Infection")
 MP = M
 MP[which(MP==0)] = NaN
 rm = rowMeans(MP,na.rm=T)
+rv = rowVars(MP,na.rm=T)
+
+#Power Law, Removing the subpatent infections
+plot(log10(rm),xlim=c(0,300))
+plot(log10(rv),xlim=c(0,300))
+plot(log10(rm)[1:125],log10(rv[1:125]),xlab="log10 Mean of Asexual Densities",ylab="log10 Variance of Asexual Densities",main="Variance-to-Mean Power Law for Asexual Parasitemia")
+rmrvfit = lm(log10(rv[1:125])~log10(rm[1:125]))
+lines(seq(-1,6),rmrvfit$coefficients[1]+rmrvfit$coefficients[2]*seq(-1,6))
+slope = 1.88
+legend(c(2,5,9.5),legend=c("Slope: " + slope))
+#Power Law, With recorded subpatent infections as zeros
+plot(log10(rowMeans(M,na.rm=T)[1:125]),log10(rowVars(M,na.rm=T)[1:125]),xlab="log10 Mean of Asexual Densities",ylab="log10 Variance of Asexual Densities",main="Variance-to-Mean Power Law for Asexual Parasitemia")
+rmrvfit = lm(log10(rowVars(M,na.rm=T)[1:125])~log10(rowMeans(M,na.rm=T)[1:125]))
+lines(seq(-1,6),rmrvfit$coefficients[1]+rmrvfit$coefficients[2]*seq(-1,6))
+#
 
 ##
 ##
@@ -31,6 +46,8 @@ GP = G
 GP[which(GP==0)] = NaN
 rmg = rowMeans(GP,na.rm=T)
 lines(log10(rmg),col="red")
+
+abline(h=log10(10),lty=2)
 
 ccf(rm[4:225],rmg[4:225],lag.max=25,type="correlation",ylim=c(0,1),ylab="Correlation",xlab="Lag (Days)", main="CCF of Asexuals to Gametocytes")
 abline(h=1)
@@ -47,10 +64,10 @@ plot(log10(rms),log10(rmgs),xlab="Lagged Asexuals",ylab="Gametocytes")
 
 #hist(log10(M[100,]))
 hist(log10(colMeans(MP[1:7,],na.rm=T)),breaks=15,xlim=c(0,5.5))
-hist(log10(colMeans(MP[30:36,],na.rm=T)),breaks=15,xlim=c(0,5.5))
+hist(log10(colMeans(MP[30:36,],na.rm=T)),breaks=10,xlim=c(0,5.5))
 hist(log10(colMeans(MP[70:76,],na.rm=T)),breaks=10,xlim=c(0,5.5))
 hist(log10(colMeans(MP[110:116,],na.rm=T)),breaks=10,xlim=c(0,5.5))
-hist(log10(colMeans(MP[160:166,],na.rm=T)),breaks=10,xlim=c(0,5.5))
+hist(log10(colMeans(MP[160:166,],na.rm=T)),breaks=5,xlim=c(0,5.5))
 hist(log10(colMeans(MP[200:206,],na.rm=T)),breaks=5,xlim=c(0,5.5))
 
 MV = matrix(0,nrow=30,ncol=length(M[1,]))
@@ -104,6 +121,7 @@ for(i in 1:251){
   Ndays[i] = tail(cumsum(N<i),1)
 }
 Ndays = Ndays/334
+plot(1-Ndays,main="Empirical Survival Function",xlab="Days Since First Patency",ylab="Proportion of Patients Infected",type="l")
 plot(Ndays,log(1-Ndays),type="s")
 
 y = log(1-Ndays)[1:250]
@@ -127,7 +145,7 @@ plot(1:length(Ndays),Ndays,type="s",xlab="Days",ylab="Probability",main="Duratio
 t = 0:250
 lines(t,CDFsurv(t))
 
-ks.test(Ndays,pexp)
+ks.test(1-Ndays,pexp)
 
 hist(N,breaks=30)
 
@@ -290,7 +308,7 @@ qqnorm((gmv$residuals-mean(gmv$residuals))/sqrt(var(gmv$residuals)))
 lines(seq(-4,4,.1),seq(-4,4,.1))
 
 ccf(rm,grm,na.action = na.contiguous,main="Cross-Correlation between Asexual and Gametocyte Densities",ylab="CCF")
-plot(rm[1:200],log10(grm[9:208]),xlab="Lagged log10 Mean Asexual Parasite Densities per microL",ylab="log10 Mean Gametocyte Densities",main="Lagged Gametocyte Production")
+plot(log10(rm[1:200]),log10(grm[9:208]),xlab="Lagged log10 Mean Asexual Parasite Densities per microL",ylab="log10 Mean Gametocyte Densities",main="Lagged Gametocyte Production")
 rmd = log10(rm)[1:(length(rm)-8)]
 rmd[which(is.infinite(rmd))] = NaN
 grmd = log10(grm)[9:length(rm)]
@@ -305,9 +323,9 @@ lines(seq(-1,5,.01),fg(seq(-1,5,.01)))
 
 rmdp = 10^rmd[which(grm>1.8)]
 grmdp = grmd[which(grm>1.8)]
-plot(rmdp,grmdp,xlab="8 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
+plot(log10(rmdp),grmdp,xlab="8 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
 title(main="Lagged Power Law Relationship")
-ptgtp = lm(grmdp~rmdp)
+ptgtp = lm(grmdp~log10(rmdp))
 fgp = function(x){
   ptgtp$coefficients[[1]]+x*ptgtp$coefficients[[2]]
 }
@@ -351,7 +369,7 @@ fgpl = function(x){
     return(y)
 }
 
-plot(log10(rm[12:208]),log10(grm[4:200]),xlab="9 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
+plot(log10(rm[9:208]),log10(grm[1:200]),xlab="9 Day Lagged log10 Mean Asexual Parasite Densities",ylab="log10 Mean Gametocyte Densities")
 title(main="Lagged Power Law Relationship")
 lines(seq(-1,5,.01),fgpl(seq(-1,5,.01)))
 
@@ -470,93 +488,22 @@ for(i in 1:333){
 R = log10(M)-LF
 plot(R[,2],xlim=c(1,60))
 
-## define Rint, the linearly interpolated R for missing data between the beginning and end
-Rint = list()
-for(i in 1:333){
-  t = pMmax[i]:lastPatent[i]
-  Rint[[i]] = na.stinterp(R[t,i])
-}
-
-Rtrunc = list()
-for(i in 1:333){
-  trunc = min(which(is.na(R[1:length(R[,i]),i])))
-  Rtrunc[[i]] = R[pMmax[i]:trunc,i]
-}
-
-plot(Rtrunc[[7]])
-
-patient = list()
-j = 1
-for(i in 1:333){
-  if(length(Rtrunc[[i]]) >= 50){
-    patient[[j]] = i
-    j = j+1
-  }
-}
-
-RRtrunc = list()
-for(i in 1:length(patient)){
-  RRtrunc[[i]] = abs(fft(Rtrunc[[patient[[i]]]]))
-}
-
-n = 10
-plot(seq(0,1-1/length(Rint[[n]]),1/length(Rint[[n]])),abs(fft(Rint[[n]])))
-
-
-#############################
-n = 19
-plot(M[1:100,n],xlim=c(0,100),type="l")
-plot(log10(M[1:100,n]),xlim=c(0,100),type="l")
-lines(intercept[n]+seq(0,100)*slope[n])
-plot(R[1:100,n],xlim=c(0,100),type="l",xlab="Days")
-
-plot(na.stinterp(R[1:100,n]),xlim=c(0,100),type="l",xlab="Days")
-
-#acf(na.stinterp(R[1:100,n]))
-#pacf(na.stinterp(R[1:100,n]))
-
-N = length(na.stinterp(R[1:100,n]))
-freq = 1:N/N
-
-plot(freq,abs(fft(na.stinterp(R[1:100,n]))),xlim=c(0,.5),ylab="A",type="l",xlab="cycles per day")
-m = which(abs(fft(na.stinterp(R[1:100,n])))==max(abs(fft(na.stinterp(R[1:100,n])))))
-1/freq[m][1]
-abline(v=freq[m][1])
-abline(v=.094)
-abline(v=.031)
-length(na.stinterp(R[1:100,n]))
-
-## differenced data 
-plot(diff(na.stinterp(R[1:150,n])))
-acf(diff(na.stinterp(R[1:150,n])))
-pacf(diff(na.stinterp(R[,n])))
 
 
 
+################ Average TE over the course of an infection ###############
+p1=.689
+p2= 2.145
+p3 = 144.351
+plot(sigmoidTE(log10(rmg),p1,p2,p3),ylim=c(0,1),type="l",xlim=c(0,300),xlab="Days since Patency",ylab="Transmission Efficiency",main="Estimated Transmission Efficiency as a Function of Time")
+lines(sigmoidTE(fgpl(c(rep(0,8),log10(rm[1:300]))),p1,p2,p3),col="green")
+legend(100,.9,legend=c("Estimated TE from Gt","Estimated TE from Pt through Gt Filter"),col=c("black","green"),lty=c(1,1))
+## green here is using the asexuals to predict gametocytes, then gametocytes to predict TE
 
-###################################### Tweedie Distribution Investigation
-
-Tlam = function(mu,var,p){
-  mu^(2-p)/((2-p)*var)
-}
-
-Talpha = function(mu,var,p){
-  (2-p)/(p-1)
-}
-
-Tbeta = function(mu,var,p){
-  mu^(1-p)/((p-1)*var)
-}
-
-plot(log10(Tlam(10^mu,10^var,1.732)*(Talpha(10^mu,10^var,1.732)/Tbeta(10^mu,10^var,1.732))))
-plot(log10(diff(Tlam(10^mu,10^var,1.732))))
-plot(log10(diff(Talpha(10^mu,10^var,1.732)/Tbeta(10^mu,10^var,1.732))))
-plot(log10(diff(Tbeta(10^mu,10^var,1.732))))
-plot(log(Talpha(10^mu,10^var,1.732)/Tbeta(10^mu,10^var,1.732)))
-GDay = which(!is.na(log10(diff(Tlam(mu,var,1.732)))))
-#lm(log(diff(Tlam(mu,var,1.732)))[GDay]~GDay)
-#Day = seq(0,250,.1)
-#lines(Day,-17.14840+.04865*Day)
-
-plot(log(Tlam(mu,var,1.732)),main="Frequency of Bursting Events per Day")
-plot(log(Talpha(mu,var,1.732)/Tbeta(mu,var,1.732)),main="Number of Merozoites Released per Bursting Event")
+################ Probability of Fever over the course of an Infection ##############
+p1 = .8953
+p2 = 3.449
+p3 = 5.819*10^4
+plot(PropFever[1:365],type="l",ylim=c(0,1),xlab="Days Since Patency", ylab="Proportion with Fever",main="Daily Prevalence of Fever Conditioned on Infection",xlim=c(0,180))
+lines(sigmoidFev(log10(rm),p1,p2,p3),col="red")
+legend(100,.9,legend=c("Measured Prevalence","Parasite Predicted Prevalence"),col=c("black","red"),lty=c(1,1))

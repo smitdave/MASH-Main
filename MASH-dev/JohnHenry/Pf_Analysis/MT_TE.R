@@ -167,7 +167,7 @@ sigmoidTE = function(x,p1,p2,p3){
   p1*exp(p2*x)/(p3+exp(p2*x))
 }
 x = seq(.8,4.1,.01)
-lines(x,sigmoidTE(x,p1,p2,p3))
+plot(x,sigmoidTE(x,p1,p2,p3))
 title(main="Mean log10 Gametocyte Density vs Mean Transmission Efficiency")
 #lines(x,gompTE(x,g1,g2,g3),lty=2)
 
@@ -188,6 +188,9 @@ abline(h=0)
 #gomphalf = x[min(which(gompTE(x,g1,g2,g3)>(.7725/2)))]
 #abline(v = gomphalf)
 #par(mfrow=c(1,1))
+
+
+
 
 plot(logGT,betaVars,type="l")
 plot(logGT,betaMeans/betaVars,type="l")

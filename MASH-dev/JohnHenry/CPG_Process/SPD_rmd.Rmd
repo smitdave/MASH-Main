@@ -1,0 +1,77 @@
+---
+title: "Stochastic Population Dynamics"
+author: "John M Henry"
+date: "April 23, 2019"
+output: html_document
+---
+
+
+Here we will introduce a geometric Levy process for population dynamics. Assume we have a population of mosquitoes, which at the nth time step has $Y_n$ individuals. Each time step here is taken to be a full feeding and reproduction cycle. For each time step, one of two things can occur for each individual - successful reproduction or death. We will assume that success in one feeding cycle has no bearing on success in the next, so they are independent. Also, if we assume that the time before death or birth events are both exponentially distributed with respective parameters $\lambda_D$ and $\lambda_B$, the probability they reproduce in the next cycle is $p_B := P($T$_B <$ T$_D) = \frac{\lambda_B}{\lambda_B+\lambda_D}$. In addition, we will assume that the death rate is subject to density dependence - that is, it increases linearly with the population size such that $\lambda_D = \lambda_D^0 + \lambda_D^C Y_t$, where $\lambda_D^0$ is the 'intinsic death rate' in the absence of competition, and $\lambda_D^C$ is the marginal increase in the death rate with each new addition to the population. When reproducing, the mosquito will lay a negative binomially distributed number of eggs with parameters $m$ and $r$. Those who die will be removed from the population. This leads to the following stochastic difference equation:
+
+\begin{equation}
+Y_{t+\Delta t} = Y_t + \left(\sum_{k=1}^{N^B_t} X_t - N^D_t \right) \Delta t
+\end{equation}
+
+where $ N^B_t, N^D_t $ are binomial random variables with parameters $n_B=Y_t$, $p_B = P_B$ and $n_D = Y_t$, $p_D = 1-p_B$. $N^B_t$ describes the number of mosquitoes which successfully complete a reproduction cycle with a blood meal and a resulting clutch of eggs, while $N^D_t$ describes the number of mosquitoes who don't survive a cycle. Subtracting $Y_n$ and dividing by $Y_n$ on both sides, we obtain
+
+\begin{equation}
+\frac{Y_{t+\Delta t}-Y_t}{Y_t} = \left(\sum_{k=1}^{N^B_t} \frac{X_k}{Y_t} - \frac{N^D_t}{Y_t}\right)\Delta t
+\end{equation}
+
+
+If we assume that the probability of survival during the next cycle decreases proportionally to the total population size (through competition for resources, for example) and we have a relatively large population, by the Poisson limit theorem the binomial $N^B_t$ will converge to a Poisson distribution $R_t$ with rate $\lambda$. Meanwhile, the negative binomial scaled by the population size will converge to $Z_t$ which follows a gamma distribution (with parameters $\alpha$ and $\beta$, say). Finally, the binomial scaled by the population size will converge to a Gaussian with mean $p_D = 1-p_B$ and variance $p_D(1-p_D)$, which we will call $B_t$. Therefore, for a large population we will have
+ 
+\begin{equation}
+\frac{\Delta Y_t}{Y_t} = \left(\sum_{k=1}^{R_t} Z_t - B_t\right)\Delta t
+\end{equation}
+
+This tells us that the per capita rate of change of the population size is going to be the Poisson sum of gamma distributed random variables, shifted by a normal distribution to account for the fraction of mosquitoes who died.
+
+If we assume that the time between cycles is small, we can replace the $\Delta$ terms with differentials while being careful with what happens to the random measures in this limit. First, we note that the Poisson sum of gamma random variables follows a compound Poisson Gamma distribution with known properties, so we will call this process M_t. Second, the infinitesimally scaled Gaussian process becomes a Wiener process. Making this substitution, we get the Stochastic Differential Equation (SDE) defined in the Ito sense:
+
+\begin{equation}
+\frac{d Y_t}{Y_t} = \left(\mu dt + var(M_t) dM_t - var(B_t) dB_t\right)
+\end{equation}
+where $\mu$ is the mean of the overall process.
+
+To solve this, we note that this is the difference between this Poisson gamma process (which I've been calling a Tweedie-Jorgensen process due to the major contributions of both Tweedie and Jorgensen to the discovery and elucidation of theoretical properties of the class of Tweedie distributions, of which both M and B are members). In order to solve this equation using Ito's lemma, first we need to find the mean of each process:
+
+$$E\left[\sum_{k=1}^{R_t}Z_t\right] = E[M_t] = \frac{\lambda_B \alpha}{\beta}$$
+
+$$E[B_t] = p_D$$
+
+And second, we need to find the quadratic variation of these two processes. Because they are independent, we don't need to worry about any covariances. The quadratic variation is known for a standard brownian motion to be
+
+$$[B_t] = t$$
+
+This is loosely because scaling brownian motion by a constant scales the variance by (the absolute value of) that same constant, so scaling a Gaussian with variance $\sigma^2$ by $\delta t$ leads to another Gaussian with variance $\sigma^2 t$. This scale invariance is key to the ubiquity of Gaussian processes as foci of convergence of the scaled sum of random variables as described by the Central Limit Theorem. Similarly, the work of Tweedie and Jorgensen lead to showing this is true of the Tweedie distributions more generally, and is part of the justification of Tweedie distributions acting as foci of convergence in effects analogous to the Central Limit Theorem. Here, the compound Poisson gamma distribution appears to act as the limit of a random sum of random variables.
+
+Making use of the Tweedie properties, we can show that for M with Tweedie parameters $\mu$, $\sigma^2$ and $p$,
+
+$$\mu = \frac{\lambda \alpha}{\beta}$$
+
+$$\sigma^2 = \frac{\lambda \alpha (1+\alpha)}{\beta^2}\left(\frac{\lambda \alpha}{\beta} \right)^{-\frac{2+\alpha}{\alpha+1}} $$
+
+$$p = \frac{2+\alpha}{\alpha+1} $$
+
+In particular, $Var(M) = \frac{\lambda \alpha (1+\alpha)}{\beta^2} = \sigma^2 \mu^p$ - this power law between the mean and variance is what characterizes a Tweedie distribution. A Gaussian is 'degenerate' in that $p=0$, while for a compound Poisson gamma distribution $1 < p < 2$. Intuitively, it is between a Poisson distribution ($p = 1$) and a gamma distribution ($p=2$). In terms of our original parameters, the PDF of a compound Poisson gamma distribution is
+
+$$f_M(x) = e^{-\lambda}\delta_0 + \frac{r_p(\lambda(\alpha x)^p)}{(e^{\lambda}-1)xe^{\alpha x}}$$
+where
+
+$$r_p(y) = \sum_{k=1}^{\infty} \frac{y^k}{k! \Gamma(k p)} $$
+
+Scaling the distribution by a factor of $c$ has the effect of raising the variance by a factor of $abs(c)^{2-p}$, and from the form it's obvious that p is restricted to be between 1 and 2 for this distribution so this is a strictly positive power.
+
+
+## Fill in Details...
+
+If the per capita growth rate is approximately equal to the death rate, then the process is approximately equal to the exponential of the scaled sum of the two random processes with time decaying the signal, leading to a stable equilibrium. Therefore in the short term the malthusian fitness in the population is dominated by these random fluctuations around 0, which can cause the population to oscillate between exponential growth and exponential decay around the population equilibrium. This is a possible explanation for the ubiquity of 1/f noise, also known as pink noise or flicker, in population ecology - random fluctuations between exponential growth and decay around the carrying capacity for a population which can have multiple births per reproductive cycle, which includes most organisms. Ultimately, this behavior is expected to be dominated by the drift terms and will die out in constant conditions; however if the parameters themselves change over time, then the behavior could possibly be maintained and allow for some variability to persist for long periods of time.
+
+The following code simulates the discrete time version of this process for 50 generations 10000 times, and summarizes the information by displaying a typical trajectory, the mean of all the trajectories, the shape of the distribution, and the power law between the mean and variance via the parameter $p$, which again should always be between 1 and 2:
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+
+```
