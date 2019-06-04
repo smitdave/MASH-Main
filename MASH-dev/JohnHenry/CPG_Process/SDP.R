@@ -2,16 +2,21 @@
 ## 
 
 library('animation')
-install.packages("remotes")
-remotes::install_github("piklprado/sads")
+#install.packages("remotes")
+#remotes::install_github("piklprado/sads")
 library(plotly)
+library(hexbin)
 
-Tmax = 10000
-Reps = 200
+#this saves the run for later analysis
+#write.csv(xn,file="Chaotic_Trajectory_SPD_10k.csv")
+#write.csv(xn,'Honeycomb_SPD.csv')
+
+Tmax = 3000
+Reps = 5000 #set to 200 for "Chaotic_Trajectory_SPD.csv"
 xn = matrix(rep(0,Tmax*Reps),nrow=Tmax,ncol=Reps)
 x0 = 10^5.5
 xn[1,] = rnbinom(Reps,x0*2,.5)
-lambdaB = 2#10#1
+lambdaB = 4#1 for regular/irregular, 2 for chaos
 lambdaD = .5
 epsilon = .005
 pB = matrix(rep(0,Reps*Tmax),nrow=Tmax,ncol=Reps)
@@ -22,28 +27,70 @@ pB[1,] = lambdaB/(lambdaB+lambdaD+epsilon*x0)
 for(i in 1:(Tmax-1)){
   for(j in 1:Reps){
     B = ifelse(xn[i,j]==0,0,rbinom(1,xn[i,j],pB[i,j]))
-    BB = sum(rnbinom(B,20,.05)) # B,10,.05 for chaos, B,50,.9 for regular
+    BB = sum(rnbinom(B,20,.05)) # B,20,.05 for chaos, B,10,.05 for irregular, B,50,.9 for regular
     D = rbinom(1,xn[i,j],1-pB[i,j]) 
     xn[i+1,j] = ifelse(xn[i,j]==0,0,xn[i,j] + BB - D)
     pB[i+1,j] = lambdaB/(lambdaB+lambdaD+epsilon*xn[i,j])
   }
+  if(i == floor(Tmax/10)){
+    print('10 Percent')
+  }
+  if(i == floor(Tmax/5)){
+    print('20 Percent')
+  }
+  if(i == floor(Tmax*3/10)){
+    print('30 Percent')
+  }
+  if(i == floor(Tmax*2/5)){
+    print('40 Percent')
+  }
+  if(i == floor(Tmax/2)){
+    print('50 Percent')
+  }
+  if(i == floor(Tmax*6/10)){
+    print('60 Percent')
+  }
+  if(i == floor(Tmax*7/10)){
+    print('70 Percent')
+  }
+  if(i == floor(Tmax*8/10)){
+    print('80 Percent')
+  }
+  if(i == floor(Tmax*9/10)){
+    print('90 Percent')
+  }
 }
 
-plot(log10(xn[1:Tmax,1]),xlab="Reproductive Cycles",ylab="Log10 Population Size",main="Example Simulated Population",type="l")
-plot(log10(xn[2:Tmax,1]),log10(xn[1:(Tmax-1),1]),xlab="Log10 Population",ylab="Log10 Population Lagged by 1 Cycle",main="Lag 1 Embedding",type="l")
-plot(log10(xn[2:Tmax,1]),log10(xn[1:(Tmax-1),1]))
 
-plot(log10(xn[1500:Tmax,1]),log10(xn[1499:(Tmax-1),1]),type="l")
-plot(log10(xn[1500:Tmax,1]),log10(xn[1499:(Tmax-1),1]))
+plot(log10(xn[1:Tmax,2]),xlab="Reproductive Cycles",ylab="Log10 Population Size",main="Example Simulated Population",type="l")
+plot(log10(xn[2:Tmax,2]),log10(xn[1:(Tmax-1),2]),xlab="Log10 Population",ylab="Log10 Population Lagged by 1 Cycle",main="Lag 1 Embedding",type="l")
+plot(log10(xn[2:Tmax,2]),log10(xn[1:(Tmax-1),2]))
 
-plot(log10(xn[500:1000,1]),log10(xn[499:999,1]),type="l",xlim=c(5.4,5.75),ylim=c(5.4,5.75))
+#plot(log10(xn[5000:Tmax,1]),log10(xn[4999:(Tmax-1),1]),type="l")
+#plot(log10(xn[5000:Tmax,1]),log10(xn[4999:(Tmax-1),1]))
+
+#plot(log10(xn[500:1000,1]),log10(xn[499:999,1]),type="l",xlim=c(5.4,5.75),ylim=c(5.4,5.75))
 #plot(log10(xn[4000:5000,1]),log10(xn[3999:4999,1]),xlim=c(5.4,5.75),ylim=c(5.4,5.75))
-
-lag0 = list(log10(xn[3:Tmax]))
-lag1 = list(log10(xn[2:(Tmax-1)]))
-lag2 = list(log10(xn[1:(Tmax-2)]))
+N = 10
+lag0 = list(log10(xn[3:Tmax,N]))
+lag1 = list(log10(xn[2:(Tmax-1),N]))
+lag2 = list(log10(xn[1:(Tmax-2),N]))
 df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
-plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode="lines") %>%
+
+df01 = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]])
+df02 = data.frame(lag0 = lag0[[1]], lag2 = lag2[[1]])
+df12 = data.frame(lag1 = lag1[[1]], lag2 = lag2[[1]])
+h01 = hexbin(df01,xbins=50)
+h02 = hexbin(df02,xbins=50)
+h12 = hexbin(df12,xbins=50)
+plot(h01)
+plot(h02)
+plot(h12)
+
+xnacf = acf(xn[1:Tmax,N],lag.max=1000)
+plot(log10(1:500),log10(Mod(fft(xnacf$acf[1:1000]))[1:500]^2))
+
+plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode="points",marker=list(size=2)) %>%
   add_trace(
     x = lag0,
     y = lag1,
@@ -60,14 +107,16 @@ plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode="lines") %>%
   showlegend = F
 )
 
-xx = rowMeans(xn)
-plot(log10(xx[1:Tmax]),xlab="Reproductive Cycles",ylab="Log10 Population Size",main="Average Population Size")
+xx = rowMeans(xn[1:Tmax,])
+plot(log10(xx))
+acf(log10(xx),lag.max=3000)
+plot(log10(xx),xlab="Reproductive Cycles",ylab="Log10 Population Size",main="Average Population Size")
 
 plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]),xlab="Population Size",ylab="Population Size Lagged By 1 Cycle",main="Single Lag Embedding",type="l")
 plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]))
 
-plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]),xlim=c(5.565,5.62),ylim=c(5.565,5.62))
-plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]),xlim=c(5.565,5.62),ylim=c(5.565,5.62),type="l")
+#plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]),xlim=c(5.565,5.62),ylim=c(5.565,5.62))
+#plot(log10(xx[10001:Tmax]),log10(xx[10000:(Tmax-1)]))#,xlim=c(5.565,5.62),ylim=c(5.565,5.62),type="l")
 
 lag0 = list(log10(xx[3:Tmax]))
 lag1 = list(log10(xx[2:(Tmax-1)]))
@@ -75,9 +124,61 @@ lag2 = list(log10(xx[1:(Tmax-2)]))
 df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
 plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode='lines')
 
-lag0 = list(log10(xx[1500:Tmax]))
-lag1 = list(log10(xx[1499:(Tmax-1)]))
-lag2 = list(log10(xx[1498:(Tmax-2)]))
+df01 = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]])
+df02 = data.frame(lag0 = lag0[[1]], lag2 = lag2[[1]])
+df12 = data.frame(lag1 = lag1[[1]], lag2 = lag2[[1]])
+h01 = hexbin(df01,xbins = 50)
+h02 = hexbin(df02, xbins = 50)
+h12 = hexbin(df12, xbins = 50)
+plot(h01)
+plot(h02)
+plot(h12)
+
+laglag = 6
+plot(log(log(xx[1:(Tmax-laglag)])),log(log(xx[(1+laglag):Tmax])))
+fitlag = lm(log(log(xx[(1+laglag):Tmax]))~log(log(xx[1:(Tmax-laglag)])))
+hist(mean(xx)*fitlag$residuals-min(mean(xx)*fitlag$residuals),freq=F,breaks=25)
+qqnorm(fitlag$residuals/sqrt(var(fitlag$residuals)))
+lines(seq(-5,5),seq(-5,5))
+var(fitlag$residuals)
+mean(xx)^2*var(fitlag$residuals)
+
+laglag = 6
+plot(xn[1:(Tmax-laglag),1],xn[(1+laglag):Tmax,1])
+plot(log(xn[1:(Tmax-laglag),1]),log(xn[(1+laglag):Tmax,1]))
+#fitlag = lm(log(log(xn[(1+laglag):Tmax,1]))~log(log(xn[1:(Tmax-laglag),1])))
+hist(mean(xn[,1])*fitlag$residuals-min(mean(xn[,1])*fitlag$residuals),freq=F,breaks=25)
+qqnorm(fitlag$residuals/sqrt(var(fitlag$residuals)))
+lines(seq(-5,5),seq(-5,5))
+var(fitlag$residuals)
+mean(xn)^2*var(fitlag$residuals)
+
+## now we can fit the sum of a bell curve to the death rate
+## and a compound poisson-gamma distribution to the birth rate
+
+mean(xx)
+
+#lag0 = list(log10(xx[5000:Tmax]))
+#lag1 = list(log10(xx[4999:(Tmax-1)]))
+#lag2 = list(log10(xx[4998:(Tmax-2)]))
+#df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
+#plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode='points')
+
+rowVars = function (x,na.rm = TRUE) {
+  sqr = function(x) x * x
+  n = rowSums(!is.na(x))
+  n[n <= 1] = NA
+  return(rowSums(sqr(x - rowMeans(x,na.rm = na.rm)), na.rm = na.rm)/(n - 1))
+}
+
+xy = rowVars(xn[1:1000,])
+plot(log10(xy))
+
+plot(log10(xy[2:1000]),log10(xy[1:999]))
+
+lag0 = list(log10(xy[3:Tmax]))
+lag1 = list(log10(xy[2:(Tmax-1)]))
+lag2 = list(log10(xy[1:(Tmax-2)]))
 df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
 plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode='lines')
 
@@ -233,9 +334,9 @@ plot(10000:35000,log10(xn[10000:35000]),type="l",main="Log10 Population Size, Zo
 plot(10000:22500,log10(xn[10000:22500]),type="l",main="Log10 Population Size, Zoom 8X",ylab="Log10 Number of Organisms",xlab="Time Steps")
 plot(10000:16250,log10(xn[10000:16250]),type="l",main="Log10 Population Size, Zoom 16X",ylab="Number of Organisms",xlab="Time Steps")
 #plot(10001:12500,log10(xn[10001:12500]),type="l")
-pacf(xn)
-acf(xn,lag.max=100,ylim=c(-1,1))
-hist(xn,freq=F,breaks=100,main="Histogram of Population Size",ylab="Frequency Density",xlab="Number of Organisms")
+pacf(xn[,1])
+acf(xn[,1],lag.max=1000,ylim=c(-1,1))
+hist(xn[,1],freq=F,breaks=100,main="Histogram of Population Size",ylab="Frequency Density",xlab="Number of Organisms")
 abline(v=mean(xn))
 hist(log10(xn)-mean(log10(xn)),freq=F,breaks=100)
 abline(v=mean(log10(xn)))
@@ -254,7 +355,7 @@ lines(seq(-5,5,.01),seq(-5,5,.01))
 ##################################
 
 lag.max = 500#50000
-yy = acf(xn,lag.max=lag.max)
+yy = acf(xn[,1],lag.max=lag.max)
 pyy = Mod(fft(yy$acf))[1:(lag.max/2)]^2
 fyy = seq(1,(lag.max/2))
 plot(log(fyy),log(pyy),main="Log-Log Plot of Power Spectrum of Data",ylab="Log Spectral Density",xlab="Log Frequency")
@@ -266,3 +367,195 @@ lmp = lm(log(pyy[which(log(fyy)>5 & log(fyy)<6)])~log(fyy[which(log(fyy)>5 & log
 lines(seq(4.4,10,.01),lmp$coefficients[1]+lmp$coefficients[2]*seq(4.4,10,.01),col="red",lwd=2)
 lines(seq(0,4.4,.01),1*rep(1,length(seq(0,4.4,.01))),col="red",lwd=2)
 abline(v=4.4,lty=2)
+
+lag.max=1000
+yymu = acf(xx,lag.max=lag.max)
+pyymu = Mod(fft(yymu$acf))[1:(lag.max/2)]^2
+fyy = seq(1,(lag.max/2))
+plot(log(fyy),log(pyymu),main="Log-Log Plot of Power Spectrum of Data",ylab="Log Spectral Density",xlab="Log Frequency")
+
+
+
+
+
+#######################################################
+####### complete loss of autocorrelation in the presence
+####### of both chaos and stochasticity
+#######################################################
+
+############# Part 2: adding white noise
+
+
+Tmax = 1000
+Reps = 1000
+x0 = 10^5
+xn = matrix(rep(0,Tmax*Reps),nrow=Tmax,ncol=Reps)
+xn[1,] = rnbinom(Reps,x0*2,.5)
+lambdaB = 1
+lambdaD = .5
+lambdaE = 1
+  
+epsilon = .0001
+for(i in 1:(Tmax-1)){
+  for(j in 1:Reps){
+    pB = lambdaB/(lambdaB+lambdaE+lambdaD+epsilon*xn[i,j])
+    pD = (lambdaD+epsilon*xn[i,j])/(lambdaB+lambdaE+lambdaD+epsilon*xn[i,j])
+    dB = rnorm(1,0,.0003)
+    dBd = rnorm(1,0,.0003)
+    B = ifelse(xn[i,j]==0,0,rpois(1,xn[i,j]*abs(pB+dB)))
+    BB = sum(rnbinom(B,20,.5))
+    D = rbinom(1,xn[i,j],min(abs(pD-dBd),1))
+    xn[i+1,j] = ifelse(xn[i,j]==0,0, xn[i,j] + BB-D)
+  }
+  if(i == floor(Tmax/10)){print('10 Percent')}
+  if(i == floor(Tmax/2)){print('50 Percent')}
+}
+
+plot(log10(xn[1:Tmax,1]),xlab="Reproductive Cycles",ylab="Log10 Population Size",main="Example Simulated Population",type="l")
+plot(log10(xn[2:Tmax,1]),log10(xn[1:(Tmax-1),1]),xlab="Log10 Population",ylab="Log10 Population Lagged by 1 Cycle",main="Lag 1 Embedding",type="l")
+plot(log10(xn[2:Tmax,1]),log10(xn[1:(Tmax-1),1]))
+
+#plot(log10(xn[1500:Tmax,1]),log10(xn[1499:(Tmax-1),1]),type="l")
+#plot(log10(xn[1500:Tmax,1]),log10(xn[1499:(Tmax-1),1]))
+
+#plot(log10(xn[500:1000,1]),log10(xn[499:999,1]),type="l",xlim=c(5.4,5.75),ylim=c(5.4,5.75))
+#plot(log10(xn[4000:5000,1]),log10(xn[3999:4999,1]),xlim=c(5.4,5.75),ylim=c(5.4,5.75))
+
+lag0 = list(log10(xn[3:Tmax]))
+lag1 = list(log10(xn[2:(Tmax-1)]))
+lag2 = list(log10(xn[1:(Tmax-2)]))
+df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
+plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode="lines") %>%
+  add_trace(
+    x = lag0,
+    y = lag1,
+    z = lag2,
+    marker = list(
+      color = 'rgb(17, 157, 255)',
+      size = .001,
+      opacity = 0.5,
+      line = list(
+        color = 'rgb(231, 99, 250)',
+        width = 1
+      )
+    ),
+    showlegend = F
+  )
+
+xx = rowMeans(xn)
+plot(log10(xx[1:Tmax]),xlab="Reproductive Cycles",ylab="Log10 Population Size",main="Average Population Size")
+
+plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]),xlab="Population Size",ylab="Population Size Lagged By 1 Cycle",main="Single Lag Embedding",type="l")
+plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]))
+
+#plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]),xlim=c(5.565,5.62),ylim=c(5.565,5.62))
+#plot(log10(xx[10001:Tmax]),log10(xx[10000:(Tmax-1)]))#,xlim=c(5.565,5.62),ylim=c(5.565,5.62),type="l")
+
+lag0 = list(log10(xx[5:Tmax]))
+lag1 = list(log10(xx[4:(Tmax-1)]))
+lag2 = list(log10(xx[3:(Tmax-2)]))
+df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
+plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode='lines',marker=list(size=2))
+
+df01 = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]])
+df02 = data.frame(lag0 = lag0[[1]], lag2 = lag2[[1]])
+df12 = data.frame(lag1 = lag1[[1]], lag2 = lag2[[1]])
+h01 = hexbin(df01)
+h02 = hexbin(df02)
+h12 = hexbin(df12)
+plot(h01)
+plot(h02)
+plot(h12)
+
+lag0 = list(log10(xx[1500:Tmax]))
+lag1 = list(log10(xx[1499:(Tmax-1)]))
+lag2 = list(log10(xx[1498:(Tmax-2)]))
+df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
+plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode='lines')
+
+
+
+
+################ Part 3: Beta noise
+
+
+Tmax = 100
+Reps = 100
+x0 = 10^6
+xn = matrix(rep(0,Tmax*Reps),nrow=Tmax,ncol=Reps)
+xn[1,] = rnbinom(Reps,x0*2,.5)
+lambdaB = 1
+lambdaD = .5
+lambdaE = 1
+epsilon = .00001
+
+for(i in 1:(Tmax-1)){
+  for(j in 1:Reps){
+    B = ifelse(xn[i,j]==0,0,rpois(1,xn[i,j]*rbeta(1,lambdaB,lambdaE+lambdaD+epsilon*xn[i,j])))
+    BB = sum(rnbinom(B,100,.95))
+    D = rbinom(1,xn[i,j],rbeta(1,lambdaD+epsilon*xn[i,j],lambdaE+lambdaB))
+    xn[i+1,j] = ifelse(xn[i,j]==0,0, xn[i,j] + BB-D)
+  }
+}
+
+plot(log10(xn[1:Tmax,1]),xlab="Reproductive Cycles",ylab="Log10 Population Size",main="Example Simulated Population",type="l")
+plot(log10(xn[2:Tmax,1]),log10(xn[1:(Tmax-1),1]),xlab="Log10 Population",ylab="Log10 Population Lagged by 1 Cycle",main="Lag 1 Embedding",type="l")
+plot(log10(xn[2:Tmax,1]),log10(xn[1:(Tmax-1),1]))
+
+#plot(log10(xn[1500:Tmax,1]),log10(xn[1499:(Tmax-1),1]),type="l")
+#plot(log10(xn[1500:Tmax,1]),log10(xn[1499:(Tmax-1),1]))
+
+#plot(log10(xn[500:1000,1]),log10(xn[499:999,1]),type="l",xlim=c(5.4,5.75),ylim=c(5.4,5.75))
+#plot(log10(xn[4000:5000,1]),log10(xn[3999:4999,1]),xlim=c(5.4,5.75),ylim=c(5.4,5.75))
+
+lag0 = list(log10(xn[3:Tmax]))
+lag1 = list(log10(xn[2:(Tmax-1)]))
+lag2 = list(log10(xn[1:(Tmax-2)]))
+df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
+plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode="points") %>%
+  add_trace(
+    x = lag0,
+    y = lag1,
+    z = lag2,
+    marker = list(
+      color = 'rgb(17, 157, 255)',
+      size = .001,
+      opacity = 0.5,
+      line = list(
+        color = 'rgb(231, 99, 250)',
+        width = 1
+      )
+    ),
+    showlegend = F
+  )
+
+xx = rowMeans(xn)
+plot(log10(xx[1:Tmax]),xlab="Reproductive Cycles",ylab="Log10 Population Size",main="Average Population Size",type="l")
+
+plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]),xlab="Population Size",ylab="Population Size Lagged By 1 Cycle",main="Single Lag Embedding",type="l")
+plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]))
+
+#plot(log10(xx[2:Tmax]),log10(xx[1:(Tmax-1)]),xlim=c(5.565,5.62),ylim=c(5.565,5.62))
+#plot(log10(xx[10001:Tmax]),log10(xx[10000:(Tmax-1)]))#,xlim=c(5.565,5.62),ylim=c(5.565,5.62),type="l")
+
+lag0 = list(log10(xx[3:Tmax]))
+lag1 = list(log10(xx[2:(Tmax-1)]))
+lag2 = list(log10(xx[1:(Tmax-2)]))
+df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
+plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode='lines')
+
+df01 = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]])
+df02 = data.frame(lag0 = lag0[[1]], lag2 = lag2[[1]])
+df12 = data.frame(lag1 = lag1[[1]], lag2 = lag2[[1]])
+h01 = hexbin(df01)
+h02 = hexbin(df02)
+h12 = hexbin(df12)
+plot(h01)
+plot(h02)
+plot(h12)
+
+lag0 = list(log10(xx[1500:Tmax]))
+lag1 = list(log10(xx[1499:(Tmax-1)]))
+lag2 = list(log10(xx[1498:(Tmax-2)]))
+df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
+plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode='lines')

@@ -41,16 +41,17 @@ for(k in 1:50){
   var[k] = var(xn[500:Tmax])
 }
 
-plot(log10(mean)[which(mean>0)],log10(var)[which(mean>0)])
-
+plot(log10(mean)[which(mean>0)],log10(var)[which(mean>0)],xlab="log10 Mean Population Size",ylab="Log10 Variance of Population Size",main="Taylor's Law with Beta Noise")
 mvpl = lm(log10(var)[which(mean>1000)]~log10(mean)[which(mean>1000)])
 lines(seq(-10,10),mvpl$coefficients[1]  + seq(-10,10)*mvpl$coefficients[2])
+legend(4.6,11, legend=parse(text=sprintf('paste(Slope,\' = %s\')',floor(mvpl$coefficients[2]*1000)/1000)))
 
 qqnorm((log10(xn[100:Tmax])-mean(log10(xn[100:Tmax])))/sqrt(var(log10(xn[100:Tmax]))[1]))
 lines(seq(-5,5),seq(-5,5))
 
-hist(xn[100:Tmax],breaks=10)
-hist(log10(xn),breaks=20)
+plot(xn[100:Tmax],xlab="Reproductive Cycles",ylab="Population Size",main="Population Over Time")
+hist(xn[100:Tmax],breaks=20,xlab="Population Size",ylab="Normalized Frequency",main="Stationary Population Distribution",freq=F)
+hist(log10(xn),breaks=20,xlab="Population Size",ylab="Normalized Frequency",main="Stationary Population Distribution",freq=F)
 #qqnorm((log10(xn)-mean(log10(xn)))/sqrt(var(log10(xn))[1]))
 #lines(-5:5,-5:5)
 
@@ -89,14 +90,14 @@ for(k in 1:50){
   }
 }
 
-plot(log10(mean)[which(mean>0)],log10(var)[which(mean>0)])
-
+plot(log10(mean)[which(mean>0)],log10(var)[which(mean>0)],xlab="log10 Mean Population Size",ylab="Log10 Variance of Population Size",main="Taylor's Law with White Noise")
 mvpl = lm(log10(var)[which(mean>0)]~log10(mean)[which(mean>0)])
 lines(seq(-10,10),mvpl$coefficients[1]  + seq(-10,10)*mvpl$coefficients[2])
+legend(4.6,8.8, legend=parse(text=sprintf('paste(Slope,\' = %s\')',floor(mvpl$coefficients[2]*1000)/1000)))
 
-plot(xn[100:2000])
-hist(xn[100:2000])
-hist(log10(xn[100:2000]),breaks=20)
+plot(xn[100:2000],xlab="Reproductive Cycles",ylab="Population Size",main="Population Over Time")
+hist(xn[100:2000],breaks=20,xlab="Population Size",ylab="Normalized Frequency",main="Stationary Population Distribution",freq=F)
+hist(log10(xn[100:2000]),breaks=20,xlab="Log10 Population Size",ylab="Normalized Frequency",main="Stationary Log10 Population Distribution",freq=F)
 
 
 ##################### No Noise in Probability of Events, Power Law ST p = 1
@@ -105,19 +106,20 @@ hist(log10(xn[100:2000]),breaks=20)
 for(k in 1:50){
   Tmax = 2000#5000
   Reps = 1#1000#10000#1
-  x0 = 10000
+  x0 = 100
   xn = matrix(rep(0,Tmax*Reps),nrow=Tmax,ncol=Reps)
   xn[1,] = rnbinom(Reps,x0*2,.5)
   lambdaB = 1
   lambdaD = .5#.001
   lambdaE = 1
+  p = 1
   
   epsilon = .0001 + .0001*k
   for(i in 1:(Tmax-1)){
     for(j in 1:Reps){
-      B = ifelse(xn[i,j]==0,0,rpois(1,xn[i,j]*(lambdaB/(lambdaB+lambdaE+lambdaD+epsilon*xn[i,j]))))
+      B = ifelse(xn[i,j]==0,0,rpois(1,xn[i,j]*(lambdaB/(lambdaB+lambdaE+lambdaD+epsilon*xn[i,j]^p))))
       BB = sum(rnbinom(B,100,.4))
-      D = rbinom(1,xn[i,j],(lambdaD+epsilon*xn[i,j])/(lambdaB+lambdaE+lambdaD+epsilon*xn[i,j]))
+      D = rbinom(1,xn[i,j],(lambdaD+epsilon*xn[i,j]^p)/(lambdaB+lambdaE+lambdaD+epsilon*xn[i,j]^p))
       xn[i+1,j] = ifelse(xn[i,j]<=0,0, xn[i,j] + BB-D)
     }
   }
@@ -125,14 +127,15 @@ for(k in 1:50){
   var[k] = var(xn[500:Tmax])
 }
 
-plot(log10(mean)[which(mean>0)],log10(var)[which(mean>0)])
-
+plot(log10(mean)[which(mean>0)],log10(var)[which(mean>0)],xlab="log10 Mean Population Size",ylab="Log10 Variance of Population Size",main="Taylor's Law Without Noise")
 mvpl = lm(log10(var)[which(mean>1000)]~log10(mean)[which(mean>1000)])
 lines(seq(-10,10),mvpl$coefficients[1]  + seq(-10,10)*mvpl$coefficients[2])
+legend(4.6,7.8, legend=parse(text=sprintf('paste(Slope,\' = %s\')',floor(mvpl$coefficients[2]*1000)/1000)))
 
-plot(xn[100:2000])
-hist(xn[100:2000])
-hist(log10(xn[100:2000]),breaks=20)
+
+plot(xn[100:2000],xlab="Reproductive Cycles",ylab="Population Size",main="Population Over Time")
+hist(xn[100:2000],xlab="Population Size",ylab="Normalized Frequency",main="Stationary Population Distribution",freq=F)
+hist(log10(xn[100:2000]),breaks=20,xlab="Log10 Population Size",ylab="Normalized Frequency",main="Stationary Log10 Population Distribution",freq=F)
 
 
 ###################################

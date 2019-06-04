@@ -6,8 +6,8 @@ Mosquito_Transmission <- read_excel("~/Malaria Data Files/Mosquito_Transmission.
 MT_Days <- read_excel("~/Malaria Data Files/MT_Days.xlsx")
 Gt_Col <- read_excel("~/Malaria Data Files/Gt_Col.xlsx")
 
-MT_GT_NP <- read_excel("~/Malaria Data Files/MT_GT_NP.xlsx")
-G = as.matrix(MT_GT_NP)
+#MT_GT_NP <- read_excel("~/Malaria Data Files/MT_GT_NP.xlsx")
+#G = as.matrix(MT_GT_NP)
 
 Days = as.matrix(MT_Days)
 ## which rows denote beginning of individual
@@ -28,17 +28,20 @@ Gt = as.numeric(Gt)
 
 Pt = as.matrix(MT_PT_NP)
 
-TE = matrix(0,nrow=1400,ncol=334)
+TE = matrix(NaN,nrow=1400,ncol=334)
 MGt = TE
 for(i in 1:334){
   TE[1:(end[i]-begin[i]+1),i] = Mosq[begin[i]:end[i]]
   MGt[1:(end[i]-begin[i]+1),i] = Gt[begin[i]:end[i]]
 }
 
+
 ### compare average gametocyte levels to average proportion of infected mosquitoes
 TEmu = rowMeans(TE,na.rm=T)
 GTmu = rowMeans(G,na.rm=T)
 PTmu = rowMeans(Pt,na.rm=T)
+
+plot(TEmu,type="l",xlim=c(0,200))
 
 rowVar = function(m){
   n = dim(m)[1]
@@ -300,3 +303,4 @@ lines(seq(0,1,.01),parab(seq(0,1,.01)))
 
 #r = seq(0,1,.01)
 #lines(r,mvfitcurve(r))
+

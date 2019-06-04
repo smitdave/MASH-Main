@@ -60,7 +60,7 @@ durfit = lm(f ~ time)
 lambda = durfit$coefficients[2]
 lines(0:250,durfit$coefficients[1] + durfit$coefficients[2]*0:250)
 
-plot(1-Ndays,xlab="Days Since First Patency",ylab="Proportion of Patients Infected",main="Duration of Infection")
+plot(1-Ndays,xlab="Days Since First Patency",ylab="Proportion of Patients Infected",main="Fitted Duration of Infection")
 lines(0:250,exp(-lambda*0:250))
 
 ########################################################################
@@ -81,7 +81,7 @@ plot(log10(rm)[1:300],log10(rv[1:300]),xlab="log10 Mean of Asexual Densities",yl
 ## weight fit by the square root of the sample size to account for sample mean uncertainty
 rmrvfit = lm(log10(rv[1:125])~log10(rm[1:125]),weights = sqrt(N[1:125]))
 lines(seq(-1,6),rmrvfit$coefficients[1]+rmrvfit$coefficients[2]*seq(-1,6))
-legend(1.5,8.5, legend=parse(text=sprintf('paste(Slope,\' = %s\')',floor(rmrvfit$coefficients[2]*1000)/1000)))
+#legend(c(2,5,9.5),legend=c("Slope: " + as.character(rmrvfit$coefficients[2])))
 
 ## restricted view of power law, at least 100 individuals (~30 percent) present for average
 # .3 = exp(-lambda*maxDays), solving for maxDays determines the limit of time restriction
@@ -176,7 +176,7 @@ BinaryFever = (Fever>38)
 # temperature was recorded if the patient had fever
 BinaryFever[which(is.na(BinaryFever))] = 0
 PropFever = rowMeans(BinaryFever,na.rm=T)
-plot(PropFever[1:200],type="l",ylim=c(0,.6),xlab="Days Since Patency", ylab="Proportion with Fever",main="Daily Prevalence of Fever Conditioned on Infection")
+plot(PropFever[1:365],type="l",ylim=c(0,1),xlab="Days Since Patency", ylab="Proportion with Fever",main="Daily Prevalence of Fever Conditioned on Infection")
 #plot(-log10(1-PropFever[1:365]),type="l",main="Daily Rate of Fever")
 
 ## compare fever probability to parasite densities, normalized by maximum density for scale
@@ -184,7 +184,7 @@ plot(log10(rm[1:365])/max(log10(rm[1:200]),rm.na=T),type="l",ylim=c(0,1))
 lines(PropFever[1:365])
 
 ##compare parasite densities to PropFever directly
-plot(log10(rm[1:365]),PropFever[1:365],xlim=c(1,5),ylim=c(0,.65),xlab="log10 Mean Asexual Densities",ylab="Proability of Fever",main="Probability of Fever Given Asexual Parasite Density")
+plot(log10(rm[1:365]),PropFever[1:365],xlim=c(1,5),ylim=c(0,1),xlab="log10 Mean Asexual Densities",ylab="Proability of Fever",main="Probability of Fever Given Asexual Parasite Density")
 
 ## fit sigmoid function to Probability of Fever Given Asexual Parasitemia
 aa = log10(rm[1:200])
@@ -204,77 +204,12 @@ abline(h=p1,lty=2)
 Fever[which(Fever<30)] = NaN
 MFever = rowMeans(Fever,na.rm=T)
 plot(MFever,type="l",xlim=c(0,140),xlab="Days",ylab="Temperature (Degrees Celsius)")
-plot(log10(rm[1:200]),MFever[1:200],xlab="log10 Asexual Parasitemia",ylab="Temperature (Degrees Celsius)",main="Severity of Fever given Asexual Parasitemia")
+plot(log10(rm[1:140]),MFever[1:140],xlab="log10 Asexual Parasitemia",ylab="Temperature (Degrees Celsius)")
 #no apparent delay between parasitemia and fever response
 ccf(rm[1:125],MFever[1:125],lag.max=20)
-hist(MFever,breaks=30,freq=F)
+hist(MFever,breaks=15)
 ## severe fevers would be underestimated using a normal distributed temp
 qqnorm(MFever)
-
-
-###############################################################################
-################   Predicting Gametocytes from Asexuals   #####################
-###############################################################################
-
-plot(log10(rm),xlim=c(0,200))
-plot(log10(rm),log10(rv),xlab="Log10 Mean Gametocyte Densities",ylab="Log10 Variance of Gametocyte Densities",main="Variance-to-Mean Power Law for Gametocytemia")
-gmvpl = lm(log10(rv)[which(log10(rm)>2.5)]~log10(rm)[which(log10(rm)>2.5)],weights=(1-Ndays[which(log10(rm)>2.5)]))
-lines(seq(1:5),gmvpl$coefficients[1] + gmvpl$coefficients[2]*seq(1:5))
-plot(log10(rmg),xlim=c(0,200))
-lag = 8
-plot(log10(rm)[1:(100-lag)],log10(rmg)[(1+lag):100])
-ccf(log10(rm[5:200]),log10(rmg[5:200]),lag.max=20)
-
-revar = rep(0,21)
-for(i in 0:21){
-  lag = i
-  hm = lm(log10(rmg)[(1+lag):150]~log10(rm)[1:(150-lag)])
-  revar[i] = var(hm$residuals)
-}
-lags = seq(0,20)
-plot(lags,revar,xlab="Lags",ylab="Variance",main="Variance of Residuals of Lagged Regression")
-lag = 8
-lagcor = cor(log10(rm)[5:(150-lag)],log10(rmg)[(5+lag):150])
-legend(10,.08, legend=parse(text=sprintf('paste(Correlation,\' = %s\')',floor(1000*lagcor)/1000)))
-
-lag = 8
-plot(log10(rm)[5:(150-lag)],log10(rmg)[(5+lag):150])
-Gtt = log10(rmg)[(5+lag):150]
-Ptt = log10(rm)[5:(150-lag)]
-
-plot(Ptt,Gtt,xlab="Lagged log10 Asexual Densities",ylab="Log10 Gametocyte Densities",main="Power Law Relationship Between Lagged Asexual and Gametocyte Densities")
-
-GtTop = Gtt[which(Ptt>3.5)]
-PtTop = Ptt[which(Ptt>3.5)]
-GtBot = Gtt[which(Ptt<3.5)]
-PtBot = Ptt[which(Ptt<3.5)]
-
-lmTop = lm(GtTop~PtTop)
-lmBot = lm(GtBot~PtBot)
-b1 = lmTop$coefficients[1]
-s1 = lmTop$coefficients[2]
-b2 = lmBot$coefficients[1]
-s2 = lmBot$coefficients[2]
-
-PtGt = function(x,b1,s1,b2,s2){
-  xtop = x[which(x>=3.5)]
-  xbot = x[which(x<3.5)]
-  ytop = b1+s1*xtop
-  ybot = b2+s2*xbot
-  y = 0*x
-  y[which(x>=3.5)] = ytop
-  y[which(x<3.5)] = ybot
-  return(y)
-}
-
-x = seq(2,5,.01)
-lines(x,PtGt(x,b1,s1,b2,s2))
-
-plot(log10(rm),xlim=c(0,250),type="l",xlab="Days Since Patency",ylab="Log10 Parasite Densities",main="Asexual-Predicted Gametocyte Densities")
-lines(log10(rmg),col="red")
-GtHat = c(rep(NaN,lag),PtGt(log10(rm),b1,s1,b2,s2))
-lines(GtHat,lty=2,col="blue")
-
 
 ###############################################################################
 ################ Transmission Efficiency from Gametocytemia ###################
@@ -339,7 +274,7 @@ for(i in 1:length(z)){
   muz[i] = params[1,i]/(params[1,i]+params[2,i])
 }
 
-plot(z,muz,ylim=c(0,1),xlab="log10 Mean Gametocytemia",ylab="Fraction of Bloodfed Mosquitoes Infected",main="Transmission Efficiency")
+plot(z,muz)
 
 aa = z
 bb = muz
@@ -363,10 +298,9 @@ abline(h=p1,lty=2)
 ## per individual infection by multiplying the transmission efficiency
 ## by the survival function of the infection
 TEhat = sigmoidTE(log10(rmg),p1,p2,p3)
-plot(TEhat,type="l",xlim=c(0,300),ylim=c(0,1),xlab="Days",ylab="Transmission Efficiency",main="Average Transmission Efficiency Predicted by Gametocytemia")
-lines(sigmoidTE(GtHat,p1,p2,p3),col="blue",lty=2)
+plot(TEhat,type="l",xlim=c(0,300),ylim=c(0,1))
 
 TEhat[which(is.na(TEhat))] = 0
 plot(1:300,cumsum(TEhat[1:300]*exp(-lambda*seq(1:300))),type="l",xlab="Days of Infection",ylab="Effective Number of Infectious Days",main="Cumulative Number of Totally Infectious Days")
-abline(h=cumsum(TEhat[1:1000]*exp(-lambda*seq(0:999)))[1000],lty=2)
+abline(h=cumsum(TEhat[1:300]*exp(-lambda*seq(0:299)))[300],lty=2)
 

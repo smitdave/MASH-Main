@@ -81,7 +81,7 @@ g = .5
 gn = function(x,A,C,g){
   A*x*(1-C*x^g)/(1+x)
 }
-Ai = seq(0,9,.001)
+Ai = seq(8,9,.001)
 x0 = .05
 for(i in 1:length(Ai)){
   xj = rep(0,300)
@@ -90,7 +90,7 @@ for(i in 1:length(Ai)){
     xj[j+1] = gn(xj[j],Ai[i],C,g)
   }
   if(i==1){
-    plot(rep(Ai[i],length(unique(xj[200:300]))),unique(xj[200:300]),xlim=c(0,9),ylim=c(0,1),type="p",main="Bifurcation Diagram for parameter A",xlab="A",ylab="an")
+    plot(rep(Ai[i],length(unique(xj[200:300]))),unique(xj[200:300]),xlim=c(8,9),ylim=c(0,1),type="p",main="Bifurcation Diagram for parameter A",xlab="A",ylab="an")
   }
   if(i>1){
     points(rep(Ai[i],length(unique(xj[200:300]))),unique(xj[200:300]),cex=.1)
