@@ -47,7 +47,7 @@ static double sigma = 1.0; // sigma > 1: competition (faster clearance), 0 < sig
 /* clearance of one clonal strain */
 double pfmoi_ttClear(const int MOI){
  double rho = (1.0/DurationPf) * std::pow(MOI,sigma);
- return R::rexp(1.0/rho);;
+ return R::rexp(1.0/rho);
 };
 
 /* no latent period */
