@@ -226,7 +226,7 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
 
   # attack rate
   AR <-rep(0,length(blocks)-1)
-  
+
   # estimated FOI
   h_tilde <-rep(0,length(blocks)-1)
 

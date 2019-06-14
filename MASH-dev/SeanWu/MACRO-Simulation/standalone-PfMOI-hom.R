@@ -23,6 +23,9 @@ library(scales)
 
 source(here::here("data/sampledata.R"))
 
+# time-step to discretize output for fig2
+DELTAT <- 1
+
 
 ################################################################################
 # ensemble simulation run for Tororo
@@ -59,7 +62,7 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
                        EIR_size = replicate(N,TTSd*TTz,simplify=FALSE),EIR_prob = replicate(N,rep(0,1260),simplify=FALSE),pb = FALSE)
 
   # aggregate data into 2-week blocks
-  blocks <- seq(from=0,to=1260,by=14)
+  blocks <- seq(from=0,to=1260,by=DELTAT)
 
   # EIR
   EIR <- rep(0,length(blocks)-1)
@@ -80,24 +83,27 @@ simout_t <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
     block_t <- (blocks[t]+1):blocks[t+1]
 
     # EIR
-    EIR[t] <- sum(simout$bites[block_t,])/14/N
+    EIR[t] <- sum(simout$bites[block_t,])/DELTAT/N
 
     # FOI
-    h_hat[t] <- sum(simout$foi[block_t,])/14/N
+    h_hat[t] <- sum(simout$foi[block_t,])/DELTAT/N
 
     # attack rate
-    AR[t] <- ifelse(sum(simout$ar[block_t,]) == 0,0,(table(apply(simout$ar[block_t,],2,max)) / N)[["1"]])
-    # AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
+    if(DELTAT == 1){
+      AR[t] <- sum(simout$ar[block_t,] > 0) / N
+    } else {
+      AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
+    }
 
     # estimated FOI
-    h_tilde[t] <- -log(1 - AR[t])/14
+    h_tilde[t] <- -log(1 - AR[t])/DELTAT
 
   }
 
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
+  data.frame(iter=rep(i,length(EIR)),time=blocks[-1],h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_t,file = here::here("sim/PfMOI_hom_t.rds"))
@@ -134,7 +140,7 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
                        EIR_size = replicate(N,KKSd*KKz,simplify=FALSE),EIR_prob = replicate(N,rep(0,1260),simplify=FALSE),pb = FALSE)
 
   # aggregate data into 2-week blocks
-  blocks <- seq(from=0,to=1260,by=14)
+  blocks <- seq(from=0,to=1260,by=DELTAT)
 
   # EIR
   EIR <- rep(0,length(blocks)-1)
@@ -155,24 +161,27 @@ simout_k <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
     block_t <- (blocks[t]+1):blocks[t+1]
 
     # EIR
-    EIR[t] <- sum(simout$bites[block_t,])/14/N
+    EIR[t] <- sum(simout$bites[block_t,])/DELTAT/N
 
     # FOI
-    h_hat[t] <- sum(simout$foi[block_t,])/14/N
+    h_hat[t] <- sum(simout$foi[block_t,])/DELTAT/N
 
     # attack rate
-    AR[t] <- ifelse(sum(simout$ar[block_t,]) == 0,0,(table(apply(simout$ar[block_t,],2,max)) / N)[["1"]])
-    # AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
+    if(DELTAT == 1){
+      AR[t] <- sum(simout$ar[block_t,] > 0) / N
+    } else {
+      AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
+    }
 
     # estimated FOI
-    h_tilde[t] <- -log(1 - AR[t])/14
+    h_tilde[t] <- -log(1 - AR[t])/DELTAT
 
   }
 
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
+  data.frame(iter=rep(i,length(EIR)),time=blocks[-1],h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_k,file = here::here("sim/PfMOI_hom_k.rds"))
@@ -209,7 +218,7 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
                        EIR_size = replicate(N,JJSd*JJz,simplify=FALSE),EIR_prob = replicate(N,rep(0,1260),simplify=FALSE),pb = FALSE)
 
   # aggregate data into 2-week blocks
-  blocks <- seq(from=0,to=1260,by=14)
+  blocks <- seq(from=0,to=1260,by=DELTAT)
 
   # EIR
   EIR <- rep(0,length(blocks)-1)
@@ -230,24 +239,27 @@ simout_j <- foreach(i = 1:nrep, .combine="rbind",.options.snow=opts) %dopar% {
     block_t <- (blocks[t]+1):blocks[t+1]
 
     # EIR
-    EIR[t] <- sum(simout$bites[block_t,])/14/N
+    EIR[t] <- sum(simout$bites[block_t,])/DELTAT/N
 
     # FOI
-    h_hat[t] <- sum(simout$foi[block_t,])/14/N
+    h_hat[t] <- sum(simout$foi[block_t,])/DELTAT/N
 
     # attack rate
-    AR[t] <- ifelse(sum(simout$ar[block_t,]) == 0,0,(table(apply(simout$ar[block_t,],2,max)) / N)[["1"]])
-    # AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
+    if(DELTAT == 1){
+      AR[t] <- sum(simout$ar[block_t,] > 0) / N
+    } else {
+      AR[t] <- (table(apply(simout$ar[block_t,],2,max)) / N)[["1"]]
+    }
 
     # estimated FOI
-    h_tilde[t] <- -log(1 - AR[t])/14
+    h_tilde[t] <- -log(1 - AR[t])/DELTAT
 
   }
 
   # transmission efficiency
   aeff <- h_hat/h_tilde
 
-  data.frame(iter=rep(i,90),time=1:90,h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
+  data.frame(iter=rep(i,length(EIR)),time=blocks[-1],h_hat=h_hat,AR=AR,h_tilde=h_tilde,aeff=aeff,EIR=EIR)
 }
 
 # saveRDS(object = simout_j,file = here::here("sim/PfMOI_hom_j.rds"))
