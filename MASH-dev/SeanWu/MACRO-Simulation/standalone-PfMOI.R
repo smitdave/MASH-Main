@@ -346,12 +346,15 @@ simout_j <- tiny_pfmoi(tmax = 1260,nh = N,init = pfmoi,
 # calc data
 aEIR_t <- colSums(simout_t$bites)/(1260/365)
 aFOI_t <- colSums(simout_t$ar)/(1260/365)
+# aFOI_t <- colSums(simout_t$foi)/(1260/365)
 
 aEIR_k <- colSums(simout_k$bites)/(1260/365)
 aFOI_k <- colSums(simout_k$ar)/(1260/365)
+# aFOI_k <- colSums(simout_k$foi)/(1260/365)
 
 aEIR_j <- colSums(simout_j$bites)/(1260/365)
 aFOI_j <- colSums(simout_j$ar)/(1260/365)
+# aFOI_j <- colSums(simout_j$foi)/(1260/365)
 
 ineff_df <- data.frame(
   aEIR = c(aEIR_t,aEIR_k,aEIR_j),

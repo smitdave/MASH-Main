@@ -42,7 +42,7 @@ human_pfsi::human_pfsi(
 ) :
   human(Rcpp::as<int>(human_pars["id"]),
         Rcpp::as<size_t>(human_pars["home_patch_id"]),
-        Rcpp::as<double>(human_pars["trip_duration"]),
+        Rcpp::as<std::vector<double> >(human_pars["trip_duration"]),
         Rcpp::as<double>(human_pars["trip_frequency"]),
         Rcpp::as<double>(human_pars["bweight"]),
         tileP_),
