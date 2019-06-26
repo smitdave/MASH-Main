@@ -28,6 +28,9 @@
 /* for smart pointers */
 #include <memory>
 
+/* trip_duration is a vector */
+#include <vector>
+
 
 /* ################################################################################
  * forward declarations
@@ -50,7 +53,7 @@ public:
 
   /* constructor & destructor */
   human(const int id_, const size_t home_patch_id_,
-        const double trip_duration_, const double trip_frequency_,
+        const std::vector<double> trip_duration_, const double trip_frequency_,
         const double bweight_, tile* tileP_) :
     id(id_), alive(true), tnow(0.0),
     patch_id(home_patch_id_), home_patch_id(home_patch_id_),
@@ -87,7 +90,7 @@ public:
   size_t                get_patch_id();
   void                  set_patch_id(const size_t pid);
   size_t                get_home_patch_id();
-  double                get_trip_duration();
+  double                get_trip_duration(const size_t pid);
   double                get_trip_frequency();
   patch*                get_patch();
   patch*                get_home_patch();
@@ -121,7 +124,7 @@ protected:
   /* movement */
   size_t                patch_id;
   size_t                home_patch_id;
-  double                trip_duration;
+  std::vector<double>   trip_duration;
   double                trip_frequency;
 
   /* biting */
@@ -150,7 +153,7 @@ inline size_t human::get_patch_id(){return patch_id;};
 inline void human::set_patch_id(const size_t pid){ patch_id = pid; };
 inline size_t human::get_home_patch_id(){return home_patch_id;};
 
-inline double human::get_trip_duration(){return trip_duration;};
+inline double human::get_trip_duration(const size_t pid){return trip_duration.at(pid);};
 inline double human::get_trip_frequency(){return trip_frequency;};
 
 inline double human::get_bweight(){return bweight;};
