@@ -19,7 +19,7 @@
 
 #'
 #' @param id integer id
-#' @param move 'row' of the stochastic movement matri
+#' @param move 'row' of the stochastic human movement matrix
 #' @param bWeightZoo biting weight assigned to non-human hosts
 #' @param bWeightZootox biting weight assigned to endectocide-treated non-human hosts
 #' @param reservoir boolean; is this patch a reservoir? (no simulation of mosquitos)
@@ -32,7 +32,7 @@ patch_conpars <- function(id,move,bWeightZoo,bWeightZootox,reservoir,res_EIR){
     stop(paste0("id: ",id," not allowed; use non-negative integer id"))
   }
 
-  if(sum(move) != 1){
+  if(!all(rowSums(moveMat) == 1)){
     stop("movement vector 'move' must sum to one")
   }
 
