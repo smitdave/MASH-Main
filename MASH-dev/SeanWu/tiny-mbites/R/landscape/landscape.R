@@ -1,24 +1,29 @@
 
-# landscape has to be a list of lists for sites.
-
-site <- list()
-
-# little booleans for quick checks
-site$has_f
-site$has_l
 
 
+make_site <- function(id,has_f,has_l,haz,move,move_id,lambda=NULL){
 
-# habitat stuff
-site$id_l
-site$prob_l
+  site <- list()
 
-# local hazard of death
-site$haz
+  site$move <- move
+  site$move_id <- move_id
 
-# haunt stuff
-site$riskQ <- make_RiskQ()
+  site$haz <- haz
 
+  # little booleans for quick checks
+  site$has_f <- has_f
+  site$has_l <- has_l
 
+  if(has_f){
+    site$riskQ <- make_RiskQ()
+  }
 
-make_site <- function(id,has_f,has_l,move,move_id)
+  if(has_l){
+    site$id_l <- 1
+    site$prob_l <- 1
+    site$lambda <- lambda
+    site$ImagoQ <- make_ImagoQ()
+  }
+
+  return(site)
+}

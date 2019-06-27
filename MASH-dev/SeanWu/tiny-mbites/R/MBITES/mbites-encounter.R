@@ -22,7 +22,10 @@ humanEncounter <- function(mosy){
 
       # undeterred, probes the host
       probeHost(mosy) # m -> h transmission (a pathogen module)
-      # track_probe(mosy) # if you want
+      # track history
+      if(mosy$hist$feed){
+        track_probe(mosy)
+      }
 
       p <- get("parameters",.GlobalEnv)$surviveprobeH
       if(runif(1) < 1 - p){
@@ -41,7 +44,10 @@ humanEncounter <- function(mosy){
           feedHost(mosy) # h -> m transmission (a pathogen module)
           bloodmeal(mosy)
 
-          # track_feed(mosy) # if you want
+          # track history
+          if(mosy$hist$feed){
+            track_feed(mosy)
+          }
 
         }
 
@@ -72,8 +78,12 @@ zooEncounter <- function(mosy){
 
       # successfully begins blood feeding
       self$bloodmeal()
-      # track_probe(mosy) # if you want
-      # track_feed(mosy) # if you want
+
+      # track history
+      if(mosy$hist$feed){
+        track_probe(mosy)
+        track_feed(mosy)
+      }
 
     }
   }

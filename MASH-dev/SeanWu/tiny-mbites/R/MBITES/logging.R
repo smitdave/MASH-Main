@@ -18,7 +18,7 @@
 
 # n: set up some reserve space for these vectors (default size is n)
 # feed: detailed tracking of feeding?
-make_history <- function(n = 20, feed = FALSE, ovi = FALSE){
+make_history <- function(n = 20, feed = FALSE, ovi = FALSE, rest = FALSE){
 
   hist <- list()
 
@@ -48,6 +48,9 @@ make_history <- function(n = 20, feed = FALSE, ovi = FALSE){
     hist$eggsite <- integer(n)
     hist$eggbatch <- numeric(n)
   }
+
+  # are we tracking resting?
+  hist$rest <- rest
 
   # list2env(hist,hash=TRUE)
   return(hist)
@@ -85,10 +88,10 @@ mbites_exit_female <- function(mosy){
 
   out <- mosy$hist
 
-  # take out that flag
+  # take out flags
   out <- out[names(out)!="feed"]
-  # take out that flag
   out <- out[names(out)!="ovi"]
+  out <- out[names(out)!="rest"]
 
   # write out
   cat(jsonlite::toJSON(x = out, pretty = TRUE),",\n",sep="",file=get("globals")$mbites_f_out)

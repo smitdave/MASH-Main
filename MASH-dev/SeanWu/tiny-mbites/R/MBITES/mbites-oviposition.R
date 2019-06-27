@@ -9,7 +9,9 @@ choosehabitat <- function(mosy){
 
 layeggs_emerge <- function(mosy){
 
-  # track_oviposit(mosy) # if you want
+  if(mosy$hist$ovi){
+    track_oviposit(mosy)
+  }
 
   mosy$gravid <- FALSE
   mosy$batch <- 0
