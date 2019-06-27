@@ -22,18 +22,19 @@ MBITES_population <- function(mpop){
 
   # simulate
   invisible(eapply(env = mpop,FUN = function(m,t){
+
+      # simulation
       MBITES(m,t)
 
-      # track history
+      # dead mosquitos
       if(m$statenext == "D"){
-
         if(m$tnow > m$tnext){
           m$tnext <- m$tnow
         }
-
         mbites_exit_female(m)
         rm(list = as.character(m$id),envir = pop)
       }
+
     },t=tnow,USE.NAMES = FALSE)
   )
 

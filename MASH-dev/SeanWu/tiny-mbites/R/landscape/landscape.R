@@ -1,7 +1,7 @@
 
 
 
-make_site <- function(id,has_f,has_l,haz,move,move_id,lambda=NULL){
+make_site <- function(id,has_f,has_l,haz,move,move_id,constant,lambda=NULL){
 
   site <- list()
 
@@ -21,9 +21,10 @@ make_site <- function(id,has_f,has_l,haz,move,move_id,lambda=NULL){
   if(has_l){
     site$id_l <- 1
     site$prob_l <- 1
+    site$constant <- constant
     site$lambda <- lambda
     site$ImagoQ <- make_ImagoQ()
   }
 
-  return(site)
+  list2env(site,hash=TRUE)
 }
