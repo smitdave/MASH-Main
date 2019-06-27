@@ -26,13 +26,16 @@
 #' @param res_EIR fixed EIR for reservoir patch
 #'
 #' @export
+
+
 patch_conpars <- function(id,move,bWeightZoo,bWeightZootox,reservoir,res_EIR){
 
   if(!is.integer(id) | id < 0){
     stop(paste0("id: ",id," not allowed; use non-negative integer id"))
   }
 
-  if(!all(rowSums(moveMat) == 1)){
+
+  if(!all.equal(rowSums(move),rep(1,nrow(move)))){
     stop("movement vector 'move' must sum to one")
   }
 
