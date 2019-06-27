@@ -12,7 +12,7 @@ humanEncounter <- function(mosy){
 
     # dies on approach
     mosy$statenext <- "D"
-    most$hist$cod <- "surviveH"
+    mosy$hist$cod <- "surviveH"
 
   } else {
 

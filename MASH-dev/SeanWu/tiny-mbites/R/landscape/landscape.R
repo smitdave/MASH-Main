@@ -7,12 +7,7 @@ site <- list()
 site$has_f
 site$has_l
 
-# movement (potentially different depending if the mosy is out for blood or out to oviposit)
-site$move_2F
-site$move_2F_id
 
-site$move_2L
-site$move_2L_id
 
 # habitat stuff
 site$id_l
@@ -23,3 +18,7 @@ site$haz
 
 # haunt stuff
 site$riskQ <- make_RiskQ()
+
+
+
+make_site <- function(id,has_f,has_l,move,move_id)
