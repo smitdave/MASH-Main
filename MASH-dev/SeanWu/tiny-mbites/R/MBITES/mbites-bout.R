@@ -13,12 +13,42 @@
 
 
 ###############################################################################
-# MBITES: main simulation loop
+# MBITES: simulate for a pop
+###############################################################################
+
+MBITES_population <- function(mpop){
+
+  tnow <- get("globals")$get_tnow()
+
+  # simulate
+  invisible(eapply(env = mpop,FUN = function(m,t){
+
+      # simulation
+      MBITES(m,t)
+
+      # dead mosquitos
+      if(m$statenext == "D"){
+        if(m$tnow > m$tnext){
+          m$tnext <- m$tnow
+        }
+        mbites_exit_female(m)
+        rm(list = as.character(m$id),envir = pop)
+      }
+
+    },t=tnow,USE.NAMES = FALSE)
+  )
+
+}
+
+
+###############################################################################
+# MBITES: main simulation loop for one mosquito
 ###############################################################################
 
 # main simulation loop for ABM
 # tnow = get("globals",.GlobalEnv)$get_tnow()
 MBITES <- function(mosy,tnow){
+
   # the main simulation loop
   while(mosy$tnext < tnow & mosy$statenext != "D"){
 
@@ -60,6 +90,7 @@ MBITES <- function(mosy,tnow){
     # 'just before' i jump out of this state (including to the dead state)
     track_history(mosy)
   }
+
 }
 
 
@@ -177,6 +208,7 @@ activity_BFAB <- function(mosy){
       zooEncounter(mosy)
     } else if(mosy$hostID == 0L){
       # didn't find a host; don't do anything
+      cat("warning: mosquito ",mosy$id," couldn't find a host at their site\n")
     } else {
       stop("mosquito ",mosy$id," has illegal hostID value: ",mosy$hostID,"\n")
     }
@@ -244,7 +276,11 @@ activity_ppr <- function(mosy){
   # ppr is a short pseudo-bout; so we update the time
   timing_ppr(mosy)
 
-  # track_rest(mosy) # if you want
+  # history tracking
+  if(mosy$hist$rest){
+    track_rest(mosy)
+  }
+
   p <- survive_ppr(mosy)
   if(runif(1) < p){
     mosy$statenext <- "D"

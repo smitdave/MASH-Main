@@ -1,25 +1,30 @@
 
-# landscape has to be a list of lists for sites.
 
-site <- list()
 
-# little booleans for quick checks
-site$has_f
-site$has_l
+make_site <- function(id,has_f,has_l,haz,move,move_id,constant,lambda=NULL){
 
-# movement (potentially different depending if the mosy is out for blood or out to oviposit)
-site$move_2F
-site$move_2F_id
+  site <- list()
 
-site$move_2L
-site$move_2L_id
+  site$move <- move
+  site$move_id <- move_id
 
-# habitat stuff
-site$id_l
-site$prob_l
+  site$haz <- haz
 
-# local hazard of death
-site$haz
+  # little booleans for quick checks
+  site$has_f <- has_f
+  site$has_l <- has_l
 
-# haunt stuff
-site$riskQ <- make_RiskQ()
+  if(has_f){
+    site$riskQ <- make_RiskQ()
+  }
+
+  if(has_l){
+    site$id_l <- 1
+    site$prob_l <- 1
+    site$constant <- constant
+    site$lambda <- lambda
+    site$ImagoQ <- make_ImagoQ()
+  }
+
+  list2env(site,hash=TRUE)
+}
