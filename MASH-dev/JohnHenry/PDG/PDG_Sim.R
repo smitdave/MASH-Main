@@ -1,8 +1,11 @@
 source('PDG.R')
 
-set.seed(534)
+seed <- 123
+ninf <- 10
+
+set.seed(seed)
 human = PDGHuman$new()
-human$infect_Human(5)
+human$infect_Human(ninf)
 dt = 1/26
 
 Nfortnights = 30
@@ -29,16 +32,16 @@ title(main="Example PDG Parasite Densities")
 
 TE = human$get_history()$TE
 plot(TE,ylim=c(0,1),main="Transmission Efficiency",xlab="fortnights")
-par(mfrow=c(1,1))
-
-# # C++ checking
-# set.seed(534)
-# human_cpp <- sim_PDG(tmax = 30,ninf = 5)
-# 
-# par(mfrow=c(2,1))
-# plot(seq(1:Nfortnights),human_cpp$Pt,type="l",xlab="fortnights",ylab="log10 Parasite Densities per microliter",ylim=c(0,5))
-# lines(human_cpp$Gt,lty=2,col="red")
-# title(main="Example PDG Parasite Densities (C++)")
-# 
-# plot(human_cpp$TE,ylim=c(0,1),main="Transmission Efficiency (C++)",xlab="fortnights")
 # par(mfrow=c(1,1))
+
+# C++ checking
+set.seed(seed)
+human_cpp <- sim_PDG(tmax = 30,ninf = ninf)
+
+# par(mfrow=c(2,1))
+plot(seq(1:Nfortnights),human_cpp$Pt,type="l",xlab="fortnights",ylab="log10 Parasite Densities per microliter",ylim=c(0,5))
+lines(human_cpp$Gt,lty=2,col="red")
+title(main="Example PDG Parasite Densities (C++)")
+
+plot(human_cpp$TE,ylim=c(0,1),main="Transmission Efficiency (C++)",xlab="fortnights")
+par(mfrow=c(1,1))
