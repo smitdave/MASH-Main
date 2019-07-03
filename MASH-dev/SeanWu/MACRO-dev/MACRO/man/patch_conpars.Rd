@@ -9,7 +9,7 @@ patch_conpars(id, move, bWeightZoo, bWeightZootox, reservoir, res_EIR)
 \arguments{
 \item{id}{integer id}
 
-\item{move}{'row' of the stochastic movement matri}
+\item{move}{'row' of the stochastic human movement matrix}
 
 \item{bWeightZoo}{biting weight assigned to non-human hosts}
 

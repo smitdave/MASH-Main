@@ -26,8 +26,6 @@
 #' @param res_EIR fixed EIR for reservoir patch
 #'
 #' @export
-
-
 patch_conpars <- function(id,move,bWeightZoo,bWeightZootox,reservoir,res_EIR){
 
   if(!is.integer(id) | id < 0){
@@ -84,4 +82,17 @@ patches_parameters <- function(move,bWeightZoo,bWeightZootox,reservoir,res_EIR){
   })
 
   return(patches)
+}
+
+#' Patch: Header for Logging Patch Time Series (PfSI)
+#'
+#' write me
+#'
+#' @export
+patch_ts_header_pfsi <- function(){
+  c(
+    "time","patch",unlist(lapply(X = c("S","I","P"),FUN = function(s){
+      paste0(s,c("_travel","_resident"))
+    })),"incidence"
+  )
 }
