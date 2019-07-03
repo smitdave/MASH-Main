@@ -33,8 +33,8 @@
 e_move_takeTrip::e_move_takeTrip(double tEvent_, const size_t dest_id, human* h) :
   event("takeTrip",tEvent_,[tEvent_,dest_id,h](){
 
-    /* log this event */
-    h->get_tile()->get_logger()->get_stream("human_move") << h->get_id() << "," << tEvent_ << ",takeTrip," << dest_id << "\n";
+    // /* log this event */
+    // h->get_tile()->get_logger()->get_stream("human_move") << h->get_id() << "," << tEvent_ << ",takeTrip," << dest_id << "\n";
 
     /* pack my bags (my biting weight) and take a trip */
     h->decrement_bweight(); /* decrement the biting weight where I came from */
@@ -72,9 +72,10 @@ e_move_takeTrip::~e_move_takeTrip(){
 e_move_returnHome::e_move_returnHome(const double tEvent_, human* h) :
   event("returnHome",tEvent_,[tEvent_,h](){
 
-    /* log this event */
     size_t home_id = h->get_home_patch_id();
-    h->get_tile()->get_logger()->get_stream("human_move") << h->get_id() << "," << tEvent_ << ",returnHome," << home_id << "\n";
+
+    // /* log this event */
+    // h->get_tile()->get_logger()->get_stream("human_move") << h->get_id() << "," << tEvent_ << ",returnHome," << home_id << "\n";
 
     /* i come home */
     h->decrement_bweight(); /* decrement the biting weight where I came from */

@@ -74,7 +74,7 @@ tile::tile(const uint_least32_t seed,
   patches.reserve(patch_pars.size());
   for(size_t i=0; i<patch_pars.size(); i++){
     Rcpp::List p_par = Rcpp::as<Rcpp::List>(patch_pars[i]);
-    patches.emplace_back(std::make_unique<patch>(p_par,this));
+    patches.emplace_back(patch::factory(p_par,"PfSI",this));
   }
 
   /* construct human population */
@@ -154,6 +154,11 @@ mosquito* tile::get_mosquitos(){
 
 void tile::simulation(const u_int tmax){
 
+  /* write initial conditions */
+  for(auto& p : patches){
+    p->log_output(-1);
+  }
+
   if(verbose){std::cout << "begin simulation" << std::endl;}
   Progress ps(tmax, verbose);
 
@@ -176,6 +181,11 @@ void tile::simulation(const u_int tmax){
     /* normalize kappa */
     for(auto& p : patches){
       p->normalize_kappa();
+    }
+
+    /* write output */
+    for(auto& p : patches){
+      p->log_output(tnow);
     }
 
     /* increment time */

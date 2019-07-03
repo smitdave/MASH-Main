@@ -57,6 +57,25 @@ void patch::print(){
 
 
 /* ################################################################################
+ * derived class factory
+################################################################################ */
+
+/* derived classes the factory needs to know about */
+#include "Patch-PfSI.hpp"
+
+/* factory method */
+std::unique_ptr<patch> patch::factory(const Rcpp::List& patch_pars, const std::string model, tile* tileP_){
+
+  /* make a derived class */
+  if(model.compare("PfSI") == 0){
+    return std::make_unique<patch_pfsi>(patch_pars,tileP_);
+  } else {
+    Rcpp::stop("invalid 'model' field in patch::factory\n");
+  }
+};
+
+
+/* ################################################################################
  * kappa
 ################################################################################ */
 

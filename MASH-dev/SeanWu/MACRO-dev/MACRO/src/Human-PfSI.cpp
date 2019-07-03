@@ -15,6 +15,7 @@
 #include "Human-PfSI.hpp"
 #include "Event-PfSI.hpp"
 #include "SimBite-PfSI.hpp"
+#include "Patch-PfSI.hpp"
 
 /* movement model */
 #include "Event-Move.hpp"
@@ -51,7 +52,6 @@ human_pfsi::human_pfsi(
   age(Rcpp::as<double>(human_pars["age"])),
   kappa(0.0), EIR(0.0)
 {
-  // std::cout << "making human_pfsi: " << id << "\n";
   std::string state_t0(Rcpp::as<std::string>(human_pars["state"]));
 
   /* transmission efficiencies */
@@ -64,19 +64,31 @@ human_pfsi::human_pfsi(
   /* initialize kappa (my infectiousness to mosquitos) */
   update_kappa();
 
-  /* susceptible */
-  if(state_t0.compare("S") == 0){
-    tileP->get_logger()->get_stream("human_inf") << id << ",0.0,S,S," << patch_id << "\n";
-  /* infected & infectious */
-  } else if(state_t0.compare("I") == 0){
+  /* initial state */
+  if(state_t0.compare("I") == 0){
     addEvent2Q(e_pfsi_infect(0.0,this));
-  /* chemoprophylactic protection */
   } else if(state_t0.compare("P") == 0){
     addEvent2Q(e_pfsi_treatment(0.0,this));
-  /* bad input */
   } else {
     Rcpp::stop("error: human ",id," has been provided with invalid 'state' argument\n");
   }
+
+  // /* susceptible */
+  // if(state_t0.compare("S") == 0){
+  //   tileP->get_logger()->get_stream("human_inf") << id << ",0.0,S,S," << patch_id << "\n";
+  // /* infected & infectious */
+  // } else if(state_t0.compare("I") == 0){
+  //   addEvent2Q(e_pfsi_infect(0.0,this));
+  // /* chemoprophylactic protection */
+  // } else if(state_t0.compare("P") == 0){
+  //   addEvent2Q(e_pfsi_treatment(0.0,this));
+  // /* bad input */
+  // } else {
+  //   Rcpp::stop("error: human ",id," has been provided with invalid 'state' argument\n");
+  // }
+
+  /* log my initial state */
+  tileP->get_patch(patch_id)->log_human(this);
 
   #ifdef DEBUG_MACRO
   std::cout << "human_pfsi " << " born at " << this << std::endl;
@@ -114,6 +126,9 @@ void human_pfsi::simulate(){
 
   /* queue bites */
   queue_bites();
+
+  /* log my state today */
+  tileP->get_patch(patch_id)->log_human(this);
 };
 
 

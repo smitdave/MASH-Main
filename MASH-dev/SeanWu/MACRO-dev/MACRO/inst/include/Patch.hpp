@@ -17,6 +17,7 @@
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
+#include <string>
 
 /* RcppArmadillo */
 #include <RcppArmadillo.h>
@@ -27,9 +28,12 @@ class tile;
 /* class definition */
 class patch {
 public:
-                        /* constructor & destructor */
-                        patch(const Rcpp::List& patch_pars, tile* tileP_);
-                        ~patch();
+  /* constructor & destructor */
+  patch(const Rcpp::List& patch_pars, tile* tileP_);
+  virtual ~patch() = 0;
+
+  /* factory method */
+  static std::unique_ptr<patch> factory(const Rcpp::List& patch_pars, const std::string model, tile* tileP_);
 
   /* accessors */
   size_t                get_id(){return id;}
@@ -62,7 +66,12 @@ public:
   void                  zero_kappa(){kappa = 0.0;}
   void                  normalize_kappa();
 
-private:
+  /* logging interface */
+  virtual void          log_human(void* human) = 0;
+  virtual void          log_incidence(void* human) = 0;
+  virtual void          log_output(const int tnow) = 0;
+
+protected:
 
   /* id */
   size_t                id;
