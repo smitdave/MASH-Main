@@ -27,45 +27,45 @@
 
 /* duration of infection */
 double pfsi_ttClearPf(human_pfsi* h){
-  double RecoveryPf = 1.0 / h->get_tile()->get_params()->get_param<double>("DurationPf");
+  double RecoveryPf = 1.0 / h->get_tile()->get_params()->get_param("DurationPf");
   return h->get_tile()->get_prng()->get_rexp(RecoveryPf);
 };
 
 /* duration of latent period */
 double psfi_ttInfectionPf(human_pfsi* h){
-  double LatentPf = h->get_tile()->get_params()->get_param<double>("LatentPf");
+  double LatentPf = h->get_tile()->get_params()->get_param("LatentPf");
   return LatentPf;
 };
 
 /* timing of fever event (when does it start relative to infection?) */
 double pfsi_ttFeverPf(human_pfsi* h){
-  double mnFeverPf = h->get_tile()->get_params()->get_param<double>("mnFeverPf");
+  double mnFeverPf = h->get_tile()->get_params()->get_param("mnFeverPf");
   return mnFeverPf;
 };
 
 /* timing of treatment event (when does it occur relative to infection?) */
 double pfsi_ttTreatPf(human_pfsi* h){
-  double mnTreatPf = h->get_tile()->get_params()->get_param<double>("mnTreatPf");
+  double mnTreatPf = h->get_tile()->get_params()->get_param("mnTreatPf");
   return mnTreatPf;
 };
 
 /* duration of protection from chemoprophylaxis */
 double pfsi_ttSusceptiblePf(human_pfsi* h){
-  double mnChemoprophylaxisPf = h->get_tile()->get_params()->get_param<double>("mnChemoprophylaxisPf");
+  double mnChemoprophylaxisPf = h->get_tile()->get_params()->get_param("mnChemoprophylaxisPf");
   return mnChemoprophylaxisPf;
 };
 
 /* duration of protection by PE vaxx */
 double pfsi_ttPEWanePf(human_pfsi* h){
-  double mnPEPf = h->get_tile()->get_params()->get_param<double>("mnPEPf");
-  double vrPEPf = h->get_tile()->get_params()->get_param<double>("vrPEPf");
+  double mnPEPf = h->get_tile()->get_params()->get_param("mnPEPf");
+  double vrPEPf = h->get_tile()->get_params()->get_param("vrPEPf");
   return h->get_tile()->get_prng()->get_rnorm(mnPEPf,vrPEPf);
 };
 
 /* duration of protection by GS vaxx */
 double pfsi_ttGSWanePf(human_pfsi* h){
-  double mnGSPf = h->get_tile()->get_params()->get_param<double>("mnGSPf");
-  double vrGSPf = h->get_tile()->get_params()->get_param<double>("vrGSPf");
+  double mnGSPf = h->get_tile()->get_params()->get_param("mnGSPf");
+  double vrGSPf = h->get_tile()->get_params()->get_param("vrGSPf");
   return h->get_tile()->get_prng()->get_rnorm(mnGSPf,vrGSPf);
 };
 

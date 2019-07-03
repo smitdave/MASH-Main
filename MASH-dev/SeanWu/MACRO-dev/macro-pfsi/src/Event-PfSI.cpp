@@ -49,7 +49,7 @@ e_pfsi_infect::e_pfsi_infect(double tEvent_, human_pfsi* h):
       h->addEvent2Q(e_pfsi_recover(tEnd,h));
 
       /* queue fever event */
-      double FeverPf = h->get_tile()->get_params()->get_param<double>("FeverPf");
+      double FeverPf = h->get_tile()->get_params()->get_param("FeverPf");
       if(h->get_tile()->get_prng()->get_runif() < FeverPf){
         double tFever = tEvent_ + pfsi_ttFeverPf(h);
         h->addEvent2Q(e_pfsi_fever(tFever,h));
@@ -124,7 +124,7 @@ e_pfsi_fever::e_pfsi_fever(double tEvent_, human_pfsi* h):
     h->get_tile()->get_logger()->get_stream("human_inf") << h->get_id() << "," << tEvent_ << ",_,F," << h->get_patch_id() << "\n";
 
     /* if i get a fever, i'll seek treatment with this probability */
-    double TreatPf = h->get_tile()->get_params()->get_param<double>("TreatPf");
+    double TreatPf = h->get_tile()->get_params()->get_param("TreatPf");
     if(h->get_tile()->get_prng()->get_runif() < TreatPf){
       double tTreat = tEvent_ + pfsi_ttTreatPf(h);
       h->addEvent2Q(e_pfsi_treatment(tTreat,h));
@@ -231,12 +231,12 @@ e_pfsi_pevaxx::e_pfsi_pevaxx(double tEvent_, const bool treat, human_pfsi* h):
   event("PfSI_PEVaxx",tEvent_,[tEvent_,treat,h](){
 
     /* check if vaxx fails (vaxx efficacy) */
-    double PEProtectPf = h->get_tile()->get_params()->get_param<double>("PEProtectPf");
+    double PEProtectPf = h->get_tile()->get_params()->get_param("PEProtectPf");
     if(h->get_tile()->get_prng()->get_runif() < PEProtectPf){
 
       /* lower my probability to get infected by mosquitos */
-      double b =  h->get_tile()->get_params()->get_param<double>("Pf_b");
-      double peBlockPf = h->get_tile()->get_params()->get_param<double>("peBlockPf");
+      double b =  h->get_tile()->get_params()->get_param("Pf_b");
+      double peBlockPf = h->get_tile()->get_params()->get_param("peBlockPf");
       h->set_b(b * (1.0 - peBlockPf));
 
       h->rmTagFromQ("PfSI_PEWane");
@@ -293,7 +293,7 @@ e_pfsi_pewane::e_pfsi_pewane(double tEvent_, human_pfsi* h):
   event("PfSI_PEWane",tEvent_,[tEvent_,h](){
 
     /* vaxx protection wanes */
-    double b =  h->get_tile()->get_params()->get_param<double>("Pf_b");
+    double b =  h->get_tile()->get_params()->get_param("Pf_b");
     h->set_b(b);
 
     /* log this event */
@@ -328,12 +328,12 @@ e_pfsi_gsvaxx::e_pfsi_gsvaxx(double tEvent_, const bool treat, human_pfsi* h):
   event("PfSI_GSVaxx",tEvent_,[tEvent_,treat,h](){
 
     /* check if vaxx fails (vaxx efficacy) */
-    double GSProtectPf = h->get_tile()->get_params()->get_param<double>("GSProtectPf");
+    double GSProtectPf = h->get_tile()->get_params()->get_param("GSProtectPf");
     if(h->get_tile()->get_prng()->get_runif() < GSProtectPf){
 
       /* lower my probability to infect mosquitos */
-      double c = h->get_tile()->get_params()->get_param<double>("Pf_c");
-      double gsBlockPf = h->get_tile()->get_params()->get_param<double>("gsBlockPf");
+      double c = h->get_tile()->get_params()->get_param("Pf_c");
+      double gsBlockPf = h->get_tile()->get_params()->get_param("gsBlockPf");
       h->set_c(c * (1.0 - gsBlockPf));
 
       h->rmTagFromQ("PfSI_GSWane");
@@ -390,7 +390,7 @@ e_pfsi_gswane::e_pfsi_gswane(double tEvent_, human_pfsi* h):
   event("PfSI_GSWane",tEvent_,[tEvent_,h](){
 
     /* vaxx protection wanes */
-    double c =  h->get_tile()->get_params()->get_param<double>("Pf_c");
+    double c =  h->get_tile()->get_params()->get_param("Pf_c");
     h->set_c(c);
 
     /* log this event */

@@ -55,8 +55,8 @@ human_pfsi::human_pfsi(
   std::string state_t0(Rcpp::as<std::string>(human_pars["state"]));
 
   /* transmission efficiencies */
-  b = tileP->get_params()->get_param<double>("Pf_b");
-  c = tileP->get_params()->get_param<double>("Pf_c");
+  b = tileP->get_params()->get_param("Pf_b");
+  c = tileP->get_params()->get_param("Pf_c");
 
   /* initialize the biting weight where i am at time = 0 */
   accumulate_bweight();
