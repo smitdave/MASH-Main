@@ -15,8 +15,6 @@
 #ifndef Event_hpp
 #define Event_hpp
 
-#include <Rcpp.h>
-
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
@@ -34,8 +32,7 @@ class event {
 public:
 
   /* constructor */
-  event(std::string tag_, double tEvent_, std::function<void()> eventF_) :
-    tag(tag_),tEvent(tEvent_),eventF(eventF_) {};
+  event(std::string tag_, double tEvent_, std::function<void()> eventF_);
 
   /* destructor */
   virtual ~event();
@@ -64,8 +61,5 @@ public:
   std::function<void()>              eventF;
 
 };
-
-/* define virtual destructor so base class bits get deleted */
-event::~event(){};
 
 #endif

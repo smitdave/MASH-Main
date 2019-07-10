@@ -42,16 +42,18 @@ e_move_takeTrip::e_move_takeTrip(double tEvent_, const size_t dest_id, human* h)
     h->accumulate_bweight(); /* accumulate the biting weight where I go */
 
     /* queue the trip back home */
-    double home_t = tEvent_ + h->get_tile()->get_prng()->get_rexp(1.0/h->get_trip_duration());
+    double home_t = tEvent_ + h->get_tile()->get_prng()->get_rexp(1.0/h->get_trip_duration(dest_id));
 
     h->addEvent2Q(e_move_returnHome(home_t,h));
 
   })
 {
 
-  #ifdef DEBUG_MACRO
-  std::cout << "e_move_takeTrip constructor being called at " << this << std::endl;
-  #endif
+  // #ifdef DEBUG_MACRO
+  // std::cout << "e_move_takeTrip constructor being called at " << this << std::endl;
+  // #endif
+
+  // std::cout << " --- e_move_takeTrip being made for human: " << h->get_id() << " at memory address: " << h << " --- \n";
 
 };
 

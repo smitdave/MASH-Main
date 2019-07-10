@@ -15,8 +15,6 @@
 #ifndef Event_Move_hpp
 #define Event_Move_hpp
 
-#include <Rcpp.h>
-
 /* standard includes */
 #include <stdio.h>
 #include <functional>
