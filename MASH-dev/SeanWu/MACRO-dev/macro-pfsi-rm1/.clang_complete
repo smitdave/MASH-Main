@@ -1,6 +1,0 @@
--I/Library/Frameworks/R.framework/Headers/
--I/Library/Frameworks/R.framework/Resources/include
--I/Library/Frameworks/R.framework/Versions/3.6/Resources/library/Rcpp/include
--I/Library/Frameworks/R.framework/Versions/3.6/Resources/library/RcppArmadillo/include
--I/Library/Frameworks/R.framework/Versions/3.6/Resources/library/RcppProgress/include
--std=c++14
