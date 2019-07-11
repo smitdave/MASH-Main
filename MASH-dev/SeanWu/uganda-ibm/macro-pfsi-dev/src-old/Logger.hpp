@@ -9,11 +9,17 @@
  *
  *  Sean Wu
  *  November 2018
-*/
+ */
 
-#ifndef LOGGER_HPP
-#define LOGGER_HPP
 
+#ifndef Logger_hpp
+#define Logger_hpp
+
+/* ######################################################################
+ # includes and forward declarations
+###################################################################### */
+
+/* C++ includes */
 #include <fstream>
 #include <unordered_map>
 #include <string>
@@ -29,7 +35,7 @@ class logger {
 public:
 
   /* ctor & dtor */
-  logger(){
+  logger() {
     #ifdef DEBUG_MACRO
     std::cout << "logger born at " << this << std::endl;
     #endif
@@ -49,22 +55,35 @@ public:
   logger& operator=(logger&&) = default;
 
   /* open & close logging streams */
-  void open(const std::string& outfile, const std::string& key, const std::string& header){
-    logstreams.insert(std::make_pair(key,std::ofstream{outfile}));
-    logstreams.at(key) << header << "\n";
-  };
-
-  void close(){
-    for(auto& it : logstreams){
-      it.second.close();
-    }
-  };
+  void open(const std::string& outfile, const std::string& key, const std::string& header);
+  void close();
 
   /* return reference to output stream */
   std::ofstream& get_stream(const std::string& key){return logstreams.at(key);};
 
 private:
   std::unordered_map<std::string, std::ofstream>   logstreams;
+  // std::vector<std::string>                         headers;
+
+};
+
+
+/* ######################################################################
+# class methods
+###################################################################### */
+
+/* open a logging stream */
+inline void logger::open(const std::string& outfile, const std::string& key, const std::string& header){
+  // std::cout << "opening a log stream; outfile: " << outfile << " key: " << key << " header: " << header << "\n";
+  logstreams.insert(std::make_pair(key,std::ofstream{outfile}));
+  logstreams.at(key) << header << "\n";
+};
+
+/* close streams */
+inline void logger::close(){
+  for(auto& it : logstreams){
+    it.second.close();
+  }
 };
 
 

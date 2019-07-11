@@ -7,20 +7,22 @@
  *
  *  Events to handle human movement (trips)
  *
- *  Sean Wu (slwu89@berkeley.edu)
+ *  Sean Wu
  *  November 2018
-*/
+ */
 
-#include "Event-Move.hpp"
-
-// other MACRO headers
-#include "Human-PfSI.hpp"
+/* model includes */
+#include "Human.hpp"
 #include "Tile.hpp"
 #include "Patch.hpp"
-#include "Parameters.hpp"
 
-// for categorial rv
-#include "RNG.hpp"
+/* movement model */
+#include "Event-Move.hpp"
+
+/* utility class includes */
+#include "PRNG.hpp"
+#include "Parameters.hpp"
+#include "Logger.hpp"
 
 
 /* ################################################################################
@@ -28,24 +30,30 @@
 ################################################################################ */
 
 /* constructor */
-e_move_takeTrip::e_move_takeTrip(double tEvent_, const u_int dest_id, human* h) :
+e_move_takeTrip::e_move_takeTrip(double tEvent_, const size_t dest_id, human* h) :
   event("takeTrip",tEvent_,[tEvent_,dest_id,h](){
+
+    /* log this event */
+    h->get_tile()->get_logger()->get_stream("human_move") << h->get_id() << "," << tEvent_ << ",takeTrip," << dest_id << "\n";
 
     /* pack my bags (my biting weight) and take a trip */
     h->decrement_bweight(); /* decrement the biting weight where I came from */
     h->set_patch_id(dest_id); /* move */
     h->accumulate_bweight(); /* accumulate the biting weight where I go */
 
-    /* queue the voyage home */
-    double home_t = tEvent_ + R::rexp(h->get_trip_duration(dest_id));
+    /* queue the trip back home */
+    double home_t = tEvent_ + h->get_tile()->get_prng()->get_rexp(1.0/h->get_trip_duration(dest_id));
+
     h->addEvent2Q(e_move_returnHome(home_t,h));
 
   })
 {
 
-  #ifdef DEBUG_MACRO
-  std::cout << "e_move_takeTrip constructor being called at " << this << std::endl;
-  #endif
+  // #ifdef DEBUG_MACRO
+  // std::cout << "e_move_takeTrip constructor being called at " << this << std::endl;
+  // #endif
+
+  // std::cout << " --- e_move_takeTrip being made for human: " << h->get_id() << " at memory address: " << h << " --- \n";
 
 };
 
@@ -66,14 +74,19 @@ e_move_takeTrip::~e_move_takeTrip(){
 e_move_returnHome::e_move_returnHome(const double tEvent_, human* h) :
   event("returnHome",tEvent_,[tEvent_,h](){
 
+    /* log this event */
+    size_t home_id = h->get_home_patch_id();
+    h->get_tile()->get_logger()->get_stream("human_move") << h->get_id() << "," << tEvent_ << ",returnHome," << home_id << "\n";
+
     /* i come home */
     h->decrement_bweight(); /* decrement the biting weight where I came from */
-    h->set_patch_id(h->get_home_patch_id()); /* move */
+    h->set_patch_id(home_id); /* move */
     h->accumulate_bweight(); /* accumulate the biting weight where I go */
 
     /* queue my next trip */
-    int dest_id = rcategorical(h->get_patch()->get_move());
-    double trip_t = tEvent_ + R::rexp(1./h->get_trip_frequency());
+    size_t dest_id = h->get_tile()->get_prng()->get_rcategorical(h->get_patch()->get_move());
+    double trip_t = tEvent_ + h->get_tile()->get_prng()->get_rexp(h->get_trip_frequency());
+
     h->addEvent2Q(e_move_takeTrip(trip_t,dest_id,h));
 
   })

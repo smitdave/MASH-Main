@@ -9,40 +9,30 @@
  *
  *  Sean Wu
  *  November 2018
-*/
+ */
 
 #ifndef Patch_hpp
 #define Patch_hpp
 
 /* standard includes */
+#include <stdio.h>
 #include <iostream>
-#include <array>
-#include <string>
 
 /* RcppArmadillo */
 #include <RcppArmadillo.h>
 
-
-/* ################################################################################
- * forward declarations & alias/typedefs
-################################################################################ */
-
 /* forward definitions */
 class tile;
 
-
-/* ################################################################################
- * class declaration
-################################################################################ */
-
+/* class definition */
 class patch {
 public:
-  /* constructor & destructor */
-  patch(const Rcpp::List& patch_pars, tile* tileP_);
-  ~patch();
+                        /* constructor & destructor */
+                        patch(const Rcpp::List& patch_pars, tile* tileP_);
+                        ~patch();
 
   /* accessors */
-  u_int                get_id(){return id;}
+  size_t                get_id(){return id;}
   arma::Row<double>&    get_move(){return move;}
   double                get_bWeightHuman(){return bWeightHuman;}
   double                get_bWeightZoo(){return bWeightZoo;}
@@ -72,15 +62,10 @@ public:
   void                  zero_kappa(){kappa = 0.0;}
   void                  normalize_kappa();
 
-  /* PfSI specific member functions */
-  void                  update_SIP(const std::string state, const bool travel);
-  void                  reset_SIP();
-  void                  log_output();
-
 private:
 
   /* id */
-  u_int                id;
+  size_t                id;
 
   /* movement vector */
   arma::Row<double>     move;
@@ -97,10 +82,6 @@ private:
 
   /* tile pointer */
   tile*                 tileP;
-
-  /* PfSI specific data members */
-  std::array<double,3>  SIP_travel;
-  std::array<double,3>  SIP_resident;
 
 };
 

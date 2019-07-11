@@ -11,10 +11,17 @@
  *  November 2018
  */
 
-#ifndef TILE_HPP
-#define TILE_HPP
+#ifndef Tile_hpp
+#define Tile_hpp
+
+/* Rcpp */
+#include <RcppArmadillo.h>
+
+/* RcppProgress */
+#include "progress.hpp"
 
 /* standard includes */
+#include <stdio.h>
 #include <iostream>
 
 /* data */
@@ -25,17 +32,6 @@
 
 /* finding stuff */
 #include <algorithm>
-
-/* Rcpp */
-#include <RcppArmadillo.h>
-
-/* RcppProgress */
-#include "progress.hpp"
-
-
-/* ################################################################################
- * forward declarations & alias/typedefs
-################################################################################ */
 
 /* forward declarations */
 class human;
@@ -57,15 +53,12 @@ class parameters;
 using parametersP = std::unique_ptr<parameters>;
 
 
-/* ################################################################################
- * class declaration
-################################################################################ */
-
-/* tile class */
+/* tile class definition */
 class tile {
 public:
 
-  tile(const Rcpp::List& human_pars,
+  tile(const uint_least32_t seed,
+       const Rcpp::List& human_pars,
        const Rcpp::List& mosquito_pars,
        const Rcpp::List& patch_pars,
        const Rcpp::List& model_pars,
@@ -77,17 +70,18 @@ public:
 
 
   /* accessors */
-  int                           get_tnow(){return tnow;};
-  void                          set_tnow(int t){ tnow = t; };
+  int                           get_tnow();
+  void                          set_tnow(int t);
 
   /* state classes */
-  patch*                        get_patch(u_int id);
+  patch*                        get_patch(size_t id);
   human*                        get_human(u_int id);
   mosquito*                     get_mosquitos();
 
   /* utility classes */
-  logger*                       get_logger(){return loggerPtr.get();};
-  parameters*                   get_params(){return parametersPtr.get();};
+  prng*                         get_prng();
+  logger*                       get_logger();
+  parameters*                   get_params();
 
   /* simulation */
   void                          simulation(const int tmax);
@@ -109,5 +103,12 @@ private:
 
 };
 
+/* inlined accessors */
+inline int tile::get_tnow(){return tnow;};
+inline void tile::set_tnow(int t){ tnow = t; };
+
+inline prng* tile::get_prng(){return prngPtr.get();};
+inline logger* tile::get_logger(){return loggerPtr.get();};
+inline parameters* tile::get_params(){return parametersPtr.get();};
 
 #endif

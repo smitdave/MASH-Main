@@ -8,14 +8,15 @@
  *  Generic Event Class: events occur on humans;
  *  and are specialized for each model (eg PfSI, PfMOI, etc.)
  *
- *  Sean Wu (slwu89@berkeley.edu)
+ *  Sean Wu
  *  November 2018
-*/
+ */
 
-#ifndef EVENT_HPP
-#define EVENT_HPP
+#ifndef Event_hpp
+#define Event_hpp
 
 /* standard includes */
+#include <stdio.h>
 #include <iostream>
 
 /* event-specific includes */

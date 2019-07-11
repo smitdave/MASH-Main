@@ -10,12 +10,13 @@
  *
  *  Sean Wu
  *  November 2018
-*/
+ */
 
-#ifndef MOSY_RM_HPP
-#define MOSY_RM_HPP
+#ifndef MosquitoRM_hpp
+#define MosquitoRM_hpp
 
 /* standard includes */
+#include <stdio.h>
 #include <iostream>
 #include <vector>
 #include <algorithm>
@@ -23,21 +24,12 @@
 /* RcppArmadillo */
 #include <RcppArmadillo.h>
 
-
-/* ################################################################################
- * forward declarations & alias/typedefs
-################################################################################ */
-
-/* forward declarations */
-class tile;
-
-
-/* ################################################################################
- * class declaration
-################################################################################ */
+/* base-class */
+#include "Mosquito.hpp"
 
 /* RM-style deterministic mosquito model */
-class mosquito_rm {
+class mosquito_rm : public mosquito {
+
 public:
 
   /* constructor & destructor */
@@ -54,9 +46,9 @@ public:
   mosquito_rm& operator=(mosquito_rm&) = delete;
 
   /* simulation interface */
-  void    simulate();
-  double  get_beta(const u_int p);
-  void    initialize_logging();
+  virtual void simulate();
+  virtual double get_beta(const size_t p);
+  virtual void initialize_logging();
 
 private:
 
@@ -64,12 +56,12 @@ private:
   void                    aquatic_dynamics(const u_int tnow);
   void                    adult_dynamics(const u_int tnow);
 
-  u_int                  N; /* number of patches */
+  size_t                  N; /* number of patches */
   arma::Mat<double>       lambda; /* emergence matrix (365 X N) */
-  arma::SpMat<double>     psi; /* diffusion matrix (N X N) */
+  arma::Mat<double>       psi; /* diffusion matrix (N X N) */
 
-  arma::Col<u_int>       EIP; /* EIP on each day of the year */
-  u_int                  maxEIP;
+  arma::Col<size_t>       EIP; /* EIP on each day of the year */
+  size_t                  maxEIP;
   arma::Col<double>       P; /* survival over EIP */
   arma::Row<double>       kappa; /* net infectiousness to mosquitos (1 X N) */
 

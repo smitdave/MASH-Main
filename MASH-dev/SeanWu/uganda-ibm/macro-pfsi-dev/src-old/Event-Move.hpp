@@ -6,19 +6,18 @@
  *  /_/  /_/_/  |_\____/_/ |_|\____/
  *
  *  Events to handle human movement (trips)
+ *  Requires logging stream 'human_move'
  *
- *  Sean Wu (slwu89@berkeley.edu)
+ *  Sean Wu
  *  November 2018
-*/
+ */
 
-#ifndef EVENT_MOVE_HPP
-#define EVENT_MOVE_HPP
+#ifndef Event_Move_hpp
+#define Event_Move_hpp
 
 /* standard includes */
+#include <stdio.h>
 #include <functional>
-
-/* Rcpp includes */
-#include <RcppArmadillo.h>
 
 #include "Event.hpp"
 
@@ -33,7 +32,7 @@ class human;
 class e_move_takeTrip : public event {
 public:
   /* constructor */
-  e_move_takeTrip(const double tEvent_, const u_int dest_id, human* h);
+  e_move_takeTrip(const double tEvent_, const size_t dest_id, human* h);
 
   /* destructor */
   ~e_move_takeTrip();
@@ -54,4 +53,4 @@ public:
 };
 
 
-#endif
+#endif /* Event_Move_hpp */
