@@ -23,9 +23,5 @@
 event::event(std::string tag_, double tEvent_, std::function<void()> eventF_):
   tag(tag_),tEvent(tEvent_),eventF(eventF_) {};
 
-// /* destructor */
-// event::~event(){
-//   #ifdef DEBUG_MACRO
-//   std::cout << "event destructor being called at " << this << std::endl;
-//   #endif
-// };
+/* destructor */
+event::~event() = default;

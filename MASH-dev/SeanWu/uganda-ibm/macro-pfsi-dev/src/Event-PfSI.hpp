@@ -52,7 +52,7 @@ public:
   e_pfsi_bite(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_bite();
+  ~e_pfsi_bite() = default;
 
 };
 
@@ -68,7 +68,7 @@ public:
   e_pfsi_initial(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_initial();
+  ~e_pfsi_initial() = default;
 };
 
 /* start a PfSI infection; tag: PfSI_infection */
@@ -78,7 +78,7 @@ public:
   e_pfsi_infect(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_infect();
+  ~e_pfsi_infect() = default;
 };
 
 
@@ -89,7 +89,7 @@ public:
   e_pfsi_recover(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_recover();
+  ~e_pfsi_recover() = default;
 };
 
 /* a fever bout; tag: PfSI_fever */
@@ -99,7 +99,7 @@ public:
   e_pfsi_fever(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_fever();
+  ~e_pfsi_fever() = default;
 };
 
 /* seek treatment; tag: PfSI_treatment */
@@ -109,7 +109,7 @@ public:
   e_pfsi_treatment(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_treatment();
+  ~e_pfsi_treatment() = default;
 };
 
 /* end of chemoprophylaxis; tag: PfSI_endprophylaxis */
@@ -119,7 +119,7 @@ public:
   e_pfsi_endchx(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_endchx();
+  ~e_pfsi_endchx() = default;
 };
 
 
@@ -134,7 +134,7 @@ public:
   e_pfsi_pevaxx(double tEvent_, const bool treat, human* h);
 
   /* destructor */
-  ~e_pfsi_pevaxx();
+  ~e_pfsi_pevaxx() = default;
 };
 
 /* waning effectiveness of PE vaccination; tag: PfSI_PEWane */
@@ -144,7 +144,7 @@ public:
   e_pfsi_pewane(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_pewane();
+  ~e_pfsi_pewane() = default;
 };
 
 /* GS vaccination (gametocyte-blocking vaccination); tag: PfSI_GSVaxx */
@@ -154,7 +154,7 @@ public:
   e_pfsi_gsvaxx(double tEvent_, const bool treat, human* h);
 
   /* destructor */
-  ~e_pfsi_gsvaxx();
+  ~e_pfsi_gsvaxx() = default;
 };
 
 /* waning effectiveness of GS vaccination; tag: PfSI_GSWane */
@@ -164,7 +164,7 @@ public:
   e_pfsi_gswane(double tEvent_, human* h);
 
   /* destructor */
-  ~e_pfsi_gswane();
+  ~e_pfsi_gswane() = default;
 };
 
 

@@ -49,15 +49,6 @@ e_move_takeTrip::e_move_takeTrip(double tEvent_, const u_int dest_id, human* h) 
 
 };
 
-/* destructor */
-e_move_takeTrip::~e_move_takeTrip(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_move_takeTrip destructor being called at " << this << std::endl;
-  #endif
-
-};
-
 
 /* ################################################################################
  * return to my home patch
@@ -81,15 +72,6 @@ e_move_returnHome::e_move_returnHome(const double tEvent_, human* h) :
 
   #ifdef DEBUG_MACRO
   std::cout << "e_move_returnHome constructor being called at " << this << std::endl;
-  #endif
-
-};
-
-/* destructor */
-e_move_returnHome::~e_move_returnHome(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_move_returnHome destructor being called at " << this << std::endl;
   #endif
 
 };

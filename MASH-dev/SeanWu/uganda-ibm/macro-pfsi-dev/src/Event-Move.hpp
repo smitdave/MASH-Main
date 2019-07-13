@@ -36,7 +36,7 @@ public:
   e_move_takeTrip(const double tEvent_, const u_int dest_id, human* h);
 
   /* destructor */
-  ~e_move_takeTrip();
+  ~e_move_takeTrip() = default;
 };
 
 
@@ -50,7 +50,7 @@ public:
   e_move_returnHome(const double tEvent_, human* h);
 
   /* destructor */
-  ~e_move_returnHome();
+  ~e_move_returnHome() = default;
 };
 
 

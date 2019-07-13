@@ -37,28 +37,30 @@ class tile;
 ################################################################################ */
 
 /* RM-style deterministic mosquito model */
-class mosquito_rm {
+class mosquito {
 public:
 
   /* constructor & destructor */
-  mosquito_rm(const Rcpp::List& mosquito_pars,
+  mosquito(const Rcpp::List& mosquito_pars,
              tile* tileP_);
-  ~mosquito_rm();
+  ~mosquito() = default;
 
   /* move operators */
-  mosquito_rm(mosquito_rm&&);
-  mosquito_rm& operator=(mosquito_rm&&);
+  mosquito(mosquito&&) = default;
+  mosquito& operator=(mosquito&&) = default;
 
   /* copy operators */
-  mosquito_rm(mosquito_rm&) = delete;
-  mosquito_rm& operator=(mosquito_rm&) = delete;
+  mosquito(mosquito&) = delete;
+  mosquito& operator=(mosquito&) = delete;
 
   /* simulation interface */
   void    simulate();
-  double  get_beta(const u_int p);
+  double  get_beta(const u_int p){return a * Z.at(p);};
   void    initialize_logging();
 
 private:
+
+  tile*                 tileP;
 
   /* private simulation methods */
   void                    aquatic_dynamics(const u_int tnow);

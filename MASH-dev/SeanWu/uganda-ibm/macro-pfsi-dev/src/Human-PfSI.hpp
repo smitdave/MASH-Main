@@ -57,8 +57,9 @@ public:
   human& operator=(human&&) = default;
 
   /* copy operators */
-  human(human&) = default;
-  human& operator=(human&) = default;
+  // NOW delete
+  human(human&) = delete;
+  human& operator=(human&) = delete;
 
   /* accessors */
   u_int                 get_id(){return id;};

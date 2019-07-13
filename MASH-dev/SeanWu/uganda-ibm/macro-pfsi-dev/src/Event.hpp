@@ -35,7 +35,7 @@ public:
 
   /* destructor */
   // NOW default
-  virtual ~event() = default;
+  virtual ~event();
 
   /* move operators */
   event(event&&) = default;

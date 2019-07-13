@@ -93,14 +93,6 @@ e_pfsi_bite::e_pfsi_bite(double tEvent_, human* h):
 
 };
 
-/* destructor */
-e_pfsi_bite::~e_pfsi_bite(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_bite destructor being called at " << this << std::endl;
-  #endif
-
-};
 
 
 /* ################################################################################
@@ -130,15 +122,6 @@ e_pfsi_initial::e_pfsi_initial(double tEvent_, human* h):
 
   #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_initial constructor being called at " << this << std::endl;
-  #endif
-
-};
-
-/* destructor */
-e_pfsi_initial::~e_pfsi_initial(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_initial destructor being called at " << this << std::endl;
   #endif
 
 };
@@ -179,15 +162,6 @@ e_pfsi_infect::e_pfsi_infect(double tEvent_, human* h):
 
 };
 
-/* destructor */
-e_pfsi_infect::~e_pfsi_infect(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_infect destructor being called at " << this << std::endl;
-  #endif
-
-};
-
 
 /* ################################################################################
  * end a PfSI infection; tag: PfSI_recovery
@@ -209,15 +183,6 @@ e_pfsi_recover::e_pfsi_recover(double tEvent_, human* h):
 
   #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_recover constructor being called at " << this << std::endl;
-  #endif
-
-};
-
-/* destructor */
-e_pfsi_recover::~e_pfsi_recover(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_recover destructor being called at " << this << std::endl;
   #endif
 
 };
@@ -244,15 +209,6 @@ e_pfsi_fever::e_pfsi_fever(double tEvent_, human* h):
 
   #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_fever constructor being called at " << this << std::endl;
-  #endif
-
-};
-
-/* destructor */
-e_pfsi_fever::~e_pfsi_fever(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_fever destructor being called at " << this << std::endl;
   #endif
 
 };
@@ -284,15 +240,6 @@ e_pfsi_treatment::e_pfsi_treatment(double tEvent_, human* h):
 
 };
 
-/* destructor */
-e_pfsi_treatment::~e_pfsi_treatment(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_treatment destructor being called at " << this << std::endl;
-  #endif
-
-};
-
 
 /* ################################################################################
  * end of chemoprophylaxis; tag: PfSI_endprophylaxis
@@ -310,15 +257,6 @@ e_pfsi_endchx::e_pfsi_endchx(double tEvent_, human* h):
 
   #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_endchx constructor being called at " << this << std::endl;
-  #endif
-
-};
-
-/* destructor */
-e_pfsi_endchx::~e_pfsi_endchx(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_endchx destructor being called at " << this << std::endl;
   #endif
 
 };
@@ -370,15 +308,6 @@ e_pfsi_pevaxx::e_pfsi_pevaxx(double tEvent_, const bool treat, human* h):
 
 };
 
-/* destructor */
-e_pfsi_pevaxx::~e_pfsi_pevaxx(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_pevaxx destructor being called at " << this << std::endl;
-  #endif
-
-};
-
 
 /* ################################################################################
  * PE vaccination (sporozoite-blocking vaccination); tag: PfSI_PEWane
@@ -397,15 +326,6 @@ e_pfsi_pewane::e_pfsi_pewane(double tEvent_, human* h):
 
   #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_pewane constructor being called at " << this << std::endl;
-  #endif
-
-};
-
-/* destructor */
-e_pfsi_pewane::~e_pfsi_pewane(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_pewane destructor being called at " << this << std::endl;
   #endif
 
 };
@@ -457,15 +377,6 @@ e_pfsi_gsvaxx::e_pfsi_gsvaxx(double tEvent_, const bool treat, human* h):
 
 };
 
-/* destructor */
-e_pfsi_gsvaxx::~e_pfsi_gsvaxx(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_gsvaxx destructor being called at " << this << std::endl;
-  #endif
-
-};
-
 
 /* ################################################################################
  * waning effectiveness of GS vaccination; tag: PfSI_GSWane
@@ -484,15 +395,6 @@ e_pfsi_gswane::e_pfsi_gswane(double tEvent_, human* h):
 
   #ifdef DEBUG_MACRO
   std::cout << "e_pfsi_gswane constructor being called at " << this << std::endl;
-  #endif
-
-};
-
-/* destructor */
-e_pfsi_gswane::~e_pfsi_gswane(){
-
-  #ifdef DEBUG_MACRO
-  std::cout << "e_pfsi_gswane destructor being called at " << this << std::endl;
   #endif
 
 };
