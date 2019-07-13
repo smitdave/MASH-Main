@@ -5,27 +5,28 @@
  *   / /  / / ___ / /___/ _, _/ /_/ /
  *  /_/  /_/_/  |_\____/_/ |_|\____/
  *
- *  Generic Event Class: events occur on humans;
- *  and are specialized for each model (eg PfSI, PfMOI, etc.)
+ *  PfSI human
  *
  *  Sean Wu (slwu89@berkeley.edu)
- *  November 2018
+ *  July 2019
 */
 
+#include "Human-PfSI.hpp"
+
+// event includes
+#include "Event-PfSI.hpp"
+#include "Event-Move.hpp"
 #include "Event.hpp"
+
+// other object includes
+#include "Mosquito-RM.hpp"
+#include "Patch.hpp"
+#include "Tile.hpp"
+
+// utility includes
+#include "Parameters.hpp"
 
 
 /* ################################################################################
  * class boilerplate
 ################################################################################ */
-
-/* constructor */
-event::event(std::string tag_, double tEvent_, std::function<void()> eventF_):
-  tag(tag_),tEvent(tEvent_),eventF(eventF_) {};
-
-// /* destructor */
-// event::~event(){
-//   #ifdef DEBUG_MACRO
-//   std::cout << "event destructor being called at " << this << std::endl;
-//   #endif
-// };

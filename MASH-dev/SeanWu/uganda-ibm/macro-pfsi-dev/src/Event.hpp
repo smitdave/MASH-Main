@@ -34,15 +34,17 @@ public:
   event(std::string tag_, double tEvent_, std::function<void()> eventF_);
 
   /* destructor */
-  virtual ~event();
+  // NOW default
+  virtual ~event() = default;
 
   /* move operators */
   event(event&&) = default;
   event& operator=(event&&) = default;
 
   /* copy operators */
-  event(event&) = default;
-  event& operator=(event&) = default;
+  // NOW delete
+  event(event&) = delete;
+  event& operator=(event&) = delete;
 
   /* print (debugging) */
   void print(){
