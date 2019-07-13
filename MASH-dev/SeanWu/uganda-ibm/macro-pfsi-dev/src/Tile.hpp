@@ -9,7 +9,7 @@
  *
  *  Sean Wu
  *  November 2018
- */
+*/
 
 #ifndef TILE_HPP
 #define TILE_HPP
@@ -47,9 +47,6 @@ using mosquitoP = std::unique_ptr<mosquito>;
 class patch;
 using patchP = std::unique_ptr<patch>;
 
-class prng;
-using prngP = std::unique_ptr<prng>;
-
 class logger;
 using loggerP = std::unique_ptr<logger>;
 
@@ -73,8 +70,15 @@ public:
        const Rcpp::List& vaxx_events,
        const bool        verbose_
   );
-  ~tile();
+  ~tile() = default;
 
+  /* move operators */
+  tile(tile&&) = default;
+  tile& operator=(tile&&) = default;
+
+  /* copy operators */
+  tile(tile&) = delete;
+  tile& operator=(tile&) = delete;
 
   /* accessors */
   int                           get_tnow(){return tnow;};
@@ -103,7 +107,6 @@ private:
   std::vector<patchP>           patches;
 
   /* utility classes */
-  prngP                         prngPtr;
   loggerP                       loggerPtr;
   parametersP                   parametersPtr;
 

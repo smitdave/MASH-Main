@@ -50,7 +50,7 @@ public:
   patch& operator=(patch&) = delete;
 
   /* accessors */
-  u_int                get_id(){return id;}
+  u_int                 get_id(){return id;}
   arma::Row<double>&    get_move(){return move;}
   double                get_bWeightHuman(){return bWeightHuman;}
   double                get_bWeightZoo(){return bWeightZoo;}

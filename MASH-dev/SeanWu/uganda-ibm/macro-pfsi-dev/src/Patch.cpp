@@ -108,7 +108,9 @@ void patch::reset_SIP(){
   inc_resident = 0;
 };
 
-
+// log output at the end of the day
 void patch::log_output(){
-  // WRITE ME!!!!
+  int tnow(tileP->get_tnow());
+  tileP->get_logger()->get_stream("pfsi") << tnow << "," << id << "," << SIP_resident.at(0) << "," << SIP_travel.at(0) << "," << SIP_resident.at(1) << "," << SIP_travel.at(1) << "," << SIP_resident.at(2) << "," << SIP_travel.at(2) << "," << inc_resident << "," << inc_travel << "\n";
+  reset_SIP();
 };
