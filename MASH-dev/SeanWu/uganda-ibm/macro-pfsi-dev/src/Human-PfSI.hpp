@@ -69,6 +69,8 @@ public:
   u_int                 get_patch_id(){return patch_id;};
   void                  set_patch_id(const u_int pid){ patch_id = pid; };
   u_int                 get_home_patch_id(){return home_patch_id;};
+  bool                  get_travel(){return travel;};
+  void                  set_travel(const bool travel_){travel = travel_;};
   double                get_trip_duration(const u_int pid){return trip_duration.at(pid);};
   double                get_trip_frequency(){return trip_frequency;};
   patch*                get_patch();
@@ -104,7 +106,10 @@ public:
   void                  set_c(const double c_){ c = c_; }
   double                get_c(){ return c; }
 
-protected:
+  // PfSI logging
+  void                  log_oneday();
+
+private:
 
   /* basic fields */
   u_int                 id; /* my id */
@@ -138,7 +143,6 @@ protected:
 
   double                kappa; /* unnormalized kappa for an individual */
   double                EIR; /* individual level entomological inoculation rate */
-
 
 };
 

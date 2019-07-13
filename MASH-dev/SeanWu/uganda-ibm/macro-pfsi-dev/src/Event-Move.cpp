@@ -35,6 +35,7 @@ e_move_takeTrip::e_move_takeTrip(double tEvent_, const u_int dest_id, human* h) 
     h->decrement_bweight(); /* decrement the biting weight where I came from */
     h->set_patch_id(dest_id); /* move */
     h->accumulate_bweight(); /* accumulate the biting weight where I go */
+    h->set_travel(true); // i'm not at home!
 
     /* queue the voyage home */
     double home_t = tEvent_ + R::rexp(h->get_trip_duration(dest_id));
@@ -61,6 +62,7 @@ e_move_returnHome::e_move_returnHome(const double tEvent_, human* h) :
     h->decrement_bweight(); /* decrement the biting weight where I came from */
     h->set_patch_id(h->get_home_patch_id()); /* move */
     h->accumulate_bweight(); /* accumulate the biting weight where I go */
+    h->set_travel(false); // i'm at home again!
 
     /* queue my next trip */
     int dest_id = rcategorical(h->get_patch()->get_move());

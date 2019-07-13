@@ -66,12 +66,12 @@ private:
   void                    aquatic_dynamics(const u_int tnow);
   void                    adult_dynamics(const u_int tnow);
 
-  u_int                  N; /* number of patches */
+  u_int                   N; /* number of patches */
   arma::Mat<double>       lambda; /* emergence matrix (365 X N) */
   arma::SpMat<double>     psi; /* diffusion matrix (N X N) */
 
-  arma::Col<u_int>       EIP; /* EIP on each day of the year */
-  u_int                  maxEIP;
+  arma::Col<u_int>        EIP; /* EIP on each day of the year */
+  u_int                   maxEIP;
   arma::Col<double>       P; /* survival over EIP */
   arma::Row<double>       kappa; /* net infectiousness to mosquitos (1 X N) */
 

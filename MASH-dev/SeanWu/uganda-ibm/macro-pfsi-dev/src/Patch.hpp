@@ -11,8 +11,8 @@
  *  November 2018
 */
 
-#ifndef Patch_hpp
-#define Patch_hpp
+#ifndef PATCH_HPP
+#define PATCH_HPP
 
 /* standard includes */
 #include <iostream>
@@ -39,7 +39,15 @@ class patch {
 public:
   /* constructor & destructor */
   patch(const Rcpp::List& patch_pars, tile* tileP_);
-  ~patch();
+  ~patch() = default;
+
+  /* move operators */
+  patch(patch&&) = default;
+  patch& operator=(patch&&) = default;
+
+  /* copy operators */
+  patch(patch&) = delete;
+  patch& operator=(patch&) = delete;
 
   /* accessors */
   u_int                get_id(){return id;}
@@ -73,6 +81,7 @@ public:
   void                  normalize_kappa();
 
   /* PfSI specific member functions */
+  void                  update_incidence(const bool travel);
   void                  update_SIP(const std::string state, const bool travel);
   void                  reset_SIP();
   void                  log_output();
@@ -101,7 +110,8 @@ private:
   /* PfSI specific data members */
   std::array<double,3>  SIP_travel;
   std::array<double,3>  SIP_resident;
-
+  int                   inc_travel;
+  int                   inc_resident;
 };
 
 

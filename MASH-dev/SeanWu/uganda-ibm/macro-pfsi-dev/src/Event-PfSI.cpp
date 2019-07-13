@@ -14,9 +14,12 @@
 
 #include "Event-PfSI.hpp"
 
-// other MACRO headers
+// other object includes
 #include "Human-PfSI.hpp"
 #include "Tile.hpp"
+#include "Patch.hpp"
+
+// utiltiy includes
 #include "Parameters.hpp"
 
 
@@ -117,6 +120,9 @@ e_pfsi_initial::e_pfsi_initial(double tEvent_, human* h):
       h->addEvent2Q(e_pfsi_fever(tFever,h));
     }
 
+    // increment incidence where i am
+    h->get_patch()->update_incidence(h->get_travel());
+
   })
 {
 
@@ -151,6 +157,9 @@ e_pfsi_infect::e_pfsi_infect(double tEvent_, human* h):
         double tFever = tEvent_ + pfsi_ttFeverPf(h);
         h->addEvent2Q(e_pfsi_fever(tFever,h));
       }
+
+      // increment incidence where i am
+      h->get_patch()->update_incidence(h->get_travel());
     }
 
   })

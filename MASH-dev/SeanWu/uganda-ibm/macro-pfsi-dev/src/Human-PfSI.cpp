@@ -40,10 +40,10 @@ human::human(/* basic values */
         /* PfSI specific values */
         const std::string state_, const double age_) :
   id(id_), alive(true), tnow(0.),
-  patch_id(home_patch_id_), home_patch_id(home_patch_id_),
+  patch_id(home_patch_id_), home_patch_id(home_patch_id_), travel(false),
   trip_duration(trip_duration_), trip_frequency(trip_frequency_),
   bweight(bweight_), tileP(tileP_),
-  state(state_), age(age_), b(0.), c(0.), kappa(0.), EIR(0.)
+  state(state_), b(0.), c(0.), age(age_), kappa(0.), EIR(0.)
 {};
 
 // destructor
@@ -168,7 +168,7 @@ void human::initialize_courseofinf(){
     addEvent2Q(e_pfsi_treatment(0.0,this));
   /* bad input */
   } else {
-    Rcpp::stop("error: human ",id," has been provided with invalid 'state' argument\n");
+    Rcpp::stop("error: human "+std::to_string(id)+" has been provided with invalid 'state' argument\n");
   }
 
 };

@@ -11,6 +11,9 @@
  *  July 2019
 */
 
+#ifndef RNG_HPP
+#define RNG_HPP
+
 #include <RcppArmadillo.h>
 
 // movement needs to sample a categorical distribution
@@ -60,3 +63,5 @@ void rmhyper(int* destination, int const* source, int n, int k){
   // get the last one
   destination[i] = n;
 };
+
+#endif
