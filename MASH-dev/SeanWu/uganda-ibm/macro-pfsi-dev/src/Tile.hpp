@@ -70,7 +70,7 @@ public:
        const Rcpp::List& vaxx_events,
        const bool        verbose_
   );
-  ~tile() = default;
+  ~tile();
 
   /* move operators */
   tile(tile&&) = default;
