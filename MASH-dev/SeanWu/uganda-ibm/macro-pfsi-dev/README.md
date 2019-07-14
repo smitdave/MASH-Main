@@ -1,5 +1,6 @@
 # bugs
 
+  * for some reason people are getting infectious bites on day 0 when Z = 0, check why this is happening.
   * SOLVED: (was because we use the "state" string, which is I, and PfSI protects from infection when you are in I) for some reason people who are infected at t=0 get events added that never fire.
 
 # dev thoughts
