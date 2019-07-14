@@ -39,7 +39,10 @@ patch::patch(
   res_EIR(Rcpp::as<double>(patch_pars["res_EIR"])),
   tileP(tileP_),
   inc_travel(0), inc_resident(0)
-{};
+{
+  SIP_resident.fill(0);
+  SIP_travel.fill(0);
+};
 
 /* debug */
 void patch::print(){

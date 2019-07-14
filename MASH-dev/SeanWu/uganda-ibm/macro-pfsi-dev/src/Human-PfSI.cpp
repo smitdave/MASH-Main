@@ -141,6 +141,9 @@ void human::simulate(){
 
   /* queue bites */
   queue_bites();
+
+  /* update patch information on state */
+  get_patch()->update_SIP(state,travel);
 };
 
 
@@ -166,11 +169,7 @@ void human::initialize_courseofinf(){
   /* chemoprophylactic protection */
   } else if(state.compare("P") == 0){
     addEvent2Q(e_pfsi_treatment(0.0,this));
-  /* bad input */
-  } else {
-    Rcpp::stop("error: human "+std::to_string(id)+" has been provided with invalid 'state' argument\n");
   }
-
 };
 
 

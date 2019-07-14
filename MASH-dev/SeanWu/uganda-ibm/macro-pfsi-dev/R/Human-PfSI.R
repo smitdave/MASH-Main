@@ -34,7 +34,6 @@
 #' @export
 human_pfsi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bweight,age,state){
   list(
-    model = "PfSI",
     id = as.integer(id),
     home_patch_id = as.integer(home_patch_id),
     trip_duration = as.numeric(trip_duration),

@@ -18,7 +18,7 @@
 
 // movement needs to sample a categorical distribution
 // stupid simple inversion method (Devroye III.2)
-int rcategorical(const arma::Row<double>& probs){
+static int rcategorical(const arma::Row<double>& probs){
   int x = 0;
   if(probs.size() == 1){
     return x;
@@ -39,7 +39,7 @@ int rcategorical(const arma::Row<double>& probs){
 // source: number of "balls" in each "urn"
 // n: number of draws to take
 // k: number of "urns"
-void rmhyper(int* destination, int const* source, int n, int k){
+static void rmhyper(int* destination, int const* source, int n, int k){
   int sum, x, y;
   size_t i;
   if(n < 0 || k < 0){Rcpp::stop("Invalid parameters of distribution");}

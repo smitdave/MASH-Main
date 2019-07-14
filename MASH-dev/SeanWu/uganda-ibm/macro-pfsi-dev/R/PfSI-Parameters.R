@@ -58,13 +58,24 @@ pfsi_parameters <- function(
     mnGSPf = 180,
     vrGSPf = 20
   ){
-
-    args <- as.list(match.call.defaults())
-    args <- args[-1]
-    out <- vector("list",length(args))
-    for(i in 1:length(args)){
-      out[[i]] <- pars_obj(val = args[[i]],name = names(args[i]), fixtype = 1L)
-    }
-
-    return(out)
+  list(
+    Pf_c = Pf_c,
+    Pf_b = Pf_b,
+    DurationPf = DurationPf,
+    LatentPf = LatentPf,
+    FeverPf = FeverPf,
+    mnFeverPf = mnFeverPf,
+    vrFeverPf = vrFeverPf,
+    TreatPf = TreatPf,
+    mnTreatPf = mnTreatPf,
+    mnChemoprophylaxisPf = mnChemoprophylaxisPf,
+    PEProtectPf = PEProtectPf,
+    peBlockPf = peBlockPf,
+    mnPEPf = mnPEPf,
+    vrPEPf = vrPEPf,
+    GSProtectPf = GSProtectPf,
+    gsBlockPf = gsBlockPf,
+    mnGSPf = mnGSPf,
+    vrGSPf = vrGSPf
+  )
 }

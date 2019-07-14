@@ -66,18 +66,18 @@ public:
   /* initialize a parameter set from R side input */
   void init_params(const Rcpp::List& pars){
 
-    /* check input */
     if(pars.size() < 1){
       Rcpp::stop("input model parameters cannot be an empty list");
     }
 
+    Rcpp::CharacterVector par_names = pars.names();
+
     /* fill hash table */
     for(u_int i=0; i<pars.size(); i++){
 
-      Rcpp::List par = Rcpp::as<Rcpp::List>(pars[i]);
       pars_map.insert(std::make_pair(
-        Rcpp::as<std::string>(par["name"]),
-        Rcpp::as<double>(par["val"])
+        Rcpp::as<std::string>(par_names[i]),
+        Rcpp::as<double>(pars[i])
       ));
 
     }

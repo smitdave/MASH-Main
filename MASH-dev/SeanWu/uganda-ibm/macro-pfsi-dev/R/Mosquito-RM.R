@@ -63,7 +63,6 @@ mosquito_rm_conpars <- function(
   }
 
   list(
-    model = "RM",
     N = as.integer(N),
     lambda = as.matrix(lambda),
     psi = as.matrix(psi),
