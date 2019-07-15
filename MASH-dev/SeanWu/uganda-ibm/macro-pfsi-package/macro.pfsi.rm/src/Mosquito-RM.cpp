@@ -33,8 +33,8 @@ mosquito::mosquito(
 ) :
    tileP(tileP_),
    N(Rcpp::as<u_int>(mosquito_pars["N"])),
-   lambda(Rcpp::as<arma::SpMat<double> >(mosquito_pars["lambda"])),
-   psi(Rcpp::as<arma::Mat<double> >(mosquito_pars["psi"])),
+   lambda(Rcpp::as<arma::Mat<double> >(mosquito_pars["lambda"])),
+   psi(Rcpp::as<arma::SpMat<double> >(mosquito_pars["psi"])),
    EIP(Rcpp::as<arma::Col<u_int> >(mosquito_pars["EIP"])),
    maxEIP(Rcpp::as<u_int>(mosquito_pars["maxEIP"])),
    P(maxEIP),

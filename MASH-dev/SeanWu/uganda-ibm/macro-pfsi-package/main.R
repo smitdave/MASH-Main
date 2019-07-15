@@ -119,14 +119,14 @@ ggplot(pfsi_pr) +
   facet_wrap(. ~ patch) +
   theme_bw()
 
-pfsi_inc <- pfsi %>%
-  gather(key,value,incidence_resident,incidence_traveller) %>%
-  select(one_of(c("time","patch","key","value")))
-
-ggplot(pfsi_inc) +
-  geom_line(aes(x=time,y=value,color=key)) +
-  facet_wrap(. ~ patch) +
-  theme_bw()
+# pfsi_inc <- pfsi %>%
+#   gather(key,value,incidence_resident,incidence_traveller) %>%
+#   select(one_of(c("time","patch","key","value")))
+# 
+# ggplot(pfsi_inc) +
+#   geom_line(aes(x=time,y=value,color=key)) +
+#   facet_wrap(. ~ patch) +
+#   theme_bw()
 
 
 ################################################################################
