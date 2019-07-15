@@ -13,20 +13,20 @@
 ################################################################################
 
 
-#' Utility: Helper function to match argument calls
-#'
-#' from: \url{https://stackoverflow.com/a/43329945/4651968}
-#'
-match.call.defaults <- function(...) {
-  call <- evalq(match.call(expand.dots = FALSE), parent.frame(1))
-  formals <- evalq(formals(), parent.frame(1))
-
-  for(i in setdiff(names(formals), names(call)))
-    call[i] <- list( formals[[i]] )
-
-
-  match.call(sys.function(sys.parent()), call)
-}
+#' #' Utility: Helper function to match argument calls
+#' #'
+#' #' from: \url{https://stackoverflow.com/a/43329945/4651968}
+#' #'
+#' match.call.defaults <- function(...) {
+#'   call <- evalq(match.call(expand.dots = FALSE), parent.frame(1))
+#'   formals <- evalq(formals(), parent.frame(1))
+#' 
+#'   for(i in setdiff(names(formals), names(call)))
+#'     call[i] <- list( formals[[i]] )
+#' 
+#' 
+#'   match.call(sys.function(sys.parent()), call)
+#' }
 
 
 #' Utility: Make a Parameter Object for C++ Initialization

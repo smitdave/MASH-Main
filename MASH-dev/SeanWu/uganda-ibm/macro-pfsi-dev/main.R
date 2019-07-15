@@ -41,7 +41,6 @@ source(here::here("R/MACRO-Utility.R"))
 source(here::here("R/Mosquito-RM.R"))
 source(here::here("R/Patch.R"))
 source(here::here("R/PfSI-Parameters.R"))
-source(here::here("R/PfSI-Utility.R"))
 
 # vector of parameters
 pfsi_pars <- pfsi_parameters()
