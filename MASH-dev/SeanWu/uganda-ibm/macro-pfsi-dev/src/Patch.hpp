@@ -82,7 +82,9 @@ public:
 
   /* PfSI specific member functions */
   void                  update_incidence(const bool travel);
-  void                  update_SIP(const std::string state, const bool travel);
+  void                  update_SIP_visitor(const std::string state);
+  void                  update_SIP_resident_home(const std::string state);
+  void                  update_SIP_resident_away(const std::string state);
   void                  reset_SIP();
   void                  log_output();
 
@@ -108,8 +110,9 @@ private:
   tile*                 tileP;
 
   /* PfSI specific data members */
-  std::array<double,3>  SIP_travel;
-  std::array<double,3>  SIP_resident;
+  std::array<int,3>     SIP_visitor;
+  std::array<int,3>     SIP_resident_home;
+  std::array<int,3>     SIP_resident_away;
   int                   inc_travel;
   int                   inc_resident;
 };

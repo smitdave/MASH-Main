@@ -107,7 +107,7 @@ public:
   double                get_c(){ return c; }
 
   // PfSI logging
-  void                  log_oneday();
+  void                  log_pfsi();
 
 private:
 

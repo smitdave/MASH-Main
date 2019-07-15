@@ -117,9 +117,6 @@ e_pfsi_initial::e_pfsi_initial(double tEvent_, human* h):
       h->addEvent2Q(e_pfsi_fever(tFever,h));
     }
 
-    // increment incidence where i am
-    h->get_patch()->update_incidence(h->get_travel());
-
   })
 {
 
@@ -144,6 +141,9 @@ e_pfsi_infect::e_pfsi_infect(double tEvent_, human* h):
       /* i'm now infected */
       h->set_state("I");
 
+      // increment incidence where i am
+      h->get_patch()->update_incidence(h->get_travel());
+
       /* queue clearance event */
       double tEnd = tEvent_ + pfsi_ttClearPf(h);
       h->addEvent2Q(e_pfsi_recover(tEnd,h));
@@ -155,8 +155,6 @@ e_pfsi_infect::e_pfsi_infect(double tEvent_, human* h):
         h->addEvent2Q(e_pfsi_fever(tFever,h));
       }
 
-      // increment incidence where i am
-      h->get_patch()->update_incidence(h->get_travel());
     }
 
   })

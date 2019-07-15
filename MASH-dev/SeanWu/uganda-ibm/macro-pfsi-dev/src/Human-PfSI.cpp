@@ -143,7 +143,7 @@ void human::simulate(){
   queue_bites();
 
   /* update patch information on state */
-  get_patch()->update_SIP(state,travel);
+  log_pfsi();
 };
 
 
@@ -254,6 +254,22 @@ void human::queue_bites(){
     for(size_t i=0; i<nbite; i++){
       addEvent2Q(e_pfsi_bite(tnow,this));
     }
+  }
+
+};
+
+
+/* ################################################################################
+ * PfSI logging
+################################################################################ */
+
+void human::log_pfsi(){
+
+  if(travel){
+    get_home_patch()->update_SIP_resident_away(state);
+    get_patch()->update_SIP_visitor(state);
+  } else {
+    get_home_patch()->update_SIP_resident_home(state);
   }
 
 };

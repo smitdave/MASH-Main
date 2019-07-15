@@ -40,8 +40,9 @@ patch::patch(
   tileP(tileP_),
   inc_travel(0), inc_resident(0)
 {
-  SIP_resident.fill(0);
-  SIP_travel.fill(0);
+  SIP_visitor.fill(0);
+  SIP_resident_home.fill(0);
+  SIP_resident_away.fill(0);
 };
 
 /* debug */
@@ -77,36 +78,78 @@ void patch::update_incidence(const bool travel){
   }
 };
 
-// this is called by humans at the end of their daily simulation
-void patch::update_SIP(const std::string state, const bool travel){
-  if(travel){
-    if(state.compare("S") == 0){
-      SIP_travel.at(0) += 1;
-    } else if(state.compare("I") == 0){
-      SIP_travel.at(1) += 1;
-    } else if(state.compare("P") == 0){
-      SIP_travel.at(2) += 1;
-    } else {
-      Rcpp::stop("error, illegal human state detected: " + state);
-    }
+// // this is called by humans at the end of their daily simulation
+// void patch::update_SIP(const std::string state, const bool travel){
+//   if(travel){
+//     if(state.compare("S") == 0){
+//       SIP_travel.at(0) += 1;
+//     } else if(state.compare("I") == 0){
+//       SIP_travel.at(1) += 1;
+//     } else if(state.compare("P") == 0){
+//       SIP_travel.at(2) += 1;
+//     } else {
+//       Rcpp::stop("error, illegal human state detected: " + state);
+//     }
+//   } else {
+//     if(state.compare("S") == 0){
+//       SIP_resident.at(0) += 1;
+//     } else if(state.compare("I") == 0){
+//       SIP_resident.at(1) += 1;
+//     } else if(state.compare("P") == 0){
+//       SIP_resident.at(2) += 1;
+//     } else {
+//       Rcpp::stop("error, illegal human state detected: " + state);
+//     }
+//   }
+// };
+
+// this is called by humans to log state
+void patch::update_SIP_visitor(const std::string state){
+  if(state.compare("S") == 0){
+    SIP_visitor.at(0) += 1;
+  } else if(state.compare("I") == 0){
+    SIP_visitor.at(1) += 1;
+  } else if(state.compare("P") == 0){
+    SIP_visitor.at(2) += 1;
   } else {
-    if(state.compare("S") == 0){
-      SIP_resident.at(0) += 1;
-    } else if(state.compare("I") == 0){
-      SIP_resident.at(1) += 1;
-    } else if(state.compare("P") == 0){
-      SIP_resident.at(2) += 1;
-    } else {
-      Rcpp::stop("error, illegal human state detected: " + state);
-    }
+    Rcpp::stop("error, illegal human state detected: " + state);
+  }
+};
+
+
+// this is called by humans to log state
+void patch::update_SIP_resident_home(const std::string state){
+  if(state.compare("S") == 0){
+    SIP_resident_home.at(0) += 1;
+  } else if(state.compare("I") == 0){
+    SIP_resident_home.at(1) += 1;
+  } else if(state.compare("P") == 0){
+    SIP_resident_home.at(2) += 1;
+  } else {
+    Rcpp::stop("error, illegal human state detected: " + state);
+  }
+};
+
+
+// this is called by humans to log state
+void patch::update_SIP_resident_away(const std::string state){
+  if(state.compare("S") == 0){
+    SIP_resident_away.at(0) += 1;
+  } else if(state.compare("I") == 0){
+    SIP_resident_away.at(1) += 1;
+  } else if(state.compare("P") == 0){
+    SIP_resident_away.at(2) += 1;
+  } else {
+    Rcpp::stop("error, illegal human state detected: " + state);
   }
 };
 
 
 // reset at the end of the day
 void patch::reset_SIP(){
-  SIP_travel.fill(0);
-  SIP_resident.fill(0);
+  SIP_visitor.fill(0);
+  SIP_resident_home.fill(0);
+  SIP_resident_away.fill(0);
   inc_travel = 0;
   inc_resident = 0;
 };
@@ -114,6 +157,6 @@ void patch::reset_SIP(){
 // log output at the end of the day
 void patch::log_output(){
   int tnow(tileP->get_tnow());
-  tileP->get_logger()->get_stream("pfsi") << tnow << "," << id << "," << SIP_resident.at(0) << "," << SIP_travel.at(0) << "," << SIP_resident.at(1) << "," << SIP_travel.at(1) << "," << SIP_resident.at(2) << "," << SIP_travel.at(2) << "," << inc_resident << "," << inc_travel << "\n";
+  tileP->get_logger()->get_stream("pfsi") << tnow << "," << id << "," << SIP_visitor.at(0) << "," << SIP_resident_home.at(0) << "," << SIP_resident_away.at(0) << "," << SIP_visitor.at(1) << "," << SIP_resident_home.at(1) << "," << SIP_resident_away.at(1) << "," << SIP_visitor.at(2) << "," << SIP_resident_home.at(2) << "," << SIP_resident_away.at(2) << "," << inc_resident << "," << inc_travel << "\n";
   reset_SIP();
 };

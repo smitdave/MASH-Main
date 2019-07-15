@@ -102,7 +102,7 @@ sourceCpp(here::here("src/main.cpp"))
 log_pars <- list()
 h_inf <- paste0(path,"pfsi.csv")
 log_pars[[1]] <- list(outfile = h_inf,key = "pfsi",
-                      header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_resident","_traveller"))})),"incidence_resident","incidence_traveller"),collapse = ","))
+                      header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_visitor","_resident_home","_resident_away"))})),"incidence_resident","incidence_traveller"),collapse = ","))
 mosy <- paste0(path,"mosy.csv")
 log_pars[[2]] <- list(outfile = mosy,key = "mosquito",
                       header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
@@ -119,10 +119,10 @@ run_macro(tmax = 1e3,
 library(tidyverse)
 pfsi <- readr::read_csv(here::here("/output/pfsi.csv"))
 
-pfsi_pr <- pfsi %>% gather(key, value, 3:10)
-pfsi_pr <- pfsi_pr %>% filter(time > 0)
-pfsi_pr <- pfsi_pr %>% filter(key != "incidence_resident")
-pfsi_pr <- pfsi_pr %>% filter(key != "incidence_traveller")
+pfsi_pr <- pfsi %>% 
+  select(-ends_with("away")) %>%
+  select(-starts_with("incidence")) %>%
+  gather(key, value, -time,-patch)
 
 ggplot(pfsi_pr) +
   geom_line(aes(x=time,y=value,color=key)) +
@@ -131,8 +131,7 @@ ggplot(pfsi_pr) +
 
 pfsi_inc <- pfsi %>%
   gather(key,value,incidence_resident,incidence_traveller) %>%
-  select(one_of(c("time","patch","key","value"))) %>%
-  filter(time > 0)
+  select(one_of(c("time","patch","key","value")))
 
 ggplot(pfsi_inc) +
   geom_line(aes(x=time,y=value,color=key)) +
@@ -153,7 +152,7 @@ for(i in 1:nrun){
   log_pars <- list()
   h_inf <- paste0(path,"pfsi_",i,".csv")
   log_pars[[1]] <- list(outfile = h_inf,key = "pfsi",
-                        header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_resident","_traveller"))})),"incidence_resident","incidence_traveller"),collapse = ","))
+                        header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_visitor","_resident_home","_resident_away"))})),"incidence_resident","incidence_traveller"),collapse = ","))
   mosy <- paste0(path,"mosy_",i,".csv")
   log_pars[[2]] <- list(outfile = mosy,key = "mosquito",
                         header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
@@ -174,11 +173,13 @@ pfsi_ensemble <-
   map_df(~read_csv(paste0(here::here("output/",.))),.id = "run") 
 
 pfsi_ensemble_pr <- pfsi_ensemble %>%
-  select(-starts_with("incidence_")) %>%
-  gather(key, value,-(1:3))
+  select(-ends_with("away")) %>%
+  select(-starts_with("incidence")) %>%
+  gather(key, value, -time,-patch,-run)
 
 ggplot(pfsi_ensemble_pr,aes(x=time,y=value,color=key,fill=key)) +
-  stat_summary(fun.data = median_hilow,fun.args = list(conf.int = 0.95),geom = "ribbon",alpha=0.2) +
+  stat_summary(fun.data = median_hilow,fun.args = list(conf.int = 0.95),geom = "ribbon",alpha=0.4,color=NA) +
   stat_summary(geom="line", fun.y="mean") +
   facet_wrap(. ~ patch) +
+  guides(color = FALSE) +
   theme_bw()
