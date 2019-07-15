@@ -103,42 +103,68 @@ vaxx_pars <- lapply(X = vaxx_id,FUN = function(id){
 # sourceCpp(paste0(src_path,"src/main.cpp"))
 sourceCpp(here::here("src/main.cpp"))
 
-# run ensemble
-nrun <- 1e2
-tsteps <- 1e3
-pb <- txtProgressBar(min = 1,max = nrun)
-for(i in 1:nrun){
-# i=1
-  seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31)
+log_pars <- list()
+h_inf <- paste0(path,"pfsi.csv")
+log_pars[[1]] <- list(outfile = h_inf,key = "pfsi",
+                      header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_resident","_traveller"))})),"incidence_resident","incidence_traveller"),collapse = ","))
+mosy <- paste0(path,"mosy.csv")
+log_pars[[2]] <- list(outfile = mosy,key = "mosquito",
+                      header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
 
-  log_pars <- list()
-  h_inf <- paste0(path,"pfsi_",i,".csv")
-  log_pars[[1]] <- list(outfile = h_inf,key = "pfsi",
-                        header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_resident","_traveller"))})),"incidence_resident","incidence_traveller"),collapse = ","))
-  mosy <- paste0(path,"mosy_",i,".csv")
-  log_pars[[2]] <- list(outfile = mosy,key = "mosquito",
-                        header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
+run_macro(tmax = 50,
+          human_pars = human_pars,
+          mosquito_pars = mosy_pars,
+          patch_pars = patch_pars,
+          model_pars = pfsi_pars,
+          log_streams = log_pars,
+          vaxx_events = vaxx_pars,
+          verbose = T)
 
-  run_macro(tmax = tsteps,
-            human_pars = human_pars,
-            mosquito_pars = mosy_pars,
-            patch_pars = patch_pars,
-            model_pars = pfsi_pars,
-            log_streams = log_pars,
-            vaxx_events = vaxx_pars,
-            verbose = T)
- setTxtProgressBar(pb,i)
-}
+# # run ensemble
+# nrun <- 1e2
+# tsteps <- 1e3
+# pb <- txtProgressBar(min = 1,max = nrun)
+# for(i in 1:nrun){
+#   seed <- as.integer((as.double(Sys.time())*1000+Sys.getpid()) %% 2^31)
+#
+#   log_pars <- list()
+#   h_inf <- paste0(path,"pfsi_",i,".csv")
+#   log_pars[[1]] <- list(outfile = h_inf,key = "pfsi",
+#                         header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_resident","_traveller"))})),"incidence_resident","incidence_traveller"),collapse = ","))
+#   mosy <- paste0(path,"mosy_",i,".csv")
+#   log_pars[[2]] <- list(outfile = mosy,key = "mosquito",
+#                         header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
+#
+#   run_macro(tmax = tsteps,
+#             human_pars = human_pars,
+#             mosquito_pars = mosy_pars,
+#             patch_pars = patch_pars,
+#             model_pars = pfsi_pars,
+#             log_streams = log_pars,
+#             vaxx_events = vaxx_pars,
+#             verbose = T)
+#  setTxtProgressBar(pb,i)
+# }
 
 library(tidyverse)
-pfsi <- readr::read_csv(here::here("/output/pfsi_1.csv"))
+pfsi <- readr::read_csv(here::here("/output/pfsi.csv"))
 
-pfsi <- pfsi %>% gather(key, value, 3:10)
-pfsi <- pfsi %>% filter(time > 0)
-pfsi <- pfsi %>% filter(key != "incidence_resident")
-pfsi <- pfsi %>% filter(key != "incidence_traveller")
+pfsi_pr <- pfsi %>% gather(key, value, 3:10)
+pfsi_pr <- pfsi_pr %>% filter(time > 0)
+pfsi_pr <- pfsi_pr %>% filter(key != "incidence_resident")
+pfsi_pr <- pfsi_pr %>% filter(key != "incidence_traveller")
 
-ggplot(pfsi) +
+ggplot(pfsi_pr) +
+  geom_line(aes(x=time,y=value,color=key)) +
+  facet_wrap(. ~ patch) +
+  theme_bw()
+
+pfsi_inc <- pfsi %>% 
+  gather(key,value,incidence_resident,incidence_traveller) %>% 
+  select(one_of(c("time","patch","key","value"))) %>%
+  filter(time > 0)
+
+ggplot(pfsi_inc) +
   geom_line(aes(x=time,y=value,color=key)) +
   facet_wrap(. ~ patch) +
   theme_bw()
@@ -149,10 +175,10 @@ ggplot(pfsi) +
 # nstate <- length(statenames) # for PfSI
 # tbins <- c(0,seq(from=1,to=tsteps+1,by=dx))
 # nbin <- length(tbins)
-# 
+#
 # h_inf_out <- array(data = 0,dim = c(nbin,nstate,nrun),
 #                    dimnames = list(tbins,statenames,1:nrun))
-# 
+#
 # # iterate over runs
 # h_inf_files <- list.files(path = path, pattern= "h_inf*")
 # pb <- txtProgressBar(min = 1,max = length(h_inf_files))
@@ -163,28 +189,28 @@ ggplot(pfsi) +
 #   h_inf_out[,,as.character(i)] <- out_i[,-1]
 #   setTxtProgressBar(pb = pb,value = i)
 # }
-# 
+#
 # h_inf_mean <- apply(X = h_inf_out,MARGIN = c(1,2),FUN = mean)
 # h_inf_sd <- apply(X = h_inf_out,MARGIN = c(1,2),FUN = sd)
-# 
+#
 # cols <- c("S"="steelblue","I"="firebrick3","P"="darkorchid")
 # alpha <- 0.5
-# 
+#
 # ymax <- ceiling(max(h_inf_mean+h_inf_sd))+10
-# 
+#
 # plot(x = tbins,y = h_inf_mean[,"S"],lwd = 2,col = cols["S"],main = "PfSI Ensemble",type = "l",
 #      ylim = c(0,ymax),xlab = "Time (days)",ylab = "Count")
 # polygon(x = c(tbins,rev(tbins)),
 #         y = c(h_inf_mean[,"S"] - h_inf_sd[,"S"],
 #               rev(h_inf_mean[,"S"] + h_inf_sd[,"S"])),
 #         col = adjustcolor(cols["S"],alpha.f = alpha),border = NA)
-# 
+#
 # lines(x = tbins,y = h_inf_mean[,"I"],lwd = 2,lty = 1,col = cols["I"])
 # polygon(x = c(tbins,rev(tbins)),
 #         y = c(h_inf_mean[,"I"] - h_inf_sd[,"I"],
 #               rev(h_inf_mean[,"I"] + h_inf_sd[,"I"])),
 #         col = adjustcolor(cols["I"],alpha.f = alpha),border = NA)
-# 
+#
 # lines(x = tbins,y = h_inf_mean[,"P"],lwd = 2,lty = 1,col = cols["P"])
 # polygon(x = c(tbins,rev(tbins)),
 #         y = c(h_inf_mean[,"P"] - h_inf_sd[,"P"],

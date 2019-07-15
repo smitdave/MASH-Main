@@ -114,6 +114,10 @@ tile::tile(
     h->initialize_courseofinf();
     h->initialize_movement();
   }
+  // need to renormalize kappa after calling h->initialize_courseofinf: it accumulates it in the patches
+  for(auto& p : patches){
+    p->normalize_kappa();
+  }
 
   #ifdef DEBUG_MACRO
   std::cout << "tile born at " << this << std::endl;

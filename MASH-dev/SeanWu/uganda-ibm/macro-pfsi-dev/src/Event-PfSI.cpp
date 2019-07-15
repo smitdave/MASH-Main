@@ -106,9 +106,6 @@ e_pfsi_bite::e_pfsi_bite(double tEvent_, human* h):
 e_pfsi_initial::e_pfsi_initial(double tEvent_, human* h):
   event("PfSI_initial",tEvent_,[tEvent_,h](){
 
-    /* i'm now infected */
-    h->set_state("I");
-
     /* queue clearance event */
     double tEnd = tEvent_ + pfsi_ttClearPf(h);
     h->addEvent2Q(e_pfsi_recover(tEnd,h));

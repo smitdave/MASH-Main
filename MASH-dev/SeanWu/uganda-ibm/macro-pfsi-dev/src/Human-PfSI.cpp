@@ -165,10 +165,10 @@ void human::initialize_courseofinf(){
 
   /* infected & infectious */
   if(state.compare("I") == 0){
-    addEvent2Q(e_pfsi_initial(0.0,this));
+    addEvent2Q(e_pfsi_initial(-1.0,this));
   /* chemoprophylactic protection */
   } else if(state.compare("P") == 0){
-    addEvent2Q(e_pfsi_treatment(0.0,this));
+    addEvent2Q(e_pfsi_treatment(-1.0,this));
   }
 };
 

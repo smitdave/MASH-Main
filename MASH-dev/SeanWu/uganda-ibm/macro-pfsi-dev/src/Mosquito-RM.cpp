@@ -161,8 +161,6 @@ void mosquito::aquatic_dynamics(const u_int tnow){
   for(u_int i=0; i<M.size(); i++){
     if(lambda_today.at(i) > 0.0){
       M.at(i) += (int)R::rpois(lambda_today.at(i));
-    } else {
-      M.at(i) += 0;
     }
   }
 
