@@ -1,0 +1,13 @@
+Package: macro.pfsi.rm
+Type: Package
+Title: What the package does (short line)
+Version: 1.0
+Date: 2019-07-15
+Author: Who wrote it
+Maintainer: Who to complain to <yourfault@somewhere.net>
+Description: More about what it does (maybe more than one line)
+License: What license is it under?
+Imports: Rcpp (>= 1.0.1)
+Depends: Rcpp, RcppArmadillo, RcppProgress
+LinkingTo: Rcpp, RcppProgress, RcppArmadillo
+RoxygenNote: 6.1.1
