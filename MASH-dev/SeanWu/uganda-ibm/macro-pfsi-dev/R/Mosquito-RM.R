@@ -65,7 +65,7 @@ mosquito_rm_conpars <- function(
   list(
     N = as.integer(N),
     lambda = as.matrix(lambda),
-    psi = as.matrix(psi),
+    psi = psi,
     EIP = as.integer(EIP),
     maxEIP = as.integer(max(EIP) + 1),
     p = as.numeric(p),

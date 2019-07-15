@@ -10,13 +10,15 @@ rm(list=ls());gc()
 # here package to get paths right between different systems
 library(here)
 
-# need these 3 packages of the Rcpp ecosystem
-# Rcpp: the main R to C++ interface package
-# RcppArmadillo: the mosquito model relies on matrix algebra, this lets us use those headers
-# RcppProgress: header for an interruptable progress bar
-library(Rcpp)
-library(RcppArmadillo)
-library(RcppProgress)
+# # need these 3 packages of the Rcpp ecosystem
+# # Rcpp: the main R to C++ interface package
+# # RcppArmadillo: the mosquito model relies on matrix algebra, this lets us use those headers
+# # RcppProgress: header for an interruptable progress bar
+# library(Rcpp)
+# library(RcppArmadillo)
+# library(RcppProgress)
+
+library(macro.pfsi.rm)
 
 # need the Matrix library for sparse matrices
 library(Matrix)
@@ -34,12 +36,6 @@ if(!dir.exists(path)){
     }
   }
 }
-
-# source the helper R code (mostly just sets up the R lists that get fed to the C++ simulation)
-source(here::here("R/Human-PfSI.R"))
-source(here::here("R/Mosquito-RM.R"))
-source(here::here("R/Patch.R"))
-source(here::here("R/PfSI-Parameters.R"))
 
 # vector of parameters
 pfsi_pars <- pfsi_parameters()
@@ -88,10 +84,6 @@ vaxx_pars <- lapply(X = vaxx_id,FUN = function(id){
   vaccination_pfsi_conpars(id = id,t = 5e2,treat = T,type = "PE")
 })
 
-# compile the simulation
-# sourceCpp(paste0(src_path,"src/main.cpp"))
-sourceCpp(here::here("src/main.cpp"))
-
 
 ################################################################################
 # single run
@@ -115,9 +107,9 @@ run_macro(tmax = 1e3,
           verbose = T)
 
 library(tidyverse)
-pfsi <- readr::read_csv(here::here("/output/pfsi.csv"))
+pfsi <- readr::read_csv(here::here("output/pfsi.csv"))
 
-pfsi_pr <- pfsi %>%
+pfsi_pr <- pfsi %>% 
   select(-ends_with("away")) %>%
   select(-starts_with("incidence")) %>%
   gather(key, value, -time,-patch)
@@ -127,14 +119,14 @@ ggplot(pfsi_pr) +
   facet_wrap(. ~ patch) +
   theme_bw()
 
-# pfsi_inc <- pfsi %>%
-#   gather(key,value,incidence_resident,incidence_traveller) %>%
-#   select(one_of(c("time","patch","key","value")))
-#
-# ggplot(pfsi_inc) +
-#   geom_line(aes(x=time,y=value,color=key)) +
-#   facet_wrap(. ~ patch) +
-#   theme_bw()
+pfsi_inc <- pfsi %>%
+  gather(key,value,incidence_resident,incidence_traveller) %>%
+  select(one_of(c("time","patch","key","value")))
+
+ggplot(pfsi_inc) +
+  geom_line(aes(x=time,y=value,color=key)) +
+  facet_wrap(. ~ patch) +
+  theme_bw()
 
 
 ################################################################################
@@ -146,7 +138,7 @@ nrun <- 1e2
 tsteps <- 1e3
 pb <- txtProgressBar(min = 1,max = nrun)
 for(i in 1:nrun){
-
+  
   log_pars <- list()
   h_inf <- paste0(path,"pfsi_",i,".csv")
   log_pars[[1]] <- list(outfile = h_inf,key = "pfsi",
@@ -154,7 +146,7 @@ for(i in 1:nrun){
   mosy <- paste0(path,"mosy_",i,".csv")
   log_pars[[2]] <- list(outfile = mosy,key = "mosquito",
                         header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
-
+  
   run_macro(tmax = tsteps,
             human_pars = human_pars,
             mosquito_pars = mosy_pars,
@@ -163,12 +155,12 @@ for(i in 1:nrun){
             log_streams = log_pars,
             vaxx_events = vaxx_pars,
             verbose = FALSE)
- setTxtProgressBar(pb,i)
+  setTxtProgressBar(pb,i)
 }
 
 pfsi_ensemble <-
   list.files(path = here::here("output/"),pattern = "pfsi_[[:digit:]]+.csv") %>%
-  map_df(~read_csv(paste0(here::here("output/",.))),.id = "run")
+  map_df(~read_csv(paste0(here::here("output/",.))),.id = "run") 
 
 pfsi_ensemble_pr <- pfsi_ensemble %>%
   select(-ends_with("away")) %>%

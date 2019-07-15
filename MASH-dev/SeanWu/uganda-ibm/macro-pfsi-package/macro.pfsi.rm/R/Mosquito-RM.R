@@ -50,7 +50,7 @@ mosquito_rm_conpars <- function(
     stop(paste0("dimension of diffusion matrix 'psi' must be same as number of patches (N)\n"))
   }
 
-  if(any(rowSums(psi) != 1)){
+  if(any(Matrix::rowSums(psi) != 1)){
     stop("diffusion matrix 'psi' is not a row-normalized stochastic matrix\n")
   }
 
@@ -65,7 +65,7 @@ mosquito_rm_conpars <- function(
   list(
     N = as.integer(N),
     lambda = as.matrix(lambda),
-    psi = as.matrix(psi),
+    psi = psi,
     EIP = as.integer(EIP),
     maxEIP = as.integer(max(EIP) + 1),
     p = as.numeric(p),
