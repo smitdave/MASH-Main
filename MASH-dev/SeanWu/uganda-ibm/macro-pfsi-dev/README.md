@@ -1,3 +1,7 @@
+# to-do
+
+  * make a static global_id for humans and pull/increment it when a new human object is stamped out of the "factory" (factory being used figuratively, not a factory function, do it in the body of constructor)
+
 # bugs
 
   * SOLVED: for some reason people are getting infectious bites on day 0 when Z = 0, check why this is happening.
