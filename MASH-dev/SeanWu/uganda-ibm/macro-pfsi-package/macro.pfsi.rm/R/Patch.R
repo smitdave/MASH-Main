@@ -31,8 +31,8 @@ patch_conpars <- function(id,move,bWeightZoo,bWeightZootox,reservoir,res_EIR){
   if(!is.integer(id) | id < 0){
     stop(paste0("id: ",id," not allowed; use non-negative integer id"))
   }
-
-  if(!all.equal(sum(move),1)){
+  
+  if(!isTRUE(all.equal(sum(move),1))){
     stop("movement vector 'move' must sum to one")
   }
 
