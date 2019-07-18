@@ -118,7 +118,7 @@ for(i in 1:nrun){
 }
 
 # read in data
-dx <- 5
+dx <- 1
 statenames <- c("S","I","P","F","PEvaxx","GSvaxx","PEwane","GSwane")
 nstate <- length(statenames) # for PfSI
 tbins <- c(0,seq(from=1,to=tsteps+1,by=dx))

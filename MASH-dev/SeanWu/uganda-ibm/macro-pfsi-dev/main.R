@@ -52,7 +52,7 @@ diag(move) <- 0
 patch_pars <- patches_parameters(move = move,bWeightZoo = rep(0,n),bWeightZootox = rep(0,n),reservoir = rep(F,n),res_EIR = rep(0,n))
 
 # mosquitos
-psi <- Matrix::sparseMatrix(i = {},j = {},x = 0.0,dims = c(5,5))
+psi <- Matrix::sparseMatrix(i = {},j = {},x = 0.0,dims = c(n,n))
 diag(psi) <- rep(1,n)
 mosy_pars <- mosquito_rm_conpars(N = n,lambda = matrix(50,nrow = 365,ncol = n),
                                  psi = psi,EIP = rep(11,365),M = rep(450,n),Y = rep(0,n),Z = rep(0,n))
@@ -166,6 +166,8 @@ for(i in 1:nrun){
  setTxtProgressBar(pb,i)
 }
 
+library(tidyverse)
+
 pfsi_ensemble <-
   list.files(path = here::here("output/"),pattern = "pfsi_[[:digit:]]+.csv") %>%
   map_df(~read_csv(paste0(here::here("output/",.))),.id = "run")
@@ -179,5 +181,16 @@ ggplot(pfsi_ensemble_pr,aes(x=time,y=value,color=key,fill=key)) +
   stat_summary(fun.data = median_hilow,fun.args = list(conf.int = 0.95),geom = "ribbon",alpha=0.4,color=NA) +
   stat_summary(geom="line", fun.y="mean") +
   facet_wrap(. ~ patch) +
+  guides(color = FALSE) +
+  theme_bw()
+
+pfsi_ensemble_pr_coarse <- pfsi_ensemble_pr %>% 
+  mutate(state = substr(key, 1, 1)) %>% 
+  group_by(run, time, state) %>% 
+  summarise(value = sum(value))
+
+ggplot(pfsi_ensemble_pr_coarse,aes(x=time,y=value,color=state,fill=state)) +
+  stat_summary(fun.data = mean_sdl,fun.args = list(mult = 1),geom = "ribbon",alpha=0.4,color=NA) +
+  stat_summary(geom="line", fun.y="mean") +
   guides(color = FALSE) +
   theme_bw()
