@@ -3,6 +3,7 @@
 #####################################
 .Rproj.user
 .Rhistory
+.Rapp.history
 .RData
 .Ruserdata
 *.log # for futile.logger created log files

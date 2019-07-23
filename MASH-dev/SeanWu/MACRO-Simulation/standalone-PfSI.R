@@ -22,9 +22,10 @@ library(scales)
 
 source(here::here("data/sampledata.R"))
 b <- 0.55
+pfpr_means <- c(Tororo=0.0001001316,Kanungu=0.0001014503,Jinja=0.0001090688)
 
 # time-step to discretize output for fig2
-DELTAT <- 1
+DELTAT <- 14
 
 
 ################################################################################
@@ -80,7 +81,6 @@ library(parallel)
 # stopCluster(cl);rm(cl);gc()
 #
 # pfpr_means <- colMeans(burnin)
-pfpr_means <- c(Tororo=0.0001001316,Kanungu=0.0001014503,Jinja=0.0001090688)
 
 
 ################################################################################
@@ -439,15 +439,15 @@ simout_j <- tiny_pfsi(tmax = 1260,nh = N,init = sample(x = c("S","I"),size = N,r
 # calc data
 aEIR_t <- colSums(simout_t$bites)/(1260/365)
 aFOI_t <- colSums(simout_t$ar)/(1260/365)
-# aFOI_t <- colSums(simout_t$foi)/(1260/365)
+# aFOI_exact_t <- colSums(simout_t$foi)/(1260/365)
 
 aEIR_k <- colSums(simout_k$bites)/(1260/365)
 aFOI_k <- colSums(simout_k$ar)/(1260/365)
-# aFOI_k <- colSums(simout_k$foi)/(1260/365)
+# aFOI_exact_k <- colSums(simout_k$foi)/(1260/365)
 
 aEIR_j <- colSums(simout_j$bites)/(1260/365)
 aFOI_j <- colSums(simout_j$ar)/(1260/365)
-# aFOI_j <- colSums(simout_j$foi)/(1260/365)
+# aFOI_exact_j <- colSums(simout_j$foi)/(1260/365)
 
 ineff_df <- data.frame(
   aEIR = c(aEIR_t,aEIR_k,aEIR_j),
@@ -457,3 +457,4 @@ ineff_df <- data.frame(
 ineff_df$eff <- ineff_df$aEIR / ineff_df$aFOI
 
 saveRDS(object = ineff_df,file = here::here("sim/PfSI_het_ineff.rds"))
+

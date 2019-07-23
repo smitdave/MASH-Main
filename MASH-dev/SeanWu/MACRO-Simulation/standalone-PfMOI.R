@@ -22,7 +22,7 @@ library(scales)
 source(here::here("data/sampledata.R"))
 
 # time-step to discretize output for fig2
-DELTAT <- 1
+DELTAT <- 14
 
 
 ################################################################################
@@ -346,7 +346,7 @@ simout_j <- tiny_pfmoi(tmax = 1260,nh = N,init = pfmoi,
 # calc data
 aEIR_t <- colSums(simout_t$bites)/(1260/365)
 aFOI_t <- colSums(simout_t$ar)/(1260/365)
-# aFOI_t <- colSums(simout_t$foi)/(1260/365)
+# aFOI_exact_t <- colSums(simout_t$foi)/(1260/365)
 
 aEIR_k <- colSums(simout_k$bites)/(1260/365)
 aFOI_k <- colSums(simout_k$ar)/(1260/365)
