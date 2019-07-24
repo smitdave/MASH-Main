@@ -14,54 +14,56 @@
 #   PDG static members
 ################################################################################ */
 
-size_t PDG_human::global_ixH = 0;
+int human::deltaT = 0;
 
-size_t PDG_human::pfAges = 27;
-double PDG_human::pfdr = 0.75;
+size_t human::global_ixH = 0;
 
-double PDG_human::gdk = std::log10(0.7);
+size_t human::pfAges = 27;
+double human::pfdr = 0.75;
 
-double PDG_human::pgm = 1.184;
-double PDG_human::pgb = -2.004;
+double human::gdk = std::log10(0.7);
 
-double PDG_human::gm = 1.652;
-double PDG_human::gb = 1.662;
+double human::pgm = 1.184;
+double human::pgb = -2.004;
 
-std::vector<double> PDG_human::Ptmax = {0.,5.210246,4.573131,4.373306,4.218014,4.079337,4.157638,3.805582,3.821811,3.827757,3.467524,3.740757,3.349316,3.732802,3.652580,3.231724,2.567026,2.283804,2.929233,1.962211,2.944931,1.851258,2.193125,2.309303,1.564271,3.205746,2.719204,1.915100};
-std::vector<double> PDG_human::Ptshape = {0.,4.639315,2.275418,2.258965,2.311616,2.474827,3.176543,2.943449,3.419812,4.387235,2.755179,5.014499,4.114957,8.849801,6.918817,4.470316,3.726024,4.332549,4.547252,1.829113,5.378781,1.581417,1.094105,1.000000,1.030259,2.641712,2.991721,5.007464};
-std::vector<double> PDG_human::Ptrate = {0.,4.008275,1.539217,1.612759,1.756409,1.907544,2.034369,1.949314,2.043045,2.571400,1.800733,2.482635,2.385546,3.573325,3.135033,2.244577,2.825106,3.004125,2.390421,2.198324,2.916877,1.992531,1.051514,1.572928,1.460975,1.294750,2.077740,2.618999};
+double human::gm = 1.652;
+double human::gb = 1.662;
 
-double PDG_human::pfpatency = 1. - std::exp(-0.1385);
-double PDG_human::pgv = 0.2704;
+std::vector<double> human::Ptmax = {0.,5.210246,4.573131,4.373306,4.218014,4.079337,4.157638,3.805582,3.821811,3.827757,3.467524,3.740757,3.349316,3.732802,3.652580,3.231724,2.567026,2.283804,2.929233,1.962211,2.944931,1.851258,2.193125,2.309303,1.564271,3.205746,2.719204,1.915100};
+std::vector<double> human::Ptshape = {0.,4.639315,2.275418,2.258965,2.311616,2.474827,3.176543,2.943449,3.419812,4.387235,2.755179,5.014499,4.114957,8.849801,6.918817,4.470316,3.726024,4.332549,4.547252,1.829113,5.378781,1.581417,1.094105,1.000000,1.030259,2.641712,2.991721,5.007464};
+std::vector<double> human::Ptrate = {0.,4.008275,1.539217,1.612759,1.756409,1.907544,2.034369,1.949314,2.043045,2.571400,1.800733,2.482635,2.385546,3.573325,3.135033,2.244577,2.825106,3.004125,2.390421,2.198324,2.916877,1.992531,1.051514,1.572928,1.460975,1.294750,2.077740,2.618999};
+
+double human::pfpatency = 1. - std::exp(-0.1385);
+double human::pgv = 0.2704;
 
 // Immunity
-double PDG_human::immHalf = 3.5246;
-double PDG_human::immSlope = 3.038;
-double PDG_human::immThresh = 0.;
-double PDG_human::immP = 0.;
+double human::immHalf = 3.5246;
+double human::immSlope = 3.038;
+double human::immThresh = 0.;
+double human::immP = 0.;
 
 // Health
-double PDG_human::feverHalf = 3.5246;
-double PDG_human::feverSlope = 3.038;
-double PDG_human::feverMax = .8835;
+double human::feverHalf = 3.5246;
+double human::feverSlope = 3.038;
+double human::feverMax = .8835;
 
 // Infectivity
-double PDG_human::TEHalf = 2.3038;
-double PDG_human::TESlope = 3.5524;
-double PDG_human::TEMax = .4242;
+double human::TEHalf = 2.3038;
+double human::TESlope = 3.5524;
+double human::TEMax = .4242;
 
 // Diagnostics - Light Microscopy
-double PDG_human::LMHalf = 2.;
-double PDG_human::LMSlope = 3.;
-double PDG_human::LMMax = 0.9;
-double PDG_human::LMMin = 0.05;
+double human::LMHalf = 2.;
+double human::LMSlope = 3.;
+double human::LMMax = 0.9;
+double human::LMMin = 0.05;
 
 // special functions
-double PDG_human::sigmoid(const double x, const double xhalf, const double b){
+double human::sigmoid(const double x, const double xhalf, const double b){
   return std::pow((x/xhalf),b) / (std::pow((x/xhalf),b) + 1.);
 };
 
-double PDG_human::sigmoidexp(const double x, const double xhalf, const double b){
+double human::sigmoidexp(const double x, const double xhalf, const double b){
   return std::exp(x*b)/(std::exp(x*b)+std::exp(xhalf*b));
 };
 
@@ -71,8 +73,8 @@ double PDG_human::sigmoidexp(const double x, const double xhalf, const double b)
 ################################################################################ */
 
 // constructor & destructor
-PDG_human::PDG_human(const double age_, const bool sex_) :
-  ixH(global_ixH),
+human::human(const double age_, const bool sex_) :
+  id(global_ixH),
   age(age_),
   sex(sex_),
   Pf(pfAges,0),
@@ -86,19 +88,19 @@ PDG_human::PDG_human(const double age_, const bool sex_) :
 };
 
 // infection methods
-void PDG_human::begin_infection(size_t nInfections){
+void human::begin_infection(size_t nInfections){
   Pf[0] += nInfections;
   MOI = std::accumulate(Pf.begin(),Pf.end(),0);
 };
 
-void PDG_human::clear_infections(){
+void human::clear_infections(){
   std::fill(Pf.begin(),Pf.end(),0);
   Pt = 0.;
   Gt = 0.;
 };
 
 // update functions
-void PDG_human::update_PDG(){
+void human::update_PDG(){
 
   // gametocytes: depend on lagged Pf
   update_Gt();
@@ -113,7 +115,7 @@ void PDG_human::update_PDG(){
   // update_age(dt)
 };
 
-void PDG_human::age_infections(){
+void human::age_infections(){
 
   // attrition of infections at final age category
   if(Pf.back() > 0){
@@ -165,7 +167,7 @@ void PDG_human::age_infections(){
 };
 
 // update parasite densities
-void PDG_human::update_Pt(){
+void human::update_Pt(){
 
   if(MOI > 0){
 
@@ -191,7 +193,7 @@ void PDG_human::update_Pt(){
 };
 
 // update gametocyte densities
-void PDG_human::update_Gt(){
+void human::update_Gt(){
 
   int nPf = std::accumulate(Pf.begin(),Pf.end(),0);
   if(nPf > 0){
@@ -215,12 +217,12 @@ void PDG_human::update_Gt(){
 };
 
 // update multiplicity of infection
-void PDG_human::update_MOI(){
+void human::update_MOI(){
   // add total active infections in each age category
   MOI = std::accumulate(Pf.begin(),Pf.end(),0);
 };
 
-void PDG_human::update_Imm(){
+void human::update_Imm(){
 
   // count up at random rate proportional to Pt, down by geometric if below
   // be sure to ensure nonnegative-definiteness of counters
@@ -235,7 +237,7 @@ void PDG_human::update_Imm(){
 };
 
 // scaled sigmoid signal; Gametocytes assumed to encode TE
-void PDG_human::update_TE(){
+void human::update_TE(){
 
   if(isnan(Gt)){
     TE = 0.;
@@ -245,7 +247,7 @@ void PDG_human::update_TE(){
 
 };
 
-void PDG_human::update_pFever(){
+void human::update_pFever(){
 
   if(isnan(Pt)){
     pFever = 0.;
@@ -255,12 +257,12 @@ void PDG_human::update_pFever(){
 
 };
 
-// void PDG_human::upate_age(const double dt);
+// void human::upate_age(const double dt);
 
 // diagnostics
 
 /* light microscopy */
-bool PDG_human::diagnostic_LM(){
+bool human::diagnostic_LM(){
   double p = 0.;
   if(!isnan(Pt) && (Pt > 0.)){
     p = (LMMax-LMMin) * sigmoidexp(Pt,LMHalf,LMSlope) + LMMin;

@@ -5,15 +5,15 @@
 #
 ################################################################################ */
 
-#ifndef PDG_HUMAN
-#define PDG_HUMAN
+#ifndef HUMAN_PDG_HPP
+#define HUMAN_PDG_HPP
 
 /* STL includes */
 #include <vector>
 #include <algorithm>
 #include <numeric>
-
 #include <memory>
+#include <list> // for TaR container
 
 /* for NAN macro and mathematical fn's */
 #include <cmath>
@@ -22,23 +22,69 @@
 
 
 /* ################################################################################
+ * forward declarations & alias/typedefs
+################################################################################ */
+
+class event;
+using eventP = std::unique_ptr<event>;
+
+class tile;
+
+class patch;
+
+
+/* ################################################################################
 #   PDG human class
 ################################################################################ */
 
-class PDG_human {
+class human {
 public:
 
   /* constructor & destructor */
-  PDG_human(const double age_, const bool sex_);
-  ~PDG_human() = default;
+  human(const double age_, const bool sex_);
+  ~human() = default;
 
   /* move operators */
-  PDG_human(PDG_human&&) = default;
-  PDG_human& operator=(PDG_human&&) = default;
+  human(human&&) = default;
+  human& operator=(human&&) = default;
 
   /* copy operators */
-  PDG_human(PDG_human&) = delete;
-  PDG_human& operator=(PDG_human&) = delete;
+  human(human&) = delete;
+  human& operator=(human&) = delete;
+
+  /* PDG methods */
+  u_int                 get_id(){return id;};
+  bool                  get_alive(){return alive;};
+  double                get_tnow(){return tnow;};
+
+  u_int                 get_patch_id(){return patch_id;};
+  void                  set_patch_id(const u_int pid){ patch_id = pid; };
+  u_int                 get_home_patch_id(){return home_patch_id;};
+  bool                  get_travel(){return travel;};
+  void                  set_travel(const bool travel_){travel = travel_;};
+  double                get_trip_duration(const u_int pid){return trip_duration.at(pid);};
+  double                get_trip_frequency(){return trip_frequency;};
+  patch*                get_patch();
+  patch*                get_home_patch();
+
+  double                get_bweight(){return bweight;};
+
+  tile*                 get_tile(){return tileP;};
+
+  /* biting */
+  void                  decrement_bweight();
+  void                  accumulate_bweight();
+
+  /* event queue related functions */
+  void                  addEvent2Q(event&& e);
+  void                  rmTagFromQ(const std::string &tag);
+  void                  fireEvent();
+  void                  printEventQ();
+
+  /* interface */
+  void                  initialize_movement();
+  void                  initialize_courseofinf();
+  void                  simulate();
 
   // infection methods
   void begin_infection(size_t nInfections);
@@ -62,19 +108,41 @@ public:
   double  get_Pt(){return Pt;}
   double  get_Gt(){return Gt;}
   int     get_MOI(){return MOI;}
-  double  get_TE(){return TE;}
+  double  get_c(){return TE;}
   double  get_pFever(){return pFever;}
   double  get_Imm(){return Imm;}
   int     get_immCounter(){return immCounter;}
 
 private:
 
-  // base traits
-  size_t            ixH;
-  double            age;
-  bool              sex; /* 0=male,1=female */
+  /* basic fields */
+  size_t                                id;
+  double                                age;
+  bool                                  alive;
+  bool                                  sex; /* 0=male,1=female */
 
-  static size_t     global_ixH;
+  static size_t                         global_ixH;
+
+  /* movement */
+  u_int                                 patch_id;
+  u_int                                 home_patch_id;
+  bool                                  travel; /* T: im travelling right now! F: i'm home right now */
+  std::vector<double>                   trip_duration;
+  double                                trip_frequency;
+
+  /* biting */
+  double                                bweight; /* my relative biting weight */
+
+  std::vector<eventP>                   eventQ;
+
+  tile*                                 tileP;
+
+  double                                tnow;
+  double                                tprev;
+  std::list<std::pair<u_int,double> >   TaR;
+  static int                            deltaT;
+
+  // PDG fields
 
   // Pf: infection
   std::vector<int>  Pf; /* number of active infections in each age category */
