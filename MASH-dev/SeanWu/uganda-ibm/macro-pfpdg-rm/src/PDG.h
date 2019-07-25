@@ -42,7 +42,7 @@ public:
 
   /* constructor & destructor */
   human(const double age_, const bool sex_);
-  ~human() = default;
+  ~human();
 
   /* move operators */
   human(human&&) = default;
@@ -52,7 +52,7 @@ public:
   human(human&) = delete;
   human& operator=(human&) = delete;
 
-  /* PDG methods */
+  /* basic methods */
   u_int                 get_id(){return id;};
   bool                  get_alive(){return alive;};
   double                get_tnow(){return tnow;};
@@ -86,6 +86,8 @@ public:
   void                  initialize_courseofinf();
   void                  simulate();
 
+  /* PDG methods */
+
   // infection methods
   void begin_infection(size_t nInfections);
   void clear_infections();
@@ -99,7 +101,6 @@ public:
   void update_Imm();
   void update_TE();
   void update_pFever();
-  // void update_age(const double dt);
 
   // diagnostics
   bool diagnostic_LM(); /* light microscopy */

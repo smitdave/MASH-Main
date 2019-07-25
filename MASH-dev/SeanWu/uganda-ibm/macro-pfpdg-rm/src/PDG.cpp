@@ -69,7 +69,7 @@ double human::sigmoidexp(const double x, const double xhalf, const double b){
 
 
 /* ################################################################################
-#   PDG implementation
+#   basic methods
 ################################################################################ */
 
 // constructor & destructor
@@ -86,6 +86,13 @@ human::human(const double age_, const bool sex_) :
 {
   global_ixH++;
 };
+
+human::~human() = default;
+
+
+/* ################################################################################
+#   PDG methods
+################################################################################ */
 
 // infection methods
 void human::begin_infection(size_t nInfections){
@@ -112,7 +119,6 @@ void human::update_PDG(){
   update_TE();
   update_pFever();
 
-  // update_age(dt)
 };
 
 void human::age_infections(){
