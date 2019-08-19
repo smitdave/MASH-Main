@@ -11,22 +11,28 @@
  *  November 2018
  */
 
-#ifndef Mosquito_hpp
-#define Mosquito_hpp
-
-/* Rcpp includes */
-#include <RcppArmadillo.h>
+#ifndef MOSQUITO_HPP
+#define MOSQUITO_HPP
 
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
-
-/* to return a base-class pointer from the factory */
 #include <memory>
 
-/* forward declarations */
+/* Rcpp includes */
+#include <RcppArmadillo.h>
+
+
+/* ################################################################################
+ * forward declarations & alias/typedefs
+################################################################################ */
+
 class tile;
 
+
+/* ################################################################################
+ * class declaration
+################################################################################ */
 
 /* abstract base mosquito */
 class mosquito {
@@ -40,11 +46,11 @@ public:
     #endif
 
   };
-  virtual ~mosquito() = 0;
+  virtual ~mosquito();
 
   /* move operators */
-  mosquito(mosquito&&);
-  mosquito& operator=(mosquito&&);
+  mosquito(mosquito&&) = default;
+  mosquito& operator=(mosquito&&) = default;
 
   /* copy operators */
   mosquito(mosquito&) = delete;

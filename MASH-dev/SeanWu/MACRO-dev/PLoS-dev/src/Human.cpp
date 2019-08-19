@@ -9,7 +9,7 @@
  *
  *  Sean Wu
  *  November 2018
- */
+*/
 
 #include "Event.hpp"
 #include "Human.hpp"
@@ -21,18 +21,8 @@
  * class boilerplate
 ################################################################################ */
 
-/* define virtual destructor is ok */
-human::~human(){
-
-  #ifdef MACRO_DEBUG
-  std::cout << "human " << id << " dying at " << this << std::endl;
-  #endif
-
-};
-
-/* move operators */
-human::human(human&&) = default;
-human& human::operator=(human&&) = default;
+// destructor
+human::~human() = default;
 
 
 /* ################################################################################
@@ -106,6 +96,14 @@ patch* human::get_patch(){
 patch* human::get_home_patch(){
   return tileP->get_patch(home_patch_id);
 };
+
+bool human::get_travel(){
+  if(patch_id != home_patch_id){
+    return true;
+  } else {
+    return false;
+  }
+}
 
 
 /* ################################################################################

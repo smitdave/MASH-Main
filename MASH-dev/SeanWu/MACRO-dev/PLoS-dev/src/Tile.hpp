@@ -14,12 +14,6 @@
 #ifndef TILE_HPP
 #define TILE_HPP
 
-/* Rcpp */
-#include <RcppArmadillo.h>
-
-/* RcppProgress */
-#include "progress.hpp"
-
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
@@ -32,6 +26,12 @@
 
 /* finding stuff */
 #include <algorithm>
+
+/* Rcpp */
+#include <RcppArmadillo.h>
+
+/* RcppProgress */
+#include "progress.hpp"
 
 
 /* ################################################################################

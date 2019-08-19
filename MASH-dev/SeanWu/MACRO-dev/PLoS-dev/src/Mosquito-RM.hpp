@@ -12,8 +12,8 @@
  *  November 2018
  */
 
-#ifndef MosquitoRM_hpp
-#define MosquitoRM_hpp
+#ifndef MOSQUITO_RM_HPP
+#define MOSQUITO_RM_HPP
 
 /* standard includes */
 #include <stdio.h>
@@ -21,15 +21,19 @@
 #include <vector>
 #include <algorithm>
 
-/* RcppArmadillo */
-#include <RcppArmadillo.h>
-
 /* base-class */
 #include "Mosquito.hpp"
 
+/* RcppArmadillo */
+#include <RcppArmadillo.h>
+
+
+/* ################################################################################
+ * class declaration
+################################################################################ */
+
 /* RM-style deterministic mosquito model */
 class mosquito_rm : public mosquito {
-
 public:
 
   /* constructor & destructor */
@@ -38,8 +42,8 @@ public:
   ~mosquito_rm();
 
   /* move operators */
-  mosquito_rm(mosquito_rm&&);
-  mosquito_rm& operator=(mosquito_rm&&);
+  mosquito_rm(mosquito_rm&&) = default;
+  mosquito_rm& operator=(mosquito_rm&&) = default;
 
   /* copy operators */
   mosquito_rm(mosquito_rm&) = delete;
@@ -58,7 +62,7 @@ private:
 
   size_t                  N; /* number of patches */
   arma::Mat<double>       lambda; /* emergence matrix (365 X N) */
-  arma::Mat<double>       psi; /* diffusion matrix (N X N) */
+  arma::SpMat<double>     psi; /* diffusion matrix (N X N) */
 
   arma::Col<size_t>       EIP; /* EIP on each day of the year */
   size_t                  maxEIP;

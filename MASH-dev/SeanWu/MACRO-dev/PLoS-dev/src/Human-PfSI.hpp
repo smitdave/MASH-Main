@@ -38,18 +38,12 @@ public:
   ~human_pfsi();
 
   /* move operators */
-  human_pfsi(human_pfsi&&);
-  human_pfsi& operator=(human_pfsi&&);
+  human_pfsi(human_pfsi&&) = default;
+  human_pfsi& operator=(human_pfsi&&) = default;
 
   /* copy operators */
   human_pfsi(human_pfsi&) = delete;
   human_pfsi& operator=(human_pfsi&) = delete;
-
-  /* print */
-  void print(){
-    human::print();
-    std::cout << "my state is: " << state << ", my age is: " << age << std::endl;
-  }
 
   /* simulation */
   virtual void    simulate();

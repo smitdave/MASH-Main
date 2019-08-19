@@ -17,6 +17,8 @@
 /* standard includes */
 #include <stdio.h>
 #include <iostream>
+#include <string>
+#include <memory>
 
 /* RcppArmadillo */
 #include <RcppArmadillo.h>
@@ -26,8 +28,12 @@
  * forward declarations & alias/typedefs
 ################################################################################ */
 
-/* forward definitions */
+/* containing tile */
 class tile;
+
+/* logger */
+class patch_logger;
+using patch_loggerP = std::unique_ptr<patch_logger>;
 
 
 /* ################################################################################
@@ -37,7 +43,7 @@ class tile;
 class patch {
 public:
   /* constructor & destructor */
-  patch(const Rcpp::List& patch_pars, tile* tileP_);
+  patch(const std::string model, const Rcpp::List& patch_pars, tile* tileP_);
   ~patch();
 
   /* move operators */
@@ -57,6 +63,8 @@ public:
   double                get_kappa(){return kappa;}
   bool                  get_reservoir(){return reservoir;}
   double                get_res_EIR(){return res_EIR;}
+  patch_logger*         get_patch_logger(){return concrete_logger.get();};
+  tile*                 get_tile(){return tileP;}
 
   /* increments */
   void                  accumulate_bWeightHuman(double b){bWeightHuman += b;}
@@ -93,6 +101,9 @@ private:
   /* infection reservoir? */
   bool                  reservoir;
   double                res_EIR;
+
+  /* logger */
+  patch_loggerP         concrete_logger;
 
   /* tile pointer */
   tile*                 tileP;

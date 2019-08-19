@@ -35,7 +35,7 @@ mosquito_rm::mosquito_rm(
    mosquito(tileP_),
    N(Rcpp::as<size_t>(mosquito_pars["N"])),
    lambda(Rcpp::as<arma::Mat<double> >(mosquito_pars["lambda"])),
-   psi(Rcpp::as<arma::Mat<double> >(mosquito_pars["psi"])),
+   psi(Rcpp::as<arma::SpMat<double> >(mosquito_pars["psi"])),
    EIP(Rcpp::as<arma::Col<size_t> >(mosquito_pars["EIP"])),
    maxEIP(Rcpp::as<size_t>(mosquito_pars["maxEIP"])),
    P(maxEIP),
@@ -81,17 +81,7 @@ mosquito_rm::mosquito_rm(
 };
 
 /* destructor */
-mosquito_rm::~mosquito_rm(){
-
-  #ifdef MACRO_DEBUG
-  std::cout << "mosquito_rm dying at " << this << std::endl;
-  #endif
-
-};
-
-/* move operators */
-mosquito_rm::mosquito_rm(mosquito_rm&&) = default;
-mosquito_rm& mosquito_rm::operator=(mosquito_rm&&) = default;
+mosquito_rm::~mosquito_rm() = default;
 
 
 /* ################################################################################

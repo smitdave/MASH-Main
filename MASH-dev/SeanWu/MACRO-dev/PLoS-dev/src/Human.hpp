@@ -9,24 +9,20 @@
  *
  *  Sean Wu
  *  November 2018
- */
+*/
 
-#ifndef Human_hpp
-#define Human_hpp
+#ifndef HUMAN_HPP
+#define HUMAN_HPP
+
+/* C++ includes */
+#include <stdio.h>
+#include <iostream>
+#include <string>
+#include <vector>
+#include <memory>
 
 /* Rcpp includes */
 #include <RcppArmadillo.h>
-
-/* standard includes */
-#include <stdio.h>
-#include <iostream>
-
-/* human-specific includes */
-#include <string>
-#include <vector>
-
-/* for smart pointers */
-#include <memory>
 
 
 /* ################################################################################
@@ -63,38 +59,37 @@ public:
     #endif
 
   };
-  virtual ~human() = 0;
+  virtual ~human();
 
   /* factory method */
   static std::unique_ptr<human> factory(const Rcpp::List& human_pars, tile* tileP_);
 
   /* move operators */
-  human(human&&);
-  human& operator=(human&&);
+  human(human&&) = default;
+  human& operator=(human&&) = default;
 
   /* copy operators */
   human(human&) = delete;
   human& operator=(human&) = delete;
 
-  /* print */
-  void print();
-
   /* accessors */
-  u_int                 get_id();
-  bool                  get_alive();
+  u_int                 get_id(){return id;};
+  bool                  get_alive(){return alive;}
   double                get_tnow();
 
-  size_t                get_patch_id();
-  void                  set_patch_id(const size_t pid);
-  size_t                get_home_patch_id();
-  double                get_trip_duration();
-  double                get_trip_frequency();
+  /* travel and location */
+  size_t                get_patch_id(){return patch_id;}
+  void                  set_patch_id(const size_t pid){patch_id = pid;}
+  size_t                get_home_patch_id(){return home_patch_id;}
+  double                get_trip_duration(){return trip_duration;}
+  double                get_trip_frequency(){return trip_frequency;}
   patch*                get_patch();
   patch*                get_home_patch();
+  bool                  get_travel();
 
-  double                get_bweight();
+  double                get_bweight(){return bweight;}
 
-  tile*                 get_tile();
+  tile*                 get_tile(){return tileP;}
 
   /* biting */
   void                  decrement_bweight();
@@ -131,30 +126,5 @@ protected:
 
   tile*                 tileP;
 };
-
-
-/* ################################################################################
- * inlined methods
-################################################################################ */
-
-/* print */
-inline void human::print(){
-  std::cout << "human " << id << ", at patch: " << patch_id << ", with home patch: " << home_patch_id << ", is saying hi!" << std::endl;
-}
-
-/* accessors */
-inline u_int human::get_id(){return id;}
-inline bool human::get_alive(){return alive;}
-
-inline size_t human::get_patch_id(){return patch_id;};
-inline void human::set_patch_id(const size_t pid){ patch_id = pid; };
-inline size_t human::get_home_patch_id(){return home_patch_id;};
-
-inline double human::get_trip_duration(){return trip_duration;};
-inline double human::get_trip_frequency(){return trip_frequency;};
-
-inline double human::get_bweight(){return bweight;};
-
-inline tile* human::get_tile(){return tileP;};
 
 #endif

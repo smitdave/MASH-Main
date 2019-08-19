@@ -19,16 +19,8 @@
  * class boilerplate
 ################################################################################ */
 
-/* virtual destructor so inheritance works properly */
-mosquito::~mosquito(){
-  #ifdef MACRO_DEBUG
-  std::cout << "mosquito dying at " << this << std::endl;
-  #endif
-};
-
-/* move operators */
-mosquito::mosquito(mosquito&&) = default;
-mosquito& mosquito::operator=(mosquito&&) = default;
+// destructor
+mosquito::~mosquito() = default;
 
 
 /* ################################################################################

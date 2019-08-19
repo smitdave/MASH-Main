@@ -55,8 +55,8 @@ human_pfsi::human_pfsi(
   std::string state_t0(Rcpp::as<std::string>(human_pars["state"]));
 
   /* transmission efficiencies */
-  b = tileP->get_params()->get_param<double>("Pf_b");
-  c = tileP->get_params()->get_param<double>("Pf_c");
+  b = tileP->get_params()->get_param("Pf_b");
+  c = tileP->get_params()->get_param("Pf_c");
 
   /* initialize the biting weight where i am at time = 0 */
   accumulate_bweight();
@@ -84,15 +84,8 @@ human_pfsi::human_pfsi(
 
 };
 
-human_pfsi::~human_pfsi(){
-  #ifdef DEBUG_MACRO
-  std::cout << "human_pfsi " << " dying at " << this << std::endl;
-  #endif
-};
-
-/* move operators */
-human_pfsi::human_pfsi(human_pfsi&&) = default;
-human_pfsi& human_pfsi::operator=(human_pfsi&&) = default;
+// destructor
+human_pfsi::~human_pfsi() = default;
 
 
 /* ################################################################################

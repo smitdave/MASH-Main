@@ -12,8 +12,8 @@
  */
 
 
-#ifndef Logger_hpp
-#define Logger_hpp
+#ifndef LOGGER_HPP
+#define LOGGER_HPP
 
 /* ######################################################################
  # includes and forward declarations
@@ -55,36 +55,22 @@ public:
   logger& operator=(logger&&) = default;
 
   /* open & close logging streams */
-  void open(const std::string& outfile, const std::string& key, const std::string& header);
-  void close();
+  void open(const std::string& outfile, const std::string& key, const std::string& header){
+    logstreams.insert(std::make_pair(key,std::ofstream{outfile}));
+    logstreams.at(key) << header << "\n";
+  };
+
+  void close(){
+    for(auto& it : logstreams){
+      it.second.close();
+    }
+  };
 
   /* return reference to output stream */
   std::ofstream& get_stream(const std::string& key){return logstreams.at(key);};
 
 private:
   std::unordered_map<std::string, std::ofstream>   logstreams;
-  // std::vector<std::string>                         headers;
-
 };
-
-
-/* ######################################################################
-# class methods
-###################################################################### */
-
-/* open a logging stream */
-inline void logger::open(const std::string& outfile, const std::string& key, const std::string& header){
-  // std::cout << "opening a log stream; outfile: " << outfile << " key: " << key << " header: " << header << "\n";
-  logstreams.insert(std::make_pair(key,std::ofstream{outfile}));
-  logstreams.at(key) << header << "\n";
-};
-
-/* close streams */
-inline void logger::close(){
-  for(auto& it : logstreams){
-    it.second.close();
-  }
-};
-
 
 #endif

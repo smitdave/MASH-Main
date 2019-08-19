@@ -21,6 +21,7 @@
 
 /* constructor */
 patch::patch(
+  const std::string model,
   const Rcpp::List& patch_pars,
   tile* tileP_
 ) :
