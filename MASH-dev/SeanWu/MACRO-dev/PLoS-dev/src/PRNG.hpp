@@ -50,6 +50,7 @@ public:
     /* discrete random univariate sampling */
     int                                    get_rpois(const double lambda);
     int                                    get_rbinom(const int n, const double p);
+    int                                    get_rnbinom(const int k, const double p);
 
     /* discrete random multivariate sampling */
     int                                    get_rcategorical(const arma::Row<double>& prob);

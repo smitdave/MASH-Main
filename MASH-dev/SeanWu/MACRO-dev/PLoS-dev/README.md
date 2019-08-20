@@ -18,5 +18,6 @@
     7. Logger.hpp
   * headers created:
     1. Patch-Logger.hpp/cpp
+    2. Human-QueueBites.hpp/cpp
   * headers in work:
     1. Patch-Logger.hpp/cpp: these need to wait for the PfMOI/PfSI humans to be fully fleshed out, then can make sure logging is set up properly.

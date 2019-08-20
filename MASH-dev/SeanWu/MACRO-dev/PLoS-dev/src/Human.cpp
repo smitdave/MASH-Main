@@ -53,7 +53,7 @@ std::unique_ptr<human> human::factory(const Rcpp::List& human_pars, tile* tileP_
 
 /* add an event to my queue */
 void human::addEvent2Q(event&& e){
-  eventQ.emplace_back(std::make_unique<event>(e));
+  eventQ.emplace_back(std::make_unique<event>(std::move(e)));
   std::sort(eventQ.begin(),eventQ.end(),[](const std::unique_ptr<event>& e1, const std::unique_ptr<event>& e2){
     return e1->tEvent < e2->tEvent;
   });
@@ -62,7 +62,7 @@ void human::addEvent2Q(event&& e){
 /* remove future queued events */
 void human::rmTagFromQ(const std::string &tag){
   eventQ.erase(std::remove_if(eventQ.begin(),eventQ.end(),
-                              [tag](eventP& e){
+                              [tag](const std::unique_ptr<event>& e){
                                 return(tag.compare(e->tag)==0);
                               }),eventQ.end());
 };
@@ -80,7 +80,7 @@ void human::fireEvent(){
 void human::printEventQ(){
   std::cout << "printing human " << id << ", event queue: " << std::endl;
   for(auto it = eventQ.begin(); it != eventQ.end(); it++){
-    (*it)->print();
+    it->get()->print();
   }
 };
 

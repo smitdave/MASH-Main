@@ -98,6 +98,11 @@ int prng::get_rbinom(const int n, const double p){
  }
 };
 
+int prng::get_rnbinom(const int k, const double p){
+  std::negative_binomial_distribution<int> rnbinom(k,p);
+  return rnbinom(rng);
+};
+
 
 /* ################################################################################
 * discrete random multivariate sampling
