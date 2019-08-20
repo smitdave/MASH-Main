@@ -11,8 +11,8 @@
  *  November 2018
  */
 
-#ifndef Human_PfSI_hpp
-#define Human_PfSI_hpp
+#ifndef HUMAN_PFSI_HPP
+#define HUMAN_PFSI_HPP
 
 /* Rcpp includes */
 #include <RcppArmadillo.h>
@@ -34,7 +34,14 @@
 
 class human_pfsi : public human {
 public:
-  human_pfsi(const Rcpp::List& human_pars, tile* tileP_);
+  human_pfsi(const int id_, const u_int home_patch_id_,
+        const std::vector<double> trip_duration_, const double trip_frequency_,
+        const double bweight_,
+        // PfSI specific values
+        const std::string state_, const double age_,
+        // biting algorithm
+        const int bite_algorithm, void* bite_data,
+        tile* tileP_);
   ~human_pfsi();
 
   /* move operators */

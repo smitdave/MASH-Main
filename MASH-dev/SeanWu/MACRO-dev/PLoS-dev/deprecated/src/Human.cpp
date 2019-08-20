@@ -15,11 +15,27 @@
 #include "Human.hpp"
 #include "Tile.hpp"
 #include "Patch.hpp"
+#include "Human-QueueBites.hpp"
 
 
 /* ################################################################################
  * class boilerplate
 ################################################################################ */
+
+human::human(const int id_, const size_t home_patch_id_,
+      const std::vector<double> trip_duration_, const double trip_frequency_,
+      const double bweight_,
+      const int bite_algorithm, void* bite_data,
+      tile* tileP_) :
+  id(id_), alive(true), tnow(0.0),
+  patch_id(home_patch_id_), home_patch_id(home_patch_id_),
+  trip_duration(trip_duration_), trip_frequency(trip_frequency_),
+  bweight(bweight_), tileP(tileP_)
+{
+  // initialize the specific sampling algorithm for queueing bites
+  queue_bites_impl = queue_bites::factory(bite_algorithm, this, bite_data);
+
+};
 
 // destructor
 human::~human() = default;

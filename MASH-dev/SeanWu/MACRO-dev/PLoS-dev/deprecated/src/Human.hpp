@@ -32,6 +32,9 @@
 class event;
 using eventP = std::unique_ptr<event>;
 
+class queue_bites;
+using queue_bitesP = std::unique_ptr<queue_bites>;
+
 class tile;
 
 class patch;
@@ -46,19 +49,10 @@ public:
 
   /* constructor & destructor */
   human(const int id_, const size_t home_patch_id_,
-        const double trip_duration_, const double trip_frequency_,
-        const double bweight_, tile* tileP_) :
-    id(id_), alive(true), tnow(0.0),
-    patch_id(home_patch_id_), home_patch_id(home_patch_id_),
-    trip_duration(trip_duration_), trip_frequency(trip_frequency_),
-    bweight(bweight_), tileP(tileP_)
-  {
-    // std::cout << "made base human: " << id << "\n";
-    #ifdef DEBUG_MACRO
-    std::cout << "human " << id << " born at " << this << std::endl;
-    #endif
-
-  };
+        const std::vector<double> trip_duration_, const double trip_frequency_,
+        const double bweight_,
+        const int bite_algorithm, void* bite_data,
+        tile* tileP_);
   virtual ~human();
 
   /* factory method */
@@ -81,7 +75,7 @@ public:
   size_t                get_patch_id(){return patch_id;}
   void                  set_patch_id(const size_t pid){patch_id = pid;}
   size_t                get_home_patch_id(){return home_patch_id;}
-  double                get_trip_duration(){return trip_duration;}
+  double                get_trip_duration(const u_int pid){return trip_duration.at(pid);}
   double                get_trip_frequency(){return trip_frequency;}
   patch*                get_patch();
   patch*                get_home_patch();
@@ -116,11 +110,12 @@ protected:
   /* movement */
   size_t                patch_id;
   size_t                home_patch_id;
-  double                trip_duration;
+  std::vector<double>   trip_duration;
   double                trip_frequency;
 
   /* biting */
   double                bweight; /* my relative biting weight */
+  queue_bitesP          queue_bites_impl; // my bite queueing algorithm
 
   std::vector<eventP>   eventQ;
 

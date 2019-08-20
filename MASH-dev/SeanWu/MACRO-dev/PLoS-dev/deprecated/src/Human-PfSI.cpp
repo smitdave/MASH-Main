@@ -37,19 +37,24 @@
 
 /* constructor */
 human_pfsi::human_pfsi(
-  const Rcpp::List& human_pars,
-  tile* tileP_
+        const int id_, const u_int home_patch_id_,
+        const std::vector<double> trip_duration_, const double trip_frequency_,
+        const double bweight_,
+        // PfSI specific values
+        const std::string state_, const double age_,
+        // biting algorithm
+        const int bite_algorithm, void* bite_data,
+        tile* tileP_
 ) :
-  human(Rcpp::as<int>(human_pars["id"]),
-        Rcpp::as<size_t>(human_pars["home_patch_id"]),
-        Rcpp::as<double>(human_pars["trip_duration"]),
-        Rcpp::as<double>(human_pars["trip_frequency"]),
-        Rcpp::as<double>(human_pars["bweight"]),
+  human(id_, home_patch_id_,
+        trip_duration_, trip_frequency_,
+        bweight_,
+        bite_algorithm, bite_data,
         tileP_),
-  state("S"),
-  b(0.0), c(0.0),
-  age(Rcpp::as<double>(human_pars["age"])),
-  kappa(0.0), EIR(0.0)
+  state(state_),
+  b(0.), c(0.),
+  age(age_),
+  kappa(0.), EIR(0.)
 {
   // std::cout << "making human_pfsi: " << id << "\n";
   std::string state_t0(Rcpp::as<std::string>(human_pars["state"]));
