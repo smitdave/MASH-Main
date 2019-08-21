@@ -47,11 +47,11 @@ tile::tile(
 
   /* construct utility classes */
   loggerPtr(std::make_unique<logger>()),
-  parametersPtr(std::make_unique<parameters>(patch_pars.size()))
+  parametersPtr(std::make_unique<parameters>(model_pars.size()))
 
 {
   /* initialize parameters */
-  if(verbose){std::cout << "initializing parameters" << std::endl;}
+  if(verbose){std::cout << "begin initializing parameters" << std::endl;}
   parametersPtr->init_params(model_pars);
 
   /* set up logging */

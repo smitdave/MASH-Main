@@ -41,17 +41,15 @@ public:
   };
 
   /* destructor */
-  ~parameters(){
-      #ifdef DEBUG_MACRO
-      std::cout << "parameters dying at " << this << std::endl;
-      #endif
-  };
+  ~parameters() = default;
 
-  /* delete copy constructor/assignment operator, default move constructor/assignment operator */
-  parameters(const parameters&) = delete;
-  parameters& operator=(const parameters&) = delete;
+  /* move operators */
   parameters(parameters&&) = default;
   parameters& operator=(parameters&&) = default;
+
+  /* copy operators */
+  parameters(const parameters&) = delete;
+  parameters& operator=(const parameters&) = delete;
 
   /* assign a key-value pair */
   void set_param(const std::string& key, const double val){
@@ -74,6 +72,10 @@ public:
 
     /* fill hash table */
     for(u_int i=0; i<pars.size(); i++){
+
+      // std::string parname(Rcpp::as<std::string>(par_names[i]));
+      // double parvalue = Rcpp::as<double>(pars[i]);
+      // std::cout << "making i: " << i << "th parameter, name: " << parname << " value: " << parvalue << "\n";
 
       pars_map.insert(std::make_pair(
         Rcpp::as<std::string>(par_names[i]),
