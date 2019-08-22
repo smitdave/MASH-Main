@@ -85,7 +85,7 @@ human_pars <- vector("list",nh)
 for(i in 1:nh){
   human_pars[[i]] <- human_pfsi_conpars(id = i-1,home_patch_id = patch_id[i],
                                         trip_duration = rep(3,n),trip_frequency = 1/20,bweight = bweights[i],
-                                        age = 20,state = init_state[i],bite_algorithm = 1,bite_disp = 1)
+                                        age = 20,state = init_state[i],bite_algorithm = 0)
 }
 check_human_pfsi_conpars(human_pars)
 

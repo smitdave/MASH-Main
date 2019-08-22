@@ -5,16 +5,16 @@
  *   / /  / / ___ / /___/ _, _/ /_/ /
  *  /_/  /_/_/  |_\____/_/ |_|\____/
  *
- *  PfSI human
+ *  PfMOI human
  *
  *  Sean Wu (slwu89@berkeley.edu)
  *  July 2019
 */
 
-#include "Human-PfSI.hpp"
+#include "Human-PfMOI.hpp"
 
 // event includes
-#include "Event-PfSI.hpp"
+#include "Event-PfMOI.hpp"
 #include "Event-Move.hpp"
 #include "Event.hpp"
 
@@ -37,16 +37,17 @@
 
 // constructor
 human::human(/* basic values */
-        const int id_, const u_int home_patch_id_,
-        const std::vector<double> trip_duration_, const double trip_frequency_,
-        const double bweight_, tile* tileP_,
-        /* PfSI specific values */
-        const std::string state_, const double age_) :
+  const int id_, const u_int home_patch_id_,
+  const std::vector<double> trip_duration_, const double trip_frequency_,
+  const double bweight_, tile* tileP_,
+  // PfMOI CoI model
+  const u_int MOI_, const bool chx_, const double age_
+) :
   id(id_), alive(true), tnow(0.),
   patch_id(home_patch_id_), home_patch_id(home_patch_id_), travel(false),
   trip_duration(trip_duration_), trip_frequency(trip_frequency_),
   bweight(bweight_), tileP(tileP_),
-  state(state_), b(0.), c(0.), age(age_), kappa(0.), EIR(0.)
+  MOI(MOI_), chx(chx_), b(0.), c(0.), age(age_), kappa(0.), EIR(0.)
 {};
 
 // destructor
@@ -146,7 +147,7 @@ void human::simulate(){
   queue_bites();
 
   /* update patch information on state */
-  log_pfsi();
+  log_pfmoi();
 };
 
 
@@ -175,12 +176,11 @@ void human::initialize_courseofinf(){
   /* initialize kappa (my infectiousness to mosquitos) */
   update_kappa();
 
-  /* infected & infectious */
-  if(state.compare("I") == 0){
-    addEvent2Q(e_pfsi_initial(-1.0,this));
-  /* chemoprophylactic protection */
-  } else if(state.compare("P") == 0){
-    addEvent2Q(e_pfsi_treatment(-1.0,this));
+  // infected
+  if(MOI > 0){
+    addEvent2Q(e_pfmoi_initial(-1.,MOI,this));
+  } else if(chx){
+    addEvent2Q(e_pfmoi_treatment(-1.,this));
   }
 };
 
@@ -213,9 +213,9 @@ void human::addVaxx2Q(const Rcpp::List& vaxx){
 
   /* add the vaccine event */
   if(vaxx_t.compare("PE") == 0){
-    addEvent2Q(e_pfsi_pevaxx(tEvent,treat,this));
+    addEvent2Q(e_pfmoi_pevaxx(tEvent,treat,this));
   } else if(vaxx_t.compare("GS") == 0){
-    addEvent2Q(e_pfsi_gsvaxx(tEvent,treat,this));
+    addEvent2Q(e_pfmoi_gsvaxx(tEvent,treat,this));
   } else {
     Rcpp::stop("invalid vaccine type found; please check all events in 'vaxx_events' are valid");
   }
@@ -234,7 +234,7 @@ void human::update_kappa(){
   if(!tileP->get_patch(patch_id)->get_reservoir()){
 
     kappa = 0.0;
-    if(state.compare("I") == 0){
+    if(MOI > 0){
       kappa = c * bweight;
     }
     tileP->get_patch(patch_id)->accumulate_kappa(kappa);
@@ -265,7 +265,7 @@ void human::queue_bites(){
   if(nbite > 0){
     double tnow = tileP->get_tnow();
     for(size_t i=0; i<nbite; i++){
-      addEvent2Q(e_pfsi_bite(tnow,this));
+      addEvent2Q(e_pfmoi_bite(tnow,this));
     }
   }
 
@@ -276,13 +276,13 @@ void human::queue_bites(){
  * PfSI logging
 ################################################################################ */
 
-void human::log_pfsi(){
+void human::log_pfmoi(){
 
   if(travel){
-    get_home_patch()->update_SIP_resident_away(state);
-    get_patch()->update_SIP_visitor(state);
+    get_home_patch()->update_SIP_resident_away(MOI,chx);
+    get_patch()->update_SIP_visitor(MOI,chx);
   } else {
-    get_home_patch()->update_SIP_resident_home(state);
+    get_home_patch()->update_SIP_resident_home(MOI,chx);
   }
 
 };
