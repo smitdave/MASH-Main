@@ -49,6 +49,9 @@ patch::patch(
   SIP_resident_away.fill(0);
 };
 
+// dtor
+patch::~patch() = default;
+
 /* debug */
 void patch::print(){
   std::cout << "patch: " << id << ", with kappa: " << kappa << ", bWeightHuman: " << bWeightHuman << ", reservoir: " << reservoir << ", res_EIR: " << res_EIR << std::endl;
@@ -70,7 +73,7 @@ void patch::normalize_kappa(){
 
 
 /* ################################################################################
- * PfSI member functions
+ * PfMOI member functions
 ################################################################################ */
 
 // humans call this to let the patch know they got sick there

@@ -15,7 +15,7 @@
 
 // other object includes
 #include "Patch.hpp"
-#include "Human-PfSI.hpp"
+#include "Human-PfMOI.hpp"
 #include "Mosquito-RM.hpp"
 
 // utility includes
@@ -85,7 +85,8 @@ tile::tile(
         Rcpp::as<double>(h_par["trip_frequency"]),
         Rcpp::as<double>(h_par["bweight"]),
         this,
-        Rcpp::as<std::string>(h_par["state"]),
+        Rcpp::as<int>(h_par["MOI"]),
+        Rcpp::as<bool>(h_par["chx"]),
         Rcpp::as<double>(h_par["age"])
     ));
 

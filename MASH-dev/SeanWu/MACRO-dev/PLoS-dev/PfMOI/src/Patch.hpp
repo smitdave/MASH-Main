@@ -43,7 +43,7 @@ class patch {
 public:
   /* constructor & destructor */
   patch(const Rcpp::List& patch_pars, tile* tileP_);
-  ~patch() = default;
+  ~patch();
 
   /* move operators */
   patch(patch&&) = default;
@@ -84,7 +84,7 @@ public:
   void                  zero_kappa(){kappa = 0.0;}
   void                  normalize_kappa();
 
-  /* PfSI specific member functions */
+  /* PfMOI specific member functions */
   void                  update_incidence(const bool travel);
   void                  update_SIP_visitor(const u_int moi, const bool chx);
   void                  update_SIP_resident_home(const u_int moi, const bool chx);

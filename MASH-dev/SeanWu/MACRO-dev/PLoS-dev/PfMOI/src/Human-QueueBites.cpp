@@ -15,7 +15,7 @@
 #include "Human-QueueBites.hpp"
 
 // other project headers
-#include "Human-PfSI.hpp"
+#include "Human-PfMOI.hpp"
 #include "Tile.hpp"
 // #include "PRNG.hpp"
 

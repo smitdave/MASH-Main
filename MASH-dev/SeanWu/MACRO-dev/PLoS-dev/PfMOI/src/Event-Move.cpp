@@ -14,7 +14,7 @@
 #include "Event-Move.hpp"
 
 // other MACRO headers
-#include "Human-PfSI.hpp"
+#include "Human-PfMOI.hpp"
 #include "Tile.hpp"
 #include "Patch.hpp"
 #include "Parameters.hpp"
