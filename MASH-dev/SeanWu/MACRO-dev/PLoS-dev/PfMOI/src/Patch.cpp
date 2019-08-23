@@ -154,6 +154,6 @@ void patch::reset_SIP(){
 // log output at the end of the day
 void patch::log_output(){
   int tnow(tileP->get_tnow());
-  tileP->get_logger()->get_stream("pfmoi") << tnow << "," << id << "," << SIP_visitor.at(0) << "," << SIP_resident_home.at(0) << "," << SIP_resident_away.at(0) << "," << SIP_visitor.at(1) << "," << SIP_resident_home.at(1) << "," << SIP_resident_away.at(1) << "," << SIP_visitor.at(2) << "," << SIP_resident_home.at(2) << "," << SIP_resident_away.at(2) << "," << inc_resident << "," << inc_travel << MOI_visitor->Mean() << "," << MOI_visitor->StandardDeviation() << "," << MOI_resident_home->Mean() << "," << MOI_resident_home->StandardDeviation() << "," << MOI_resident_away->Mean() << "," << MOI_resident_away->StandardDeviation() << "\n";
+  tileP->get_logger()->get_stream("pfmoi") << tnow << "," << id << "," << SIP_visitor.at(0) << "," << SIP_resident_home.at(0) << "," << SIP_resident_away.at(0) << "," << SIP_visitor.at(1) << "," << SIP_resident_home.at(1) << "," << SIP_resident_away.at(1) << "," << SIP_visitor.at(2) << "," << SIP_resident_home.at(2) << "," << SIP_resident_away.at(2) << "," << inc_resident << "," << inc_travel << "," << MOI_visitor->Mean() << "," << MOI_visitor->StandardDeviation() << "," << MOI_resident_home->Mean() << "," << MOI_resident_home->StandardDeviation() << "," << MOI_resident_away->Mean() << "," << MOI_resident_away->StandardDeviation() << "\n";
   reset_SIP();
 };

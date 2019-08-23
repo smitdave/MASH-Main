@@ -134,6 +134,7 @@ pfmoi <- readr::read_csv(here::here("output/pfmoi.csv"))
 pfmoi_pr <- pfmoi %>%
   select(-ends_with("away")) %>%
   select(-starts_with("incidence")) %>%
+  select(-starts_with("MOI")) %>%
   gather(key, value, -time,-patch)
 
 ggplot(pfmoi_pr) +
@@ -149,6 +150,17 @@ ggplot(pfmoi_pr) +
 #   geom_line(aes(x=time,y=value,color=key)) +
 #   facet_wrap(. ~ patch) +
 #   theme_bw()
+
+pfmoi_moi <- pfmoi %>%
+  select(matches("time|patch|MOI_visitor|MOI_resident_home")) %>%
+  gather(key,value,-time,-patch) %>% 
+  filter(time != 0)
+
+ggplot(pfmoi_moi) +
+  geom_line(aes(x=time,y=value,color=key)) +
+  facet_wrap(. ~ patch) +
+  theme_bw()
+  
 
 
 ################################################################################
