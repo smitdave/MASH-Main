@@ -27,7 +27,7 @@ public:
 
   /* constructor & destructor */
   RunningStat() : m_n(0) {};
-  ~RunningStat(){};
+  ~RunningStat() = default;
 
   void Clear() { m_n = 0; };
 

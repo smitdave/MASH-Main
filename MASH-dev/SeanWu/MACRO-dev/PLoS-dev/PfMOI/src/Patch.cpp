@@ -93,8 +93,10 @@ void patch::update_SIP_visitor(const u_int moi, const bool chx){
     MOI_visitor->Push((double)moi);
   } else if(moi == 0 && !chx){
     SIP_visitor.at(0) += 1;
+    MOI_visitor->Push((double)moi);
   } else if(moi == 0 && chx){
     SIP_visitor.at(2) += 1;
+    MOI_visitor->Push((double)moi);
   } else {
     std::string error = "error, illegal human state detected, MOI: " + std::to_string(moi) + " chx: " + std::to_string(chx);
     Rcpp::stop(error);
@@ -111,8 +113,10 @@ void patch::update_SIP_resident_home(const u_int moi, const bool chx){
     MOI_resident_home->Push((double)moi);
   } else if(moi == 0 && !chx){
     SIP_resident_home.at(0) += 1;
+    MOI_resident_home->Push((double)moi);
   } else if(moi == 0 && chx){
     SIP_resident_home.at(2) += 1;
+    MOI_resident_home->Push((double)moi);
   } else {
     std::string error = "error, illegal human state detected, MOI: " + std::to_string(moi) + " chx: " + std::to_string(chx);
     Rcpp::stop(error);
@@ -129,8 +133,10 @@ void patch::update_SIP_resident_away(const u_int moi, const bool chx){
     MOI_resident_away->Push((double)moi);
   } else if(moi == 0 && !chx){
     SIP_resident_away.at(0) += 1;
+    MOI_resident_away->Push((double)moi);
   } else if(moi == 0 && chx){
     SIP_resident_away.at(2) += 1;
+    MOI_resident_away->Push((double)moi);
   } else {
     std::string error = "error, illegal human state detected, MOI: " + std::to_string(moi) + " chx: " + std::to_string(chx);
     Rcpp::stop(error);

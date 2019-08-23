@@ -103,7 +103,7 @@ vaxx_pars <- lapply(X = vaxx_id,FUN = function(id){
 })
 
 # compile the simulation
-sourceCpp(here::here("PfMOI/src/main.cpp"),rebuild=T)
+sourceCpp(here::here("PfMOI/src/main.cpp"),rebuild=F)
 
 
 ################################################################################
@@ -212,6 +212,7 @@ for(i in 1:nrun){
 }
 
 library(tidyverse)
+library(Hmisc)
 
 pfmoi_ensemble <-
   list.files(path = here::here("output/"),pattern = "pfmoi_[[:digit:]]+.csv") %>%
