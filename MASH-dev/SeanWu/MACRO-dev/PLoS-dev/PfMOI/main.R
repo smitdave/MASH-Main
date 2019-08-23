@@ -151,13 +151,31 @@ ggplot(pfmoi_pr) +
 #   facet_wrap(. ~ patch) +
 #   theme_bw()
 
+# plot MOI
+
+# pfmoi_moi <- pfmoi %>%
+#   select(matches("time|patch|MOI_visitor|MOI_resident_home")) %>%
+#   # gather(key,value,-time,-patch) %>% 
+#   filter(time != 0)
+# 
+# pfmoi %>%
+#   select(matches("time|patch|MOI_visitor|MOI_resident_home")) %>%
+#   gather(key,value,-time,-patch) %>% 
+#   filter(time != 0) %>% 
+#   extract(key,c("mean","sd"),"(_mean)-(_sd)") %>%
+#   head()
+
 pfmoi_moi <- pfmoi %>%
   select(matches("time|patch|MOI_visitor|MOI_resident_home")) %>%
-  gather(key,value,-time,-patch) %>% 
+  # gather(key,value,-time,-patch) %>% 
   filter(time != 0)
 
 ggplot(pfmoi_moi) +
-  geom_line(aes(x=time,y=value,color=key)) +
+  # geom_line(aes(x=time,y=value,color=key)) +
+  geom_line(aes(x=time,y=MOI_visitor_mean),colour="firebrick3") +
+  geom_line(aes(x=time,y=MOI_resident_home_mean),colour="steelblue") +
+  geom_ribbon(aes(x=time,ymin=MOI_visitor_mean - MOI_visitor_sd,ymax=MOI_visitor_mean + MOI_visitor_sd),alpha=0.5,fill="firebrick3") +
+  geom_ribbon(aes(x=time,ymin=MOI_resident_home_mean - MOI_resident_home_sd,ymax=MOI_resident_home_mean + MOI_resident_home_sd),alpha=0.5,fill="steelblue") +
   facet_wrap(. ~ patch) +
   theme_bw()
   
