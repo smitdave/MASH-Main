@@ -260,7 +260,6 @@ void human::update_EIR(){
 void human::queue_bites(){
 
   int nbite = biting_algorithm->sample_bites(EIR);
-  // int nbite = (int)R::rpois(EIR);
 
   if(nbite > 0){
     double tnow = tileP->get_tnow();

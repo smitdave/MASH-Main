@@ -92,8 +92,8 @@ patches_parameters <- function(move,bWeightZoo,bWeightZootox,reservoir,res_EIR){
 patches_header <- function(){
   head <- paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_visitor","_resident_home","_resident_away"))})),"incidence_resident","incidence_traveller"),collapse = ",")
   head <- c(head,unlist(lapply(paste0(paste0("MOI_",c("visitor","resident_home","resident_away"))),function(x){
-      paste0(x,c("_mean","_variance"))
+      paste0(x,c("_mean","_sd"))
   })))
 
-  return(cat(head,sep=","))
+  return(paste0(head,collapse=","))
 }
