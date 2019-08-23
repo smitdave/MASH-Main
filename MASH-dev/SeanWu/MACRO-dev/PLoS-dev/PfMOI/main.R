@@ -174,8 +174,8 @@ ggplot(pfmoi_moi) +
   # geom_line(aes(x=time,y=value,color=key)) +
   geom_line(aes(x=time,y=MOI_visitor_mean),colour="firebrick3") +
   geom_line(aes(x=time,y=MOI_resident_home_mean),colour="steelblue") +
-  geom_ribbon(aes(x=time,ymin=MOI_visitor_mean - MOI_visitor_sd,ymax=MOI_visitor_mean + MOI_visitor_sd),alpha=0.5,fill="firebrick3") +
-  geom_ribbon(aes(x=time,ymin=MOI_resident_home_mean - MOI_resident_home_sd,ymax=MOI_resident_home_mean + MOI_resident_home_sd),alpha=0.5,fill="steelblue") +
+  geom_ribbon(aes(x=time,ymin=pmax(MOI_visitor_mean - MOI_visitor_sd,0),ymax=MOI_visitor_mean + MOI_visitor_sd),alpha=0.5,fill="firebrick3") +
+  geom_ribbon(aes(x=time,ymin=pmax(MOI_resident_home_mean - MOI_resident_home_sd,0),ymax=MOI_resident_home_mean + MOI_resident_home_sd),alpha=0.5,fill="steelblue") +
   facet_wrap(. ~ patch) +
   theme_bw()
   
