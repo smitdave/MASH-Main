@@ -5,7 +5,7 @@
 #     / /  / / ___ / /___/ _, _/ /_/ /
 #    /_/  /_/_/  |_\____/_/ |_|\____/
 #
-#   PfSI main script with user-selection of Poisson or Negative Binomial biting
+#   PfMOI main script with user-selection of Poisson or Negative Binomial biting
 #
 #   Sean Wu (slwu89@berkeley.edu)
 #   August 2019
@@ -44,13 +44,13 @@ if(!dir.exists(path)){
 }
 
 # source the helper R code (mostly just sets up the R lists that get fed to the C++ simulation)
-source(here::here("PfSI/R/Human-PfSI.R"))
-source(here::here("PfSI/R/Mosquito-RM.R"))
-source(here::here("PfSI/R/Patch.R"))
-source(here::here("PfSI/R/PfSI-Parameters.R"))
+source(here::here("PfMOI/R/Human-PfMOI.R"))
+source(here::here("PfMOI/R/Mosquito-RM.R"))
+source(here::here("PfMOI/R/Patch.R"))
+source(here::here("PfMOI/R/PfMOI-Parameters.R"))
 
 # vector of parameters
-pfsi_pars <- pfsi_parameters()
+pfmoi_pars <- pfmoi_parameters()
 
 # set up patches (n is how many patches we have)
 n <- 5
@@ -71,9 +71,16 @@ pfpr <- rep(0.5,n) # malaria prevalence in each patch
 nh <- sum(patch_sizes) # total num of humans
 
 # sample the infection status of the population stratified by patch and return as a character vector
-init_state <- unlist(mapply(FUN = function(n,pr){
-  sample(x = c("I","S"),size = n,replace = T,prob = c(pr,1-pr))
+init_moi <- unlist(mapply(FUN = function(n,pr){
+  sample(x = c(1,0),size = n,replace = T,prob = c(pr,1-pr))
 },n=patch_sizes,pr=pfpr,SIMPLIFY = F))
+init_moi <- unlist(lapply(init_moi,function(x){
+  if(x==1){
+    rpois(n = 1,lambda = 1)
+  } else {
+    0
+  }
+}))
 
 # where the people go (0-indexed for c++)
 patch_id <- rep(0:(n-1),times=patch_sizes)
@@ -83,22 +90,20 @@ bweights <- rep(1,nh)
 
 human_pars <- vector("list",nh)
 for(i in 1:nh){
-  human_pars[[i]] <- human_pfsi_conpars(id = i-1,home_patch_id = patch_id[i],
+  human_pars[[i]] <- human_pfmoi_conpars(id = i-1,home_patch_id = patch_id[i],
                                         trip_duration = rep(3,n),trip_frequency = 1/20,bweight = bweights[i],
-                                        age = 20,state = init_state[i],bite_algorithm = 0)
+                                        age = 20,moi = init_moi[i],chx = FALSE,bite_algorithm = 0)
 }
-check_human_pfsi_conpars(human_pars)
 
 # vaccinations (can uncomment the code below to vaccinate 25% of the population at day 500)
 # vaxx_pars <- list()
 vaxx_id <- sample(x = 0:(nh-1),size = nh*0.25,replace = F)
 vaxx_pars <- lapply(X = vaxx_id,FUN = function(id){
-  vaccination_pfsi_conpars(id = id,t = 5e2,treat = T,type = "PE")
+  vaccination_pfmoi_conpars(id = id,t = 5e2,treat = T,type = "PE")
 })
 
 # compile the simulation
-# sourceCpp(paste0(src_path,"src/main.cpp"))
-sourceCpp(here::here("PfSI/src/main.cpp"),rebuild=F)
+sourceCpp(here::here("PfMOI/src/main.cpp"),rebuild=T)
 
 
 ################################################################################
@@ -106,9 +111,10 @@ sourceCpp(here::here("PfSI/src/main.cpp"),rebuild=F)
 ################################################################################
 
 log_pars <- list()
-h_inf <- paste0(path,"pfsi.csv")
-log_pars[[1]] <- list(outfile = h_inf,key = "pfsi",
-                      header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_visitor","_resident_home","_resident_away"))})),"incidence_resident","incidence_traveller"),collapse = ","))
+h_inf <- paste0(path,"pfmoi.csv")
+log_pars[[1]] <- list(outfile = h_inf,key = "pfmoi",
+                      header = patches_header()
+                    )
 mosy <- paste0(path,"mosy.csv")
 log_pars[[2]] <- list(outfile = mosy,key = "mosquito",
                       header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
@@ -117,29 +123,29 @@ run_macro(tmax = 1e3,
           human_pars = human_pars,
           mosquito_pars = mosy_pars,
           patch_pars = patch_pars,
-          model_pars = pfsi_pars,
+          model_pars = pfmoi_pars,
           log_streams = log_pars,
           vaxx_events = vaxx_pars,
           verbose = T)
 
 library(tidyverse)
-pfsi <- readr::read_csv(here::here("/output/pfsi.csv"))
+pfmoi <- readr::read_csv(here::here("output/pfmoi.csv"))
 
-pfsi_pr <- pfsi %>%
+pfmoi_pr <- pfmoi %>%
   select(-ends_with("away")) %>%
   select(-starts_with("incidence")) %>%
   gather(key, value, -time,-patch)
 
-ggplot(pfsi_pr) +
+ggplot(pfmoi_pr) +
   geom_line(aes(x=time,y=value,color=key)) +
   facet_wrap(. ~ patch) +
   theme_bw()
 
-# pfsi_inc <- pfsi %>%
+# pfmoi_inc <- pfmoi %>%
 #   gather(key,value,incidence_resident,incidence_traveller) %>%
 #   select(one_of(c("time","patch","key","value")))
 #
-# ggplot(pfsi_inc) +
+# ggplot(pfmoi_inc) +
 #   geom_line(aes(x=time,y=value,color=key)) +
 #   facet_wrap(. ~ patch) +
 #   theme_bw()
@@ -156,9 +162,10 @@ pb <- txtProgressBar(min = 1,max = nrun)
 for(i in 1:nrun){
 
   log_pars <- list()
-  h_inf <- paste0(path,"pfsi_",i,".csv")
-  log_pars[[1]] <- list(outfile = h_inf,key = "pfsi",
-                        header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_visitor","_resident_home","_resident_away"))})),"incidence_resident","incidence_traveller"),collapse = ","))
+  h_inf <- paste0(path,"pfmoi_",i,".csv")
+  log_pars[[1]] <- list(outfile = h_inf,key = "pfmoi",
+                        header = patches_header()
+                      )
   mosy <- paste0(path,"mosy_",i,".csv")
   log_pars[[2]] <- list(outfile = mosy,key = "mosquito",
                         header = paste0(c("time","state",paste0("patch",1:n)),collapse = ","))
@@ -167,7 +174,7 @@ for(i in 1:nrun){
             human_pars = human_pars,
             mosquito_pars = mosy_pars,
             patch_pars = patch_pars,
-            model_pars = pfsi_pars,
+            model_pars = pfmoi_pars,
             log_streams = log_pars,
             vaxx_events = vaxx_pars,
             verbose = FALSE)
@@ -176,28 +183,28 @@ for(i in 1:nrun){
 
 library(tidyverse)
 
-pfsi_ensemble <-
-  list.files(path = here::here("output/"),pattern = "pfsi_[[:digit:]]+.csv") %>%
+pfmoi_ensemble <-
+  list.files(path = here::here("output/"),pattern = "pfmoi_[[:digit:]]+.csv") %>%
   map_df(~read_csv(paste0(here::here("output/",.))),.id = "run")
 
-pfsi_ensemble_pr <- pfsi_ensemble %>%
+pfmoi_ensemble_pr <- pfmoi_ensemble %>%
   select(-ends_with("away")) %>%
   select(-starts_with("incidence")) %>%
   gather(key, value, -time,-patch,-run)
 
-ggplot(pfsi_ensemble_pr,aes(x=time,y=value,color=key,fill=key)) +
+ggplot(pfmoi_ensemble_pr,aes(x=time,y=value,color=key,fill=key)) +
   stat_summary(fun.data = median_hilow,fun.args = list(conf.int = 0.95),geom = "ribbon",alpha=0.4,color=NA) +
   stat_summary(geom="line", fun.y="mean") +
   facet_wrap(. ~ patch) +
   guides(color = FALSE) +
   theme_bw()
 
-# pfsi_ensemble_pr_coarse <- pfsi_ensemble_pr %>%
+# pfmoi_ensemble_pr_coarse <- pfmoi_ensemble_pr %>%
 #   mutate(state = substr(key, 1, 1)) %>%
 #   group_by(run, time, state) %>%
 #   summarise(value = sum(value))
 #
-# ggplot(pfsi_ensemble_pr_coarse,aes(x=time,y=value,color=state,fill=state)) +
+# ggplot(pfmoi_ensemble_pr_coarse,aes(x=time,y=value,color=state,fill=state)) +
 #   stat_summary(fun.data = mean_sdl,fun.args = list(mult = 1),geom = "ribbon",alpha=0.4,color=NA) +
 #   stat_summary(geom="line", fun.y="mean") +
 #   guides(color = FALSE) +

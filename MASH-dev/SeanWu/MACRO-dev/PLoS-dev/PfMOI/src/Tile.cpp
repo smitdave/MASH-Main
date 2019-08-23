@@ -85,7 +85,7 @@ tile::tile(
         Rcpp::as<double>(h_par["trip_frequency"]),
         Rcpp::as<double>(h_par["bweight"]),
         this,
-        Rcpp::as<int>(h_par["MOI"]),
+        Rcpp::as<int>(h_par["moi"]),
         Rcpp::as<bool>(h_par["chx"]),
         Rcpp::as<double>(h_par["age"])
     ));

@@ -35,7 +35,7 @@
 #' @param bite_disp overdispersion parameter for negative binomial biting (NULL for Poisson)
 #'
 #' @export
-human_pfmoi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bweight,age,state,bite_algorithm,bite_disp=NaN){
+human_pfmoi_conpars <- function(id,home_patch_id,trip_duration,trip_frequency,bweight,age,moi,chx,bite_algorithm,bite_disp=NaN){
   if(bite_algorithm==1 && (is.null(bite_disp) || is.nan(bite_disp) || is.na(bite_disp))){
     stop("if using negative binomial biting, please provide a valid numeric value for 'bite_disp'")
   }
