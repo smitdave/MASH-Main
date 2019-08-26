@@ -71,12 +71,12 @@ Generic_Pathogen <- R6::R6Class(classname = "Generic_Pathogen",
                        private$parentID = 0L
                      }
 
-                     futile.logger::flog.trace("Generic_Pathogen being born at self: %s , private: %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Generic_Pathogen being born at self: %s , private: %s",pryr::address(self),pryr::address(private))
                    }, # end constructor
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Generic_Pathogen being killed at self: %s , private: %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Generic_Pathogen being killed at self: %s , private: %s",pryr::address(self),pryr::address(private))
                    }, # end destructor
 
                    oneDay_human = function(){

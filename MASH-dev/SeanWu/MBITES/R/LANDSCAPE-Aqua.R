@@ -54,7 +54,7 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
 
                    # begin constructor
                    initialize = function(w, site){
-                     futile.logger::flog.trace("Aqua_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Aqua_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      private$habitatID = 1L # all habitats are normal ones for now
 
@@ -68,7 +68,7 @@ Aqua_Resource <- R6::R6Class(classname = "Aqua_Resource",
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Aqua_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Aqua_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      self$EggQ = NULL
                      self$ImagoQ = NULL

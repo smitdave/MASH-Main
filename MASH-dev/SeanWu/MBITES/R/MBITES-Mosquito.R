@@ -70,14 +70,14 @@ Mosquito <- R6::R6Class(classname = "Mosquito",
                      private$searchHist[1] = TRUE
 
                      # logging
-                     # futile.logger::flog.trace("Mosquito %s being born at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+                     # # futile.logger::flog.trace("Mosquito %s being born at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
 
                    }, # end constructor
 
                    # begin destructor
                    finalize = function(){
                      # logging
-                     # futile.logger::flog.trace("Mosquito %s being killed at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
+                     # # futile.logger::flog.trace("Mosquito %s being killed at: self %s , private %s",private$id,pryr::address(self),pryr::address(private))
                    }
 
                  ), # end public members
@@ -195,7 +195,7 @@ Mosquito_Female <- R6::R6Class(classname = "Mosquito_Female",
 
                    # pathogenDynamics
                    pathogenDynamics = function(){
-                     futile.logger::flog.warn("default 'pathogenDynamics' being called for mosquito: ",private$id)
+                     # futile.logger::flog.warn("default 'pathogenDynamics' being called for mosquito: ",private$id)
                    }
 
                  ), # end public members

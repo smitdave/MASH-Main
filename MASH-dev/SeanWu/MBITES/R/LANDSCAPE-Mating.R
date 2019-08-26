@@ -48,7 +48,7 @@ Mating_Resource <- R6::R6Class(classname = "Mating_Resource",
 
                    # begin constructor
                    initialize = function(w,site){
-                     futile.logger::flog.trace("Mating_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Mating_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      super$initialize(w,site) # construct base-class parts
 
@@ -57,7 +57,7 @@ Mating_Resource <- R6::R6Class(classname = "Mating_Resource",
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Mating_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Mating_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      self$MatingQ = NULL
                    }, # end destructor

@@ -63,12 +63,12 @@ NULL
 #' @param P_BF blood feeding attempt to search transition probability
 #' @param P_BB blood feeding attempt to attempt transition probability
 #' @param P_BR blood feeding attempt to post-prandial resting transition probability
-#' @param P_LL
-#' @param P_LO
-#' @param P_OL
-#' @param P_OO
-#' @param P_OB
-#' @param P_OF
+#' @param P_LL egg laying search bout to egg laying search bout transition probability
+#' @param P_LO egg laying search bout to egg laying attempt bout transition probability
+#' @param P_OL egg laying attempt bout to egg laying search bout transition probability
+#' @param P_OO egg laying attempt bout to egg laying attempt bout transition probability
+#' @param P_OB egg laying attempt bout to blood feeding attempt bout transition probability
+#' @param P_OF egg laying search bout to blood feeding search bout transition probability
 #' @param P_RF post-prandial resting to blood feeding search transition probability
 #' @param P_RB post-prandial resting to blood feeding attempt transition probability
 #' @param P_RL post-prandial resting to egg laying search transition probability

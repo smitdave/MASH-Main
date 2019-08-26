@@ -46,7 +46,7 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
 
                    # begin constructor
                    initialize = function(w, site, lambda){
-                     futile.logger::flog.trace("Aqua_Resource_Emerge being born at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Aqua_Resource_Emerge being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      if(length(lambda)<365 & length(lambda)>1){
                        stop(cat("length of provided lambda vector: ",length(lambda),", but require vector either >= 365 days or 1 day (constant emergence)"))
@@ -66,7 +66,7 @@ Aqua_Resource_Emerge <- R6::R6Class(classname = "Aqua_Resource_Emerge",
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Aqua_Resource_Emerge being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Aqua_Resource_Emerge being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
                    } # end destructor
 
                  ), # end public
