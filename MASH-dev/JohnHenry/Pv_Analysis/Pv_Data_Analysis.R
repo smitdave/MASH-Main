@@ -1,5 +1,6 @@
 library(readxl)
 library(fitdistrplus)
+library(ggplot2)
 
 Vivax = read.csv("~/vivax_processed_2017-02-14.csv")
 
@@ -41,17 +42,16 @@ for(i in 1:336){
 }
 
 ## histogram of duration of infection; appears to have multiple modes
-hist(PvDur,breaks=25,freq=F,xlab="Days",main="Histogram of the Duration of Infection")
-
+hist(PvDur,breaks=25,freq=F,xlab="Days Since First Patency",main="Histogram of the Duration of Pv Infection")
 
 gamma_fit = fitdist(PvDur,distr="gamma", method="mle")
 shape = 1.924
 rate = .0286
 x = seq(0,400,.1)
-lines(x,dgamma(x,shape=shape,rate=rate))
+lines(x,dgamma(x,shape=shape,rate=rate),lty=2)
 
 exp_fit = fitdist(PvDur,distr="exp",method="mle")
-lines(x,dexp(x,.01485))
+lines(x,dexp(x,.01485),lty=2)
 
 ## this should be a straight line if exponentially distributed with slope = 1/mean
 ## not enough infections end very early on
@@ -73,7 +73,7 @@ Durcdf = function(x){
 
 ### justification for using 90 days as a frequency
 ### mu is the mean, .015 (used above)
-### no justification for the shift, just eyeball it so far
+### no formal justification for the shift, just eyeball it so far
 x = seq(0,155)
 plot(x,Durcdf(x),type="l")
 pdf = diff(Durcdf(x))
@@ -94,8 +94,11 @@ lines(x,.015*(sin(pi*(x-shift)/45)+1)*exp(-.015*(45/pi*cos(pi*(x-shift)/45)+x)),
 ################### Asexual Parasitemia ##########################
 
 
-MVP = log10(rowMeans(t(VP),na.rm=T))
-plot(MVP,type="l",xlab="Days",ylab="Mean Pv Density",main="Daily Mean Pv Density Conditioned on Persistent Infection")
+MVP = log10(colMeans(VP,na.rm=T))
+plot(MVP,type="l",xlab="Days Since First Pantency",ylab="log10 Mean Pv Density per cmm",main="Daily Mean Pv Density Conditioned on Patent Infection",xlim=c(0,300),ylim=c(0,5))
+abline(v=c(0,80,160,240,320))
+abline(v=c(10,90,170,250,330),lty=2)
+
 
 rowVars = function (x,na.rm = TRUE) {
   sqr = function(x) x * x
@@ -106,13 +109,15 @@ rowVars = function (x,na.rm = TRUE) {
 VVP = log10(rowVars(t(VP)))
 
 lm(VVP[is.finite(VVP)]~MVP[is.finite(VVP)])
-m = 1.993
-b = .454
+m = 1.992
+b = .45
 
 plot(MVP,VVP,xlab="Mean Pv Parasite Density",ylab="Variance of Pv Parasite Density",main="Pv Parasite Density Mean-Variance Power Law")
 lines(seq(0,5,.1),seq(0,5,.1)*m+b)
 
-
+plot(log10(Vivax$asexual[1:PvDur[3]]),type="l",xlab="Days Since Innoculation",ylab="log10 Parasite Density per cmm",main="Example Individual Infection")
+abline(v=c(32:34),lty=2)
+abline(v=c(90),lty=2)
 
 ######################## Gametocytemia #############################
 
@@ -137,8 +142,8 @@ for(i in 1:335){
 }
 
 MVG = log10(rowMeans(t(VG),na.rm=T))
-plot(MVP,type="l",xlab="Days",ylab="log10 Parasite Density per cmm",main="Average Asexual and Gametocyte Densities Conditioned on Infection")
-lines(MVG,lty=2,col="red")
+plot(MVP,type="l",xlab="Days Since First Patency",ylab="log10 Parasite Density per cmm",main="Average Asexual and Gametocyte Densities Conditioned on Infection",xlim=c(0,300),ylim=c(0,5))
+lines(MVG,col="red")
 
 #lag = 7
 #plot(MVP[(lag+1):400],MVG[1:(400-lag)])
@@ -162,7 +167,7 @@ plot(MVG,VVG,xlab="log10 Mean P. vivax Gametocytemia",ylab="log10 Variance P. vi
 
 MVG[which(is.infinite(MVG))] = NaN
 MVP[which(is.infinite(MVP))] = NaN
-ccf(MVP, MVG, na.action = na.contiguous)
+ccf(MVP[1:80], MVG[1:80], na.action = na.contiguous,main="CCF for Asexuals to Gametocytes for P vivax")
 acf(MVP, na.action=na.contiguous,main="ACF for Mean Asexual P. vivax Densities")
 pacf(MVP,na.action=na.contiguous,main="PACF for Mean Asexual P. vivax Densities")
 
@@ -193,7 +198,7 @@ MVTE = rowMeans(t(VTE),na.rm=T)/100
 plot(MVG/max(MVG,na.rm=T),type="l",ylim=c(0,1))
 lines(MVTE,lty=2,col="green")
 
-plot(MVG,MVTE,xlab="log10 Mean Gametocyte Density",ylab="Proportion of Infected Mosquitoes",main="Transmission Efficiency for Given Gametocytemia")
+plot(MVG,MVTE,xlab="log10 Mean Gametocyte Density",ylab="Proportion of Infected Mosquitoes",main="Transmission Efficiency as a Function of Gametocyte Density")
 
 smoothedTE = function(x){
   y = rep(0,length(x))
@@ -205,16 +210,17 @@ smoothedTE = function(x){
 
 z = seq(0,2.5,.1)
 y = smoothedTE(z)
-plot(z+.25,y,xlab="log10 Gametocyte Density",ylab="Transmission Efficiency",ylim=c(0,1),main="Mean Transmission Efficiency for Given Gametocytemia")
+plot(z+.25,y,xlab="log10 Mean Gametocyte Density",ylab="Fraction of Bloodfed Mosquitoes Infected",ylim=c(0,1),main="Mean Transmission Efficiency for Given Gametocytemia")
 
 sigfit = nls(y~p1*exp(p2*(z+.25))/(p3+exp(p2*(z+.25))),start=list(p1=1,p2=1,p3=.5))
 p1=.5003
 p2=.8535
 p3=.9324
 lines(z+.25, p1*exp(p2*(z+.25))/(p3+exp(p2*(z+.25))))
+abline(h=p1,lty=2)
 
 VVTE = rowVars(t(VTE),na.rm=T)
-plot(MVTE,VVTE)
+#plot(MVTE,VVTE)
 
 
 ############## Fever from Asexual Parasitemia
@@ -290,8 +296,73 @@ for(i in 1:335){
 
 PFever = rowMeans(t(FeverDays),na.rm=T)
 plot(MVP/max(MVP,na.rm=T),type="l",ylim=c(0,1))
+PFeverPrime = PFever/pDet
+plot(PFeverPrime,type="l",xlim=c(1,200))
+lines(PFever[1:200])
+
 lines(PFever,lty=2)
 
 plot(MVP,log10(PFever/(1-PFever)),xlab="log10 Parasite Density",ylab="log10 Odds Ratio of Fever",xlim=c(1.5,4.5))
-plot(MVP,PFever,xlab="log10 Parasite Density",ylab="Probability of Fever")
+
+plot(MVP[8:80],PFeverPrime[8:80],xlab="log10 Parasite Density",ylab="Probability of Fever")
+
+xxpd = MVP[8:80]
+yyfev = PFeverPrime[8:80]
+#xxpd = xxpd[which(yyfev>0)]
+#yyfev = yyfev[which(yyfev>0)]
+
+fitmodel <- nls(yyfev~a/(1 + exp(-b * (xxpd-c))), start=list(a=.6,b=1.5,c=3.5))
+xx = seq(0,4.5,.01)
+a = .7488
+b = 3.9322
+c = 3.4620
+plot(MVP[8:80],PFeverPrime[8:80],xlab="log10 Parasite Density",ylab="Probability of Fever",xlim=c(2,4.5),main="Probability of Fever Given log10 P. vivax Density",ylim=c(0,1))
+lines(xx,a/(1+exp(-b*(xx-c))))
+
+plot(PFeverPrime[1:200],type="l",xlab="Days Since Inoculation",ylab="Fraction Presenting with Fever",main="Fever Prevalence Given Active Infection")
+lines(a/(1+exp(-b*(MVP[1:200]-c))),lty=2,col="red")
+legend(100,.65,legend=c("Measured Fraction","Predicted from Pv Density"),col=c("black","red"),lty=c(1,2))
+
+
+plot(MVP[8:80],log10(PFever[8:80]/(1-PFever[8:80])),xlim=c(2.5,4.1))
+
+##### Daily fraction with patent parasitemia
+
+
+pDet = rep(0,300)
+VP[which(is.na(VP))] = 0
+pDet = rowMeans(t(VP>0))
+plot(pDet*336,type="l",xlim=c(0,300),xlab="Days Since First Patency",ylab="Number of Patients with Patent Infections",main="Daily Fraction of Patent Infections")
+abline(v=80,lty=2)
+abline(h=.5,lty=2)
+
+plot(MVP[1:80],type="l",xlab="Days Since First Patency",ylab="log10 Mean Parasitemia per cmm",main="Average Parasitemia Conditioned on Infection",ylim=c(0,5),xlim=c(0,200))
+xx = 10:50
+yy = MVP[10:50]
+lmpd = lm(yy~xx)
+lines(seq(0,200),seq(0,200)*lmpd$coefficients[2]+lmpd$coefficients[1])
+abline(h=log10(88),lty=2)
+abline(v=103,lty=2)
+
+lines(pDet)
+############# Aggregate by week/fortnight to get violin plots for first several months? 
+
+VivaxPD = list()
+for(i in 1:335){
+  VivaxPD[[i]] = Vivax$asexual[(split[i]+1):split[i+1]]
+}
+
+PvPD = matrix(0,nrow=80,ncol=336)
+for(i in 1:80){
+  for(j in 1:335){
+    PvPD[i,j] = VivaxPD[[j]][i]
+  }
+}
+
+PvPD[which(PvPD==0)] = NaN
+
+MPViol = rowMeans(PvPD,na.rm=T)
+plot(log10(MPViol)[1:80],type="l")
+
+vioplot(log10(PvPD[1:14]),log10(MPViol[15:28]),log10(MPViol[29:42]),log10(MPViol[43:55]))
 

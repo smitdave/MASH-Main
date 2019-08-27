@@ -46,7 +46,7 @@ for(i in 1:334){
 ## plot empirical survival function
 N = sort(N)
 Ndays = rep(0,250)
-for(i in 1:251){
+for(i in 1:250){
   Ndays[i] = tail(cumsum(N<i),1)
 }
 Ndays = Ndays/334
@@ -178,6 +178,7 @@ BinaryFever[which(is.na(BinaryFever))] = 0
 PropFever = rowMeans(BinaryFever,na.rm=T)
 plot(PropFever[1:200],type="l",ylim=c(0,.6),xlab="Days Since Patency", ylab="Proportion with Fever",main="Daily Prevalence of Fever Conditioned on Infection")
 #plot(-log10(1-PropFever[1:365]),type="l",main="Daily Rate of Fever")
+
 
 ## compare fever probability to parasite densities, normalized by maximum density for scale
 plot(log10(rm[1:365])/max(log10(rm[1:200]),rm.na=T),type="l",ylim=c(0,1))
@@ -370,3 +371,44 @@ TEhat[which(is.na(TEhat))] = 0
 plot(1:300,cumsum(TEhat[1:300]*exp(-lambda*seq(1:300))),type="l",xlab="Days of Infection",ylab="Effective Number of Infectious Days",main="Cumulative Number of Totally Infectious Days")
 abline(h=cumsum(TEhat[1:1000]*exp(-lambda*seq(0:999)))[1000],lty=2)
 
+
+###########################################################
+################## Patency Evaluation #####################
+###########################################################
+
+## include NaNs (may overcount - NaN may mean a measurement wasn't taken)
+
+Nd = rep(0,334)
+subpat = Nd
+beginning = rep(0,334)
+for(i in 1:334){
+  position = which(!is.na(M[,i]))
+  nonzero = which(M[,i]>0)
+  beginning[i] = min(which(M[,i]>0))
+  Nd[i] = max(intersect(position,nonzero))
+  subpat[i] = sum(M[beginning[i]:Nd[i],i]==0 | is.na(M[beginning[i]:Nd[i],i]),na.rm=T)
+}
+
+psubpat = subpat/Nd
+hist(psubpat,freq=F,breaks=50)
+
+
+## don't include NaNs (may undercount - NaN may mean measurement wasn't taken)
+
+subpatent = 0*M
+for(i in 1:334){
+  subpatent[beginning[i]:Nd[i],i] = (M[beginning[i]:Nd[i],i] == 0)
+}
+psub = rowSums(subpatent,na.rm=T)[1:250]/(334*(1-Ndays))
+plot(psub,type="l",xlab="Days",ylab="Fraction With Subpatent Infection",main="Daily Fraction of Active Infections Below Patent Parasitemia",ylim=c(0,1))
+abline(h=c(.1,.2,.3,.4,.5),lty=c(rep(2,4),1))
+
+plot(psub,type="l",xlab="Days",ylab="Fraction With Subpatent Infection",main="Daily Fraction of Active Infections Below Patent Parasitemia",xlim=c(1,30),ylim=c(0,1))
+
+## compare maximum density to duration to detect correlation, a la Eyles
+
+maxPt = rep(0, 334)
+for(i in 1:334){
+  maxPt[i] = log10(max(M[,i],na.rm=T))
+}
+plot(Nd,maxPt,xlab="Last Day of Patent Infection",ylab="log10 Maximum Parasite Density",main="Relationship Between Maximum Asexual Density and Duration")

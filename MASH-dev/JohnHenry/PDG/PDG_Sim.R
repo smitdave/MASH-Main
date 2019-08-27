@@ -1,12 +1,13 @@
 source('PDG.R')
 
 set.seed(534)
-human = PDGHuman$new()
-human$infect_Human(5)
-dt = 1/26
 
-Nfortnights = 30
-for(t in seq(1:Nfortnights)){
+human = PDGHuman$new()
+human$infect_Human(1)
+dt = 10/365
+
+Ntimesteps = 30
+for(t in seq(1:Ntimesteps)){
   human$update_Human(dt=dt)
 }
 
@@ -22,14 +23,12 @@ immCounter = human$get_history()$immCounter
 # plot(pFever,type="l",ylim=c(0,1),xlab="fortnights")
 # par(mfrow=c(1,1))
 
-par(mfrow=c(2,2))
-plot(seq(1:Nfortnights),Pt,type="l",xlab="fortnights",ylab="log10 Parasite Densities per microliter",ylim=c(0,5))
+plot(seq(1:Ntimesteps),Pt,type="l",xlab="10 Day Timesteps",ylab="log10 Parasite Densities per microliter",ylim=c(0,5))
 lines(Gt,lty=2,col="red")
 title(main="Example PDG Parasite Densities")
 
 TE = human$get_history()$TE
 plot(TE,ylim=c(0,1),main="Transmission Efficiency",xlab="fortnights")
-par(mfrow=c(1,1))
 
 # # C++ checking
 # set.seed(534)
@@ -42,3 +41,4 @@ par(mfrow=c(1,1))
 # 
 # plot(human_cpp$TE,ylim=c(0,1),main="Transmission Efficiency (C++)",xlab="fortnights")
 # par(mfrow=c(1,1))
+

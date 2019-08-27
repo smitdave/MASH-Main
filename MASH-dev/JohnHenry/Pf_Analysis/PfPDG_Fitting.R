@@ -20,7 +20,7 @@ rm = rowMeans(MP,na.rm=T)
 rv = rowVars(MP,na.rm=T)
 
 #Power Law, Removing the subpatent infections
-plot(log10(rm),xlim=c(0,300))
+plot(log10(rm),xlim=c(0,300),type="l",xlab="Days Since First Pantency",ylab="Log10 Mean Asexual Parasite Densities",main="Daily Mean Pf Density Conditioned on Patent Parasitemia",ylim=c(0,5))
 plot(log10(rv),xlim=c(0,300))
 plot(log10(rm)[1:125],log10(rv[1:125]),xlab="log10 Mean of Asexual Densities",ylab="log10 Variance of Asexual Densities",main="Variance-to-Mean Power Law for Asexual Parasitemia")
 rmrvfit = lm(log10(rv[1:125])~log10(rm[1:125]))
@@ -37,9 +37,12 @@ lines(seq(-1,6),rmrvfit$coefficients[1]+rmrvfit$coefficients[2]*seq(-1,6))
 ##
 ##
 ####daily plot of parasite densities
-plot(log10(rm),type="l",xlim=c(0,365),xlab="Days Since First Detectable",ylab="log10 Parasites per microL",ylim=c(0,5))
+plot(log10(rm),type="l",xlim=c(0,80),xlab="Days Since First Patency",ylab="log10 Parasites per cmm",ylim=c(0,5),main="Daily Mean P falciparum and P vivax Density Conditioned on Patent Parasitemia",lty=2)
 #abline(h=log10(88))
-title(main="Daily Mean Parasite Densities")
+lines(MVP)
+legend(60,4.8,legend=c("Pv","Pf"),col=c("black","black"),lty=c(1,2))
+
+title(main="Average Asexual and Gametocyte Densities Conditioned on Infection")
 #abline(h=log10(5),lty=2)
 
 GP = G
@@ -49,7 +52,7 @@ lines(log10(rmg),col="red")
 
 abline(h=log10(10),lty=2)
 
-ccf(rm[4:225],rmg[4:225],lag.max=25,type="correlation",ylim=c(0,1),ylab="Correlation",xlab="Lag (Days)", main="CCF of Asexuals to Gametocytes")
+ccf(rm[4:225],rmg[4:225],lag.max=25,type="correlation",ylim=c(0,1),ylab="Correlation",xlab="Lag (Days)", main="CCF of Asexuals to Gametocytes for P falciparum")
 abline(h=1)
 plot(log10(rm[1:233]),type="l",ylim=c(0,5))
 lines(log10(rmg[9:241]),col="red")
@@ -227,7 +230,7 @@ qqnorm(gresidNorm)
 lines(seq(-2,2,.1),seq(-2,2,.1))
 
 ## check for cross-correlation in mu, gmu - best correlation at a 1 week lag
-ccf(mu,gmu,type="correlation",main="")
+ccf(mu[10:50],gmu[10:50],type="correlation",main="")
 title(main="Cross-Correlation Between Asexual Parasitemia and Gametocytemia")
 
 pg = lm(gmu[2:30]~mu[1:29])
