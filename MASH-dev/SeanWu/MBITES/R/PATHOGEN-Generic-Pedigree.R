@@ -44,12 +44,12 @@ Generic_Pedigree <- R6::R6Class(classname = "Generic_Pedigree",
 
                    # begin constructor
                    initialize = function(){
-                     futile.logger::flog.trace("Generic_Pedigree being born at self: %s , private: %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Generic_Pedigree being born at self: %s , private: %s",pryr::address(self),pryr::address(private))
                    }, # end constructor
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Generic_Pedigree being killed at self: %s , private: %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Generic_Pedigree being killed at self: %s , private: %s",pryr::address(self),pryr::address(private))
                    } # end destructor
 
                  ), # end public members

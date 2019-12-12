@@ -66,7 +66,7 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
 
                    # begin constructor
                    initialize = function(id,w,feedingID,siteID,tileID){
-                     futile.logger::flog.trace("Human_NULL %i being born at self: %s , private: %s",id,pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Human_NULL %i being born at self: %s , private: %s",id,pryr::address(self),pryr::address(private))
 
                      # basic parameters
                      private$id = id
@@ -81,7 +81,7 @@ Human_NULL <- R6::R6Class(classname = "Human_NULL",
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Human_NULL %i being killed at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Human_NULL %i being killed at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
                    } # end destructor
 
                  ),

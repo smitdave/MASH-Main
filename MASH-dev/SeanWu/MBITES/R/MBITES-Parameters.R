@@ -43,12 +43,12 @@ MBITES_Parameters <- R6::R6Class(classname = "MBITES_Parameters",
 
                    # begin constructor
                    initialize = function(){
-                     futile.logger::flog.trace("MBITES_Parameters being born at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("MBITES_Parameters being born at: self %s , private %s",pryr::address(self),pryr::address(private))
                    }, # end constructor
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("MBITES_Parameters being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("MBITES_Parameters being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
                    }, # end destructor
 
                    # time to event samplers
@@ -1661,11 +1661,11 @@ MBITES_Parameters$set(which = "public",name = "get_rf_b",
 #' @param preGsugar amount of energy a sugar meal contributes to the pre-gonotrophic energy requirement, called from \code{\link{mbites_sugarMeal}}
 #' @param energyFromBlood_b amount of energy derived per unit of blood, called from \code{\link{mbites_energyFromBlood}}
 #' @param S_u amount of energy burned by a mosquito during a bout, called from \code{\link{mbites_flightBurnEnergy}}
-#' @param omega
+#' @param omega scaling parameter called in \code{\link{mbites_pSugarBout}}
 #' @param S_sa parameter for probability to queue a sugar bout as function of a mosquito's energy, called from \code{\link{mbites_pSugarBout}}
 #' @param S_sb parameter for probability to queue a sugar bout as function of a mosquito's energy, called from \code{\link{mbites_pSugarBout}}
-#' @param S_w
-#' @param S_p
+#' @param S_w scaling parameter called in \code{\link{mbites_pSugarBout}}
+#' @param S_p scaling parameter called in \code{\link{mbites_pSugarBout}}
 #' @param Bs_surv blood feeding search bout baseline survival probability, called from \code{\link{surviveFlight}}
 #' @param Os_surv oviposition search bout baseline survival probability, called from \code{\link{surviveFlight}}
 #' @param Ms_surv mating search bout baseline survival probability, called from \code{\link{surviveFlight}}
@@ -1674,14 +1674,14 @@ MBITES_Parameters$set(which = "public",name = "get_rf_b",
 #' @param O_surv oviposition bout baseline survival probability, called from \code{\link{surviveFlight}}
 #' @param M_surv mating bout baseline survival probability, called from \code{\link{surviveFlight}}
 #' @param S_surv sugar feeding bout baseline survival probability, called from \code{\link{surviveFlight}}
-#' @param Bs_succeed
-#' @param Os_succeed
-#' @param Ms_succeed
-#' @param Ss_succeed
-#' @param B_succeed
-#' @param O_succeed
-#' @param M_succeed
-#' @param S_succeed
+#' @param Bs_succeed unconditional probability for blood feeding search bout to succeed
+#' @param Os_succeed unconditional probability for egg laying search bout to succeed
+#' @param Ms_succeed unconditional probability for mating search bout to succeed
+#' @param Ss_succeed unconditional probability for sugar feeding search bout to succeed
+#' @param B_succeed unconditional probability for blood feeding attempt bout to succeed
+#' @param O_succeed unconditional probability for egg laying attempt bout to succeed
+#' @param M_succeed unconditional probability for mating attempt bout to succeed
+#' @param S_succeed unconditional probability for sugar feeding attempt bout to succeed
 #' @param surviveH survival probability for initial encounter (survive to probe)
 #' @param probeH probability that undeterred during probing
 #' @param surviveprobeH survival probability for host probing

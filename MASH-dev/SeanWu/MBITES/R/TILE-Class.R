@@ -57,7 +57,7 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$Humans = HashMap$new(N=1e3L)
 
                      # log the event
-                     futile.logger::flog.trace("Tile %i being born at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Tile %i being born at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
                    }, # end constructor
 
                    # begin destructor
@@ -66,7 +66,7 @@ Tile <- R6::R6Class(classname = "Tile",
                      private$Mosquitoes$rm_all()
                      private$Humans$rm_all()
                      invisible(gc())
-                     futile.logger::flog.trace("Tile %i being killed at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Tile %i being killed at self: %s , private: %s",private$id,pryr::address(self),pryr::address(private))
                    } # end destructor
 
                  ),

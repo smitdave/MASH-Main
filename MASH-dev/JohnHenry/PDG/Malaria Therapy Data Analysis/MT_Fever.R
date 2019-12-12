@@ -30,20 +30,27 @@ for(i in 2:334){
 
 BinaryFever = (Fever>37)
 PropFever = rowMeans(BinaryFever,na.rm=T)
-plot(PropFever[1:365],type="l",ylim=c(0,1),xlab="Days Since Patency", ylab="Proportion with Fever",main="Daily Prevalence of Fever Conditioned on Infection")
+for(i in 1:length(PropFever)){PropFever[i] = PropFever[i]*(exp(-lambda*i))}
+plot(PropFever[1:365],type="l",ylim=c(0,1),xlab="Days Since Patency", ylab="Proportion with Fever",main="Daily Prevalence of Fever Conditioned on P falciparum Infection",xlim=c(0,200))
+
+lines(sigmoidFev(log10(rm),p1,p2,p3),col="red",lty=2)
+
+########
+#### Needed correction above to condition on survival ######
+########
 
 plot(log10(rm[1:365]),type="l",ylim=c(0,5))
 lines(PropFever[1:365])
 ccf(PropFever[1:200],log10(rm[1:200]))
 cor(PropFever[1:200],log10(rm[1:200]))
-plot(log10(rm[1:200]),PropFever[1:200],xlab="log10 Mean Asexual Densities",ylab="Proability of Fever",main="Probability of Fever Given Asexual Parasite Density")
+plot(log10(rm[1:200]),PropFever[1:200],ylim=c(0,1),xlab="log10 Mean Asexual Densities",ylab="Proability of Fever",main="Probability of Fever Given Asexual Parasite Density")
 
 aa = log10(rm[1:200])
 bb = PropFever[1:200]
 sigfitfev = nls(bb~p1*exp(p2*aa)/(p3+exp(p2*aa)),start=list(p1=.5,p2=.5,p3=10))
-p1 = .8953
-p2 = 3.449
-p3 = 5.819*10^4
+p1 = .8458
+p2 = 3.851
+p3 = 6.187*10^5
 sigmoidFev = function(x,p1,p2,p3){
   p1*exp(p2*x)/(p3+exp(p2*x))
 }

@@ -49,12 +49,12 @@ Generic_Pathogen_Parameters <- R6::R6Class(classname = "Generic_Pathogen_Paramet
                      private$human_incubation = 0L
                      private$mosquito_incubation = 11L
 
-                     futile.logger::flog.trace("Generic_Pathogen_Parameters being born at self: %s , private: %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Generic_Pathogen_Parameters being born at self: %s , private: %s",pryr::address(self),pryr::address(private))
                    }, # end constructor
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Generic_Pathogen_Parameters being killed at self: %s , private: %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Generic_Pathogen_Parameters being killed at self: %s , private: %s",pryr::address(self),pryr::address(private))
                    } # end destructor
 
                  ),

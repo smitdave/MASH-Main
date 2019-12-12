@@ -95,7 +95,7 @@ double PDG_human::sigmoidexp(const double x, const double xhalf, const double b)
 
 
 /* ################################################################################
-#   PDG implementation
+#   PDG constructor & destructor
 ################################################################################ */
 
 // constructor & destructor
@@ -113,7 +113,12 @@ PDG_human::PDG_human(const double age_, const bool sex_) :
   global_ixH++;
 };
 
-PDG_human::~PDG_human(){};
+PDG_human::~PDG_human() = default;
+
+
+/* ################################################################################
+#   PDG infection dynamics
+################################################################################ */
 
 // infection methods
 void PDG_human::begin_infection(size_t nInfections){

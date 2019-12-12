@@ -45,22 +45,24 @@ lines(dexp(n,lambdaF))
 
 
 
-WP = matrix(0,nrow=52,ncol=334)
-MP = rep(0,52)
-VP = rep(0,52)
+WP = matrix(0,nrow=26,ncol=334)
+MP = rep(0,26)
+VP = rep(0,26)
 
 for(j in 1:334){
-  for(i in 1:52){
+  for(i in 1:26){
     WP[i,j] = mean(M[((i-1)*14+1):(i*14),j],na.rm=T)
   }
 }
 
-for(i in 1:52){
+for(i in 1:26){
   MP[i] = mean(WP[i,],na.rm=T)
   VP[i] = var(WP[i,],na.rm=T)
 }
 
-plot(1:52,log10(MP),type="l",xlab="Fortnights Since Infection",ylab="Mean log10 Parasite Density",main="Mean log10 Density Averged over Fortnights",xlim=c(0,30))
+plot(log10(MP),ylim=c(0,5))
+
+plot(1:26,log10(MP),type="l",xlab="Fortnights Since Infection",ylab="Mean log10 Parasite Density",main="Mean log10 Density Averged over Fortnights",xlim=c(0,30))
 plot(log10(MP),log10(VP),xlab="log10 Mean Parasite Density",ylab="log10 Variance Parasite Density",main="Mean-Variance Power Law")
 mvfit = lm(log10(VP) ~ log10(MP))
 b = mvfit$coefficients[1]
@@ -213,12 +215,12 @@ hist(diff(shape/rate^2,1),freq=F,breaks=10)
 
 
 
-FeverFNM = rep(0,52)
-FeverFNP = rep(0,52)
-FeverFN = matrix(0,nrow=52,ncol=334)
+FeverFNM = rep(0,26)
+FeverFNP = rep(0,26)
+FeverFN = matrix(0,nrow=26,ncol=334)
 Fever[which(Fever<30)]=NaN
 for(j in 1:334){
-  for(i in 1:52){
+  for(i in 1:26){
     FeverFN[i,j] = mean(Fever[((i-1)*14+1):(i*14),j],na.rm=T)
   }
 }
@@ -226,7 +228,7 @@ for(j in 1:334){
 FeverFNBin = FeverFN
 FeverFNBin[which(!is.na(FeverFNBin))]=1
 FeverFNBin[which(is.na(FeverFNBin))]=0
-for(i in 1:52){
+for(i in 1:26){
   FeverFNM[i] = mean(FeverFN[i,],na.rm=T)
   FeverFNP[i] = mean(FeverFNBin[i,],na.rm=T)
 }
@@ -254,21 +256,21 @@ qqnorm(5/9*(MFeverF-32))
 
 
 
-WG = matrix(0,nrow=52,ncol=334)
-MG = rep(0,52)
-VG = rep(0,52)
+WG = matrix(0,nrow=26,ncol=334)
+MG = rep(0,26)
+VG = rep(0,26)
 
-WTE = matrix(0,nrow=52,ncol=334)
-MTE = rep(0,52)
-VTE = rep(0,52)
+WTE = matrix(0,nrow=26,ncol=334)
+MTE = rep(0,26)
+VTE = rep(0,26)
 
 for(j in 1:334){
-  for(i in 1:52){
+  for(i in 1:26){
     WG[i,j] = mean(MGt[((i-1)*14+1):(i*14),j],na.rm=T)
   }
 }
 
-for(i in 1:52){
+for(i in 1:26){
   MG[i] = mean(WG[i,],na.rm=T)
   VG[i] = var(WG[i,],na.rm=T)
   MTE[i] = mean(WTE[i,],na.rm=T)
@@ -277,8 +279,8 @@ for(i in 1:52){
 
 plot(log10(MG),log10(VG),xlab="log10 Mean Gametocyte Density",ylab="log10 Variance of Gametocyte Density",main="Gametocyte Mean-Variance Power Law")
 lmG = lm(log10(VG[1:26])~log10(MG[1:26]))
-b = 1.662
-m = 1.652
+b = lmG$coefficients[1]
+m = lmG$coefficients[2]
 x = seq(-3,3,.1)
 lines(x,m*x+b)
 
@@ -287,10 +289,10 @@ lines(log10(MP))
 ## asexual-gametocyte relationship
 plot(log10(MP[4:30]),log10(MG[3:29]))
 plot(log10(MP),log10(MG),xlab="log10 Asexual Parasite Density",ylab="log10 Gametocyte Density",main="Mean Asexual and Gametocyte Densities Power Law")
-ccf(MP[4:28],MG[4:28],lag.max=5)
+ccf(MP[4:26],MG[4:26],lag.max=5)
 ccf(log10(MP[4:28]),log10(MG[4:28]),lag.max=5)
 ccf(MP,MG,lag.max=5)
-ccf(log10(MP[1:28]),log10(MG[1:28]),lag.max=5)
+ccf(log10(MP[1:26]),log10(MG[1:26]),lag.max=5)
 ## note here the ccf shows a lag-dependence of one fortnight for original data, but not log-transformed data...
 ## this is due to the first couple fortnights of infection where there does seem to be a lag and parasite densities
 ## are very high, so they dominate the correlation calculation for the non-transformed data. This is confirmed

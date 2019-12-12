@@ -1,3 +1,5 @@
+library(plotly)
+
 an = rep(.5,1000)
 gn = function(x,A,C,g){
   A*x*(1-C*x^g)/(1+x)
@@ -17,6 +19,12 @@ lines(0:10,0:10,lty=2)
 plot(an[1:499],an[2:500],type="l")
 lines(0:10,0:10,lty=2)
 points(an[1:499],an[2:500])
+
+lag0 = list(an[1:998])
+lag1 = list(an[2:999])
+lag2 = list(an[3:1000])
+df = data.frame(lag0 = lag0[[1]], lag1 = lag1[[1]], lag2 = lag2[[1]])
+plot_ly(df,x=~lag0,y=~lag1,z=~lag2, type='scatter3d',mode='points')
 
 x = seq(0,1,.01)
 plot(x,8.5*x*(1-(.95*x+x^.5)/(1+.95*x)),type="l",xlim=c(0,1),ylim=c(0,1.1),xlab="x[n]",ylab="x[n+1]",main="Asymptotic Iterated Mapping")
@@ -76,12 +84,13 @@ for(i in 1:length(Bi)){
 }
 
 
+min = 0
 C = 1
 g = .5
 gn = function(x,A,C,g){
   A*x*(1-C*x^g)/(1+x)
 }
-Ai = seq(8,9,.001)
+Ai = seq(min,9,.001)
 x0 = .05
 for(i in 1:length(Ai)){
   xj = rep(0,300)
@@ -90,7 +99,7 @@ for(i in 1:length(Ai)){
     xj[j+1] = gn(xj[j],Ai[i],C,g)
   }
   if(i==1){
-    plot(rep(Ai[i],length(unique(xj[200:300]))),unique(xj[200:300]),xlim=c(8,9),ylim=c(0,1),type="p",main="Bifurcation Diagram for parameter A",xlab="A",ylab="an")
+    plot(rep(Ai[i],length(unique(xj[200:300]))),unique(xj[200:300]),xlim=c(min,9),ylim=c(0,1),type="p",main="Bifurcation Diagram for parameter A",xlab="A",ylab="an")
   }
   if(i>1){
     points(rep(Ai[i],length(unique(xj[200:300]))),unique(xj[200:300]),cex=.1)

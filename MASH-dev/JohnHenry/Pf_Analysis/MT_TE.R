@@ -304,3 +304,15 @@ lines(seq(0,1,.01),parab(seq(0,1,.01)))
 #r = seq(0,1,.01)
 #lines(r,mvfitcurve(r))
 
+plot(log10(GTmu),xlim=c(0,300))
+lines(TEmu/100)
+
+plot(TEmu/100,type="l",xlim=c(0,300),xlab="Days",ylab="Fraction of Mosquitoes Infected",main="Transmission Efficiency Time Course")
+lines(sigmoidTE(log10(GTmu),p1,p2,p3),type="l",col="red")
+
+plot(sigmoidTE(log10(GTmu),p1,p2,p3),type="l",xlim=c(0,300),ylim=c(0,1))
+plot(cumsum(sigmoidTE(log10(GTmu),p1,p2,p3)),type="l",xlim=c(0,300),ylim=c(0,50))
+
+TEweight = rep(0,300)
+for(i in 1:300){TEweight[i]=sigmoidTE(log10(GTmu),p1,p2,p3)[i]*exp(-lambda*i)}
+plot(cumsum(TEweight))

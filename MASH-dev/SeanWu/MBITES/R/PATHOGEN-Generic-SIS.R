@@ -51,7 +51,7 @@ SEI_Pathogen <- R6::R6Class(classname = "SEI_Pathogen",
                      private$b = MBITES:::PathogenParameters$get_b()
                      private$c = MBITES:::PathogenParameters$get_c()
 
-                     futile.logger::flog.trace("SEI_Pathogen being born at self: %s , private: %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("SEI_Pathogen being born at self: %s , private: %s",pryr::address(self),pryr::address(private))
                    }, # end constructor
 
                    # begin destructor
@@ -59,7 +59,7 @@ SEI_Pathogen <- R6::R6Class(classname = "SEI_Pathogen",
 
                      super$finalize() # destruct base parts
 
-                     futile.logger::flog.trace("SEI_Pathogen being killed at self: %s , private: %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("SEI_Pathogen being killed at self: %s , private: %s",pryr::address(self),pryr::address(private))
                    } # end destructor
 
                  ),

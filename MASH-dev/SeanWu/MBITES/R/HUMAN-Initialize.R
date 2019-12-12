@@ -22,8 +22,13 @@
 #'
 #' @param human_init a \code{\link{data.frame}} object where each row corresponds to a human
 #'
-#' @details
-#'
+#' @details each row must have the following named columns:
+#' \itemize{
+#'   \item tileID: the tile the human resides in (right now should be all the same)
+#'   \item siteID: the \code{\link[MBITES]{Site}} that the human resides in (must be a site that has a \code{\link[MBITES]{Feeding_Resource}})
+#'   \item feedingID: the specific \code{\link[MBITES]{Feeding_Resource}} that this person resides at
+#'   \item w: this person's relative biting weight, must be a number in [0,inf)
+#' }
 #'
 #'
 #' @export

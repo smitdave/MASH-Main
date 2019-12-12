@@ -108,7 +108,7 @@ n <- 26
 sumstat <- vector("list",n)
 
 verbose <- TRUE # if TRUE print out progress  bars in the fn's; o/w just have a global bar
-if(!verbose){s
+if(!verbose){
   pb <- txtProgressBar(1,n)
 }
 

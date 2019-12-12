@@ -48,7 +48,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 
                    # begin constructor
                    initialize = function(w,site,enterP){
-                     futile.logger::flog.trace("Feeding_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Feeding_Resource being born at: self %s , private %s",pryr::address(self),pryr::address(private))
 
                      super$initialize(w,site) # construct base-class parts
 
@@ -60,7 +60,7 @@ Feeding_Resource <- R6::R6Class(classname = "Feeding_Resource",
 
                    # begin destructor
                    finalize = function(){
-                     futile.logger::flog.trace("Feeding_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
+                     # futile.logger::flog.trace("Feeding_Resource being killed at: self %s , private %s",pryr::address(self),pryr::address(private))
                      self$RiskQ = NULL
                    } # end destructor
 

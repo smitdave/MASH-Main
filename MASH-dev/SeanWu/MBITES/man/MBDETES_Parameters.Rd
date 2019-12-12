@@ -31,6 +31,18 @@ MBDETES_Parameters(tF = 6/24, tB = 3/24, tR = 18/24, tL = 6/24,
 
 \item{P_BR}{blood feeding attempt to post-prandial resting transition probability}
 
+\item{P_LL}{egg laying search bout to egg laying search bout transition probability}
+
+\item{P_LO}{egg laying search bout to egg laying attempt bout transition probability}
+
+\item{P_OL}{egg laying attempt bout to egg laying search bout transition probability}
+
+\item{P_OO}{egg laying attempt bout to egg laying attempt bout transition probability}
+
+\item{P_OB}{egg laying attempt bout to blood feeding attempt bout transition probability}
+
+\item{P_OF}{egg laying search bout to blood feeding search bout transition probability}
+
 \item{P_RF}{post-prandial resting to blood feeding search transition probability}
 
 \item{P_RB}{post-prandial resting to blood feeding attempt transition probability}

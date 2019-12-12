@@ -70,9 +70,15 @@ set_parameters_MBITES_Parameters(defaultState_F = "B",
 
 \item{S_u}{amount of energy burned by a mosquito during a bout, called from \code{\link{mbites_flightBurnEnergy}}}
 
+\item{omega}{scaling parameter called in \code{\link{mbites_pSugarBout}}}
+
 \item{S_sa}{parameter for probability to queue a sugar bout as function of a mosquito's energy, called from \code{\link{mbites_pSugarBout}}}
 
 \item{S_sb}{parameter for probability to queue a sugar bout as function of a mosquito's energy, called from \code{\link{mbites_pSugarBout}}}
+
+\item{S_w}{scaling parameter called in \code{\link{mbites_pSugarBout}}}
+
+\item{S_p}{scaling parameter called in \code{\link{mbites_pSugarBout}}}
 
 \item{Bs_surv}{blood feeding search bout baseline survival probability, called from \code{\link{surviveFlight}}}
 
@@ -89,6 +95,22 @@ set_parameters_MBITES_Parameters(defaultState_F = "B",
 \item{M_surv}{mating bout baseline survival probability, called from \code{\link{surviveFlight}}}
 
 \item{S_surv}{sugar feeding bout baseline survival probability, called from \code{\link{surviveFlight}}}
+
+\item{Bs_succeed}{unconditional probability for blood feeding search bout to succeed}
+
+\item{Os_succeed}{unconditional probability for egg laying search bout to succeed}
+
+\item{Ms_succeed}{unconditional probability for mating search bout to succeed}
+
+\item{Ss_succeed}{unconditional probability for sugar feeding search bout to succeed}
+
+\item{B_succeed}{unconditional probability for blood feeding attempt bout to succeed}
+
+\item{O_succeed}{unconditional probability for egg laying attempt bout to succeed}
+
+\item{M_succeed}{unconditional probability for mating attempt bout to succeed}
+
+\item{S_succeed}{unconditional probability for sugar feeding attempt bout to succeed}
 
 \item{surviveH}{survival probability for initial encounter (survive to probe)}
 
