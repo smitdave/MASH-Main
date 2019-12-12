@@ -1,0 +1,209 @@
+---
+title: "macro_pfsi_vignette_09_27_2019"
+author: "Daniel T. Citron"
+date: "9/27/2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## MACRO-PfSI VIGNETTE
+
+The purpose of this notebook will be to demonstrate how to use the `macro.pfsi` vignettes, as a way of demonstrating the workflow for setting and running a single simulation.  Eventually we will code up a model which resembles Bioko Island, but for now we just want to make sure the simulator works at all.
+
+```{r Call Libraries}
+library(data.table)
+library(Rcpp)
+library(RcppArmadillo)
+library(RcppProgress)
+library(devtools)
+library(here)
+library(withr)
+```
+
+## Load macro.pfsi from repo
+
+First, set your path to the local directory of your choosing. You can also use the `reportfactory` library to set up that directory in a structured way.
+
+```{r}
+setwd("pick/your/favorite/location")
+here()
+```
+
+
+Download the `macro.pfsi` library to a local directory.
+
+```{r Load macro.pfsi from repo}
+#This is only for the initial installation
+withr::with_libpaths(
+  new = here("macro.pfsi"),
+  devtools::install_github(repo = "https://github.com/dd-harp/MASH",subdir = "macro.pfsi", force = TRUE)
+)
+
+```
+
+## Begin the vignette:
+
+```{r Load Vignette Libraries}
+
+library(macro.pfsi, lib.loc = here("macro.pfsi"))
+
+library(Matrix)
+# tidyverse and Hmisc for output visualization; 
+# I prefer to use tidyverse but the output can be analyzed with base plots just fine
+library(tidyverse)
+library(Hmisc)
+```
+
+Set the random seed, as setting our initial conditions and running 
+```{r Set random seed}
+# seed
+set.seed(42L)
+```
+
+```{r Course of Infection Setup}
+# vector of parameters describing course of infection - PfSI
+pfsi_pars <- pfsi_parameters(mnChemoprophylaxisPf = 32,
+                             PEProtectPf = 1, # % of people the vaccine works in
+                             peBlockPf = 1, # % decrease in transmission efficiency of new infections
+                             mnPEPf = 200, vrPEPf = 50)
+
+```
+
+
+```{r Patch set-up}
+
+# set up patches (n is how many patches we have)
+n.patch <- 5
+# movement matrix for humans is uniform over possible destinations.
+move <- matrix(data = 1/(n.patch-1),nrow = n.patch, ncol = n.patch)
+diag(move) <- 0
+patch_pars <- patches_parameters(move = move,
+                                 bWeightZoo = rep(0,n.patch),
+                                 bWeightZootox = rep(0,n.patch),
+                                 reservoir = rep(F,n.patch),
+                                 res_EIR = rep(0,n.patch))
+## mosquito parameters
+# psi is the movement matrix for mosquitoes, if we let mosquitoes drift from one place to another
+psi <- Matrix::sparseMatrix(i = {},j = {},x = 0.0,dims = c(n.patch,n.patch))
+diag(psi) <- rep(1,n.patch)
+
+# lambda is the per-day rate that new adult mosquitoes emerge at each patch
+# In our model, the abundance of mosquitoes drives the transmission intensity, which in turn drives PR
+# (In a more complicated course-of-infection model, the relationship between mosquito abundance, incidence, and PR will be much more complicated)
+# The matrix has 1 row for each value of lambda, and 1 column for each day of the year
+# This allows us to specify the annual cycles in mosquito emergence rates (but does not yet account for multi-year trends)
+# In this example we will have 5 patches, each of which will have a different (increasing) value of lambda
+lambda.matrix = t(matrix(c(10,20,30,40,50), nrow = n.patch, ncol = 365))
+
+# Set up mosquito parameters
+mosy_pars <- mosquito_rm_conpars(N = n.patch,
+                                 lambda = lambda.matrix,
+                                 psi = psi,
+                                 EIP = rep(11,365),
+                                 M = rep(450,n.patch),
+                                 Y = rep(0,n.patch),
+                                 Z = rep(0,n.patch))
+```
+
+
+```{r Human populations set up}
+# humans
+patch_sizes <- rep(500,n.patch) # number of people in each patch
+pfpr <- rep(0.5,n.patch) # initial malaria prevalence in each patch
+n.humans <- sum(patch_sizes) # total number of humans
+
+# sample S or I for each person
+# Given that each patch has 50% infected people at the start of the simulation
+# we randomly assign each person in each patch to have initial state of infected or susceptible
+init_state <- unlist(mapply(FUN = function(n.patch,pr){
+  sample(x = c("I","S"),size = n.patch,replace = T,prob = c(pr,1-pr))
+},n=patch_sizes,pr=pfpr,SIMPLIFY = F))
+
+# Assign a patch ID to each human (0-indexed, because these variables go into C++)
+patch_id <- rep(0:(n.patch-1),times=patch_sizes)
+
+# Assign biting weights to humans
+# uniform biting weights; this could follow any density on the positive reals (gamma, log-normal, weibull, etc.)
+bweights <- rep(1,n.humans)
+
+# Human parameters - Define parameters to each human
+human_pars <- vector("list",n.humans)
+for(i in 1:n.humans){
+  human_pars[[i]] <- human_pfsi_conpars(id = i-1,
+                                        home_patch_id = patch_id[i],
+                                        trip_duration = rep(3,n.patch), # assign duration of travel of 3 days to each destination patch to all humans
+                                        trip_frequency = 1/20, # assign rate of travel to once every 20 days to all humans
+                                        bweight = bweights[i],
+                                        age = 20, # relevant if the course-of-infection model had lifetime exposure dependence; not relevant for PfSI
+                                        state = init_state[i], # initial state of the ith human
+                                        bite_algorithm = 0) # dunno what this one is
+}
+
+```
+
+
+```{r Vaccinations}
+# Vaccinations - this is an example of scheduling an intervention
+
+# vaxx_id comes up with a sample of 25 humans to treat
+vaxx_id <- sample(x = 0:(n.humans-1),size = n.humans*0.25,replace = F)
+# Treat everyone
+vaxx_pars <- lapply(X = vaxx_id, FUN = function(id){
+  vaccination_pfsi_conpars(id = id, # who to vaccinate
+                           t = 500, # vaccinate on day 500
+                           treat = T,
+                           type = "PE")
+})
+
+# Similarly, you can set this list to be empty if you want no interventions
+#vaxx_pars <- list()
+
+```
+
+
+
+```{r Set up a place to save all of the output files}
+log_pars <- list()
+
+# Where to put the human outputs
+h_inf <- here("macro.pfsi/vignette_outputs/pfsi.csv")
+log_pars[[1]] <- list(outfile = h_inf,key = "pfsi",
+                      header = paste0(c("time","patch",unlist(lapply(c("S","I","P"),function(x){paste0(x,c("_visitor","_resident_home","_resident_away"))})),"incidence_resident","incidence_traveller"),collapse = ",")
+                    )
+
+# Where to put the mosquito outputs
+mosy <- here("macro.pfsi/vignette_outputs/mosy.csv")
+log_pars[[2]] <- list(outfile = mosy,key = "mosquito",
+                      header = paste0(c("time","state",paste0("patch",1:n.patch)),collapse = ","))
+```
+
+```{r Run the simulation}
+run_macro(tmax = 1e3,
+          human_pars = human_pars,
+          mosquito_pars = mosy_pars,
+          patch_pars = patch_pars,
+          model_pars = pfsi_pars,
+          log_streams = log_pars,
+          vaxx_events = vaxx_pars,
+          verbose = T)
+```
+
+# Postprocess and visualize output for analysis
+This part you can customize according to your needs - This is the way Sean wrote it up for his example script, although personally I like to use something a little different which doesn't rely on `tidyverse`
+```{r Postprocess and Visualize output}
+pfsi <- readr::read_csv(h_inf)
+
+pfsi_pr <- pfsi %>%
+  select(-ends_with("away")) %>%
+  select(-starts_with("incidence")) %>%
+  gather(key, value, -time,-patch)
+
+ggplot(pfsi_pr) +
+  geom_line(aes(x=time,y=value,color=key)) +
+  facet_wrap(. ~ patch) +
+  theme_bw()
+```
+
